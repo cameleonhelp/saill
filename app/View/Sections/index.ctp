@@ -14,7 +14,7 @@
         <thead>
 	<tr>
 			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
-                        <th><?php echo $this->Paginator->sort('UTILISATEUR_ID','Responsable'); ?></th>
+                        <th><?php echo $this->Paginator->sort('Utilisateur.NOMLONG','Responsable'); ?></th>
 			<th><?php echo $this->Paginator->sort('DESCRIPTION','Description'); ?></th>
 			<th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
 	</tr>
@@ -23,7 +23,7 @@
 	<?php foreach ($sections as $section): ?>
 	<tr>
 		<td><?php echo h($section['Section']['NOM']); ?>&nbsp;</td>
-		<td><?php echo h(isset($section['Section']['UTILISATEUR_ID']) ? $section['Section']['UTILISATEUR_ID'] : ''); ?>&nbsp;</td>
+		<td><?php echo h(isset($section['Utilisateur']['NOMLONG']) ? $section['Utilisateur']['NOMLONG'] : ''); ?>&nbsp;</td>
                 <td><?php echo h($section['Section']['DESCRIPTION']); ?>&nbsp;</td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Section :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($section['Section']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($section['Section']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;

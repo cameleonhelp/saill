@@ -45,7 +45,7 @@ class SectionsController extends AppController {
  * @return void
  */
 	public function add() {
-                $responsable = $this->Section->Utilisateur->find('list',array('fields' => array('id', 'NOM')));
+                $responsable = $this->Section->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'conditions'=>array('id >'=>1,'HIERARCHIQUE'=>1)));
                 $this->set('responsable',$responsable);
 		if ($this->request->is('post')) {
 			$this->Section->create();
@@ -66,7 +66,7 @@ class SectionsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-                $responsable = $this->Section->Utilisateur->find('list',array('fields' => array('id', 'NOM')));
+                $responsable = $this->Section->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'conditions'=>array('id >'=>1,'HIERARCHIQUE'=>1)));
                 $this->set('responsable',$responsable);		
                 if (!$this->Section->exists($id)) {
 			throw new NotFoundException(__('Section incorrecte'),true,array('class'=>'alert alert-error'));

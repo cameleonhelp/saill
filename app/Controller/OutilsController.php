@@ -45,7 +45,7 @@ class OutilsController extends AppController {
  * @return void
  */
 	public function add() {
-                $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('id', 'NOM')));              
+                $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'conditions'=>array('id >'=>1)));              
                 $this->set('gestionnaire',$gestionnaire);            
 		if ($this->request->is('post')) {
 			$this->Outil->create();
@@ -66,7 +66,7 @@ class OutilsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-                $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('id', 'NOM')));
+                $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'conditions'=>array('id >'=>1)));              
                 $this->set('gestionnaire',$gestionnaire);            
 		if (!$this->Outil->exists($id)) {
 			throw new NotFoundException(__('Outil incorrect'),true,array('class'=>'alert alert-error'));

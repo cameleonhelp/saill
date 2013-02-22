@@ -14,7 +14,7 @@
         <thead>
 	<tr>
 			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
-                        <th><?php echo $this->Paginator->sort('utilisateur_id','Gestionnaire '); ?></th>
+                        <th><?php echo $this->Paginator->sort('Utilisateur.NOMLONG','Gestionnaire '); ?></th>
 			<th width="80px;" style="text-align:center;"><?php echo $this->Paginator->sort('VALIDATION','A faire valider'); ?></th>
 			<th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
 	</tr>
@@ -23,8 +23,8 @@
 	<?php foreach ($outils as $outil): ?>
 	<tr>
 		<td><?php echo h($outil['Outil']['NOM']); ?>&nbsp;</td>
-                <td><?php echo h($outil['Outil']['utilisateur_id']); ?>&nbsp;</td>
-		<td><?php echo h($outil['Outil']['VALIDATION']); ?>&nbsp;</td>
+                <td><?php echo h($outil['Utilisateur']['NOMLONG']); ?>&nbsp;</td>
+		<td style="text-align:center;"><?php echo h($outil['Outil']['VALIDATION']) == 1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Outil :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($outil['Outil']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($outil['Outil']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $outil['Outil']['id']),array('escape' => false)); ?>&nbsp;

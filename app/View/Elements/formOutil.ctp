@@ -9,16 +9,17 @@
         <label class="control-label sstitre required" for="OutilUtilisateurId">Gestionnaire : </label>
         <div class="controls">
             <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->Form->input('utilisateur_id',array('data-rule-required'=>'true','data-msg-required'=>"Le nom du gestionnaire est obligatoire",'type'=>'select', 'options' => $gestionnaire, 'value' => $gestionnaire,'selected' => $this->data['Outil']['utilisateur_id'],'empty' => 'Choisir un gestionnaire')); ?>
+                <?php echo $this->Form->select('utilisateur_id',$gestionnaire,array('data-rule-required'=>'true','data-msg-required'=>"Le nom du gestionnaire est obligatoire", 'selected' => $this->data['Outil']['utilisateur_id'],'empty' => 'Choisir un gestionnaire')); ?>
             <?php } else { ?>
-                <?php echo $this->Form->input('utilisateur_id',array('data-rule-required'=>'true','data-msg-required'=>"Le nom du gestionnaire est obligatoire",'type'=>'select', 'options' => $gestionnaire, 'value' => $gestionnaire,'empty' => 'Choisir un gestionnaire')); ?>
+                <?php echo $this->Form->select('utilisateur_id',$gestionnaire,array('data-rule-required'=>'true','data-msg-required'=>"Le nom du gestionnaire est obligatoire", 'empty' => 'Choisir un gestionnaire')); ?>
             <?php } ?>
         </div>
         </div>
     <div class="control-group">
-        <label class="control-label sstitre" for="OutilValidation">A faire valider : </label>
+        <label class="control-label sstitre" for="OutilVALIDATION">A faire valider : </label>
         <div class="controls">
-            <?php echo $this->Form->input('VALIDATION',array('type'=>'checkbox','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('VALIDATION',array('type'=>'checkbox','class'=>'yesno','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            &nbsp;<label class='labelAfter'></label>
         </div>
         </div>
     <div class="control-group">
