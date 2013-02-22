@@ -93,9 +93,9 @@ class UtilisateursController extends AppController {
                 $this->set('workcapacite',$workcapacite);
                 $affectations = $this->Utilisateur->Affectation->find('all',array('fields'=>array('id','activite_id','Activite.NOM'),'conditions'=>array('Affectation.utilisateur_id'=>$id)));
                 $this->set('affectations',$affectations);
-                $dotations = $this->Utilisateur->Dotation->find('all',array('fields'=>array('id','materielinformatique_id','Materielinformatique.NOM'),'conditions'=>array('Dotation.utilisateur_id'=>$id)));
+                $dotations = $this->Utilisateur->Dotation->find('all',array('fields'=>array('id','materielinformatique_id','Materielinformatique.NOM','materielautre_id','Typemateriel.NOM'),'conditions'=>array('Dotation.utilisateur_id'=>$id)));
                 $this->set('dotations',$dotations);
-                $utiliseoutils = $this->Utilisateur->Utiliseoutil->find('all',array('fields'=>array('id','outil_id','Outil.NOM'),'conditions'=>array('Utiliseoutil.utilisateur_id'=>$id)));
+                $utiliseoutils = $this->Utilisateur->Utiliseoutil->find('all',array('fields'=>array('id','outil_id','Outil.NOM','listediffusion_id','Listediffusion.NOM','dossierpartage_id','Dossierpartage.NOM'),'conditions'=>array('Utiliseoutil.utilisateur_id'=>$id)));
                 $this->set('utiliseoutils',$utiliseoutils);
                 if (!$this->Utilisateur->exists($id)) {
 			throw new NotFoundException(__('Utilisateur incorrect'),true,array('class'=>'alert alert-error'));

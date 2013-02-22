@@ -87,6 +87,13 @@ class Dotation extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'Typemateriel' => array(
+			'className' => 'Utilisateur',
+			'foreignKey' => '',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
 
