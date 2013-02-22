@@ -128,35 +128,8 @@ $cakeDescription = __d('cake_dev', 'OSACT 3.0.0 ');
     </div>
     <div id="debugguer" style="background-color: #cccccc;">SQL Debug :
         <?php echo $this->element('sql_dump'); ?>
-        <?php //debug($this->params); ?>
-    </div>
-    <!-- Modal -->
-    <div id="delete-msg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel">Suppression</h3>
-            </div>
-            <div class="modal-body">
-            <p>Voulez-vous vraiment supprimer cet élément ?</p>
-        </div>
-        <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Non</button>
-        <button class="btn btn-primary">Oui</button>
-        </div>
-    </div>
-    <div id="initpsw-msg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel">Initialisation du mot de passe</h3>
-            </div>
-            <div class="modal-body">
-            <p>Voulez-vous vraiment initialiser le mot de passe cet élément ?</p>
-        </div>
-        <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Non</button>
-        <button class="btn btn-primary">Oui</button>
-        </div>
-    </div>    
+        <?php debug($this->params); ?>
+    </div>   
 </body>
 </html>
 <script>

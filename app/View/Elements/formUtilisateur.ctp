@@ -289,14 +289,9 @@
                         </div>
                     </div> 
                     <hr/>
-                    <form class="form-inline">
-                        A faire en jQuery<br>
-                        <?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>$this->data['Utilisateur']['id'])); ?>
-                        <?php echo $this->Form->select('activite_id',$activite,array('empty' => 'Choisir un poste informatique')); ?> ou 
-                        <?php echo $this->Form->select('activite_id',$activite,array('empty' => 'Choisir un autre matériel')); ?>
-                        <?php echo $this->Form->button('Ajouter une nouvelle dotation', array('class' => 'btn btn-inverse pull-right','type'=>'submit')); ?> <hr/>
-                    </form>
-                    <label class="sstitre">Liste des dotations</label>                  
+                    <button type="button" class='btn btn-inverse pull-right' onclick="location.href='<?php echo $this->Html->url('/dotations/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter une dotation</button>                    
+                    <label class="sstitre">Liste des dotations</label>   
+                    <?php echo $this->element('tableDotation'); ?>
                 </div>
             </div>
         </div> 
@@ -310,19 +305,14 @@
             <div id="collapse3" class="accordion-body collapse">
                 <div class="accordion-inner">
                     <div class="control-group">
-                        <label class="control-label sstitre" for="UtilisateurDomaineId">Assistance : </label>
-                        <div class="controls">
+                        <label class="control-label sstitre" for="UtilisateurDomaineId">Domaine : </label>
+                        <div class="controls">                            
                             <?php echo $this->Form->select('domaine_id',$domaine,array('selected' => $this->data['Utilisateur']['domaine_id'],'empty' => 'Choisir un domaine')); ?>
                         </div>
-                    </div>
-                    <hr/>
-                    <form class="form-inline">
-                        A faire en jQuery<br>
-                        <?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>$this->data['Utilisateur']['id'])); ?>
-                        <?php echo $this->Form->select('activite_id',$activite,array('empty' => 'Choisir une activité')); ?>
-                        <?php echo $this->Form->button('Ajouter une nouvelle activité', array('class' => 'btn btn-inverse pull-right','type'=>'submit')); ?> <hr/>
-                    </form>
-                    <label class="sstitre">Liste des activités</label>                     
+                    </div><hr/>
+                    <button type="button" class='btn btn-inverse pull-right' onclick="location.href='<?php echo $this->Html->url('/affectations/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter une activité</button>                    
+                    <label class="sstitre"><h4>Liste des activités</h4></label> 
+                    <?php echo $this->element('tableAffectation'); ?>
                 </div>
             </div>
         </div>   
@@ -335,16 +325,9 @@
             </div>
             <div id="collapse4" class="accordion-body collapse">
                 <div class="accordion-inner">
-                    <form class="form-inline">
-                        A faire en jQuery<br>
-                        <?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>$this->data['Utilisateur']['id'])); ?>
-                        <?php echo $this->Form->input('STATUT',array('type'=>'hidden','value'=>Configure::read('etatOuvertureDroit.Demandé'))); ?>
-                        <?php echo $this->Form->select('outil_id',$outil,array('empty' => 'Choisir un outil')); ?> ou
-                        <?php echo $this->Form->select('listediffusion_id',$listediffusion,array('empty' => 'Choisir une liste de diffusion')); ?> ou
-                        <?php echo $this->Form->select('dossierpartage_id',$dossierpartage,array('empty' => 'Choisir un partage réseau')); ?>
-                        <?php echo $this->Form->button('Faire une nouvelle demande', array('class' => 'btn btn-inverse pull-right','type'=>'submit')); ?> <hr/>
-                    </form>
+                    <button type="button" class='btn btn-inverse pull-right' onclick="location.href='<?php echo $this->Html->url('/utiliseoutils/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter une ouverture de droit</button>                    
                     <label class="sstitre">Liste des droits et état avancement des demandes à mettre dans un tableau</label> 
+                    <?php echo $this->element('tableUtiliseOutil'); ?>
                 </div>
             </div>
         </div> 

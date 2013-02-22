@@ -73,7 +73,7 @@
         <ul class="dropdown-menu">
             <li class="<?php echo $classUtilisateurs; ?>"><?php echo $this->Html->link('Utilisateurs',array('controller'=>'utilisateurs','action'=>'index'),array('escape' => false)); ?></li>
             <li class="<?php echo $classMateriels; ?>"><?php echo $this->Html->link('Postes informatique',array('controller'=>'materielinformatiques','action'=>'index'),array('escape' => false)); ?></li>
-            <!--<li class="<?php //echo $classPetitMateriels; ?>"><?php //echo $this->Html->link('Périphériques',array('controller'=>'materielautres','action'=>'index'),array('escape' => false)); ?></li>//-->
+            <li class="<?php echo $classPetitMateriels; ?>"><?php echo $this->Html->link('Périphériques',array('controller'=>'materielautres','action'=>'index'),array('escape' => false)); ?></li>
             <li class="<?php echo $classUtiliseOutils; ?>"><?php echo $this->Html->link('Ouvertures des droits',array('controller'=>'utiliseoutils','action'=>'index'),array('escape' => false)); ?></li>
             <!--<li class="disabled"><a href="#">Ouvertures des droits</a></li>//-->
         </ul>

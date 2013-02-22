@@ -403,6 +403,10 @@ a, a:focus {
   background-image: url("../img/glyphicons-halflings-grey.png");
 }
 
+.icon-red {
+  background-image: url("../img/glyphicons-halflings-red.png");
+}
+
 .table tfoot {
     background-color: #CB0044;
     color: #EAEAEA;

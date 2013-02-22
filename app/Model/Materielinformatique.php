@@ -128,7 +128,8 @@ class Materielinformatique extends AppModel {
                 }      
                 if (isset($val['Materielinformatique']['modified'])) {
                     $results[$key]['Materielinformatique']['modified'] = $this->dateFormatAfterFind($val['Materielinformatique']['modified']);
-                }            }
+                }            
+            }
             return $results;
         } 
 }

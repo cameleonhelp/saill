@@ -113,6 +113,5 @@ class AppModel extends Model {
                     $result[$value] = $value;
                 }            
             return $result;
-        } 
-       
+        }      
 }
