@@ -331,7 +331,18 @@
                 </div>
             </div>
         </div> 
-
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse5">
+                Historique
+                </a>
+            </div>
+            <div id="collapse5" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <?php echo $this->element('tableHistoryUtilisateur'); ?>
+                </div>
+            </div>
+        </div> 
     <?php } ?>
     </div>    
     <div class="navbar">

@@ -173,6 +173,8 @@ class UtiliseoutilsController extends AppController {
                        break; 
                 }
                 $record['Utiliseoutil']['STATUT'] = $newetat;
+                $record['Utiliseoutil']['created'] = $this->Utiliseoutil->read('created');
+                $record['Utiliseoutil']['modified'] = date('Y-m-d');
 		if (!$this->Utiliseoutil->exists()) {
 			throw new NotFoundException(__('Ouvertures des droits incorrecte'),true,array('class'=>'alert alert-error'));
 		}

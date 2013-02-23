@@ -71,7 +71,7 @@
 		<td><?php echo h($utiliseoutil['Outil']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($utiliseoutil['Listediffusion']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($utiliseoutil['Dossierpartage']['NOM']); ?>&nbsp;</td>
-                <td style='text-align:center;'><?php echo $this->Html->link('<i class="'.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'"></i>&nbsp;', array('action' => 'progressState', h($utiliseoutil['Utiliseoutil']['id'])), array('escape' => false), __('Etes-vous certain de vouloir mettre à jour le statut de cette demande de droit ?')); ?>
+                <td style='text-align:center;'><?php echo $this->Html->link('<i class="'.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'"></i>', array('action' => 'progressState', h($utiliseoutil['Utiliseoutil']['id'])), array('escape' => false), __('Etes-vous certain de vouloir mettre à jour le statut de cette demande de droit ?')); ?>
                     </td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Demande de droit :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($utiliseoutil['Utiliseoutil']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($utiliseoutil['Utiliseoutil']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
