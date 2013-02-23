@@ -5,8 +5,35 @@
                 <ul class="nav">
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtres Etats <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',$this->params->pass[1])); ?></li>
+                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',$this->params->pass[1])); ?></li>
+                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',$this->params->pass[1])); ?></li>
+                         <li><?php echo $this->Html->link('Incomplet', array('action' => 'index','incomplet',$this->params->pass[1])); ?></li>
+                      </ul>
+                 </li> 
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtres Sections <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index',$this->params->pass[0],'allsections')); ?></li>
+                     <li class="divider"></li>
+                         <?php foreach ($sections as $section): ?>
+                            <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',$this->params->pass[0],$section['Section']['NOM'])); ?></li>
+                         <?php endforeach; ?>
+                      </ul>
+                 </li>                  
+                 <li class="divider-vertical"></li>
+                 <li><?php echo $this->Html->link('A prolonger', array('action' => 'nextyear')); ?></li>
+                 <li class="divider-vertical"></li>
                 <li><a href="#"><i class="ico-xls"></i></a></li>
+                <li class="divider-vertical"></li>
                 </ul> 
+                <form class="navbar-form clearfix pull-right ">
+                    <input class="span8" type="text" placeholder="Recherche dans tous les champs">
+                    <button type="submit" class="btn">Rechercher</button>
+                </form>                    
                 </div>
             </div>
         </div>

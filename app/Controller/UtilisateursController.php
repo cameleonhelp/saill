@@ -21,6 +21,8 @@ class UtilisateursController extends AppController {
 	public function index() {
 		$this->Utilisateur->recursive = 0;
 		$this->set('utilisateurs', $this->paginate());
+                $sections = $this->Utilisateur->Section->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
+                $this->set('sections',$sections);
 	}
 
 /**
