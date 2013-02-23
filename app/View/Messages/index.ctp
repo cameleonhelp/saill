@@ -24,7 +24,7 @@
 		<td><?php echo h($message['Message']['LIBELLE']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($message['Message']['DATELIMITE']); ?>&nbsp;</td>
 		<td class="actions">
-                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Message :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($message['Message']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($message['Message']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Message :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($message['Message']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($message['Message']['modified']).'" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $message['Message']['id']),array('escape' => false)); ?>&nbsp;
 			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $message['Message']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce message ?')); ?>
 		</td>

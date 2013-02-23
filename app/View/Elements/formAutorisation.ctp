@@ -3,15 +3,19 @@
         <label class="control-label sstitre  required" for="AutorisationProfilId">Profil : </label>
         <div class="controls">
             <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->Form->select('profil_id',$profil,array('data-rule-required'=>'true','data-msg-required'=>"Le nom du profil est obligatoire",'selected' => $this->data['Autorisation']['profil_id'],'empty' => 'Choisir un profil')); ?>
+                <?php echo $this->Form->input('profil_id',array('type'=>'hidden','value'=>$this->data['Autorisation']['profil_id'])); ?>
+                <?php echo h($autorisation['Profil']['NOM']); ?>
             <?php } else { ?>
                 <?php echo $this->Form->select('profil_id',$profil,array('data-rule-required'=>'true','data-msg-required'=>"Le nom du profil est obligatoire",'selected' => '','empty' => 'Choisir un profil')); ?>
             <?php } ?>
         </div>
+    </div>
+    <div class="control-group">
         <label class="control-label sstitre  required" for="AutorisationMODEL">Modèle : </label>
         <div class="controls">
             <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->Form->select('MODEL',$models,array('data-rule-required'=>'true','data-msg-required'=>"Le modèle est obligatoire",'selected' => $this->data['Autorisation']['MODEL'],'empty' => 'Choisir un modèle')); ?>
+                <?php echo $this->Form->input('MODEL',array('type'=>'hidden','value'=>$this->data['Autorisation']['MODEL'])); ?>
+                <?php echo h($autorisation['Autorisation']['MODEL']); ?>
             <?php } else { ?>
                 <?php echo $this->Form->select('MODEL',$models,array('data-rule-required'=>'true','data-msg-required'=>"Le modèle est obligatoire",'selected' => '','empty' => 'Choisir un modèle')); ?>
             <?php } ?>

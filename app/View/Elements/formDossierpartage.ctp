@@ -2,13 +2,13 @@
     <div class="control-group">
         <label class="control-label sstitre  required" for="DossierpartageNOM">Nom : </label>
         <div class="controls">
-            <?php echo $this->Form->input('NOM',array('type'=>'text','data-rule-required'=>'true','data-msg-required'=>"Le nom du partage est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('NOM',array('type'=>'text','placeholder'=>'Nom du partage','data-rule-required'=>'true','data-msg-required'=>"Le nom du partage est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
         </div>
     <div class="control-group">
         <label class="control-label sstitre  required" for="DossierpartageGROUPEAD">Nom du groupe: </label>
         <div class="controls">
-            <?php echo $this->Form->input('GROUPEAD',array('type'=>'text','data-rule-required'=>'true','data-msg-required'=>"Le nom du groupe AD est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('GROUPEAD',array('type'=>'text','placeholder'=>'Nom du groupe dans l\'AD','data-rule-required'=>'true','data-msg-required'=>"Le nom du groupe AD est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
         </div>
         <div class="control-group">

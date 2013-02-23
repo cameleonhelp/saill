@@ -16,10 +16,10 @@
 		<td><?php echo h($utiliseoutil['Outil']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($utiliseoutil['Listediffusion']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($utiliseoutil['Dossierpartage']['NOM']); ?>&nbsp;</td>
-                <td><?php echo h($utiliseoutil['Utiliseoutil']['ETAT']); ?>&nbsp;</td>
+                <td><?php echo h($utiliseoutil['Utiliseoutil']['STATUT']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $utiliseoutil['Utiliseoutil']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $utiliseoutil['Utiliseoutil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce droit d\'utilisation ?')); ?>                    
+			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('controller'=>'utiliseoutils','action' => 'edit', $utiliseoutil['Utiliseoutil']['id']),array('escape' => false)); ?>&nbsp;
+			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('controller'=>'utiliseoutils','action' => 'delete', $utiliseoutil['Utiliseoutil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce droit d\'utilisation ?')); ?>                    
 		</td>
 	</tr>
 <?php endforeach; ?>

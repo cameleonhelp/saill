@@ -102,6 +102,7 @@ class UtiliseoutilsController extends AppController {
 		} else {
 			$options = array('conditions' => array('Utiliseoutil.' . $this->Utiliseoutil->primaryKey => $id));
 			$this->request->data = $this->Utiliseoutil->find('first', $options);
+                        $this->set('utiliseoutil', $this->Utiliseoutil->find('first', $options));
 		}
 	}
 

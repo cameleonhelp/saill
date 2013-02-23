@@ -2,7 +2,7 @@
     <div class="control-group">
         <label class="control-label sstitre  required" for="ListediffusionNOM">Nom : </label>
         <div class="controls">
-            <?php echo $this->Form->input('NOM',array('type'=>'text','data-rule-required'=>'true','data-msg-required'=>"Le nom de la liste de diffusion est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('NOM',array('type'=>'text','placeholder'=>'Nom de la liste de diffusion','data-rule-required'=>'true','data-msg-required'=>"Le nom de la liste de diffusion est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
         </div>
         <div class="control-group">

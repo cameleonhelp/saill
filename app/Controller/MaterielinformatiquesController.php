@@ -76,7 +76,7 @@ class MaterielinformatiquesController extends AppController {
  */
 	public function edit($id = null) {
 		$this->set('title_for_layout','Postes informatique');
-                 $peripherique = $this->Materielinformatique->Typemateriel->find('list',array('fields' => array('id', 'NOM')));
+                $peripherique = $this->Materielinformatique->Typemateriel->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('peripherique',$peripherique);                
                 $section = $this->Materielinformatique->Section->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('section',$section);  
@@ -97,6 +97,7 @@ class MaterielinformatiquesController extends AppController {
 		} else {
 			$options = array('conditions' => array('Materielinformatique.' . $this->Materielinformatique->primaryKey => $id));
 			$this->request->data = $this->Materielinformatique->find('first', $options);
+                        $this->set('materielinformatique',$this->request->data);
 		}
 	}
 

@@ -85,6 +85,7 @@ class AutorisationsController extends AppController {
 		} else {
 			$options = array('conditions' => array('Autorisation.' . $this->Autorisation->primaryKey => $id));
 			$this->request->data = $this->Autorisation->find('first', $options);
+                        $this->set('autorisation', $this->Autorisation->find('first', $options));
 		}
 	}
 

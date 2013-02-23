@@ -9,7 +9,8 @@
         <label class="control-label sstitre  required" for="MaterielinformatiqueTypematerielId">Périphérique : </label>
         <div class="controls">
             <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->Form->select('typemateriel_id',$peripherique, array('data-rule-required'=>'true','selected' => $this->data['Materielinformatique']['typemateriel_id'],'empty'=>'Choisir un périphérique','class'=>'span8','data-msg-required'=>"Le nom du périphérique est obligatoire")); ?>
+                <?php echo $this->Form->input('typemateriel_id',array('type'=>'hidden','value'=>$this->data['Materielinformatique']['typemateriel_id'])); ?>
+                <?php echo h($materielinformatique['Typemateriel']['NOM']); ?> 
             <?php } else { ?>
                 <?php echo $this->Form->select('typemateriel_id',$peripherique, array('data-rule-required'=>'true','empty'=>'Choisir un périphérique','class'=>'span8','data-msg-required'=>"Le nom du périphérique est obligatoire")); ?>
             <?php } ?>            
@@ -38,13 +39,15 @@
     <div class="control-group">
         <label class="control-label sstitre" for="MaterielinformatiqueWIFI">Wifi : </label>
         <div class="controls">
-            <?php echo $this->Form->input('WIFI'); ?>
+            <?php echo $this->Form->input('WIFI',array('class'=>'yesno')); ?>
+            &nbsp;<label class='labelAfter'></label>
         </div>
         </div>
     <div class="control-group">
         <label class="control-label sstitre" for="MaterielinformatiqueVPN">Accès distant : </label>
         <div class="controls">
-            <?php echo $this->Form->input('VPN'); ?>
+            <?php echo $this->Form->input('VPN',array('class'=>'yesno')); ?>
+            &nbsp;<label class='labelAfter'></label>
         </div>
         </div>
     <div class="control-group">

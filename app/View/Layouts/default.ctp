@@ -154,10 +154,28 @@ $(document).ready(function () {
      if ($("[rel=tooltip]").length) {
      $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
      }   
-    /** PopOver **/     
+    /** PopOver **/ 
+    var isVisible = false;
+    var clickedAway = false;
     if ($("[rel=popover]").length) {
-        $("[rel=popover]").popover({placement:'bottom',trigger:'click',html:true});
+        $("[rel=popover]").popover({placement:'bottom',trigger:'manual',html:true}).click(function(e) {
+                $(this).popover('toggle');
+                clickedAway = false
+                isVisible = true
+                e.preventDefault()
+            });
     }  
+    $('html').click(function(e) {
+        if(isVisible & clickedAway)
+        {
+          $("[rel=popover]").popover('hide')
+          isVisible = clickedAway = false
+        }
+        else
+        {
+          clickedAway = true
+        }
+    });
     /** DatePicker **/	        
     $(".date").datepicker({
          format: 'dd/mm/yyyy',
