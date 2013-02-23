@@ -26,7 +26,7 @@
 		<td><?php echo h($societe['Societe']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h(isset($societe['Societe']['NOMCONTACT']) ? $societe['Societe']['NOMCONTACT'] : ''); ?>&nbsp;</td>
 		<td><?php echo h(isset($societe['Societe']['TELEPHONE']) ? $societe['Societe']['TELEPHONE'] : ''); ?>&nbsp;</td>
-		<td><?php echo h(isset($societe['Societe']['MAIL']) ? $societe['Societe']['MAIL'] : ''); ?>&nbsp;</td>
+		<td><?php echo h(isset($societe['Societe']['MAIL']) ? $societe['Societe']['MAIL'] : ''); ?>&nbsp;<?php echo h(!empty($societe['Societe']['MAIL'])) ? '<a href="mailto:'.$societe['Societe']['MAIL'].'"><i class="icon-envelope"></i></a>' : ''; ?></td>
                 <td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Société :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($societe['Societe']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($societe['Societe']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $societe['Societe']['id']),array('escape' => false)); ?>&nbsp;

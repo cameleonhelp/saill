@@ -139,16 +139,47 @@ class UtiliseoutilsController extends AppController {
  */
 	public function progressState($id = null) {
 		$this->set('title_for_layout','Ouvertures des droits');
+                $newetat = '';
                 $this->Utiliseoutil->id = $id;
-                //lecture
-                //affectation nouvel état
+                $record = $this->Utiliseoutil->read();
+                if($record['Outil']['VALIDATION']==0 && $record['Utiliseoutil']['STATUT']=='Pris en compte') $record['Utiliseoutil']['STATUT']='Validé';
+                switch ($record['Utiliseoutil']['STATUT']) {
+                    case 'Demandé':
+                       $newetat = 'Pris en compte';
+                       break;
+                    case 'Pris en compte':
+                       $newetat = 'En validation';
+                       break;                
+                    case 'En validation':
+                       $newetat = 'Validé';
+                       break;          
+                    case 'Validé':
+                       $newetat = 'Demande transférée';
+                       break;
+                    case 'Demande transférée':
+                       $newetat = 'Demande traitée';
+                       break;                
+                    case 'Demande traitée':
+                       $newetat = 'Retour utilisateur';
+                       break;
+                    case 'Retour utilisateur':
+                       $newetat = 'A supprimer';
+                       break;                
+                    case 'A supprimer':
+                       $newetat = 'Supprimée';
+                       break;          
+                    case 'Supprimée':
+                       $newetat = 'Demandé';
+                       break; 
+                }
+                $record['Utiliseoutil']['STATUT'] = $newetat;
 		if (!$this->Utiliseoutil->exists()) {
 			throw new NotFoundException(__('Ouvertures des droits incorrecte'),true,array('class'=>'alert alert-error'));
 		}
-                /*if ($this->Utiliseoutil->save($this->request->data)) {
+                if ($this->Utiliseoutil->save($record)) { 
                     $this->Session->setFlash(__('Ouvertures des droits progression de l\'état'),true,array('class'=>'alert alert-success'));
                     $this->redirect(array('action' => 'index'));
-                }*/
+                }
 		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> progression de l\'état'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index'));
 	}      

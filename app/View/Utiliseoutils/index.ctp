@@ -1,3 +1,46 @@
+ <?php
+ /**
+ * etatMaterielInformatiqueImage method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $etat
+ * @return string class
+ */  
+        function etatUtiliseOutilImage($etat) {
+            $class = '';
+            switch ($etat){
+                 case 'Demandé':
+                    $class = 'icon-envelope';
+                    break;
+                 case 'Pris en compte':
+                    $class = 'icon-flag';
+                    break;                
+                 case 'En validation':
+                    $class = 'icon-bookmark icon-grey';
+                    break;          
+                 case 'Validé':
+                    $class = 'icon-bookmark icon-green';
+                    break;
+                 case 'Demande transférée':
+                    $class = 'icon-share-alt';
+                    break;                
+                 case 'Demande traitée':
+                    $class = 'icon-ok';
+                    break;
+                 case 'Retour utilisateur':
+                    $class = 'icon-ok icon-green';
+                    break;                
+                 case 'A supprimer':
+                    $class = 'icon-remove';
+                    break;          
+                 case 'Supprimée':
+                    $class = 'icon-remove icon-red';
+                    break; 
+            }
+            return $class;
+        } 
+?> 
 <div class="utiliseoutils index">
         <div class="navbar">
             <div class="navbar-inner">
@@ -28,7 +71,8 @@
 		<td><?php echo h($utiliseoutil['Outil']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($utiliseoutil['Listediffusion']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($utiliseoutil['Dossierpartage']['NOM']); ?>&nbsp;</td>
-		<td><?php echo h($utiliseoutil['Utiliseoutil']['STATUT']); ?>&nbsp;</td>
+                <td style='text-align:center;'><?php echo $this->Html->link('<i class="'.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'"></i>&nbsp;', array('action' => 'progressState', h($utiliseoutil['Utiliseoutil']['id'])), array('escape' => false), __('Etes-vous certain de vouloir mettre à jour le statut de cette demande de droit ?')); ?>
+                    </td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Demande de droit :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($utiliseoutil['Utiliseoutil']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($utiliseoutil['Utiliseoutil']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $utiliseoutil['Utiliseoutil']['id']),array('escape' => false)); ?>&nbsp;

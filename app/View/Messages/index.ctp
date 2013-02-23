@@ -21,7 +21,7 @@
         <tbody>        
 	<?php foreach ($messages as $message): ?>
 	<tr>
-		<td><?php echo h($message['Message']['LIBELLE']); ?>&nbsp;</td>
+		<td><?php echo $message['Message']['LIBELLE']; ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($message['Message']['DATELIMITE']); ?>&nbsp;</td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Message :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($message['Message']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($message['Message']['modified']).'" style="cursor: pointer;"></i>'; ?>&nbsp;
