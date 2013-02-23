@@ -8,3 +8,6 @@ app/tmp/tests/
 app/.DS_Store
 lib/.DS_Store
 _git2_L2FF60
+*Thumbs.db
+
+*.db
