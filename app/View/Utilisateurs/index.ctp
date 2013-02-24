@@ -6,16 +6,20 @@
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
                 <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtres Etats <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
                          <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',$this->params->pass[1])); ?></li>
+                         <li class="divider"></li>
                          <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',$this->params->pass[1])); ?></li>
                          <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',$this->params->pass[1])); ?></li>
+                         <li class="divider"></li>
                          <li><?php echo $this->Html->link('Incomplet', array('action' => 'index','incomplet',$this->params->pass[1])); ?></li>
+                         <li class="divider"></li>
+                         <li><?php echo $this->Html->link('A prolonger', array('action' => 'index','aprolonger',$this->params->pass[1])); ?></li>
                       </ul>
                  </li> 
                 <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtres Sections <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Sections <b class="caret"></b></a>
                      <ul class="dropdown-menu">
                      <li><?php echo $this->Html->link('Toutes', array('action' => 'index',$this->params->pass[0],'allsections')); ?></li>
                      <li class="divider"></li>
@@ -24,8 +28,6 @@
                          <?php endforeach; ?>
                       </ul>
                  </li>                  
-                 <li class="divider-vertical"></li>
-                 <li><?php echo $this->Html->link('A prolonger', array('action' => 'nextyear')); ?></li>
                  <li class="divider-vertical"></li>
                 <li><a href="#"><i class="ico-xls"></i></a></li>
                 <li class="divider-vertical"></li>
@@ -37,6 +39,7 @@
                 </div>
             </div>
         </div>
+        <code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $futilisateur; ?> de <?php echo $fsection; ?></em></code>
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>

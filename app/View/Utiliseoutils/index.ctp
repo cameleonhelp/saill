@@ -48,11 +48,37 @@
                 <ul class="nav">
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
-                <li><a href="#"><i class="ico-xls"></i></a></li>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',$this->params->pass[1])); ?></li>
+                     <li class="divider"></li>
+                         <?php foreach ($etats as $etat): ?>
+                            <li><?php echo $this->Html->link($etat['Utiliseoutil']['STATUT'], array('action' => 'index',$etat['Utiliseoutil']['STATUT'],$this->params->pass[1])); ?></li>
+                         <?php endforeach; ?>
+                      </ul>
+                 </li>   
+                <!--<li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Utilisateurs <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',$this->params->pass[0],'tous')); ?></li>
+                     <li class="divider"></li>
+                         <?php foreach ($utilisateurs as $utilisateur): ?>
+                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'], array('action' => 'index',$this->params->pass[0],$utilisateur['Utilisateur']['id'])); ; ?></li>
+                         <?php endforeach; ?>
+                      </ul>
+                 </li>  //-->
+                 <li class="divider-vertical"></li>
+                <li><a href="#"><i class="ico-xls"></i></a></li>                
                 </ul> 
+                <form class="navbar-form clearfix pull-right ">
+                    <input class="span8" type="text" placeholder="Recherche dans tous les champs">
+                    <button type="submit" class="btn">Rechercher</button>
+                </form>                     
                 </div>
             </div>
         </div>
+        <code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste des droits <?php echo $fetat; ?></em></code>     
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>

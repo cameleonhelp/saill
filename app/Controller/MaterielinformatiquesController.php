@@ -19,10 +19,47 @@ class MaterielinformatiquesController extends AppController {
  *
  * @return void
  */
-	public function index() {
+	public function index($filtreetat,$filtretype,$filtresection) {
+                switch ($filtreetat){
+                    case 'tous':
+                        $newconditions[]="1=1";
+                        $fetat = "de tous les états";
+                        break;
+                    default :
+                        $newconditions[]="Materielinformatique.ETAT='".$filtreetat."'";
+                        $fetat = "étant '".$filtreetat."'";                        
+                }    
+                $this->set('fetat',$fetat); 
+                switch ($filtretype){
+                    case 'tous':
+                        $newconditions[]="1=1";
+                        $ftype = "tous les types de matériel";
+                        break;
+                    default :
+                        $newconditions[]="Typemateriel.NOM='".$filtretype."'";
+                        $ftype = "type de matériel '".$filtretype."'";                        
+                }    
+                $this->set('ftype',$ftype); 
+                switch ($filtresection){
+                    case 'toutes':
+                        $newconditions[]="1=1";
+                        $fsection = "toutes les sections";
+                        break;
+                    default :
+                        $newconditions[]="Section.NOM='".$filtresection."'";
+                        $fsection = "la section ".$filtresection;                        
+                }    
+                $this->set('fsection',$fsection);                 
                 $this->set('title_for_layout','Postes informatique');
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->Materielinformatique->recursive = 0;
 		$this->set('materielinformatiques', $this->paginate());
+                $etats = $this->Materielinformatique->find('all',array('fields' => array('ETAT'),'group'=>'ETAT','order'=>array('ETAT'=>'asc')));
+                $this->set('etats',$etats); 
+                $types = $this->Materielinformatique->find('all',array('fields' => array('Typemateriel.NOM'),'group'=>'Typemateriel.NOM','order'=>array('Typemateriel.NOM'=>'asc')));
+                $this->set('types',$types);    
+                $sections = $this->Materielinformatique->find('all',array('fields' => array('Section.NOM'),'group'=>'Section.NOM','order'=>array('Section.NOM'=>'asc')));
+                $this->set('sections',$sections);                 
 	}
 
 /**
@@ -60,7 +97,7 @@ class MaterielinformatiquesController extends AppController {
 			$this->Materielinformatique->create();
 			if ($this->Materielinformatique->save($this->request->data)) {
 				$this->Session->setFlash(__('Postes informatique sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'index','En stock','tous','toutes'));
 			} else {
 				$this->Session->setFlash(__('Postes informatique incorrect, veuillez corriger le poste informatique'),true,array('class'=>'alert alert-error'));
 			}
@@ -90,7 +127,7 @@ class MaterielinformatiquesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Materielinformatique->save($this->request->data)) {
 				$this->Session->setFlash(__('Postes informatique sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'index','En stock','tous','toutes'));
 			} else {
 				$this->Session->setFlash(__('Postes informatique incorrect, veuillez corriger le poste informatique'),true,array('class'=>'alert alert-error'));
 			}
@@ -118,9 +155,9 @@ class MaterielinformatiquesController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Materielinformatique->delete()) {
 			$this->Session->setFlash(__('Postes informatique supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect(array('action' => 'index','En stock','tous','toutes'));
 		}
 		$this->Session->setFlash(__('Postes informatique <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect(array('action' => 'index','En stock','tous','toutes'));
 	}
 }

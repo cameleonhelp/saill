@@ -7,6 +7,10 @@
                 <li class="divider-vertical"></li>
                 <li><a href="#"><i class="ico-xls"></i></a></li>
                 </ul> 
+                <form class="navbar-form clearfix pull-right ">
+                    <input class="span8" type="text" placeholder="Recherche dans tous les champs">
+                    <button type="submit" class="btn">Rechercher</button>
+                </form> 
                 </div>
             </div>
         </div>

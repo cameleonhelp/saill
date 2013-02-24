@@ -5,11 +5,27 @@
                 <ul class="nav">
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
-                <li><a href="#"><i class="ico-xls"></i></a></li>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Profils <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous')); ?></li>
+                     <li class="divider"></li>
+                         <?php foreach ($profils as $profil): ?>
+                            <li><?php echo $this->Html->link($profil['Profil']['NOM'], array('action' => 'index',$profil['Profil']['NOM'])); ?></li>
+                         <?php endforeach; ?>
+                      </ul>
+                 </li>   
+                <li class="divider-vertical"></li>
+                <li><a href="#"><i class="ico-xls"></i></a></li>                
                 </ul> 
+                <form class="navbar-form clearfix pull-right ">
+                    <input class="span8" type="text" placeholder="Recherche dans tous les champs">
+                    <button type="submit" class="btn">Rechercher</button>
+                </form>                     
                 </div>
             </div>
         </div>
+        <code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste des autorisations pour <?php echo $fprofil; ?></em></code>    
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>

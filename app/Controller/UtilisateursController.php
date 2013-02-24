@@ -18,7 +18,42 @@ class UtilisateursController extends AppController {
  *
  * @return void
  */
-	public function index() {
+	public function index($filtreUtilisateur,$filtreSection) {
+                switch ($filtreUtilisateur){
+                    case 'tous':
+                        $newconditions[]="1=1";
+                        $futilisateur = "tous les utilisateurs";
+                        break;
+                    case 'actif':
+                        $newconditions[]="Utilisateur.ACTIF=1";
+                        $futilisateur = "tous les utilisateurs actifs";
+                        break;  
+                    case 'inactif':
+                        $newconditions[]="Utilisateur.ACTIF=0";
+                        $futilisateur = "tous les utilisateurs inactifs";
+                        break;  
+                    case 'incomplet':
+                        $newconditions[]="Utilisateur.ACTIF=1 AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.MAIL='')";
+                        $futilisateur = "tous les utilisateurs actifs et incomplets";
+                        break;  
+                    case 'aprolonger':
+                        $newconditions[]="Utilisateur.ACTIF=1 AND Utilisateur.FINMISSION IS NOT NULL AND Utilisateur.FINMISSION < DATE_ADD(CURDATE(), INTERVAL 1 MONTH)";
+                        $futilisateur = "tous les utilisateurs actifs, dont la date de fin de mission est proche de son terme";
+                        break;                      
+                }
+                switch ($filtreSection){
+                    case 'allsections':
+                        $newconditions[]="1=1";
+                        $fsection = "toutes les sections";
+                        break;
+                    default :
+                        $newconditions[]="Section.NOM='".$filtreSection."'";
+                        $fsection = "la section ".$filtreSection;                        
+                }    
+                
+                $this->set('fsection',$fsection);
+                $this->set('futilisateur',$futilisateur);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Utilisateur->recursive = 0;
 		$this->set('utilisateurs', $this->paginate());
                 $sections = $this->Utilisateur->Section->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
@@ -52,7 +87,7 @@ class UtilisateursController extends AppController {
 			$this->Utilisateur->create();
 			if ($this->Utilisateur->save($this->request->data)) {
 				$this->Session->setFlash(__('Utilisateur sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'index','actif','allsections'));
 			} else {
 				$this->Session->setFlash(__('Utilisateur incorrect, veuillez corriger l\'utilisateur'),true,array('class'=>'alert alert-error'));
 			}
@@ -105,7 +140,7 @@ class UtilisateursController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Utilisateur->save($this->request->data)) {
 				$this->Session->setFlash(__('Utilisateur sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'index','actif','allsections'));
 			} else {
 				$this->Session->setFlash(__('Utilisateur incorrect, veuillez corriger l\'utilisateur'),true,array('class'=>'alert alert-error'));
 			}
@@ -132,10 +167,10 @@ class UtilisateursController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Utilisateur->delete()) {
 			$this->Session->setFlash(__('Utilisateur supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect(array('action' => 'index','actif','allsections'));
 		}
 		$this->Session->setFlash(__('Utilisateur <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect(array('action' => 'index','actif','allsections'));
 	}
         
 /**
@@ -177,12 +212,14 @@ class UtilisateursController extends AppController {
                 $record = $this->Utilisateur->read();
                 unset($record['Utilisateur']['id']);
                 unset($record['Utilisateur']['COMMENTAIRE']);
+                unset($record['Utilisateur']['created']);                
+                unset($record['Utilisateur']['modified']);                
                 $this->Utilisateur->create();
-                if ($this->Utilisateur->saveAll($record)) {
+                if ($this->Utilisateur->save($record)) {
                         $this->Session->setFlash(__('Utilisateur dupliqué'),true,array('class'=>'alert alert-success'));
-                        $this->redirect(array('action' => 'index'));
+                        $this->redirect(array('action' => 'index','actif','allsections'));
                 } 
 		$this->Session->setFlash(__('Utilisateur <b>NON</b> dupliqué'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect(array('action' => 'index','actif','allsections'));
 	}          
 }

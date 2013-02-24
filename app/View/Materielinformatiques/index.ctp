@@ -36,12 +36,48 @@
                 <ul class="nav">
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
-                <li><a href="#"><i class="ico-xls"></i></a></li>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',$this->params->pass[1],$this->params->pass[2])); ?></li>
+                     <li class="divider"></li>
+                         <?php foreach ($etats as $etat): ?>
+                            <li><?php echo $this->Html->link($etat['Materielinformatique']['ETAT'], array('action' => 'index',$etat['Materielinformatique']['ETAT'],$this->params->pass[1],$this->params->pass[2])); ?></li>
+                         <?php endforeach; ?>
+                      </ul>
+                 </li>   
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Type de matériel <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',$this->params->pass[0],'tous',$this->params->pass[2])); ?></li>
+                     <li class="divider"></li>
+                         <?php foreach ($types as $type): ?>
+                            <li><?php echo $this->Html->link($type['Typemateriel']['NOM'], array('action' => 'index',$this->params->pass[0],$type['Typemateriel']['NOM'],$this->params->pass[2])); ?></li>
+                         <?php endforeach; ?>
+                      </ul>
+                </li>  
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Sections <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index',$this->params->pass[0],$this->params->pass[1],'toutes')); ?></li>
+                     <li class="divider"></li>
+                         <?php foreach ($sections as $section): ?>
+                            <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',$this->params->pass[0],$this->params->pass[1],$section['Section']['NOM'])); ?></li>
+                         <?php endforeach; ?>
+                      </ul>
+                 </li>                   
+                <li class="divider-vertical"></li>
+                <li><a href="#"><i class="ico-xls"></i></a></li>                
                 </ul> 
+                <form class="navbar-form clearfix pull-right ">
+                    <input class="span8" type="text" placeholder="Recherche dans tous les champs">
+                    <button type="submit" class="btn">Rechercher</button>
+                </form>                     
                 </div>
             </div>
         </div>
-        <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
+       <code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste des postes informatiques <?php echo $fetat; ?>, de <?php echo $ftype; ?> et étant affectés à <?php echo $fsection; ?></em></code>    
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
 			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
