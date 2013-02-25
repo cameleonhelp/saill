@@ -28,7 +28,7 @@
 	<tr>
 		<td><?php echo h($dossierpartage['Dossierpartage']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($dossierpartage['Dossierpartage']['GROUPEAD']); ?>&nbsp;</td>
-		<td><?php echo h($dossierpartage['Dossierpartage']['DESCRIPTION']); ?>&nbsp;</td>
+		<td><?php echo $dossierpartage['Dossierpartage']['DESCRIPTION']; ?>&nbsp;</td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Partage réseau :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($dossierpartage['Dossierpartage']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($dossierpartage['Dossierpartage']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $dossierpartage['Dossierpartage']['id']),array('escape' => false)); ?>&nbsp;

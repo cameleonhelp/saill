@@ -261,6 +261,34 @@ class UtilisateursController extends AppController {
 		$this->Session->setFlash(__('Utilisateur <b>NON</b> dupliqué'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index','actif','allsections'));
 	}   
+    
+/**
+ * initpassword method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $id
+ * @return void
+ */
+	public function initpassword($id = null) {
+		$this->Utilisateur->id = $id;
+                $record = $this->Utilisateur->read();
+                unset($record['Utilisateur']['password']); 
+                unset($record['Utilisateur']['created']);
+                unset($record['Utilisateur']['modified']);
+                $record['Utilisateur']['password']='OSACT'; 
+                $record['Utilisateur']['created'] = $this->Utilisateur->read('created');
+                $record['Utilisateur']['modified'] = date('Y-m-d');                
+                if ($this->Utilisateur->save($record)) {
+                        $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mot de passe initialisé";
+                        $this->Utilisateur->Historyutilisateur->save($history);
+                        $this->Session->setFlash(__('Mot de passe de l\'utilisateur initialisé'),true,array('class'=>'alert alert-success'));
+                        $this->redirect(array('action' => 'index','actif','allsections'));
+                } 
+		$this->Session->setFlash(__('Mot de passe de l\'utilisateur <b>NON</b> initialisé'),true,array('class'=>'alert alert-error'));
+		$this->redirect(array('action' => 'index','actif','allsections'));
+	} 
         
 /**
  * search method

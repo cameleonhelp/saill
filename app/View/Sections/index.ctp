@@ -28,7 +28,7 @@
 	<tr>
 		<td><?php echo h($section['Section']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h(isset($section['Utilisateur']['NOMLONG']) ? $section['Utilisateur']['NOMLONG'] : ''); ?>&nbsp;</td>
-                <td><?php echo h($section['Section']['DESCRIPTION']); ?>&nbsp;</td>
+                <td><?php echo $section['Section']['DESCRIPTION']; ?>&nbsp;</td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Section :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($section['Section']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($section['Section']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $section['Section']['id']),array('escape' => false)); ?>&nbsp;

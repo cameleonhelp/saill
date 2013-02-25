@@ -61,7 +61,7 @@ class Materielautre extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		)
+		)           
 	);
 
  /**

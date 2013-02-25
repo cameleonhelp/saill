@@ -46,10 +46,10 @@
 			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
 			<th><?php echo $this->Paginator->sort('PRENOM','Prénom'); ?></th>
 			<th><?php echo $this->Paginator->sort('section_id','Section'); ?></th>
-			<th  width="80px"><?php echo $this->Paginator->sort('FINMISSION','Date de fin de mission'); ?></th>
+			<th  width="100px"><?php echo $this->Paginator->sort('FINMISSION','Date de fin de mission'); ?></th>
                         <th><?php echo $this->Paginator->sort('ACTIF','Etat du compte'); ?></th>
 
-			<th class="actions" width="80px"><?php echo __('Actions'); ?></th>
+			<th class="actions" width="90px"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
         <tbody>
@@ -58,7 +58,7 @@
 		<td><?php echo h($utilisateur['Utilisateur']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($utilisateur['Utilisateur']['PRENOM']); ?>&nbsp;</td>
 		<td><?php echo h($utilisateur['Section']['NOM']); ?>&nbsp;</td>
-		<td><?php echo h($utilisateur['Utilisateur']['FINMISSION']); ?>&nbsp;</td>
+		<td style="text-align: center;"><?php echo h($utilisateur['Utilisateur']['FINMISSION']); ?>&nbsp;</td>
                 <td  width="80px" style="text-align: center;"><?php echo h($utilisateur['Utilisateur']['ACTIF']) == 1 ? '<i class="icon-ok"></i>' : '<i class="icon-ok icon-grey"></i>'; ?>&nbsp;</td>
 		<td class="actions">
                         <?php $mail = (isset($utilisateur['Utilisateur']['MAIL']) && !empty($utilisateur['Utilisateur']['MAIL'])) ? '<a href=\'mailto:'.h($utilisateur['Utilisateur']['MAIL']).'\'>'.h($utilisateur['Utilisateur']['MAIL']).'</a>': 'Non attribué'; ?>
@@ -73,6 +73,7 @@
                                     .'<br/><contenttitle>Modifié le: </contenttitle>'.h($utilisateur['Utilisateur']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
 			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet utilisateur ?')); ?>                    
+			<?php echo $this->Form->postLink('<i class="icon-asterisk"></i>', array('action' => 'initpassword', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir initialiser le mot de passe de cet utilisateur ?')); ?>                                            
                         <?php echo $this->Form->postLink('<i class="icon-retweet"></i>', array('action' => 'dupliquer', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cet utilisateur ?')); ?>
                 </td>
 	</tr>

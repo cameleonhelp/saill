@@ -340,59 +340,36 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `osact_cake230`.`materielautres`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `osact_cake230`.`materielautres` ;
-
-CREATE  TABLE IF NOT EXISTS `osact_cake230`.`materielautres` (
-  `id` INT(15) NOT NULL AUTO_INCREMENT ,
-  `typemateriel_id` INT(15) NOT NULL ,
-  `COMMENTAIRE` TEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
-  `created` DATE NOT NULL ,
-  `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_materielautres_typemateriels1_idx` (`typemateriel_id` ASC) ,
-  CONSTRAINT `fk_materielautres_typemateriels1`
-    FOREIGN KEY (`typemateriel_id` )
-    REFERENCES `osact_cake230`.`typemateriels` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
 -- Table `osact_cake230`.`dotations`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `osact_cake230`.`dotations` ;
 
 CREATE  TABLE IF NOT EXISTS `osact_cake230`.`dotations` (
   `id` INT(15) NOT NULL AUTO_INCREMENT ,
-  `materielinformatique_id` INT(15) NOT NULL ,
-  `materielautre_id` INT(15) NOT NULL ,
+  `materielinformatique_id` INT(15) NULL DEFAULT NULL ,
+  `typemateriels_id` INT(15) NULL DEFAULT NULL ,
   `utilisateur_id` INT(15) NOT NULL ,
   `DATERECEPTION` DATE NULL DEFAULT NULL ,
-  `DATEREMISE` DATE NOT NULL ,
+  `DATEREMISE` DATE NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `fk_dotations_materielinformatiques1_idx` (`materielinformatique_id` ASC) ,
-  INDEX `fk_dotations_materielautres1_idx` (`materielautre_id` ASC) ,
   INDEX `fk_dotations_utilisateurs1_idx` (`utilisateur_id` ASC) ,
+  INDEX `fk_dotations_typemateriels1_idx` (`typemateriels_id` ASC) ,
   CONSTRAINT `fk_dotations_materielinformatiques1`
     FOREIGN KEY (`materielinformatique_id` )
     REFERENCES `osact_cake230`.`materielinformatiques` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_dotations_materielautres1`
-    FOREIGN KEY (`materielautre_id` )
-    REFERENCES `osact_cake230`.`materielautres` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_dotations_utilisateurs1`
     FOREIGN KEY (`utilisateur_id` )
     REFERENCES `osact_cake230`.`utilisateurs` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_dotations_typemateriels1`
+    FOREIGN KEY (`typemateriels_id` )
+    REFERENCES `osact_cake230`.`typemateriels` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB

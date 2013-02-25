@@ -9,7 +9,7 @@ class UtiliseoutilsController extends AppController {
  
     public $paginate = array(
         'limit' => 15,
-        'order' => array('Utiliseoutil.utilisateur_id' => 'asc'),
+        'order' => array('Utiliseoutil.created' => 'desc'),
         /*'order' => array(
             'Post.title' => 'asc' /*/
         );

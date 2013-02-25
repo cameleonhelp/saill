@@ -26,7 +26,7 @@
 	<?php foreach ($typemateriels as $typemateriel): ?>
 	<tr>
 		<td><?php echo h($typemateriel['Typemateriel']['NOM']); ?>&nbsp;</td>
-		<td><?php echo h($typemateriel['Typemateriel']['DESCRIPTION']); ?>&nbsp;</td>
+		<td><?php echo $typemateriel['Typemateriel']['DESCRIPTION']; ?>&nbsp;</td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Type de matériel :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($typemateriel['Typemateriel']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($typemateriel['Typemateriel']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $typemateriel['Typemateriel']['id']),array('escape' => false)); ?>&nbsp;

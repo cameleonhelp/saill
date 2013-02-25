@@ -26,7 +26,7 @@
 	<?php foreach ($domaines as $domaine): ?>
 	<tr>
 		<td><?php echo h($domaine['Domaine']['NOM']); ?>&nbsp;</td>
-		<td><?php echo h($domaine['Domaine']['DESCRIPTION']); ?>&nbsp;</td>
+		<td><?php echo $domaine['Domaine']['DESCRIPTION']; ?>&nbsp;</td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Domaine :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($domaine['Domaine']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($domaine['Domaine']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $domaine['Domaine']['id']),array('escape' => false)); ?>&nbsp;

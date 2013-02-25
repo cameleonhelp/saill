@@ -89,9 +89,9 @@ class Dotation extends AppModel {
 			'order' => ''
 		),
 		'Typemateriel' => array(
-			'className' => 'Utilisateur',
+			'className' => 'Typemateriel',
 			'foreignKey' => '',
-			'conditions' => '',
+			'conditions' => 'Dotation.materielautre_id=Typemateriel.id',
 			'fields' => '',
 			'order' => ''
 		)
@@ -131,4 +131,47 @@ class Dotation extends AppModel {
 		)
 	);
 
+/**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {
+            if (!empty($this->data['Dotation']['DATERECEPTION'])) {
+                $this->data['Dotation']['DATERECEPTION'] = $this->dateFormatBeforeSave($this->data['Message']['DATERECEPTION']);
+            }
+            if (!empty($this->data['Dotation']['DATEREMISE'])) {
+                $this->data['Dotation']['DATEREMISE'] = $this->dateFormatBeforeSave($this->data['Message']['DATEREMISE']);
+            }            
+            parent::beforeSave();
+            return true;
+        }
+
+/**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Dotation']['DATERECEPTION'])) {
+                    $results[$key]['Dotation']['DATERECEPTION'] = $this->dateFormatAfterFind($val['Dotation']['DATERECEPTION']);
+                }
+                if (isset($val['Dotation']['DATEREMISE'])) {
+                    $results[$key]['Dotation']['DATEREMISE'] = $this->dateFormatAfterFind($val['Dotation']['DATEREMISE']);
+                }
+                if (isset($val['Dotation']['created'])) {
+                    $results[$key]['Dotation']['created'] = $this->dateFormatAfterFind($val['Dotation']['created']);
+                }      
+                if (isset($val['Dotation']['modified'])) {
+                    $results[$key]['Message']['modified'] = $this->dateFormatAfterFind($val['Dotation']['modified']);
+                }            }
+            return $results;
+        }        
 }

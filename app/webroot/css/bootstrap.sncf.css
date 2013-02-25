@@ -414,3 +414,17 @@ a, a:focus {
     background-color: #CB0044;
     color: #EAEAEA;
 }
+
+div.controls{
+    height: auto;
+    line-height: 20px;
+    margin-bottom: 5px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    padding-top: 5px;
+}
+
+.form-horizontal .control-label {
+  width: 170px;
+}

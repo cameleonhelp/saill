@@ -26,7 +26,7 @@
 	<?php foreach ($assistances as $assistance): ?>
 	<tr>
 		<td><?php echo h($assistance['Assistance']['NOM']); ?>&nbsp;</td>
-		<td><?php echo h($assistance['Assistance']['DESCRIPTION']); ?>&nbsp;</td>
+		<td><?php echo $assistance['Assistance']['DESCRIPTION']; ?>&nbsp;</td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Assistance :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($assistance['Assistance']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($assistance['Assistance']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $assistance['Assistance']['id']),array('escape' => false)); ?>&nbsp;
