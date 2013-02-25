@@ -119,4 +119,21 @@ class MessagesController extends AppController {
             }
            
         }
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $keyword=$this->params->data['Message']['SEARCH']; 
+                //$newconditions = array('OR'=>array("Message.LIBELLE LIKE '%$keyword%'","ModelName.name LIKE '%$keyword%'", "ModelName.email LIKE '%$keyword%'")  );
+                $newconditions = array("Message.LIBELLE LIKE '%".$keyword."%'");
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                //$this->set('messages',$this->Message->search($this->data['Message']['MessageSEARCH'])); 
+                $this->autoRender = false;
+                $this->Message->recursive = 0;
+                $this->set('messages', $this->paginate());
+                $this->render('/Messages/index');
+        }        
 }

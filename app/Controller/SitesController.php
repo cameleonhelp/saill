@@ -101,4 +101,19 @@ class SitesController extends AppController {
 		$this->Session->setFlash(___('Site <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index'));
 	}
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $keyword=$this->params->data['Site']['SEARCH']; 
+                $newconditions = array('OR'=>array("Site.NOM LIKE '%".$keyword."%'","Site.DESCRIPTION LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                $this->autoRender = false;
+                $this->Site->recursive = 0;
+                $this->set('sites', $this->paginate());              
+                $this->render('/Sites/index');
+        }         
 }

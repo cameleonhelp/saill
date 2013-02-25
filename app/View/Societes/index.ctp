@@ -7,10 +7,10 @@
                 <li class="divider-vertical"></li>
                 <li><a href="#"><i class="ico-xls"></i></a></li>
                 </ul> 
-                <form class="navbar-form clearfix pull-right ">
-                    <input class="span8" type="text" placeholder="Recherche dans tous les champs">
+                <?php echo $this->Form->create("Societe",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
+                    <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
                     <button type="submit" class="btn">Rechercher</button>
-                </form> 
+                <?php echo $this->Form->end(); ?> 
                 </div>
             </div>
         </div>

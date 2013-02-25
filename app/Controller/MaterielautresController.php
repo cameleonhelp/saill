@@ -133,5 +133,21 @@ class MaterielautresController extends AppController {
                 } 
 		$this->Session->setFlash(__('Périphérique <b>NON</b> dupliqué'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index'));
-	}        
+	} 
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $this->set('title_for_layout','Périphériques');            
+                $keyword=$this->params->data['Materielautre']['SEARCH']; 
+                $newconditions = array('OR'=>array("Typemateriel.NOM LIKE '%".$keyword."%'","Typemateriel.DESCRIPTION LIKE '%".$keyword."%'","Materielautre.COMMENTAIRE LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                $this->autoRender = false;
+                $this->Materielautre->recursive = 0;
+                $this->set('materielautres', $this->paginate());            
+                $this->render('/Materielautres/index');
+        }         
 }

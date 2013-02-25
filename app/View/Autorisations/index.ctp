@@ -18,14 +18,14 @@
                 <li class="divider-vertical"></li>
                 <li><a href="#"><i class="ico-xls"></i></a></li>                
                 </ul> 
-                <form class="navbar-form clearfix pull-right ">
-                    <input class="span8" type="text" placeholder="Recherche dans tous les champs">
+                <?php echo $this->Form->create("Autorisation",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
+                    <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
                     <button type="submit" class="btn">Rechercher</button>
-                </form>                     
+                <?php echo $this->Form->end(); ?>                     
                 </div>
             </div>
         </div>
-        <code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste des autorisations pour <?php echo $fprofil; ?></em></code>    
+        <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste des autorisations pour <?php echo $fprofil; ?></em></code><?php } ?>
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>

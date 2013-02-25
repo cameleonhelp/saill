@@ -106,4 +106,20 @@ class DossierpartagesController extends AppController {
 		$this->Session->setFlash(__('Dossier partagé NON supprimé'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index'));
 	}
-}
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $this->set('title_for_layout','Partages réseaux');
+                $keyword=$this->params->data['Dossierpartage']['SEARCH']; 
+                $newconditions = array('OR'=>array("Dossierpartage.NOM LIKE '%".$keyword."%'","Dossierpartage.DESCRIPTION LIKE '%".$keyword."%'","Dossierpartage.GROUPEAD LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                $this->autoRender = false;
+                $this->Dossierpartage->recursive = 0;
+                $this->set('dossierpartages', $this->paginate());              
+                $this->render('/Dossierpartages/index');
+        }            
+}        

@@ -41,4 +41,37 @@ class Historyutilisateur extends AppModel {
 			'order' => ''
 		)
 	);
+        
+ /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {
+            parent::beforeSave();
+            return true;
+        }
+        
+/**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Historyutilisateur']['created'])) {
+                    $results[$key]['Historyutilisateur']['created'] = $this->dateFormatAfterFind($val['Historyutilisateur']['created']);
+                }      
+                if (isset($val['Historyutilisateur']['modified'])) {
+                    $results[$key]['Historyutilisateur']['modified'] = $this->dateFormatAfterFind($val['Historyutilisateur']['modified']);
+                }            
+            }
+            return $results;
+        }          
 }

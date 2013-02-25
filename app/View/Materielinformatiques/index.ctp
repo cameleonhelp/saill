@@ -39,44 +39,44 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',$this->params->pass[1],$this->params->pass[2])); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'toutes')); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($etats as $etat): ?>
-                            <li><?php echo $this->Html->link($etat['Materielinformatique']['ETAT'], array('action' => 'index',$etat['Materielinformatique']['ETAT'],$this->params->pass[1],$this->params->pass[2])); ?></li>
+                            <li><?php echo $this->Html->link($etat['Materielinformatique']['ETAT'], array('action' => 'index',$etat['Materielinformatique']['ETAT'],isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'toutes')); ?></li>
                          <?php endforeach; ?>
                       </ul>
                  </li>   
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Type de matériel <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',$this->params->pass[0],'tous',$this->params->pass[2])); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'toutes')); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($types as $type): ?>
-                            <li><?php echo $this->Html->link($type['Typemateriel']['NOM'], array('action' => 'index',$this->params->pass[0],$type['Typemateriel']['NOM'],$this->params->pass[2])); ?></li>
+                            <li><?php echo $this->Html->link($type['Typemateriel']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$type['Typemateriel']['NOM'],isset($this->params->pass[2]) ? $this->params->pass[2] : 'toutes')); ?></li>
                          <?php endforeach; ?>
                       </ul>
                 </li>  
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Sections <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index',$this->params->pass[0],$this->params->pass[1],'toutes')); ?></li>
+                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','toutes')); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($sections as $section): ?>
-                            <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',$this->params->pass[0],$this->params->pass[1],$section['Section']['NOM'])); ?></li>
+                            <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$section['Section']['NOM'])); ?></li>
                          <?php endforeach; ?>
                       </ul>
                  </li>                   
                 <li class="divider-vertical"></li>
                 <li><a href="#"><i class="ico-xls"></i></a></li>                
                 </ul> 
-                <form class="navbar-form clearfix pull-right ">
-                    <input class="span8" type="text" placeholder="Recherche dans tous les champs">
+                <?php echo $this->Form->create("Materielinformatique",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
+                    <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
                     <button type="submit" class="btn">Rechercher</button>
-                </form>                     
+                <?php echo $this->Form->end(); ?>                     
                 </div>
             </div>
         </div>
-       <code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste des postes informatiques <?php echo $fetat; ?>, de <?php echo $ftype; ?> et étant affectés à <?php echo $fsection; ?></em></code>    
+       <?php if($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste des postes informatiques <?php echo $fetat; ?>, de <?php echo $ftype; ?> et étant affectés à <?php echo $fsection; ?></em></code><?php } ?>
     <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>

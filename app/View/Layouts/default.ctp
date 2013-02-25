@@ -129,6 +129,7 @@ $cakeDescription = __d('cake_dev', 'OSACT 3.0.0 ');
     <div id="debugguer" style="background-color: #cccccc;">SQL Debug :
         <?php echo $this->element('sql_dump'); ?>
     </div>   
+    <?php //debug($compteurs); ?>
 </body>
 </html>
 <script>

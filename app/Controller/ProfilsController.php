@@ -101,4 +101,21 @@ class ProfilsController extends AppController {
 		$this->Session->setFlash(__('Profil NON supprimé'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index'));
 	}
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $keyword=$this->params->data['Profil']['SEARCH']; 
+                //$newconditions = array('OR'=>array("Message.LIBELLE LIKE '%$keyword%'","ModelName.name LIKE '%$keyword%'", "ModelName.email LIKE '%$keyword%'")  );
+                $newconditions = array('OR'=>array("Profil.NOM LIKE '%".$keyword."%'","Profil.COMMENTAIRE LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                //$this->set('messages',$this->Message->search($this->data['Message']['MessageSEARCH'])); 
+                $this->autoRender = false;
+                $this->Profil->recursive = 0;
+                $this->set('profils', $this->paginate());
+                $this->render('/Profils/index');
+        }         
 }

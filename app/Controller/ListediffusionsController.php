@@ -106,4 +106,20 @@ class ListediffusionsController extends AppController {
 		$this->Session->setFlash(__('Liste de diffusion NON supprimée'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index'));
 	}
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $this->set('title_for_layout','Listes de diffusion');
+                $keyword=$this->params->data['Listediffusion']['SEARCH']; 
+                $newconditions = array('OR'=>array("Listediffusion.NOM LIKE '%".$keyword."%'","Listediffusion.DESCRIPTION LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                $this->autoRender = false;
+                $this->Listediffusion->recursive = 0;
+                $this->set('listediffusions', $this->paginate());              
+                $this->render('/Listediffusions/index');
+        }         
 }

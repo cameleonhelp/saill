@@ -105,4 +105,19 @@ class OutilsController extends AppController {
 		$this->Session->setFlash(__('Outil NON supprimé'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index'));
 	}
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $keyword=$this->params->data['Outil']['SEARCH']; 
+                $newconditions = array('OR'=>array("Outil.NOM LIKE '%".$keyword."%'","Outil.DESCRIPTION LIKE '%".$keyword."%'","(CONCAT(Utilisateur.NOM, ' ', Utilisateur.PRENOM)) LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                $this->autoRender = false;
+                $this->Outil->recursive = 0;
+                $this->set('outils', $this->paginate());              
+                $this->render('/Outils/index');
+        }            
 }

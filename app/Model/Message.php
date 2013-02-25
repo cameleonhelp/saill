@@ -10,7 +10,7 @@ class Message extends AppModel {
  * Validation rules
  *
  * @var array
- */
+ */    
 	public $validate = array(
 		'LIBELLE' => array(
 			'notempty' => array(

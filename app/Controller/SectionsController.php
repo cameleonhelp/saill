@@ -105,4 +105,19 @@ class SectionsController extends AppController {
 		$this->Session->setFlash(__('Section <b>NON</b> supprimée'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index'));
 	}
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $keyword=$this->params->data['Section']['SEARCH']; 
+                $newconditions = array('OR'=>array("Section.NOM LIKE '%".$keyword."%'","Section.DESCRIPTION LIKE '%".$keyword."%'","(CONCAT(Utilisateur.NOM, ' ', Utilisateur.PRENOM)) LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                $this->autoRender = false;
+                $this->Section->recursive = 0;
+                $this->set('sections', $this->paginate());              
+                $this->render('/Sections/index');
+        }            
 }

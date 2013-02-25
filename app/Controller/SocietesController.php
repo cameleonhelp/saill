@@ -101,4 +101,19 @@ class SocietesController extends AppController {
 		$this->Session->setFlash(__('Société <b>NON</b> supprime'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index'));
 	}
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $keyword=$this->params->data['Societe']['SEARCH']; 
+                $newconditions = array('OR'=>array("Societe.NOM LIKE '%".$keyword."%'","Societe.NOMCONTACT LIKE '%".$keyword."%'","Societe.TELEPHONE LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                $this->autoRender = false;
+                $this->Societe->recursive = 0;
+                $this->set('societes', $this->paginate());              
+                $this->render('/Societes/index');
+        }            
 }

@@ -8,23 +8,23 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',$this->params->pass[1])); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'allsections')); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',$this->params->pass[1])); ?></li>
-                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',$this->params->pass[1])); ?></li>
+                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'allsections')); ?></li>
+                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'allsections')); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Incomplet', array('action' => 'index','incomplet',$this->params->pass[1])); ?></li>
+                         <li><?php echo $this->Html->link('Incomplet', array('action' => 'index','incomplet',isset($this->params->pass[1]) ? $this->params->pass[1] : 'allsections')); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('A prolonger', array('action' => 'index','aprolonger',$this->params->pass[1])); ?></li>
+                         <li><?php echo $this->Html->link('A prolonger', array('action' => 'index','aprolonger',isset($this->params->pass[1]) ? $this->params->pass[1] : 'allsections')); ?></li>
                       </ul>
                  </li> 
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Sections <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index',$this->params->pass[0],'allsections')); ?></li>
+                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','allsections')); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($sections as $section): ?>
-                            <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',$this->params->pass[0],$section['Section']['NOM'])); ?></li>
+                            <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$section['Section']['NOM'])); ?></li>
                          <?php endforeach; ?>
                       </ul>
                  </li>                  
@@ -32,14 +32,14 @@
                 <li><a href="#"><i class="ico-xls"></i></a></li>
                 <li class="divider-vertical"></li>
                 </ul> 
-                <form class="navbar-form clearfix pull-right ">
-                    <input class="span8" type="text" placeholder="Recherche dans tous les champs">
+                <?php echo $this->Form->create("Utilisateur",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
+                    <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
                     <button type="submit" class="btn">Rechercher</button>
-                </form>                    
+                <?php echo $this->Form->end(); ?>                    
                 </div>
             </div>
         </div>
-        <code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $futilisateur; ?> de <?php echo $fsection; ?></em></code>
+        <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $futilisateur; ?> de <?php echo $fsection; ?></em></code><?php } ?>
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>

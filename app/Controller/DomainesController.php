@@ -101,4 +101,19 @@ class DomainesController extends AppController {
 		$this->Session->setFlash(__('Domaine NON supprimé'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index'));
 	}
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $keyword=$this->params->data['Domaine']['SEARCH']; 
+                $newconditions = array('OR'=>array("Domaine.NOM LIKE '%".$keyword."%'","Domaine.DESCRIPTION LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                $this->autoRender = false;
+                $this->Domaine->recursive = 0;
+                $this->set('domaines', $this->paginate());               
+                $this->render('/Domaines/index');
+        }               
 }

@@ -123,4 +123,23 @@ class AutorisationsController extends AppController {
 		$this->Session->setFlash(__('Autorisation NON supprimée'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index','tous'));
 	}
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $keyword=$this->params->data['Autorisation']['SEARCH']; 
+                //$newconditions = array('OR'=>array("Message.LIBELLE LIKE '%$keyword%'","ModelName.name LIKE '%$keyword%'", "ModelName.email LIKE '%$keyword%'")  );
+                $newconditions = array('OR'=>array("Profil.NOM LIKE '%".$keyword."%'","Autorisation.MODEL LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                //$this->set('messages',$this->Message->search($this->data['Message']['MessageSEARCH'])); 
+                $this->autoRender = false;
+                $this->Autorisation->recursive = 0;
+                $this->set('autorisations', $this->paginate());
+                $profils = $this->Autorisation->find('all',array('fields' => array('Profil.NOM'),'group'=>'Profil.NOM','order'=>array('Profil.NOM'=>'asc')));
+                $this->set('profils',$profils);                 
+                $this->render('/Autorisations/index');
+        }          
 }

@@ -160,4 +160,25 @@ class MaterielinformatiquesController extends AppController {
 		$this->Session->setFlash(__('Postes informatique <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index','En stock','tous','toutes'));
 	}
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $keyword=$this->params->data['Materielinformatique']['SEARCH']; 
+                $newconditions = array('OR'=>array("Materielinformatique.NOM LIKE '%".$keyword."%'","Materielinformatique.ETAT LIKE '%".$keyword."%'","Materielinformatique.COMMENTAIRE LIKE '%".$keyword."%'","Assistance.NOM LIKE '%".$keyword."%'","Section.NOM LIKE '%".$keyword."%'","Typemateriel.NOM LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 
+                $this->autoRender = false;
+                $this->Materielinformatique->recursive = 0;
+                $this->set('materielinformatiques', $this->paginate());
+                $etats = $this->Materielinformatique->find('all',array('fields' => array('ETAT'),'group'=>'ETAT','order'=>array('ETAT'=>'asc')));
+                $this->set('etats',$etats); 
+                $types = $this->Materielinformatique->find('all',array('fields' => array('Typemateriel.NOM'),'group'=>'Typemateriel.NOM','order'=>array('Typemateriel.NOM'=>'asc')));
+                $this->set('types',$types);    
+                $sections = $this->Materielinformatique->find('all',array('fields' => array('Section.NOM'),'group'=>'Section.NOM','order'=>array('Section.NOM'=>'asc')));
+                $this->set('sections',$sections);                 
+                $this->render('/Materielinformatiques/index');
+        }         
 }

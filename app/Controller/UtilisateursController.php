@@ -86,6 +86,9 @@ class UtilisateursController extends AppController {
                 if ($this->request->is('post')) {
 			$this->Utilisateur->create();
 			if ($this->Utilisateur->save($this->request->data)) {
+                                $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
+                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur créé";
+                                $this->Utilisateur->Historyutilisateur->save($history);                              
 				$this->Session->setFlash(__('Utilisateur sauvegardé'),true,array('class'=>'alert alert-success'));
 				$this->redirect(array('action' => 'index','actif','allsections'));
 			} else {
@@ -138,7 +141,11 @@ class UtilisateursController extends AppController {
 			throw new NotFoundException(__('Utilisateur incorrect'),true,array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+
 			if ($this->Utilisateur->save($this->request->data)) {
+                        $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur mis à jour";
+                        $this->Utilisateur->Historyutilisateur->save($history);                            
 				$this->Session->setFlash(__('Utilisateur sauvegardé'),true,array('class'=>'alert alert-success'));
 				$this->redirect(array('action' => 'index','actif','allsections'));
 			} else {
@@ -148,7 +155,15 @@ class UtilisateursController extends AppController {
 			$options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));
 			$this->request->data = $this->Utilisateur->find('first', $options);
                         $this->set('utilisateur', $this->Utilisateur->find('first', $options));
-		}
+                        $options = array('conditions' => array('Historyutilisateur.utilisateur_id' => $id),'order'=>array('Historyutilisateur.created'=> 'desc','Historyutilisateur.HISTORIQUE'=>'desc'));
+                        $historyutilisateurs = $this->Utilisateur->Historyutilisateur->find('all',$options);
+                        $this->set('historyutilisateurs',$historyutilisateurs);
+                        $options = array('conditions' => array('Utiliseoutil.utilisateur_id' => $id));
+                        $utiliseoutils = $this->Utilisateur->Utiliseoutil->find('all',$options);
+                        $this->set('utiliseoutils',$utiliseoutils);
+                        $compteurs = $this->Utilisateur->Utiliseoutil->query("SELECT count(outil_id) AS nboutil, count(listediffusion_id) AS nbliste, count(dossierpartage_id) AS nbpartage FROM utiliseoutils WHERE utilisateur_id =".$id);
+                        $this->set('compteurs',$compteurs);
+                }
 	}
 
 /**
@@ -183,9 +198,14 @@ class UtilisateursController extends AppController {
  */
 	public function profil($id = null) {
                 $this->set('title_for_layout',"Mon profils");
+		if (!$this->Utilisateur->exists($id)) {
+			throw new NotFoundException(__('Utilisateur incorrect'),true,array('class'=>'alert alert-error'));
+		}
+		$options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));
+		$this->set('utilisateur', $this->Utilisateur->find('first', $options));                
                 $societe = $this->Utilisateur->Societe->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
                 $this->set('societe',$societe);
-         }  
+        }  
         
 /**
  * logout method
@@ -210,16 +230,52 @@ class UtilisateursController extends AppController {
 	public function dupliquer($id = null) {
 		$this->Utilisateur->id = $id;
                 $record = $this->Utilisateur->read();
+                $NOMLONG = $record['Utilisateur']['NOMLONG'];
                 unset($record['Utilisateur']['id']);
+                unset($record['Utilisateur']['password']); 
+                unset($record['Utilisateur']['utilisateur_id']); 
+                unset($record['Utilisateur']['tjmagent_id']); 
+                unset($record['Utilisateur']['dotation_id']);
+                unset($record['Utilisateur']['username']);
+                unset($record['Utilisateur']['ACTIF']); 
+                unset($record['Utilisateur']['DATEDEBUTACTIF']); 
+                unset($record['Utilisateur']['NAISSANCE']);
+                unset($record['Utilisateur']['NOM']);
+                unset($record['Utilisateur']['PRENOM']);
+                unset($record['Utilisateur']['MAIL']);  
+                unset($record['Utilisateur']['TELEPHONE']);
+                unset($record['Utilisateur']['CONGE']);
+                unset($record['Utilisateur']['RQ']);
+                unset($record['Utilisateur']['VT']);                
                 unset($record['Utilisateur']['COMMENTAIRE']);
                 unset($record['Utilisateur']['created']);                
-                unset($record['Utilisateur']['modified']);                
+                unset($record['Utilisateur']['modified']);
                 $this->Utilisateur->create();
                 if ($this->Utilisateur->save($record)) {
+                        $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur dupliqué à partir de ".$NOMLONG;
+                        $this->Utilisateur->Historyutilisateur->save($history);
                         $this->Session->setFlash(__('Utilisateur dupliqué'),true,array('class'=>'alert alert-success'));
-                        $this->redirect(array('action' => 'index','actif','allsections'));
+                        $this->redirect(array('action' => 'edit',$this->Utilisateur->id));
                 } 
 		$this->Session->setFlash(__('Utilisateur <b>NON</b> dupliqué'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index','actif','allsections'));
-	}          
+	}   
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $keyword=$this->params->data['Utilisateur']['SEARCH']; 
+                $newconditions = array('OR'=>array("Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Utilisateur.COMMENTAIRE LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Utilisateur.TELEPHONE LIKE '%".$keyword."%'","Utilisateur.WORKCAPACITY LIKE '%".$keyword."%'","Utilisateur.WORKCAPACITY LIKE '%".$keyword."%'","Profil.NOM LIKE '%".$keyword."%'","Societe.NOM LIKE '%".$keyword."%'","Assistance.NOM LIKE '%".$keyword."%'","Section.NOM LIKE '%".$keyword."%'","Tjmagent.NOM LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                $this->autoRender = false;
+                $this->Utilisateur->recursive = 0;
+                $this->set('utilisateurs', $this->paginate());
+                $sections = $this->Utilisateur->Section->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
+                $this->set('sections',$sections);
+                $this->render('/Utilisateurs/index');
+        }         
 }

@@ -19,7 +19,7 @@ class UtiliseoutilsController extends AppController {
  *
  * @return void
  */
-	public function index($filtreetat,$filtreutilisateur) {
+	public function index($filtreetat) {
 		$this->set('title_for_layout','Ouvertures des droits');
                 switch ($filtreetat){
                     case 'tous':
@@ -30,24 +30,12 @@ class UtiliseoutilsController extends AppController {
                         $newconditions[]="Utiliseoutil.STATUT='".$filtreetat."'";
                         $fetat = "avec l'état ".$filtreetat;                        
                 }    
-                $this->set('fetat',$fetat);
-                /*switch ($filtreutilisateur){
-                    case 'tous':
-                        $newconditions[]='Utilisateur.id !=1';
-                        $futilisateur = "tous les utilisateurs";
-                        break;
-                    default :
-                        $newconditions[]= "Utilisateur.id='".$filtreutilisateur."'";
-                        $futilisateur = "le compte de  ".$filtreutilisateur;                        
-                }    
-                $this->set('futilisateur',$futilisateur);   */             
+                $this->set('fetat',$fetat);          
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->Utiliseoutil->recursive = 0;
 		$this->set('utiliseoutils', $this->paginate());
                 $etats = $this->Utiliseoutil->find('all',array('fields' => array('Utiliseoutil.STATUT'),'group'=>'Utiliseoutil.STATUT','order'=>array('Utiliseoutil.STATUT'=>'asc')));
-                $this->set('etats',$etats);   
-                /*$utilisateurs = $this->Utiliseoutil->find('all',array('fields' => array('Utilisateur.NOM','Utilisateur.PRENOM','Utilisateur.id'),'conditions'=>array('Utilisateur.id !='=>1),'group'=>"Utiliseoutil.utilisateur_id",'order'=>array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc')));
-                $this->set('utilisateurs',$utilisateurs);  */                 
+                $this->set('etats',$etats);                   
 	}
 
 /**
@@ -71,9 +59,13 @@ class UtiliseoutilsController extends AppController {
  *
  * @return void
  */
-	public function add() {
+	public function add($id = null) {
 		$this->set('title_for_layout','Ouvertures des droits');
-                $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG')));
+                if($id==null){
+                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG')));
+                } else {
+                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id','NOMLONG'),'conditions'=>array('Utilisateur.id'=>$id)));
+                }
                 $this->set('utilisateur',$utilisateur);  
                 $outil = $this->Utiliseoutil->Outil->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('outil',$outil);  
@@ -87,7 +79,11 @@ class UtiliseoutilsController extends AppController {
 			$this->Utiliseoutil->create();
 			if ($this->Utiliseoutil->save($this->request->data)) {
 				$this->Session->setFlash(__('Ouvertures des droits sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','tous','tous'));
+                                if($id==null){
+                                    $this->redirect(array('action' => 'index','tous','tous'));
+                                } else {
+                                    $this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$id));
+                                }
 			} else {
 				$this->Session->setFlash(__('Ouvertures des droits incorrecte, veuillez corriger cette ouverture de droit'),true,array('class'=>'alert alert-error'));
 			}
@@ -208,5 +204,25 @@ class UtiliseoutilsController extends AppController {
                 }
 		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> progression de l\'état'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index','tous','tous'));
-	}      
+	}    
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $this->set('title_for_layout','Ouvertures des droits');
+                $keyword=$this->params->data['Utiliseoutil']['SEARCH']; 
+                //$newconditions = array('OR'=>array("Message.LIBELLE LIKE '%$keyword%'","ModelName.name LIKE '%$keyword%'", "ModelName.email LIKE '%$keyword%'")  );
+                $newconditions = array('OR'=>array("Utiliseoutil.STATUT LIKE '%".$keyword."%'","Utiliseoutil.TYPE LIKE '%".$keyword."%'","(CONCAT(Utilisateur.NOM, ' ', Utilisateur.PRENOM)) LIKE '%".$keyword."%'","Outil.NOM LIKE '%".$keyword."%'","Dossierpartage.NOM LIKE '%".$keyword."%'","Listediffusion.NOM LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                //$this->set('messages',$this->Message->search($this->data['Message']['MessageSEARCH'])); 
+                $this->autoRender = false;
+                $this->Utiliseoutil->recursive = 0;
+                $this->set('utiliseoutils', $this->paginate());
+                $etats = $this->Utiliseoutil->find('all',array('fields' => array('Utiliseoutil.STATUT'),'group'=>'Utiliseoutil.STATUT','order'=>array('Utiliseoutil.STATUT'=>'asc')));
+                $this->set('etats',$etats);                
+                $this->render('/Utiliseoutils/index');
+        }         
 }

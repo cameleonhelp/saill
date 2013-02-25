@@ -101,4 +101,19 @@ class AssistancesController extends AppController {
 		$this->Session->setFlash(__('Assistance NON supprimée'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index'));
 	}
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $keyword=$this->params->data['Assistance']['SEARCH']; 
+                $newconditions = array('OR'=>array("Assistance.NOM LIKE '%".$keyword."%'","Assistance.DESCRIPTION LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                $this->autoRender = false;
+                $this->Assistance->recursive = 0;
+                $this->set('assistances', $this->paginate());           
+                $this->render('/Assistances/index');
+        }         
 }

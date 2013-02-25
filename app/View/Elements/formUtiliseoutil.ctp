@@ -7,7 +7,13 @@
                 <?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>$this->data['Utiliseoutil']['utilisateur_id'])); ?>
                 <?php echo h($utiliseoutil['Utilisateur']['NOMLONG']); ?>            
             <?php } else { ?>
-                <?php echo $this->Form->select('utilisateur_id',$utilisateur,array('data-rule-required'=>'true','data-msg-required'=>'Le nom de l\'utilisateur est obligatoire','empty' => 'Choisir un utilisateur')); ?>
+                <?php if (!isset($this->params->pass[0])) { 
+                    echo $this->Form->select('utilisateur_id',$utilisateur,array('data-rule-required'=>'true','data-msg-required'=>'Le nom de l\'utilisateur est obligatoire','empty' => 'Choisir un utilisateur')); ?>
+                <?php } else { 
+                    echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>$this->params->pass[0])); 
+                    echo $utilisateur[$this->params->pass[0]];
+                    } 
+                ?>
             <?php } ?>
         </div>
         </div>
@@ -57,7 +63,8 @@
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="container" style="margin-top:2px;text-align:center;">
-                    <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url('/utiliseoutils/index/tous/tous')."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
+                    <?php $url = isset($this->params->pass[0]) ? '/utilisateurs/edit/'.$this->params->pass[0] : '/utiliseoutils/index/tous/tous' ; ?>
+                    <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url($url)."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
                 </div>
             </div>
         </div>

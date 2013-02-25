@@ -106,4 +106,20 @@ class TypematerielsController extends AppController {
 		$this->Session->setFlash(__('Type de matériel <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index'));
 	}
+        
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+                $this->set('title_for_layout','Types de matériel');
+                $keyword=$this->params->data['Typemateriel']['SEARCH']; 
+                $newconditions = array('OR'=>array("Typemateriel.NOM LIKE '%".$keyword."%'","Typemateriel.DESCRIPTION LIKE '%".$keyword."%'"));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                $this->autoRender = false;
+                $this->Typemateriel->recursive = 0;
+                $this->set('typemateriels', $this->paginate());              
+                $this->render('/Typemateriels/index');
+        }            
 }
