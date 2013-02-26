@@ -4,20 +4,20 @@
         <div class="controls">
             <?php if ($this->params->action == 'edit') { ?>
                 <?php echo $this->Form->input('materielinformatique_id',array('type'=>'hidden','value'=>$this->data['Dotation']['materielinformatique_id'])); ?>
-                <?php echo h($matinformatique['Materielinformatique']['NOM']); ?>
+                <?php echo h($dotation['Materielinformatique']['NOM']); ?>
             <?php } else { ?>
                 <?php echo $this->Form->select('materielinformatique_id',$matinformatique,array('selected' => '','empty' => 'Choisir un poste informatique')); ?>
             <?php } ?>
         </div>
     </div> ou
     <div class="control-group">
-        <label class="control-label sstitre" for="DotationMaterielautreId">Périphérique : </label>
+        <label class="control-label sstitre" for="DotationTypematerielId">Périphérique : </label>
         <div class="controls">
             <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->Form->input('materielautre_id',array('type'=>'hidden','value'=>$this->data['Dotation']['materielautre_id'])); ?>
-                <?php echo h($matautre['Materielautre']['NOM']); ?>
+                <?php echo $this->Form->input('typemateriel_id',array('type'=>'hidden','value'=>$this->data['Dotation']['typemateriel_id'])); ?>
+                <?php echo h($dotation['Typemateriel']['NOM']); ?>
             <?php } else { ?>
-                <?php echo $this->Form->select('materielautre_id',$matautre,array('selected' => '','empty' => 'Choisir un périphérique')); ?>
+                <?php echo $this->Form->select('typemateriel_id',$matautre,array('selected' => '','empty' => 'Choisir un périphérique')); ?>
             <?php } ?>
         </div>
     </div> 
@@ -46,7 +46,7 @@
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container" style="margin-top:2px;text-align:center;">
-                <?php $params = $this->params->action == 'edit' ? $this->params->pass[0].'/'.$this->params->pass[1] : $this->params->pass[0]; ?>
+                <?php $params = $this->params->action == 'edit' ? $this->params->pass[1] : $this->params->pass[0]; ?>
                 <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url('/Utilisateurs/edit/'.$params)."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
             </div>
         </div>

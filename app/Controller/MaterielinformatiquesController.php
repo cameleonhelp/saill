@@ -84,7 +84,7 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function add() {
-                $peripherique = $this->Materielinformatique->Typemateriel->find('list',array('fields' => array('id', 'NOM')));
+                $peripherique = $this->Materielinformatique->Typemateriel->find('list',array('fields' => array('id', 'NOM'),'conditions'=>array('id <'=>3)));
                 $this->set('peripherique',$peripherique);                
                 $section = $this->Materielinformatique->Section->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('section',$section);  
@@ -180,5 +180,5 @@ class MaterielinformatiquesController extends AppController {
                 $sections = $this->Materielinformatique->find('all',array('fields' => array('Section.NOM'),'group'=>'Section.NOM','order'=>array('Section.NOM'=>'asc')));
                 $this->set('sections',$sections);                 
                 $this->render('/Materielinformatiques/index');
-        }         
+        }   
 }

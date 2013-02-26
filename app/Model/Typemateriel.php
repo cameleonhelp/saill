@@ -34,19 +34,6 @@ class Typemateriel extends AppModel {
  * @var array
  */
 	public $hasMany = array(
-		'Materielautre' => array(
-			'className' => 'Materielautre',
-			'foreignKey' => 'typemateriel_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		),
 		'Materielinformatique' => array(
 			'className' => 'Materielinformatique',
 			'foreignKey' => 'typemateriel_id',

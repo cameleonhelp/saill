@@ -30,7 +30,7 @@
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Profil :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($profil['Profil']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($profil['Profil']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $profil['Profil']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $profil['Profil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce profil ?')); ?>
+			<?php echo $profil['Profil']['id'] != 1 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $profil['Profil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce profil ?') ): ''; ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

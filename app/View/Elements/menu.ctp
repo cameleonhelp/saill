@@ -1,5 +1,5 @@
 <div class="dropdown clearfix">
-  <?php  $controller = $this->params['controller'] != 'pages' ? $this->params['controller'].'_'.$this->params['action'] : $this->params['controller'].'_'.$this->params['pass'][0];?>  
+  <?php  $controller = $this->params['controller'] != 'pages' ? strtolower($this->params['controller'].'_'.$this->params['action']) : strtolower($this->params['controller'].'_'.$this->params['pass'][0]);?>  
   <!-- classes pour rendre le menu actif si en se situe sur le controller //-->  
   <?php $classProfil = in_array($controller,array('utilisateurs_profil')) ? 'active' : ''; ?>
   <?php $classLogout = in_array($controller,array('utilisateurs_logout')) ? 'active' : ''; ?>
@@ -28,7 +28,7 @@
   <?php $classTJMAgents = in_array($controller,array('tjmagents_index','tjmagents_add','tjmagents_edit','tjmagents_delete')) ? 'active' : ''; ?>               
   <?php $classAchats = in_array($controller,array('achats_index','achats_add','achats_edit','achats_delete')) ? 'active' : ''; ?>    
   <?php $classBudget = in_array('active',array($classContrats,$classProjets,$classActivites,$classAchats,$classTJMProjets,$classTJMAgents)) ? 'active' : ''; ?>  
-  <?php $classUtilisateurs = in_array($controller,array('utilisateurs_index','utilisateurs_add','utilisateurs_edit','utilisateurs_delete')) ? 'active' : ''; ?> 
+  <?php $classUtilisateurs = in_array($controller,array('utilisateurs_index','utilisateurs_add','utilisateurs_edit','utilisateurs_delete','dotations_add','dotations_edit','dotations_delete','affectations_add','affectations_edit','affectations_delete')) ? 'active' : ''; ?> 
   <?php $classMateriels = in_array($controller,array('materielinformatiques_index','materielinformatiques_add','materielinformatiques_edit','materielinformatiques_delete')) ? 'active' : ''; ?>               
   <?php $classPetitMateriels = in_array($controller,array('materielautres_index','materielautres_add','materielautres_edit','materielautres_delete')) ? 'active' : ''; ?>               
   <?php $classUtiliseOutils = in_array($controller,array('utiliseoutils_index','utiliseoutils_add','utiliseoutils_edit','utiliseoutils_delete')) ? 'active' : ''; ?>    
@@ -73,14 +73,14 @@
         <ul class="dropdown-menu">
             <li class="<?php echo $classUtilisateurs; ?>"><?php echo $this->Html->link('Utilisateurs',array('controller'=>'utilisateurs','action'=>'index','actif','allsections'),array('escape' => false)); ?></li>
             <li class="<?php echo $classMateriels; ?>"><?php echo $this->Html->link('Postes informatique',array('controller'=>'materielinformatiques','action'=>'index','En stock','tous','toutes'),array('escape' => false)); ?></li>
-            <li class="<?php echo $classPetitMateriels; ?>"><?php echo $this->Html->link('Périphériques',array('controller'=>'materielautres','action'=>'index'),array('escape' => false)); ?></li>
+            <!--<li class="<?php echo $classPetitMateriels; ?>"><?php echo $this->Html->link('Périphériques',array('controller'=>'materielautres','action'=>'index'),array('escape' => false)); ?></li>//-->
             <li class="<?php echo $classUtiliseOutils; ?>"><?php echo $this->Html->link('Ouvertures des droits',array('controller'=>'utiliseoutils','action'=>'index','tous','tous'),array('escape' => false)); ?></li>
             <!--<li class="disabled"><a href="#">Ouvertures des droits</a></li>//-->
         </ul>
     </li>
     <li  class="dropdown-submenu <?php echo $classBudget; ?>"><a href="#"><i class="glyphicon_euro"></i> Budget</a>
         <ul class="dropdown-menu">
-            <li class="<?php echo $classContrats; ?>"><?php echo $this->Html->link('Contrats',array('controller'=>'contrats','action'=>'index'),array('escape' => false)); ?></li>
+            <li class="<?php echo $classContrats; ?>"><?php echo $this->Html->link('Contrats',array('controller'=>'contrats','action'=>'index','actif'),array('escape' => false)); ?></li>
             <li class="<?php echo $classProjets; ?>"><?php echo $this->Html->link('Projets',array('controller'=>'projets','action'=>'index'),array('escape' => false)); ?></li>
             <li class="<?php echo $classActivites; ?>"><?php echo $this->Html->link('Activités',array('controller'=>'activites','action'=>'index'),array('escape' => false)); ?></li>
             <li class="divider"></li>

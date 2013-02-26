@@ -84,4 +84,39 @@ class Contrat extends AppModel {
 		)
 	);
 
+ /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {      
+            parent::beforeSave();
+            return true;
+        }
+        
+ /**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Contrat']['created'])) {
+                    $results[$key]['Contrat']['created'] = $this->dateFormatAfterFind($val['Contrat']['created']);
+                }      
+                if (isset($val['Contrat']['modified'])) {
+                    $results[$key]['Contrat']['modified'] = $this->dateFormatAfterFind($val['Contrat']['modified']);
+                }            
+                 if (isset($val['Contrat']['ANNEEFIN'])) {
+                    $results[$key]['Contrat']['ANNEEFIN'] = $this->YearFormatAfterFind($val['Contrat']['ANNEEFIN']);
+                } 
+            }
+            return $results;
+        } 
 }

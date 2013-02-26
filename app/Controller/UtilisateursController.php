@@ -10,7 +10,7 @@ class UtilisateursController extends AppController {
     public $paginate = array(
         'limit' => 15,
         'order' => array('Utilisateur.NOM' => 'asc','Utilisateur.PRENOM' => 'asc'),
-        'conditions'=>array('Utilisateur.id >'=> 1),
+        'conditions'=>array('Utilisateur.id > '=> 1),
         );
     
 /**
@@ -133,7 +133,7 @@ class UtilisateursController extends AppController {
                 $this->set('workcapacite',$workcapacite);
                 $affectations = $this->Utilisateur->Affectation->find('all',array('fields'=>array('id','activite_id','Activite.NOM'),'conditions'=>array('Affectation.utilisateur_id'=>$id)));
                 $this->set('affectations',$affectations);
-                $dotations = $this->Utilisateur->Dotation->find('all',array('fields'=>array('id','materielinformatique_id','Materielinformatique.NOM','materielautre_id','Typemateriel.NOM'),'conditions'=>array('Dotation.utilisateur_id'=>$id)));
+                $dotations = $this->Utilisateur->Dotation->find('all',array('conditions'=>array('Dotation.utilisateur_id'=>$id)));
                 $this->set('dotations',$dotations);
                 $utiliseoutils = $this->Utilisateur->Utiliseoutil->find('all',array('fields'=>array('id','outil_id','Outil.NOM','listediffusion_id','Listediffusion.NOM','dossierpartage_id','Dossierpartage.NOM','Utiliseoutil.STATUT'),'conditions'=>array('Utiliseoutil.utilisateur_id'=>$id)));
                 $this->set('utiliseoutils',$utiliseoutils);
@@ -163,6 +163,8 @@ class UtilisateursController extends AppController {
                         $this->set('utiliseoutils',$utiliseoutils);
                         $compteurs = $this->Utilisateur->Utiliseoutil->query("SELECT count(outil_id) AS nboutil, count(listediffusion_id) AS nbliste, count(dossierpartage_id) AS nbpartage FROM utiliseoutils WHERE utilisateur_id =".$id);
                         $this->set('compteurs',$compteurs);
+                        $nbDotation = $this->Utilisateur->Dotation->query("SELECT count(id) AS nbDotation FROM dotations WHERE utilisateur_id =".$id);
+                        $this->set('nbDotation',$nbDotation);                        
                 }
 	}
 
@@ -179,8 +181,17 @@ class UtilisateursController extends AppController {
 		if (!$this->Utilisateur->exists()) {
 			throw new NotFoundException(__('Utilisateur incorrect'),true,array('class'=>'alert alert-error'));
 		}
-		$this->request->onlyAllow('post', 'delete');
-		if ($this->Utilisateur->delete()) {
+                $record = $this->Utilisateur->read();
+                unset($record['Utilisateur']['ACTIF']); 
+                unset($record['Utilisateur']['created']);
+                unset($record['Utilisateur']['modified']);
+                $record['Utilisateur']['ACTIF']=0; 
+                $record['Utilisateur']['created'] = $this->Utilisateur->read('created');
+                $record['Utilisateur']['modified'] = date('Y-m-d');                
+                if ($this->Utilisateur->save($record)) {
+                        $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - utilisateur supprimé";
+                        $this->Utilisateur->Historyutilisateur->save($history);
 			$this->Session->setFlash(__('Utilisateur supprimé'),true,array('class'=>'alert alert-success'));
 			$this->redirect(array('action' => 'index','actif','allsections'));
 		}
@@ -297,7 +308,7 @@ class UtilisateursController extends AppController {
  */
 	public function search() {
                 $keyword=$this->params->data['Utilisateur']['SEARCH']; 
-                $newconditions = array('OR'=>array("Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Utilisateur.COMMENTAIRE LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Utilisateur.TELEPHONE LIKE '%".$keyword."%'","Utilisateur.WORKCAPACITY LIKE '%".$keyword."%'","Utilisateur.WORKCAPACITY LIKE '%".$keyword."%'","Profil.NOM LIKE '%".$keyword."%'","Societe.NOM LIKE '%".$keyword."%'","Assistance.NOM LIKE '%".$keyword."%'","Section.NOM LIKE '%".$keyword."%'","Tjmagent.NOM LIKE '%".$keyword."%'"));
+                $newconditions = array('OR'=>array("Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Utilisateur.COMMENTAIRE LIKE '%".$keyword."%'","Utilisateur.TELEPHONE LIKE '%".$keyword."%'","Utilisateur.WORKCAPACITY LIKE '%".$keyword."%'","Profil.NOM LIKE '%".$keyword."%'","Societe.NOM LIKE '%".$keyword."%'","Assistance.NOM LIKE '%".$keyword."%'","Section.NOM LIKE '%".$keyword."%'","Tjmagent.NOM LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;
                 $this->Utilisateur->recursive = 0;

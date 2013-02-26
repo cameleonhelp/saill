@@ -40,15 +40,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`contrats` (
   `DESCRIPTION` TEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_contrats_tjmcontrats1_idx` (`tjmcontrat_id` ASC) ,
-  CONSTRAINT `fk_contrats_tjmcontrats1`
-    FOREIGN KEY (`tjmcontrat_id` )
-    REFERENCES `osact_cake230`.`tjmcontrats` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 11
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -62,6 +56,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`projets` (
   `id` INT(15) NOT NULL AUTO_INCREMENT ,
   `contrat_id` INT(15) NOT NULL ,
   `NOM` VARCHAR(255) CHARACTER SET 'latin1' NOT NULL ,
+  `NUMEROGALLILIE` VARCHAR(255) CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `DEBUT` DATE NULL DEFAULT NULL ,
   `FIN` DATE NULL DEFAULT NULL ,
   `COMMENTAIRE` LONGTEXT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL DEFAULT NULL ,
@@ -70,15 +65,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`projets` (
   `FACTURATION` ENUM('régie','forfait','autre') CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_projets_contrats1_idx` (`contrat_id` ASC) ,
-  CONSTRAINT `fk_projets_contrats1`
-    FOREIGN KEY (`contrat_id` )
-    REFERENCES `osact_cake230`.`contrats` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 57
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -95,22 +84,15 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`activites` (
   `DATEDEBUT` DATE NULL DEFAULT NULL ,
   `DATEFIN` DATE NULL DEFAULT NULL ,
   `NUMEROGALLILIE` VARCHAR(255) CHARACTER SET 'latin1' NULL DEFAULT NULL ,
-  `NOMGALLILIE` VARCHAR(255) CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `DESCRIPTION` LONGTEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `BUDJETRA` DECIMAL(25,2) NULL DEFAULT NULL ,
   `BUDGETREVU` DECIMAL(25,2) NULL DEFAULT NULL ,
   `ACTIVE` TINYINT(1) NULL DEFAULT '0' ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_activites_projets1_idx` (`projet_id` ASC) ,
-  CONSTRAINT `fk_activites_projets1`
-    FOREIGN KEY (`projet_id` )
-    REFERENCES `osact_cake230`.`projets` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 106
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -129,15 +111,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`achats` (
   `DESCRIPTION` TEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_achats_activites1_idx` (`activite_id` ASC) ,
-  CONSTRAINT `fk_achats_activites1`
-    FOREIGN KEY (`activite_id` )
-    REFERENCES `osact_cake230`.`activites` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -155,7 +131,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`domaines` (
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 39
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -175,7 +151,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`societes` (
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 25
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci;
 
@@ -193,7 +169,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`profils` (
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 39
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -211,7 +187,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`assistances` (
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`ID`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 12
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -229,7 +205,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`sites` (
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 10
+AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -246,15 +222,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`sections` (
   `DESCRIPTION` TEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_sections_utilisateurs1_idx` (`utilisateur_id` ASC) ,
-  CONSTRAINT `fk_sections_utilisateurs1`
-    FOREIGN KEY (`utilisateur_id` )
-    REFERENCES `osact_cake230`.`utilisateurs` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 70
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -274,7 +244,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`tjmagents` (
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 17
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -292,7 +262,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`typemateriels` (
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 39
+AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -314,27 +284,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`materielinformatiques` (
   `COMMENTAIRE` TEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_materielinformatiques_typemateriels1_idx` (`typemateriel_id` ASC) ,
-  INDEX `fk_materielinformatiques_sections1_idx` (`section_id` ASC) ,
-  INDEX `fk_materielinformatiques_assistances1_idx` (`assistance_id` ASC) ,
-  CONSTRAINT `fk_materielinformatiques_typemateriels1`
-    FOREIGN KEY (`typemateriel_id` )
-    REFERENCES `osact_cake230`.`typemateriels` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_materielinformatiques_sections1`
-    FOREIGN KEY (`section_id` )
-    REFERENCES `osact_cake230`.`sections` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_materielinformatiques_assistances1`
-    FOREIGN KEY (`assistance_id` )
-    REFERENCES `osact_cake230`.`assistances` (`ID` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 348
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -346,33 +298,16 @@ DROP TABLE IF EXISTS `osact_cake230`.`dotations` ;
 
 CREATE  TABLE IF NOT EXISTS `osact_cake230`.`dotations` (
   `id` INT(15) NOT NULL AUTO_INCREMENT ,
-  `materielinformatique_id` INT(15) NULL DEFAULT NULL ,
-  `typemateriels_id` INT(15) NULL DEFAULT NULL ,
+  `materielinformatiques_id` INT(15) NOT NULL ,
+  `typemateriel_id` INT(15) NOT NULL ,
   `utilisateur_id` INT(15) NOT NULL ,
   `DATERECEPTION` DATE NULL DEFAULT NULL ,
   `DATEREMISE` DATE NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_dotations_materielinformatiques1_idx` (`materielinformatique_id` ASC) ,
-  INDEX `fk_dotations_utilisateurs1_idx` (`utilisateur_id` ASC) ,
-  INDEX `fk_dotations_typemateriels1_idx` (`typemateriels_id` ASC) ,
-  CONSTRAINT `fk_dotations_materielinformatiques1`
-    FOREIGN KEY (`materielinformatique_id` )
-    REFERENCES `osact_cake230`.`materielinformatiques` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_dotations_utilisateurs1`
-    FOREIGN KEY (`utilisateur_id` )
-    REFERENCES `osact_cake230`.`utilisateurs` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_dotations_typemateriels1`
-    FOREIGN KEY (`typemateriels_id` )
-    REFERENCES `osact_cake230`.`typemateriels` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -405,70 +340,16 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`utilisateurs` (
   `MAIL` VARCHAR(255) CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `TELEPHONE` VARCHAR(15) CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `WORKCAPACITY` INT(1) NOT NULL DEFAULT 1 ,
-  `CONGE` INT(15) NOT NULL DEFAULT 0 ,
-  `RQ` INT(15) NOT NULL DEFAULT 0 ,
-  `VT` INT(15) NOT NULL DEFAULT 0 ,
+  `CONGE` INT(15) NULL DEFAULT 0 ,
+  `RQ` INT(15) NULL DEFAULT 0 ,
+  `VT` INT(15) NULL DEFAULT 0 ,
   `HIERARCHIQUE` TINYINT(1) NOT NULL DEFAULT 0 ,
   `GESTIONABSENCES` TINYINT(1) NOT NULL DEFAULT 0 ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_utilisateurs_societes_idx` (`societe_id` ASC) ,
-  INDEX `fk_utilisateurs_profils1_idx` (`profil_id` ASC) ,
-  INDEX `fk_utilisateurs_assistances1_idx` (`assistance_id` ASC) ,
-  INDEX `fk_utilisateurs_domaines1_idx` (`domaine_id` ASC) ,
-  INDEX `fk_utilisateurs_sites1_idx` (`site_id` ASC) ,
-  INDEX `fk_utilisateurs_sections1_idx` (`section_id` ASC) ,
-  INDEX `fk_utilisateurs_tjmagents1_idx` (`tjmagent_id` ASC) ,
-  INDEX `fk_utilisateurs_utilisateurs1_idx` (`utilisateur_id` ASC) ,
-  INDEX `fk_utilisateurs_dotations1_idx` (`dotation_id` ASC) ,
-  CONSTRAINT `fk_utilisateurs_societes`
-    FOREIGN KEY (`societe_id` )
-    REFERENCES `osact_cake230`.`societes` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_utilisateurs_profils1`
-    FOREIGN KEY (`profil_id` )
-    REFERENCES `osact_cake230`.`profils` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_utilisateurs_assistances1`
-    FOREIGN KEY (`assistance_id` )
-    REFERENCES `osact_cake230`.`assistances` (`ID` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_utilisateurs_domaines1`
-    FOREIGN KEY (`domaine_id` )
-    REFERENCES `osact_cake230`.`domaines` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_utilisateurs_sites1`
-    FOREIGN KEY (`site_id` )
-    REFERENCES `osact_cake230`.`sites` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_utilisateurs_sections1`
-    FOREIGN KEY (`section_id` )
-    REFERENCES `osact_cake230`.`sections` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_utilisateurs_tjmagents1`
-    FOREIGN KEY (`tjmagent_id` )
-    REFERENCES `osact_cake230`.`tjmagents` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_utilisateurs_utilisateurs1`
-    FOREIGN KEY (`utilisateur_id` )
-    REFERENCES `osact_cake230`.`utilisateurs` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_utilisateurs_dotations1`
-    FOREIGN KEY (`dotation_id` )
-    REFERENCES `osact_cake230`.`dotations` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 1444
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -485,15 +366,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`livrables` (
   `REFERENCE` VARCHAR(45) NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_livrables_utilisateurs1_idx` (`utilisateur_id` ASC) ,
-  CONSTRAINT `fk_livrables_utilisateurs1`
-    FOREIGN KEY (`utilisateur_id` )
-    REFERENCES `osact_cake230`.`utilisateurs` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -527,39 +402,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`actions` (
   `TYPE` ENUM('action','indisponibilité','standard') CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_actions_domaines1_idx` (`domaine_id` ASC) ,
-  INDEX `fk_actions_activites1_idx` (`activite_id` ASC) ,
-  INDEX `fk_actions_utilisateurs1_idx` (`utilisateur_id` ASC) ,
-  INDEX `fk_actions_utilisateurs2_idx` (`destinataire` ASC) ,
-  INDEX `fk_actions_livrables1_idx` (`livrable_id` ASC) ,
-  CONSTRAINT `fk_actions_domaines1`
-    FOREIGN KEY (`domaine_id` )
-    REFERENCES `osact_cake230`.`domaines` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_actions_activites1`
-    FOREIGN KEY (`activite_id` )
-    REFERENCES `osact_cake230`.`activites` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_actions_utilisateurs1`
-    FOREIGN KEY (`utilisateur_id` )
-    REFERENCES `osact_cake230`.`utilisateurs` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_actions_utilisateurs2`
-    FOREIGN KEY (`destinataire` )
-    REFERENCES `osact_cake230`.`utilisateurs` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_actions_livrables1`
-    FOREIGN KEY (`livrable_id` )
-    REFERENCES `osact_cake230`.`livrables` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 15
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -575,21 +420,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`affectations` (
   `activite_id` INT(15) NOT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_affectations_activites1_idx` (`activite_id` ASC) ,
-  INDEX `fk_affectations_utilisateurs1_idx` (`utilisateur_id` ASC) ,
-  CONSTRAINT `fk_affectations_activites1`
-    FOREIGN KEY (`activite_id` )
-    REFERENCES `osact_cake230`.`activites` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_affectations_utilisateurs1`
-    FOREIGN KEY (`utilisateur_id` )
-    REFERENCES `osact_cake230`.`utilisateurs` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 276
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -612,15 +445,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`autorisations` (
   `INITPASSWORD` TINYINT(1) NOT NULL DEFAULT 0 ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_autorisations_profils1_idx` (`profil_id` ASC) ,
-  CONSTRAINT `fk_autorisations_profils1`
-    FOREIGN KEY (`profil_id` )
-    REFERENCES `osact_cake230`.`profils` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 29
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -639,7 +466,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`dossierpartages` (
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 11
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -657,43 +484,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`historyactions` (
   `STATUT` ENUM('à faire','en cours','terminiée','livré','annulée') NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_historyactions_actions1_idx` (`action_id` ASC) ,
-  INDEX `fk_historyactions_utilisateurs1_idx` (`utilisateur_id` ASC) ,
-  CONSTRAINT `fk_historyactions_actions1`
-    FOREIGN KEY (`action_id` )
-    REFERENCES `osact_cake230`.`actions` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_historyactions_utilisateurs1`
-    FOREIGN KEY (`utilisateur_id` )
-    REFERENCES `osact_cake230`.`utilisateurs` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
--- Table `osact_cake230`.`historydotations`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `osact_cake230`.`historydotations` ;
-
-CREATE  TABLE IF NOT EXISTS `osact_cake230`.`historydotations` (
-  `id` INT(15) NOT NULL AUTO_INCREMENT ,
-  `dotation_id` INT(15) NOT NULL ,
-  `HISTORIQUE` LONGTEXT NULL DEFAULT NULL ,
-  `created` DATE NOT NULL ,
-  `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_historydotation_dotations1_idx` (`dotation_id` ASC) ,
-  CONSTRAINT `fk_historydotation_dotations1`
-    FOREIGN KEY (`dotation_id` )
-    REFERENCES `osact_cake230`.`dotations` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -709,14 +502,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`historyutilisateurs` (
   `HISTORIQUE` LONGTEXT NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_historyutilisateur_utilisateurs1_idx` (`utilisateur_id` ASC) ,
-  CONSTRAINT `fk_historyutilisateur_utilisateurs1`
-    FOREIGN KEY (`utilisateur_id` )
-    REFERENCES `osact_cake230`.`utilisateurs` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -733,15 +521,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`linkshareds` (
   `LINK` TEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_linkshareds_utilisateurs1_idx` (`utilisateur_id` ASC) ,
-  CONSTRAINT `fk_linkshareds_utilisateurs1`
-    FOREIGN KEY (`utilisateur_id` )
-    REFERENCES `osact_cake230`.`utilisateurs` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 14
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -758,15 +540,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`listediffusions` (
   `DESCRIPTION` LONGTEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_listediffusions_utilisateurs1_idx` (`utilisateur_id` ASC) ,
-  CONSTRAINT `fk_listediffusions_utilisateurs1`
-    FOREIGN KEY (`utilisateur_id` )
-    REFERENCES `osact_cake230`.`utilisateurs` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 40
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -784,7 +560,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`messages` (
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 5
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -802,15 +578,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`outils` (
   `VALIDATION` TINYINT(1) NOT NULL DEFAULT '0' ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_outils_utilisateurs1_idx` (`utilisateur_id` ASC) ,
-  CONSTRAINT `fk_outils_utilisateurs1`
-    FOREIGN KEY (`utilisateur_id` )
-    REFERENCES `osact_cake230`.`utilisateurs` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 26
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -829,14 +599,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`suivilivrables` (
   `ETAT` ENUM('à faire','en cours','validé','livré','refusé','annulé') NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_suivilivrables_livrables1_idx` (`livrable_id` ASC) ,
-  CONSTRAINT `fk_suivilivrables_livrables1`
-    FOREIGN KEY (`livrable_id` )
-    REFERENCES `osact_cake230`.`livrables` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -856,33 +621,9 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`utiliseoutils` (
   `TYPE` ENUM('Outil','Liste Diffusion','Partage Réseaux','') CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_utiliseoutils_outils1_idx` (`outil_id` ASC) ,
-  INDEX `fk_utiliseoutils_utilisateurs1_idx` (`utilisateur_id` ASC) ,
-  INDEX `fk_utiliseoutils_listediffusions1_idx` (`listediffusion_id` ASC) ,
-  INDEX `fk_utiliseoutils_dossierpartages1_idx` (`dossierpartage_id` ASC) ,
-  CONSTRAINT `fk_utiliseoutils_outils1`
-    FOREIGN KEY (`outil_id` )
-    REFERENCES `osact_cake230`.`outils` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_utiliseoutils_utilisateurs1`
-    FOREIGN KEY (`utilisateur_id` )
-    REFERENCES `osact_cake230`.`utilisateurs` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_utiliseoutils_listediffusions1`
-    FOREIGN KEY (`listediffusion_id` )
-    REFERENCES `osact_cake230`.`listediffusions` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_utiliseoutils_dossierpartages1`
-    FOREIGN KEY (`dossierpartage_id` )
-    REFERENCES `osact_cake230`.`dossierpartages` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 63
+AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -892,3 +633,134 @@ USE `osact_cake230` ;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `osact_cake230`.`contrats`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `osact_cake230`;
+INSERT INTO `osact_cake230`.`contrats` (`id`, `tjmcontrat_id`, `NOM`, `ANNEEDEBUT`, `ANNEEFIN`, `MONTANT`, `ACTIF`, `DESCRIPTION`, `created`, `modified`) VALUES (1, NULL, 'absences', 2012, NULL, NULL, 1, NULL, '2013-02-01', '2013-02-01');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `osact_cake230`.`projets`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `osact_cake230`;
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (1, 1, 'indisponibilité', NULL, '2013-01-01', NULL, NULL, 1, 'indisponibilité', 'autre', '2013-02-01', '2013-02-01');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `osact_cake230`.`activites`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `osact_cake230`;
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (1, 1, 'C', NULL, NULL, NULL, 'Congés protocolaires', NULL, NULL, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (2, 1, 'RQ', NULL, NULL, NULL, 'Journée 35h', NULL, NULL, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (3, 1, 'VT', NULL, NULL, NULL, 'Temps partiel', NULL, NULL, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (4, 1, 'SE', NULL, NULL, NULL, 'Soin enfant ou conjoint', NULL, NULL, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (5, 1, 'Mal', NULL, NULL, NULL, 'Maladie', NULL, NULL, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (6, 1, 'CS', NULL, NULL, NULL, 'Congés supplémentaire', NULL, NULL, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (7, 1, 'DA', NULL, NULL, NULL, '1h de grève', NULL, NULL, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (8, 1, 'DB', NULL, NULL, NULL, '4h de grève', NULL, NULL, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (9, 1, 'DC', NULL, NULL, NULL, '8h de grève', NULL, NULL, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (10, 1, 'DD', NULL, NULL, NULL, 'Journée de délégation', NULL, NULL, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (11, 1, 'DR', NULL, NULL, NULL, 'Journée de délégation', NULL, NULL, 1, '2013-02-01', '2013-02-01');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `osact_cake230`.`societes`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `osact_cake230`;
+INSERT INTO `osact_cake230`.`societes` (`id`, `NOM`, `NOMCONTACT`, `TELEPHONE`, `MAIL`, `created`, `modified`) VALUES (1, 'SNCF', NULL, NULL, NULL, '2013-02-01', '2013-02-01');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `osact_cake230`.`profils`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `osact_cake230`;
+INSERT INTO `osact_cake230`.`profils` (`id`, `NOM`, `COMMENTAIRE`, `created`, `modified`) VALUES (1, 'ADMINISTRATEUR', 'Profil donnant les droits complet au site', '2013-02-01', '2013-02-01');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `osact_cake230`.`assistances`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `osact_cake230`;
+INSERT INTO `osact_cake230`.`assistances` (`ID`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (1, 'SAMBA', 'Assistance utilisé par DSIT', '2013-02-01', '2013-02-01');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `osact_cake230`.`sites`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `osact_cake230`;
+INSERT INTO `osact_cake230`.`sites` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (1, 'OXYGENE', 'SIte lyonnais de DSI-T', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`sites` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (2, 'INNOVIA', 'Site parision de DSI-T', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`sites` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (3, 'LUMIERE', 'Site parisien du client MATERIEL', '2013-02-01', '2013-02-01');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `osact_cake230`.`typemateriels`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `osact_cake230`;
+INSERT INTO `osact_cake230`.`typemateriels` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (1, 'Ordinateur de bureau', 'Ordinateur de bureau à l\'accord cadre', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`typemateriels` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (2, 'Portable', 'Portable à l\'accord cadre', '2013-02-01', '2013-02-01');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `osact_cake230`.`utilisateurs`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `osact_cake230`;
+INSERT INTO `osact_cake230`.`utilisateurs` (`id`, `profil_id`, `societe_id`, `assistance_id`, `section_id`, `utilisateur_id`, `domaine_id`, `site_id`, `tjmagent_id`, `dotation_id`, `password`, `username`, `ACTIF`, `DATEDEBUTACTIF`, `NAISSANCE`, `NOM`, `PRENOM`, `COMMENTAIRE`, `FINMISSION`, `MAIL`, `TELEPHONE`, `WORKCAPACITY`, `CONGE`, `RQ`, `VT`, `HIERARCHIQUE`, `GESTIONABSENCES`, `created`, `modified`) VALUES (1, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, 'OSACTADM', '12345ADM', 1, '2013-02-01', '0000-00-00', 'Administrateur', 'ADM', NULL, NULL, NULL, NULL, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `osact_cake230`.`autorisations`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `osact_cake230`;
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (1, 1, 'achats', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (2, 1, 'actions', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (3, 1, 'activites', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (4, 1, 'affectations', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (5, 1, 'assistances', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (6, 1, 'autorisations', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (7, 1, 'contrats', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (8, 1, 'domaines', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (9, 1, 'dossierpartages', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (10, 1, 'dotations', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (11, 1, 'hitoryactions', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (12, 1, 'hitoryutilisateurs', 1, 1, 1, 1, 1, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (13, 1, 'linkshareds', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (14, 1, 'listediffusions', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (15, 1, 'livrables', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (16, 1, 'materielinformatiques', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (17, 1, 'messages', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (18, 1, 'outils', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (19, 1, 'profils', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (20, 1, 'projets', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (21, 1, 'sections', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (22, 1, 'sites', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (23, 1, 'societes', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (24, 1, 'suivilivrables', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (25, 1, 'tjmagents', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (26, 1, 'tjmcontrats', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (27, 1, 'typemateriels', 1, 1, 1, 1, 1, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (28, 1, 'utilisateurs', 1, 1, 1, 1, 1, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (29, 1, 'utiliseoutils', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+
+COMMIT;

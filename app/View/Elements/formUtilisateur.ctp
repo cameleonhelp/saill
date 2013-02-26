@@ -229,7 +229,7 @@
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2">
                 Logistique
-                <span class="pull-right">Matériel : 0</span>
+                <span class="pull-right">Matériel : <?php echo h($nbDotation[0][0]['nbDotation']); ?></span>
                 </a>
             </div>
             <div id="collapse2" class="accordion-body collapse">

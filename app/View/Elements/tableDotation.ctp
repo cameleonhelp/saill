@@ -5,7 +5,9 @@
 	<tr>
 			<th><?php echo 'Poste informatique'; ?></th>
 			<th><?php echo 'Périphérique'; ?></th>
-                        <th class="actions" width='40px'><?php echo __('Actions'); ?></th>
+                        <th><?php echo 'Remis'; ?></th>
+                        <th><?php echo 'Restitué'; ?></th>
+                        <th class="actions" width='30px' style="text-align:center;"><?php echo __('Actions'); ?></th>
 	</tr>
         </thead>
         <tbody>
@@ -13,9 +15,11 @@
 	<tr>
 		<td><?php echo h($dotation['Materielinformatique']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($dotation['Typemateriel']['NOM']); ?>&nbsp;</td>
+                <td width="100px" style="text-align:center;"><?php echo h($dotation['Dotation']['DATERECEPTION']); ?>&nbsp;</td>
+                <td width="100px" style="text-align:center;"><?php echo h($dotation['Dotation']['DATEREMISE']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $dotation['Dotation']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $dotation['Dotation']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette dotation ?')); ?>                    
+			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('controller'=>'Dotations','action' => 'edit', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false)); ?>&nbsp;
+			<?php echo $this->Html->link('<i class="icon-trash"></i>', array('controller'=>'Dotations','action' => 'delete', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette dotation ?')); ?>                    
 		</td>
 	</tr>
 <?php endforeach; ?>

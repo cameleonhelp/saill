@@ -62,7 +62,7 @@ class UtiliseoutilsController extends AppController {
 	public function add($id = null) {
 		$this->set('title_for_layout','Ouvertures des droits');
                 if($id==null){
-                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG')));
+                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'conditions'=>array('Utilisateur.id > 1')));
                 } else {
                     $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id','NOMLONG'),'conditions'=>array('Utilisateur.id'=>$id)));
                 }
@@ -78,6 +78,9 @@ class UtiliseoutilsController extends AppController {
                 if ($this->request->is('post')) {
 			$this->Utiliseoutil->create();
 			if ($this->Utiliseoutil->save($this->request->data)) {
+                                $history['Historyutilisateur']['utilisateur_id']=$this->request->data['Utiliseoutil']['utilisateur_id'];
+                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit";
+                                $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                            
 				$this->Session->setFlash(__('Ouvertures des droits sauvegardée'),true,array('class'=>'alert alert-success'));
                                 if($id==null){
                                     $this->redirect(array('action' => 'index','tous','tous'));
@@ -99,7 +102,7 @@ class UtiliseoutilsController extends AppController {
  */
 	public function edit($id = null) {
 		$this->set('title_for_layout','Ouvertures des droits');
-                $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOM')));
+                $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOM'),'conditions'=>array('Utilisateur.id'=>$id)));
                 $this->set('utilisateur',$utilisateur);  
                 $outil = $this->Utiliseoutil->Outil->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('outil',$outil);  
@@ -114,6 +117,9 @@ class UtiliseoutilsController extends AppController {
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Utiliseoutil->save($this->request->data)) {
+                                $history['Historyutilisateur']['utilisateur_id']=$this->request->data['Utiliseoutil']['utilisateur_id'];
+                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour d'une ouverture de droit";
+                                $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                               
 				$this->Session->setFlash(__('Ouvertures des droits sauvegardée'),true,array('class'=>'alert alert-success'));
 				$this->redirect(array('action' => 'index','tous','tous'));
 			} else {
@@ -137,11 +143,15 @@ class UtiliseoutilsController extends AppController {
 	public function delete($id = null) {
 		$this->set('title_for_layout','Ouvertures des droits');
                 $this->Utiliseoutil->id = $id;
+                $userid = $this->Utiliseoutil->read();
 		if (!$this->Utiliseoutil->exists()) {
 			throw new NotFoundException(__('Ouvertures des droits incorrecte'),true,array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Utiliseoutil->delete()) {
+                        $history['Historyutilisateur']['utilisateur_id']=$userid['Utiliseoutil']['utilisateur_id'];
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une ouverture de droit";
+                        $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                         
 			$this->Session->setFlash(__('Ouvertures des droits supprimée'),true,array('class'=>'alert alert-success'));
 			$this->redirect(array('action' => 'index','tous','tous'));
 		}
@@ -199,6 +209,9 @@ class UtiliseoutilsController extends AppController {
 			throw new NotFoundException(__('Ouvertures des droits incorrecte'),true,array('class'=>'alert alert-error'));
 		}
                 if ($this->Utiliseoutil->save($record)) { 
+                    $history['Historyutilisateur']['utilisateur_id']=$record['Utiliseoutil']['utilisateur_id'];
+                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - changement d'état d'une ouverture de droit";
+                    $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                     
                     $this->Session->setFlash(__('Ouvertures des droits progression de l\'état'),true,array('class'=>'alert alert-success'));
                     $this->redirect(array('action' => 'index','tous','tous'));
                 }

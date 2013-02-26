@@ -41,7 +41,7 @@ class AppModel extends Model {
  * @return date au format français pour affichage
  */  
         public function dateFormatAfterFind($dateString) {
-            return date('d/m/Y', strtotime($dateString));
+            return (isset($dateString) && $dateString != '0000-00-00') ? date('d/m/Y', strtotime($dateString)) : '';
         }
         
 /**
@@ -57,6 +57,18 @@ class AppModel extends Model {
             return date('Y-m-d', mktime(0, 0, 0, $d[1], $d[0], $d[2]));
             //return strftime("%Y-%m-%d", strtotime($dateString));
         } 
+
+ /**
+ * yearFormatAfterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $dateString
+ * @return date au format français pour affichage
+ */  
+        public function yearFormatAfterFind($dateString) {
+            return (isset($dateString) && $dateString != '0000') ? $dateString : '';
+        }
         
 /**
  * htmlTextFormatBeforeSave method
