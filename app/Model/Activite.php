@@ -3,7 +3,7 @@ App::uses('AppModel', 'Model');
 /**
  * Activite Model
  *
- * @property Projet $Projet
+ * @property Activite $Activite
  * @property Achat $Achat
  * @property Action $Action
  * @property Affectation $Affectation
@@ -102,4 +102,48 @@ class Activite extends AppModel {
 		)
 	);
 
+ /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {      
+            if (!empty($this->data['Activite']['DATEDEBUT'])) {
+                $this->data['Activite']['DATEDEBUT'] = $this->dateFormatBeforeSave($this->data['Activite']['DATEDEBUT']);
+            }
+            if (!empty($this->data['Activite']['DATEFIN'])) {
+                $this->data['Activite']['FIN'] = $this->dateFormatBeforeSave($this->data['Activite']['DATEFIN']);
+            }
+            parent::beforeSave();
+            return true;
+        }
+        
+ /**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Activite']['created'])) {
+                    $results[$key]['Activite']['created'] = $this->dateFormatAfterFind($val['Activite']['created']);
+                }      
+                if (isset($val['Activite']['modified'])) {
+                    $results[$key]['Activite']['modified'] = $this->dateFormatAfterFind($val['Activite']['modified']);
+                }            
+                 if (isset($val['Activite']['DATEDEBUT'])) {
+                    $results[$key]['Activite']['DATEDEBUT'] = $this->dateFormatAfterFind($val['Activite']['DATEDEBUT']);
+                } 
+                 if (isset($val['Activite']['DATEFIN'])) {
+                    $results[$key]['Activite']['DATEFIN'] = $this->dateFormatAfterFind($val['Activite']['DATEFIN']);
+                } 
+            }
+            return $results;
+        }  
 }

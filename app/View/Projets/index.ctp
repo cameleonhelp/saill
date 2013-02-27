@@ -5,6 +5,26 @@
                 <ul class="nav">
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                         <li class="divider"></li>
+                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                     </ul>
+                 </li> 
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Contrats <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous')); ?></li>
+                     <li class="divider"></li>
+                         <?php foreach ($contrats as $contrat): ?>
+                            <li><?php echo $this->Html->link($contrat['Contrat']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$contrat['Contrat']['NOM'])); ?></li>
+                         <?php endforeach; ?>
+                      </ul>
+                 </li>                   
+                <li class="divider-vertical"></li>                
                 <li><a href="#"><i class="ico-xls"></i></a></li>
                 </ul> 
                 <?php echo $this->Form->create("Projet",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -14,27 +34,19 @@
                 </div>
             </div>
         </div>
-	<div class="pull-left">
-	<?php
-	echo $this->Paginator->counter('Page {:page} sur {:pages}');
-	?>	
-        </div>
-	<div class="pull-right">
-	<?php
-	echo $this->Paginator->counter('Nombre total d\'éléments : {:count}');
-	?>	
-        </div>
+        <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $fetat; ?> sur <?php echo $fcontrat; ?></em></code><?php } ?>        
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
-			<th><?php echo $this->Paginator->sort('CONTRAT_ID'); ?></th>
-			<th><?php echo $this->Paginator->sort('NOM'); ?></th>
-			<th><?php echo $this->Paginator->sort('DEBUT'); ?></th>
-			<th><?php echo $this->Paginator->sort('FIN'); ?></th>
-			<th><?php echo $this->Paginator->sort('ACTIF'); ?></th>
-			<th><?php echo $this->Paginator->sort('TYPE'); ?></th>
-			<th><?php echo $this->Paginator->sort('FACTURATION'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
+			<th><?php echo $this->Paginator->sort('contrat_id','Contrats'); ?></th>
+			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
+                        <th><?php echo $this->Paginator->sort('NUMEROGALLILIE','Réf. GALILEI'); ?></th>
+			<th width="90px;"><?php echo $this->Paginator->sort('DEBUT','Début'); ?></th>
+			<th width="90px;"><?php echo $this->Paginator->sort('FIN','Fin'); ?></th>
+			<th width="50px;"><?php echo $this->Paginator->sort('ACTIF','Etat'); ?></th>
+			<th width="60px;"><?php echo $this->Paginator->sort('TYPE','Type'); ?></th>
+			<th width="60px;"><?php echo $this->Paginator->sort('FACTURATION','Facturation'); ?></th>
+			<th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
         <tbody>
@@ -42,27 +54,33 @@
 	<tr>
 		<td><?php echo h($projet['Projet']['CONTRAT_ID']); ?>&nbsp;</td>
 		<td><?php echo h($projet['Projet']['NOM']); ?>&nbsp;</td>
-		<td><?php echo h($projet['Projet']['DEBUT']); ?>&nbsp;</td>
-		<td><?php echo h($projet['Projet']['FIN']); ?>&nbsp;</td>
-		<td><?php echo h($projet['Projet']['ACTIF']); ?>&nbsp;</td>
-		<td><?php echo h($projet['Projet']['TYPE']); ?>&nbsp;</td>
-		<td><?php echo h($projet['Projet']['FACTURATION']); ?>&nbsp;</td>
+                <td><?php echo h($projet['Projet']['NUMEROGALLILIE']); ?>&nbsp;</td>
+		<td style="text-align: center;"><?php echo h($projet['Projet']['DEBUT']); ?>&nbsp;</td>
+		<td style="text-align: center;"><?php echo h($projet['Projet']['FIN']); ?>&nbsp;</td>
+		<td style="text-align: center;"><?php echo $projet['Projet']['ACTIF']==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
+		<td style="text-align: center;"><?php echo h($projet['Projet']['TYPE']); ?>&nbsp;</td>
+		<td style="text-align: center;"><?php echo h($projet['Projet']['FACTURATION']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $projet['Projet']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $projet['Projet']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $projet['Projet']['id']), null, __('Are you sure you want to delete # %s?', $projet['Projet']['id'])); ?>
+                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Projet :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($projet['Projet']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($projet['Projet']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $projet['Projet']['id']),array('escape' => false)); ?>&nbsp;
+			<?php $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $projet['Projet']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce projet ?')); ?>                    
 		</td>
 	</tr>
 <?php endforeach; ?>
         </tbody>
 	</table>
+	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
+	<div class="pull-right"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>     
 	<div class="pagination  pagination-centered">
         <ul>
 	<?php
-		echo "<li>".$this->Paginator->prev('«', array(), null, array('class' => 'prev disabled'))."</li>";
+                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";
+		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled'))."</li>";
 		echo "<li>".$this->Paginator->numbers(array('separator' => ''))."</li>";
-		echo "<li>".$this->Paginator->next('»', array(), null, array('class' => 'next disabled'))."</li>";
+		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabled'))."</li>";
+                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled'))."</li>";
 	?>
         </ul>
 	</div>
 </div>
+

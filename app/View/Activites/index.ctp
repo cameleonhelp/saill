@@ -5,65 +5,81 @@
                 <ul class="nav">
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                         <li class="divider"></li>
+                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                     </ul>
+                 </li>                 
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Projets <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous')); ?></li>
+                     <li><?php echo $this->Html->link('Autres que indisponibilité', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','autres')); ?></li>                     
+                     <li class="divider"></li>
+                         <?php foreach ($projets as $projet): ?>
+                            <li><?php echo $this->Html->link($projet['Projet']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$projet['Projet']['NOM'])); ?></li>
+                         <?php endforeach; ?>
+                      </ul>
+                 </li>                   
+                <li class="divider-vertical"></li>                
                 <li><a href="#"><i class="ico-xls"></i></a></li>
                 </ul> 
-                <form class="navbar-form clearfix pull-right ">
-                    <input class="span8" type="text" placeholder="Recherche dans tous les champs">
+                <?php echo $this->Form->create("Activite",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
+                    <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
                     <button type="submit" class="btn">Rechercher</button>
-                </form> 
+                <?php echo $this->Form->end(); ?> 
                 </div>
             </div>
         </div>
-	<div class="pull-left">
-	<?php
-	echo $this->Paginator->counter('Page {:page} sur {:pages}');
-	?>	
-        </div>
-	<div class="pull-right">
-	<?php
-	echo $this->Paginator->counter('Nombre total d\'éléments : {:count}');
-	?>	
-        </div>
+        <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $fetat; ?> sur <?php echo $fprojet; ?></em></code><?php } ?>        
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
-			<th><?php echo $this->Paginator->sort('PROJET_ID'); ?></th>
-			<th><?php echo $this->Paginator->sort('NOM'); ?></th>
-			<th><?php echo $this->Paginator->sort('DATEDEBUT'); ?></th>
-			<th><?php echo $this->Paginator->sort('DATEFIN'); ?></th>
-			<th><?php echo $this->Paginator->sort('NOMGALLILIE'); ?></th>
-			<th><?php echo $this->Paginator->sort('BUDJETRA'); ?></th>
-			<th><?php echo $this->Paginator->sort('BUDGETREVU'); ?></th>
-			<th><?php echo $this->Paginator->sort('ACTIVE'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
+			<th><?php echo $this->Paginator->sort('Projet.NOM','Projet'); ?></th>
+			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
+			<th width="90px;"><?php echo $this->Paginator->sort('DATEDEBUT','Début'); ?></th>
+			<th width="90px;"><?php echo $this->Paginator->sort('DATEFIN','Fin'); ?></th>
+			<th><?php echo $this->Paginator->sort('NUMEROGALLILIE','Réf. GALILEI'); ?></th>
+			<th><?php echo $this->Paginator->sort('BUDJETRA','Budget initial'); ?></th>
+			<th><?php echo $this->Paginator->sort('BUDGETREVU','Dernier budget'); ?></th>
+			<th width="50px;"><?php echo $this->Paginator->sort('ACTIVE','Etat'); ?></th>
+			<th width="60px;" class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
         <tbody>
 	<?php foreach ($activites as $activite): ?>
 	<tr>
-		<td><?php echo h($activite['Activite']['PROJET_ID']); ?>&nbsp;</td>
+		<td><?php echo h($activite['Projet']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($activite['Activite']['NOM']); ?>&nbsp;</td>
-		<td><?php echo h($activite['Activite']['DATEDEBUT']); ?>&nbsp;</td>
-		<td><?php echo h($activite['Activite']['DATEFIN']); ?>&nbsp;</td>
-		<td><?php echo h($activite['Activite']['NOMGALLILIE']); ?>&nbsp;</td>
-		<td><?php echo h($activite['Activite']['BUDJETRA']); ?>&nbsp;</td>
-		<td><?php echo h($activite['Activite']['BUDGETREVU']); ?>&nbsp;</td>
-		<td><?php echo h($activite['Activite']['ACTIVE']); ?>&nbsp;</td>
+		<td style="text-align: center;"><?php echo h($activite['Activite']['DATEDEBUT']); ?>&nbsp;</td>
+		<td style="text-align: center;"><?php echo h($activite['Activite']['DATEFIN']); ?>&nbsp;</td>
+		<td><?php echo h($activite['Activite']['NUMEROGALLILIE']); ?>&nbsp;</td>
+		<td style="text-align: right;"><?php echo h(isset($activite['Activite']['BUDJETRA']) ? $activite['Activite']['BUDJETRA'] : '0'); ?> k€&nbsp;</td>
+		<td style="text-align: right;"><?php echo h(isset($activite['Activite']['BUDGETREVU']) ? $activite['Activite']['BUDGETREVU'] : '0'); ?> k€&nbsp;</td>
+		<td style="text-align: center;"><?php echo $activite['Activite']['ACTIVE']==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $activite['Activite']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $activite['Activite']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $activite['Activite']['id']), null, __('Are you sure you want to delete # %s?', $activite['Activite']['id'])); ?>
+                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Activité :</h3>" data-content="<contenttitle>Description: </contenttitle>'.h($activite['Activite']['DESCRIPTION']).'<br/><contenttitle>Crée le: </contenttitle>'.h($activite['Activite']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($activite['Activite']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $activite['Activite']['id']),array('escape' => false)); ?>&nbsp;
+			<?php $activite['Activite']['projet_id']>1 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $activite['Activite']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette activité ?')):''; ?>                    
 		</td>
 	</tr>
 <?php endforeach; ?>
         </tbody>
 	</table>
+	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
+	<div class="pull-right"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>     
 	<div class="pagination  pagination-centered">
         <ul>
 	<?php
-		echo "<li>".$this->Paginator->prev('«', array(), null, array('class' => 'prev disabled'))."</li>";
+                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";
+		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled'))."</li>";
 		echo "<li>".$this->Paginator->numbers(array('separator' => ''))."</li>";
-		echo "<li>".$this->Paginator->next('»', array(), null, array('class' => 'next disabled'))."</li>";
+		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabled'))."</li>";
+                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled'))."</li>";
 	?>
         </ul>
 	</div>

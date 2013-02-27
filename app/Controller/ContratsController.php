@@ -10,8 +10,7 @@ class ContratsController extends AppController {
         public $paginate = array(
         'limit' => 15,
         'order' => array('Contrat.NOM' => 'asc'),
-        /*'order' => array(
-            'Post.title' => 'asc' /*/
+        'conditions' => array('Contrat.id >' => 1),
         );
 /**
  * index method

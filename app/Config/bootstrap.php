@@ -191,3 +191,11 @@ Configure::write(
 Configure::write(
     'workCapacity',array('1'=>'5 jours par semaine','0.8'=>'4 jours par semaine','0.6'=>'3 jours par semaine','0.4'=>'2 jours par semaine','0.2'=>'1 jour par semaine')
 );
+
+Configure::write(
+    'typeProjet',array('Projet'=>'Projet','MCO'=>'MCO') //,'Indisponibilité'=>'Indisponibilité'
+);
+
+Configure::write(
+    'factureProjet',array('régie'=>'Régie','forfait'=>'Forfait') //,'autre'=>'Autre'
+);

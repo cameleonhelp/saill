@@ -57,5 +57,39 @@ class Tjmagent extends AppModel {
 			'counterQuery' => ''
 		)
 	);
-
+ /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {      
+            parent::beforeSave();
+            return true;
+        }
+        
+ /**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Tjmagent']['created'])) {
+                    $results[$key]['Tjmagent']['created'] = $this->dateFormatAfterFind($val['Tjmagent']['created']);
+                }      
+                if (isset($val['Tjmagent']['modified'])) {
+                    $results[$key]['Tjmagent']['modified'] = $this->dateFormatAfterFind($val['Tjmagent']['modified']);
+                }            
+                 if (isset($val['Tjmagent']['ANNEE'])) {
+                    $results[$key]['Tjmagent']['ANNEE'] = $this->yearFormatAfterFind($val['Tjmagent']['ANNEE']);
+                } 
+            }
+            return $results;
+        }   
 }

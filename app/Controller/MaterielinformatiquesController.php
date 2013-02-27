@@ -167,6 +167,7 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function search() {
+                $this->set('title_for_layout','Postes informatique');
                 $keyword=$this->params->data['Materielinformatique']['SEARCH']; 
                 $newconditions = array('OR'=>array("Materielinformatique.NOM LIKE '%".$keyword."%'","Materielinformatique.ETAT LIKE '%".$keyword."%'","Materielinformatique.COMMENTAIRE LIKE '%".$keyword."%'","Assistance.NOM LIKE '%".$keyword."%'","Section.NOM LIKE '%".$keyword."%'","Typemateriel.NOM LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 

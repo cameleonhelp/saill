@@ -48,4 +48,39 @@ class Tjmcontrat extends AppModel {
 		)
 	);
 
+ /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {      
+            parent::beforeSave();
+            return true;
+        }
+        
+ /**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Tjmcontrat']['created'])) {
+                    $results[$key]['Tjmcontrat']['created'] = $this->dateFormatAfterFind($val['Tjmcontrat']['created']);
+                }      
+                if (isset($val['Tjmcontrat']['modified'])) {
+                    $results[$key]['Tjmcontrat']['modified'] = $this->dateFormatAfterFind($val['Tjmcontrat']['modified']);
+                }            
+                 if (isset($val['Tjmcontrat']['ANNEE'])) {
+                    $results[$key]['Tjmcontrat']['ANNEE'] = $this->yearFormatAfterFind($val['Tjmcontrat']['ANNEE']);
+                } 
+            }
+            return $results;
+        }         
 }

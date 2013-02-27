@@ -84,4 +84,48 @@ class Projet extends AppModel {
 		)
 	);
 
+ /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {      
+            if (!empty($this->data['Projet']['DEBUT'])) {
+                $this->data['Projet']['DEBUT'] = $this->dateFormatBeforeSave($this->data['Projet']['DEBUT']);
+            }
+            if (!empty($this->data['Projet']['FIN'])) {
+                $this->data['Projet']['FIN'] = $this->dateFormatBeforeSave($this->data['Projet']['FIN']);
+            }
+            parent::beforeSave();
+            return true;
+        }
+        
+ /**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Projet']['created'])) {
+                    $results[$key]['Projet']['created'] = $this->dateFormatAfterFind($val['Projet']['created']);
+                }      
+                if (isset($val['Projet']['modified'])) {
+                    $results[$key]['Projet']['modified'] = $this->dateFormatAfterFind($val['Projet']['modified']);
+                }            
+                 if (isset($val['Projet']['DEBUT'])) {
+                    $results[$key]['Projet']['DEBUT'] = $this->dateFormatAfterFind($val['Projet']['DEBUT']);
+                } 
+                 if (isset($val['Projet']['FIN'])) {
+                    $results[$key]['Projet']['FIN'] = $this->dateFormatAfterFind($val['Projet']['FIN']);
+                } 
+            }
+            return $results;
+        }         
 }

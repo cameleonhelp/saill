@@ -4,7 +4,7 @@
         <div class="controls">
             <?php echo $this->Form->input('NOM',array('data-rule-required'=>'true','placeholder'=>'Nom du profil','class'=>'span8','data-msg-required'=>"Le nom du profil est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
-        </div>
+    </div>
         <div class="control-group">
         <label class="control-label sstitre" for="ProfilCOMMENTAIRE">Description : </label>
         <div class="controls">

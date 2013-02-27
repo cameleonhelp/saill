@@ -61,4 +61,43 @@ class Achat extends AppModel {
 			'order' => ''
 		)
 	);
+        
+ /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {      
+            if (!empty($this->data['Achat']['DATE'])) {
+                $this->data['Achat']['DATE'] = $this->dateFormatBeforeSave($this->data['Achat']['DATE']);
+            }
+            parent::beforeSave();
+            return true;
+        }
+        
+ /**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Achat']['created'])) {
+                    $results[$key]['Achat']['created'] = $this->dateFormatAfterFind($val['Achat']['created']);
+                }      
+                if (isset($val['Achat']['modified'])) {
+                    $results[$key]['Achat']['modified'] = $this->dateFormatAfterFind($val['Achat']['modified']);
+                }            
+                 if (isset($val['Achat']['DATE'])) {
+                    $results[$key]['Achat']['DATE'] = $this->dateFormatAfterFind($val['Achat']['DATE']);
+                } 
+            }
+            return $results;
+        }          
 }

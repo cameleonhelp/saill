@@ -34,7 +34,7 @@
                 <td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Société :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($societe['Societe']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($societe['Societe']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $societe['Societe']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $societe['Societe']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette société ?')); ?>
+			<?php echo $societe['Societe']['id']>1 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $societe['Societe']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette société ?')):''; ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

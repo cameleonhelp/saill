@@ -217,7 +217,20 @@ $(document).ready(function () {
    /** Check all **/
    $('.checkall').on('click',function (e) {
         $(this).parents('.table').find(':checkbox').prop('checked', this.checked);
-   });   
+   }); 
+   /** Aide au calcul du Tarif TTC **/
+   $('#calculer').on('click',function(e){
+       e.preventDefault();
+       var tjmHt = $("input[id=prixht]").val();
+       var locaux = $("input[id=locaux]").val();
+       var fraisdsit = $("input[id=fraisdsit]").val();
+       var fraisdiv = $("input[id=fraisdiv]").val();
+       var tjm_locaux =parseFloat(tjmHt) + parseFloat(locaux);
+       var tjm_locaux_dsit = parseFloat(tjm_locaux)*parseFloat(fraisdsit);
+       var totalBrut = parseFloat(tjm_locaux_dsit)*parseFloat(fraisdiv);
+       totalBrut = !isNaN(totalBrut) ? totalBrut : 0;       
+       $("input[id=total]").val(parseFloat(totalBrut.toFixed(2)));       
+   });
    /** Accordion **/
    /*$("#accordion2").on('click',function(){
        $(this).find('.accordion-body').each(function(index){

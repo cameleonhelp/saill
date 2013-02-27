@@ -4,34 +4,34 @@
   <?php $classProfil = in_array($controller,array('utilisateurs_profil')) ? 'active' : ''; ?>
   <?php $classLogout = in_array($controller,array('utilisateurs_logout')) ? 'active' : ''; ?>
   <?php $classHome = in_array($controller,array('pages_home')) ? 'active' : ''; ?>
-  <?php $classAction = in_array($controller,array('actions_index','actions_add','actions_edit','actions_delete')) ? 'active' : ''; ?>
-  <?php $classLinkShared = in_array($controller,array('linkshareds_index','linkshareds_add','linkshareds_edit','linkshareds_delete')) ? 'active' : ''; ?>
-  <?php $classLivrable = in_array($controller,array('livrables_index','livrables_add','livrables_edit','livrables_delete')) ? 'active' : ''; ?>
+  <?php $classAction = in_array($controller,array('actions_index','actions_add','actions_edit','actions_delete','actions_search')) ? 'active' : ''; ?>
+  <?php $classLinkShared = in_array($controller,array('linkshareds_index','linkshareds_add','linkshareds_edit','linkshareds_delete','linkshareds_search')) ? 'active' : ''; ?>
+  <?php $classLivrable = in_array($controller,array('livrables_index','livrables_add','livrables_edit','livrables_delete','livrables_search')) ? 'active' : ''; ?>
   <?php $classCalendardAbs = in_array($controller,array('pages_absences')) ? 'active' : ''; ?>
-  <?php $classSections = in_array($controller,array('sections_index','sections_add','sections_edit','sections_delete')) ? 'active' : ''; ?> 
-  <?php $classSocietes = in_array($controller,array('societes_index','societes_add','societes_edit','societes_delete')) ? 'active' : ''; ?> 
-  <?php $classSites = in_array($controller,array('sites_index','sites_add','sites_edit','sites_delete')) ? 'active' : ''; ?>               
-  <?php $classDossierPartages = in_array($controller,array('dossierpartages_index','dossierpartages_add','dossierpartages_edit','dossierpartages_delete')) ? 'active' : ''; ?> 
-  <?php $classDomaines = in_array($controller,array('domaines_index','domaines_add','domaines_edit','domaines_delete')) ? 'active' : ''; ?>               
-  <?php $classOutils = in_array($controller,array('outils_index','outils_add','outils_edit','outils_delete')) ? 'active' : ''; ?>    
-  <?php $classAssistances = in_array($controller,array('assistances_index','assistances_add','assistances_edit','assistances_delete')) ? 'active' : ''; ?> 
-  <?php $classListeDiffusions = in_array($controller,array('listediffusions_index','listediffusions_add','listediffusions_edit','listediffusions_delete')) ? 'active' : ''; ?>               
-  <?php $classProfils = in_array($controller,array('profils_index','profils_add','profils_edit','profils_delete')) ? 'active' : ''; ?>  
-  <?php $classAutorisations = in_array($controller,array('autorisations_index','autorisations_add','autorisations_edit','autorisations_delete')) ? 'active' : ''; ?>                
-  <?php $classTypeMateriels = in_array($controller,array('typemateriels_index','typemateriels_add','typemateriels_edit','typemateriels_delete')) ? 'active' : ''; ?> 
-  <?php $classMessages = in_array($controller,array('messages_index','messages_add','messages_edit','messages_delete')) ? 'active' : ''; ?>
+  <?php $classSections = in_array($controller,array('sections_index','sections_add','sections_edit','sections_delete','sections_search')) ? 'active' : ''; ?> 
+  <?php $classSocietes = in_array($controller,array('societes_index','societes_add','societes_edit','societes_delete','societes_search')) ? 'active' : ''; ?> 
+  <?php $classSites = in_array($controller,array('sites_index','sites_add','sites_edit','sites_delete','sites_search')) ? 'active' : ''; ?>               
+  <?php $classDossierPartages = in_array($controller,array('dossierpartages_index','dossierpartages_add','dossierpartages_edit','dossierpartages_delete','dossierpartages_search')) ? 'active' : ''; ?> 
+  <?php $classDomaines = in_array($controller,array('domaines_index','domaines_add','domaines_edit','domaines_delete','domaines_search')) ? 'active' : ''; ?>               
+  <?php $classOutils = in_array($controller,array('outils_index','outils_add','outils_edit','outils_delete','outils_search')) ? 'active' : ''; ?>    
+  <?php $classAssistances = in_array($controller,array('assistances_index','assistances_add','assistances_edit','assistances_delete','assistances_search')) ? 'active' : ''; ?> 
+  <?php $classListeDiffusions = in_array($controller,array('listediffusions_index','listediffusions_add','listediffusions_edit','listediffusions_delete','listediffusions_search')) ? 'active' : ''; ?>               
+  <?php $classProfils = in_array($controller,array('profils_index','profils_add','profils_edit','profils_delete','profils_search')) ? 'active' : ''; ?>  
+  <?php $classAutorisations = in_array($controller,array('autorisations_index','autorisations_add','autorisations_edit','autorisations_delete','autorisations_search')) ? 'active' : ''; ?>                
+  <?php $classTypeMateriels = in_array($controller,array('typemateriels_index','typemateriels_add','typemateriels_edit','typemateriels_delete','typemateriels_search')) ? 'active' : ''; ?> 
+  <?php $classMessages = in_array($controller,array('messages_index','messages_add','messages_edit','messages_delete','messages_search')) ? 'active' : ''; ?>
   <?php $classAdministration = in_array('active',array($classSections,$classSocietes,$classSites,$classDossierPartages,$classAutorisations,$classDomaines,$classOutils,$classAssistances,$classProfils,$classListeDiffusions,$classTypeMateriels,$classMessages)) ? 'active' : ''; ?>               
-  <?php $classContrats = in_array($controller,array('contrats_index','contrats_add','contrats_edit','contrats_delete')) ? 'active' : ''; ?> 
-  <?php $classProjets = in_array($controller,array('projets_index','projets_add','projets_edit','projets_delete')) ? 'active' : ''; ?> 
-  <?php $classActivites = in_array($controller,array('activites_index','activites_add','activites_edit','activites_delete')) ? 'active' : ''; ?>               
-  <?php $classTJMProjets = in_array($controller,array('tjmcontrats_index','tjmcontrats_add','tjmcontrats_edit','tjmcontrats_delete')) ? 'active' : ''; ?> 
-  <?php $classTJMAgents = in_array($controller,array('tjmagents_index','tjmagents_add','tjmagents_edit','tjmagents_delete')) ? 'active' : ''; ?>               
-  <?php $classAchats = in_array($controller,array('achats_index','achats_add','achats_edit','achats_delete')) ? 'active' : ''; ?>    
+  <?php $classContrats = in_array($controller,array('contrats_index','contrats_add','contrats_edit','contrats_delete','contrats_search')) ? 'active' : ''; ?> 
+  <?php $classProjets = in_array($controller,array('projets_index','projets_add','projets_edit','projets_delete','projets_search')) ? 'active' : ''; ?> 
+  <?php $classActivites = in_array($controller,array('activites_index','activites_add','activites_edit','activites_delete','activites_search')) ? 'active' : ''; ?>               
+  <?php $classTJMProjets = in_array($controller,array('tjmcontrats_index','tjmcontrats_add','tjmcontrats_edit','tjmcontrats_delete','tjmcontrats_search')) ? 'active' : ''; ?> 
+  <?php $classTJMAgents = in_array($controller,array('tjmagents_index','tjmagents_add','tjmagents_edit','tjmagents_delete','tjmagents_search')) ? 'active' : ''; ?>               
+  <?php $classAchats = in_array($controller,array('achats_index','achats_add','achats_edit','achats_delete','achats_search')) ? 'active' : ''; ?>    
   <?php $classBudget = in_array('active',array($classContrats,$classProjets,$classActivites,$classAchats,$classTJMProjets,$classTJMAgents)) ? 'active' : ''; ?>  
-  <?php $classUtilisateurs = in_array($controller,array('utilisateurs_index','utilisateurs_add','utilisateurs_edit','utilisateurs_delete','dotations_add','dotations_edit','dotations_delete','affectations_add','affectations_edit','affectations_delete')) ? 'active' : ''; ?> 
-  <?php $classMateriels = in_array($controller,array('materielinformatiques_index','materielinformatiques_add','materielinformatiques_edit','materielinformatiques_delete')) ? 'active' : ''; ?>               
-  <?php $classPetitMateriels = in_array($controller,array('materielautres_index','materielautres_add','materielautres_edit','materielautres_delete')) ? 'active' : ''; ?>               
-  <?php $classUtiliseOutils = in_array($controller,array('utiliseoutils_index','utiliseoutils_add','utiliseoutils_edit','utiliseoutils_delete')) ? 'active' : ''; ?>    
+  <?php $classUtilisateurs = in_array($controller,array('utilisateurs_index','utilisateurs_add','utilisateurs_edit','utilisateurs_delete','utilisateurs_search','dotations_add','dotations_edit','dotations_delete','affectations_add','affectations_edit','affectations_delete')) ? 'active' : ''; ?> 
+  <?php $classMateriels = in_array($controller,array('materielinformatiques_index','materielinformatiques_add','materielinformatiques_edit','materielinformatiques_delete','materielinformatiques_search')) ? 'active' : ''; ?>               
+  <?php $classPetitMateriels = in_array($controller,array('materielautres_index','materielautres_add','materielautres_edit','materielautres_delete','materielautres_search')) ? 'active' : ''; ?>               
+  <?php $classUtiliseOutils = in_array($controller,array('utiliseoutils_index','utiliseoutils_add','utiliseoutils_edit','utiliseoutils_delete','utiliseoutils_search')) ? 'active' : ''; ?>    
   <?php $classLogistique = in_array('active',array($classPetitMateriels,$classUtilisateurs,$classMateriels,$classUtiliseOutils)) ? 'active' : ''; ?> 
   <?php $classPlanCharges = in_array($controller,array('pages_plancharge')) ? 'active' : ''; ?> 
   <?php $classCRAMois = in_array($controller,array('pages_cramois')) ? 'active' : ''; ?>               
@@ -81,10 +81,10 @@
     <li  class="dropdown-submenu <?php echo $classBudget; ?>"><a href="#"><i class="glyphicon_euro"></i> Budget</a>
         <ul class="dropdown-menu">
             <li class="<?php echo $classContrats; ?>"><?php echo $this->Html->link('Contrats',array('controller'=>'contrats','action'=>'index','actif'),array('escape' => false)); ?></li>
-            <li class="<?php echo $classProjets; ?>"><?php echo $this->Html->link('Projets',array('controller'=>'projets','action'=>'index'),array('escape' => false)); ?></li>
-            <li class="<?php echo $classActivites; ?>"><?php echo $this->Html->link('Activités',array('controller'=>'activites','action'=>'index'),array('escape' => false)); ?></li>
+            <li class="<?php echo $classProjets; ?>"><?php echo $this->Html->link('Projets',array('controller'=>'projets','action'=>'index','actif','tous'),array('escape' => false)); ?></li>
+            <li class="<?php echo $classActivites; ?>"><?php echo $this->Html->link('Activités',array('controller'=>'activites','action'=>'index','actif','tous'),array('escape' => false)); ?></li>
             <li class="divider"></li>
-            <li class="<?php echo $classAchats; ?>"><?php echo $this->Html->link('Achats',array('controller'=>'achats','action'=>'index'),array('escape' => false)); ?></li>
+            <li class="<?php echo $classAchats; ?>"><?php echo $this->Html->link('Achats',array('controller'=>'achats','action'=>'index','toutes'),array('escape' => false)); ?></li>
             <li class="divider"></li>
             <li class="<?php echo $classTJMProjets; ?>"><?php echo $this->Html->link('TJM Contrats',array('controller'=>'tjmcontrats','action'=>'index'),array('escape' => false)); ?></li>
             <li class="<?php echo $classTJMAgents; ?>"><?php echo $this->Html->link('TJM Agents',array('controller'=>'tjmagents','action'=>'index'),array('escape' => false)); ?></li>
