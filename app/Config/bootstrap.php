@@ -193,7 +193,7 @@ Configure::write(
 );
 
 Configure::write(
-    'typeProjet',array('Projet'=>'Projet','MCO'=>'MCO') //,'Indisponibilité'=>'Indisponibilité'
+    'typeProjet',array('Projet'=>'Projet','MCO'=>'MCO','Evolution'=>'Evolution','Intégration'=>'Intégration','Exploitation'=>'Exploitation') //,'Indisponibilité'=>'Indisponibilité'
 );
 
 Configure::write(

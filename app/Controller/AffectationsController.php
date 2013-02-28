@@ -12,9 +12,10 @@ class AffectationsController extends AppController {
  *
  * @return void
  */
-	public function index() {
+	public function index($id = null) {
 		$this->Affectation->recursive = 0;
-		$this->set('affectations', $this->paginate());
+                $liste = $this->Affectation->find('all',array('conditions'=>array('Affectation.utilisateur_id'=>$id)));                
+		$this->set('affectations', $liste);
 	}
 
 /**
@@ -26,7 +27,7 @@ class AffectationsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Affectation->exists($id)) {
-			throw new NotFoundException(__('Invalid affectation'));
+			throw new NotFoundException(__('Affectation incorrecte'),true,array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Affectation.' . $this->Affectation->primaryKey => $id));
 		$this->set('affectation', $this->Affectation->find('first', $options));
@@ -37,14 +38,20 @@ class AffectationsController extends AppController {
  *
  * @return void
  */
-	public function add() {
+	public function add($userid = null) {
+                $activites = $this->Affectation->Activite->find('list',array('fields'=>array('id','NOM')));
+		$this->set('activites', $activites);            
 		if ($this->request->is('post')) {
+                        $this->Affectation->utilisateur_id = $userid;
 			$this->Affectation->create();
 			if ($this->Affectation->save($this->request->data)) {
-				$this->Session->setFlash(__('The affectation has been saved'));
-				$this->redirect(array('action' => 'index'));
+                                $history['Historyutilisateur']['utilisateur_id']=$userid;
+                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une affectation";
+                                $this->Affectation->Utilisateur->Historyutilisateur->save($history);     
+				$this->Session->setFlash(__('Affectation sauvegardée'),true,array('class'=>'alert alert-success'));
+				$this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$userid));
 			} else {
-				$this->Session->setFlash(__('The affectation could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('Affectation incorrecte, veuillez corriger l\'affectation'),true,array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -56,16 +63,21 @@ class AffectationsController extends AppController {
  * @param string $id
  * @return void
  */
-	public function edit($id = null) {
+	public function edit($id = null,$userid = null) {
+                $activites = $this->Affectation->Activite->find('list',array('fields'=>array('id','NOM')));
+		$this->set('activites', $activites);             
 		if (!$this->Affectation->exists($id)) {
-			throw new NotFoundException(__('Invalid affectation'));
+			throw new NotFoundException(__('Affectation incorrecte'),true,array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Affectation->save($this->request->data)) {
-				$this->Session->setFlash(__('The affectation has been saved'));
-				$this->redirect(array('action' => 'index'));
+                                $history['Historyutilisateur']['utilisateur_id']=$userid;
+                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour d'une affectation";
+                                $this->Affectation->Utilisateur->Historyutilisateur->save($history);                            
+				$this->Session->setFlash(__('Affectation sauvegardée'),true,array('class'=>'alert alert-success'));
+				$this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$userid));
 			} else {
-				$this->Session->setFlash(__('The affectation could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('Affectation incorrecte, veuillez corriger làffectation'),true,array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Affectation.' . $this->Affectation->primaryKey => $id));
@@ -81,17 +93,20 @@ class AffectationsController extends AppController {
  * @param string $id
  * @return void
  */
-	public function delete($id = null) {
+	public function delete($id = null,$userid = null) {
 		$this->Affectation->id = $id;
 		if (!$this->Affectation->exists()) {
-			throw new NotFoundException(__('Invalid affectation'));
+			throw new NotFoundException(__('Affectation incorrecte'),true,array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Affectation->delete()) {
-			$this->Session->setFlash(__('Affectation deleted'));
-			$this->redirect(array('action' => 'index'));
+                        $history['Historyutilisateur']['utilisateur_id']=$userid;
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une affectation";
+                        $this->Affectation->Utilisateur->Historyutilisateur->save($history);                     
+			$this->Session->setFlash(__('Affectation supprimée'),true,array('class'=>'alert alert-success'));
+			$this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$userid));
 		}
-		$this->Session->setFlash(__('Affectation was not deleted'));
-		$this->redirect(array('action' => 'index'));
+		$this->Session->setFlash(__('Affectation <b>NON</b> supprimée'),true,array('class'=>'alert alert-error'));
+		$this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$userid));
 	}
 }

@@ -12,8 +12,8 @@
 	<tr>
 		<td><?php echo h($affectation['Activite']['NOM']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $affectation['Affectation']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $affectation['Affectation']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette affectation ?')); ?>                    
+			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('controller'=>'Affectations','action' => 'edit', $affectation['Affectation']['id'], $this->params->pass[0]),array('escape' => false)); ?>&nbsp;
+			<?php echo $this->Html->link('<i class="icon-trash"></i>', array('controller'=>'Affectations','action' => 'delete', $affectation['Affectation']['id'], $this->params->pass[0]),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette affectation ?')); ?>                    
 		</td>
 	</tr>
 <?php endforeach; ?>

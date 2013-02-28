@@ -73,7 +73,7 @@ class ProjetsController extends AppController {
  * @return void
  */
 	public function add() {
-                $contrats = $this->Projet->Contrat->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1'));
+                $contrats = $this->Projet->Contrat->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1'));
                 $this->set('contrats',$contrats);
                 $typeProjet = Configure::read('typeProjet');
                 $this->set('type',$typeProjet);
@@ -98,8 +98,12 @@ class ProjetsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-                $contrats = $this->Projet->Contrat->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1'));
+                $contrats = $this->Projet->Contrat->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1'));
                 $this->set('contrats',$contrats);  
+                $typeProjet = Configure::read('typeProjet');
+                $this->set('type',$typeProjet);
+                $factureProjet = Configure::read('factureProjet');
+                $this->set('facturation',$factureProjet);                   
                 if (!$this->Projet->exists($id)) {
 			throw new NotFoundException(__('Projet incorrect'),true,array('class'=>'alert alert-error'));
 		}

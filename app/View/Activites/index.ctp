@@ -57,14 +57,14 @@
 		<td><?php echo h($activite['Activite']['NOM']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($activite['Activite']['DATEDEBUT']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($activite['Activite']['DATEFIN']); ?>&nbsp;</td>
-		<td><?php echo h($activite['Activite']['NUMEROGALLILIE']); ?>&nbsp;</td>
+		<td style="text-align: right;"><?php echo h($activite['Activite']['NUMEROGALLILIE']); ?>&nbsp;</td>
 		<td style="text-align: right;"><?php echo h(isset($activite['Activite']['BUDJETRA']) ? $activite['Activite']['BUDJETRA'] : '0'); ?> k€&nbsp;</td>
 		<td style="text-align: right;"><?php echo h(isset($activite['Activite']['BUDGETREVU']) ? $activite['Activite']['BUDGETREVU'] : '0'); ?> k€&nbsp;</td>
 		<td style="text-align: center;"><?php echo $activite['Activite']['ACTIVE']==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Activité :</h3>" data-content="<contenttitle>Description: </contenttitle>'.h($activite['Activite']['DESCRIPTION']).'<br/><contenttitle>Crée le: </contenttitle>'.h($activite['Activite']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($activite['Activite']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $activite['Activite']['id']),array('escape' => false)); ?>&nbsp;
-			<?php $activite['Activite']['projet_id']>1 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $activite['Activite']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette activité ?')):''; ?>                    
+			<?php echo ($activite['Activite']['projet_id']!=1 || $activite['Activite']['id']>11) ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $activite['Activite']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette activité ?')):''; ?>                    
 		</td>
 	</tr>
 <?php endforeach; ?>

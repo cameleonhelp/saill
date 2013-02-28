@@ -48,7 +48,7 @@
     <li class="divider"></li>                
     <li class="<?php echo $classAction; ?>"><?php echo $this->Html->link('<i class="glyphicon_stopwatch"></i> Actions',array('controller'=>'actions','action'=>'index'),array('escape' => false)); ?></li>
     <li class="<?php echo $classLinkShared; ?>"><?php echo $this->Html->link('<i class="glyphicon_link"></i> Liens partagés',array('controller'=>'linkshareds','action'=>'index'),array('escape' => false)); ?></li>
-    <li class="<?php echo $classLivrable; ?>"><?php echo $this->Html->link('<i class="glyphicon_inbox"></i> Livrables',array('controller'=>'livrables','action'=>'index'),array('escape' => false)); ?></li>
+    <li class="<?php echo $classLivrable; ?>"><?php echo $this->Html->link('<i class="glyphicon_inbox"></i> Livrables',array('controller'=>'livrables','action'=>'index','week','tous'),array('escape' => false)); ?></li>
     <li class="<?php echo $classCalendardAbs; ?>"><?php echo $this->Html->link('<i class="glyphicon_beach_umbrella"></i> Absences équipe',array('controller'=>'pages','action'=>'absences'),array('escape' => false)); ?></li>
     <li class="divider"></li>
     <li  class="dropdown-submenu  <?php echo $classAdministration; ?>"><a href="#"><i class="glyphicon_lock"></i> Administration</a>
@@ -101,6 +101,6 @@
     <li class="divider"></li>
     <li class="<?php echo $classContactUs; ?>"><?php echo $this->Html->link('<i class="glyphicon_envelope"></i> Nous contacter',array('controller'=>'pages','action'=>'contactus'),array('escape' => false)); ?></li>
     <li class="<?php echo $classAddFavorites; ?>"><?php echo $this->Html->link('<i class="glyphicon_star"></i> Ajouter aux favoris',array('controller'=>'pages','action'=>'addfavorites'),array('escape' => false)); ?></li>
-    <li  class="dropdown-menu-nolink sstitre text-center">Version : 3.0.0</li>
+    <li  class="dropdown-menu-nolink sstitre text-center">Version : <?php echo $this->element('version') ?></li>
   </ul>
 </div>

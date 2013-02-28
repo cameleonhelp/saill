@@ -41,7 +41,14 @@ class Livrable extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		)
+		),
+		'Suivilivrable' => array(
+			'className' => 'Suivilivrable',
+			'foreignKey' => '',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),            
 	);
 
 /**

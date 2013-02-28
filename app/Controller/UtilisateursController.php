@@ -164,7 +164,9 @@ class UtilisateursController extends AppController {
                         $compteurs = $this->Utilisateur->Utiliseoutil->query("SELECT count(outil_id) AS nboutil, count(listediffusion_id) AS nbliste, count(dossierpartage_id) AS nbpartage FROM utiliseoutils WHERE utilisateur_id =".$id);
                         $this->set('compteurs',$compteurs);
                         $nbDotation = $this->Utilisateur->Dotation->query("SELECT count(id) AS nbDotation FROM dotations WHERE utilisateur_id =".$id);
-                        $this->set('nbDotation',$nbDotation);                        
+                        $this->set('nbDotation',$nbDotation);   
+                        $nbAffectation = $this->Utilisateur->Affectation->query("SELECT count(id) AS nbAffectation FROM affectations WHERE utilisateur_id =".$id);
+                        $this->set('nbAffectation',$nbAffectation);                          
                 }
 	}
 

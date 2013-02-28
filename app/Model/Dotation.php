@@ -58,7 +58,7 @@ class Dotation extends AppModel {
 	public $belongsTo = array(
 		'Materielinformatique' => array(
 			'className' => 'Materielinformatique',
-			'foreignKey' => 'materielinformatique_id',
+			'foreignKey' => 'materielinformatiques_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
@@ -85,19 +85,6 @@ class Dotation extends AppModel {
  * @var array
  */
 	public $hasMany = array(
-		'Historydotation' => array(
-			'className' => 'Historydotation',
-			'foreignKey' => 'dotation_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		),
 		'Utilisateur' => array(
 			'className' => 'Utilisateur',
 			'foreignKey' => 'dotation_id',

@@ -34,7 +34,7 @@
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>TJM Agent :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($tjmagent['Tjmagent']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($tjmagent['Tjmagent']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $tjmagent['Tjmagent']['id']),array('escape' => false)); ?>&nbsp;
-			<?php $activite['Activite']['projet_id']>1 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $tjmagent['Tjmagent']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce TJM agent ?')):''; ?>                    
+			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $tjmagent['Tjmagent']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce TJM agent ?')); ?>                    
 		</td>
 	</tr>
 <?php endforeach; ?>

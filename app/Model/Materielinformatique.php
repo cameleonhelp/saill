@@ -87,7 +87,7 @@ class Materielinformatique extends AppModel {
 	public $hasMany = array(
 		'Dotation' => array(
 			'className' => 'Dotation',
-			'foreignKey' => 'materielinformatique_id',
+			'foreignKey' => 'materielinformatiques_id',
 			'dependent' => false,
 			'conditions' => '',
 			'fields' => '',

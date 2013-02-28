@@ -115,7 +115,7 @@ class Activite extends AppModel {
                 $this->data['Activite']['DATEDEBUT'] = $this->dateFormatBeforeSave($this->data['Activite']['DATEDEBUT']);
             }
             if (!empty($this->data['Activite']['DATEFIN'])) {
-                $this->data['Activite']['FIN'] = $this->dateFormatBeforeSave($this->data['Activite']['DATEFIN']);
+                $this->data['Activite']['DATEFIN'] = $this->dateFormatBeforeSave($this->data['Activite']['DATEFIN']);
             }
             parent::beforeSave();
             return true;

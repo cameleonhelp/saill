@@ -30,7 +30,7 @@
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>TJM COntrat :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($tjmcontrat['Tjmcontrat']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($tjmcontrat['Tjmcontrat']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $tjmcontrat['Tjmcontrat']['id']),array('escape' => false)); ?>&nbsp;
-			<?php $activite['Activite']['projet_id']>1 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $tjmcontrat['Tjmcontrat']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce TJM contrat ?')):''; ?>                    
+			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $tjmcontrat['Tjmcontrat']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce TJM contrat ?')); ?>                    
 		</td>
 	</tr>
 <?php endforeach; ?>

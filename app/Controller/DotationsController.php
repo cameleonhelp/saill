@@ -46,14 +46,12 @@ class DotationsController extends AppController {
 		if ($this->request->is('post')) {
                         $this->Dotation->utilisateur_id = $userid;
 			$this->Dotation->create();
-                        $idmat = $this->request->data['Dotation']['materielinformatique_id'];
-			if ($this->Dotation->save($this->request->data)) {
-                                if(isset($this->request->data['Dotation']['materielinformatique_id'])){
+                        $idmat = $this->request->data['Dotation']['materielinformatiques_id'];
+			if ($this->Dotation->save($this->request->data,false)) {
+                                if(isset($this->request->data['Dotation']['materielinformatiques_id']) && !empty($this->request->data['Dotation']['materielinformatiques_id'])){
                                     $this->Dotation->Materielinformatique->id = $idmat;
                                     $record = $this->Dotation->Materielinformatique->read();
-                                    debug($record['Materielinformatique']);
                                     $record['Materielinformatique']['ETAT'] = $record['Materielinformatique']['ETAT']=='En stock' ? 'En dotation' : 'En stock';
-                                    debug($record['Materielinformatique']);
                                     $record['Materielinformatique']['created'] = $record['Materielinformatique']['created'];
                                     $record['Materielinformatique']['modified'] = date('Y-m-d');                
                                     $this->Dotation->Materielinformatique->save($record,false);

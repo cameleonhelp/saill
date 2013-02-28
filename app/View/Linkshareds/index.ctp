@@ -14,23 +14,13 @@
                 </div>
             </div>
         </div>
-	<div class="pull-left">
-	<?php
-	echo $this->Paginator->counter('Page {:page} sur {:pages}');
-	?>	
-        </div>
-	<div class="pull-right">
-	<?php
-	echo $this->Paginator->counter('Nombre total d\'éléments : {:count}');
-	?>	
-        </div>
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
-			<th><?php echo $this->Paginator->sort('NOM'); ?></th>
-			<th><?php echo $this->Paginator->sort('LINK'); ?></th>
-			<th><?php echo ""; ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
+			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
+			<th><?php echo $this->Paginator->sort('LINK','Url'); ?></th>
+                        <th width="40px"><?php echo $this->Paginator->sort('LINK','Lien'); ?></th>
+			<th width="60px" class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
         </thead>
         <tbody>
@@ -38,22 +28,27 @@
 	<tr>
 		<td><?php echo h($linkshared['Linkshared']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($linkshared['Linkshared']['LINK']); ?>&nbsp;</td>
-		<td><?php echo h($this->Html->link('<i class="glyphicon_global"></i>',$this->Paginator->sort('created'),array('escape' => false,'target'=>'_blank'))); ?>&nbsp;</td>
+		<td style="text-align: center;"><?php echo $this->Html->link('<i class="glyphicon_global"></i>',$linkshared['Linkshared']['LINK'],array('escape' => false,'target'=>'_blank')); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $linkshared['Linkshared']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $linkshared['Linkshared']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $linkshared['Linkshared']['id']), null, __('Are you sure you want to delete # %s?', $linkshared['Linkshared']['id'])); ?>
+                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Lien :</h3>" data-content="<contenttitle>Crée par: </contenttitle>'.h($linkshared['Utilisateur']['NOMLONG']).'<br/><contenttitle>Crée le: </contenttitle>'.h($linkshared['Linkshared']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($linkshared['Linkshared']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $linkshared['Linkshared']['id']),array('escape' => false)); ?>&nbsp;
+			<?php echo $linkshared['Linkshared']['utilisateur_id']==1 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $linkshared['Linkshared']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce lien ?')):''; ?>
+
 		</td>
 	</tr>
 <?php endforeach; ?>
         </tbody>
 	</table>
+	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
+	<div class="pull-right"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>    
 	<div class="pagination  pagination-centered">
         <ul>
 	<?php
-		echo "<li>".$this->Paginator->prev('«', array(), null, array('class' => 'prev disabled'))."</li>";
+                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";
+		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled'))."</li>";
 		echo "<li>".$this->Paginator->numbers(array('separator' => ''))."</li>";
-		echo "<li>".$this->Paginator->next('»', array(), null, array('class' => 'next disabled'))."</li>";
+		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabled'))."</li>";
+                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled'))."</li>";
 	?>
         </ul>
 	</div>

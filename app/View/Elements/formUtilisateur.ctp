@@ -299,7 +299,7 @@
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse3">
                 Affectation
-                <span class="pull-right">Activités : 0</span>
+                <span class="pull-right">Activités : <?php echo h($nbAffectation[0][0]['nbAffectation']); ?></span>
                 </a>
             </div>
             <div id="collapse3" class="accordion-body collapse">

@@ -51,4 +51,37 @@ class Linkshared extends AppModel {
 			'order' => ''
 		)
 	);
+        
+ /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {
+            parent::beforeSave();
+            return true;
+        }
+        
+/**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Linkshared']['created'])) {
+                    $results[$key]['Linkshared']['created'] = $this->dateFormatAfterFind($val['Linkshared']['created']);
+                }      
+                if (isset($val['Linkshared']['modified'])) {
+                    $results[$key]['Linkshared']['modified'] = $this->dateFormatAfterFind($val['Linkshared']['modified']);
+                }            
+            }
+            return $results;
+        }         
 }

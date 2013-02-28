@@ -52,9 +52,9 @@
         <tbody>
 	<?php foreach ($projets as $projet): ?>
 	<tr>
-		<td><?php echo h($projet['Projet']['CONTRAT_ID']); ?>&nbsp;</td>
+		<td><?php echo h($projet['Contrat']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($projet['Projet']['NOM']); ?>&nbsp;</td>
-                <td><?php echo h($projet['Projet']['NUMEROGALLILIE']); ?>&nbsp;</td>
+                <td style="text-align: right;"><?php echo h($projet['Projet']['NUMEROGALLILIE']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($projet['Projet']['DEBUT']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($projet['Projet']['FIN']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo $projet['Projet']['ACTIF']==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
@@ -63,7 +63,7 @@
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Projet :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($projet['Projet']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($projet['Projet']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $projet['Projet']['id']),array('escape' => false)); ?>&nbsp;
-			<?php $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $projet['Projet']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce projet ?')); ?>                    
+			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $projet['Projet']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce projet ?')); ?>                    
 		</td>
 	</tr>
 <?php endforeach; ?>

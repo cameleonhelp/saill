@@ -1,12 +1,12 @@
 <?php echo $this->Form->create('Dotation',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
     <div class="control-group">
-        <label class="control-label sstitre" for="DotationMaterielinformatiqueId">Poste informatique : </label>
+        <label class="control-label sstitre" for="DotationMaterielinformatiquesId">Poste informatique : </label>
         <div class="controls">
             <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->Form->input('materielinformatique_id',array('type'=>'hidden','value'=>$this->data['Dotation']['materielinformatique_id'])); ?>
+                <?php echo $this->Form->input('materielinformatiques_id',array('type'=>'hidden','value'=>$this->data['Dotation']['materielinformatiques_id'])); ?>
                 <?php echo h($dotation['Materielinformatique']['NOM']); ?>
             <?php } else { ?>
-                <?php echo $this->Form->select('materielinformatique_id',$matinformatique,array('selected' => '','empty' => 'Choisir un poste informatique')); ?>
+                <?php echo $this->Form->select('materielinformatiques_id',$matinformatique,array('selected' => '','empty' => 'Choisir un poste informatique')); ?>
             <?php } ?>
         </div>
     </div> ou
