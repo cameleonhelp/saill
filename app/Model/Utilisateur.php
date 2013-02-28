@@ -430,6 +430,9 @@ class Utilisateur extends AppModel {
  * @return void
  */
         public function beforeSave() {
+            if (!empty($this->data['Utilisateur']['password'])) {
+                $this->data['Utilisateur']['password'] = md5($this->data['Utilisateur']['password']); 
+            }
             if (!empty($this->data['Utilisateur']['NAISSANCE'])) {
                 $this->data['Utilisateur']['NAISSANCE'] = $this->dateFormatBeforeSave($this->data['Utilisateur']['NAISSANCE']);
             }
