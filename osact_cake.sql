@@ -298,8 +298,8 @@ DROP TABLE IF EXISTS `osact_cake230`.`dotations` ;
 
 CREATE  TABLE IF NOT EXISTS `osact_cake230`.`dotations` (
   `id` INT(15) NOT NULL AUTO_INCREMENT ,
-  `materielinformatiques_id` INT(15) NOT NULL ,
-  `typemateriel_id` INT(15) NOT NULL ,
+  `materielinformatiques_id` INT(15) NULL ,
+  `typemateriel_id` INT(15) NULL ,
   `utilisateur_id` INT(15) NOT NULL ,
   `DATERECEPTION` DATE NULL DEFAULT NULL ,
   `DATEREMISE` DATE NULL DEFAULT NULL ,
