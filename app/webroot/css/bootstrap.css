@@ -1,5 +1,5 @@
 /*!
- * Bootstrap v2.3.0
+ * Bootstrap v2.3.1
  *
  * Copyright 2012 Twitter, Inc
  * Licensed under the Apache License v2.0
@@ -4572,9 +4572,6 @@ input[type="submit"].btn.btn-mini {
   background-color: transparent;
   cursor: default;
 }
-.prev {
-    border-left-width: 1px !important;
-}
 .pagination ul > li:first-child > a,
 .pagination ul > li:first-child > span {
   border-left-width: 1px;
@@ -4584,7 +4581,6 @@ input[type="submit"].btn.btn-mini {
   -webkit-border-bottom-left-radius: 2px;
   -moz-border-radius-bottomleft: 2px;
   border-bottom-left-radius: 2px;
-  margin-right: -1px;
 }
 .pagination ul > li:last-child > a,
 .pagination ul > li:last-child > span {
@@ -5799,12 +5795,12 @@ button.close {
 }
 .collapse {
   position: relative;
-  height: 0px;
+  height: 0;
   overflow: hidden;
-  -webkit-transition: height 0.35s linear;
+  -webkit-transition: height 0.35s ease;
   -moz-transition: height 0.35s ease;
   -o-transition: height 0.35s ease;
-  transition: height 0.35s ease; 
+  transition: height 0.35s ease;
 }
 .collapse.in {
   height: auto;
@@ -6954,8 +6950,7 @@ button.close {
     width: 980px;
   }
   .span29 {
-    width: 1017px;
-    margin-left: -60px;
+    width: 947px;
   }
   .span28 {
     width: 914px;

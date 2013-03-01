@@ -9,7 +9,7 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench](http://www.mysql.f
 
 * [CakePhp 2.3.0] (http://cakephp.org) - Framework
 
-* [BootStrap 2.3.0] (http://twitter.github.com/bootstrap/) - Style et javascript
+* [BootStrap 2.3.1] (http://twitter.github.com/bootstrap/) - Style et javascript
 
 * [JQuery 1.9.1] (http://jquery.com) - La dernière version de JQuery
 

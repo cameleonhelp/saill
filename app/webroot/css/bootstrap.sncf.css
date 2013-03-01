@@ -428,3 +428,19 @@ div.controls{
 .form-horizontal .control-label {
   width: 170px;
 }
+
+.prev {
+    border-left-width: 1px !important;
+}
+
+.pagination ul > li:first-child > a,
+.pagination ul > li:first-child > span {
+  margin-right: -1px;
+}
+
+@media (min-width: 1200px) {
+    .span29 {
+    width: 1017px;
+    margin-left: -60px;
+    }
+}
