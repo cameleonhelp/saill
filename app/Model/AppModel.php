@@ -126,4 +126,18 @@ class AppModel extends Model {
                 }            
             return $result;
         }      
+
+/**
+ * afterRender method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterLoad() {
+             $this->Session->setFlash(__('message après chargement - AppModel'),true,array('class'=>'alert alert-info'));
+            return true;            
+        }         
+                  
 }

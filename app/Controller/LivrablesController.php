@@ -19,7 +19,7 @@ class LivrablesController extends AppController {
  *
  * @return void
  */
-	public function index($filtreChrono,$filtreEtat) {
+	public function index($filtreChrono=null,$filtreEtat=null,$filtregestionnaire=null) {
                 switch ($filtreChrono){
                     case 'toutes':
                         $newconditions[]="1=1";
@@ -48,8 +48,8 @@ class LivrablesController extends AppController {
                         break;  
                     case 'tolate':
                         $date = new DateTime();
-                        $previousWeek = $date->sub(new DateInterval('P2W'));
-                        $newconditions[]="Suivilivrable.ECHEANCE > '".$previousWeek->format('Y-m-d')."'";
+                        $previousWeek = $date;
+                        $newconditions[]="Suivilivrable.ECHEANCE > '".$previousWeek->format('Y-m-d')."' AND (Suivilivrable.DATELIVRAISON = '0000-00-00' OR Suivilivrable.DATELIVRAISON = NULL)";
                         $fchronologie = "tous les livrables en retards";
                         break;  
                     case 'incomplet':
@@ -84,7 +84,20 @@ class LivrablesController extends AppController {
                         $fetat = "dont l'état est autre que 'validé'";
                         break;                      
                     }    
-                $this->set('fetat',$fetat);           
+                $this->set('fetat',$fetat);  
+                switch ($filtregestionnaire){
+                    case 'tous':
+                        $newconditions[]="1=1";
+                        $fgestionnaire = "de tous les gestionnaires";
+                        break;                      
+                    default :
+                        $newconditions[]="Livrable.utilisateur_id = '".$filtregestionnaire."'";
+                        $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> $filtregestionnaire)));
+                        $fgestionnaire = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG'];                     
+                    }    
+                $this->set('fgestionnaire',$fgestionnaire); 
+                $gestionnaires = $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $this->set('gestionnaires',$gestionnaires);                
 		$this->Livrable->recursive = 0;
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->set('livrables', $this->paginate());
@@ -111,11 +124,13 @@ class LivrablesController extends AppController {
  * @return void
  */
 	public function add() {
+                $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $this->set('utilisateur',$utilisateur);
 		if ($this->request->is('post')) {
 			$this->Livrable->create();
 			if ($this->Livrable->save($this->request->data)) {
 				$this->Session->setFlash(__('Livrable sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','week','tous'));
+				$this->redirect(array('action' => 'index','week','tous','tous'));
 			} else {
 				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable'),true,array('class'=>'alert alert-error'));
 			}
@@ -130,13 +145,15 @@ class LivrablesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+                $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $this->set('utilisateur',$utilisateur);
 		if (!$this->Livrable->exists($id)) {
 			throw new NotFoundException(__('Livrable incorrect'),true,array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Livrable->save($this->request->data)) {
 				$this->Session->setFlash(__('Livrable sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','week','tous'));
+				$this->redirect(array('action' => 'index','week','tous','tous'));
 			} else {
 				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable'),true,array('class'=>'alert alert-error'));
 			}
@@ -162,10 +179,10 @@ class LivrablesController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Livrable->delete()) {
 			$this->Session->setFlash(__('Livrable supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index','week','tous'));
+			$this->redirect(array('action' => 'index','week','tous','tous'));
 		}
 		$this->Session->setFlash(__('Livrable <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index','week','tous'));
+		$this->redirect(array('action' => 'index','week','tous','tous'));
 	}
         
 /**

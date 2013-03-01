@@ -85,4 +85,51 @@ class Livrable extends AppModel {
 		)
 	);
 
+        
+ /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {
+            parent::beforeSave();
+            return true;
+        }
+        
+/**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Listediffusion']['created'])) {
+                    $results[$key]['Listediffusion']['created'] = $this->dateFormatAfterFind($val['Listediffusion']['created']);
+                }      
+                if (isset($val['Listediffusion']['modified'])) {
+                    $results[$key]['Listediffusion']['modified'] = $this->dateFormatAfterFind($val['Listediffusion']['modified']);
+                }            }
+            return $results;
+        }         
+        
+/**
+ * afterRender method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterLoad() {
+            $this->Session->setFlash(__('message aprés chargement'),true,array('class'=>'alert alert-info'));
+            parent::afterRender();
+            return true;            
+        }         
+                
 }

@@ -16,7 +16,7 @@
                 ?>
             <?php } ?>
         </div>
-        </div>
+    </div>
     <div class="control-group">
         <label class="control-label sstitre" for="UtiliseoutilOutilId">Outil : </label>
         <div class="controls">

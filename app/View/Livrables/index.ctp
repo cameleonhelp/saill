@@ -36,30 +36,41 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Chronologie<b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index','toutes',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index','toutes',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      <li class="divider"></li>
-                     <li><?php echo $this->Html->link('Sans échéance', array('action' => 'index','incomplet',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>                     
+                     <li><?php echo $this->Html->link('Sans échéance', array('action' => 'index','incomplet',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>                     
                      <li class="divider"></li>
-                     <li><?php echo $this->Html->link('Semaine précédente', array('action' => 'index','previousweek',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
-                     <li><?php echo $this->Html->link('Semaine courante', array('action' => 'index','week',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
-                     <li><?php echo $this->Html->link('Semaine suivante', array('action' => 'index','nextweek',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
-                     <li><?php echo $this->Html->link('En retard', array('action' => 'index','tolate',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                     <li><?php echo $this->Html->link('Semaine précédente', array('action' => 'index','previousweek',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                     <li><?php echo $this->Html->link('Semaine courante', array('action' => 'index','week',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                     <li><?php echo $this->Html->link('Semaine suivante', array('action' => 'index','nextweek',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                     <li><?php echo $this->Html->link('En retard', array('action' => 'index','tolate',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      </ul>
                  </li>                   
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etat<b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes','tous')); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes','tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      <li class="divider"></li>
-                     <li><?php echo $this->Html->link('A faire', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes','todo')); ?></li>
-                     <li><?php echo $this->Html->link('En cours', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes','inmotion')); ?></li>
-                     <li><?php echo $this->Html->link('Livré', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes','delivered')); ?></li>
-                     <li><?php echo $this->Html->link('Validé', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes','validated')); ?></li>
+                     <li><?php echo $this->Html->link('A faire', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes','todo',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                     <li><?php echo $this->Html->link('En cours', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes','inmotion',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                     <li><?php echo $this->Html->link('Livré', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes','delivered',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                     <li><?php echo $this->Html->link('Validé', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes','validated',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      <li class="divider"></li>
-                     <li><?php echo $this->Html->link('Autre que validé', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes','notvalidated')); ?></li>                     
+                     <li><?php echo $this->Html->link('Autre que validé', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes','notvalidated',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>                     
                      </ul>
                  </li> 
-                 <li class="divider-vertical"></li>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Gestionnaire<b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes',isset($this->params->pass[1]) ? $this->params->pass[1] : 'toutes','tous')); ?></li>
+                     <li class="divider"></li>
+                     <?php //debug($gestionnaires); ?>
+                         <?php foreach ($gestionnaires as $gestionnaire): ?>
+                            <li><?php echo $this->Html->link($gestionnaire['Utilisateur']['NOMLONG'], array('action' => 'index',$this->params->pass[0],$this->params->pass[1],$gestionnaire['Utilisateur']['id'])); ; ?></li>
+                         <?php endforeach; ?>
+                     </ul>
+                </li>                  
+                <li class="divider-vertical"></li>
                 <li><a href="#"><i class="ico-xls"></i></a></li>
                 </ul> 
                 <?php echo $this->Form->create("Livrable",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -69,11 +80,12 @@
                 </div>
             </div>
         </div>
-        <?php if($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $fchronologie; ?>, <?php echo $fetat; ?></em></code><?php } ?>
+        <?php if($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $fchronologie; ?>, <?php echo $fetat; ?> et <?php echo $fgestionnaire; ?></em></code><?php } ?>
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
 			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
+                        <th><?php echo $this->Paginator->sort('NOMLONG','Nom du gestionnaire'); ?></th>
 			<th width="60px"><?php echo $this->Paginator->sort('REFERENCE','Réf. MINIDOC'); ?></th>
 			<th width="40px"><?php echo $this->Paginator->sort('ETAT','Etat'); ?></th>
 			<th width="90px"><?php echo $this->Paginator->sort('ECHEANCE','Echéance'); ?></th>
@@ -85,6 +97,7 @@
 	<?php foreach ($livrables as $livrable): ?>
 	<tr>
 		<td><?php echo h($livrable['Livrable']['NOM']); ?>&nbsp;</td>
+                <td><?php echo h($livrable['Utilisateur']['NOMLONG']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($livrable['Livrable']['REFERENCE']); ?>&nbsp;</td>
                 <td style="text-align: center;"><i class="<?php echo etatLivrable(h($livrable['Suivilivrable']['ETAT'])); ?>" rel="tooltip" data-title="<?php echo h($livrable['Suivilivrable']['ETAT']); ?>"></i></td>
 		<td style="text-align: center;"><?php echo h($livrable['Suivilivrable']['ECHEANCE']); ?>&nbsp;</td>
