@@ -231,6 +231,62 @@ $(document).ready(function () {
        totalBrut = !isNaN(totalBrut) ? totalBrut : 0;       
        $("input[id=total]").val(parseFloat(totalBrut.toFixed(2)));       
    });
+   $('#UtiliseoutilOutilId').parent().on('click',function(e){
+       e.preventDefault();     
+   }); 
+   $('#UtiliseoutilOutilId').on('change',function(e){
+       if (this.value != ''){
+           $('#UtiliseoutilDossierpartageId').parent().children().children('button').addClass('disabled');
+           $('#UtiliseoutilListediffusionId').parent().children().children('button').addClass('disabled');
+       } else {
+           $('#UtiliseoutilDossierpartageId').parent().children().children('button').removeClass('disabled');
+           $('#UtiliseoutilListediffusionId').parent().children().children('button').removeClass('disabled');
+       }
+   });
+   $('#UtiliseoutilDossierpartageId').parent().on('click',function(e){
+       e.preventDefault();    
+   }); 
+   $('#UtiliseoutilDossierpartageId').on('change',function(e){
+       if (this.value != ''){
+           $('#UtiliseoutilOutilId').parent().children().children('button').addClass('disabled');
+           $('#UtiliseoutilListediffusionId').parent().children().children('button').addClass('disabled');
+       } else {
+           $('#UtiliseoutilOutilId').parent().children().children('button').removeClass('disabled');
+           $('#UtiliseoutilListediffusionId').parent().children().children('button').removeClass('disabled');
+       }
+   });
+   $('#UtiliseoutilListediffusionId').parent().on('click',function(e){
+       e.preventDefault();     
+   }); 
+   $('#UtiliseoutilListediffusionId').on('change',function(e){
+       if (this.value != ''){
+           $('#UtiliseoutilDossierpartageId').parent().children().children('button').addClass('disabled');
+           $('#UtiliseoutilOutilId').parent().children().children('button').addClass('disabled');
+       } else {
+           $('#UtiliseoutilDossierpartageId').parent().children().children('button').removeClass('disabled');
+           $('#UtiliseoutilOutilId').parent().children().children('button').removeClass('disabled');
+       }
+   }); 
+   $('#DotationMaterielinformatiquesId').parent().on('click',function(e){
+       e.preventDefault();     
+   }); 
+   $('#DotationMaterielinformatiquesId').on('change',function(e){
+       if (this.value != ''){
+           $('#DotationTypematerielId').parent().children().children('button').addClass('disabled');
+       } else {
+           $('#DotationTypematerielId').parent().children().children('button').removeClass('disabled');
+       }
+   });  
+   $('#DotationTypematerielId').parent().on('click',function(e){
+       e.preventDefault();     
+   }); 
+   $('#DotationTypematerielId').on('change',function(e){
+       if (this.value != ''){
+           $('#DotationMaterielinformatiquesId').parent().children().children('button').addClass('disabled');
+       } else {
+           $('#DotationMaterielinformatiquesId').parent().children().children('button').removeClass('disabled');
+       }
+   });    
    /** Accordion **/
    /*$("#accordion2").on('click',function(){
        $(this).find('.accordion-body').each(function(index){
@@ -269,5 +325,20 @@ $(document).ready(function () {
        }
    });*/
 });
+<?php
+                echo $this->Html->script('jquery');
+                echo $this->Html->script('bootstrap');              
+                echo $this->Html->script('editable'); 
+                echo $this->Html->script('validate');                
+                echo $this->Html->script('messages_fr'); 
+                echo $this->Html->script('datepicker'); 
+                echo $this->Html->script('select'); 
+                echo $this->Html->script('tiny_mce/tiny_mce');
+                echo $this->Html->script('jscroller2'); 
+                
+		echo $this->fetch('meta');
+		echo $this->fetch('css');
+		echo $this->fetch('script');
+	?>
 </script>
 

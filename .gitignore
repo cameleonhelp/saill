@@ -13,3 +13,7 @@ _git2_L2FF60
 *.db
 
 *.bak
+
+app/webroot/css/select.ori.css
+
+app/webroot/js/select.ori.js

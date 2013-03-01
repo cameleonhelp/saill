@@ -24,7 +24,7 @@
                 <?php echo $this->Form->input('outil_id',array('type'=>'hidden','value'=>$this->data['Utiliseoutil']['outil_id'])); ?>
                 <?php echo h($utiliseoutil['Outil']['NOM']); ?> 
             <?php } else { ?>
-                <?php echo $this->Form->select('outil_id',$outil,array('empty' => 'Choisir un outil')); ?>
+                <?php echo $this->Form->select('outil_id',$outil,array('class'=>'selectpicker','empty' => 'Choisir un outil')); ?>
             <?php } ?>
         </div>
         </div>
@@ -35,7 +35,7 @@
                 <?php echo $this->Form->input('listediffusion_id',array('type'=>'hidden','value'=>$this->data['Utiliseoutil']['listediffusion_id'])); ?>
                 <?php echo h($utiliseoutil['Listediffusion']['NOM']); ?> 
             <?php } else { ?>
-                <?php echo $this->Form->select('listediffusion_id',$listediffusion,array('empty' => 'Choisir une liste de diffusion')); ?>
+                <?php echo $this->Form->select('listediffusion_id',$listediffusion,array('class'=>'selectpicker','empty' => 'Choisir une liste de diffusion')); ?>
             <?php } ?>
         </div>
         </div>
@@ -46,7 +46,7 @@
                 <?php echo $this->Form->input('dossierpartage_id',array('type'=>'hidden','value'=>$this->data['Utiliseoutil']['dossierpartage_id'])); ?>
                 <?php echo h($utiliseoutil['Dossierpartage']['NOM']); ?> 
             <?php } else { ?>
-                <?php echo $this->Form->select('dossierpartage_id',$dossierpartage,array('empty' => 'Choisir un partage réseau')); ?>
+                <?php echo $this->Form->select('dossierpartage_id',$dossierpartage,array('class'=>'selectpicker','empty' => 'Choisir un partage réseau')); ?>
             <?php } ?>
         </div>
         </div>
