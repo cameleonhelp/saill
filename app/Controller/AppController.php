@@ -32,9 +32,53 @@ App::uses('Controller', 'Controller');
  * @link http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
-    
-    public function getVersion(){
-        return Configure::read('version');
-    }
+    public $History = array();
 
+    public function addUrl(){
+        if ($this->params['action']!='activeMessage'){
+            $this->History = $this->Session->read('history');
+            $url = $this->params->url;
+            $root = explode('/',ROOT);
+            $last = count($root)-1;            
+            if(count($this->History)==0){$this->History[] = FULL_BASE_URL.DS.$root[$last].DS.$url;} else{array_unshift($this->History, FULL_BASE_URL.DS.$root[$last].DS.$url);}
+            $this->Session->write('history',$this->History);  
+        }
+    }
+    
+    public function lastUrl(){
+        $this->History = $this->Session->read('history');
+        if (count($this->Session->read('history')) > 0){
+            $lastUrl = $this->History[0];
+            $this->Session->write('history',$this->History); 
+            array_shift($this->History);
+        } else {
+            $lastUrl = array();
+        }        
+        return $lastUrl;
+    }    
+    
+    public function resetHistory(){
+        $this->Session->delete('history');
+    }
+    
+    public function getHistory(){
+        return $this->Session->read('history');        
+    }
+    
+    public function goToPostion($pos = 0){
+        $url = $this->getHistory();
+        return $url[$pos];
+    }
+    
+    public function afterFilter() {
+        $this->addUrl();       
+        //debug($this->lastUrl());
+        parent::afterFilter();
+    }
+               
+    public function beforeRender() {
+        if($this->params['action']=='index') $this->resetHistory();
+        parent::beforeRender();
+    }
+    
 }

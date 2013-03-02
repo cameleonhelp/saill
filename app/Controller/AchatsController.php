@@ -7,6 +7,8 @@ App::uses('AppController', 'Controller');
  */
 class AchatsController extends AppController {
 
+        public $url = array();
+    
         public $paginate = array(
         'limit' => 15,
         'order' => array('Achat.DATE' => 'desc','Achat.LIBELLEACHAT' => 'asc'),
@@ -23,14 +25,15 @@ class AchatsController extends AppController {
                         $factivite = "toutes les activités";
                         break;                 
                     default :
-                        $newconditions[]="Activite.NOM='".$filtre."'";
-                        $factivite = "l'activité ".$filtre;
+                        $newconditions[]="Activite.id='".$filtre."'";
+                        $activite = $this->Achat->Activite->find('first',array('fields'=>array('NOM'),'conditions'=>array('Activite.id'=>$filtre)));
+                        $factivite = "l'activité ".$activite['Activite']['NOM'];
                         break;                      
                 }  
                 $this->set('factivite',$factivite);            
 		$this->Achat->recursive = 0;
 		$this->set('achats', $this->paginate());
-                $activites = $this->Achat->Activite->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
+                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
                 $this->set('activites',$activites);                  
 	}
 
@@ -55,13 +58,13 @@ class AchatsController extends AppController {
  * @return void
  */
 	public function add() {
-                $activites = $this->Achat->Activite->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
+                $activites = $this->Achat->Activite->find('list',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
                 $this->set('activites',$activites);  
 		if ($this->request->is('post')) {
 			$this->Achat->create();
 			if ($this->Achat->save($this->request->data)) {
 				$this->Session->setFlash(__('Achat sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','toutes'));
+                                $this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Achat incorrect, veuillez corriger l\'achat'),true,array('class'=>'alert alert-error'));
 			}
@@ -76,7 +79,7 @@ class AchatsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-                $activites = $this->Achat->Activite->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
+                $activites = $this->Achat->Activite->find('list',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
                 $this->set('activites',$activites);              
 		if (!$this->Achat->exists($id)) {
 			throw new NotFoundException(__('Achat incorrect'),true,array('class'=>'alert alert-error'));
@@ -84,7 +87,7 @@ class AchatsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Achat->save($this->request->data)) {
 				$this->Session->setFlash(__('Achat sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','toutes'));
+                                $this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Achat incorrect, veuillez corriger l\'achat'),true,array('class'=>'alert alert-error'));
 			}
@@ -110,10 +113,10 @@ class AchatsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Achat->delete()) {
 			$this->Session->setFlash(__('Achat supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index','toutes'));
+                        $this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Achat <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index','toutes'));
+                $this->redirect($this->goToPostion());
 	}
         
 /**
@@ -131,5 +134,6 @@ class AchatsController extends AppController {
                 $activites = $this->Achat->Activite->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
                 $this->set('activites',$activites);  
                 $this->render('/achats/index');
-        }          
+        }    
+       
 }

@@ -99,5 +99,5 @@ class Achat extends AppModel {
                 } 
             }
             return $results;
-        }          
+        }   
 }
