@@ -35,7 +35,7 @@ class AppController extends Controller {
     public $History = array();
 
     public function addUrl(){
-        if ($this->params['action']!='activeMessage'){
+        if (strpos($this->params->url,'activeMessage')===false){
             $this->History = $this->Session->read('history');
             $url = $this->params->url;
             $root = explode('/',ROOT);
@@ -72,7 +72,6 @@ class AppController extends Controller {
     
     public function afterFilter() {
         $this->addUrl();       
-        //debug($this->lastUrl());
         parent::afterFilter();
     }
                

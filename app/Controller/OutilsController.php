@@ -51,7 +51,7 @@ class OutilsController extends AppController {
 			$this->Outil->create();
 			if ($this->Outil->save($this->request->data)) {
 				$this->Session->setFlash(__('Outil sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Outil incorrect, veuillez corriger l\'outil'),true,array('class'=>'alert alert-error'));
 			}
@@ -74,7 +74,7 @@ class OutilsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Outil->save($this->request->data)) {
 				$this->Session->setFlash(__('Outil sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Outil incorrect, veuillez corriger l\'outil'),true,array('class'=>'alert alert-error'));
 			}
@@ -100,10 +100,10 @@ class OutilsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Outil->delete()) {
 			$this->Session->setFlash(__('Outil supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Outil NON supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

@@ -97,7 +97,7 @@ class MaterielinformatiquesController extends AppController {
 			$this->Materielinformatique->create();
 			if ($this->Materielinformatique->save($this->request->data)) {
 				$this->Session->setFlash(__('Postes informatique sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','En stock','tous','toutes'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Postes informatique incorrect, veuillez corriger le poste informatique'),true,array('class'=>'alert alert-error'));
 			}
@@ -127,7 +127,7 @@ class MaterielinformatiquesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Materielinformatique->save($this->request->data)) {
 				$this->Session->setFlash(__('Postes informatique sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','En stock','tous','toutes'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Postes informatique incorrect, veuillez corriger le poste informatique'),true,array('class'=>'alert alert-error'));
 			}
@@ -155,10 +155,10 @@ class MaterielinformatiquesController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Materielinformatique->delete()) {
 			$this->Session->setFlash(__('Postes informatique supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index','En stock','tous','toutes'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Postes informatique <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index','En stock','tous','toutes'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

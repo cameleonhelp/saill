@@ -49,7 +49,7 @@ class SitesController extends AppController {
 			$this->Site->create();
 			if ($this->Site->save($this->request->data)) {
 				$this->Session->setFlash(__('Site sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Site incorrecte, veuillez corriger le site'),true,array('class'=>'alert alert-error'));
 			}
@@ -70,7 +70,7 @@ class SitesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Site->save($this->request->data)) {
 				$this->Session->setFlash(__('Site sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Site incorrect, veuillez corriger le site'),true,array('class'=>'alert alert-error'));
 			}
@@ -96,10 +96,10 @@ class SitesController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Site->delete()) {
 			$this->Session->setFlash(__('Site supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(___('Site <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

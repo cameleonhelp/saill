@@ -42,7 +42,7 @@ class ActionsController extends AppController {
 			$this->Action->create();
 			if ($this->Action->save($this->request->data)) {
 				$this->Session->setFlash(__('The action has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('The action could not be saved. Please, try again.'));
 			}
@@ -63,7 +63,7 @@ class ActionsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Action->save($this->request->data)) {
 				$this->Session->setFlash(__('The action has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('The action could not be saved. Please, try again.'));
 			}
@@ -89,9 +89,9 @@ class ActionsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Action->delete()) {
 			$this->Session->setFlash(__('Action deleted'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Action was not deleted'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
 }

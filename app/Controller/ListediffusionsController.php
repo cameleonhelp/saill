@@ -52,7 +52,7 @@ class ListediffusionsController extends AppController {
 			$this->Listediffusion->create();
 			if ($this->Listediffusion->save($this->request->data)) {
 				$this->Session->setFlash(__('Liste de diffusion sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Liste de diffusion incorrecte, veuillez corriger la liste de diffusion'),true,array('class'=>'alert alert-error'));
 			}
@@ -74,7 +74,7 @@ class ListediffusionsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Listediffusion->save($this->request->data)) {
 				$this->Session->setFlash(__('Liste de diffusion sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Liste de diffusion incorrecte, veuillez corriger la liste de diffusion'),true,array('class'=>'alert alert-error'));
 			}
@@ -101,10 +101,10 @@ class ListediffusionsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Listediffusion->delete()) {
 			$this->Session->setFlash(__('Liste de diffusion supprimée'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Liste de diffusion NON supprimée'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

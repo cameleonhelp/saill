@@ -49,7 +49,7 @@ class SocietesController extends AppController {
 			$this->Societe->create();
 			if ($this->Societe->save($this->request->data)) {
 				$this->Session->setFlash(__('Société sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Société incorrecte, veuillez corriger la société'),true,array('class'=>'alert alert-error'));
 			}
@@ -70,7 +70,7 @@ class SocietesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Societe->save($this->request->data)) {
 				$this->Session->setFlash(__('Société sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Société incorrecte, veuillez corriger la société'),true,array('class'=>'alert alert-error'));
 			}
@@ -96,10 +96,10 @@ class SocietesController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Societe->delete()) {
 			$this->Session->setFlash(__('Société supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Société <b>NON</b> supprime'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

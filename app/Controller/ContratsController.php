@@ -65,7 +65,7 @@ class ContratsController extends AppController {
 			$this->Contrat->create();
 			if ($this->Contrat->save($this->request->data)) {
 				$this->Session->setFlash(__('Contrat sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','actif'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Contrat incorrect, veuillez corriger le contrat'),true,array('class'=>'alert alert-error'));
 			}
@@ -88,7 +88,7 @@ class ContratsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Contrat->save($this->request->data)) {
 				$this->Session->setFlash(__('Contrat sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','actif'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Contrat incorrect, veuillez corriger le contrat'),true,array('class'=>'alert alert-error'));
 			}
@@ -114,10 +114,10 @@ class ContratsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Contrat->delete()) {
 			$this->Session->setFlash(__('Contrat supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index','actif'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Contrat <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

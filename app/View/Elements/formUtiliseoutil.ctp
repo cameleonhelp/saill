@@ -63,8 +63,8 @@
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="container" style="margin-top:2px;text-align:center;">
-                    <?php $url = isset($this->params->pass[0]) ? '/utilisateurs/edit/'.$this->params->pass[0] : '/utiliseoutils/index/tous/tous' ; ?>
-                    <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url($url)."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
+                    <?php $url = $this->Session->read('history'); $pos = (strpos($url[0],$this->params['controller'])===false) ? 1 : 0; ?>
+                    <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url($url[$pos])."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
                 </div>
             </div>
         </div>

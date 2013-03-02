@@ -83,7 +83,7 @@ class ProjetsController extends AppController {
 			$this->Projet->create();
 			if ($this->Projet->save($this->request->data)) {
 				$this->Session->setFlash(__('Projet sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','actif','tous'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Projet incorrect, veuillez corriger le projet'),true,array('class'=>'alert alert-error'));
 			}
@@ -110,7 +110,7 @@ class ProjetsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Projet->save($this->request->data)) {
 				$this->Session->setFlash(__('Projet sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','actif','tous'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Projet incorrect, veuillez corriger le projet'),true,array('class'=>'alert alert-error'));
 			}
@@ -136,10 +136,10 @@ class ProjetsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Projet->delete()) {
 			$this->Session->setFlash(__('Projet supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index','actif','tous'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Projet <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index','actif','tous'));
+		$this->redirect($this->goToPostion());
 	}
         
         

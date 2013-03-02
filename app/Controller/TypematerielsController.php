@@ -52,7 +52,7 @@ class TypematerielsController extends AppController {
 			$this->Typemateriel->create();
 			if ($this->Typemateriel->save($this->request->data)) {
 				$this->Session->setFlash(__('Type de matériel sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Type de matériel incorrect, veuillez corriger le type de matériel'),true,array('class'=>'alert alert-error'));
 			}
@@ -74,7 +74,7 @@ class TypematerielsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Typemateriel->save($this->request->data)) {
 				$this->Session->setFlash(__('Type de matériel sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Type de matériel incorrect, veuillez corriger le type de matériel'),true,array('class'=>'alert alert-error'));
 			}
@@ -101,10 +101,10 @@ class TypematerielsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Typemateriel->delete()) {
 			$this->Session->setFlash(__('Type de matériel supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Type de matériel <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

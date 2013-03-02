@@ -49,7 +49,7 @@ class AssistancesController extends AppController {
 			$this->Assistance->create();
 			if ($this->Assistance->save($this->request->data)) {
 				$this->Session->setFlash(__('Assistance sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Assistance incorrecte, veuillez corriger l\'assistance'),true,array('class'=>'alert alert-error'));
 			}
@@ -70,7 +70,7 @@ class AssistancesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Assistance->save($this->request->data)) {
 				$this->Session->setFlash(__('Assistance sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Assistance incorrecte, veuillez corriger l\'assistance'),true,array('class'=>'alert alert-error'));
 			}
@@ -96,10 +96,10 @@ class AssistancesController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Assistance->delete()) {
 			$this->Session->setFlash(__('Assistance supprimée'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Assistance NON supprimée'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

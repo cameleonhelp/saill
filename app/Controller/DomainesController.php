@@ -49,7 +49,7 @@ class DomainesController extends AppController {
 			$this->Domaine->create();
 			if ($this->Domaine->save($this->request->data)) {
 				$this->Session->setFlash(__('Domaine sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Domaine incorrect, veuillez corriger le domaine'),true,array('class'=>'alert alert-error'));
 			}
@@ -70,7 +70,7 @@ class DomainesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Domaine->save($this->request->data)) {
 				$this->Session->setFlash(__('Domaine sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Domaine incorrect, veuillez corriger le domaine'),true,array('class'=>'alert alert-error'));
 			}
@@ -96,10 +96,10 @@ class DomainesController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Domaine->delete()) {
 			$this->Session->setFlash(__('Domaine supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Domaine NON supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

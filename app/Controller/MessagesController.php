@@ -50,7 +50,7 @@ class MessagesController extends AppController {
 			$this->Message->create();
 			if ($this->Message->save($this->request->data)) {
 				$this->Session->setFlash(__('Message sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Message incorrect, veuillez corriger le message.'),true,array('class'=>'alert alert-error'));
 			}
@@ -71,7 +71,7 @@ class MessagesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Message->save($this->request->data)) {
 				$this->Session->setFlash(__('Message sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Message incorrect, veuillez corriger le message.'),true,array('class'=>'alert alert-error'));
 			}
@@ -97,10 +97,10 @@ class MessagesController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Message->delete()) {
 			$this->Session->setFlash(__('Message supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Message NON supprimé.'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
 
 /**

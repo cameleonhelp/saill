@@ -51,7 +51,7 @@ class SectionsController extends AppController {
 			$this->Section->create();
 			if ($this->Section->save($this->request->data)) {
 				$this->Session->setFlash(__('Section sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Section incorrecte, veuillez corriger la section'),true,array('class'=>'alert alert-error'));
 			}
@@ -74,7 +74,7 @@ class SectionsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Section->save($this->request->data)) {
 				$this->Session->setFlash(__('Section sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Section incorrecte, veuillez corriger la section'),true,array('class'=>'alert alert-error'));
 			}
@@ -100,10 +100,10 @@ class SectionsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Section->delete()) {
 			$this->Session->setFlash(__('Section supprimée'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Section <b>NON</b> supprimée'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

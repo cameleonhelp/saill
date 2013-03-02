@@ -66,7 +66,7 @@ class AutorisationsController extends AppController {
 			$this->Autorisation->create();
 			if ($this->Autorisation->save($this->request->data)) {
 				$this->Session->setFlash(__('Autorisation sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','tous'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Autorisation incorrecte, veuillez corriger l\'autorisation'),true,array('class'=>'alert alert-error'));
 			}
@@ -91,7 +91,7 @@ class AutorisationsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Autorisation->save($this->request->data)) {
 				$this->Session->setFlash(__('Autorisation sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','tous'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Autorisation incorrecte, veuillez corriger l\'autorisation'),true,array('class'=>'alert alert-error'));
 			}
@@ -118,10 +118,10 @@ class AutorisationsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Autorisation->delete()) {
 			$this->Session->setFlash(__('Autorisation supprimée'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index','tous'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Autorisation NON supprimée'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index','tous'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

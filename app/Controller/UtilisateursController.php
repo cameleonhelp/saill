@@ -90,7 +90,7 @@ class UtilisateursController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur créé";
                                 $this->Utilisateur->Historyutilisateur->save($history);                              
 				$this->Session->setFlash(__('Utilisateur sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','actif','allsections'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Utilisateur incorrect, veuillez corriger l\'utilisateur'),true,array('class'=>'alert alert-error'));
 			}
@@ -147,7 +147,7 @@ class UtilisateursController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur mis à jour";
                         $this->Utilisateur->Historyutilisateur->save($history);                            
 				$this->Session->setFlash(__('Utilisateur sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','actif','allsections'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Utilisateur incorrect, veuillez corriger l\'utilisateur'),true,array('class'=>'alert alert-error'));
 			}
@@ -195,10 +195,10 @@ class UtilisateursController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - utilisateur supprimé";
                         $this->Utilisateur->Historyutilisateur->save($history);
 			$this->Session->setFlash(__('Utilisateur supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index','actif','allsections'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Utilisateur <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index','actif','allsections'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**
@@ -269,10 +269,10 @@ class UtilisateursController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur dupliqué à partir de ".$NOMLONG;
                         $this->Utilisateur->Historyutilisateur->save($history);
                         $this->Session->setFlash(__('Utilisateur dupliqué'),true,array('class'=>'alert alert-success'));
-                        $this->redirect(array('action' => 'edit',$this->Utilisateur->id));
+                        $this->redirect($this->goToPostion());
                 } 
 		$this->Session->setFlash(__('Utilisateur <b>NON</b> dupliqué'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index','actif','allsections'));
+		$this->redirect($this->goToPostion());
 	}   
     
 /**
@@ -297,10 +297,10 @@ class UtilisateursController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mot de passe initialisé";
                         $this->Utilisateur->Historyutilisateur->save($history);
                         $this->Session->setFlash(__('Mot de passe de l\'utilisateur initialisé'),true,array('class'=>'alert alert-success'));
-                        $this->redirect(array('action' => 'index','actif','allsections'));
+                        $this->redirect($this->goToPostion());
                 } 
 		$this->Session->setFlash(__('Mot de passe de l\'utilisateur <b>NON</b> initialisé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index','actif','allsections'));
+		$this->redirect($this->goToPostion());
 	} 
         
 /**

@@ -60,7 +60,7 @@ class DotationsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une dotation";
                                 $this->Dotation->Utilisateur->Historyutilisateur->save($history);                               
 				$this->Session->setFlash(__('Dotation sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$userid));
+				$this->redirect($this->goToPostion(2));
 			} else {
 				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),true,array('class'=>'alert alert-error'));
 			}
@@ -84,7 +84,7 @@ class DotationsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour de la dotation dotation";
                                 $this->Dotation->Utilisateur->Historyutilisateur->save($history); 				
                             $this->Session->setFlash(__('Dotation sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$userid));
+				$this->redirect($this->goToPostion(2));
 			} else {
 				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),true,array('class'=>'alert alert-error'));
 			}
@@ -113,9 +113,9 @@ class DotationsController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une dotation";
                         $this->Dotation->Utilisateur->Historyutilisateur->save($history);                     
 			$this->Session->setFlash(__('Dotation supprimée'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$userid));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Dotation <b>NON</b> supprimée'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$userid));
+		$this->redirect($this->goToPostion());
 	}
 }

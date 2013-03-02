@@ -83,7 +83,7 @@ class ActivitesController extends AppController {
 			$this->Activite->create();
 			if ($this->Activite->save($this->request->data)) {
 				$this->Session->setFlash(__('Activité sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','actif','tous'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Activité incorrecte, veuillez corriger l\'activité'),true,array('class'=>'alert alert-error'));
 			}
@@ -106,7 +106,7 @@ class ActivitesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Activite->save($this->request->data)) {
 				$this->Session->setFlash(__('Activité sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','actif','tous'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Activité incorrecte, veuillez corriger l\'activité'),true,array('class'=>'alert alert-error'));
 			}
@@ -132,10 +132,10 @@ class ActivitesController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Activite->delete()) {
 			$this->Session->setFlash(__('Activité supprimée'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index','actif','tous'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Activité <b>NON</b> supprimée'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index','actif','tous'));
+		$this->redirect($this->goToPostion());
 	}
         
         

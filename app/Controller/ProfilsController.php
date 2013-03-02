@@ -49,7 +49,7 @@ class ProfilsController extends AppController {
 			$this->Profil->create();
 			if ($this->Profil->save($this->request->data)) {
 				$this->Session->setFlash(__('Profil sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Profil incorrect, veuillez corriger le profil'),true,array('class'=>'alert alert-error'));
 			}
@@ -70,7 +70,7 @@ class ProfilsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Profil->save($this->request->data)) {
 				$this->Session->setFlash(__('Profil sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Profil incorrect, veuillez corriger le profil'),true,array('class'=>'alert alert-error'));
 			}
@@ -96,10 +96,10 @@ class ProfilsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Profil->delete()) {
 			$this->Session->setFlash(__('Profil supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Profil NON supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

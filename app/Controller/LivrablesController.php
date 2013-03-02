@@ -130,7 +130,7 @@ class LivrablesController extends AppController {
 			$this->Livrable->create();
 			if ($this->Livrable->save($this->request->data)) {
 				$this->Session->setFlash(__('Livrable sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','week','tous','tous'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable'),true,array('class'=>'alert alert-error'));
 			}
@@ -153,7 +153,7 @@ class LivrablesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Livrable->save($this->request->data)) {
 				$this->Session->setFlash(__('Livrable sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','week','tous','tous'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable'),true,array('class'=>'alert alert-error'));
 			}
@@ -179,10 +179,10 @@ class LivrablesController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Livrable->delete()) {
 			$this->Session->setFlash(__('Livrable supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index','week','tous','tous'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Livrable <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index','week','tous','tous'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

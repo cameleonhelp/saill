@@ -50,7 +50,7 @@ class TjmagentsController extends AppController {
 			$this->Tjmagent->create();
 			if ($this->Tjmagent->save($this->request->data)) {
 				$this->Session->setFlash(__('TJM agent sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('TJM agent incorrect, veuillez corriger le TJM agent'),true,array('class'=>'alert alert-error'));
 			}
@@ -72,7 +72,7 @@ class TjmagentsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Tjmagent->save($this->request->data)) {
 				$this->Session->setFlash(__('TJM agent sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('TJM agent incorrect, veuillez corriger le TJM agent'),true,array('class'=>'alert alert-error'));
 			}
@@ -99,10 +99,10 @@ class TjmagentsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Tjmagent->delete()) {
 			$this->Session->setFlash(__('TJM agent supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('TJM agent <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
 /**
  * search method

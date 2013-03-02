@@ -20,7 +20,8 @@
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container" style="margin-top:2px;text-align:center;">
-                <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url('/livrables/index/week/tous/tous')."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
+                <?php $url = $this->Session->read('history'); ?>
+                <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url($url[0])."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
             </div>
         </div>
     </div>

@@ -6,9 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Achat $Achat
  */
 class AchatsController extends AppController {
-
-        public $url = array();
-    
+  
         public $paginate = array(
         'limit' => 15,
         'order' => array('Achat.DATE' => 'desc','Achat.LIBELLEACHAT' => 'asc'),

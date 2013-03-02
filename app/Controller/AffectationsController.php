@@ -49,7 +49,7 @@ class AffectationsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une affectation";
                                 $this->Affectation->Utilisateur->Historyutilisateur->save($history);     
 				$this->Session->setFlash(__('Affectation sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$userid));
+				$this->redirect($this->goToPostion(2));
 			} else {
 				$this->Session->setFlash(__('Affectation incorrecte, veuillez corriger l\'affectation'),true,array('class'=>'alert alert-error'));
 			}
@@ -75,7 +75,7 @@ class AffectationsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour d'une affectation";
                                 $this->Affectation->Utilisateur->Historyutilisateur->save($history);                            
 				$this->Session->setFlash(__('Affectation sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$userid));
+				$this->redirect($this->goToPostion(2));
 			} else {
 				$this->Session->setFlash(__('Affectation incorrecte, veuillez corriger làffectation'),true,array('class'=>'alert alert-error'));
 			}
@@ -104,9 +104,9 @@ class AffectationsController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une affectation";
                         $this->Affectation->Utilisateur->Historyutilisateur->save($history);                     
 			$this->Session->setFlash(__('Affectation supprimée'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$userid));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Affectation <b>NON</b> supprimée'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$userid));
+		$this->redirect($this->goToPostion());
 	}
 }

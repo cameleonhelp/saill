@@ -83,9 +83,9 @@ class UtiliseoutilsController extends AppController {
                                 $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                            
 				$this->Session->setFlash(__('Ouvertures des droits sauvegardée'),true,array('class'=>'alert alert-success'));
                                 if($id==null){
-                                    $this->redirect(array('action' => 'index','tous','tous'));
+                                    $this->redirect($this->goToPostion(1));
                                 } else {
-                                    $this->redirect(array('controller'=>'Utilisateurs','action' => 'edit',$id));
+                                    $this->redirect($this->goToPostion(2));
                                 }
 			} else {
 				$this->Session->setFlash(__('Ouvertures des droits incorrecte, veuillez corriger cette ouverture de droit'),true,array('class'=>'alert alert-error'));
@@ -121,7 +121,7 @@ class UtiliseoutilsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour d'une ouverture de droit";
                                 $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                               
 				$this->Session->setFlash(__('Ouvertures des droits sauvegardée'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index','tous','tous'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Ouvertures des droits incorrecte, veuillez corriger cette ouverture de droit'),true,array('class'=>'alert alert-error'));
 			}
@@ -153,10 +153,10 @@ class UtiliseoutilsController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une ouverture de droit";
                         $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                         
 			$this->Session->setFlash(__('Ouvertures des droits supprimée'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index','tous','tous'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> supprimée'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index','tous','tous'));
+		$this->redirect($this->goToPostion());
 	}
         
   /**
@@ -213,10 +213,10 @@ class UtiliseoutilsController extends AppController {
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - changement d'état d'une ouverture de droit";
                     $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                     
                     $this->Session->setFlash(__('Ouvertures des droits progression de l\'état'),true,array('class'=>'alert alert-success'));
-                    $this->redirect(array('action' => 'index','tous','tous'));
+                    $this->redirect($this->goToPostion());
                 }
 		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> progression de l\'état'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index','tous','tous'));
+		$this->redirect($this->goToPostion());
 	}    
         
 /**

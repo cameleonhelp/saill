@@ -50,7 +50,7 @@ class TjmcontratsController extends AppController {
 			$this->Tjmcontrat->create();
 			if ($this->Tjmcontrat->save($this->request->data)) {
 				$this->Session->setFlash(__('TJM contrat sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('TJM contrat incorrect, veuillez corriger le TJM contrat'),true,array('class'=>'alert alert-error'));
 			}
@@ -72,7 +72,7 @@ class TjmcontratsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Tjmcontrat->save($this->request->data)) {
 				$this->Session->setFlash(__('TJM contrat sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('TJM contrat incorrect, veuillez corriger le TJM contrat'),true,array('class'=>'alert alert-error'));
 			}
@@ -99,10 +99,10 @@ class TjmcontratsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Tjmcontrat->delete()) {
 			$this->Session->setFlash(__('TJM contrat supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('TJM contrat <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

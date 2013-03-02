@@ -52,7 +52,7 @@ class LinksharedsController extends AppController {
 			$this->Linkshared->create();
 			if ($this->Linkshared->save($this->request->data)) {
 				$this->Session->setFlash(__('Lien partagé sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Lien partagé incorrect, veuillez corriger le lien partagé'),true,array('class'=>'alert alert-error'));
 			}
@@ -74,7 +74,7 @@ class LinksharedsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Linkshared->save($this->request->data)) {
 				$this->Session->setFlash(__('Lien partagé sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Lien partagé incorrect, veuillez corriger le lien partagé'),true,array('class'=>'alert alert-error'));
 			}
@@ -101,10 +101,10 @@ class LinksharedsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Linkshared->delete()) {
 			$this->Session->setFlash(__('Lien partagé supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Lien partagé <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

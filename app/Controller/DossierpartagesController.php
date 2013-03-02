@@ -52,7 +52,7 @@ class DossierpartagesController extends AppController {
 			$this->Dossierpartage->create();
 			if ($this->Dossierpartage->save($this->request->data)) {
 				$this->Session->setFlash(__('Dossier partagé sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Dossier partagé incorrecte, veuilez corriger le dossier partagé'),true,array('class'=>'alert alert-error'));
 			}
@@ -74,7 +74,7 @@ class DossierpartagesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Dossierpartage->save($this->request->data)) {
 				$this->Session->setFlash(__('Dossier partagé sauvegardé'),true,array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Dossier partagé incorrecte, veuillez corriger le dossier partagé'),true,array('class'=>'alert alert-error'));
 			}
@@ -101,10 +101,10 @@ class DossierpartagesController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Dossierpartage->delete()) {
 			$this->Session->setFlash(__('Dossier partagé supprimé'),true,array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Dossier partagé NON supprimé'),true,array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
         
 /**

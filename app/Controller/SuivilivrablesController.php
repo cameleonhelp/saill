@@ -42,7 +42,7 @@ class SuivilivrablesController extends AppController {
 			$this->Suivilivrable->create();
 			if ($this->Suivilivrable->save($this->request->data)) {
 				$this->Session->setFlash(__('The suivilivrable has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(2));
 			} else {
 				$this->Session->setFlash(__('The suivilivrable could not be saved. Please, try again.'));
 			}
@@ -63,7 +63,7 @@ class SuivilivrablesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Suivilivrable->save($this->request->data)) {
 				$this->Session->setFlash(__('The suivilivrable has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(2));
 			} else {
 				$this->Session->setFlash(__('The suivilivrable could not be saved. Please, try again.'));
 			}
@@ -89,9 +89,9 @@ class SuivilivrablesController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Suivilivrable->delete()) {
 			$this->Session->setFlash(__('Suivilivrable deleted'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Suivilivrable was not deleted'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect($this->goToPostion());
 	}
 }
