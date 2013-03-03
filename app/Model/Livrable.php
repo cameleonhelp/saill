@@ -42,14 +42,23 @@ class Livrable extends AppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'Suivilivrable' => array(
+		/*'Suivilivrable' => array(
 			'className' => 'Suivilivrable',
 			'foreignKey' => '',
-			'conditions' => '',
+			'conditions' => '', //Suivilivrable.livrable_id = livrable.id
 			'fields' => '',
-			'order' => ''
-		),            
+			'order' => '' //Suivilivrable.created as desc
+		),     */       
 	);
+        
+ /**
+ * hasMany associations
+ *
+ * @var array
+ */
+	public $hasOne = array(
+            
+        );       
 
 /**
  * hasMany associations
@@ -109,27 +118,12 @@ class Livrable extends AppModel {
  */
         public function afterFind($results) {
             foreach ($results as $key => $val) {
-                if (isset($val['Listediffusion']['created'])) {
-                    $results[$key]['Listediffusion']['created'] = $this->dateFormatAfterFind($val['Listediffusion']['created']);
+                if (isset($val['Livrable']['created'])) {
+                    $results[$key]['Livrable']['created'] = $this->dateFormatAfterFind($val['Livrable']['created']);
                 }      
-                if (isset($val['Listediffusion']['modified'])) {
-                    $results[$key]['Listediffusion']['modified'] = $this->dateFormatAfterFind($val['Listediffusion']['modified']);
+                if (isset($val['Livrable']['modified'])) {
+                    $results[$key]['Livrable']['modified'] = $this->dateFormatAfterFind($val['Livrable']['modified']);
                 }            }
             return $results;
         }         
-        
-/**
- * afterRender method
- *
- * @throws NotFoundException
- * @throws MethodNotAllowedException
- * @param none
- * @return void
- */
-        public function afterLoad() {
-            $this->Session->setFlash(__('message aprés chargement'),true,array('class'=>'alert alert-info'));
-            parent::afterRender();
-            return true;            
-        }         
-                
 }

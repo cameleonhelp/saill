@@ -99,8 +99,11 @@ class LivrablesController extends AppController {
                 $gestionnaires = $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('gestionnaires',$gestionnaires);                
 		$this->Livrable->recursive = 0;
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
+                $join = array(array('table'=>'suivilivrables','alias'=>'Suivilivrable','type'=>'LEFT','conditions'=>'Suivilivrable.livrable_id=Livrable.id'));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'joins'=>$join));                
 		$this->set('livrables', $this->paginate());
+                $suivilivrable = $this->Livrable->Suivilivrable->find('all',array('fields'=>array('MAX(Suivilivrable.created) AS created','Suivilivrable.ETAT','Suivilivrable.DATELIVRAISON','Suivilivrable.DATEVALIDATION','Suivilivrable.ECHEANCE','Suivilivrable.created'),'conditions'=>array('Suivilivrable.livrable_id'=>'livrable.id')));
+                $this->set('suivilivrable',$suivilivrable);
 	}
 
 /**

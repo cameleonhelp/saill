@@ -211,13 +211,15 @@ class UtilisateursController extends AppController {
  */
 	public function profil($id = null) {
                 $this->set('title_for_layout',"Mon profils");
-		if (!$this->Utilisateur->exists($id)) {
-			throw new NotFoundException(__('Utilisateur incorrect'),true,array('class'=>'alert alert-error'));
-		}
-		$options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));
-		$this->set('utilisateur', $this->Utilisateur->find('first', $options));                
-                $societe = $this->Utilisateur->Societe->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
-                $this->set('societe',$societe);
+                if ($id != null){
+                    if (!$this->Utilisateur->exists($id)) {
+                            throw new NotFoundException(__('Utilisateur incorrect'),true,array('class'=>'alert alert-error'));
+                    }
+                $options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));
+                $this->set('utilisateur', $this->Utilisateur->find('first', $options));    
+                } else {
+                    throw new NotFoundException(__('Utilisateur non renseigné'),true,array('class'=>'alert alert-error'));
+                }
         }  
         
 /**
