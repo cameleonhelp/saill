@@ -61,7 +61,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`projets` (
   `FIN` DATE NULL DEFAULT NULL ,
   `COMMENTAIRE` LONGTEXT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL DEFAULT NULL ,
   `ACTIF` TINYINT(1) NOT NULL DEFAULT 0 ,
-  `TYPE` ENUM('Projet','MCO','Indisponibilité') CHARACTER SET 'latin1' NULL DEFAULT 'Projet' ,
+  `TYPE` ENUM('Projet','MCO','Indisponibilité','Evolution','Intégration','Exploitation') CHARACTER SET 'latin1' NULL DEFAULT 'Projet' ,
   `FACTURATION` ENUM('régie','forfait','autre') CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
