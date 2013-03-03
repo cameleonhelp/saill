@@ -114,6 +114,6 @@ class SocietesController extends AppController {
                 $this->autoRender = false;
                 $this->Societe->recursive = 0;
                 $this->set('societes', $this->paginate());              
-                $this->render('/Societes/index');
+                $this->render('index');
         }            
 }

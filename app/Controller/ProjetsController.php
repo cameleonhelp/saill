@@ -157,6 +157,6 @@ class ProjetsController extends AppController {
                 $this->set('utilisateurs', $this->paginate());
                 $contrats = $this->Projet->Contrat->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1'));
                 $this->set('contrats',$contrats);
-                $this->render('/projets/index');
+                $this->render('index');
         }          
 }

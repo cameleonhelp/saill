@@ -134,6 +134,6 @@ class MessagesController extends AppController {
                 $this->autoRender = false;
                 $this->Message->recursive = 0;
                 $this->set('messages', $this->paginate());
-                $this->render('/Messages/index');
+                $this->render('index');
         }        
 }

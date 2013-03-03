@@ -180,6 +180,6 @@ class MaterielinformatiquesController extends AppController {
                 $this->set('types',$types);    
                 $sections = $this->Materielinformatique->find('all',array('fields' => array('Section.NOM'),'group'=>'Section.NOM','order'=>array('Section.NOM'=>'asc')));
                 $this->set('sections',$sections);                 
-                $this->render('/Materielinformatiques/index');
+                $this->render('index');
         }   
 }

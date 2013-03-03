@@ -118,6 +118,6 @@ class OutilsController extends AppController {
                 $this->autoRender = false;
                 $this->Outil->recursive = 0;
                 $this->set('outils', $this->paginate());              
-                $this->render('/Outils/index');
+                $this->render('index');
         }            
 }

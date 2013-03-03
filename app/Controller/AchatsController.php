@@ -131,7 +131,7 @@ class AchatsController extends AppController {
                 $this->set('achats', $this->paginate());
                 $activites = $this->Achat->Activite->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
                 $this->set('activites',$activites);  
-                $this->render('/achats/index');
+                $this->render('index');
         }    
        
 }

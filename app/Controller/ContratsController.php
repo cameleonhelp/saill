@@ -132,6 +132,6 @@ class ContratsController extends AppController {
                 $this->autoRender = false;
                 $this->Contrat->recursive = 0;
                 $this->set('contrats', $this->paginate());              
-                $this->render('/Contrats/index');
+                $this->render('index');
         }         
 }

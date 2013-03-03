@@ -117,6 +117,6 @@ class TjmagentsController extends AppController {
                 $this->autoRender = false;
                 $this->Tjmagent->recursive = 0;
                 $this->set('tjmagents', $this->paginate());            
-                $this->render('/tjmagents/index');
+                $this->render('index');
         }         
 }

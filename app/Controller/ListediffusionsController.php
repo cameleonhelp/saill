@@ -120,6 +120,6 @@ class ListediffusionsController extends AppController {
                 $this->autoRender = false;
                 $this->Listediffusion->recursive = 0;
                 $this->set('listediffusions', $this->paginate());              
-                $this->render('/Listediffusions/index');
+                $this->render('index');
         }         
 }

@@ -120,6 +120,6 @@ class TypematerielsController extends AppController {
                 $this->autoRender = false;
                 $this->Typemateriel->recursive = 0;
                 $this->set('typemateriels', $this->paginate());              
-                $this->render('/Typemateriels/index');
+                $this->render('index');
         }            
 }

@@ -120,6 +120,6 @@ class DossierpartagesController extends AppController {
                 $this->autoRender = false;
                 $this->Dossierpartage->recursive = 0;
                 $this->set('dossierpartages', $this->paginate());              
-                $this->render('/Dossierpartages/index');
+                $this->render('index');
         }            
 }        

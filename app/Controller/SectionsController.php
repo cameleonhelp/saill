@@ -118,6 +118,6 @@ class SectionsController extends AppController {
                 $this->autoRender = false;
                 $this->Section->recursive = 0;
                 $this->set('sections', $this->paginate());              
-                $this->render('/Sections/index');
+                $this->render('index');
         }            
 }

@@ -118,6 +118,6 @@ class TjmcontratsController extends AppController {
                 $this->autoRender = false;
                 $this->Tjmcontrat->recursive = 0;
                 $this->set('tjmcontrats', $this->paginate());            
-                $this->render('/tjmcontrats/index');
+                $this->render('index');
         }         
 }

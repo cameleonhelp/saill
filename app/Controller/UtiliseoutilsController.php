@@ -236,6 +236,6 @@ class UtiliseoutilsController extends AppController {
                 $this->set('utiliseoutils', $this->paginate());
                 $etats = $this->Utiliseoutil->find('all',array('fields' => array('Utiliseoutil.STATUT'),'group'=>'Utiliseoutil.STATUT','order'=>array('Utiliseoutil.STATUT'=>'asc')));
                 $this->set('etats',$etats);                
-                $this->render('/Utiliseoutils/index');
+                $this->render('index');
         }         
 }

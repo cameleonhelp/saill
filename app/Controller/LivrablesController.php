@@ -197,6 +197,6 @@ class LivrablesController extends AppController {
                 $this->autoRender = false;
                 $this->Livrable->recursive = 0;
                 $this->set('livrables', $this->paginate());              
-                $this->render('/livrables/index'); 
+                $this->render('index'); 
         }           
 }

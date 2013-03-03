@@ -116,6 +116,6 @@ class ProfilsController extends AppController {
                 $this->autoRender = false;
                 $this->Profil->recursive = 0;
                 $this->set('profils', $this->paginate());
-                $this->render('/Profils/index');
+                $this->render('index');
         }         
 }

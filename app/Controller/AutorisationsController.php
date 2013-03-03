@@ -140,6 +140,6 @@ class AutorisationsController extends AppController {
                 $this->set('autorisations', $this->paginate());
                 $profils = $this->Autorisation->find('all',array('fields' => array('Profil.NOM'),'group'=>'Profil.NOM','order'=>array('Profil.NOM'=>'asc')));
                 $this->set('profils',$profils);                 
-                $this->render('/Autorisations/index');
+                $this->render('index');
         }          
 }

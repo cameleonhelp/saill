@@ -153,6 +153,6 @@ class ActivitesController extends AppController {
                 $this->set('activites', $this->paginate());
                 $projets = $this->Activite->Projet->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Projet.id>1'));
                 $this->set('projets',$projets);  
-                $this->render('/activites/index');
+                $this->render('index');
         }          
 }

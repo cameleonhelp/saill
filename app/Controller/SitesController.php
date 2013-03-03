@@ -114,6 +114,6 @@ class SitesController extends AppController {
                 $this->autoRender = false;
                 $this->Site->recursive = 0;
                 $this->set('sites', $this->paginate());              
-                $this->render('/Sites/index');
+                $this->render('index');
         }         
 }

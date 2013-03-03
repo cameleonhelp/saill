@@ -317,6 +317,6 @@ class UtilisateursController extends AppController {
                 $this->set('utilisateurs', $this->paginate());
                 $sections = $this->Utilisateur->Section->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
                 $this->set('sections',$sections);
-                $this->render('/Utilisateurs/index');
+                $this->render('index');
         }         
 }

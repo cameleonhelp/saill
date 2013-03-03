@@ -114,6 +114,6 @@ class DomainesController extends AppController {
                 $this->autoRender = false;
                 $this->Domaine->recursive = 0;
                 $this->set('domaines', $this->paginate());               
-                $this->render('/Domaines/index');
+                $this->render('index');
         }               
 }

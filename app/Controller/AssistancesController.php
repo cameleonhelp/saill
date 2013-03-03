@@ -114,6 +114,6 @@ class AssistancesController extends AppController {
                 $this->autoRender = false;
                 $this->Assistance->recursive = 0;
                 $this->set('assistances', $this->paginate());           
-                $this->render('/Assistances/index');
+                $this->render('index');
         }         
 }

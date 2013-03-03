@@ -120,6 +120,6 @@ class LinksharedsController extends AppController {
                 $this->autoRender = false;
                 $this->Linkshared->recursive = 0;
                 $this->set('linkshareds', $this->paginate());              
-                $this->render('/linkshareds/index'); 
+                $this->render('index'); 
         }   
 }        
