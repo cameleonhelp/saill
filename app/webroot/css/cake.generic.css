@@ -4,12 +4,13 @@
  * Generic CSS for CakePHP
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.webroot.css
  * @since         CakePHP(tm)
@@ -66,7 +67,7 @@ h4 {
 	font-weight: normal;
 }
 ul, li {
-	/*margin: 0 12px;*/
+	margin: 0 12px;
 }
 p {
 	margin: 0 0 1em 0;
@@ -97,13 +98,13 @@ p {
 	background: #003d4c;
 	text-decoration: underline;
 }
-/*#content{
+#content{
 	background: #fff;
 	clear: both;
 	color: #333;
 	padding: 10px 20px 40px 20px;
 	overflow: auto;
-}*/
+}
 #footer {
 	clear: both;
 	padding: 6px 10px;
@@ -254,12 +255,12 @@ dd {
 }
 
 /** Forms **/
-/*form {
+form {
 	clear: both;
 	margin-right: 20px;
 	padding: 0;
 	width: 95%;
-}*/
+}
 fieldset {
 	border: none;
 	margin-bottom: 1em;
