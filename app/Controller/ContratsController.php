@@ -47,7 +47,7 @@ class ContratsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Contrat->exists($id)) {
-			throw new NotFoundException(__('Contrat incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Contrat incorrect'));
 		}
 		$options = array('conditions' => array('Contrat.' . $this->Contrat->primaryKey => $id));
 		$this->set('contrat', $this->Contrat->find('first', $options));
@@ -83,7 +83,7 @@ class ContratsController extends AppController {
                 $tjmcontrats = $this->Contrat->Tjmcontrat->find('list',array('fields' => array('id', 'TJM')));
                 $this->set('tjmcontrats',$tjmcontrats);            
 		if (!$this->Contrat->exists($id)) {
-			throw new NotFoundException(__('Contrat incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Contrat incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Contrat->save($this->request->data)) {
@@ -109,7 +109,7 @@ class ContratsController extends AppController {
 	public function delete($id = null) {
 		$this->Contrat->id = $id;
 		if (!$this->Contrat->exists()) {
-			throw new NotFoundException(__('Contrat incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Contrat incorrect'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Contrat->delete()) {

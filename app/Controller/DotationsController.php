@@ -27,7 +27,7 @@ class DotationsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Dotation->exists($id)) {
-			throw new NotFoundException(__('Dotation incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Dotation incorrecte'));
 		}
 		$options = array('conditions' => array('Dotation.' . $this->Dotation->primaryKey => $id));
 		$this->set('dotation', $this->Dotation->find('first', $options));
@@ -76,7 +76,7 @@ class DotationsController extends AppController {
  */
 	public function edit($id = null,$userid = null) {         
 		if (!$this->Dotation->exists($id)) {
-			throw new NotFoundException(__('Dotation incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Dotation incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Dotation->save($this->request->data)) {
@@ -106,7 +106,7 @@ class DotationsController extends AppController {
 	public function delete($id = null,$userid = null) {
 		$this->Dotation->id = $id;
 		if (!$this->Dotation->exists()) {
-			throw new NotFoundException(__('Dotation incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Dotation incorrecte'));
 		}
 		if ($this->Dotation->delete()) {
                         $history['Historyutilisateur']['utilisateur_id']=$userid;

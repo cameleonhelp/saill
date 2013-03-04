@@ -34,7 +34,7 @@ class MessagesController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Message->exists($id)) {
-			throw new NotFoundException(__('Message incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Message incorrect'));
 		}
 		$options = array('conditions' => array('Message.' . $this->Message->primaryKey => $id));
 		$this->set('message', $this->Message->find('first', $options));
@@ -66,7 +66,7 @@ class MessagesController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Message->exists($id)) {
-			throw new NotFoundException(__('Message incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Message incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Message->save($this->request->data)) {
@@ -92,7 +92,7 @@ class MessagesController extends AppController {
 	public function delete($id = null) {
 		$this->Message->id = $id;
 		if (!$this->Message->exists()) {
-			throw new NotFoundException(__('Message incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Message incorrect'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Message->delete()) {

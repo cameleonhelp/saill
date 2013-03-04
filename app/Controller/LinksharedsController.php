@@ -35,7 +35,7 @@ class LinksharedsController extends AppController {
 	public function view($id = null) {
                 $this->set('title_for_layout','Liens partagés');
                 if (!$this->Linkshared->exists($id)) {
-			throw new NotFoundException(__('Lien partagé incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Lien partagé incorrect'));
 		}
 		$options = array('conditions' => array('Linkshared.' . $this->Linkshared->primaryKey => $id));
 		$this->set('linkshared', $this->Linkshared->find('first', $options));
@@ -69,7 +69,7 @@ class LinksharedsController extends AppController {
 	public function edit($id = null) {
                 $this->set('title_for_layout','Liens partagés');
                 if (!$this->Linkshared->exists($id)) {
-			throw new NotFoundException(__('Lien partagé incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Lien partagé incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Linkshared->save($this->request->data)) {
@@ -96,7 +96,7 @@ class LinksharedsController extends AppController {
                 $this->set('title_for_layout','Liens partagés');
                 $this->Linkshared->id = $id;
 		if (!$this->Linkshared->exists()) {
-			throw new NotFoundException(__('Lien partagé incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Lien partagé incorrect'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Linkshared->delete()) {

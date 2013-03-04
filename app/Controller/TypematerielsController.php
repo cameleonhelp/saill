@@ -35,7 +35,7 @@ class TypematerielsController extends AppController {
 	public function view($id = null) {
 		$this->set('title_for_layout','Types de matériel');
                 if (!$this->Typemateriel->exists($id)) {
-			throw new NotFoundException(__('Type de matériel incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Type de matériel incorrect'));
 		}
 		$options = array('conditions' => array('Typemateriel.' . $this->Typemateriel->primaryKey => $id));
 		$this->set('typemateriel', $this->Typemateriel->find('first', $options));
@@ -69,7 +69,7 @@ class TypematerielsController extends AppController {
 	public function edit($id = null) {
 		$this->set('title_for_layout','Types de matériel');
                 if (!$this->Typemateriel->exists($id)) {
-			throw new NotFoundException(__('Type de matériel incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Type de matériel incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Typemateriel->save($this->request->data)) {
@@ -96,7 +96,7 @@ class TypematerielsController extends AppController {
 		$this->set('title_for_layout','Types de matériel');
                 $this->Typemateriel->id = $id;
 		if (!$this->Typemateriel->exists()) {
-			throw new NotFoundException(__('Type de matériel incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Type de matériel incorrect'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Typemateriel->delete()) {

@@ -33,7 +33,7 @@ class OutilsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Outil->exists($id)) {
-			throw new NotFoundException(__('Outil incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Outil incorrect'));
 		}
 		$options = array('conditions' => array('Outil.' . $this->Outil->primaryKey => $id));
 		$this->set('outil', $this->Outil->find('first', $options));
@@ -69,7 +69,7 @@ class OutilsController extends AppController {
                 $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1')));              
                 $this->set('gestionnaire',$gestionnaire);            
 		if (!$this->Outil->exists($id)) {
-			throw new NotFoundException(__('Outil incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Outil incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Outil->save($this->request->data)) {
@@ -95,7 +95,7 @@ class OutilsController extends AppController {
 	public function delete($id = null) {
 		$this->Outil->id = $id;
 		if (!$this->Outil->exists()) {
-			throw new NotFoundException(__('Outil incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Outil incorrect'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Outil->delete()) {

@@ -46,7 +46,7 @@ class AutorisationsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Autorisation->exists($id)) {
-			throw new NotFoundException(__('Autorisation incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Autorisation incorrecte'));
 		}
 		$options = array('conditions' => array('Autorisation.' . $this->Autorisation->primaryKey => $id));
 		$this->set('autorisation', $this->Autorisation->find('first', $options));
@@ -86,7 +86,7 @@ class AutorisationsController extends AppController {
                 $profil = $this->Autorisation->Profil->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('profil',$profil);                
 		if (!$this->Autorisation->exists($id)) {
-			throw new NotFoundException(__('Autorisation incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Autorisation incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Autorisation->save($this->request->data)) {
@@ -113,7 +113,7 @@ class AutorisationsController extends AppController {
 	public function delete($id = null) {
 		$this->Autorisation->id = $id;
 		if (!$this->Autorisation->exists()) {
-			throw new NotFoundException(__('Autorisation incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Autorisation incorrecte'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Autorisation->delete()) {

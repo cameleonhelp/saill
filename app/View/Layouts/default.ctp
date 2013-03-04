@@ -127,11 +127,12 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
         </div>
     </div>    
     <?php //$url = $this->Session->read('history'); debug($this->params->url); 
-    debug($suivilivrable); ?>
+    //debug(env('SERVER_ADDR')); ?>
+    <?php if (env('SERVER_ADDR') == '10.0.0.8' || env('SERVER_ADDR') == '127.0.0.1') { ?>
     <div id="debugguer" style="background-color: #cccccc;">SQL Debug :
         <?php echo $this->element('sql_dump'); ?>
     </div>   
-
+    <?php } ?>
 </body>
 </html>
 <script>

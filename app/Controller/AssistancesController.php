@@ -33,7 +33,7 @@ class AssistancesController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Assistance->exists($id)) {
-			throw new NotFoundException(__('Assistance incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Assistance incorrecte'));
 		}
 		$options = array('conditions' => array('Assistance.' . $this->Assistance->primaryKey => $id));
 		$this->set('assistance', $this->Assistance->find('first', $options));
@@ -65,7 +65,7 @@ class AssistancesController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Assistance->exists($id)) {
-			throw new NotFoundException(__('Assistance incorrectee'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Assistance incorrectee'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Assistance->save($this->request->data)) {
@@ -91,7 +91,7 @@ class AssistancesController extends AppController {
 	public function delete($id = null) {
 		$this->Assistance->id = $id;
 		if (!$this->Assistance->exists()) {
-			throw new NotFoundException(__('Assistance incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Assistance incorrecte'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Assistance->delete()) {

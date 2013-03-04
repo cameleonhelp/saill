@@ -61,7 +61,7 @@ class ProjetsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Projet->exists($id)) {
-			throw new NotFoundException(__('Projet incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Projet incorrect'));
 		}
 		$options = array('conditions' => array('Projet.' . $this->Projet->primaryKey => $id));
 		$this->set('projet', $this->Projet->find('first', $options));
@@ -105,7 +105,7 @@ class ProjetsController extends AppController {
                 $factureProjet = Configure::read('factureProjet');
                 $this->set('facturation',$factureProjet);                   
                 if (!$this->Projet->exists($id)) {
-			throw new NotFoundException(__('Projet incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Projet incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Projet->save($this->request->data)) {
@@ -131,7 +131,7 @@ class ProjetsController extends AppController {
 	public function delete($id = null) {
 		$this->Projet->id = $id;
 		if (!$this->Projet->exists()) {
-			throw new NotFoundException(__('Projet incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Projet incorrect'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Projet->delete()) {

@@ -33,7 +33,7 @@ class SectionsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Section->exists($id)) {
-			throw new NotFoundException(__('Section incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Section incorrecte'));
 		}
 		$options = array('conditions' => array('Section.' . $this->Section->primaryKey => $id));
 		$this->set('section', $this->Section->find('first', $options));
@@ -69,7 +69,7 @@ class SectionsController extends AppController {
                 $responsable = $this->Section->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'conditions'=>array('id >'=>1,'HIERARCHIQUE'=>1)));
                 $this->set('responsable',$responsable);		
                 if (!$this->Section->exists($id)) {
-			throw new NotFoundException(__('Section incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Section incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Section->save($this->request->data)) {
@@ -95,7 +95,7 @@ class SectionsController extends AppController {
 	public function delete($id = null) {
 		$this->Section->id = $id;
 		if (!$this->Section->exists()) {
-			throw new NotFoundException(__('Section incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Section incorrecte'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Section->delete()) {

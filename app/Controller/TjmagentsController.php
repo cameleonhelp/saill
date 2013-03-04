@@ -33,7 +33,7 @@ class TjmagentsController extends AppController {
 	public function view($id = null) {
 		$this->set('title_for_layout','TJM agents');
                 if (!$this->Tjmagent->exists($id)) {
-			throw new NotFoundException(__('TJM agent incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('TJM agent incorrect'));
 		}
 		$options = array('conditions' => array('Tjmagent.' . $this->Tjmagent->primaryKey => $id));
 		$this->set('tjmagent', $this->Tjmagent->find('first', $options));
@@ -67,7 +67,7 @@ class TjmagentsController extends AppController {
 	public function edit($id = null) {
 		$this->set('title_for_layout','TJM agents');
                 if (!$this->Tjmagent->exists($id)) {
-			throw new NotFoundException(__('TJM agent incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('TJM agent incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Tjmagent->save($this->request->data)) {
@@ -94,7 +94,7 @@ class TjmagentsController extends AppController {
 		$this->set('title_for_layout','TJM agents');
                 $this->Tjmagent->id = $id;
 		if (!$this->Tjmagent->exists()) {
-			throw new NotFoundException(__('TJM agent incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('TJM agent incorrect'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Tjmagent->delete()) {

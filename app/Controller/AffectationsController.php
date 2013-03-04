@@ -27,7 +27,7 @@ class AffectationsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Affectation->exists($id)) {
-			throw new NotFoundException(__('Affectation incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Affectation incorrecte'));
 		}
 		$options = array('conditions' => array('Affectation.' . $this->Affectation->primaryKey => $id));
 		$this->set('affectation', $this->Affectation->find('first', $options));
@@ -67,7 +67,7 @@ class AffectationsController extends AppController {
                 $activites = $this->Affectation->Activite->find('list',array('fields'=>array('id','NOM')));
 		$this->set('activites', $activites);             
 		if (!$this->Affectation->exists($id)) {
-			throw new NotFoundException(__('Affectation incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Affectation incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Affectation->save($this->request->data)) {
@@ -96,7 +96,7 @@ class AffectationsController extends AppController {
 	public function delete($id = null,$userid = null) {
 		$this->Affectation->id = $id;
 		if (!$this->Affectation->exists()) {
-			throw new NotFoundException(__('Affectation incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Affectation incorrecte'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Affectation->delete()) {

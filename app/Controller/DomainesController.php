@@ -33,7 +33,7 @@ class DomainesController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Domaine->exists($id)) {
-			throw new NotFoundException(__('Domaine incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Domaine incorrect'));
 		}
 		$options = array('conditions' => array('Domaine.' . $this->Domaine->primaryKey => $id));
 		$this->set('domaine', $this->Domaine->find('first', $options));
@@ -65,7 +65,7 @@ class DomainesController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Domaine->exists($id)) {
-			throw new NotFoundException(__('Domaine incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Domaine incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Domaine->save($this->request->data)) {
@@ -91,7 +91,7 @@ class DomainesController extends AppController {
 	public function delete($id = null) {
 		$this->Domaine->id = $id;
 		if (!$this->Domaine->exists()) {
-			throw new NotFoundException(__('Domaine incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Domaine incorrect'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Domaine->delete()) {

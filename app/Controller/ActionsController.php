@@ -69,7 +69,7 @@ class ActionsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Action->exists($id)) {
-			throw new NotFoundException(__('Action incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Action incorrecte'));
 		}
 		$options = array('conditions' => array('Action.' . $this->Action->primaryKey => $id));
 		$this->set('action', $this->Action->find('first', $options));
@@ -101,7 +101,7 @@ class ActionsController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Action->exists($id)) {
-			throw new NotFoundException(__('Action incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Action incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Action->save($this->request->data)) {
@@ -127,7 +127,7 @@ class ActionsController extends AppController {
 	public function delete($id = null) {
 		$this->Action->id = $id;
 		if (!$this->Action->exists()) {
-			throw new NotFoundException(__('Action incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Action incorrecte'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Action->delete()) {

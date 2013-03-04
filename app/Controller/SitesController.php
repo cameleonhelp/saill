@@ -33,7 +33,7 @@ class SitesController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Site->exists($id)) {
-			throw new NotFoundException(__('Site incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Site incorrect'));
 		}
 		$options = array('conditions' => array('Site.' . $this->Site->primaryKey => $id));
 		$this->set('site', $this->Site->find('first', $options));
@@ -65,7 +65,7 @@ class SitesController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Site->exists($id)) {
-			throw new NotFoundException(__('Site incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Site incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Site->save($this->request->data)) {
@@ -91,7 +91,7 @@ class SitesController extends AppController {
 	public function delete($id = null) {
 		$this->Site->id = $id;
 		if (!$this->Site->exists()) {
-			throw new NotFoundException(__('Site incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Site incorrect'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Site->delete()) {

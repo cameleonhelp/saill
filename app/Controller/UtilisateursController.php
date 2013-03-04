@@ -69,7 +69,7 @@ class UtilisateursController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Utilisateur->exists($id)) {
-			throw new NotFoundException(__('Utilisateur incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Utilisateur incorrect'));
 		}
 		$options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));
 		$this->set('utilisateur', $this->Utilisateur->find('first', $options));
@@ -181,7 +181,7 @@ class UtilisateursController extends AppController {
 	public function delete($id = null) {
 		$this->Utilisateur->id = $id;
 		if (!$this->Utilisateur->exists()) {
-			throw new NotFoundException(__('Utilisateur incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Utilisateur incorrect'));
 		}
                 $record = $this->Utilisateur->read();
                 unset($record['Utilisateur']['ACTIF']); 
@@ -209,16 +209,17 @@ class UtilisateursController extends AppController {
  * @param string $id
  * @return void
  */
-	public function profil($id = null) {
+	public function profil() {
+                $id = $this->Utilisateur->id;
                 $this->set('title_for_layout',"Mon profils");
-                if ($id != null){
+                if (isset($id)){
                     if (!$this->Utilisateur->exists($id)) {
-                            throw new NotFoundException(__('Utilisateur incorrect'),'default',array('class'=>'alert alert-error'));
+                            throw new NotFoundException(__('Utilisateur incorrect'));
                     }
-                $options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));
-                $this->set('utilisateur', $this->Utilisateur->find('first', $options));    
+                    $options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));
+                    $this->set('utilisateur', $this->Utilisateur->find('first', $options));    
                 } else {
-                    throw new NotFoundException(__('Utilisateur non renseigné'),'default',array('class'=>'alert alert-error'));
+                    throw new NotFoundException(__('Utilisateur non renseigné'));
                 }
         }  
         

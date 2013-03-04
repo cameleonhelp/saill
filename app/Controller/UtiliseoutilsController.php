@@ -48,7 +48,7 @@ class UtiliseoutilsController extends AppController {
 	public function view($id = null) {
 		$this->set('title_for_layout','Ouvertures des droits');
                 if (!$this->Utiliseoutil->exists($id)) {
-			throw new NotFoundException(__('Ouvertures des droits incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Ouvertures des droits incorrecte'));
 		}
 		$options = array('conditions' => array('Utiliseoutil.' . $this->Utiliseoutil->primaryKey => $id));
 		$this->set('utiliseoutil', $this->Utiliseoutil->find('first', $options));
@@ -113,7 +113,7 @@ class UtiliseoutilsController extends AppController {
                 $etat = Configure::read('etatOuvertureDroit');
                 $this->set('etat',$etat);    
                 if (!$this->Utiliseoutil->exists($id)) {
-			throw new NotFoundException(__('Ouvertures des droits incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Ouvertures des droits incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Utiliseoutil->save($this->request->data)) {
@@ -145,7 +145,7 @@ class UtiliseoutilsController extends AppController {
                 $this->Utiliseoutil->id = $id;
                 $userid = $this->Utiliseoutil->read();
 		if (!$this->Utiliseoutil->exists()) {
-			throw new NotFoundException(__('Ouvertures des droits incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Ouvertures des droits incorrecte'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Utiliseoutil->delete()) {
@@ -206,7 +206,7 @@ class UtiliseoutilsController extends AppController {
                 $record['Utiliseoutil']['created'] = $this->Utiliseoutil->read('created');
                 $record['Utiliseoutil']['modified'] = date('Y-m-d');
 		if (!$this->Utiliseoutil->exists()) {
-			throw new NotFoundException(__('Ouvertures des droits incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Ouvertures des droits incorrecte'));
 		}
                 if ($this->Utiliseoutil->save($record)) { 
                     $history['Historyutilisateur']['utilisateur_id']=$record['Utiliseoutil']['utilisateur_id'];

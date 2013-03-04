@@ -35,7 +35,7 @@ class DossierpartagesController extends AppController {
 	public function view($id = null) {
 		$this->set('title_for_layout','Partages réseaux');
                 if (!$this->Dossierpartage->exists($id)) {
-			throw new NotFoundException(__('Dossier partagé incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Dossier partagé incorrecte'));
 		}
 		$options = array('conditions' => array('Dossierpartage.' . $this->Dossierpartage->primaryKey => $id));
 		$this->set('dossierpartage', $this->Dossierpartage->find('first', $options));
@@ -69,7 +69,7 @@ class DossierpartagesController extends AppController {
 	public function edit($id = null) {
 		$this->set('title_for_layout','Partages réseaux');
                 if (!$this->Dossierpartage->exists($id)) {
-			throw new NotFoundException(__('Dossier partagé incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Dossier partagé incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Dossierpartage->save($this->request->data)) {
@@ -96,7 +96,7 @@ class DossierpartagesController extends AppController {
 		$this->set('title_for_layout','Partages réseaux');
                 $this->Dossierpartage->id = $id;
 		if (!$this->Dossierpartage->exists()) {
-			throw new NotFoundException(__('Dossier partagé incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Dossier partagé incorrecte'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Dossierpartage->delete()) {

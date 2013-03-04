@@ -35,7 +35,7 @@ class ListediffusionsController extends AppController {
 	public function view($id = null) {
 		$this->set('title_for_layout','Listes de diffusion');
                 if (!$this->Listediffusion->exists($id)) {
-			throw new NotFoundException(__('Liste de diffusion incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Liste de diffusion incorrecte'));
 		}
 		$options = array('conditions' => array('Listediffusion.' . $this->Listediffusion->primaryKey => $id));
 		$this->set('listediffusion', $this->Listediffusion->find('first', $options));
@@ -69,7 +69,7 @@ class ListediffusionsController extends AppController {
 	public function edit($id = null) {
 		$this->set('title_for_layout','Listes de diffusion');
                 if (!$this->Listediffusion->exists($id)) {
-			throw new NotFoundException(__('Liste de diffusion incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Liste de diffusion incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Listediffusion->save($this->request->data)) {
@@ -96,7 +96,7 @@ class ListediffusionsController extends AppController {
 		$this->set('title_for_layout','Listes de diffusion');
                 $this->Listediffusion->id = $id;
 		if (!$this->Listediffusion->exists()) {
-			throw new NotFoundException(__('Liste de diffusion incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Liste de diffusion incorrecte'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Listediffusion->delete()) {

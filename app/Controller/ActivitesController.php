@@ -65,7 +65,7 @@ class ActivitesController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Activite->exists($id)) {
-			throw new NotFoundException(__('Activité incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Activité incorrecte'));
 		}
 		$options = array('conditions' => array('Activite.' . $this->Activite->primaryKey => $id));
 		$this->set('activite', $this->Activite->find('first', $options));
@@ -101,7 +101,7 @@ class ActivitesController extends AppController {
                 $projets = $this->Activite->Projet->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
                 $this->set('projets',$projets);               
 		if (!$this->Activite->exists($id)) {
-			throw new NotFoundException(__('Activité incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Activité incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Activite->save($this->request->data)) {
@@ -127,7 +127,7 @@ class ActivitesController extends AppController {
 	public function delete($id = null) {
 		$this->Activite->id = $id;
 		if (!$this->Activite->exists()) {
-			throw new NotFoundException(__('Activité incorrecte'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Activité incorrecte'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Activite->delete()) {

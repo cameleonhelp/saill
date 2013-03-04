@@ -33,7 +33,7 @@ class TjmcontratsController extends AppController {
 	public function view($id = null) {
 		$this->set('title_for_layout','TJM contrats');
                 if (!$this->Tjmcontrat->exists($id)) {
-			throw new NotFoundException(__('TJM contrat incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('TJM contrat incorrect'));
 		}
 		$options = array('conditions' => array('Tjmcontrat.' . $this->Tjmcontrat->primaryKey => $id));
 		$this->set('tjmcontrat', $this->Tjmcontrat->find('first', $options));
@@ -67,7 +67,7 @@ class TjmcontratsController extends AppController {
 	public function edit($id = null) {
 		$this->set('title_for_layout','TJM contrats');
                 if (!$this->Tjmcontrat->exists($id)) {
-			throw new NotFoundException(__('TJM contrat incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('TJM contrat incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Tjmcontrat->save($this->request->data)) {
@@ -94,7 +94,7 @@ class TjmcontratsController extends AppController {
 		$this->set('title_for_layout','TJM contrats');
                 $this->Tjmcontrat->id = $id;
 		if (!$this->Tjmcontrat->exists()) {
-			throw new NotFoundException(__('TJM contrat incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('TJM contrat incorrect'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Tjmcontrat->delete()) {

@@ -72,7 +72,7 @@ class MaterielinformatiquesController extends AppController {
 	public function view($id = null) {
 		$this->set('title_for_layout','Postes informatique');
                 if (!$this->Materielinformatique->exists($id)) {
-			throw new NotFoundException(__('Postes informatique incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Postes informatique incorrect'));
 		}
 		$options = array('conditions' => array('Materielinformatique.' . $this->Materielinformatique->primaryKey => $id));
 		$this->set('materielinformatique', $this->Materielinformatique->find('first', $options));
@@ -122,7 +122,7 @@ class MaterielinformatiquesController extends AppController {
                 $etat = Configure::read('etatMaterielInformatique');
                 $this->set('etat',$etat); 
                 if (!$this->Materielinformatique->exists($id)) {
-			throw new NotFoundException(__('Postes informatique incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Postes informatique incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Materielinformatique->save($this->request->data)) {
@@ -150,7 +150,7 @@ class MaterielinformatiquesController extends AppController {
 		$this->set('title_for_layout','Postes informatique');
                 $this->Materielinformatique->id = $id;
 		if (!$this->Materielinformatique->exists()) {
-			throw new NotFoundException(__('Postes informatique incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Postes informatique incorrect'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Materielinformatique->delete()) {

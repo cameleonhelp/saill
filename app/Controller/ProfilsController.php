@@ -33,7 +33,7 @@ class ProfilsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Profil->exists($id)) {
-			throw new NotFoundException(__('Profil incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Profil incorrect'));
 		}
 		$options = array('conditions' => array('Profil.' . $this->Profil->primaryKey => $id));
 		$this->set('profil', $this->Profil->find('first', $options));
@@ -65,7 +65,7 @@ class ProfilsController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Profil->exists($id)) {
-			throw new NotFoundException(__('Profil incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Profil incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Profil->save($this->request->data)) {
@@ -91,7 +91,7 @@ class ProfilsController extends AppController {
 	public function delete($id = null) {
 		$this->Profil->id = $id;
 		if (!$this->Profil->exists()) {
-			throw new NotFoundException(__('Profil incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Profil incorrect'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Profil->delete()) {

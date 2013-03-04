@@ -112,7 +112,7 @@ class LivrablesController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Livrable->exists($id)) {
-			throw new NotFoundException(__('Livrable incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Livrable incorrect'));
 		}
 		$options = array('conditions' => array('Livrable.' . $this->Livrable->primaryKey => $id));
 		$this->set('livrable', $this->Livrable->find('first', $options));
@@ -192,7 +192,7 @@ class LivrablesController extends AppController {
 	public function delete($id = null) {
 		$this->Livrable->id = $id;
 		if (!$this->Livrable->exists()) {
-			throw new NotFoundException(__('Livrable incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Livrable incorrect'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Livrable->delete()) {
