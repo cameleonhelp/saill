@@ -421,6 +421,7 @@ class Utilisateur extends AppModel {
         public $virtualFields = array(
             'NOMLONG' => 'CONCAT(Utilisateur.NOM, " ", Utilisateur.PRENOM)'
         );
+ 
  /**
  * beforeSave method
  *

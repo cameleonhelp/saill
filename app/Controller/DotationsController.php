@@ -27,7 +27,7 @@ class DotationsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Dotation->exists($id)) {
-			throw new NotFoundException(__('Dotation incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Dotation incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Dotation.' . $this->Dotation->primaryKey => $id));
 		$this->set('dotation', $this->Dotation->find('first', $options));
@@ -59,10 +59,10 @@ class DotationsController extends AppController {
                                 $history['Historyutilisateur']['utilisateur_id']=$userid;
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une dotation";
                                 $this->Dotation->Utilisateur->Historyutilisateur->save($history);                               
-				$this->Session->setFlash(__('Dotation sauvegardée'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Dotation sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(2));
 			} else {
-				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -76,17 +76,17 @@ class DotationsController extends AppController {
  */
 	public function edit($id = null,$userid = null) {         
 		if (!$this->Dotation->exists($id)) {
-			throw new NotFoundException(__('Dotation incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Dotation incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Dotation->save($this->request->data)) {
                                 $history['Historyutilisateur']['utilisateur_id']=$userid;
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour de la dotation dotation";
                                 $this->Dotation->Utilisateur->Historyutilisateur->save($history); 				
-                            $this->Session->setFlash(__('Dotation sauvegardée'),true,array('class'=>'alert alert-success'));
+                            $this->Session->setFlash(__('Dotation sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(2));
 			} else {
-				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Dotation.' . $this->Dotation->primaryKey => $id));
@@ -106,16 +106,16 @@ class DotationsController extends AppController {
 	public function delete($id = null,$userid = null) {
 		$this->Dotation->id = $id;
 		if (!$this->Dotation->exists()) {
-			throw new NotFoundException(__('Dotation incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Dotation incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->Dotation->delete()) {
                         $history['Historyutilisateur']['utilisateur_id']=$userid;
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une dotation";
                         $this->Dotation->Utilisateur->Historyutilisateur->save($history);                     
-			$this->Session->setFlash(__('Dotation supprimée'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Dotation supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Dotation <b>NON</b> supprimée'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Dotation <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
 }

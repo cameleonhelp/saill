@@ -33,7 +33,7 @@ class SectionsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Section->exists($id)) {
-			throw new NotFoundException(__('Section incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Section incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Section.' . $this->Section->primaryKey => $id));
 		$this->set('section', $this->Section->find('first', $options));
@@ -50,10 +50,10 @@ class SectionsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Section->create();
 			if ($this->Section->save($this->request->data)) {
-				$this->Session->setFlash(__('Section sauvegardée'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Section sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Section incorrecte, veuillez corriger la section'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Section incorrecte, veuillez corriger la section'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -69,14 +69,14 @@ class SectionsController extends AppController {
                 $responsable = $this->Section->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'conditions'=>array('id >'=>1,'HIERARCHIQUE'=>1)));
                 $this->set('responsable',$responsable);		
                 if (!$this->Section->exists($id)) {
-			throw new NotFoundException(__('Section incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Section incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Section->save($this->request->data)) {
-				$this->Session->setFlash(__('Section sauvegardée'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Section sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Section incorrecte, veuillez corriger la section'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Section incorrecte, veuillez corriger la section'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Section.' . $this->Section->primaryKey => $id));
@@ -95,14 +95,14 @@ class SectionsController extends AppController {
 	public function delete($id = null) {
 		$this->Section->id = $id;
 		if (!$this->Section->exists()) {
-			throw new NotFoundException(__('Section incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Section incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Section->delete()) {
-			$this->Session->setFlash(__('Section supprimée'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Section supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Section <b>NON</b> supprimée'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Section <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

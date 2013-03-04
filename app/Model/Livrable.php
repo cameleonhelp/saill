@@ -25,6 +25,46 @@ class Livrable extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
+		'ETAT' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		), 
+		'ECHEANCE' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'DATELIVRAISON' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'DATEVALIDATION' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),            
 	);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -41,14 +81,7 @@ class Livrable extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		/*'Suivilivrable' => array(
-			'className' => 'Suivilivrable',
-			'foreignKey' => '',
-			'conditions' => '', //Suivilivrable.livrable_id = livrable.id
-			'fields' => '',
-			'order' => '' //Suivilivrable.created as desc
-		),     */       
+		),   
 	);
         
  /**
@@ -85,7 +118,7 @@ class Livrable extends AppModel {
 			'dependent' => false,
 			'conditions' => '',
 			'fields' => '',
-			'order' => '',
+			'order' => 'Suivilivrable.created desc, Suivilivrable.id desc',
 			'limit' => '',
 			'offset' => '',
 			'exclusive' => '',
@@ -104,6 +137,15 @@ class Livrable extends AppModel {
  * @return void
  */
         public function beforeSave() {
+            if (!empty($this->data['Livrable']['ECHEANCE'])) {
+                $this->data['Livrable']['ECHEANCE'] = $this->dateFormatBeforeSave($this->data['Livrable']['ECHEANCE']);
+            }
+            if (!empty($this->data['Livrable']['DATELIVRAISON'])) {
+                $this->data['Livrable']['DATELIVRAISON'] = $this->dateFormatBeforeSave($this->data['Livrable']['DATELIVRAISON']);
+            }
+            if (!empty($this->data['Livrable']['DATEVALIDATION'])) {
+                $this->data['Livrable']['DATEVALIDATION'] = $this->dateFormatBeforeSave($this->data['Livrable']['DATEVALIDATION']);
+            }
             parent::beforeSave();
             return true;
         }
@@ -123,7 +165,17 @@ class Livrable extends AppModel {
                 }      
                 if (isset($val['Livrable']['modified'])) {
                     $results[$key]['Livrable']['modified'] = $this->dateFormatAfterFind($val['Livrable']['modified']);
-                }            }
+                }                   
+                if (isset($val['Livrable']['ECHEANCE'])) {
+                    $results[$key]['Livrable']['ECHEANCE'] = $this->dateFormatAfterFind($val['Livrable']['ECHEANCE']);
+                }      
+                if (isset($val['Livrable']['DATEVALIDATION'])) {
+                    $results[$key]['Livrable']['DATEVALIDATION'] = $this->dateFormatAfterFind($val['Livrable']['DATEVALIDATION']);
+                }   
+                if (isset($val['Livrable']['DATELIVRAISON'])) {
+                    $results[$key]['Livrable']['DATELIVRAISON'] = $this->dateFormatAfterFind($val['Livrable']['DATELIVRAISON']);
+                }                 
+            }
             return $results;
         }         
 }

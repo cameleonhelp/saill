@@ -87,9 +87,9 @@
 			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
                         <th><?php echo $this->Paginator->sort('NOMLONG','Nom du gestionnaire'); ?></th>
 			<th width="60px"><?php echo $this->Paginator->sort('REFERENCE','Réf. MINIDOC'); ?></th>
-			<th width="40px"><?php echo $this->Paginator->sort('Suivilivrable.ETAT','Etat'); ?></th>
-			<th width="90px"><?php echo $this->Paginator->sort('Suivilivrable.ECHEANCE','Echéance'); ?></th>
-			<th width="90px"><?php echo $this->Paginator->sort('Suivilivrable.DATELIVRAISON','Date de livraison'); ?></th>                        
+			<th width="40px"><?php echo $this->Paginator->sort('ETAT','Etat'); ?></th>
+			<th width="90px"><?php echo $this->Paginator->sort('ECHEANCE','Echéance'); ?></th>
+			<th width="90px"><?php echo $this->Paginator->sort('DATELIVRAISON','Date de livraison'); ?></th>                        
 			<th width="60px" class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
         </thead>
@@ -99,11 +99,11 @@
 		<td><?php echo h($livrable['Livrable']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($livrable['Utilisateur']['NOMLONG']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($livrable['Livrable']['REFERENCE']); ?>&nbsp;</td>
-                <td style="text-align: center;"><?php echo isset($suivilivrable['ETAT']) ? '<i class="'.etatLivrable(h($suivilivrable['ETAT'])).'" rel="tooltip" data-title="'.h($suivilivrable['ETAT']).'"></i>' : '' ; ?></td>
-		<td style="text-align: center;"><?php echo h(isset($suivilivrable['Suivilivrable']['ECHEANCE']) ? $suivilivrable['Suivilivrable']['ECHEANCE'] : ''); ?>&nbsp;</td>
-		<td style="text-align: center;"><?php echo h(isset($suivilivrable['Suivilivrable']['DATELIVRAISON']) ? $suivilivrable['Suivilivrable']['DATELIVRAISON'] : ''); ?>&nbsp;</td>
+                <td style="text-align: center;"><?php echo isset($livrable['Livrable']['ETAT']) ? '<i class="'.etatLivrable(h($livrable['Livrable']['ETAT'])).'" rel="tooltip" data-title="'.h($livrable['Livrable']['ETAT']).'"></i>' : '' ; ?></td>
+		<td style="text-align: center;"><?php echo h(isset($livrable['Livrable']['ECHEANCE']) ? $livrable['Livrable']['ECHEANCE'] : ''); ?>&nbsp;</td>
+		<td style="text-align: center;"><?php echo h(isset($livrable['Livrable']['DATELIVRAISON']) ? $livrable['Livrable']['DATELIVRAISON'] : ''); ?>&nbsp;</td>
 		<td class="actions">
-                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Livrable :</h3>" data-content="<contenttitle>Validé le: </contenttitle>'.h(isset($suivilivrable['Suivilivrable']['DATEVALIDATION']) ? $suivilivrable['Suivilivrable']['DATEVALIDATION'] : '').'<br/><contenttitle>Crée le: </contenttitle>'.h($livrable['Livrable']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($livrable['Livrable']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Livrable :</h3>" data-content="<contenttitle>Validé le: </contenttitle>'.h(isset($livrable['Livrable']['DATEVALIDATION']) ? $livrable['Livrable']['DATEVALIDATION'] : '').'<br/><contenttitle>Crée le: </contenttitle>'.h($livrable['Livrable']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($livrable['Livrable']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $livrable['Livrable']['id']),array('escape' => false)); ?>&nbsp;
 			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $livrable['Livrable']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce livrables ?')); ?>
 

@@ -46,7 +46,7 @@ class AutorisationsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Autorisation->exists($id)) {
-			throw new NotFoundException(__('Autorisation incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Autorisation incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Autorisation.' . $this->Autorisation->primaryKey => $id));
 		$this->set('autorisation', $this->Autorisation->find('first', $options));
@@ -65,10 +65,10 @@ class AutorisationsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Autorisation->create();
 			if ($this->Autorisation->save($this->request->data)) {
-				$this->Session->setFlash(__('Autorisation sauvegardée'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Autorisation sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Autorisation incorrecte, veuillez corriger l\'autorisation'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Autorisation incorrecte, veuillez corriger l\'autorisation'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -86,14 +86,14 @@ class AutorisationsController extends AppController {
                 $profil = $this->Autorisation->Profil->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('profil',$profil);                
 		if (!$this->Autorisation->exists($id)) {
-			throw new NotFoundException(__('Autorisation incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Autorisation incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Autorisation->save($this->request->data)) {
-				$this->Session->setFlash(__('Autorisation sauvegardée'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Autorisation sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Autorisation incorrecte, veuillez corriger l\'autorisation'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Autorisation incorrecte, veuillez corriger l\'autorisation'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Autorisation.' . $this->Autorisation->primaryKey => $id));
@@ -113,14 +113,14 @@ class AutorisationsController extends AppController {
 	public function delete($id = null) {
 		$this->Autorisation->id = $id;
 		if (!$this->Autorisation->exists()) {
-			throw new NotFoundException(__('Autorisation incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Autorisation incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Autorisation->delete()) {
-			$this->Session->setFlash(__('Autorisation supprimée'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Autorisation supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Autorisation NON supprimée'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Autorisation NON supprimée'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

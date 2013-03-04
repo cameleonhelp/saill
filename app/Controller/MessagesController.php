@@ -34,7 +34,7 @@ class MessagesController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Message->exists($id)) {
-			throw new NotFoundException(__('Message incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Message incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Message.' . $this->Message->primaryKey => $id));
 		$this->set('message', $this->Message->find('first', $options));
@@ -49,10 +49,10 @@ class MessagesController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Message->create();
 			if ($this->Message->save($this->request->data)) {
-				$this->Session->setFlash(__('Message sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Message sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Message incorrect, veuillez corriger le message.'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Message incorrect, veuillez corriger le message.'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -66,14 +66,14 @@ class MessagesController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Message->exists($id)) {
-			throw new NotFoundException(__('Message incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Message incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Message->save($this->request->data)) {
-				$this->Session->setFlash(__('Message sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Message sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Message incorrect, veuillez corriger le message.'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Message incorrect, veuillez corriger le message.'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Message.' . $this->Message->primaryKey => $id));
@@ -92,14 +92,14 @@ class MessagesController extends AppController {
 	public function delete($id = null) {
 		$this->Message->id = $id;
 		if (!$this->Message->exists()) {
-			throw new NotFoundException(__('Message incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Message incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Message->delete()) {
-			$this->Session->setFlash(__('Message supprimé'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Message supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Message NON supprimé.'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Message NON supprimé.'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
 

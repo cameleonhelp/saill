@@ -7,6 +7,9 @@ App::uses('AppController', 'Controller');
  */
 class SuivilivrablesController extends AppController {
 
+        public $paginate = array(
+        'order' => array('Suivilivrable.created' => 'asc','Suivilivrable.id'=>'asc'),
+          );
 /**
  * index method
  *
@@ -37,7 +40,7 @@ class SuivilivrablesController extends AppController {
  *
  * @return void
  */
-	public function add() {
+	public function add() {           
 		if ($this->request->is('post')) {
 			$this->Suivilivrable->create();
 			if ($this->Suivilivrable->save($this->request->data)) {

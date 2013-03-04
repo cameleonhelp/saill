@@ -33,7 +33,7 @@ class SocietesController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Societe->exists($id)) {
-			throw new NotFoundException(__('Société incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Société incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Societe.' . $this->Societe->primaryKey => $id));
 		$this->set('societe', $this->Societe->find('first', $options));
@@ -48,10 +48,10 @@ class SocietesController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Societe->create();
 			if ($this->Societe->save($this->request->data)) {
-				$this->Session->setFlash(__('Société sauvegardée'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Société sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Société incorrecte, veuillez corriger la société'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Société incorrecte, veuillez corriger la société'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -65,14 +65,14 @@ class SocietesController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Societe->exists($id)) {
-			throw new NotFoundException(__('Société incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Société incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Societe->save($this->request->data)) {
-				$this->Session->setFlash(__('Société sauvegardée'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Société sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Société incorrecte, veuillez corriger la société'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Société incorrecte, veuillez corriger la société'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Societe.' . $this->Societe->primaryKey => $id));
@@ -91,14 +91,14 @@ class SocietesController extends AppController {
 	public function delete($id = null) {
 		$this->Societe->id = $id;
 		if (!$this->Societe->exists()) {
-			throw new NotFoundException(__('Société incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Société incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Societe->delete()) {
-			$this->Session->setFlash(__('Société supprimé'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Société supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Société <b>NON</b> supprime'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Société <b>NON</b> supprime'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

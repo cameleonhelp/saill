@@ -35,7 +35,7 @@ class TypematerielsController extends AppController {
 	public function view($id = null) {
 		$this->set('title_for_layout','Types de matériel');
                 if (!$this->Typemateriel->exists($id)) {
-			throw new NotFoundException(__('Type de matériel incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Type de matériel incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Typemateriel.' . $this->Typemateriel->primaryKey => $id));
 		$this->set('typemateriel', $this->Typemateriel->find('first', $options));
@@ -51,10 +51,10 @@ class TypematerielsController extends AppController {
                 if ($this->request->is('post')) {
 			$this->Typemateriel->create();
 			if ($this->Typemateriel->save($this->request->data)) {
-				$this->Session->setFlash(__('Type de matériel sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Type de matériel sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Type de matériel incorrect, veuillez corriger le type de matériel'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Type de matériel incorrect, veuillez corriger le type de matériel'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -69,14 +69,14 @@ class TypematerielsController extends AppController {
 	public function edit($id = null) {
 		$this->set('title_for_layout','Types de matériel');
                 if (!$this->Typemateriel->exists($id)) {
-			throw new NotFoundException(__('Type de matériel incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Type de matériel incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Typemateriel->save($this->request->data)) {
-				$this->Session->setFlash(__('Type de matériel sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Type de matériel sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Type de matériel incorrect, veuillez corriger le type de matériel'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Type de matériel incorrect, veuillez corriger le type de matériel'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Typemateriel.' . $this->Typemateriel->primaryKey => $id));
@@ -96,14 +96,14 @@ class TypematerielsController extends AppController {
 		$this->set('title_for_layout','Types de matériel');
                 $this->Typemateriel->id = $id;
 		if (!$this->Typemateriel->exists()) {
-			throw new NotFoundException(__('Type de matériel incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Type de matériel incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Typemateriel->delete()) {
-			$this->Session->setFlash(__('Type de matériel supprimé'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Type de matériel supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Type de matériel <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Type de matériel <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

@@ -364,6 +364,10 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`livrables` (
   `utilisateur_id` INT(15) NULL DEFAULT NULL ,
   `NOM` VARCHAR(255) CHARACTER SET 'latin1' NOT NULL ,
   `REFERENCE` VARCHAR(45) NULL ,
+  `ECHEANCE` DATE NOT NULL ,
+  `DATELIVRAISON` DATE NOT NULL ,
+  `DATEVALIDATION` DATE NOT NULL ,
+  `ETAT` ENUM('à faire','en cours','validé','livré','refusé','annulé') NOT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
@@ -593,10 +597,10 @@ DROP TABLE IF EXISTS `osact_cake230`.`suivilivrables` ;
 CREATE  TABLE IF NOT EXISTS `osact_cake230`.`suivilivrables` (
   `id` INT(15) NOT NULL AUTO_INCREMENT ,
   `livrable_id` INT(15) NOT NULL ,
-  `ECHEANCE` DATE NULL DEFAULT NULL ,
-  `DATELIVRAISON` DATE NULL DEFAULT NULL ,
-  `DATEVALIDATION` DATE NULL DEFAULT NULL ,
-  `ETAT` ENUM('à faire','en cours','validé','livré','refusé','annulé') NULL DEFAULT NULL ,
+  `ECHEANCE` DATE NOT NULL ,
+  `DATELIVRAISON` DATE NOT NULL ,
+  `DATEVALIDATION` DATE NOT NULL ,
+  `ETAT` VARCHAR(50) NOT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )

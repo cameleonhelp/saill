@@ -61,7 +61,7 @@ class ProjetsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Projet->exists($id)) {
-			throw new NotFoundException(__('Projet incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Projet incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Projet.' . $this->Projet->primaryKey => $id));
 		$this->set('projet', $this->Projet->find('first', $options));
@@ -82,10 +82,10 @@ class ProjetsController extends AppController {
                 if ($this->request->is('post')) {
 			$this->Projet->create();
 			if ($this->Projet->save($this->request->data)) {
-				$this->Session->setFlash(__('Projet sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Projet sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Projet incorrect, veuillez corriger le projet'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Projet incorrect, veuillez corriger le projet'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -105,14 +105,14 @@ class ProjetsController extends AppController {
                 $factureProjet = Configure::read('factureProjet');
                 $this->set('facturation',$factureProjet);                   
                 if (!$this->Projet->exists($id)) {
-			throw new NotFoundException(__('Projet incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Projet incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Projet->save($this->request->data)) {
-				$this->Session->setFlash(__('Projet sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Projet sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Projet incorrect, veuillez corriger le projet'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Projet incorrect, veuillez corriger le projet'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Projet.' . $this->Projet->primaryKey => $id));
@@ -131,14 +131,14 @@ class ProjetsController extends AppController {
 	public function delete($id = null) {
 		$this->Projet->id = $id;
 		if (!$this->Projet->exists()) {
-			throw new NotFoundException(__('Projet incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Projet incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Projet->delete()) {
-			$this->Session->setFlash(__('Projet supprimé'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Projet supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Projet <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Projet <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

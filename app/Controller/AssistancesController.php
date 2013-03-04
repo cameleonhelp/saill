@@ -33,7 +33,7 @@ class AssistancesController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Assistance->exists($id)) {
-			throw new NotFoundException(__('Assistance incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Assistance incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Assistance.' . $this->Assistance->primaryKey => $id));
 		$this->set('assistance', $this->Assistance->find('first', $options));
@@ -48,10 +48,10 @@ class AssistancesController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Assistance->create();
 			if ($this->Assistance->save($this->request->data)) {
-				$this->Session->setFlash(__('Assistance sauvegardée'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Assistance sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Assistance incorrecte, veuillez corriger l\'assistance'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Assistance incorrecte, veuillez corriger l\'assistance'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -65,14 +65,14 @@ class AssistancesController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Assistance->exists($id)) {
-			throw new NotFoundException(__('Assistance incorrectee'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Assistance incorrectee'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Assistance->save($this->request->data)) {
-				$this->Session->setFlash(__('Assistance sauvegardée'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Assistance sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Assistance incorrecte, veuillez corriger l\'assistance'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Assistance incorrecte, veuillez corriger l\'assistance'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Assistance.' . $this->Assistance->primaryKey => $id));
@@ -91,14 +91,14 @@ class AssistancesController extends AppController {
 	public function delete($id = null) {
 		$this->Assistance->id = $id;
 		if (!$this->Assistance->exists()) {
-			throw new NotFoundException(__('Assistance incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Assistance incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Assistance->delete()) {
-			$this->Session->setFlash(__('Assistance supprimée'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Assistance supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Assistance NON supprimée'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Assistance NON supprimée'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

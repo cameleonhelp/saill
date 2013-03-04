@@ -29,31 +29,31 @@ class LivrablesController extends AppController {
                         $date = new DateTime();
                         $today = $date->sub(new DateInterval('P1W'));
                         $previousWeek = $date->sub(new DateInterval('P2W'));
-                        $newconditions[]="Suivilivrable.ECHEANCE BETWEEN '".$today->format('Y-m-d')."' AND '".$previousWeek->format('Y-m-d')."'";
+                        $newconditions[]="Livrable.ECHEANCE BETWEEN '".$today->format('Y-m-d')."' AND '".$previousWeek->format('Y-m-d')."'";
                         $fchronologie = "tous les livrables de la semaine précédente";
                         break;  
                     case 'week':
                         $date = new DateTime();
                         $today = new DateTime();
                         $previousWeek = $date->sub(new DateInterval('P1W'));
-                        $newconditions[]="Suivilivrable.ECHEANCE BETWEEN '".$today->format('Y-m-d')."' AND '".$previousWeek->format('Y-m-d')."'";                        
+                        $newconditions[]="Livrable.ECHEANCE BETWEEN '".$today->format('Y-m-d')."' AND '".$previousWeek->format('Y-m-d')."'";                        
                         $fchronologie = "tous les livrables de la semaine en cours";
                         break;  
                     case 'nextweek':
                         $date = new DateTime();
                         $today = $date->add(new DateInterval('P1W'));
                         $previousWeek = $date->add(new DateInterval('P2W'));
-                        $newconditions[]="Suivilivrable.ECHEANCE BETWEEN '".$today->format('Y-m-d')."' AND '".$previousWeek->format('Y-m-d')."'";                        
+                        $newconditions[]="Livrable.ECHEANCE BETWEEN '".$today->format('Y-m-d')."' AND '".$previousWeek->format('Y-m-d')."'";                        
                         $fchronologie = "tous les livrables de la semaine suivante";
                         break;  
                     case 'tolate':
                         $date = new DateTime();
                         $previousWeek = $date;
-                        $newconditions[]="Suivilivrable.ECHEANCE > '".$previousWeek->format('Y-m-d')."' AND (Suivilivrable.DATELIVRAISON = '0000-00-00' OR Suivilivrable.DATELIVRAISON = NULL)";
+                        $newconditions[]="Livrable.ECHEANCE > '".$previousWeek->format('Y-m-d')."' AND (Livrable.DATELIVRAISON = '0000-00-00' OR Livrable.DATELIVRAISON = NULL)";
                         $fchronologie = "tous les livrables en retards";
                         break;  
                     case 'incomplet':
-                        $newconditions[]="Suivilivrable.ECHEANCE IS NULL ";
+                        $newconditions[]="Livrable.ECHEANCE IS NULL ";
                         $fchronologie = "tous les livrables en retards";
                         break;     
                 }
@@ -64,23 +64,23 @@ class LivrablesController extends AppController {
                         $fetat = "sans condition sur les états";
                         break;                      
                     case 'todo':
-                        $newconditions[]="Suivilivrable.ETAT = 'à faire'";
+                        $newconditions[]="Livrable.ETAT = 'à faire'";
                         $fetat = "dont l'état est 'à faire'";
                         break;  
                     case 'inmotion':
-                        $newconditions[]="Suivilivrable.ETAT = 'en cours'";
+                        $newconditions[]="Livrable.ETAT = 'en cours'";
                         $fetat = "dont l'état est 'en cours'";
                         break;  
                     case 'delivered':
-                        $newconditions[]="Suivilivrable.ETAT = 'livré'";
+                        $newconditions[]="Livrable.ETAT = 'livré'";
                         $fetat = "dont l'état est 'livré'";
                         break;  
                     case 'validated':
-                        $newconditions[]="Suivilivrable.ETAT = 'validé'";
+                        $newconditions[]="Livrable.ETAT = 'validé'";
                         $fetat = "dont l'état est 'validé'";
                         break;  
                     case 'notvalidated':
-                        $newconditions[]="Suivilivrable.ETAT != 'validé'";
+                        $newconditions[]="Livrable.ETAT != 'validé'";
                         $fetat = "dont l'état est autre que 'validé'";
                         break;                      
                     }    
@@ -99,11 +99,8 @@ class LivrablesController extends AppController {
                 $gestionnaires = $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('gestionnaires',$gestionnaires);                
 		$this->Livrable->recursive = 0;
-                $join = array(array('table'=>'suivilivrables','alias'=>'Suivilivrable','type'=>'LEFT','conditions'=>'Suivilivrable.livrable_id=Livrable.id'));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'joins'=>$join));                
+                  $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->set('livrables', $this->paginate());
-                $suivilivrable = $this->Livrable->Suivilivrable->find('all',array('fields'=>array('MAX(Suivilivrable.created) AS created','Suivilivrable.ETAT','Suivilivrable.DATELIVRAISON','Suivilivrable.DATEVALIDATION','Suivilivrable.ECHEANCE','Suivilivrable.created'),'conditions'=>array('Suivilivrable.livrable_id'=>'livrable.id')));
-                $this->set('suivilivrable',$suivilivrable);
 	}
 
 /**
@@ -115,7 +112,7 @@ class LivrablesController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Livrable->exists($id)) {
-			throw new NotFoundException(__('Livrable incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Livrable incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Livrable.' . $this->Livrable->primaryKey => $id));
 		$this->set('livrable', $this->Livrable->find('first', $options));
@@ -132,10 +129,17 @@ class LivrablesController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Livrable->create();
 			if ($this->Livrable->save($this->request->data)) {
-				$this->Session->setFlash(__('Livrable sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Livrable sauvegardé'),'default',array('class'=>'alert alert-success'));
+                                //enregistrer le suivilivrable
+                                $suiviliv['Suivilivrable']['livrable_id']=$this->Livrable->id;
+                                $suiviliv['Suivilivrable']['ECHEANCE']=$this->Livrable->ECHEANCE;
+                                $suiviliv['Suivilivrable']['ETAT']=$this->Livrable->ETAT;
+                                $suiviliv['Suivilivrable']['DATELIVRAISON']=$this->Livrable->DATELIVRAISON;
+                                $suiviliv['Suivilivrable']['DATEVALIDATION']=$this->Livrable->DATEVALIDATION;                                
+                                $this->Livrable->Suivilivrable->save($suiviliv);
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -148,17 +152,28 @@ class LivrablesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+                $etats = Configure::read('etatLivrable');
+                $this->set('etats',$etats);             
                 $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
-                $this->set('utilisateur',$utilisateur);
+                $this->set('utilisateur',$utilisateur);  
+                $suivilivrables = $this->Livrable->Suivilivrable->find('all',array('conditions'=>array('Suivilivrable.livrable_id'=>$id),'order'=>array('Suivilivrable.created'=>'desc','Suivilivrable.id'=>'desc')));
+                $this->set('Suivilivrables',$suivilivrables);                 
 		if (!$this->Livrable->exists($id)) {
-			throw new NotFoundException(__('Livrable incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Livrable incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Livrable->save($this->request->data)) {
-				$this->Session->setFlash(__('Livrable sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Livrable sauvegardé'),'default',array('class'=>'alert alert-success'));
+                                //enregistrer le suivilivrable
+                                $suiviliv['Suivilivrable']['livrable_id']=$this->Livrable->id;
+                                $suiviliv['Suivilivrable']['ECHEANCE']=$this->Livrable->ECHEANCE;
+                                $suiviliv['Suivilivrable']['ETAT']=$this->Livrable->ETAT;
+                                $suiviliv['Suivilivrable']['DATELIVRAISON']=$this->Livrable->DATELIVRAISON;
+                                $suiviliv['Suivilivrable']['DATEVALIDATION']=$this->Livrable->DATEVALIDATION;                                
+                                $this->Livrable->Suivilivrable->save($suiviliv);
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Livrable.' . $this->Livrable->primaryKey => $id));
@@ -177,14 +192,14 @@ class LivrablesController extends AppController {
 	public function delete($id = null) {
 		$this->Livrable->id = $id;
 		if (!$this->Livrable->exists()) {
-			throw new NotFoundException(__('Livrable incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Livrable incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Livrable->delete()) {
-			$this->Session->setFlash(__('Livrable supprimé'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Livrable supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Livrable <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Livrable <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

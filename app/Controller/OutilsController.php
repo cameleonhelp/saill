@@ -33,7 +33,7 @@ class OutilsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Outil->exists($id)) {
-			throw new NotFoundException(__('Outil incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Outil incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Outil.' . $this->Outil->primaryKey => $id));
 		$this->set('outil', $this->Outil->find('first', $options));
@@ -50,10 +50,10 @@ class OutilsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Outil->create();
 			if ($this->Outil->save($this->request->data)) {
-				$this->Session->setFlash(__('Outil sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Outil sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Outil incorrect, veuillez corriger l\'outil'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Outil incorrect, veuillez corriger l\'outil'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -69,14 +69,14 @@ class OutilsController extends AppController {
                 $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1')));              
                 $this->set('gestionnaire',$gestionnaire);            
 		if (!$this->Outil->exists($id)) {
-			throw new NotFoundException(__('Outil incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Outil incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Outil->save($this->request->data)) {
-				$this->Session->setFlash(__('Outil sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Outil sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Outil incorrect, veuillez corriger l\'outil'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Outil incorrect, veuillez corriger l\'outil'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Outil.' . $this->Outil->primaryKey => $id));
@@ -95,14 +95,14 @@ class OutilsController extends AppController {
 	public function delete($id = null) {
 		$this->Outil->id = $id;
 		if (!$this->Outil->exists()) {
-			throw new NotFoundException(__('Outil incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Outil incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Outil->delete()) {
-			$this->Session->setFlash(__('Outil supprimé'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Outil supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Outil NON supprimé'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Outil NON supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

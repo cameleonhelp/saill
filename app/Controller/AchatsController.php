@@ -44,7 +44,7 @@ class AchatsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Achat->exists($id)) {
-			throw new NotFoundException(__('Achat incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Achat incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Achat.' . $this->Achat->primaryKey => $id));
 		$this->set('achat', $this->Achat->find('first', $options));
@@ -61,10 +61,10 @@ class AchatsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Achat->create();
 			if ($this->Achat->save($this->request->data)) {
-				$this->Session->setFlash(__('Achat sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Achat sauvegardé'),'default',array('class'=>'alert alert-success'));
                                 $this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Achat incorrect, veuillez corriger l\'achat'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Achat incorrect, veuillez corriger l\'achat'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -80,14 +80,14 @@ class AchatsController extends AppController {
                 $activites = $this->Achat->Activite->find('list',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
                 $this->set('activites',$activites);              
 		if (!$this->Achat->exists($id)) {
-			throw new NotFoundException(__('Achat incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Achat incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Achat->save($this->request->data)) {
-				$this->Session->setFlash(__('Achat sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Achat sauvegardé'),'default',array('class'=>'alert alert-success'));
                                 $this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Achat incorrect, veuillez corriger l\'achat'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Achat incorrect, veuillez corriger l\'achat'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Achat.' . $this->Achat->primaryKey => $id));
@@ -106,14 +106,14 @@ class AchatsController extends AppController {
 	public function delete($id = null) {
 		$this->Achat->id = $id;
 		if (!$this->Achat->exists()) {
-			throw new NotFoundException(__('Achat incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Achat incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Achat->delete()) {
-			$this->Session->setFlash(__('Achat supprimé'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Achat supprimé'),'default',array('class'=>'alert alert-success'));
                         $this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Achat <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Achat <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
                 $this->redirect($this->goToPostion());
 	}
         

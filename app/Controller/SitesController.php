@@ -33,7 +33,7 @@ class SitesController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Site->exists($id)) {
-			throw new NotFoundException(__('Site incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Site incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Site.' . $this->Site->primaryKey => $id));
 		$this->set('site', $this->Site->find('first', $options));
@@ -48,10 +48,10 @@ class SitesController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Site->create();
 			if ($this->Site->save($this->request->data)) {
-				$this->Session->setFlash(__('Site sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Site sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Site incorrecte, veuillez corriger le site'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Site incorrecte, veuillez corriger le site'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -65,14 +65,14 @@ class SitesController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Site->exists($id)) {
-			throw new NotFoundException(__('Site incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Site incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Site->save($this->request->data)) {
-				$this->Session->setFlash(__('Site sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Site sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Site incorrect, veuillez corriger le site'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Site incorrect, veuillez corriger le site'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Site.' . $this->Site->primaryKey => $id));
@@ -91,14 +91,14 @@ class SitesController extends AppController {
 	public function delete($id = null) {
 		$this->Site->id = $id;
 		if (!$this->Site->exists()) {
-			throw new NotFoundException(__('Site incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Site incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Site->delete()) {
-			$this->Session->setFlash(__('Site supprimé'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Site supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(___('Site <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(___('Site <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

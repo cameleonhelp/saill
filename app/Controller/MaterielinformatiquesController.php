@@ -72,7 +72,7 @@ class MaterielinformatiquesController extends AppController {
 	public function view($id = null) {
 		$this->set('title_for_layout','Postes informatique');
                 if (!$this->Materielinformatique->exists($id)) {
-			throw new NotFoundException(__('Postes informatique incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Postes informatique incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Materielinformatique.' . $this->Materielinformatique->primaryKey => $id));
 		$this->set('materielinformatique', $this->Materielinformatique->find('first', $options));
@@ -96,10 +96,10 @@ class MaterielinformatiquesController extends AppController {
                 if ($this->request->is('post')) {
 			$this->Materielinformatique->create();
 			if ($this->Materielinformatique->save($this->request->data)) {
-				$this->Session->setFlash(__('Postes informatique sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Postes informatique sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Postes informatique incorrect, veuillez corriger le poste informatique'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Postes informatique incorrect, veuillez corriger le poste informatique'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -122,14 +122,14 @@ class MaterielinformatiquesController extends AppController {
                 $etat = Configure::read('etatMaterielInformatique');
                 $this->set('etat',$etat); 
                 if (!$this->Materielinformatique->exists($id)) {
-			throw new NotFoundException(__('Postes informatique incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Postes informatique incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Materielinformatique->save($this->request->data)) {
-				$this->Session->setFlash(__('Postes informatique sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Postes informatique sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Postes informatique incorrect, veuillez corriger le poste informatique'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Postes informatique incorrect, veuillez corriger le poste informatique'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Materielinformatique.' . $this->Materielinformatique->primaryKey => $id));
@@ -150,14 +150,14 @@ class MaterielinformatiquesController extends AppController {
 		$this->set('title_for_layout','Postes informatique');
                 $this->Materielinformatique->id = $id;
 		if (!$this->Materielinformatique->exists()) {
-			throw new NotFoundException(__('Postes informatique incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Postes informatique incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Materielinformatique->delete()) {
-			$this->Session->setFlash(__('Postes informatique supprimé'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Postes informatique supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Postes informatique <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Postes informatique <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

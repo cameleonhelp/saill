@@ -35,7 +35,7 @@ class LinksharedsController extends AppController {
 	public function view($id = null) {
                 $this->set('title_for_layout','Liens partagés');
                 if (!$this->Linkshared->exists($id)) {
-			throw new NotFoundException(__('Lien partagé incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Lien partagé incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Linkshared.' . $this->Linkshared->primaryKey => $id));
 		$this->set('linkshared', $this->Linkshared->find('first', $options));
@@ -51,10 +51,10 @@ class LinksharedsController extends AppController {
                 if ($this->request->is('post')) {
 			$this->Linkshared->create();
 			if ($this->Linkshared->save($this->request->data)) {
-				$this->Session->setFlash(__('Lien partagé sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Lien partagé sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Lien partagé incorrect, veuillez corriger le lien partagé'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Lien partagé incorrect, veuillez corriger le lien partagé'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -69,14 +69,14 @@ class LinksharedsController extends AppController {
 	public function edit($id = null) {
                 $this->set('title_for_layout','Liens partagés');
                 if (!$this->Linkshared->exists($id)) {
-			throw new NotFoundException(__('Lien partagé incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Lien partagé incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Linkshared->save($this->request->data)) {
-				$this->Session->setFlash(__('Lien partagé sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Lien partagé sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Lien partagé incorrect, veuillez corriger le lien partagé'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Lien partagé incorrect, veuillez corriger le lien partagé'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Linkshared.' . $this->Linkshared->primaryKey => $id));
@@ -96,14 +96,14 @@ class LinksharedsController extends AppController {
                 $this->set('title_for_layout','Liens partagés');
                 $this->Linkshared->id = $id;
 		if (!$this->Linkshared->exists()) {
-			throw new NotFoundException(__('Lien partagé incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Lien partagé incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Linkshared->delete()) {
-			$this->Session->setFlash(__('Lien partagé supprimé'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Lien partagé supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Lien partagé <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Lien partagé <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

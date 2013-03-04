@@ -69,7 +69,7 @@ class ActionsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Action->exists($id)) {
-			throw new NotFoundException(__('Action incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Action incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Action.' . $this->Action->primaryKey => $id));
 		$this->set('action', $this->Action->find('first', $options));
@@ -84,10 +84,10 @@ class ActionsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Action->create();
 			if ($this->Action->save($this->request->data)) {
-				$this->Session->setFlash(__('Action sauvegardée'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Action incorrecte, veuillez corriger l\'action'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Action incorrecte, veuillez corriger l\'action'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -101,14 +101,14 @@ class ActionsController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Action->exists($id)) {
-			throw new NotFoundException(__('Action incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Action incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Action->save($this->request->data)) {
-				$this->Session->setFlash(__('Action sauvegardée'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Action incorrecte, veuilelz corriger l\'action'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Action incorrecte, veuilelz corriger l\'action'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Action.' . $this->Action->primaryKey => $id));
@@ -127,14 +127,14 @@ class ActionsController extends AppController {
 	public function delete($id = null) {
 		$this->Action->id = $id;
 		if (!$this->Action->exists()) {
-			throw new NotFoundException(__('Action incorrecte'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Action incorrecte'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Action->delete()) {
-			$this->Session->setFlash(__('Action supprimée'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Action supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Action <b>NON</b> supprimée'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Action <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

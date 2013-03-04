@@ -41,4 +41,55 @@ class Suivilivrable extends AppModel {
 			'order' => ''
 		)
 	);
+        
+ /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {
+            if (!empty($this->data['Suivilivrable']['ECHEANCE'])) {
+                $this->data['Suivilivrable']['ECHEANCE'] = $this->dateFormatBeforeSave($this->data['Suivilivrable']['ECHEANCE']);
+            }
+            if (!empty($this->data['Suivilivrable']['DATELIVRAISON'])) {
+                $this->data['Suivilivrable']['DATELIVRAISON'] = $this->dateFormatBeforeSave($this->data['Suivilivrable']['DATELIVRAISON']);
+            }
+            if (!empty($this->data['Suivilivrable']['DATEVALIDATION'])) {
+                $this->data['Suivilivrable']['DATEVALIDATION'] = $this->dateFormatBeforeSave($this->data['Suivilivrable']['DATEVALIDATION']);
+            }
+            parent::beforeSave();
+            return true;
+        }
+        
+/**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Suivilivrable']['created'])) {
+                    $results[$key]['Suivilivrable']['created'] = $this->dateFormatAfterFind($val['Suivilivrable']['created']);
+                }      
+                if (isset($val['Suivilivrable']['modified'])) {
+                    $results[$key]['Suivilivrable']['modified'] = $this->dateFormatAfterFind($val['Suivilivrable']['modified']);
+                }            
+                if (isset($val['Suivilivrable']['ECHEANCE'])) {
+                    $results[$key]['Suivilivrable']['ECHEANCE'] = $this->dateFormatAfterFind($val['Suivilivrable']['ECHEANCE']);
+                } 
+                if (isset($val['Suivilivrable']['DATELIVRAISON'])) {
+                    $results[$key]['Suivilivrable']['DATELIVRAISON'] = $this->dateFormatAfterFind($val['Suivilivrable']['DATELIVRAISON']);
+                } 
+                if (isset($val['Suivilivrable']['DATEVALIDATION'])) {
+                    $results[$key]['Suivilivrable']['DATEVALIDATION'] = $this->dateFormatAfterFind($val['Suivilivrable']['DATEVALIDATION']);
+                } 
+            }
+            return $results;
+        }          
 }

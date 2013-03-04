@@ -199,3 +199,7 @@ Configure::write(
 Configure::write(
     'factureProjet',array('régie'=>'Régie','forfait'=>'Forfait') //,'autre'=>'Autre'
 );
+
+Configure::write(
+    'etatLivrable',array('à faire'=>'A faire','en cours'=>'En cours','validé'=>'Validé','livré'=>'Livré','refusé'=>'Refusé','annulé'=>'Annulé') //,'autre'=>'Autre'
+);

@@ -17,6 +17,45 @@
             <?php echo $this->Form->input('REFERENCE',array('placeholder'=>'Référence MINIDOC','class'=>'span6','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
     </div>
+    <div class="control-group">
+        <label class="control-label sstitre" for="LivrableECHEANCE">Echéance de livraison : </label>
+        <div class="controls">
+            <div class="input-append date" data-date="<?php echo empty($this->data['Livrable']['ECHEANCE']) ? date('d/m/Y') : $this->data['Livrable']['ECHEANCE']; ?>" data-date-format="dd/mm/yyyy">
+            <?php $today = date('d/m/Y'); ?>
+            <?php echo $this->Form->input('ECHEANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
+            <span class="add-on"><i class="glyphicon_calendar"></i></span>
+            </div>
+        </div>
+    </div>   
+    <div class="control-group">
+        <label class="control-label sstitre" for="LivrableDATELIVRAISON">Date de livraison : </label>
+        <div class="controls">
+            <div class="input-append date" data-date="<?php echo empty($this->data['Livrable']['DATELIVRAISON']) ? date('d/m/Y') : $this->data['Livrable']['DATELIVRAISON']; ?>" data-date-format="dd/mm/yyyy">
+            <?php $today = date('d/m/Y'); ?>
+            <?php echo $this->Form->input('DATELIVRAISON',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
+            <span class="add-on"><i class="glyphicon_calendar"></i></span>
+            </div>
+        </div>
+    </div>   
+    <div class="control-group">
+        <label class="control-label sstitre" for="LivrableDATEVALIDATION">Date de validation : </label>
+        <div class="controls">
+            <div class="input-append date" data-date="<?php echo empty($this->data['Livrable']['DATEVALIDATION']) ? date('d/m/Y') : $this->data['Livrable']['DATEVALIDATION']; ?>" data-date-format="dd/mm/yyyy">
+            <?php $today = date('d/m/Y'); ?>
+            <?php echo $this->Form->input('DATEVALIDATION',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
+            <span class="add-on"><i class="glyphicon_calendar"></i></span>
+            </div>
+        </div>
+    </div>   	
+    <div class="control-group">
+        <label class="control-label sstitre" for="LivrableETAT">Poste informatique : </label>
+        <div class="controls">
+                <?php echo $this->Form->select('ETAT',$etats,array('selected' => '','empty' => 'Choisir un état')); ?>
+        </div>
+    </div>
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container" style="margin-top:2px;text-align:center;">
@@ -29,6 +68,6 @@
 <?php echo $this->Form->end(); ?>
 <?php if ($this->params['action']=='edit'){ ?>
 <hr>
-<button type="button" class='btn btn-inverse pull-right' onclick="location.href='<?php echo $this->Html->url('/suivilivrables/add/'.$this->data['Livrable']['id']); ?>';">Nouveau suivi</button>                    
+<label class="sstitre">Historique du suivi du livrable :</label>      
 <?php echo $this->element('tableSuiviLivrable'); ?>
 <?php } ?>

@@ -47,7 +47,7 @@ class ContratsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Contrat->exists($id)) {
-			throw new NotFoundException(__('Contrat incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Contrat incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Contrat.' . $this->Contrat->primaryKey => $id));
 		$this->set('contrat', $this->Contrat->find('first', $options));
@@ -64,10 +64,10 @@ class ContratsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Contrat->create();
 			if ($this->Contrat->save($this->request->data)) {
-				$this->Session->setFlash(__('Contrat sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Contrat sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Contrat incorrect, veuillez corriger le contrat'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Contrat incorrect, veuillez corriger le contrat'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -83,14 +83,14 @@ class ContratsController extends AppController {
                 $tjmcontrats = $this->Contrat->Tjmcontrat->find('list',array('fields' => array('id', 'TJM')));
                 $this->set('tjmcontrats',$tjmcontrats);            
 		if (!$this->Contrat->exists($id)) {
-			throw new NotFoundException(__('Contrat incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Contrat incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Contrat->save($this->request->data)) {
-				$this->Session->setFlash(__('Contrat sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Contrat sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Contrat incorrect, veuillez corriger le contrat'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Contrat incorrect, veuillez corriger le contrat'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Contrat.' . $this->Contrat->primaryKey => $id));
@@ -109,14 +109,14 @@ class ContratsController extends AppController {
 	public function delete($id = null) {
 		$this->Contrat->id = $id;
 		if (!$this->Contrat->exists()) {
-			throw new NotFoundException(__('Contrat incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Contrat incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Contrat->delete()) {
-			$this->Session->setFlash(__('Contrat supprimé'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Contrat supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Contrat <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Contrat <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

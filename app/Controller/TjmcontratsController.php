@@ -33,7 +33,7 @@ class TjmcontratsController extends AppController {
 	public function view($id = null) {
 		$this->set('title_for_layout','TJM contrats');
                 if (!$this->Tjmcontrat->exists($id)) {
-			throw new NotFoundException(__('TJM contrat incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('TJM contrat incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Tjmcontrat.' . $this->Tjmcontrat->primaryKey => $id));
 		$this->set('tjmcontrat', $this->Tjmcontrat->find('first', $options));
@@ -49,10 +49,10 @@ class TjmcontratsController extends AppController {
                 if ($this->request->is('post')) {
 			$this->Tjmcontrat->create();
 			if ($this->Tjmcontrat->save($this->request->data)) {
-				$this->Session->setFlash(__('TJM contrat sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('TJM contrat sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('TJM contrat incorrect, veuillez corriger le TJM contrat'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('TJM contrat incorrect, veuillez corriger le TJM contrat'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -67,14 +67,14 @@ class TjmcontratsController extends AppController {
 	public function edit($id = null) {
 		$this->set('title_for_layout','TJM contrats');
                 if (!$this->Tjmcontrat->exists($id)) {
-			throw new NotFoundException(__('TJM contrat incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('TJM contrat incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Tjmcontrat->save($this->request->data)) {
-				$this->Session->setFlash(__('TJM contrat sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('TJM contrat sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('TJM contrat incorrect, veuillez corriger le TJM contrat'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('TJM contrat incorrect, veuillez corriger le TJM contrat'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Tjmcontrat.' . $this->Tjmcontrat->primaryKey => $id));
@@ -94,14 +94,14 @@ class TjmcontratsController extends AppController {
 		$this->set('title_for_layout','TJM contrats');
                 $this->Tjmcontrat->id = $id;
 		if (!$this->Tjmcontrat->exists()) {
-			throw new NotFoundException(__('TJM contrat incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('TJM contrat incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Tjmcontrat->delete()) {
-			$this->Session->setFlash(__('TJM contrat supprimé'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('TJM contrat supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('TJM contrat <b>NON</b> supprimé'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('TJM contrat <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         

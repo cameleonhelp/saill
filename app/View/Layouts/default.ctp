@@ -126,7 +126,8 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
             </div>
         </div>
     </div>    
-    <?php //$url = $this->Session->read('history'); debug(strpos($url[0],$this->params['controller'])); debug($this->Session->read('history')); ?>
+    <?php //$url = $this->Session->read('history'); debug($this->params->url); 
+    debug($suivilivrable); ?>
     <div id="debugguer" style="background-color: #cccccc;">SQL Debug :
         <?php echo $this->element('sql_dump'); ?>
     </div>   

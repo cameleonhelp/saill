@@ -10,23 +10,29 @@
         function etatLivrable($etat) {
             $class = '';
             switch ($etat){
-                 case 'A Faire':
+                 case 'à faire':
                     $class = 'icon-edit icon-red';
                     break;
-                 case 'En cours':
+                 case 'en cours':
                     $class = 'icon-edit';
                     break;                
-                 case 'Livré':
+                 case 'livré':
                     $class = 'icon-share';
                     break;          
-                 case 'Validé':
+                 case 'validé':
                     $class = 'icon-check icon-green';
-                    break;               
+                    break;  
+                 case 'refusé':
+                    $class = 'icon-share icon-red';
+                    break;  
+                 case 'annulé':
+                    $class = 'icon-remove icon-red';
+                    break;                  
             }
             return $class;
         } 
 ?>    
-<br/><br/>
+<br/>
 <div class="utiliseoutils index">
 	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
@@ -38,12 +44,12 @@
 	</tr>
         </thead>
         <tbody>
-	<?php foreach ($this->data['Suivilivrable'] as $Suivilivrable): ?>
+	<?php foreach ($Suivilivrables as $Suivilivrable): ?>
             <tr>
-		<td><?php echo h($Suivilivrable['ECHEANCE']); ?>&nbsp;</td>
-                <td><?php echo h($Suivilivrable['DATELIVRAISON']); ?>&nbsp;</td>
-                <td><?php echo h($Suivilivrable['DATEVALIDATION']); ?>&nbsp;</td>
-                <td style='text-align:center;'><i class="<?php echo etatLivrable(h($Suivilivrable['ETAT'])); ?>" rel="tooltip" data-title="<?php echo h($Suivilivrable['ETAT']); ?>"></i>&nbsp;</td>
+		<td><?php echo h($Suivilivrable['Suivilivrable']['ECHEANCE']); ?>&nbsp;</td>
+                <td><?php echo h($Suivilivrable['Suivilivrable']['DATELIVRAISON']); ?>&nbsp;</td>
+                <td><?php echo h($Suivilivrable['Suivilivrable']['DATEVALIDATION']); ?>&nbsp;</td>
+                <td style='text-align:center;'><i class="<?php echo etatLivrable(h($Suivilivrable['Suivilivrable']['ETAT'])); ?>" rel="tooltip" data-title="<?php echo h($Suivilivrable['Suivilivrable']['ETAT']); ?>"></i>&nbsp;</td>
             </tr>
         <?php endforeach; ?>
         </tbody>

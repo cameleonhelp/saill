@@ -37,10 +37,10 @@ class AppController extends Controller {
     public function addUrl(){
         if (strpos($this->params->url,'activeMessage')===false){
             $this->History = $this->Session->read('history');
-            $url = $this->params->url;
-            $root = explode('/',ROOT);
+            $url = ucfirst($this->params->url);
+            $root = strpos(ROOT,'/')!==false ? explode('/',ROOT) : explode('\\',ROOT);
             $last = count($root)-1;            
-            if(count($this->History)==0){$this->History[] = FULL_BASE_URL.DS.$root[$last].DS.$url;} else{array_unshift($this->History, FULL_BASE_URL.DS.$root[$last].DS.$url);}
+            if(count($this->History)==0){$this->History[] = str_replace('\\','/',FULL_BASE_URL.DS.$root[$last].DS.$url);} else{array_unshift($this->History, str_replace('\\','/',FULL_BASE_URL.DS.$root[$last].DS.$url));}
             $this->Session->write('history',$this->History);  
         }
     }
@@ -67,6 +67,8 @@ class AppController extends Controller {
     
     public function goToPostion($pos = 0){
         $url = $this->getHistory();
+        $max = count($url)-1;
+        $pos = ($pos > $max) ? $max : $pos;
         return $url[$pos];
     }
     

@@ -33,7 +33,7 @@ class ProfilsController extends AppController {
  */
 	public function view($id = null) {
 		if (!$this->Profil->exists($id)) {
-			throw new NotFoundException(__('Profil incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Profil incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$options = array('conditions' => array('Profil.' . $this->Profil->primaryKey => $id));
 		$this->set('profil', $this->Profil->find('first', $options));
@@ -48,10 +48,10 @@ class ProfilsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Profil->create();
 			if ($this->Profil->save($this->request->data)) {
-				$this->Session->setFlash(__('Profil sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Profil sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Profil incorrect, veuillez corriger le profil'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Profil incorrect, veuillez corriger le profil'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 	}
@@ -65,14 +65,14 @@ class ProfilsController extends AppController {
  */
 	public function edit($id = null) {
 		if (!$this->Profil->exists($id)) {
-			throw new NotFoundException(__('Profil incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Profil incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Profil->save($this->request->data)) {
-				$this->Session->setFlash(__('Profil sauvegardé'),true,array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Profil sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
-				$this->Session->setFlash(__('Profil incorrect, veuillez corriger le profil'),true,array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Profil incorrect, veuillez corriger le profil'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
 			$options = array('conditions' => array('Profil.' . $this->Profil->primaryKey => $id));
@@ -91,14 +91,14 @@ class ProfilsController extends AppController {
 	public function delete($id = null) {
 		$this->Profil->id = $id;
 		if (!$this->Profil->exists()) {
-			throw new NotFoundException(__('Profil incorrect'),true,array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Profil incorrect'),'default',array('class'=>'alert alert-error'));
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Profil->delete()) {
-			$this->Session->setFlash(__('Profil supprimé'),true,array('class'=>'alert alert-success'));
+			$this->Session->setFlash(__('Profil supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Profil NON supprimé'),true,array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Profil NON supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
 	}
         
