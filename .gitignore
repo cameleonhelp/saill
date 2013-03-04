@@ -1,5 +1,5 @@
 nbproject
-.DS_Store
+*.DS_Store
 osact_test.sql
 app/tmp/cache/
 app/tmp/logs/
@@ -9,11 +9,7 @@ app/.DS_Store
 lib/.DS_Store
 _git2_L2FF60
 *Thumbs.db
-
 *.db
-
 *.bak
-
-app/webroot/css/select.ori.css
-
-app/webroot/js/select.ori.js
+*.ori.css
+*.ori.js
