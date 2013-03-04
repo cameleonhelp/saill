@@ -10,18 +10,24 @@
         function etatLivrable($etat) {
             $class = '';
             switch ($etat){
-                 case 'A Faire':
+                 case 'à faire':
                     $class = 'icon-edit icon-red';
                     break;
-                 case 'En cours':
+                 case 'en cours':
                     $class = 'icon-edit';
                     break;                
-                 case 'Livré':
+                 case 'livré':
                     $class = 'icon-share';
                     break;          
-                 case 'Validé':
+                 case 'validé':
                     $class = 'icon-check icon-green';
-                    break;               
+                    break;  
+                 case 'refusé':
+                    $class = 'icon-share icon-red';
+                    break;          
+                 case 'annulé':
+                    $class = 'icon-remove icon-red';
+                    break;                 
             }
             return $class;
         } 
@@ -37,8 +43,6 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Chronologie<b class="caret"></b></a>
                      <ul class="dropdown-menu">
                      <li><?php echo $this->Html->link('Toutes', array('action' => 'index','toutes',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
-                     <li class="divider"></li>
-                     <li><?php echo $this->Html->link('Sans échéance', array('action' => 'index','incomplet',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>                     
                      <li class="divider"></li>
                      <li><?php echo $this->Html->link('Semaine précédente', array('action' => 'index','previousweek',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      <li><?php echo $this->Html->link('Semaine courante', array('action' => 'index','week',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>

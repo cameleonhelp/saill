@@ -201,5 +201,5 @@ Configure::write(
 );
 
 Configure::write(
-    'etatLivrable',array('à faire'=>'A faire','en cours'=>'En cours','validé'=>'Validé','livré'=>'Livré','refusé'=>'Refusé','annulé'=>'Annulé') //,'autre'=>'Autre'
+    'etatLivrable',array('à faire'=>'A faire','en cours'=>'En cours','livré'=>'Livré','validé'=>'Validé','refusé'=>'Refusé','annulé'=>'Annulé') //,'autre'=>'Autre'
 );
