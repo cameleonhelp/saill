@@ -139,13 +139,19 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
 $.fn.editable.defaults.mode = 'inline';
 
 $(document).ready(function () {
+    /** Initialisation des durée des actions **/
+    $('#ActionDUREEPREVUE').val()=='' ? $('#ActionLblDUREEPREVUE').text('0 jour') : $('#ActionLblDUREEPREVUE').text(($('#ActionDUREEPREVUE').val()/8)+' jours');
+    $('#ActionDUREEREELLE').val()=='' ? $('#ActionLblDUREEREELLE').text('0 jour') : $('#ActionLblDUREEREELLE').text(($('#ActionDUREEREELLE').val()/8)+' jours');
+    var avancement = $('#ActionAVANCEMENT').val() < 0 ? 0 : $('#ActionAVANCEMENT').val() > 100 ? 100 : $('#ActionAVANCEMENT').val();
+    avancement = Math.round(avancement/10)*10;
+    $('#ActionAVANCEMENT').val(avancement);
+    $('#progressbar').attr('style',"width:"+avancement+"%;");
     /** Fermeture du message en cliquant dessus **/
     $('#flashMessage').on('click',function(){$(this).hide();});
     /** Application d'un style sur les select **/
     $('select').selectpicker();
     /** Application d'un style sur les select **/
-    $(".yesno").each( function() { $(this).next(".labelAfter").text(this.checked ? "Oui" : "Non"); } 
-    );
+    $(".yesno").each( function() { $(this).next(".labelAfter").text(this.checked ? "Oui" : "Non"); });
     $(".yesno").click(function() {
         $(this).next(".labelAfter").text(this.checked ? "Oui" : "Non");
     });
@@ -237,7 +243,7 @@ $(document).ready(function () {
    $('#UtiliseoutilOutilId').parent().on('click',function(e){
        e.preventDefault();     
    }); 
-   $('#UtiliseoutilOutilId').on('change',function(e){
+   $('#UtiliseoutilOutilId').on('change',function(){
        if (this.value != ''){
            $('#UtiliseoutilDossierpartageId').parent().children().children('button').addClass('disabled');
            $('#UtiliseoutilListediffusionId').parent().children().children('button').addClass('disabled');
@@ -249,7 +255,7 @@ $(document).ready(function () {
    $('#UtiliseoutilDossierpartageId').parent().on('click',function(e){
        e.preventDefault();    
    }); 
-   $('#UtiliseoutilDossierpartageId').on('change',function(e){
+   $('#UtiliseoutilDossierpartageId').on('change',function(){
        if (this.value != ''){
            $('#UtiliseoutilOutilId').parent().children().children('button').addClass('disabled');
            $('#UtiliseoutilListediffusionId').parent().children().children('button').addClass('disabled');
@@ -261,7 +267,7 @@ $(document).ready(function () {
    $('#UtiliseoutilListediffusionId').parent().on('click',function(e){
        e.preventDefault();     
    }); 
-   $('#UtiliseoutilListediffusionId').on('change',function(e){
+   $('#UtiliseoutilListediffusionId').on('change',function(){
        if (this.value != ''){
            $('#UtiliseoutilDossierpartageId').parent().children().children('button').addClass('disabled');
            $('#UtiliseoutilOutilId').parent().children().children('button').addClass('disabled');
@@ -273,7 +279,7 @@ $(document).ready(function () {
    $('#DotationMaterielinformatiquesId').parent().on('click',function(e){
        e.preventDefault();     
    }); 
-   $('#DotationMaterielinformatiquesId').on('change',function(e){
+   $('#DotationMaterielinformatiquesId').on('change',function(){
        if (this.value != ''){
            $('#DotationTypematerielId').parent().children().children('button').addClass('disabled');
        } else {
@@ -283,13 +289,43 @@ $(document).ready(function () {
    $('#DotationTypematerielId').parent().on('click',function(e){
        e.preventDefault();     
    }); 
-   $('#DotationTypematerielId').on('change',function(e){
+   $('#DotationTypematerielId').on('change',function(){
        if (this.value != ''){
            $('#DotationMaterielinformatiquesId').parent().children().children('button').addClass('disabled');
        } else {
            $('#DotationMaterielinformatiquesId').parent().children().children('button').removeClass('disabled');
        }
-   });    
+   });   
+   /** Changement de l'avancement d'une action **/
+   $('#ActionAVANCEMENT').on('change',function(e){
+       e.preventDefault();
+       var avancement = $('#ActionAVANCEMENT').val() < 0 ? 0 : $('#ActionAVANCEMENT').val() > 100 ? 100 : $('#ActionAVANCEMENT').val();
+       avancement = Math.round(avancement/10)*10;
+       $('#ActionAVANCEMENT').val(avancement);
+       $('#progressbar').attr('style',"width:"+avancement+"%;");
+   });
+   $('#ActionDUREEPREVUE').on('change',function(e){
+       e.preventDefault();
+       var jour = ($('#ActionDUREEPREVUE').val()/8) > 1 ? ' jours' : ' jour';
+       $('#ActionLblDUREEPREVUE').text(($('#ActionDUREEPREVUE').val()/8)+jour);       
+   });
+   $('#ActionDUREEREELLE').on('change',function(e){
+       e.preventDefault();
+       var jour = ($('#ActionDUREEREELLE').val()/8) > 1 ? ' jours' : ' jour';
+       $('#ActionLblDUREEREELLE').text(($('#ActionDUREEREELLE').val()/8)+jour);       
+   });
+   $('#ActionSTATUT').on('change',function(e){
+       e.preventDefault();
+       if ($('#ActionSTATUT').val() == 'terminiée' || $('#ActionSTATUT').val() == 'livré') {
+            avancement = 100;
+            $('#ActionAVANCEMENT').val(avancement);
+            $('#progressbar').attr('style',"width:"+avancement+"%;");           
+       } else {
+             avancement = 0;
+            $('#ActionAVANCEMENT').val(avancement);
+            $('#progressbar').attr('style',"width:"+avancement+"%;");          
+       }
+   });
    /** Accordion **/
    /*$("#accordion2").on('click',function(){
        $(this).find('.accordion-body').each(function(index){
@@ -328,20 +364,5 @@ $(document).ready(function () {
        }
    });*/
 });
-<?php
-                echo $this->Html->script('jquery');
-                echo $this->Html->script('bootstrap');              
-                echo $this->Html->script('editable'); 
-                echo $this->Html->script('validate');                
-                echo $this->Html->script('messages_fr'); 
-                echo $this->Html->script('datepicker'); 
-                echo $this->Html->script('select'); 
-                echo $this->Html->script('tiny_mce/tiny_mce');
-                echo $this->Html->script('jscroller2'); 
-                
-		echo $this->fetch('meta');
-		echo $this->fetch('css');
-		echo $this->fetch('script');
-	?>
 </script>
 

@@ -444,3 +444,13 @@ div.controls{
     margin-left: -60px;
     }
 }
+
+.text-small{
+    font-size: 8px;
+}
+
+.td-error {
+    background-color: #f2dede !important;
+    color:#b94a48;
+    font-weight: bold;
+}

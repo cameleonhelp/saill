@@ -19,9 +19,10 @@ class MaterielinformatiquesController extends AppController {
  *
  * @return void
  */
-	public function index($filtreetat,$filtretype,$filtresection) {
+	public function index($filtreetat=null,$filtretype=null,$filtresection=null) {
                 switch ($filtreetat){
                     case 'tous':
+                    case null:    
                         $newconditions[]="1=1";
                         $fetat = "de tous les états";
                         break;
@@ -32,6 +33,7 @@ class MaterielinformatiquesController extends AppController {
                 $this->set('fetat',$fetat); 
                 switch ($filtretype){
                     case 'tous':
+                    case null:    
                         $newconditions[]="1=1";
                         $ftype = "tous les types de matériel";
                         break;
@@ -42,6 +44,7 @@ class MaterielinformatiquesController extends AppController {
                 $this->set('ftype',$ftype); 
                 switch ($filtresection){
                     case 'toutes':
+                    case null:    
                         $newconditions[]="1=1";
                         $fsection = "toutes les sections";
                         break;

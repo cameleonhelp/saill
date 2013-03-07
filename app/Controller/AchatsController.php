@@ -16,9 +16,10 @@ class AchatsController extends AppController {
  *
  * @return void
  */
-	public function index($filtre) {
+	public function index($filtre=null) {
                 switch ($filtre){
                     case 'toutes':
+                    case null:    
                         $newconditions[]="1=1";
                         $factivite = "toutes les activités";
                         break;                 

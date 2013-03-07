@@ -203,3 +203,15 @@ Configure::write(
 Configure::write(
     'etatLivrable',array('à faire'=>'A faire','en cours'=>'En cours','livré'=>'Livré','validé'=>'Validé','refusé'=>'Refusé','annulé'=>'Annulé') //,'autre'=>'Autre'
 );
+
+Configure::write(
+    'etatAction',array('à faire'=>'A faire','en cours'=>'En cours','terminée'=>'Terminée','livré'=>'Livrée','annulée'=>'Annulée') 
+);
+
+Configure::write(
+    'prioriteAction',array('normale'=>'Normale','moyenne'=>'Moyenne','haute'=>'Haute') 
+);
+
+Configure::write(
+    'typeAction',array('action'=>'Action','indisponibilité'=>'Absences','standard'=>'Automatique')
+);

@@ -1,3 +1,73 @@
+<?php
+function styleBarre($avancement){
+    $result = '';
+    switch ($avancement){
+        case '10':
+        case '20':
+        case '30':            
+            $result = 'danger';
+            break;
+        case '40':
+        case '50':           
+        case '60':
+            $result = 'warning';
+            break;
+        case '70':
+        case '80':
+        case '90':
+            $result = 'info';
+            break;
+        case '100':
+            $result = 'success';
+            break;        
+    }
+    return $result;
+}
+
+    function etatAction($etat) {
+        $class = '';
+        switch ($etat){
+             case 'à faire':
+                $class = 'icon-tag icon-red';
+                break;
+             case 'en cours':
+                $class = 'icon-tag';
+                break;                
+             case 'livrée':
+                $class = 'icon-inbox icon-green';
+                break;          
+             case 'terminée':
+                $class = 'icon-tag icon-green';
+                break;         
+             case 'annulée':
+                $class = 'icon-remove icon-red';
+                break;                 
+        }
+        return $class;
+    } 
+    
+    function etatTooltip($etat) {
+        $tooltip = '';
+        switch ($etat){
+             case 'à faire':
+                $tooltip = 'À faire';
+                break;
+             case 'en cours':
+                $tooltip = 'En cours';
+                break;                
+             case 'livrée':
+                $tooltip = 'Livrée';
+                break;          
+             case 'terminée':
+                $tooltip = 'Terminée';
+                break;         
+             case 'annulée':
+                $tooltip = 'Annulée';
+                break;                 
+        }
+        return $tooltip;
+    }     
+?>
 <div class="actions index">
         <div class="navbar">
             <div class="navbar-inner">
@@ -8,28 +78,33 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Priorité <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
-                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Normale', array('action' => 'index','1',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Moyenne', array('action' => 'index','2',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Haute', array('action' => 'index','3',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      </ul>
                 </li>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
-                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('A faire', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','1',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('En cours', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','2',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Terminée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','3',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Livrée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','4',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Annulée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','5',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      </ul>
                 </li>                
                  <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Responsable <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous')); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
-                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                         <?php foreach ($responsables as $responsable): ?>
+                            <li><?php echo $this->Html->link($responsable['Utilisateur']['NOMLONG'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$responsable['Utilisateur']['id'])); ; ?></li>
+                         <?php endforeach; ?>
                      </ul>
                  </li>                
                 <li class="divider-vertical"></li>
@@ -65,17 +140,20 @@
 		<td><?php echo h($action['Domaine']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($action['Utilisateur']['NOMLONG']); ?>&nbsp;</td>
 		<td><?php echo h($action['Action']['OBJET']); ?>&nbsp;</td>
-		<td><?php echo h($action['Action']['AVANCEMENT']); ?>&nbsp;</td>
-		<td><?php echo h($action['Action']['DEBUT']); ?>&nbsp;</td>
-		<td><?php echo h($action['Action']['ECHEANCE']); ?>&nbsp;</td>
-		<td><?php echo h($action['Action']['STATUT']); ?>&nbsp;</td>
-		<td><?php echo h($action['Action']['DUREEPREVUE']); ?>&nbsp;</td>
-		<td><?php echo h($action['Action']['DUREEREELLE']); ?>&nbsp;</td>
-		<td><?php echo h($action['Action']['PRIORITE']); ?>&nbsp;</td>
+                <?php $style = styleBarre(h($action['Action']['AVANCEMENT'])); ?>
+		<td><div class="progress progress-<?php echo $style; ?>" style="margin-bottom:-10px;">
+                <div class="bar " style="width:<?php echo h($action['Action']['AVANCEMENT']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($action['Action']['AVANCEMENT']); ?>%"></div></div></td>
+		<td style="text-align:center;"><?php echo h($action['Action']['DEBUT']); ?>&nbsp;</td>
+		<td style="text-align:center;"><?php echo h($action['Action']['ECHEANCE']); ?>&nbsp;</td>
+		<td style="text-align:center;"><?php echo isset($action['Action']['STATUT']) ? '<i class="'.etatAction(h($action['Action']['STATUT'])).'" rel="tooltip" data-title="'.etatTooltip(h($action['Action']['STATUT'])).'"></i>' : '' ; ?>&nbsp;</td>
+		<td style="text-align:center;"><?php echo h($action['Action']['DUREEPREVUE']); ?> h</td>
+                <?php $warning = (h($action['Action']['DUREEREELLE']) > h($action['Action']['DUREEPREVUE'])) ? 'class="td-error"' : ""; ?>
+		<td <?php echo $warning; ?> style="text-align:center;"><?php echo h($action['Action']['DUREEREELLE']); ?> h</td>
+		<td style="text-align:center;"><?php echo h($action['Action']['PRIORITE']); ?>&nbsp;</td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($action['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($action['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $action['Action']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', h($action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette action ?'))); ?>                    
+			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette action ?')); ?>                    
 		</td>
 	</tr>
 <?php endforeach; ?>

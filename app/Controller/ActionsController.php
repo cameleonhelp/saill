@@ -19,16 +19,24 @@ class ActionsController extends AppController {
  */
 	public function index($filtrePriorite=null,$filtreEtat=null,$filtreResponsable=null) {
                 switch ($filtrePriorite){
-                    case 'toutes':
+                    case 'tous':
                     case null:    
                         $newconditions[]="1=1";
                         $fpriorite = "toutes les priorités";
                         break;                  
-                    default :
-                        $newconditions[]="Action.PRIORITE='".$filtrePriorite."'";
-                        $fpriorite = "la priorité ".$filtrePriorite;
+                    case '1':
+                        $newconditions[]="Action.PRIORITE='normale'";
+                        $fpriorite = "la priorité normale";
                         break;                      
-                }  
+                    case '2':
+                        $newconditions[]="Action.PRIORITE='moyenne'";
+                        $fpriorite = "la priorité moyenne";
+                        break;   
+                    case '3':
+                        $newconditions[]="Action.PRIORITE='haute'";
+                        $fpriorite = "la priorité haute";
+                        break;   
+                    }  
                 $this->set('fpriorite',$fpriorite); 
                 switch ($filtreEtat){
                     case 'tous':
@@ -36,11 +44,27 @@ class ActionsController extends AppController {
                         $newconditions[]="1=1";
                         $fetat = "tous les états";
                         break;                 
-                    default :
-                        $newconditions[]="Action.STATUT='".$fetat."'";
-                        $fetat = "le projet ".$fetat;
+                    case '1':
+                        $newconditions[]="Action.STATUT='à faire'";
+                        $fetat = "l'état à faire";
                         break;                      
-                }  
+                    case '2':
+                        $newconditions[]="Action.STATUT='en cours'";
+                        $fetat = "l'état en cours";
+                        break;    
+                    case '3':
+                        $newconditions[]="Action.STATUT='terminée'";
+                        $fetat = "l'état terminée";
+                        break;    
+                    case '4':
+                        $newconditions[]="Action.STATUT='livrée'";
+                        $fetat = "l'état livrée";
+                        break;    
+                    case '5':
+                        $newconditions[]="Action.STATUT='annulée'";
+                        $fetat = "l'état annulée";
+                        break;                        
+                    }  
                 $this->set('fetat',$fetat); 
                 switch ($filtreResponsable){
                     case 'tous':
@@ -49,15 +73,17 @@ class ActionsController extends AppController {
                         $fresponsable = "de tous les agents";
                         break;                    
                     default :
-                        $newconditions[]="Action.RESPONSABLE='".$filtreResponsable."'";
+                        $newconditions[]="Action.utilisateur_id='".$filtreResponsable."'";
                         $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>$filtreResponsable)));
                         $fresponsable = "dont le responsable est ".$nomlong;
                         break;                      
                 }  
                 $this->set('fresponsable',$fresponsable); 
+                $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $this->set('responsables',$responsables);                 
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Action->recursive = 0;
-		$this->set('actions', $this->paginate());
+		$this->set('actions', $this->paginate());              
 	}
 
 /**
@@ -81,6 +107,22 @@ class ActionsController extends AppController {
  * @return void
  */
 	public function add() {
+                $etats = Configure::read('etatAction');
+                $this->set('etats',$etats); 
+                $priorites = Configure::read('prioriteAction');
+                $this->set('priorites',$priorites); 
+                $types = Configure::read('typeAction');
+                $this->set('types',$types);    
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $this->set('destinataires',$destinataires); 
+                $activitesagent = $this->findActiviteForUtilisateur(2);
+                $this->set('activitesagent',$activitesagent); 
+                $activites = $this->findActiviteActive();
+                $this->set('activites',$activites);    
+                $livrablesNonClos = $this->findLivrableNonTermine();
+                $this->set('livrablesNonClos',$livrablesNonClos);
+                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM')));
+                $this->set('domaines',$domaines);                 
 		if ($this->request->is('post')) {
 			$this->Action->create();
 			if ($this->Action->save($this->request->data)) {
@@ -100,7 +142,23 @@ class ActionsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-		if (!$this->Action->exists($id)) {
+                $etats = Configure::read('etatAction');
+                $this->set('etats',$etats); 
+                $priorites = Configure::read('prioriteAction');
+                $this->set('priorites',$priorites); 
+                $types = Configure::read('typeAction');
+                $this->set('types',$types);    
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $this->set('destinataires',$destinataires); 
+                $activitesagent = $this->findActiviteForUtilisateur(2);
+                $this->set('activitesagent',$activitesagent); 
+                $activites = $this->findActiviteActive();
+                $this->set('activites',$activites);    
+                $livrablesNonClos = $this->findLivrableNonTermine();
+                $this->set('livrablesNonClos',$livrablesNonClos);
+                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM')));
+                $this->set('domaines',$domaines);   
+                if (!$this->Action->exists($id)) {
 			throw new NotFoundException(__('Action incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
@@ -151,5 +209,35 @@ class ActionsController extends AppController {
                 $this->Action->recursive = 0;
                 $this->set('actions', $this->paginate());
                 $this->render('index');
-        }           
+        }     
+        
+        public function findActiviteForUtilisateur($utilisateur_id = null) {
+            $list = array();
+            $sql = "SELECT affectations.activite_id, activites.NOM FROM affectations LEFT JOIN activites ON ( activites.id = affectations.activite_id ) WHERE utilisateur_id = ".$utilisateur_id;
+            $results = $this->Action->query($sql);
+            foreach ($results as $result) {
+                $list[$result['affectations']['activite_id']]=$result['activites']['NOM'];
+            }
+            return $list;
+        }        
+
+        public function findActiviteActive() {
+            $list = array();
+            $sql = "SELECT activites.id, activites.NOM FROM activites WHERE activites.ACTIVE = 1";
+            $results = $this->Action->query($sql);
+            foreach ($results as $result) {
+                $list[$result['activites']['id']]=$result['activites']['NOM'];
+            }
+            return $list;
+        } 
+        
+        public function findLivrableNonTermine() {
+            $list = array();
+            $sql = "SELECT livrables.id, livrables.NOM FROM livrables WHERE livrables.ETAT NOT IN ('validé','livré','refusé','annulé')";
+            $results = $this->Action->query($sql);
+            foreach ($results as $result) {
+                $list[$result['livrables']['id']]=$result['livrables']['NOM'];
+            }
+            return $list;
+        }         
 }

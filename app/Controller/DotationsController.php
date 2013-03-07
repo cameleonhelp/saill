@@ -29,7 +29,7 @@ class DotationsController extends AppController {
 		if (!$this->Dotation->exists($id)) {
 			throw new NotFoundException(__('Dotation incorrecte'));
 		}
-		$options = array('conditions' => array('Dotation.' . $this->Dotation->primaryKey => $id));
+		$options = isset($id) ? array('conditions' => array('Dotation.' . $this->Dotation->primaryKey => $id)) : '';
 		$this->set('dotation', $this->Dotation->find('first', $options));
 	}
 

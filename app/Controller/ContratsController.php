@@ -17,13 +17,14 @@ class ContratsController extends AppController {
  *
  * @return void
  */
-	public function index($filtre) {
+	public function index($filtre=null) {
                 switch ($filtre){
-                    case 'tous':
+                    case 'tous':    
                         $newconditions[]="1=1";
                         $fcontrat = "tous les contrats";
                         break;
                     case 'actif':
+                    case null:    
                         $newconditions[]="Contrat.ACTIF=1";
                         $fcontrat = "tous les contrats actifs";
                         break;  

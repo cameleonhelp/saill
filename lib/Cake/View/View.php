@@ -391,7 +391,7 @@ class View extends Object {
  * @deprecated The `$options['plugin']` is deprecated and will be removed in CakePHP 3.0. Use
  *   `Plugin.element_name` instead.
  */
-	public function element($name, $data = array(), $options = array()) {
+	public function element($name=null, $data = array(), $options = array()) {
 		$file = $plugin = null;
 
 		if (isset($options['plugin'])) {

@@ -18,9 +18,10 @@ class ProjetsController extends AppController {
  *
  * @return void
  */
-	public function index($filtreEtat,$filtreContrat) {
+	public function index($filtreEtat=null,$filtreContrat=null) {
                 switch ($filtreContrat){
                     case 'tous':
+                    case null:
                         $newconditions[]="1=1";
                         $fcontrat = "tous les contrats";
                         break;
@@ -32,6 +33,7 @@ class ProjetsController extends AppController {
                 $this->set('fcontrat',$fcontrat);
                 switch ($filtreEtat){
                     case 'tous':
+                    case null:
                         $newconditions[]="1=1";
                         $fetat = "tous les projets";
                         break;

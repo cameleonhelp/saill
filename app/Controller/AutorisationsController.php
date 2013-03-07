@@ -19,9 +19,10 @@ class AutorisationsController extends AppController {
  *
  * @return void
  */
-	public function index($filtreautorisation) {
+	public function index($filtreautorisation=null) {
                 switch ($filtreautorisation){
                     case 'tous':
+                    case null:    
                         $newconditions[]="1=1";
                         $fprofil = "tous les profils";
                         break;

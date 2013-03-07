@@ -22,6 +22,7 @@ class LivrablesController extends AppController {
 	public function index($filtreChrono=null,$filtreEtat=null,$filtregestionnaire=null) {
                 switch ($filtreChrono){
                     case 'toutes':
+                    case null:    
                         $newconditions[]="1=1";
                         $fchronologie = "tous les livrables";
                         break;
@@ -56,6 +57,7 @@ class LivrablesController extends AppController {
                 $this->set('fchronologie',$fchronologie); 
                 switch ($filtreEtat){
                     case 'tous':
+                    case null:    
                         $newconditions[]="1=1";
                         $fetat = "sans condition sur les états";
                         break;                      
@@ -83,6 +85,7 @@ class LivrablesController extends AppController {
                 $this->set('fetat',$fetat);  
                 switch ($filtregestionnaire){
                     case 'tous':
+                    case null:    
                         $newconditions[]="1=1";
                         $fgestionnaire = "de tous les gestionnaires";
                         break;                      
@@ -125,15 +128,17 @@ class LivrablesController extends AppController {
                 $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('utilisateur',$utilisateur);
 		if ($this->request->is('post')) {
-                        $suiviliv['Suivilivrable']['livrable_id']=$this->request->data['Livrable']['id'];
-                        $suiviliv['Suivilivrable']['ECHEANCE']=$this->request->data['Livrable']['ECHEANCE'];
-                        $suiviliv['Suivilivrable']['ETAT']=$this->request->data['Livrable']['ETAT'];
-                        $suiviliv['Suivilivrable']['DATELIVRAISON']=$this->request->data['Livrable']['DATELIVRAISON'];
-                        $suiviliv['Suivilivrable']['DATEVALIDATION']=$this->request->data['Livrable']['DATEVALIDATION'];                     
 			$this->Livrable->create();
 			if ($this->Livrable->save($this->request->data)) {
 				$this->Session->setFlash(__('Livrable sauvegardé'),'default',array('class'=>'alert alert-success'));
                                 //enregistrer le suivilivrable
+                                $thisLivrable = $this->Livrable->find('first',array('conditions'=>array('Livrable.id'=>$this->Livrable->getInsertID())));
+                                $suiviliv['Suivilivrable']['livrable_id']=$thisLivrable['Livrable']['id'];
+                                $suiviliv['Suivilivrable']['ECHEANCE']=$thisLivrable['Livrable']['ECHEANCE'];
+                                $suiviliv['Suivilivrable']['ETAT']=$thisLivrable['Livrable']['ETAT'];
+                                $suiviliv['Suivilivrable']['DATELIVRAISON']=$thisLivrable['Livrable']['DATELIVRAISON'];
+                                $suiviliv['Suivilivrable']['DATEVALIDATION']=$thisLivrable['Livrable']['DATEVALIDATION'];
+                                $this->Livrable->Suivilivrable->create();
                                 $this->Livrable->Suivilivrable->save($suiviliv);
 				$this->redirect($this->goToPostion(1));
 			} else {
@@ -159,15 +164,17 @@ class LivrablesController extends AppController {
 		if (!$this->Livrable->exists($id)) {
 			throw new NotFoundException(__('Livrable incorrect'),'default',array('class'=>'alert alert-error'));
 		}
-		if ($this->request->is('post') || $this->request->is('put')) {
-                        $suiviliv['Suivilivrable']['livrable_id']=$this->request->data['Livrable']['id'];
-                        $suiviliv['Suivilivrable']['ECHEANCE']=$this->request->data['Livrable']['ECHEANCE'];
-                        $suiviliv['Suivilivrable']['ETAT']=$this->request->data['Livrable']['ETAT'];
-                        $suiviliv['Suivilivrable']['DATELIVRAISON']=$this->request->data['Livrable']['DATELIVRAISON'];
-                        $suiviliv['Suivilivrable']['DATEVALIDATION']=$this->request->data['Livrable']['DATEVALIDATION'];                      
+		if ($this->request->is('post') || $this->request->is('put')) {                    
 			if ($this->Livrable->save($this->request->data)) {
 				$this->Session->setFlash(__('Livrable sauvegardé'),'default',array('class'=>'alert alert-success'));
-                                //enregistrer le suivilivrable                                
+                                //enregistrer le suivilivrable   
+                                $thisLivrable = $this->Livrable->find('first',array('conditions'=>array('Livrable.id'=>$id)));
+                                $suiviliv['Suivilivrable']['livrable_id']=$thisLivrable['Livrable']['id'];
+                                $suiviliv['Suivilivrable']['ECHEANCE']=$thisLivrable['Livrable']['ECHEANCE'];
+                                $suiviliv['Suivilivrable']['ETAT']=$thisLivrable['Livrable']['ETAT'];
+                                $suiviliv['Suivilivrable']['DATELIVRAISON']=$thisLivrable['Livrable']['DATELIVRAISON'];
+                                $suiviliv['Suivilivrable']['DATEVALIDATION']=$thisLivrable['Livrable']['DATEVALIDATION'];                                
+                                $this->Livrable->Suivilivrable->create();
                                 $this->Livrable->Suivilivrable->save($suiviliv);
 				$this->redirect($this->goToPostion(1));
 			} else {

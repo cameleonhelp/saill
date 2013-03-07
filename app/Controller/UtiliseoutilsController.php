@@ -19,10 +19,11 @@ class UtiliseoutilsController extends AppController {
  *
  * @return void
  */
-	public function index($filtreetat) {
+	public function index($filtreetat=null) {
 		$this->set('title_for_layout','Ouvertures des droits');
                 switch ($filtreetat){
                     case 'tous':
+                    case null:    
                         $newconditions[]="Utiliseoutil.STATUT !='Retour utilisateur'";
                         $fetat = "de tous les états sauf 'Retour utilisateur'";
                         break;

@@ -18,9 +18,10 @@ class ActivitesController extends AppController {
  *
  * @return void
  */
-	public function index($filtreEtat,$filtre) {
+	public function index($filtreEtat=null,$filtre=null) {
                 switch ($filtre){
                     case 'tous':
+                    case null:    
                         $newconditions[]="1=1";
                         $fprojet = "tous les projets";
                         break;
@@ -36,6 +37,7 @@ class ActivitesController extends AppController {
                 $this->set('fprojet',$fprojet); 
                 switch ($filtreEtat){
                     case 'tous':
+                    case null:    
                         $newconditions[]="1=1";
                         $fetat = "toutes les activités";
                         break;

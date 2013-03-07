@@ -18,9 +18,10 @@ class UtilisateursController extends AppController {
  *
  * @return void
  */
-	public function index($filtreUtilisateur,$filtreSection) {
+	public function index($filtreUtilisateur=null,$filtreSection=null) {
                 switch ($filtreUtilisateur){
                     case 'tous':
+                    case null:    
                         $newconditions[]="1=1";
                         $futilisateur = "tous les utilisateurs";
                         break;
@@ -43,6 +44,7 @@ class UtilisateursController extends AppController {
                 }
                 switch ($filtreSection){
                     case 'allsections':
+                    case null:    
                         $newconditions[]="1=1";
                         $fsection = "toutes les sections";
                         break;
