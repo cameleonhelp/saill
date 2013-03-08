@@ -5,11 +5,11 @@ OSACT est un site pour suivre l'activité d'une équipe de développeurs, ainsi 
 
 **Nouvelle version car modification de la conception pour les actions**
 
-Maintenant une action et géré à part le calcul de l'activité réelle et la facturation sont elles aussi distinctes pour une facilité de calcul et de restitution ensuite.
+Maintenant une action et gérée à part. Le calcul de l'activité réelle et la facturation sont elles aussi distinctes pour une facilité de calcul et de restitution ensuite.
 
-Lorsque l'on enregistre une action une activité réelle est automatiquement enregistrée si la somme en base pour cette action et la date est < 1
+Lorsque l'on enregistre une action une activité réelle est automatiquement enregistrée si la somme de la charge pour cette activité, de cet agent et la date est < 1
 
-Pour être certain en fin de mois que la saisie est correct l'agent pourra via un tableau compléter le manque de saisie
+Pour être certain en fin de mois que la saisie est correcte l'agent pourra via un tableau compléter le manque de saisie
 
 OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench](http://www.mysql.fr/products/workbench/)
 
