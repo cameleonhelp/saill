@@ -684,6 +684,22 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`facturations` (
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `osact_cake230`.`plandecharges`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `osact_cake230`.`plandecharges` ;
+
+CREATE  TABLE IF NOT EXISTS `osact_cake230`.`plandecharges` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `affectation_id` INT(15) NOT NULL ,
+  `CHARGE` INT NOT NULL ,
+  `DATE` DATE NOT NULL ,
+  `created` DATE NOT NULL ,
+  `modeified` DATE NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
 USE `osact_cake230` ;
 
 
@@ -819,5 +835,9 @@ INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`
 INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (27, 1, 'typemateriels', 1, 1, 1, 1, 1, 1, 0, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (28, 1, 'utilisateurs', 1, 1, 1, 1, 1, 1, 1, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (29, 1, 'utiliseoutils', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (30, 1, 'actionslivrables', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (31, 1, 'activitereelles', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (32, 1, 'facturations', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `created`, `modified`) VALUES (33, 1, 'plandecharges', 1, 1, 1, 1, 1, 0, 0, '2013-02-01', '2013-02-01');
 
 COMMIT;
