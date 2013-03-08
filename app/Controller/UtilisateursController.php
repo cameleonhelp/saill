@@ -133,7 +133,7 @@ class UtilisateursController extends AppController {
                 $this->set('activite',$activite);
                 $workcapacite = Configure::read('workCapacity');
                 $this->set('workcapacite',$workcapacite);
-                $affectations = $this->Utilisateur->Affectation->find('all',array('fields'=>array('id','activite_id','Activite.NOM'),'conditions'=>array('Affectation.utilisateur_id'=>$id)));
+                $affectations = $this->Utilisateur->Affectation->find('all',array('fields'=>array('id','activite_id','Activite.NOM','Affectation.REPARTITION'),'conditions'=>array('Affectation.utilisateur_id'=>$id)));
                 $this->set('affectations',$affectations);
                 $dotations = $this->Utilisateur->Dotation->find('all',array('conditions'=>array('Dotation.utilisateur_id'=>$id)));
                 $this->set('dotations',$dotations);

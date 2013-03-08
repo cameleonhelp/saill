@@ -355,56 +355,26 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `osact_cake230`.`livrables`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `osact_cake230`.`livrables` ;
-
-CREATE  TABLE IF NOT EXISTS `osact_cake230`.`livrables` (
-  `id` INT(15) NOT NULL AUTO_INCREMENT ,
-  `utilisateur_id` INT(15) NULL DEFAULT NULL ,
-  `NOM` VARCHAR(255) CHARACTER SET 'latin1' NOT NULL ,
-  `REFERENCE` VARCHAR(45) NULL ,
-  `ECHEANCE` DATE NOT NULL ,
-  `DATELIVRAISON` DATE NOT NULL ,
-  `DATEVALIDATION` DATE NOT NULL ,
-  `ETAT` ENUM('à faire','en cours','validé','livré','refusé','annulé') NOT NULL ,
-  `COMMENTAIRE` TEXT NULL DEFAULT NULL ,
-  `created` DATE NOT NULL ,
-  `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB
-AUTO_INCREMENT = 1
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
 -- Table `osact_cake230`.`actions`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `osact_cake230`.`actions` ;
 
 CREATE  TABLE IF NOT EXISTS `osact_cake230`.`actions` (
   `id` INT(15) NOT NULL AUTO_INCREMENT ,
-  `domaine_id` INT(15) NOT NULL ,
-  `activite_id` INT(15) NOT NULL ,
   `utilisateur_id` INT(15) NOT NULL COMMENT 'Créateur\n' ,
   `destinataire` INT(15) NOT NULL COMMENT 'Destinataire' ,
-  `livrable_id` INT(15) NULL DEFAULT NULL ,
-  `FACTURATION` INT(15) NULL DEFAULT NULL COMMENT 'id de l\'activité sur laquelle sera facturée l\'action' ,
-  `OBJET` VARCHAR(255) CHARACTER SET 'latin1' NOT NULL ,
-  `DESCRIPTION` LONGTEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
+  `domaine_id` INT(15) NOT NULL ,
+  `activite_id` INT(15) NOT NULL ,
+  `OBJET` TEXT CHARACTER SET 'latin1' NOT NULL ,
   `AVANCEMENT` INT(11) NULL DEFAULT '0' ,
-  `COMMENTAIRE` TEXT CHARACTER SET 'latin1' NOT NULL ,
-  `DEBUT` DATE NOT NULL ,
+  `COMMENTAIRE` TEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `ECHEANCE` DATE NOT NULL ,
+  `DEBUT` DATE NOT NULL ,
   `DEBUTREELLE` DATE NULL DEFAULT NULL ,
-  `PERIODE` INT(11) NULL DEFAULT NULL ,
-  `STATUT` ENUM('à faire','en cours','terminiée','livré','annulée') CHARACTER SET 'latin1' NULL DEFAULT NULL ,
-  `HIERARCHIQUE` INT(15) NULL DEFAULT NULL COMMENT 'id de l\'utilisateur' ,
+  `STATUT` ENUM('à faire','en cours','terminée','livré','annulée') CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `DUREEPREVUE` INT(15) NULL DEFAULT NULL ,
   `DUREEREELLE` INT(15) NULL DEFAULT NULL ,
   `PRIORITE` ENUM('normale','moyenne','haute') CHARACTER SET 'latin1' NULL DEFAULT NULL ,
-  `TYPE` ENUM('action','indisponibilité','standard') CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
@@ -423,6 +393,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`affectations` (
   `id` INT(15) NOT NULL AUTO_INCREMENT ,
   `utilisateur_id` INT(15) NOT NULL ,
   `activite_id` INT(15) NOT NULL ,
+  `REPARTITION` INT NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
@@ -484,9 +455,15 @@ DROP TABLE IF EXISTS `osact_cake230`.`historyactions` ;
 CREATE  TABLE IF NOT EXISTS `osact_cake230`.`historyactions` (
   `id` INT(15) NOT NULL AUTO_INCREMENT ,
   `action_id` INT(15) NOT NULL ,
-  `utilisateur_id` INT(15) NOT NULL ,
-  `HISTORIQUE` LONGTEXT NOT NULL ,
-  `STATUT` ENUM('à faire','en cours','terminiée','livré','annulée') NULL DEFAULT NULL ,
+  `AVANCEMENT` INT NULL DEFAULT NULL ,
+  `DEBUT` DATE NOT NULL ,
+  `DEBUTREELLE` DATE NULL DEFAULT NULL ,
+  `ECHEANCE` DATE NOT NULL ,
+  `CHARGEPREVUE` INT NOT NULL ,
+  `CHARGEREELLE` INT NULL DEFAULT NULL ,
+  `PRIORITE` ENUM('normale','moyenne','haute') CHARACTER SET 'latin1' NOT NULL ,
+  `STATUT` ENUM('à faire','en cours','terminiée','livré','annulée') NOT NULL ,
+  `COMMENTAIRE` TEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
@@ -543,6 +520,30 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`listediffusions` (
   `utilisateur_id` INT(15) NULL DEFAULT NULL ,
   `NOM` VARCHAR(255) CHARACTER SET 'latin1' NOT NULL ,
   `DESCRIPTION` LONGTEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
+  `created` DATE NOT NULL ,
+  `modified` DATE NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB
+AUTO_INCREMENT = 1
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `osact_cake230`.`livrables`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `osact_cake230`.`livrables` ;
+
+CREATE  TABLE IF NOT EXISTS `osact_cake230`.`livrables` (
+  `id` INT(15) NOT NULL AUTO_INCREMENT ,
+  `utilisateur_id` INT(15) NULL DEFAULT NULL ,
+  `NOM` VARCHAR(255) CHARACTER SET 'latin1' NOT NULL ,
+  `REFERENCE` VARCHAR(45) NULL ,
+  `ECHEANCE` DATE NOT NULL ,
+  `DATELIVRAISON` DATE NOT NULL ,
+  `DATEVALIDATION` DATE NOT NULL ,
+  `ETAT` ENUM('à faire','en cours','validé','livré','refusé','annulé') NOT NULL ,
+  `COMMENTAIRE` TEXT NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
@@ -631,6 +632,57 @@ ENGINE = InnoDB
 AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `osact_cake230`.`actionslivrables`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `osact_cake230`.`actionslivrables` ;
+
+CREATE  TABLE IF NOT EXISTS `osact_cake230`.`actionslivrables` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `livrables_id` INT(15) NOT NULL ,
+  `actions_id` INT(15) NOT NULL ,
+  `created` DATE NOT NULL ,
+  `modified` DATE NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `osact_cake230`.`activitesreelles`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `osact_cake230`.`activitesreelles` ;
+
+CREATE  TABLE IF NOT EXISTS `osact_cake230`.`activitesreelles` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `utilisateur_id` INT(15) NOT NULL ,
+  `action_id` INT(15) NOT NULL ,
+  `DATE` DATE NOT NULL ,
+  `CHARGE` INT NOT NULL DEFAULT 0 ,
+  `TYPE` TINYINT NOT NULL DEFAULT 0 COMMENT '0=>Action\n1=>Absence' ,
+  `PERIODE` TINYINT NOT NULL DEFAULT 0 COMMENT '0=>matin\n1=>Après midi' ,
+  `created` DATE NOT NULL ,
+  `modified` DATE NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `osact_cake230`.`facturations`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `osact_cake230`.`facturations` ;
+
+CREATE  TABLE IF NOT EXISTS `osact_cake230`.`facturations` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `utilisateur_id` INT(15) NOT NULL ,
+  `action_id` INT(15) NOT NULL ,
+  `DATE` DATE NOT NULL ,
+  `CHARGE` INT NOT NULL DEFAULT 0 ,
+  `created` DATE NOT NULL ,
+  `modified` DATE NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
 
 USE `osact_cake230` ;
 

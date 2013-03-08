@@ -1,12 +1,12 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * Affectation Model
+ * Activitesreelle Model
  *
  * @property Utilisateur $Utilisateur
- * @property Activite $Activite
+ * @property Action $Action
  */
-class Affectation extends AppModel {
+class Activitesreelle extends AppModel {
 
 /**
  * Validation rules
@@ -24,7 +24,7 @@ class Affectation extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'activite_id' => array(
+		'action_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -34,15 +34,45 @@ class Affectation extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'REPARTITION' => array(
-			/*'numeric' => array(
+		'DATE' => array(
+			'date' => array(
+				'rule' => array('date'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'CHARGE' => array(
+			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),*/
+			),
+		),
+		'TYPE' => array(
+			'numeric' => array(
+				'rule' => array('numeric'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'PERIODE' => array(
+			'numeric' => array(
+				'rule' => array('numeric'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
 		),
 	);
 
@@ -61,9 +91,9 @@ class Affectation extends AppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'Activite' => array(
-			'className' => 'Activite',
-			'foreignKey' => 'activite_id',
+		'Action' => array(
+			'className' => 'Action',
+			'foreignKey' => 'action_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

@@ -3,10 +3,11 @@ App::uses('AppModel', 'Model');
 /**
  * Action Model
  *
+ * @property Utilisateur $Utilisateur
  * @property Domaine $Domaine
  * @property Activite $Activite
- * @property Utilisateur $Utilisateur
- * @property Action $Action
+ * @property Activitesreelle $Activitesreelle
+ * @property Facturation $Facturation
  * @property Historyaction $Historyaction
  */
 class Action extends AppModel {
@@ -17,26 +18,6 @@ class Action extends AppModel {
  * @var array
  */
 	public $validate = array(
-		'domaine_id' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'activite_id' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
 		'utilisateur_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
@@ -57,6 +38,26 @@ class Action extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
+		'domaine_id' => array(
+			'numeric' => array(
+				'rule' => array('numeric'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'activite_id' => array(
+			'numeric' => array(
+				'rule' => array('numeric'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
 		'OBJET' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
@@ -67,17 +68,7 @@ class Action extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		//'COMMENTAIRE' => array(
-			//'notempty' => array(
-				//'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			//),
-		//),
-		'DEBUT' => array(
+		'ECHEANCE' => array(
 			/*'date' => array(
 				'rule' => array('date'),
 				//'message' => 'Your custom message here',
@@ -87,7 +78,7 @@ class Action extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),*/
 		),
-		'ECHEANCE' => array(
+		'DEBUT' => array(
 			/*'date' => array(
 				'rule' => array('date'),
 				//'message' => 'Your custom message here',
@@ -107,7 +98,21 @@ class Action extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Domaine' => array(
+		'Utilisateur' => array(
+			'className' => 'Utilisateur',
+			'foreignKey' => 'utilisateur_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'Destinataire' => array(
+			'className' => 'Utilisateur',
+			'foreignKey' => 'destinataire',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),		
+                'Domaine' => array(
 			'className' => 'Domaine',
 			'foreignKey' => 'domaine_id',
 			'conditions' => '',
@@ -120,20 +125,6 @@ class Action extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'Utilisateur' => array(
-			'className' => 'Utilisateur',
-			'foreignKey' => 'utilisateur_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
-		'Livrable' => array(
-			'className' => 'Livrable',
-			'foreignKey' => 'livrable_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
 		)
 	);
 
@@ -143,6 +134,32 @@ class Action extends AppModel {
  * @var array
  */
 	public $hasMany = array(
+		'Activitesreelle' => array(
+			'className' => 'Activitesreelle',
+			'foreignKey' => 'action_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'Facturation' => array(
+			'className' => 'Facturation',
+			'foreignKey' => 'action_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
 		'Historyaction' => array(
 			'className' => 'Historyaction',
 			'foreignKey' => 'action_id',
@@ -156,9 +173,9 @@ class Action extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		)
-	);
+	);      
 
-         /**
+/**
  * beforeSave method
  *
  * @throws NotFoundException

@@ -95,6 +95,8 @@ function styleBarre($avancement){
                          <li><?php echo $this->Html->link('Terminée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','3',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                          <li><?php echo $this->Html->link('Livrée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','4',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                          <li><?php echo $this->Html->link('Annulée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','5',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li class="divider"></li>
+                         <li><?php echo $this->Html->link('Todolist', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','6',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      </ul>
                 </li>                
                  <li class="dropdown">
@@ -122,7 +124,7 @@ function styleBarre($avancement){
         <thead>
 	<tr>
 			<th><?php echo $this->Paginator->sort('Domaine.NOM','Domaine'); ?></th>
-			<th><?php echo $this->Paginator->sort('Utilisateur.NOMLONG','Responsable de l\'action'); ?></th>
+			<th><?php echo $this->Paginator->sort('Destinataire.NOMLGDEST','Responsable de l\'action'); ?></th>
 			<th><?php echo $this->Paginator->sort('OBJET','Objet'); ?></th>
 			<th><?php echo $this->Paginator->sort('AVANCEMENT','% avancement'); ?></th>
 			<th width='90px'><?php echo $this->Paginator->sort('DEBUT','Date de début'); ?></th>
@@ -138,7 +140,7 @@ function styleBarre($avancement){
 	<?php foreach ($actions as $action): ?>
 	<tr>
 		<td><?php echo h($action['Domaine']['NOM']); ?>&nbsp;</td>
-		<td><?php echo h($action['Utilisateur']['NOMLONG']); ?>&nbsp;</td>
+		<td><?php echo h($action['Destinataire']['NOM']." ".$action['Destinataire']['PRENOM']); ?>&nbsp;</td>
 		<td><?php echo h($action['Action']['OBJET']); ?>&nbsp;</td>
                 <?php $style = styleBarre(h($action['Action']['AVANCEMENT'])); ?>
 		<td><div class="progress progress-<?php echo $style; ?>" style="margin-bottom:-10px;">

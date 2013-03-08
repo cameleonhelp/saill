@@ -316,7 +316,7 @@ $(document).ready(function () {
    });
    $('#ActionSTATUT').on('change',function(e){
        e.preventDefault();
-       if ($('#ActionSTATUT').val() == 'terminiée' || $('#ActionSTATUT').val() == 'livré') {
+       if ($('#ActionSTATUT').val() == 'terminée' || $('#ActionSTATUT').val() == 'livré') {
             avancement = 100;
             $('#ActionAVANCEMENT').val(avancement);
             $('#progressbar').attr('style',"width:"+avancement+"%;");           

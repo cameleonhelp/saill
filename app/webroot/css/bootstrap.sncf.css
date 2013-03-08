@@ -454,3 +454,6 @@ div.controls{
     color:#b94a48;
     font-weight: bold;
 }
+.clearboth {
+    clear: both !important;
+}

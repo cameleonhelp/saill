@@ -2,22 +2,36 @@
 	<h2><?php echo __('Historyactions'); ?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
-			<th><?php echo $this->Paginator->sort('ID'); ?></th>
-			<th><?php echo $this->Paginator->sort('ACTION_ID'); ?></th>
-			<th><?php echo $this->Paginator->sort('UTILISATEUR_ID'); ?></th>
-			<th><?php echo $this->Paginator->sort('HISTORIQUE'); ?></th>
+			<th><?php echo $this->Paginator->sort('id'); ?></th>
+			<th><?php echo $this->Paginator->sort('action_id'); ?></th>
+			<th><?php echo $this->Paginator->sort('AVANCEMENT'); ?></th>
+			<th><?php echo $this->Paginator->sort('DEBUT'); ?></th>
+			<th><?php echo $this->Paginator->sort('DEBUTREELLE'); ?></th>
+			<th><?php echo $this->Paginator->sort('ECHEANCE'); ?></th>
+			<th><?php echo $this->Paginator->sort('CHARGEPREVUE'); ?></th>
+			<th><?php echo $this->Paginator->sort('CHARGEREELLE'); ?></th>
+			<th><?php echo $this->Paginator->sort('PRIORITE'); ?></th>
 			<th><?php echo $this->Paginator->sort('STATUT'); ?></th>
+			<th><?php echo $this->Paginator->sort('COMMENTAIRE'); ?></th>
 			<th><?php echo $this->Paginator->sort('created'); ?></th>
 			<th><?php echo $this->Paginator->sort('modified'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($historyactions as $historyaction): ?>
 	<tr>
-		<td><?php echo h($historyaction['Historyaction']['ID']); ?>&nbsp;</td>
-		<td><?php echo h($historyaction['Historyaction']['ACTION_ID']); ?>&nbsp;</td>
-		<td><?php echo h($historyaction['Historyaction']['UTILISATEUR_ID']); ?>&nbsp;</td>
-		<td><?php echo h($historyaction['Historyaction']['HISTORIQUE']); ?>&nbsp;</td>
+		<td><?php echo h($historyaction['Historyaction']['id']); ?>&nbsp;</td>
+		<td>
+			<?php echo $this->Html->link($historyaction['Action']['id'], array('controller' => 'actions', 'action' => 'view', $historyaction['Action']['id'])); ?>
+		</td>
+		<td><?php echo h($historyaction['Historyaction']['AVANCEMENT']); ?>&nbsp;</td>
+		<td><?php echo h($historyaction['Historyaction']['DEBUT']); ?>&nbsp;</td>
+		<td><?php echo h($historyaction['Historyaction']['DEBUTREELLE']); ?>&nbsp;</td>
+		<td><?php echo h($historyaction['Historyaction']['ECHEANCE']); ?>&nbsp;</td>
+		<td><?php echo h($historyaction['Historyaction']['CHARGEPREVUE']); ?>&nbsp;</td>
+		<td><?php echo h($historyaction['Historyaction']['CHARGEREELLE']); ?>&nbsp;</td>
+		<td><?php echo h($historyaction['Historyaction']['PRIORITE']); ?>&nbsp;</td>
 		<td><?php echo h($historyaction['Historyaction']['STATUT']); ?>&nbsp;</td>
+		<td><?php echo h($historyaction['Historyaction']['COMMENTAIRE']); ?>&nbsp;</td>
 		<td><?php echo h($historyaction['Historyaction']['created']); ?>&nbsp;</td>
 		<td><?php echo h($historyaction['Historyaction']['modified']); ?>&nbsp;</td>
 		<td class="actions">
@@ -46,5 +60,9 @@
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('New Historyaction'), array('action' => 'add')); ?></li>
+		<li><?php echo $this->Html->link(__('List Actions'), array('controller' => 'actions', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Action'), array('controller' => 'actions', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Utilisateurs'), array('controller' => 'utilisateurs', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Utilisateur'), array('controller' => 'utilisateurs', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

@@ -4,6 +4,7 @@
         <thead>
 	<tr>
 			<th><?php echo 'Activités'; ?></th>
+                        <th><?php echo 'Répartition'; ?></th>
 			<th class="actions" width='40px'><?php echo __('Actions'); ?></th>
 	</tr>
         </thead>
@@ -11,6 +12,7 @@
 	<?php foreach ($affectations as $affectation): ?>
 	<tr>
 		<td><?php echo h($affectation['Activite']['NOM']); ?>&nbsp;</td>
+                <td style="text-align: right;"><?php echo h(isset($affectation['Affectation']['REPARTITION']) ? $affectation['Affectation']['REPARTITION'].'%' : ''); ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('controller'=>'Affectations','action' => 'edit', $affectation['Affectation']['id'], $this->params->pass[0]),array('escape' => false)); ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-trash"></i>', array('controller'=>'Affectations','action' => 'delete', $affectation['Affectation']['id'], $this->params->pass[0]),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette affectation ?')); ?>                    

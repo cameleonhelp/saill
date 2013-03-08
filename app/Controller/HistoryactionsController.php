@@ -47,6 +47,9 @@ class HistoryactionsController extends AppController {
 				$this->Session->setFlash(__('The historyaction could not be saved. Please, try again.'));
 			}
 		}
+		$actions = $this->Historyaction->Action->find('list');
+		$utilisateurs = $this->Historyaction->Utilisateur->find('list');
+		$this->set(compact('actions', 'utilisateurs'));
 	}
 
 /**
@@ -71,6 +74,9 @@ class HistoryactionsController extends AppController {
 			$options = array('conditions' => array('Historyaction.' . $this->Historyaction->primaryKey => $id));
 			$this->request->data = $this->Historyaction->find('first', $options);
 		}
+		$actions = $this->Historyaction->Action->find('list');
+		$utilisateurs = $this->Historyaction->Utilisateur->find('list');
+		$this->set(compact('actions', 'utilisateurs'));
 	}
 
 /**

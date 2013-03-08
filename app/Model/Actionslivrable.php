@@ -1,12 +1,12 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * Affectation Model
+ * Actionslivrable Model
  *
- * @property Utilisateur $Utilisateur
- * @property Activite $Activite
+ * @property Livrables $Livrables
+ * @property Actions $Actions
  */
-class Affectation extends AppModel {
+class Actionslivrable extends AppModel {
 
 /**
  * Validation rules
@@ -14,7 +14,7 @@ class Affectation extends AppModel {
  * @var array
  */
 	public $validate = array(
-		'utilisateur_id' => array(
+		'livrables_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -24,7 +24,7 @@ class Affectation extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'activite_id' => array(
+		'actions_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -33,16 +33,6 @@ class Affectation extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-		),
-		'REPARTITION' => array(
-			/*'numeric' => array(
-				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),*/
 		),
 	);
 
@@ -54,16 +44,16 @@ class Affectation extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Utilisateur' => array(
-			'className' => 'Utilisateur',
-			'foreignKey' => 'utilisateur_id',
+		'Livrables' => array(
+			'className' => 'Livrables',
+			'foreignKey' => 'livrables_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
 		),
-		'Activite' => array(
-			'className' => 'Activite',
-			'foreignKey' => 'activite_id',
+		'Actions' => array(
+			'className' => 'Actions',
+			'foreignKey' => 'actions_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

@@ -247,6 +247,19 @@ class Utilisateur extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
+                'Action' => array(
+			'className' => 'Action',
+			'foreignKey' => 'destinataire',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),            
 		'Affectation' => array(
 			'className' => 'Affectation',
 			'foreignKey' => 'utilisateur_id',
@@ -262,19 +275,6 @@ class Utilisateur extends AppModel {
 		),
 		'Dotation' => array(
 			'className' => 'Dotation',
-			'foreignKey' => 'utilisateur_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		),
-		'Historyaction' => array(
-			'className' => 'Historyaction',
 			'foreignKey' => 'utilisateur_id',
 			'dependent' => false,
 			'conditions' => '',
