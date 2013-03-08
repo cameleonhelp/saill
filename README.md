@@ -9,7 +9,9 @@ Maintenant une action et gérée à part. Le calcul de l'activité réelle et la
 
 Lorsque l'on enregistre une action une activité réelle est automatiquement enregistrée si la somme de la charge pour cette activité, de cet agent et la date est < 1
 
-Pour être certain en fin de mois que la saisie est correcte l'agent pourra via un tableau compléter le manque de saisie
+Pour être certain en fin de mois que la saisie est correcte l'agent pourra via un tableau compléter le manque de saisie.
+
+Un administrateur pourra quand a lui saisir la facturation dans un autre tableau qui sera affiché en parallèle de la saisie réelle de l'agent. Ce tableau sera pré-rempli à partir du plan de charge.
 
 OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench](http://www.mysql.fr/products/workbench/)
 
