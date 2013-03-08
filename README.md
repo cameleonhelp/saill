@@ -3,6 +3,14 @@ OSACT
 
 OSACT est un site pour suivre l'activité d'une équipe de développeurs, ainsi que le suivi logistique du matériel mis à disposition.
 
+**Nouvelle version car modification de la conception pour les actions**
+
+Maintenant une action et géré à part le calcul de l'activité réelle et la facturation sont elles aussi distinctes pour une facilité de calcul et de restitution ensuite.
+
+Lorsque l'on enregistre une action une activité réelle est automatiquement enregistrée si la somme en base pour cette action et la date est < 1
+
+Pour être certain en fin de mois que la saisie est correct l'agent pourra via un tableau compléter le manque de saisie
+
 OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench](http://www.mysql.fr/products/workbench/)
 
 ## Cette version s'appuie sur :
@@ -28,14 +36,6 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench](http://www.mysql.f
 * [CakePDF] (https://github.com/ceeram/CakePdf) - Pour exporter au format PDF je cherche la même chose pour Excel
 
 * [Authentificate] (https://github.com/ceeram/Authenticate) - Prévois de l'utiliser pour s'authentifier
-
-* [TimePicker pour BootStrap] (https://github.com/jdewit/bootstrap-timepicker) - Si j'ai besoin de choisir des heures
-
-* [Jquery File Upload] (http://blueimp.github.com/jQuery-File-Upload/) - Si je veux y joindre des fichiers
-
-* [Font Awesome 3.0.2](http://fortawesome.github.com/Font-Awesome/) - 249 icones pouvant être utilisées en plus de celles incluses dans BootStrap, (http://fortawesome.github.com/Font-Awesome/design.html)
-
-* [CakeExcel](https://github.com/dakota/CakeExcel) - Pour exporter au format xls
 
 * Graphiques : 
 
