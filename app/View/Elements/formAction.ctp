@@ -51,11 +51,11 @@
             </td>
             <td><label class="control-label sstitre required" for="ActionECHEANCE">Echéance de l'Action : </label></td>
             <td>
-                <div class="input-append date" data-date="<?php echo empty($this->data['Action']['ECHEANCE']) ? date('d/m/Y') : $this->data['Action']['ECHEANCE']; ?>" data-date-format="dd/mm/yyyy">
+                <div class="input-prepend date" data-date="<?php echo empty($this->data['Action']['ECHEANCE']) ? date('d/m/Y') : $this->data['Action']['ECHEANCE']; ?>" data-date-format="dd/mm/yyyy">
                 <?php $today = date('d/m/Y'); ?>
-                <?php echo $this->Form->input('ECHEANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>"L'échéance de l'action est obligatoire dans l'onglet Chronologie",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
-                <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
                 <span class="add-on"><i class="glyphicon_calendar"></i></span>
+                <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>                
+                <?php echo $this->Form->input('ECHEANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>"L'échéance de l'action est obligatoire dans l'onglet Chronologie",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 </div>                
             </td>            
         </tr>

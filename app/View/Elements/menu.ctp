@@ -5,6 +5,7 @@
   <?php $classLogout = in_array($controller,array('utilisateurs_logout')) ? 'active' : ''; ?>
   <?php $classHome = in_array($controller,array('pages_home')) ? 'active' : ''; ?>
   <?php $classAction = in_array($controller,array('actions_index','actions_add','actions_edit','actions_delete','actions_search')) ? 'active' : ''; ?>
+  <?php $classActvitereelle = in_array($controller,array('activitesreelles_index','activitesreelles_add','activitesreelles_edit','activitesreelles_delete','activitesreelles_search')) ? 'active' : ''; ?>  
   <?php $classLinkShared = in_array($controller,array('linkshareds_index','linkshareds_add','linkshareds_edit','linkshareds_delete','linkshareds_search')) ? 'active' : ''; ?>
   <?php $classLivrable = in_array($controller,array('livrables_index','livrables_add','livrables_edit','livrables_delete','livrables_search')) ? 'active' : ''; ?>
   <?php $classCalendardAbs = in_array($controller,array('pages_absences')) ? 'active' : ''; ?>
@@ -27,16 +28,17 @@
   <?php $classTJMProjets = in_array($controller,array('tjmcontrats_index','tjmcontrats_add','tjmcontrats_edit','tjmcontrats_delete','tjmcontrats_search')) ? 'active' : ''; ?> 
   <?php $classTJMAgents = in_array($controller,array('tjmagents_index','tjmagents_add','tjmagents_edit','tjmagents_delete','tjmagents_search')) ? 'active' : ''; ?>               
   <?php $classAchats = in_array($controller,array('achats_index','achats_add','achats_edit','achats_delete','achats_search')) ? 'active' : ''; ?>    
-  <?php $classBudget = in_array('active',array($classContrats,$classProjets,$classActivites,$classAchats,$classTJMProjets,$classTJMAgents)) ? 'active' : ''; ?>  
+  <?php $classPlanDeCharge = in_array($controller,array('plandecharges_index','plandecharges_add','plandecharges_edit','plandecharges_delete','plandecharges_search')) ? 'active' : ''; ?>      
+  <?php $classFacturation = in_array($controller,array('facturations_index','facturations_add','facturations_edit','facturations_delete','facturations_search')) ? 'active' : ''; ?>        
+  <?php $classBudget = in_array('active',array($classFacturation,$classPlanDeCharge,$classContrats,$classProjets,$classActivites,$classAchats,$classTJMProjets,$classTJMAgents)) ? 'active' : ''; ?>  
   <?php $classUtilisateurs = in_array($controller,array('utilisateurs_index','utilisateurs_add','utilisateurs_edit','utilisateurs_delete','utilisateurs_search','dotations_add','dotations_edit','dotations_delete','affectations_add','affectations_edit','affectations_delete')) ? 'active' : ''; ?> 
   <?php $classMateriels = in_array($controller,array('materielinformatiques_index','materielinformatiques_add','materielinformatiques_edit','materielinformatiques_delete','materielinformatiques_search')) ? 'active' : ''; ?>               
   <?php $classPetitMateriels = in_array($controller,array('materielautres_index','materielautres_add','materielautres_edit','materielautres_delete','materielautres_search')) ? 'active' : ''; ?>               
   <?php $classUtiliseOutils = in_array($controller,array('utiliseoutils_index','utiliseoutils_add','utiliseoutils_edit','utiliseoutils_delete','utiliseoutils_search')) ? 'active' : ''; ?>    
   <?php $classLogistique = in_array('active',array($classPetitMateriels,$classUtilisateurs,$classMateriels,$classUtiliseOutils)) ? 'active' : ''; ?> 
-  <?php $classPlanCharges = in_array($controller,array('pages_plancharge')) ? 'active' : ''; ?> 
   <?php $classCRAMois = in_array($controller,array('pages_cramois')) ? 'active' : ''; ?>               
   <?php $classCRAPeriode = in_array($controller,array('pages_craperiode')) ? 'active' : ''; ?>    
-  <?php $classRapports = in_array('active',array($classPlanCharges,$classCRAMois,$classCRAPeriode)) ? 'active' : ''; ?> 
+  <?php $classRapports = in_array('active',array($classCRAMois,$classCRAPeriode)) ? 'active' : ''; ?> 
   <?php $classContactUs = in_array($controller,array('pages_contactus')) ? 'active' : ''; ?>               
   <?php $classAddFavorites = in_array($controller,array('pages_addfavorites')) ? 'active' : ''; ?>  
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: static; margin-bottom: 15px; margin-left: -20px; margin-top: 15px;">
@@ -47,6 +49,7 @@
     <li class="<?php echo $classHome; ?>"><?php echo $this->Html->link('<i class="glyphicon_home"></i> Accueil',array('controller'=>'pages','action'=>'home'),array('escape' => false)); ?></li>                
     <li class="divider"></li>                
     <li class="<?php echo $classAction; ?>"><?php echo $this->Html->link('<i class="glyphicon_stopwatch"></i> Actions',array('controller'=>'actions','action'=>'index'),array('escape' => false)); ?></li>
+    <li class="<?php echo $classActvitereelle; ?>"><?php echo $this->Html->link('<i class="icon-tasks"></i> Feuille de temps',array('controller'=>'activitesreelles','action'=>'index'),array('escape' => false)); ?></li>    
     <li class="<?php echo $classLinkShared; ?>"><?php echo $this->Html->link('<i class="glyphicon_link"></i> Liens partagés',array('controller'=>'linkshareds','action'=>'index'),array('escape' => false)); ?></li>
     <li class="<?php echo $classLivrable; ?>"><?php echo $this->Html->link('<i class="glyphicon_inbox"></i> Livrables',array('controller'=>'livrables','action'=>'index','week','tous','tous'),array('escape' => false)); ?></li>
     <li class="<?php echo $classCalendardAbs; ?>"><?php echo $this->Html->link('<i class="glyphicon_beach_umbrella"></i> Absences équipe',array('controller'=>'pages','action'=>'absences'),array('escape' => false)); ?></li>
@@ -88,12 +91,15 @@
             <li class="divider"></li>
             <li class="<?php echo $classTJMProjets; ?>"><?php echo $this->Html->link('TJM Contrats',array('controller'=>'tjmcontrats','action'=>'index'),array('escape' => false)); ?></li>
             <li class="<?php echo $classTJMAgents; ?>"><?php echo $this->Html->link('TJM Agents',array('controller'=>'tjmagents','action'=>'index'),array('escape' => false)); ?></li>
+            <li class="divider"></li>
+            <li class="<?php echo $classPlanDeCharge; ?>"><?php echo $this->Html->link('Plan de charge',array('controller'=>'plandecharges','action'=>'index'),array('escape' => false)); ?></li>
+            <li class="divider"></li>
+            <li class="<?php echo $classFacturation; ?>"><?php echo $this->Html->link('Facturation',array('controller'=>'facturations','action'=>'index'),array('escape' => false)); ?></li>
         </ul>
     </li>
     <li class="divider"></li>
     <li  class="dropdown-submenu <?php echo $classRapports; ?>"><a href="#"><i class="glyphicon_charts"></i> Rapports</a>
         <ul class="dropdown-menu">
-            <li class="<?php echo $classPlanCharges; ?>"><?php echo $this->Html->link('Plan de charge',array('controller'=>'pages','action'=>'plancharge'),array('escape' => false)); ?></li>
             <li class="<?php echo $classCRAMois; ?>"><?php echo $this->Html->link('Activités - Mensuel',array('controller'=>'pages','action'=>'cramois'),array('escape' => false)); ?></li>
             <li class="<?php echo $classCRAPeriode; ?>"><?php echo $this->Html->link('Activités - Périodique',array('controller'=>'pages','action'=>'craperiode'),array('escape' => false)); ?></li>
         </ul>
