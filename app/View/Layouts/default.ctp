@@ -128,11 +128,11 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
     </div>    
     <?php //$url = $this->Session->read('history'); debug($this->params->url); 
     //debug(env('SERVER_ADDR')); ?>
-    <?php if (env('SERVER_ADDR') == '10.0.0.8' || env('SERVER_ADDR') == '127.0.0.1') { ?>
-    <div id="debugguer" style="background-color: #cccccc;">SQL Debug :
-        <?php echo $this->element('sql_dump'); ?>
-    </div>   
-    <?php } ?>
+    
+    <!--<div id="debugguer" style="background-color: #cccccc;">SQL Debug :
+        <?php // echo $this->element('sql_dump'); ?>
+    </div>//-->   
+
 </body>
 </html>
 <script>
@@ -149,7 +149,7 @@ $(document).ready(function () {
     /** Fermeture du message en cliquant dessus **/
     $('#flashMessage').on('click',function(){$(this).hide();});
     /** Application d'un style sur les select **/
-    $('select').selectpicker();
+    $('select').selectpicker({size:5,});
     /** Application d'un style sur les select **/
     $(".yesno").each( function() { $(this).next(".labelAfter").text(this.checked ? "Oui" : "Non"); });
     $(".yesno").click(function() {

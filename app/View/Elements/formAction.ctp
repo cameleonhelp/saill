@@ -120,6 +120,7 @@
             <?php echo $this->Form->input('COMMENTAIRE'); ?>   
         </div>
     </div>  
+
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container" style="margin-top:2px;text-align:center;">
@@ -130,4 +131,5 @@
     </div>
 <?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>2)); ?> 
 <?php if ($this->params->action == 'edit') echo $this->Form->input('id',array('type'=>'hidden')); ?>    
-<?php echo $this->Form->end(); ?>
+<?php echo $this->Form->end(); ?> 
+<?php if ($this->params->action == 'edit') echo $this->element('tableHistoryAction'); ?>

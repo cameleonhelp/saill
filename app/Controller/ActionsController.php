@@ -171,13 +171,11 @@ class ActionsController extends AppController {
                 $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('destinataires',$destinataires); 
                 $activitesagent = $this->findActiviteForUtilisateur(2);
-                $this->set('activitesagent',$activitesagent); 
-                $activites = $this->findActiviteActive();
-                $this->set('activites',$activites);    
-                $livrablesNonClos = $this->findLivrableNonTermine();
-                $this->set('livrablesNonClos',$livrablesNonClos);
+                $this->set('activitesagent',$activitesagent);   
                 $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM')));
-                $this->set('domaines',$domaines);                 
+                $this->set('domaines',$domaines); 
+                $histories = $this->Action->Historyaction->find('all',array('conditions'=>array('Historyaction.action_id'=>$id),'order'=>array('Historyaction.id'=>'desc')));
+                $this->set('histories',$histories);
         }
 
 /**

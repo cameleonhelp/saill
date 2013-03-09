@@ -189,7 +189,7 @@ Configure::write(
 );
 
 Configure::write(
-    'workCapacity',array('1'=>'5 jours par semaine','0.8'=>'4 jours par semaine','0.6'=>'3 jours par semaine','0.4'=>'2 jours par semaine','0.2'=>'1 jour par semaine')
+    'workCapacity',array('1.0'=>'5 jours par semaine','0.8'=>'4 jours par semaine','0.6'=>'3 jours par semaine','0.4'=>'2 jours par semaine','0.2'=>'1 jour par semaine')
 );
 
 Configure::write(

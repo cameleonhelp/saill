@@ -1,5 +1,5 @@
 <?php 
     $version = '2.0';
-    $build = '0001';
+    $build = '0002';
     echo $version.'-'.$build;
 ?>
