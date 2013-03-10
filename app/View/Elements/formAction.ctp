@@ -1,12 +1,11 @@
 <?php echo $this->Form->create('Action',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
-    <div class="control-group">
-        <label class="control-label sstitre required" for="ActionOBJET">Objet : </label>
-        <div class="controls">
-                <?php echo $this->Form->input('OBJET',array('type'=>'text','data-rule-required'=>'true','data-msg-required'=>"L'objet de l'action est obligatoire",'class' => 'span20')); ?>
-        </div>
-    </div>  
-    <hr>
     <table>
+        <tr>
+            <td><label class="control-label sstitre required" for="ActionOBJET">Objet : </label></td>
+            <td colspan='3'  style='margin-bottom: 10px;padding-bottom: 10px;'>
+                <?php echo $this->Form->input('OBJET',array('type'=>'text','data-rule-required'=>'true','data-msg-required'=>"L'objet de l'action est obligatoire",'class' => 'span23')); ?>
+            </td>
+        </tr>
         <tr>
             <td><label class="control-label sstitre  required" for="ActionDestinataire">Responsable: </label></td>
             <td>
@@ -37,9 +36,6 @@
                 <?php } ?>                
             </td>            
         </tr>
-    </table>
-    <hr>    
-    <table>
         <tr>
             <td><label class="control-label sstitre  required" for="ActionPRIORITE">Priorité : </label></td>
             <td>
@@ -95,24 +91,8 @@
                 <?php $value = isset($this->data['Action']['DUREEPREVUE']) ? $this->data['Action']['DUREEPREVUE'] : 0; ?>
                 <?php echo $this->Form->input('DUREEPREVUE',array('type'=>"number", 'min'=>"0", 'step'=>"2",'maxlength'=>'3','class' => 'span2 text-right', 'value'=>$value,'data-msg-required'=>"La durée prévue de l'action est obligatoire dans l'onglet Chronologie")); ?> heures soit : <label id="ActionLblDUREEPREVUE"></label>              
             </td>            
-        </tr>
-        <tr>
-            <td><label class="control-label sstitre" for="ActionDEBUTREELLE">Début réel de l'action : </label></td>
-            <td>
-                <div class="input-append date" data-date="<?php echo empty($this->data['Action']['DEBUTREELLE']) ? date('d/m/Y') : $this->data['Action']['DEBUTREELLE']; ?>" data-date-format="dd/mm/yyyy">
-                <?php $today = date('d/m/Y'); ?>
-                <?php echo $this->Form->input('DEBUTREELLE',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
-                <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
-                <span class="add-on"><i class="glyphicon_calendar"></i></span>
-                </div>                
-            </td>
-            <td><label class="control-label sstitre" for="ActionDUREEREELLE">Durée réelle : </label></td>
-            <td class="form-inline">
-             <?php $value = isset($this->data['Action']['DUREEREELLE']) ? $this->data['Action']['DUREEREELLE'] : 0; ?>            
-            <?php echo $this->Form->input('DUREEREELLE',array('type'=>"number", 'min'=>"0", 'step'=>"2",'maxlength'=>'3','class' => 'span2 text-right', 'value'=>$value)); ?> heures soit : <label id="ActionLblDUREEREELLE"></label>                
-            </td>            
-        </tr>        
-    </table>
+        </tr>      
+    </table> 
     <hr>
     <div class="control-group">
         <label class="control-label sstitre" for="ActionCOMMENTAIRE">Commentaire : </label>
@@ -132,4 +112,5 @@
 <?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>2)); ?> 
 <?php if ($this->params->action == 'edit') echo $this->Form->input('id',array('type'=>'hidden')); ?>    
 <?php echo $this->Form->end(); ?> 
+    <?php if ($this->params->action == 'edit') echo $this->element('tableActiviteReelle')."<hr>"; ?>   
 <?php if ($this->params->action == 'edit') echo $this->element('tableHistoryAction'); ?>

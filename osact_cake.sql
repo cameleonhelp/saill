@@ -462,7 +462,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`historyactions` (
   `CHARGEPREVUE` INT NOT NULL ,
   `CHARGEREELLE` INT NULL DEFAULT NULL ,
   `PRIORITE` ENUM('normale','moyenne','haute') CHARACTER SET 'latin1' NOT NULL ,
-  `STATUT` ENUM('à faire','en cours','terminiée','livré','annulée') NOT NULL ,
+  `STATUT` ENUM('à faire','en cours','terminée','livré','annulée') NOT NULL ,
   `COMMENTAIRE` TEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
@@ -659,26 +659,20 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`activitesreelles` (
   `utilisateur_id` INT(15) NOT NULL ,
   `action_id` INT(15) NOT NULL ,
   `DATE` DATE NOT NULL ,
-  `CHARGE` INT NOT NULL DEFAULT 0 ,
-  `TYPE` TINYINT NOT NULL DEFAULT 0 COMMENT '0=>Action\n1=>Absence' ,
-  `PERIODE` TINYINT NOT NULL DEFAULT 0 COMMENT '0=>matin\n1=>Après midi' ,
-  `created` DATE NOT NULL ,
-  `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `osact_cake230`.`facturations`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `osact_cake230`.`facturations` ;
-
-CREATE  TABLE IF NOT EXISTS `osact_cake230`.`facturations` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `utilisateur_id` INT(15) NOT NULL ,
-  `action_id` INT(15) NOT NULL ,
-  `DATE` DATE NOT NULL ,
-  `CHARGE` INT NOT NULL DEFAULT 0 ,
+  `LU` DECIMAL(1,1) NULL ,
+  `LU_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `MA` DECIMAL(1,1) NULL ,
+  `MA_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `ME` DECIMAL(1,1) NULL ,
+  `ME_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `JE` DECIMAL(1,1) NULL ,
+  `JE_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `VE` DECIMAL(1,1) NULL ,
+  `VE_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `SA` DECIMAL(1,1) NULL ,
+  `SA_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `DI` DECIMAL(1,1) NULL ,
+  `DI_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
@@ -697,6 +691,36 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`plandecharges` (
   `DATE` DATE NOT NULL ,
   `created` DATE NOT NULL ,
   `modeified` DATE NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `osact_cake230`.`facturations`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `osact_cake230`.`facturations` ;
+
+CREATE  TABLE IF NOT EXISTS `osact_cake230`.`facturations` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `utilisateur_id` INT(15) NOT NULL ,
+  `action_id` INT(15) NOT NULL ,
+  `DATE` DATE NOT NULL ,
+  `LU` DECIMAL(1,1) NULL ,
+  `LU_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `MA` DECIMAL(1,1) NULL ,
+  `MA_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `ME` DECIMAL(1,1) NULL ,
+  `ME_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `JE` DECIMAL(1,1) NULL ,
+  `JE_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `VE` DECIMAL(1,1) NULL ,
+  `VE_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `SA` DECIMAL(1,1) NULL ,
+  `SA_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `DI` DECIMAL(1,1) NULL ,
+  `DI_TYPE` TINYINT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `created` DATE NOT NULL ,
+  `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 

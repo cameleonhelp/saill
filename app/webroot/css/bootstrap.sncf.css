@@ -360,6 +360,7 @@ a, a:focus {
 }
 .week {
     background-color: #CB0044 !important;
+    color: #F7F7F7;
 }
 .absday {
     width: 10px !important;
@@ -456,4 +457,9 @@ div.controls{
 }
 .clearboth {
     clear: both !important;
+}
+
+.table75 {
+    width: 75% !important;
+    text-align: left;
 }

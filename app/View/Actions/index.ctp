@@ -131,7 +131,6 @@ function styleBarre($avancement){
 			<th width='90px'><?php echo $this->Paginator->sort('ECHEANCE','Echéance'); ?></th>
 			<th width='60px'><?php echo $this->Paginator->sort('STATUT','Statut'); ?></th>
 			<th width='50px'><?php echo $this->Paginator->sort('DUREEPREVUE','Durée prévue'); ?></th>
-			<th width='50px'><?php echo $this->Paginator->sort('DUREEREELLE','Durée réelle'); ?></th>
 			<th><?php echo $this->Paginator->sort('PRIORITE','Priorité'); ?></th>
 			<th class="actions" width='60px'><?php echo __('Actions'); ?></th>
 	</tr>
@@ -149,8 +148,6 @@ function styleBarre($avancement){
 		<td style="text-align:center;"><?php echo h($action['Action']['ECHEANCE']); ?>&nbsp;</td>
 		<td style="text-align:center;"><?php echo isset($action['Action']['STATUT']) ? '<i class="'.etatAction(h($action['Action']['STATUT'])).'" rel="tooltip" data-title="'.etatTooltip(h($action['Action']['STATUT'])).'"></i>' : '' ; ?>&nbsp;</td>
 		<td style="text-align:center;"><?php echo h($action['Action']['DUREEPREVUE']); ?> h</td>
-                <?php $warning = (h($action['Action']['DUREEREELLE']) > h($action['Action']['DUREEPREVUE'])) ? 'class="td-error"' : ""; ?>
-		<td <?php echo $warning; ?> style="text-align:center;"><?php echo h($action['Action']['DUREEREELLE']); ?> h</td>
 		<td style="text-align:center;"><?php echo h($action['Action']['PRIORITE']); ?>&nbsp;</td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($action['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($action['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
