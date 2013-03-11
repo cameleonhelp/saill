@@ -16,24 +16,84 @@
 			<?php echo $this->Html->link($activitesreelle['Action']['id'], array('controller' => 'actions', 'action' => 'view', $activitesreelle['Action']['id'])); ?>
 			&nbsp;
 		</dd>
+		<dt><?php echo __('Activite Id'); ?></dt>
+		<dd>
+			<?php echo h($activitesreelle['Activitesreelle']['activite_id']); ?>
+			&nbsp;
+		</dd>
 		<dt><?php echo __('DATE'); ?></dt>
 		<dd>
 			<?php echo h($activitesreelle['Activitesreelle']['DATE']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('CHARGE'); ?></dt>
+		<dt><?php echo __('LU'); ?></dt>
 		<dd>
-			<?php echo h($activitesreelle['Activitesreelle']['CHARGE']); ?>
+			<?php echo h($activitesreelle['Activitesreelle']['LU']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('TYPE'); ?></dt>
+		<dt><?php echo __('LU TYPE'); ?></dt>
 		<dd>
-			<?php echo h($activitesreelle['Activitesreelle']['TYPE']); ?>
+			<?php echo h($activitesreelle['Activitesreelle']['LU_TYPE']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('PERIODE'); ?></dt>
+		<dt><?php echo __('MA'); ?></dt>
 		<dd>
-			<?php echo h($activitesreelle['Activitesreelle']['PERIODE']); ?>
+			<?php echo h($activitesreelle['Activitesreelle']['MA']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('MA TYPE'); ?></dt>
+		<dd>
+			<?php echo h($activitesreelle['Activitesreelle']['MA_TYPE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('ME'); ?></dt>
+		<dd>
+			<?php echo h($activitesreelle['Activitesreelle']['ME']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('ME TYPE'); ?></dt>
+		<dd>
+			<?php echo h($activitesreelle['Activitesreelle']['ME_TYPE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('JE'); ?></dt>
+		<dd>
+			<?php echo h($activitesreelle['Activitesreelle']['JE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('JE TYPE'); ?></dt>
+		<dd>
+			<?php echo h($activitesreelle['Activitesreelle']['JE_TYPE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('VE'); ?></dt>
+		<dd>
+			<?php echo h($activitesreelle['Activitesreelle']['VE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('VE TYPE'); ?></dt>
+		<dd>
+			<?php echo h($activitesreelle['Activitesreelle']['VE_TYPE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('SA'); ?></dt>
+		<dd>
+			<?php echo h($activitesreelle['Activitesreelle']['SA']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('SA TYPE'); ?></dt>
+		<dd>
+			<?php echo h($activitesreelle['Activitesreelle']['SA_TYPE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('DI'); ?></dt>
+		<dd>
+			<?php echo h($activitesreelle['Activitesreelle']['DI']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('DI TYPE'); ?></dt>
+		<dd>
+			<?php echo h($activitesreelle['Activitesreelle']['DI_TYPE']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Created'); ?></dt>

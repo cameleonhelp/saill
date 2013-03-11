@@ -5,6 +5,7 @@ App::uses('AppModel', 'Model');
  *
  * @property Utilisateur $Utilisateur
  * @property Action $Action
+ * @property Activite $Activite
  */
 class Activitesreelle extends AppModel {
 
@@ -24,7 +25,7 @@ class Activitesreelle extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'action_id' => array(
+		'activite_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -35,44 +36,6 @@ class Activitesreelle extends AppModel {
 			),
 		),
 		'DATE' => array(
-			'date' => array(
-				'rule' => array('date'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'CHARGE' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'TYPE' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'PERIODE' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
 		),
 	);
 
@@ -97,6 +60,53 @@ class Activitesreelle extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'Activite' => array(
+			'className' => 'Activite',
+			'foreignKey' => 'activite_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
+
+ /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {
+            if (!empty($this->data['Activitesreelle']['DATE'])) {
+                $this->data['Activitesreelle']['DATE'] = $this->dateFormatBeforeSave($this->data['Activitesreelle']['DATE']);
+            }
+            parent::beforeSave();
+            return true;
+        }
+        
+/**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Activitesreelle']['created'])) {
+                    $results[$key]['Activitesreelle']['created'] = $this->dateFormatAfterFind($val['Activitesreelle']['created']);
+                }      
+                if (isset($val['Activitesreelle']['modified'])) {
+                    $results[$key]['Activitesreelle']['modified'] = $this->dateFormatAfterFind($val['Activitesreelle']['modified']);
+                }                   
+                if (isset($val['Activitesreelle']['DATE'])) {
+                    $results[$key]['Activitesreelle']['DATE'] = $this->dateFormatAfterFind($val['Activitesreelle']['DATE']);
+                }                    
+            }
+            return $results;
+        }  
+        
 }

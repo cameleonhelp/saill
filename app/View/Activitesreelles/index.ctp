@@ -5,10 +5,22 @@
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('utilisateur_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('action_id'); ?></th>
+			<th><?php echo $this->Paginator->sort('activite_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('DATE'); ?></th>
-			<th><?php echo $this->Paginator->sort('CHARGE'); ?></th>
-			<th><?php echo $this->Paginator->sort('TYPE'); ?></th>
-			<th><?php echo $this->Paginator->sort('PERIODE'); ?></th>
+			<th><?php echo $this->Paginator->sort('LU'); ?></th>
+			<th><?php echo $this->Paginator->sort('LU_TYPE'); ?></th>
+			<th><?php echo $this->Paginator->sort('MA'); ?></th>
+			<th><?php echo $this->Paginator->sort('MA_TYPE'); ?></th>
+			<th><?php echo $this->Paginator->sort('ME'); ?></th>
+			<th><?php echo $this->Paginator->sort('ME_TYPE'); ?></th>
+			<th><?php echo $this->Paginator->sort('JE'); ?></th>
+			<th><?php echo $this->Paginator->sort('JE_TYPE'); ?></th>
+			<th><?php echo $this->Paginator->sort('VE'); ?></th>
+			<th><?php echo $this->Paginator->sort('VE_TYPE'); ?></th>
+			<th><?php echo $this->Paginator->sort('SA'); ?></th>
+			<th><?php echo $this->Paginator->sort('SA_TYPE'); ?></th>
+			<th><?php echo $this->Paginator->sort('DI'); ?></th>
+			<th><?php echo $this->Paginator->sort('DI_TYPE'); ?></th>
 			<th><?php echo $this->Paginator->sort('created'); ?></th>
 			<th><?php echo $this->Paginator->sort('modified'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
@@ -22,10 +34,22 @@
 		<td>
 			<?php echo $this->Html->link($activitesreelle['Action']['id'], array('controller' => 'actions', 'action' => 'view', $activitesreelle['Action']['id'])); ?>
 		</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['activite_id']); ?>&nbsp;</td>
 		<td><?php echo h($activitesreelle['Activitesreelle']['DATE']); ?>&nbsp;</td>
-		<td><?php echo h($activitesreelle['Activitesreelle']['CHARGE']); ?>&nbsp;</td>
-		<td><?php echo h($activitesreelle['Activitesreelle']['TYPE']); ?>&nbsp;</td>
-		<td><?php echo h($activitesreelle['Activitesreelle']['PERIODE']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['LU']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['LU_TYPE']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['MA']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['MA_TYPE']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['ME']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['ME_TYPE']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['JE']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['JE_TYPE']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['VE']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['VE_TYPE']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['SA']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['SA_TYPE']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['DI']); ?>&nbsp;</td>
+		<td><?php echo h($activitesreelle['Activitesreelle']['DI_TYPE']); ?>&nbsp;</td>
 		<td><?php echo h($activitesreelle['Activitesreelle']['created']); ?>&nbsp;</td>
 		<td><?php echo h($activitesreelle['Activitesreelle']['modified']); ?>&nbsp;</td>
 		<td class="actions">

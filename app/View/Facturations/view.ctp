@@ -11,9 +11,9 @@
 			<?php echo $this->Html->link($facturation['Utilisateur']['id'], array('controller' => 'utilisateurs', 'action' => 'view', $facturation['Utilisateur']['id'])); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Action'); ?></dt>
+		<dt><?php echo __('Activite Id'); ?></dt>
 		<dd>
-			<?php echo $this->Html->link($facturation['Action']['id'], array('controller' => 'actions', 'action' => 'view', $facturation['Action']['id'])); ?>
+			<?php echo h($facturation['Facturation']['activite_id']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('DATE'); ?></dt>
@@ -21,9 +21,74 @@
 			<?php echo h($facturation['Facturation']['DATE']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('CHARGE'); ?></dt>
+		<dt><?php echo __('LU'); ?></dt>
 		<dd>
-			<?php echo h($facturation['Facturation']['CHARGE']); ?>
+			<?php echo h($facturation['Facturation']['LU']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('LU TYPE'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['LU_TYPE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('MA'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['MA']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('MA TYPE'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['MA_TYPE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('ME'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['ME']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('ME TYPE'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['ME_TYPE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('JE'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['JE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('JE TYPE'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['JE_TYPE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('VE'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['VE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('VE TYPE'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['VE_TYPE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('SA'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['SA']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('SA TYPE'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['SA_TYPE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('DI'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['DI']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('DI TYPE'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['DI_TYPE']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Created'); ?></dt>

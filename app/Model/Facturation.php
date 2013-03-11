@@ -4,7 +4,7 @@ App::uses('AppModel', 'Model');
  * Facturation Model
  *
  * @property Utilisateur $Utilisateur
- * @property Action $Action
+ * @property Activite $Activite
  */
 class Facturation extends AppModel {
 
@@ -24,7 +24,7 @@ class Facturation extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'action_id' => array(
+		'activite_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -37,16 +37,6 @@ class Facturation extends AppModel {
 		'DATE' => array(
 			'date' => array(
 				'rule' => array('date'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'CHARGE' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -71,9 +61,9 @@ class Facturation extends AppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'Action' => array(
-			'className' => 'Action',
-			'foreignKey' => 'action_id',
+		'Activite' => array(
+			'className' => 'Activite',
+			'foreignKey' => 'activite_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

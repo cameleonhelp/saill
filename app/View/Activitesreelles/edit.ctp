@@ -6,10 +6,22 @@
 		echo $this->Form->input('id');
 		echo $this->Form->input('utilisateur_id');
 		echo $this->Form->input('action_id');
+		echo $this->Form->input('activite_id');
 		echo $this->Form->input('DATE');
-		echo $this->Form->input('CHARGE');
-		echo $this->Form->input('TYPE');
-		echo $this->Form->input('PERIODE');
+		echo $this->Form->input('LU');
+		echo $this->Form->input('LU_TYPE');
+		echo $this->Form->input('MA');
+		echo $this->Form->input('MA_TYPE');
+		echo $this->Form->input('ME');
+		echo $this->Form->input('ME_TYPE');
+		echo $this->Form->input('JE');
+		echo $this->Form->input('JE_TYPE');
+		echo $this->Form->input('VE');
+		echo $this->Form->input('VE_TYPE');
+		echo $this->Form->input('SA');
+		echo $this->Form->input('SA_TYPE');
+		echo $this->Form->input('DI');
+		echo $this->Form->input('DI_TYPE');
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>

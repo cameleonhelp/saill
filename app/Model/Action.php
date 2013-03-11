@@ -147,19 +147,6 @@ class Action extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'Facturation' => array(
-			'className' => 'Facturation',
-			'foreignKey' => 'action_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		),
 		'Historyaction' => array(
 			'className' => 'Historyaction',
 			'foreignKey' => 'action_id',

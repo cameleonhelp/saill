@@ -105,12 +105,12 @@
         <div class="navbar-inner">
             <div class="container" style="margin-top:2px;text-align:center;">
                 <?php $url = $this->Session->read('history'); ?>
-                <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url($url[0])."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
+                <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url($url[0])."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>   
+                <?php if ($this->params->action == 'edit' && $idActivitereelle != '') echo $this->Form->button('Enregistrer la charge consommée', array('class' => 'btn btn-inverse pull-right','type'=>'button','onclick'=>"location.href='".$this->Html->url('/activitesreelles/edit/'.$idActivitereelle)."'")); ?>
             </div>
         </div>
     </div>
 <?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>2)); ?> 
 <?php if ($this->params->action == 'edit') echo $this->Form->input('id',array('type'=>'hidden')); ?>    
-<?php echo $this->Form->end(); ?> 
-    <?php if ($this->params->action == 'edit') echo $this->element('tableActiviteReelle')."<hr>"; ?>   
+<?php echo $this->Form->end(); ?>   
 <?php if ($this->params->action == 'edit') echo $this->element('tableHistoryAction'); ?>

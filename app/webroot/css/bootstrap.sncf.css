@@ -463,3 +463,7 @@ div.controls{
     width: 75% !important;
     text-align: left;
 }
+
+.cursor {
+    cursor: pointer;
+}

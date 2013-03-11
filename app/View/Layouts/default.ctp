@@ -128,7 +128,6 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
     </div>    
     <?php //$url = $this->Session->read('history'); debug($this->params->url); 
     //debug(env('SERVER_ADDR')); ?>
-    
     <!--<div id="debugguer" style="background-color: #cccccc;">SQL Debug :
         <?php // echo $this->element('sql_dump'); ?>
     </div>//-->   
@@ -326,7 +325,7 @@ $(document).ready(function () {
             $('#progressbar').attr('style',"width:"+avancement+"%;");          
        }
    });
-   /** Accordion **/
+      /** Accordion **/
    /*$("#accordion2").on('click',function(){
        $(this).find('.accordion-body').each(function(index){
            alert('click on accordion!'+" : "+index+" in ? "+$(this).hasClass('in'))

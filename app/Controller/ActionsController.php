@@ -114,7 +114,8 @@ class ActionsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Action->create();
 			if ($this->Action->save($this->request->data)) {
-                                $this->saveHistory($this->Action->getInsertID());                                 
+                                $this->saveHistory($this->Action->getInsertID()); 
+                                $this->initActiviteReelle($this->Action->getInsertID());
 				$this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
@@ -176,6 +177,9 @@ class ActionsController extends AppController {
                 $this->set('domaines',$domaines); 
                 $histories = $this->Action->Historyaction->find('all',array('conditions'=>array('Historyaction.action_id'=>$id),'order'=>array('Historyaction.id'=>'desc')));
                 $this->set('histories',$histories);
+                $ActiviteReelle = $this->Action->Activitesreelle->find('first',array('conditions'=>array('Activitesreelle.action_id'=>$id)));
+                $idActiviteReelle = (isset($ActiviteReelle['Activitesreelle']) && !empty($ActiviteReelle['Activitesreelle'])) ? $ActiviteReelle['Activitesreelle']['id'] : '' ;
+                $this->set('idActivitereelle',$idActiviteReelle);
         }
 
 /**
@@ -250,10 +254,8 @@ class ActionsController extends AppController {
             $history['Historyaction']['action_id']=$thisAction['Action']['id'];
             $history['Historyaction']['AVANCEMENT']=$thisAction['Action']['AVANCEMENT'];
             $history['Historyaction']['DEBUT']=$thisAction['Action']['DEBUT'];
-            $history['Historyaction']['DEBUTREELLE']=$thisAction['Action']['DEBUTREELLE'];
             $history['Historyaction']['ECHEANCE']=$thisAction['Action']['ECHEANCE'];
             $history['Historyaction']['CHARGEPREVUE']=$thisAction['Action']['DUREEPREVUE'];
-            $history['Historyaction']['CHARGEREELLE']=$thisAction['Action']['DUREEREELLE'];
             $history['Historyaction']['PRIORITE']=$thisAction['Action']['PRIORITE'];
             $history['Historyaction']['STATUT']=$thisAction['Action']['STATUT'];
             $history['Historyaction']['COMMENTAIRE']=$thisAction['Action']['COMMENTAIRE'];
@@ -261,32 +263,27 @@ class ActionsController extends AppController {
             $this->Action->Historyaction->save($history);            
         }
         
-        public function saveActiviteReelle($id,$type=0,$periode=0){
-            $thisAction = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id)));
-            $nbjour = round($thisAction['Action']['DUREEPREVUE']/8, 0, PHP_ROUND_HALF_UP);
-            $chargemax = $thisAction['Action']['DUREEPREVUE']/8;
-            $date = $thisAction['Action']['DEBUT'];            
-            for($i=0;$i<$nbjour;$i++){
-                $charge = $chargemax < 1 ? $chargemax : 1;
-                if ($this->availableActiviteReelle($thisAction['Action']['id'], $thisAction['Action']['destinataire'], $date)) {
-                    $realActivity['Activitesreelle']['action_id']=$thisAction['Action']['id'];
-                    $realActivity['Activitesreelle']['utilisateur_id']=$thisAction['Action']['destinataire'];
-                    $realActivity['Activitesreelle']['DATE']=$date;
-                    $realActivity['Activitesreelle']['CHARGE']=$charge;
-                    $realActivity['Activitesreelle']['TYPE']=$type;
-                    $realActivity['Activitesreelle']['PERIODE']=$periode;
-                    $this->Action->Activitesreelle->create();
-                    $this->Action->Activitesreelle->save($realActivity); 
-                }
-                $chargemax--;
-                $date = strtotime(date("Y-m-d", strtotime($date)) . " +1 day");
-            }
-        }    
-        
-        public function availableActiviteReelle($actionId,$utilisateurId,$date){
-            $sql = "SELECT SUM(CHARGE) FROM activitesreelles WHERE activitesreelles.action_id = '".$actionId."' AND activitesreelles.utilisateur_id ='".$utilisateurId."' AND  activitesreelles.DATE = '".$date."'";
-            $results = $this->Action->query($sql); 
-            $available = $results < 1 ? true : false;
-            return $available;
+        public function initActiviteReelle($id){
+            $action = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id)));
+            $realActivity['Activitesreelle']['action_id']=$action['Action']['id'];
+            $realActivity['Activitesreelle']['activite_id']=$action['Action']['activite_id'];
+            $realActivity['Activitesreelle']['utilisateur_id']=$action['Action']['utilisateur_id'];
+            $realActivity['Activitesreelle']['DATE']=$action['Action']['DEBUT'];
+            $realActivity['Activitesreelle']['LU']=0;     
+            $realActivity['Activitesreelle']['LU_TYPE']=0;              
+            $realActivity['Activitesreelle']['MA']=0;     
+            $realActivity['Activitesreelle']['MA_TYPE']=0;
+            $realActivity['Activitesreelle']['ME']=0;     
+            $realActivity['Activitesreelle']['ME_TYPE']=0;
+            $realActivity['Activitesreelle']['JE']=0;     
+            $realActivity['Activitesreelle']['JE_TYPE']=0;
+            $realActivity['Activitesreelle']['VE']=0;     
+            $realActivity['Activitesreelle']['VE_TYPE']=0;
+            $realActivity['Activitesreelle']['SA']=0;     
+            $realActivity['Activitesreelle']['SA_TYPE']=0;
+            $realActivity['Activitesreelle']['DI']=0;     
+            $realActivity['Activitesreelle']['DI_TYPE']=0;
+            $this->Action->Activitesreelle->create();
+            $this->Action->Activitesreelle->save($realActivity);
         }
 }

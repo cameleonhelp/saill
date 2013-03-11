@@ -35,8 +35,6 @@ class Historyaction extends AppModel {
 		),
 		'DEBUT' => array(
 		),
-		'DEBUTREELLE' => array(
-		),
 		'ECHEANCE' => array(
 		),
 		'CHARGEPREVUE' => array(
@@ -48,8 +46,6 @@ class Historyaction extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-		),
-		'CHARGEREELLE' => array(
 		),
 	);
 
@@ -85,9 +81,6 @@ class Historyaction extends AppModel {
             if (!empty($this->data['Historyaction']['DEBUT'])) {
                 $this->data['Historyaction']['DEBUT'] = $this->dateFormatBeforeSave($this->data['Historyaction']['DEBUT']);
             }
-            if (!empty($this->data['Historyaction']['DEBUTREELLE'])) {
-                $this->data['Historyaction']['DEBUTREELLE'] = $this->dateFormatBeforeSave($this->data['Historyaction']['DEBUTREELLE']);
-            }
             parent::beforeSave();
             return true;
         }
@@ -110,10 +103,7 @@ class Historyaction extends AppModel {
                 }                   
                 if (isset($val['Historyaction']['ECHEANCE'])) {
                     $results[$key]['Historyaction']['ECHEANCE'] = $this->dateFormatAfterFind($val['Historyaction']['ECHEANCE']);
-                }      
-                if (isset($val['Historyaction']['DEBUTREELLE'])) {
-                    $results[$key]['Historyaction']['DEBUTREELLE'] = $this->dateFormatAfterFind($val['Historyaction']['DEBUTREELLE']);
-                }   
+                }        
                 if (isset($val['Historyaction']['DEBUT'])) {
                     $results[$key]['Historyaction']['DEBUT'] = $this->dateFormatAfterFind($val['Historyaction']['DEBUT']);
                 }                 

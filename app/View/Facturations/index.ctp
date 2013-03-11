@@ -4,9 +4,22 @@
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('utilisateur_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('action_id'); ?></th>
+			<th><?php echo $this->Paginator->sort('activite_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('DATE'); ?></th>
-			<th><?php echo $this->Paginator->sort('CHARGE'); ?></th>
+			<th><?php echo $this->Paginator->sort('LU'); ?></th>
+			<th><?php echo $this->Paginator->sort('LU_TYPE'); ?></th>
+			<th><?php echo $this->Paginator->sort('MA'); ?></th>
+			<th><?php echo $this->Paginator->sort('MA_TYPE'); ?></th>
+			<th><?php echo $this->Paginator->sort('ME'); ?></th>
+			<th><?php echo $this->Paginator->sort('ME_TYPE'); ?></th>
+			<th><?php echo $this->Paginator->sort('JE'); ?></th>
+			<th><?php echo $this->Paginator->sort('JE_TYPE'); ?></th>
+			<th><?php echo $this->Paginator->sort('VE'); ?></th>
+			<th><?php echo $this->Paginator->sort('VE_TYPE'); ?></th>
+			<th><?php echo $this->Paginator->sort('SA'); ?></th>
+			<th><?php echo $this->Paginator->sort('SA_TYPE'); ?></th>
+			<th><?php echo $this->Paginator->sort('DI'); ?></th>
+			<th><?php echo $this->Paginator->sort('DI_TYPE'); ?></th>
 			<th><?php echo $this->Paginator->sort('created'); ?></th>
 			<th><?php echo $this->Paginator->sort('modified'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
@@ -17,11 +30,22 @@
 		<td>
 			<?php echo $this->Html->link($facturation['Utilisateur']['id'], array('controller' => 'utilisateurs', 'action' => 'view', $facturation['Utilisateur']['id'])); ?>
 		</td>
-		<td>
-			<?php echo $this->Html->link($facturation['Action']['id'], array('controller' => 'actions', 'action' => 'view', $facturation['Action']['id'])); ?>
-		</td>
+		<td><?php echo h($facturation['Facturation']['activite_id']); ?>&nbsp;</td>
 		<td><?php echo h($facturation['Facturation']['DATE']); ?>&nbsp;</td>
-		<td><?php echo h($facturation['Facturation']['CHARGE']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['LU']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['LU_TYPE']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['MA']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['MA_TYPE']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['ME']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['ME_TYPE']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['JE']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['JE_TYPE']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['VE']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['VE_TYPE']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['SA']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['SA_TYPE']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['DI']); ?>&nbsp;</td>
+		<td><?php echo h($facturation['Facturation']['DI_TYPE']); ?>&nbsp;</td>
 		<td><?php echo h($facturation['Facturation']['created']); ?>&nbsp;</td>
 		<td><?php echo h($facturation['Facturation']['modified']); ?>&nbsp;</td>
 		<td class="actions">
