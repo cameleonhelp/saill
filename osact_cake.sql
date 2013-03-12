@@ -670,6 +670,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`activitesreelles` (
   `SA_TYPE` TINYINT NULL DEFAULT NULL COMMENT '0=>matin\n1=>après midi' ,
   `DI` DECIMAL(1,1) NULL DEFAULT NULL ,
   `DI_TYPE` TINYINT NULL DEFAULT NULL COMMENT '0=>matin\n1=>après midi' ,
+  `VEROUILLE` TINYINT NOT NULL DEFAULT 1 COMMENT '0=>verrouille\n1=>actif' ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
