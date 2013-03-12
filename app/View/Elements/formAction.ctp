@@ -106,7 +106,9 @@
             <div class="container" style="margin-top:2px;text-align:center;">
                 <?php $url = $this->Session->read('history'); ?>
                 <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url($url[0])."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>   
-                <?php if ($this->params->action == 'edit' && $idActivitereelle != '') echo $this->Form->button('Enregistrer la charge consommée', array('class' => 'btn btn-inverse pull-right','type'=>'button','onclick'=>"location.href='".$this->Html->url('/activitesreelles/edit/'.$idActivitereelle)."'")); ?>
+                <?php if ($this->params->action == 'edit' && $nbActivite == 0) echo $this->Form->button('Enregistrer la charge consommée', array('class' => 'btn btn-inverse pull-right','type'=>'button','onclick'=>"location.href='".$this->Html->url('/activitesreelles/add/')."'")); ?>
+                <?php if ($this->params->action == 'edit' && $nbActivite == 1) echo $this->Form->button('Modifier la charge consommée', array('class' => 'btn btn-inverse pull-right','type'=>'button','onclick'=>"location.href='".$this->Html->url('/activitesreelles/edit/'.$activiteId['Activitesreelle']['id'])."'")); ?>
+                <?php if ($this->params->action == 'edit' && $nbActivite > 1) echo $this->Form->button('Consulter les charges consommées', array('class' => 'btn btn-inverse pull-right','type'=>'button','onclick'=>"location.href='".$this->Html->url('/activitesreelles/index/tous/tous/tous/'.$actionId)."'")); ?>                
             </div>
         </div>
     </div>

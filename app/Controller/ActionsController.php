@@ -87,7 +87,7 @@ class ActionsController extends AppController {
                 $this->set('responsables',$responsables);                 
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Action->recursive = 0;
-		$this->set('actions', $this->paginate());              
+                $this->set('actions', $this->paginate());              
 	}
 
 /**
@@ -115,7 +115,7 @@ class ActionsController extends AppController {
 			$this->Action->create();
 			if ($this->Action->save($this->request->data)) {
                                 $this->saveHistory($this->Action->getInsertID()); 
-                                $this->initActiviteReelle($this->Action->getInsertID());
+                                //$this->initActiviteReelle($this->Action->getInsertID());
 				$this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
@@ -163,6 +163,15 @@ class ActionsController extends AppController {
 			$options = array('conditions' => array('Action.' . $this->Action->primaryKey => $id));
 			$this->request->data = $this->Action->find('first', $options);
 		}
+                $nbActivite = $this->ActiviteExists($id);
+                $this->set('nbActivite',$nbActivite);
+                if ($nbActivite==1) {
+                    $activite = $this->Action->Activitesreelle->find('first',array('conditions'=>array('Activitesreelle.action_id'=>$id),'fields'=>array('id')));
+                    $this->set('activiteId',$activite);
+                }
+                if ($nbActivite>1) {
+                    $this->set('actionId',$id);
+                }
                 $etats = Configure::read('etatAction');
                 $this->set('etats',$etats); 
                 $priorites = Configure::read('prioriteAction');
@@ -285,5 +294,10 @@ class ActionsController extends AppController {
             $realActivity['Activitesreelle']['DI_TYPE']=0;
             $this->Action->Activitesreelle->create();
             $this->Action->Activitesreelle->save($realActivity);
+        }
+        
+        public function ActiviteExists($id){
+            $allActivite = $this->Action->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.action_id'=>$id)));
+            return count($allActivite);
         }
 }
