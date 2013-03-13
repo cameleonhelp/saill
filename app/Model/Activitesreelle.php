@@ -34,9 +34,7 @@ class Activitesreelle extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-		),
-		'DATE' => array(
-		),
+		),            
 	);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -80,7 +78,7 @@ class Activitesreelle extends AppModel {
  */
         public function beforeSave() {
             if (!empty($this->data['Activitesreelle']['DATE'])) {
-                $this->data['Activitesreelle']['DATE'] = $this->dateFormatBeforeSave($this->data['Activitesreelle']['DATE']);
+                $this->data['Activitesreelle']['DATE'] = $this->dateFormatBeforeSave($this->debutsem($this->data['Activitesreelle']['DATE']));
             }
             parent::beforeSave();
             return true;
@@ -109,4 +107,42 @@ class Activitesreelle extends AppModel {
             return $results;
         }  
         
+/**
+ * debutsem method
+ * 
+ * @param type $date
+ * @return date de début de semaine au format français
+ */        
+        public function debutsem($date) {
+            $d = explode('/',$date);
+            $year = $d[2];
+            $month = $d[1];
+            $day = $d[0];
+            $num_day      = date('w', mktime(0,0,0,$month,$day,$year));
+            $premier_jour = mktime(0,0,0, $month,$day-(!$num_day?7:$num_day)+1,$year);
+            $datedeb      = date('d/m/Y', $premier_jour);
+            return $datedeb;
+        }  
+        
+/**
+ * CUSDate method
+ * 
+ * @param type $frdate
+ * @return date au format US
+ */
+        public function CUSDate($frdate){
+            $day = explode('/',$frdate);
+            return $day[2]."-".$day[1]."-".$day[0];
+        }
+        
+/**
+ * CFRDate method
+ * 
+ * @param type $usdate
+ * @return date au format US
+ */
+        public function CFRDate($usdate){
+            $day = explode('-',$usdate);
+            return $day[0]."/".$day[1]."/".$day[2];
+        }        
 }

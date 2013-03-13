@@ -87,7 +87,8 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`activites` (
   `DESCRIPTION` LONGTEXT CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `BUDJETRA` DECIMAL(25,2) NULL DEFAULT NULL ,
   `BUDGETREVU` DECIMAL(25,2) NULL DEFAULT NULL ,
-  `ACTIVE` TINYINT(1) NULL DEFAULT '0' ,
+  `ACTIVE` TINYINT(1) NOT NULL DEFAULT 0 ,
+  `DELETABLE` TINYINT NOT NULL DEFAULT 1 ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
@@ -656,21 +657,22 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`activitesreelles` (
   `action_id` INT(15) NULL DEFAULT NULL ,
   `activite_id` INT(15) NOT NULL ,
   `DATE` DATE NOT NULL ,
-  `LU` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `LU_TYPE` TINYINT NULL DEFAULT NULL COMMENT '0=>matin\n1=>après midi' ,
-  `MA` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `MA_TYPE` TINYINT NULL DEFAULT NULL COMMENT '0=>matin\n1=>après midi' ,
-  `ME` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `ME_TYPE` TINYINT NULL DEFAULT NULL COMMENT '0=>matin\n1=>après midi' ,
-  `JE` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `JE_TYPE` TINYINT NULL DEFAULT NULL COMMENT '0=>matin\n1=>après midi' ,
-  `VE` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `VE_TYPE` TINYINT NULL DEFAULT NULL COMMENT '0=>matin\n1=>après midi' ,
-  `SA` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `SA_TYPE` TINYINT NULL DEFAULT NULL COMMENT '0=>matin\n1=>après midi' ,
-  `DI` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `DI_TYPE` TINYINT NULL DEFAULT NULL COMMENT '0=>matin\n1=>après midi' ,
-  `VEROUILLE` TINYINT NOT NULL DEFAULT 1 COMMENT '0=>verrouille\n1=>actif' ,
+  `LU` DECIMAL(2,1) NOT NULL DEFAULT 0.0 ,
+  `LU_TYPE` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1=>matin\n0=>après midi' ,
+  `MA` DECIMAL(2,1) NOT NULL DEFAULT 0.0 ,
+  `MA_TYPE` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1=>matin\n0=>après midi' ,
+  `ME` DECIMAL(2,1) NOT NULL DEFAULT 0.0 ,
+  `ME_TYPE` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1=>matin\n0=>après midi' ,
+  `JE` DECIMAL(2,1) NOT NULL DEFAULT 0.0 ,
+  `JE_TYPE` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1=>matin\n0=>après midi' ,
+  `VE` DECIMAL(2,1) NOT NULL DEFAULT 0.0 ,
+  `VE_TYPE` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1=>matin\n0=>après midi' ,
+  `SA` DECIMAL(2,1) NOT NULL DEFAULT 0.0 ,
+  `SA_TYPE` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1=>matin\n0=>après midi' ,
+  `DI` DECIMAL(2,1) NOT NULL DEFAULT 0.0 ,
+  `DI_TYPE` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1=>matin\n0=>après midi' ,
+  `TOTAL` DECIMAL(2,1) NOT NULL DEFAULT 0.0 ,
+  `VEROUILLE` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '0=>verrouille\n1=>actif' ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
@@ -756,21 +758,21 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `osact_cake230`;
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (1, 1, 'C', NULL, NULL, NULL, 'Congés protocolaires', NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (2, 1, 'RQ', NULL, NULL, NULL, 'Journée 35h', NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (3, 1, 'VT', NULL, NULL, NULL, 'Temps partiel', NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (4, 1, 'SE', NULL, NULL, NULL, 'Soin enfant ou conjoint', NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (5, 1, 'Mal', NULL, NULL, NULL, 'Maladie', NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (6, 1, 'CS', NULL, NULL, NULL, 'Congés supplémentaire', NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (7, 1, 'DA', NULL, NULL, NULL, '1h de grève', NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (8, 1, 'DB', NULL, NULL, NULL, '4h de grève', NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (9, 1, 'DC', NULL, NULL, NULL, '8h de grève', NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (10, 1, 'DD', NULL, NULL, NULL, 'Journée de délégation', NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (11, 1, 'DR', NULL, NULL, NULL, 'Journée de délégation', NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (13, 2, 'Conception OSMOSE MR Lot 310', NULL, NULL, NULL, NULL, NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (14, 2, 'Conception OSMOSE ORGANE Lot 310', NULL, NULL, NULL, NULL, NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (15, 3, 'OSMOSE MCO', NULL, NULL, NULL, NULL, NULL, NULL, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `created`, `modified`) VALUES (12, 1, 'ILD', NULL, NULL, NULL, 'Longue maladie', NULL, NULL, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (1, 1, 'C', NULL, NULL, NULL, 'Congés protocolaires', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (2, 1, 'RQ', NULL, NULL, NULL, 'Journée 35h', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (3, 1, 'VT', NULL, NULL, NULL, 'Temps partiel', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (4, 1, 'SE', NULL, NULL, NULL, 'Soin enfant ou conjoint', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (5, 1, 'Mal', NULL, NULL, NULL, 'Maladie', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (6, 1, 'CS', NULL, NULL, NULL, 'Congés supplémentaire', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (7, 1, 'DA', NULL, NULL, NULL, '1h de grève', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (8, 1, 'DB', NULL, NULL, NULL, '4h de grève', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (9, 1, 'DC', NULL, NULL, NULL, '8h de grève', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (10, 1, 'DD', NULL, NULL, NULL, 'Journée de délégation', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (11, 1, 'DR', NULL, NULL, NULL, 'Journée de délégation', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (13, 2, 'Conception OSMOSE MR Lot 310', NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (14, 2, 'Conception OSMOSE ORGANE Lot 310', NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (15, 3, 'OSMOSE MCO', NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (12, 1, 'ILD', NULL, NULL, NULL, 'Longue maladie', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
 
 COMMIT;
 

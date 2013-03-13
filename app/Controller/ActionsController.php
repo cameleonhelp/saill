@@ -165,13 +165,13 @@ class ActionsController extends AppController {
 		}
                 $nbActivite = $this->ActiviteExists($id);
                 $this->set('nbActivite',$nbActivite);
-                if ($nbActivite==1) {
+                $this->set('actionId',$id);
+                if ($nbActivite < 2)  {
                     $activite = $this->Action->Activitesreelle->find('first',array('conditions'=>array('Activitesreelle.action_id'=>$id),'fields'=>array('id')));
-                    $this->set('activiteId',$activite);
+                    $this->set('activiteId',$activite);                    
                 }
-                if ($nbActivite>1) {
-                    $this->set('actionId',$id);
-                }
+                $utilisateurId = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id),'fields'=>array('utilisateur_id')));
+                $this->set('utilisateurId', $utilisateurId);
                 $etats = Configure::read('etatAction');
                 $this->set('etats',$etats); 
                 $priorites = Configure::read('prioriteAction');
@@ -186,9 +186,6 @@ class ActionsController extends AppController {
                 $this->set('domaines',$domaines); 
                 $histories = $this->Action->Historyaction->find('all',array('conditions'=>array('Historyaction.action_id'=>$id),'order'=>array('Historyaction.id'=>'desc')));
                 $this->set('histories',$histories);
-                $ActiviteReelle = $this->Action->Activitesreelle->find('first',array('conditions'=>array('Activitesreelle.action_id'=>$id)));
-                $idActiviteReelle = (isset($ActiviteReelle['Activitesreelle']) && !empty($ActiviteReelle['Activitesreelle'])) ? $ActiviteReelle['Activitesreelle']['id'] : '' ;
-                $this->set('idActivitereelle',$idActiviteReelle);
         }
 
 /**
