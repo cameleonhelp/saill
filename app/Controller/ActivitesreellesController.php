@@ -183,6 +183,6 @@ class ActivitesreellesController extends AppController {
  */        
         public function ActiviteExists($utilisateurId, $date, $activite){
             $allActivite = $this->Activitesreelle->find('first',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$utilisateurId,'Activitesreelle.activite_id'=>$activite,'Activitesreelle.DATE'=>$this->Activitesreelle->CUSDate($this->Activitesreelle->debutsem($date)))));
-            return $allActivite['Activitesreelle']['id'];
+            return isset($allActivite['Activitesreelle']) ? $allActivite['Activitesreelle']['id'] : 0;
         }        
 }
