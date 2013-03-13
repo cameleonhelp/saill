@@ -14,14 +14,15 @@ function finsem($year,$month,$day) {
 }
 
 function joursemaine($usdate){
-    $jour = date('d', strtotime($usdate));
+    $jour = date('d', $usdate);
     return $jour;
 }
 
 function CUSDate($frdate){
     $day = explode('/',$frdate);
-    return strtotime($day[2]."-".$day[1]."-".$day[0]);
+    return $day[2]."-".$day[1]."-".$day[0];
 }
+
     $date = isset($this->data['Activitesreelle']['DATE']) ? $this->data['Activitesreelle']['DATE'] : date('d/m/Y');
     $d = explode('/',$date);
     $day = $d[0];
@@ -76,13 +77,20 @@ function CUSDate($frdate){
         <th rowspan="2" width='70px'>Total</th>
     </tr>
     <tr>
-        <th><?php echo joursemaine(strtotime(CUSDate($debutsemaine))." +0 day"); ?></th>
-        <th><?php echo joursemaine(strtotime(CUSDate($debutsemaine))." +1 day"); ?></th>
-        <th><?php echo joursemaine(strtotime(CUSDate($debutsemaine))." +2 days"); ?></th>
-        <th><?php echo joursemaine(strtotime(CUSDate($debutsemaine))." +3 days"); ?></th>
-        <th><?php echo joursemaine(strtotime(CUSDate($debutsemaine))." +4 days"); ?></th>
-        <th class='week'><?php echo joursemaine(strtotime(CUSDate($debutsemaine))." +5 days"); ?></th>
-        <th class='week'><?php echo joursemaine(strtotime(CUSDate($debutsemaine))." +6 days"); ?></th>
+        <?php $date = new DateTime(CUSDate($debutsemaine)); ?>    
+        <th><?php echo $date->format('d'); ?></th>
+        <?php $date->add(new DateInterval('P1D')); ?>   
+        <th><?php echo $date->format('d'); ?></th>
+        <?php $date->add(new DateInterval('P1D')); ?> 
+        <th><?php echo $date->format('d'); ?></th>
+        <?php $date->add(new DateInterval('P1D')); ?> 
+        <th><?php echo $date->format('d'); ?></th>
+        <?php $date->add(new DateInterval('P1D')); ?> 
+        <th><?php echo $date->format('d'); ?></th>
+        <?php $date->add(new DateInterval('P1D')); ?> 
+        <th class='week'><?php echo $date->format('d'); ?></th>
+        <?php $date->add(new DateInterval('P1D')); ?> 
+        <th class='week'><?php echo $date->format('d'); ?>  </th>
     </tr> 
     </thead>
     <tbody>
