@@ -48,40 +48,71 @@
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
-			<th><?php echo $this->Paginator->sort('utilisateur_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('DATE'); ?></th>
+			<th><?php echo 'Agent'; ?></th>
+			<th><?php echo 'Date'; ?></th>
                         <th><?php echo $this->Paginator->sort('activite_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('LU'); ?></th>
-			<th><?php echo $this->Paginator->sort('MA'); ?></th>
-	<!--		<th><?php echo $this->Paginator->sort('ME'); ?></th>
-			<th><?php echo $this->Paginator->sort('JE'); ?></th>
-			<th><?php echo $this->Paginator->sort('VE'); ?></th>
-			<th><?php echo $this->Paginator->sort('SA'); ?></th>
-			<th><?php echo $this->Paginator->sort('DI'); ?></th>
-			<th><?php echo $this->Paginator->sort('TOTAL'); ?></th>
-			<th class="actions" width="90px"><?php echo __('Actions'); ?></th>//-->
+			<th width="20px"><?php echo 'Lu.'; ?></th>
+			<th width="20px"><?php echo 'Ma.'; ?></th>
+			<th width="20px"><?php echo 'Me.'; ?></th>
+			<th width="20px"><?php echo 'Je.'; ?></th>
+			<th width="20px"><?php echo 'Ve.'; ?></th>
+			<th width="20px"><?php echo 'Sa.'; ?></th>
+			<th width="20px"><?php echo 'Di.'; ?></th>
+			<th><?php echo 'Total'; ?></th>
+                        <th><?php echo 'Action'; ?></th>
+			<th class="actions" width="90px"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
         <tbody>   
+        <?php $r = 0; ?>
         <?php foreach ($groups as $group) : ?>
+        <?php $row = $groups[$r][0]['NBACTIVITE']; ?>
+        <?php if($row > 1): ?>
+            <tr>
+                <td rowspan="<?php echo $row; ?>" style="vertical-align: middle;"><?php echo $group['Utilisateur']['NOM']." ".$group['Utilisateur']['PRENOM']; ?></td>
+                <td rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: center;"><?php echo $group['Activitesreelle']['DATE']; ?></td>
+        <?php endif; ?>
         <?php $i = 0; ?>
         <?php foreach ($activitesreelles as $activitesreelle): ?>
-            <tr>
+            <?php if($activitesreelle['Activitesreelle']['utilisateur_id']==$group['Activitesreelle']['utilisateur_id'] && dateIsEqual($group['Activitesreelle']['DATE'], $activitesreelle['Activitesreelle']['DATE'])): ?>
+                <?php if ($row==1): ?>
+                <tr>
                 <td><?php echo $activitesreelle['Utilisateur']['NOMLONG']; ?></td>
-                <td><?php echo $group['Activitesreelle']['DATE']; ?></td>
+                <td style="text-align: center;" ><?php echo $group['Activitesreelle']['DATE']; ?></td>
+                <?php endif; ?>
                 <td><?php echo $activitesreelle['Activite']['NOM']; ?></td>  
-                <td><?php echo $group['Activitesreelle']['NBACTIVITE']; ?></td> 
-                <td><?php echo $i; ?></td> 
+                <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['LU']!=0 ? $activitesreelle['Activitesreelle']['LU'] : ""; ?></td> 
+                <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['MA']!=0 ? $activitesreelle['Activitesreelle']['MA'] : ""; ?></td> 
+                <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['ME']!=0 ? $activitesreelle['Activitesreelle']['ME'] : ""; ?></td> 
+                <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['JE']!=0 ? $activitesreelle['Activitesreelle']['JE'] : ""; ?></td> 
+                <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['VE']!=0 ? $activitesreelle['Activitesreelle']['VE'] : ""; ?></td> 
+                <td style="text-align: center;" class="week"><?php echo $activitesreelle['Activitesreelle']['SA']!=0 ? $activitesreelle['Activitesreelle']['SA'] : ""; ?></td> 
+                <td style="text-align: center;" class="week"><?php echo $activitesreelle['Activitesreelle']['DI']!=0 ? $activitesreelle['Activitesreelle']['DI'] : ""; ?></td> 
+                <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['TOTAL']; ?></td> 
+                <td style="text-align: center;"><?php echo isset($activitesreelle['Activitesreelle']['action_id']) ? "<i class='icon-eye-open'></i>" : ""; ?></td>
+                <td style="text-align: center;">Actions</td>                 
             </tr>
         <?php $i++; ?>
-	
             <?php //if (dateIsEqual($group['Activitesreelle']['DATE'],$activitesreelle['Activitesreelle']['DATE'])){ ?>
                 <?php //echo $i." ".$activitesreelle['Activitesreelle']['DATE']." ".$activitesreelle['Utilisateur']['NOMLONG']." ".$activitesreelle['Activite']['NOM']; ?>
             
-            <?php //} ?>
+            <?php endif; ?>
         <?php endforeach; ?>
+        <?php $r++; ?>
         <?php endforeach; ?>        
         </tbody>
 	</table>
+        <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>
+        <div class="pull-right"><?php	echo $this->Paginator->counter('Nombre total d\'éléments : {:count}');	?></div>
+        <div class="pagination  pagination-centered">
+        <ul>
+	<?php
+                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";
+		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled'))."</li>";
+		echo "<li>".$this->Paginator->numbers(array('separator' => ''))."</li>";
+		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabled'))."</li>";
+                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled'))."</li>";
+	?>
+        </ul>
+	</div>        
 </div>
-<?php debug($activitesreelles); ?>
