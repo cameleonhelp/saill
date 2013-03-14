@@ -290,6 +290,7 @@ contenttitle,
 .horizontal {clear: both; display: inline !important;}
 .horizontal:after {content: " : " !important;}
 table thead th {background-color: #EAEAEA !important; text-align: center !important;}
+.header {background-color: #f9f9f9 !important;}
 div ol li {list-style-type: none; padding: 0; margin-left: -25px;}
 .align-right {
   margin-bottom: 24px !important;

@@ -59,7 +59,6 @@
 			<th width="20px"><?php echo 'Sa.'; ?></th>
 			<th width="20px"><?php echo 'Di.'; ?></th>
 			<th><?php echo 'Total'; ?></th>
-                        <th><?php echo 'Action'; ?></th>
 			<th class="actions" width="90px"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
@@ -69,16 +68,16 @@
         <?php $row = $groups[$r][0]['NBACTIVITE']; ?>
         <?php if($row > 1): ?>
             <tr>
-                <td rowspan="<?php echo $row; ?>" style="vertical-align: middle;"><?php echo $group['Utilisateur']['NOM']." ".$group['Utilisateur']['PRENOM']; ?></td>
-                <td rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: center;"><?php echo $group['Activitesreelle']['DATE']; ?></td>
+                <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;"><?php echo $group['Utilisateur']['NOM']." ".$group['Utilisateur']['PRENOM']; ?></td>
+                <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: center;"><?php echo $group['Activitesreelle']['DATE']; ?></td>
         <?php endif; ?>
         <?php $i = 0; ?>
         <?php foreach ($activitesreelles as $activitesreelle): ?>
             <?php if($activitesreelle['Activitesreelle']['utilisateur_id']==$group['Activitesreelle']['utilisateur_id'] && dateIsEqual($group['Activitesreelle']['DATE'], $activitesreelle['Activitesreelle']['DATE'])): ?>
                 <?php if ($row==1): ?>
                 <tr>
-                <td><?php echo $activitesreelle['Utilisateur']['NOMLONG']; ?></td>
-                <td style="text-align: center;" ><?php echo $group['Activitesreelle']['DATE']; ?></td>
+                <td class="header"><?php echo $activitesreelle['Utilisateur']['NOMLONG']; ?></td>
+                <td class="header" style="text-align: center;" ><?php echo $group['Activitesreelle']['DATE']; ?></td>
                 <?php endif; ?>
                 <td><?php echo $activitesreelle['Activite']['NOM']; ?></td>  
                 <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['LU']!=0 ? $activitesreelle['Activitesreelle']['LU'] : ""; ?></td> 
@@ -89,8 +88,13 @@
                 <td style="text-align: center;" class="week"><?php echo $activitesreelle['Activitesreelle']['SA']!=0 ? $activitesreelle['Activitesreelle']['SA'] : ""; ?></td> 
                 <td style="text-align: center;" class="week"><?php echo $activitesreelle['Activitesreelle']['DI']!=0 ? $activitesreelle['Activitesreelle']['DI'] : ""; ?></td> 
                 <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['TOTAL']; ?></td> 
-                <td style="text-align: center;"><?php echo isset($activitesreelle['Activitesreelle']['action_id']) ? "<i class='icon-eye-open'></i>" : ""; ?></td>
-                <td style="text-align: center;">Actions</td>                 
+                <td style="text-align: center;">
+                    <?php echo isset($activitesreelle['Activitesreelle']['action_id']) ? "<i class='icon-eye-open'></i>" : "<i class='icon-blank'></i>"; ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>
+                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette feuille de temps ?')); ?>                    
+                    <?php echo $this->Form->postLink('<i class="icon-thumbs-up"></i>', array('action' => 'validate', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir verrouiller cette feuille de temps ?')); ?>                    
+                    <?php echo $this->Html->link('<i class=" icon-tags"></i>', array('action' => 'duplicate', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>                    
+                </td>                 
             </tr>
         <?php $i++; ?>
             <?php //if (dateIsEqual($group['Activitesreelle']['DATE'],$activitesreelle['Activitesreelle']['DATE'])){ ?>
@@ -102,7 +106,7 @@
         <?php endforeach; ?>        
         </tbody>
 	</table>
-        <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>
+        <!--<div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>
         <div class="pull-right"><?php	echo $this->Paginator->counter('Nombre total d\'éléments : {:count}');	?></div>
         <div class="pagination  pagination-centered">
         <ul>
@@ -114,5 +118,5 @@
                 echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled'))."</li>";
 	?>
         </ul>
-	</div>        
+	</div>  //-->      
 </div>
