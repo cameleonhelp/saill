@@ -57,7 +57,8 @@ class Activitesreelle extends AppModel {
 			'foreignKey' => 'action_id',
 			'conditions' => '',
 			'fields' => '',
-			'order' => ''
+			'order' => '',
+                        'type'=>'left'
 		),
 		'Activite' => array(
 			'className' => 'Activite',
@@ -67,6 +68,10 @@ class Activitesreelle extends AppModel {
 			'order' => ''
 		)
 	);
+        
+        /*public $virtualFields = array(
+            'NBACTIVITE' => 'COUNT( Activitesreelle.DATE )'
+        );*/
 
  /**
  * beforeSave method

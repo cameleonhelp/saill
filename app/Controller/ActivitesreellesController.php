@@ -8,8 +8,8 @@ App::uses('AppController', 'Controller');
 class ActivitesreellesController extends AppController {
 
         public $paginate = array(
-        'limit' => 15,
-        'order' => array('Activitesreelle.DATE' => 'desc'),
+        //'limit' => 15,
+        'order' => array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc'),
         );
         
 /**
@@ -19,6 +19,8 @@ class ActivitesreellesController extends AppController {
  */
 	public function index($id=null) {
                 $this->set('title_for_layout','Feuilles de temps');
+                $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc')));
+                $this->set('groups',$group);
 		$this->Activitesreelle->recursive = 0;
 		$this->set('activitesreelles', $this->paginate());
 	}

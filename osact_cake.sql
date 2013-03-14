@@ -704,6 +704,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`facturations` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `utilisateur_id` INT(15) NOT NULL ,
   `activite_id` INT(15) NOT NULL ,
+  `activitesreelle_id` INT NOT NULL ,
   `DATE` DATE NOT NULL ,
   `LU` DECIMAL(1,1) NULL DEFAULT NULL ,
   `LU_TYPE` TINYINT NULL DEFAULT NULL COMMENT '0=>matin\n1=>après midi' ,
