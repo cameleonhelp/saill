@@ -77,6 +77,7 @@ function CUSDate($frdate){
         <th rowspan="2" width='70px'>Total</th>
     </tr>
     <tr>
+        <!--calculer les jours fériés pour mettre le style week sur les jours fériés //-->
         <?php $date = new DateTime(CUSDate($debutsemaine)); ?>    
         <th><?php echo $date->format('d'); ?></th>
         <?php $date->add(new DateInterval('P1D')); ?>   

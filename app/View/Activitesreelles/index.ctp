@@ -17,34 +17,52 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
-                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Non facturé', array('action' => 'index','actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Facturé', array('action' => 'index','facture',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      </ul>
                  </li>                 
                 <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Projets <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Utilisateurs <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous')); ?></li>
-                     <li><?php echo $this->Html->link('Autres que indisponibilité', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','autres')); ?></li>                     
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      <li class="divider"></li>
-                         <?php foreach ($projets as $projet): ?>
-                            <li><?php echo $this->Html->link($projet['Projet']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$projet['Projet']['NOM'])); ?></li>
+                         <?php foreach ($utilisateurs as $utilisateur): ?>
+                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$utilisateur['Utilisateur']['id'],isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                          <?php endforeach; ?>
                       </ul>
                  </li>                   
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Mois <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous')); ?></li>
+                     <li class="divider"></li>
+                     <li><?php echo $this->Html->link('Janvier', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','01')); ?></li>
+                     <li><?php echo $this->Html->link('Février', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','02')); ?></li>
+                     <li><?php echo $this->Html->link('Mars', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','03')); ?></li>
+                     <li><?php echo $this->Html->link('Avril', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','04')); ?></li>
+                     <li><?php echo $this->Html->link('Mai', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','05')); ?></li>
+                     <li><?php echo $this->Html->link('Juin', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','06')); ?></li>
+                     <li><?php echo $this->Html->link('Juillet', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','07')); ?></li>
+                     <li><?php echo $this->Html->link('Août', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','08')); ?></li>
+                     <li><?php echo $this->Html->link('Septembre', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','09')); ?></li>
+                     <li><?php echo $this->Html->link('Octobre', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','10')); ?></li>
+                     <li><?php echo $this->Html->link('Novembre', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','11')); ?></li>
+                     <li><?php echo $this->Html->link('Décembre', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','12')); ?></li>                     
+                      </ul>
+                </li>  
                 <li class="divider-vertical"></li>                
                 <li><a href="#"><i class="ico-xls"></i></a></li>
                 </ul> 
-                <?php echo $this->Form->create("Activite",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
+                <?php echo $this->Form->create("Activitesreelle",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
                     <button type="submit" class="btn">Rechercher</button>
                 <?php echo $this->Form->end(); ?> 
                 </div>
             </div>
         </div>
-        <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $fetat; ?> sur <?php echo $fprojet; ?></em></code><?php } ?>        
+        <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $fetat; ?> de <?php echo $futilisateur; ?> <?php echo $fperiode; ?></em></code><?php } ?>        
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
@@ -63,10 +81,11 @@
 	</tr>
 	</thead>
         <tbody>   
+        <?php if (count($activitesreelles)>0): ?>
         <?php $r = 0; ?>
         <?php foreach ($groups as $group) : ?>
         <?php $row = $groups[$r][0]['NBACTIVITE']; ?>
-        <?php if($row > 1): ?>
+        <?php if($row > 1 && count($activitesreelles)>1): ?>
             <tr>
                 <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;"><?php echo $group['Utilisateur']['NOM']." ".$group['Utilisateur']['PRENOM']; ?></td>
                 <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: center;"><?php echo $group['Activitesreelle']['DATE']; ?></td>
@@ -80,6 +99,7 @@
                 <td class="header" style="text-align: center;" ><?php echo $group['Activitesreelle']['DATE']; ?></td>
                 <?php endif; ?>
                 <td><?php echo $activitesreelle['Activite']['NOM']; ?></td>  
+                <!--calculer les jours fériés pour mettre le style week sur les jours fériés //-->
                 <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['LU']!=0 ? $activitesreelle['Activitesreelle']['LU'] : ""; ?></td> 
                 <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['MA']!=0 ? $activitesreelle['Activitesreelle']['MA'] : ""; ?></td> 
                 <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['ME']!=0 ? $activitesreelle['Activitesreelle']['ME'] : ""; ?></td> 
@@ -89,34 +109,20 @@
                 <td style="text-align: center;" class="week"><?php echo $activitesreelle['Activitesreelle']['DI']!=0 ? $activitesreelle['Activitesreelle']['DI'] : ""; ?></td> 
                 <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['TOTAL']; ?></td> 
                 <td style="text-align: center;">
-                    <?php echo isset($activitesreelle['Activitesreelle']['action_id']) ? "<i class='icon-eye-open'></i>" : "<i class='icon-blank'></i>"; ?>
+                    <?php echo isset($activitesreelle['Activitesreelle']['action_id']) ? '<i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Objet: </contenttitle>'.h($activitesreelle['Action']['OBJET']).'<br/><contenttitle>Avancement: </contenttitle>'.h($activitesreelle['Action']['AVANCEMENT']).'%<br/><contenttitle>Crée le: </contenttitle>'.h($activitesreelle['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($activitesreelle['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>' : "<i class='icon-blank'></i>"; ?>
                     <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>
                     <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette feuille de temps ?')); ?>                    
-                    <?php echo $this->Form->postLink('<i class="icon-thumbs-up"></i>', array('action' => 'validate', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir verrouiller cette feuille de temps ?')); ?>                    
-                    <?php echo $this->Html->link('<i class=" icon-tags"></i>', array('action' => 'duplicate', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>                    
+                    <?php $img = $activitesreelle['Activitesreelle']['VEROUILLE']==0 ? 'icon-thumbs-up' : 'icon-thumbs-down'; ?>
+                    <?php echo $this->Form->postLink('<i class="'.$img.'"></i>', array('action' => 'updatefacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour facturation ?')); ?>                    
+                    <?php echo $this->Html->link('<i class=" icon-tags"></i>', array('action' => 'autoduplicate', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>                    
                 </td>                 
             </tr>
         <?php $i++; ?>
-            <?php //if (dateIsEqual($group['Activitesreelle']['DATE'],$activitesreelle['Activitesreelle']['DATE'])){ ?>
-                <?php //echo $i." ".$activitesreelle['Activitesreelle']['DATE']." ".$activitesreelle['Utilisateur']['NOMLONG']." ".$activitesreelle['Activite']['NOM']; ?>
-            
-            <?php endif; ?>
+        <?php endif; ?>
         <?php endforeach; ?>
         <?php $r++; ?>
-        <?php endforeach; ?>        
+        <?php endforeach; ?> 
+        <?php endif; ?> 
         </tbody>
-	</table>
-        <!--<div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>
-        <div class="pull-right"><?php	echo $this->Paginator->counter('Nombre total d\'éléments : {:count}');	?></div>
-        <div class="pagination  pagination-centered">
-        <ul>
-	<?php
-                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";
-		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled'))."</li>";
-		echo "<li>".$this->Paginator->numbers(array('separator' => ''))."</li>";
-		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabled'))."</li>";
-                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled'))."</li>";
-	?>
-        </ul>
-	</div>  //-->      
+	</table>        
 </div>
