@@ -1,5 +1,5 @@
 <?php 
-    echo $form->create('Contact');
-    echo $form->inputs();
-    echo $form->end('Send');
+    echo $this->Form->create('Contact');
+    echo $this->Form->inputs();
+    echo $this->Form->end('Send');
 ?>

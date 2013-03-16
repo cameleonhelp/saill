@@ -39,10 +39,12 @@ class EmailConfig {
         public $gmail = array(
             'host' => 'ssl://smtp.gmail.com',
             'port' => 465,
-            'username' => 'j.levavasseur@gmail.com',
-            'password' => 'azerty64',
-            'transport' => 'Smtp'
-        );
+            'username' => 'votreemail@host.fr',
+            'password' => 'secret',
+            'transport' => 'Smtp',
+            'charset' => 'utf-8',
+            'headerCharset' => 'utf-8'
+            );
     
 	public $default = array(
 		'transport' => 'Mail',

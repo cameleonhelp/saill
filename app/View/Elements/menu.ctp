@@ -39,7 +39,7 @@
   <?php $classCRAMois = in_array($controller,array('pages_cramois')) ? 'active' : ''; ?>               
   <?php $classCRAPeriode = in_array($controller,array('pages_craperiode')) ? 'active' : ''; ?>    
   <?php $classRapports = in_array('active',array($classCRAMois,$classCRAPeriode)) ? 'active' : ''; ?> 
-  <?php $classContactUs = in_array($controller,array('pages_contactus')) ? 'active' : ''; ?>               
+  <?php $classContactUs = in_array($controller,array('contacts_add')) ? 'active' : ''; ?>               
   <?php $classAddFavorites = in_array($controller,array('pages_addfavorites')) ? 'active' : ''; ?>  
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: static; margin-bottom: 15px; margin-left: -20px; margin-top: 15px;">
     <li class="dropdown-menu-nolink sstitre text-center">6404901Z</li>
@@ -105,7 +105,7 @@
         </ul>
     </li>
     <li class="divider"></li>
-    <li class="<?php echo $classContactUs; ?>"><?php echo $this->Html->link('<i class="glyphicon_envelope"></i> Nous contacter',array('controller'=>'pages','action'=>'contactus'),array('escape' => false)); ?></li>
+    <li class="<?php echo $classContactUs; ?>"><?php echo $this->Html->link('<i class="glyphicon_envelope"></i> Nous contacter',array('controller'=>'contacts','action'=>'add'),array('escape' => false)); ?></li>
     <li class="<?php echo $classAddFavorites; ?>"><?php echo $this->Html->link('<i class="glyphicon_star"></i> Ajouter aux favoris',array('controller'=>'pages','action'=>'addfavorites'),array('escape' => false)); ?></li>
     <li  class="dropdown-menu-nolink sstitre text-center">Version : <?php echo $this->element('version') ?></li>
   </ul>
