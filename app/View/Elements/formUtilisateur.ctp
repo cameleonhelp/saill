@@ -320,7 +320,7 @@
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse4">
                 Ouverture des droits
-                <span class="pull-right">Outils : <?php echo h($compteurs[0][0]['nboutil']); ?> - Partages : <?php echo h($compteurs[0][0]['nbliste']); ?> - Listes de diffusion : <?php echo h($compteurs[0][0]['nbpartage']); ?></span>
+                <span class="pull-right">Outils : <?php echo h($compteurs[0][0]['nboutil']); ?> - Partages : <?php echo h($compteurs[0][0]['nbpartage']); ?> - Listes de diffusion : <?php echo h($compteurs[0][0]['nbliste']); ?></span>
                 </a>
             </div>
             <div id="collapse4" class="accordion-body collapse">

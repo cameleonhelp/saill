@@ -244,6 +244,14 @@ table th a.desc:after,
     background-image: url("../img/xls.png");
     background-position: 0 0;    
 }
+.ico-doc{
+    background-image: url("../img/doc.png");
+    background-position: 0 0;    
+}
+.ico-ppt{
+    background-image: url("../img/ppt.png");
+    background-position: 0 0;    
+}
 .ico-pdf{
     background-image: url("../img/pdf.png");
     background-position: 0 0;     
