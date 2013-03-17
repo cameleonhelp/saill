@@ -40,11 +40,11 @@
   <?php $classCRAPeriode = in_array($controller,array('pages_craperiode')) ? 'active' : ''; ?>    
   <?php $classRapports = in_array('active',array($classCRAMois,$classCRAPeriode)) ? 'active' : ''; ?> 
   <?php $classContactUs = in_array($controller,array('contacts_add')) ? 'active' : ''; ?>               
-  <?php $classAddFavorites = in_array($controller,array('pages_addfavorites')) ? 'active' : ''; ?>  
+  <?php $classAddFavorites = 'notactive'; ?>  
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: static; margin-bottom: 15px; margin-left: -20px; margin-top: 15px;">
     <li class="dropdown-menu-nolink sstitre text-center">6404901Z</li>
-    <li class="<?php echo $classProfil; ?>"><?php echo $this->Html->link('<i class="glyphicon_user"></i> Mon profil',array('controller'=>'utilisateurs','action'=>'profil'),array('escape' => false)); ?></li>
-    <li class="<?php echo $classLogout; ?>"><?php echo $this->Html->link('<i class="glyphicon_power"></i> Se déconnecter',array('controller'=>'utilisateurs','action'=>'logout'),array('escape' => false)); ?></li>           
+    <li class="<?php echo $classProfil; ?> disabled"><?php echo $this->Html->link('<i class="glyphicon_user"></i> Mon profil',array('controller'=>'utilisateurs','action'=>'profil'),array('escape' => false)); ?></li>
+    <li class="<?php echo $classLogout; ?> disabled"><?php echo $this->Html->link('<i class="glyphicon_power"></i> Se déconnecter',array('controller'=>'utilisateurs','action'=>'logout'),array('escape' => false)); ?></li>           
     <li class="divider"></li>
     <li class="<?php echo $classHome; ?>"><?php echo $this->Html->link('<i class="glyphicon_home"></i> Accueil',array('controller'=>'pages','action'=>'home'),array('escape' => false)); ?></li>                
     <li class="divider"></li>                
@@ -92,13 +92,13 @@
             <li class="<?php echo $classTJMProjets; ?>"><?php echo $this->Html->link('TJM Contrats',array('controller'=>'tjmcontrats','action'=>'index'),array('escape' => false)); ?></li>
             <li class="<?php echo $classTJMAgents; ?>"><?php echo $this->Html->link('TJM Agents',array('controller'=>'tjmagents','action'=>'index'),array('escape' => false)); ?></li>
             <li class="divider"></li>
-            <li class="<?php echo $classPlanDeCharge; ?>"><?php echo $this->Html->link('Plan de charge',array('controller'=>'plandecharges','action'=>'index'),array('escape' => false)); ?></li>
+            <li class="<?php echo $classPlanDeCharge; ?> disabled"><?php echo $this->Html->link('Plan de charge',array('controller'=>'plandecharges','action'=>'index'),array('escape' => false)); ?></li>
             <li class="divider"></li>
-            <li class="<?php echo $classFacturation; ?>"><?php echo $this->Html->link('Facturation',array('controller'=>'facturations','action'=>'index'),array('escape' => false)); ?></li>
+            <li class="<?php echo $classFacturation; ?> disabled"><?php echo $this->Html->link('Facturation',array('controller'=>'facturations','action'=>'index'),array('escape' => false)); ?></li>
         </ul>
     </li>
     <li class="divider"></li>
-    <li  class="dropdown-submenu <?php echo $classRapports; ?>"><a href="#"><i class="glyphicon_charts"></i> Rapports</a>
+    <li  class="dropdown-submenu <?php echo $classRapports; ?> disabled"><a href="#"><i class="glyphicon_charts"></i> Rapports</a>
         <ul class="dropdown-menu">
             <li class="<?php echo $classCRAMois; ?>"><?php echo $this->Html->link('Activités - Mensuel',array('controller'=>'pages','action'=>'cramois'),array('escape' => false)); ?></li>
             <li class="<?php echo $classCRAPeriode; ?>"><?php echo $this->Html->link('Activités - Périodique',array('controller'=>'pages','action'=>'craperiode'),array('escape' => false)); ?></li>
@@ -106,7 +106,36 @@
     </li>
     <li class="divider"></li>
     <li class="<?php echo $classContactUs; ?>"><?php echo $this->Html->link('<i class="glyphicon_envelope"></i> Nous contacter',array('controller'=>'contacts','action'=>'add'),array('escape' => false)); ?></li>
-    <li class="<?php echo $classAddFavorites; ?>"><?php echo $this->Html->link('<i class="glyphicon_star"></i> Ajouter aux favoris',array('controller'=>'pages','action'=>'addfavorites'),array('escape' => false)); ?></li>
+    <li class="<?php echo $classAddFavorites; ?> jQueryBookmark"><?php echo $this->Html->link('<i class="glyphicon_star"></i> Ajouter aux favoris',array('action'=>"#"),array('escape' => false)); ?></li>
     <li  class="dropdown-menu-nolink sstitre text-center">Version : <?php echo $this->element('version') ?></li>
   </ul>
 </div>
+<script language="javascript" type="text/javascript">
+$(document).ready(function(){
+  $(".jQueryBookmark").click(function(e){
+    e.preventDefault(); // this will prevent the anchor tag from going the user off to the link
+    <?php 
+        $root = strpos(ROOT,'/')!==false ? explode('/',ROOT) : explode('\\',ROOT);
+        $last = count($root)-1;            
+        $urlSite = str_replace('\\','/',FULL_BASE_URL.DS.$root[$last].DS);    
+    ?>
+    var bookmarkUrl = '<?php echo $urlSite; ?>';
+    var bookmarkTitle = 'SNCF - OSACT';
+
+    if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) { 
+            alert("Cette fonction n'est pas disponible sur Chrome\n\r. Cliquez sur l'étoile pour ajouter cette adresse à vos favoris\n\rou utilisez le raccourci clavier Ctrl-D (Command+D pour Macs) pour créer le favoris.");      
+    }else if (window.sidebar) { // For Mozilla Firefox Bookmark
+        window.sidebar.addPanel(bookmarkTitle, bookmarkUrl,"");
+    } else if( window.external || document.all) { // For IE Favorite
+        window.external.AddFavorite( bookmarkUrl, bookmarkTitle);
+    } else if(window.opera) { // For Opera Browsers
+        $("a.jQueryBookmark").attr("href",bookmarkUrl);
+        $("a.jQueryBookmark").attr("title",bookmarkTitle);
+        $("a.jQueryBookmark").attr("rel","sidebar");
+    } else { // for other browsers which does not support
+         alert('Votre navigateur ne supporte pas cette fonction.');
+         return false;
+    }
+  });
+});
+</script>
