@@ -22,12 +22,13 @@ class ContactsController extends AppController {
             $this->Contact->set($this->data);
             //send email using the Email component
             $email = new CakeEmail();
-            $email->config('gmail');
+            //$email->config('gmail');
+            $email->config('exchange');
             $email->emailFormat('html');
-            $email->from($this->data['Contact']['email']);
-            $email->to('j.levavasseur@gmail.com');
-            $email->subject('OSACT : ' . $this->data['Contact']['objet']);
-            if ($email->send($this->data['Contact']['message'])) {
+            $email->from($this->data['Contact']['EMAIL']);
+            $email->to('jacques.levavasseur@sncf.fr');
+            $email->subject('OSACT : ' . $this->data['Contact']['OBJET']);
+            if ($email->send($this->data['Contact']['MESSAGE'])) {
                 $this->Session->setFlash(__('Message envoyé avec succès'),'default',array('class'=>'alert alert-success'));
             } else {
                 $this->Session->setFlash(__('Message <b>NON</b> envoyé'),'default',array('class'=>'alert alert-error'));

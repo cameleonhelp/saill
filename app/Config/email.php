@@ -44,8 +44,17 @@ class EmailConfig {
             'transport' => 'Smtp',
             'charset' => 'utf-8',
             'headerCharset' => 'utf-8'
-            );
-    
+        );
+
+        public $exchange = array(
+            'host' => 'server.Exchange',
+            'port' => 25,
+            'from' => 'mail@sncf.fr',
+            'password' => 'secret',
+            'transport' => 'Smtp',
+            'charset' => 'utf-8',
+            'headerCharset' => 'utf-8',
+        );
 	public $default = array(
 		'transport' => 'Mail',
 		'from' => 'you@localhost',
