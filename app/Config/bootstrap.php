@@ -160,6 +160,9 @@ Cache::config('default', array('engine' => 'File'));
  *
  * ));
  */
+
+App::import('Vendor', 'functions'); 
+
 Configure::write('Dispatcher.filters', array(
 	'AssetDispatcher',
 	'CacheDispatcher'

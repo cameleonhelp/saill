@@ -18,10 +18,7 @@ function joursemaine($usdate){
     return $jour;
 }
 
-function CUSDate($frdate){
-    $day = explode('/',$frdate);
-    return $day[2]."-".$day[1]."-".$day[0];
-}
+
 
     $date = isset($this->data['Activitesreelle']['DATE']) ? $this->data['Activitesreelle']['DATE'] : date('d/m/Y');
     $d = explode('/',$date);
@@ -67,55 +64,63 @@ function CUSDate($frdate){
     </tr>
     <tr>
         <th rowspan="2">Activité</th>
-        <th width='70px'>Lu.</th>
-        <th width='70px'>Ma.</th>
-        <th width='70px'>Me.</th>
-        <th width='70px'>Je.</th>
-        <th width='70px'>Ve.</th>
-        <th class='week' width='70px'>Sa.</th>
-        <th class='week' width='70px'>Di.</th>
+        <?php $date = new DateTime(CUSDate($debutsemaine)); ?> 
+        <?php $classLU = isFerie($date) ? 'class="ferie"' : ''; ?>
+        <th <?php echo $classLU; ?> width='70px'>Lu.</th>
+        <?php $date->add(new DateInterval('P1D')); ?> 
+        <?php $classMA = isFerie($date) ? 'class="ferie"' : ''; ?>
+        <th <?php echo $classMA; ?> width='70px'>Ma.</th>
+        <?php $date->add(new DateInterval('P1D')); ?>
+        <?php $classME = isFerie($date) ? 'class="ferie"' : ''; ?>
+        <th <?php echo $classME; ?> width='70px'>Me.</th>
+        <?php $date->add(new DateInterval('P1D')); ?> 
+        <?php $classJE = isFerie($date) ? 'class="ferie"' : ''; ?>
+        <th <?php echo $classJE; ?> width='70px'>Je.</th>
+        <?php $date->add(new DateInterval('P1D')); ?> 
+        <?php $classVE = isFerie($date) ? 'class="ferie"' : ''; ?>        
+        <th <?php echo $classVE; ?> width='70px'>Ve.</th>
+        <?php $date->add(new DateInterval('P1D')); ?> 
+        <?php $classSA = isFerie($date) ? ' ferie' : ''; ?>        
+        <th class='week <?php echo $classSA; ?>' width='70px'>Sa.</th>
+        <?php $date->add(new DateInterval('P1D')); ?> 
+        <?php $classDI = isFerie($date) ? ' ferie' : ''; ?>        
+        <th class='week <?php echo $classDI; ?>' width='70px'>Di.</th>
         <th rowspan="2" width='70px'>Total</th>
     </tr>
     <tr>
         <!--calculer les jours fériés pour mettre le style week sur les jours fériés //-->
-        <?php $date = new DateTime(CUSDate($debutsemaine)); ?>    
-        <th><?php echo $date->format('d'); ?></th>
-        <?php $date->add(new DateInterval('P1D')); ?>   
-        <th><?php echo $date->format('d'); ?></th>
-        <?php $date->add(new DateInterval('P1D')); ?> 
-        <th><?php echo $date->format('d'); ?></th>
-        <?php $date->add(new DateInterval('P1D')); ?> 
-        <th><?php echo $date->format('d'); ?></th>
-        <?php $date->add(new DateInterval('P1D')); ?> 
-        <th><?php echo $date->format('d'); ?></th>
-        <?php $date->add(new DateInterval('P1D')); ?> 
-        <th class='week'><?php echo $date->format('d'); ?></th>
-        <?php $date->add(new DateInterval('P1D')); ?> 
-        <th class='week'><?php echo $date->format('d'); ?>  </th>
+
+        <th <?php echo $classLU; ?>><?php echo $date->format('d'); ?></th>
+        <th <?php echo $classMA; ?>><?php echo $date->format('d'); ?></th>
+        <th <?php echo $classME; ?>><?php echo $date->format('d'); ?></th>
+        <th <?php echo $classJE; ?>><?php echo $date->format('d'); ?></th>
+        <th <?php echo $classVE; ?>><?php echo $date->format('d'); ?></th>
+        <th class='week <?php echo $classSA; ?>'><?php echo $date->format('d'); ?></th>
+        <th class='week <?php echo $classDI; ?>'><?php echo $date->format('d'); ?>  </th>
     </tr> 
     </thead>
     <tbody>
     <tr>
         <td><?php echo $this->data['Activite']['NOM']; ?></td>
-        <td width='15px'><?php echo $this->Form->input('LU',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du lundi")); ?> j</td>
-        <td width='15px'><?php echo $this->Form->input('MA',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du mardi")); ?> j</td>
-        <td width='15px'><?php echo $this->Form->input('ME',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du mercredi")); ?> j</td>
-        <td width='15px'><?php echo $this->Form->input('JE',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du jeudi")); ?> j</td>
-        <td width='15px'><?php echo $this->Form->input('VE',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du vendredi")); ?> j</td>
-        <td class='week' width='15px'><?php echo $this->Form->input('SA',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du samedi")); ?> j</td>
-        <td class='week' width='15px'><?php echo $this->Form->input('DI',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du dimanche")); ?> j</td>
+        <td <?php echo $classLU; ?> width='15px'><?php echo $this->Form->input('LU',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du lundi")); ?> j</td>
+        <td <?php echo $classMA; ?> width='15px'><?php echo $this->Form->input('MA',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du mardi")); ?> j</td>
+        <td <?php echo $classME; ?> width='15px'><?php echo $this->Form->input('ME',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du mercredi")); ?> j</td>
+        <td <?php echo $classJE; ?> width='15px'><?php echo $this->Form->input('JE',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du jeudi")); ?> j</td>
+        <td <?php echo $classVE; ?> width='15px'><?php echo $this->Form->input('VE',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du vendredi")); ?> j</td>
+        <td class='week <?php echo $classSA; ?>' width='15px'><?php echo $this->Form->input('SA',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du samedi")); ?> j</td>
+        <td class='week <?php echo $classDI; ?>' width='15px'><?php echo $this->Form->input('DI',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du dimanche")); ?> j</td>
         <td width='15px'><?php echo $this->Form->input('TOTAL',array('class'=>'span2 text-right')); ?> j</td>        
     </tr>
     <?php if($this->data['Activite']['projet_id']==1) { ?>
     <tr>
         <td>Commence le matin</td>
-        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('LU_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleLUTYPE'></label></td>
-        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('MA_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleMATYPE'></label></td>
-        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('ME_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleMETYPE'></label></td>
-        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('JE_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleJETYPE'></label></td>
-        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('VE_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleVETYPE'></label></td>
-        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('SA_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleSATYPE'></label></td>
-        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('DI_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleDITYPE'></label></td>
+        <td <?php echo $classLU; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('LU_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleLUTYPE'></label></td>
+        <td <?php echo $classMA; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('MA_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleMATYPE'></label></td>
+        <td <?php echo $classME; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('ME_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleMETYPE'></label></td>
+        <td <?php echo $classJE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('JE_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleJETYPE'></label></td>
+        <td <?php echo $classVE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('VE_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleVETYPE'></label></td>
+        <td class='week <?php echo $classSA; ?>'  width='15px' style="text-align: center;"><?php echo $this->Form->input('SA_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleSATYPE'></label></td>
+        <td class='week <?php echo $classDI; ?>'  width='15px' style="text-align: center;"><?php echo $this->Form->input('DI_TYPE',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class='labelAfter' for='ActivitesreelleDITYPE'></label></td>
         <td width='15px'>&nbsp;</td>        
     </tr>    
     <?php } ?>

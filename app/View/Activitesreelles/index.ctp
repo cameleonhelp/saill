@@ -6,6 +6,8 @@
         $n2 = $d2[2].$d2[1].$d2[0];
         return $n1==$n2 ? true: false;
     }
+    
+
 ?>
 <div class="activitesreelles index">
         <div class="navbar">
@@ -100,13 +102,27 @@
                 <?php endif; ?>
                 <td><?php echo $activitesreelle['Activite']['NOM']; ?></td>  
                 <!--calculer les jours fériés pour mettre le style week sur les jours fériés //-->
-                <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['LU']!=0 ? $activitesreelle['Activitesreelle']['LU'] : ""; ?></td> 
-                <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['MA']!=0 ? $activitesreelle['Activitesreelle']['MA'] : ""; ?></td> 
-                <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['ME']!=0 ? $activitesreelle['Activitesreelle']['ME'] : ""; ?></td> 
-                <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['JE']!=0 ? $activitesreelle['Activitesreelle']['JE'] : ""; ?></td> 
-                <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['VE']!=0 ? $activitesreelle['Activitesreelle']['VE'] : ""; ?></td> 
-                <td style="text-align: center;" class="week"><?php echo $activitesreelle['Activitesreelle']['SA']!=0 ? $activitesreelle['Activitesreelle']['SA'] : ""; ?></td> 
-                <td style="text-align: center;" class="week"><?php echo $activitesreelle['Activitesreelle']['DI']!=0 ? $activitesreelle['Activitesreelle']['DI'] : ""; ?></td> 
+                <?php $date = new DateTime(CUSDate($group['Activitesreelle']['DATE'])); ?> 
+                <?php $classLu = isFerie($date) ? 'class="ferie"' : ''; ?>
+                <td style="text-align: center;" <?php echo $classLu; ?>><?php echo $activitesreelle['Activitesreelle']['LU']!=0 ? $activitesreelle['Activitesreelle']['LU'] : ""; ?></td> 
+                <?php $date->add(new DateInterval('P1D')); ?>
+                <?php $classMA = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <td style="text-align: center;" <?php echo $classMA; ?>><?php echo $activitesreelle['Activitesreelle']['MA']!=0 ? $activitesreelle['Activitesreelle']['MA'] : ""; ?></td> 
+                <?php $date->add(new DateInterval('P1D')); ?>
+                <?php $classME = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <td style="text-align: center;" <?php echo $classME; ?>><?php echo $activitesreelle['Activitesreelle']['ME']!=0 ? $activitesreelle['Activitesreelle']['ME'] : ""; ?></td> 
+                <?php $date->add(new DateInterval('P1D')); ?>
+                <?php $classJE = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <td style="text-align: center;" <?php echo $classJE; ?>><?php echo $activitesreelle['Activitesreelle']['JE']!=0 ? $activitesreelle['Activitesreelle']['JE'] : ""; ?></td> 
+                <?php $date->add(new DateInterval('P1D')); ?>
+                <?php $classVE = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <td style="text-align: center;" <?php echo $classVE; ?>><?php echo $activitesreelle['Activitesreelle']['VE']!=0 ? $activitesreelle['Activitesreelle']['VE'] : ""; ?></td> 
+                <?php $date->add(new DateInterval('P1D')); ?>
+                <?php $classSA = isFerie($date) ? ' ferie' : ''; ?> 
+                <td style="text-align: center;" class="week <?php echo $classSA; ?>"><?php echo $activitesreelle['Activitesreelle']['SA']!=0 ? $activitesreelle['Activitesreelle']['SA'] : ""; ?></td> 
+                <?php $date->add(new DateInterval('P1D')); ?>
+                <?php $classDI = isFerie($date) ? ' ferie' : ''; ?>
+                <td style="text-align: center;" class="week <?php echo $classDI; ?>"><?php echo $activitesreelle['Activitesreelle']['DI']!=0 ? $activitesreelle['Activitesreelle']['DI'] : ""; ?></td> 
                 <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['TOTAL']; ?></td> 
                 <td style="text-align: center;">
                     <?php echo isset($activitesreelle['Activitesreelle']['action_id']) ? '<i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Objet: </contenttitle>'.h($activitesreelle['Action']['OBJET']).'<br/><contenttitle>Avancement: </contenttitle>'.h($activitesreelle['Action']['AVANCEMENT']).'%<br/><contenttitle>Crée le: </contenttitle>'.h($activitesreelle['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($activitesreelle['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>' : "<i class='icon-blank'></i>"; ?>

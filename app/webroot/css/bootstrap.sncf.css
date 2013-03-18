@@ -371,6 +371,20 @@ a, a:focus {
     background-color: #CB0044 !important;
     color: #F7F7F7;
 }
+.ferie{
+    background-color: #A1006B !important;
+    color: #F7F7F7;
+}
+/*.ferie:after{
+    content: 'F';
+}*/
+.indispo{
+    background-color: #AEA79F !important;
+    color: #F7F7F7;
+}
+.indispo:after{
+    content: 'NP';
+}
 .absday {
     width: 10px !important;
 }
