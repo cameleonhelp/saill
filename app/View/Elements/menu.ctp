@@ -8,7 +8,7 @@
   <?php $classActvitereelle = in_array($controller,array('activitesreelles_index','activitesreelles_add','activitesreelles_edit','activitesreelles_delete','activitesreelles_search')) ? 'active' : ''; ?>  
   <?php $classLinkShared = in_array($controller,array('linkshareds_index','linkshareds_add','linkshareds_edit','linkshareds_delete','linkshareds_search')) ? 'active' : ''; ?>
   <?php $classLivrable = in_array($controller,array('livrables_index','livrables_add','livrables_edit','livrables_delete','livrables_search')) ? 'active' : ''; ?>
-  <?php $classCalendardAbs = in_array($controller,array('pages_absences')) ? 'active' : ''; ?>
+  <?php $classCalendardAbs = in_array($controller,array('activitesreelles_absences')) ? 'active' : ''; ?>
   <?php $classSections = in_array($controller,array('sections_index','sections_add','sections_edit','sections_delete','sections_search')) ? 'active' : ''; ?> 
   <?php $classSocietes = in_array($controller,array('societes_index','societes_add','societes_edit','societes_delete','societes_search')) ? 'active' : ''; ?> 
   <?php $classSites = in_array($controller,array('sites_index','sites_add','sites_edit','sites_delete','sites_search')) ? 'active' : ''; ?>               
@@ -52,7 +52,7 @@
     <li class="<?php echo $classActvitereelle; ?>"><?php echo $this->Html->link('<i class="icon-tasks"></i> Feuille de temps',array('controller'=>'activitesreelles','action'=>'index'),array('escape' => false)); ?></li>    
     <li class="<?php echo $classLinkShared; ?>"><?php echo $this->Html->link('<i class="glyphicon_link"></i> Liens partagés',array('controller'=>'linkshareds','action'=>'index'),array('escape' => false)); ?></li>
     <li class="<?php echo $classLivrable; ?>"><?php echo $this->Html->link('<i class="glyphicon_inbox"></i> Livrables',array('controller'=>'livrables','action'=>'index','week','tous','tous'),array('escape' => false)); ?></li>
-    <li class="<?php echo $classCalendardAbs; ?>"><?php echo $this->Html->link('<i class="glyphicon_beach_umbrella"></i> Absences équipe',array('controller'=>'pages','action'=>'absences'),array('escape' => false)); ?></li>
+    <li class="<?php echo $classCalendardAbs; ?>"><?php echo $this->Html->link('<i class="glyphicon_beach_umbrella"></i> Absences équipe',array('controller'=>'activitesreelles','action'=>'absences'),array('escape' => false)); ?></li>
     <li class="divider"></li>
     <li  class="dropdown-submenu  <?php echo $classAdministration; ?>"><a href="#"><i class="glyphicon_lock"></i> Administration</a>
         <ul class="dropdown-menu">
@@ -78,7 +78,6 @@
             <li class="<?php echo $classMateriels; ?>"><?php echo $this->Html->link('Postes informatique',array('controller'=>'materielinformatiques','action'=>'index','En stock','tous','toutes'),array('escape' => false)); ?></li>
             <!--<li class="<?php echo $classPetitMateriels; ?>"><?php echo $this->Html->link('Périphériques',array('controller'=>'materielautres','action'=>'index'),array('escape' => false)); ?></li>//-->
             <li class="<?php echo $classUtiliseOutils; ?>"><?php echo $this->Html->link('Ouvertures des droits',array('controller'=>'utiliseoutils','action'=>'index','tous','tous'),array('escape' => false)); ?></li>
-            <!--<li class="disabled"><a href="#">Ouvertures des droits</a></li>//-->
         </ul>
     </li>
     <li  class="dropdown-submenu <?php echo $classBudget; ?>"><a href="#"><i class="glyphicon_euro"></i> Budget</a>

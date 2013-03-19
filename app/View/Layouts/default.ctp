@@ -46,6 +46,7 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
                 echo $this->Html->script('select'); 
                 echo $this->Html->script('tiny_mce/tiny_mce');
                 echo $this->Html->script('jscroller2'); 
+                echo $this->Html->script('datetime');
                 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');

@@ -1,25 +1,4 @@
 <?php 
-function debutsem($year,$month,$day) {
-    $num_day      = date('w', mktime(0,0,0,$month,$day,$year));
-    $premier_jour = mktime(0,0,0, $month,$day-(!$num_day?7:$num_day)+1,$year);
-    $datedeb      = date('d/m/Y', $premier_jour);
-    return $datedeb;
-}
-
-function finsem($year,$month,$day) {
-    $num_day      = date('w', mktime(0,0,0,$month,$day,$year));
-    $dernier_jour = mktime(0,0,0, $month,7-(!$num_day?7:$num_day)+$day,$year);
-    $datedeb      = date('d/m/Y', $dernier_jour);
-    return $datedeb;
-}
-
-function joursemaine($usdate){
-    $jour = date('d', $usdate);
-    return $jour;
-}
-
-
-
     $date = isset($this->data['Activitesreelle']['DATE']) ? $this->data['Activitesreelle']['DATE'] : date('d/m/Y');
     $d = explode('/',$date);
     $day = $d[0];
@@ -64,39 +43,38 @@ function joursemaine($usdate){
     </tr>
     <tr>
         <th rowspan="2">Activité</th>
-        <?php $date = new DateTime(CUSDate($debutsemaine)); ?> 
+        <?php $date = new DateTime(CUSDate($debutsemaine)); $LU = $date->format('d'); ?> 
         <?php $classLU = isFerie($date) ? 'class="ferie"' : ''; ?>
         <th <?php echo $classLU; ?> width='70px'>Lu.</th>
-        <?php $date->add(new DateInterval('P1D')); ?> 
+        <?php $date->add(new DateInterval('P1D')); $MA = $date->format('d'); ?> 
         <?php $classMA = isFerie($date) ? 'class="ferie"' : ''; ?>
         <th <?php echo $classMA; ?> width='70px'>Ma.</th>
-        <?php $date->add(new DateInterval('P1D')); ?>
+        <?php $date->add(new DateInterval('P1D')); $ME = $date->format('d'); ?>
         <?php $classME = isFerie($date) ? 'class="ferie"' : ''; ?>
         <th <?php echo $classME; ?> width='70px'>Me.</th>
-        <?php $date->add(new DateInterval('P1D')); ?> 
+        <?php $date->add(new DateInterval('P1D')); $JE = $date->format('d'); ?> 
         <?php $classJE = isFerie($date) ? 'class="ferie"' : ''; ?>
         <th <?php echo $classJE; ?> width='70px'>Je.</th>
-        <?php $date->add(new DateInterval('P1D')); ?> 
+        <?php $date->add(new DateInterval('P1D')); $VE = $date->format('d'); ?> 
         <?php $classVE = isFerie($date) ? 'class="ferie"' : ''; ?>        
         <th <?php echo $classVE; ?> width='70px'>Ve.</th>
-        <?php $date->add(new DateInterval('P1D')); ?> 
+        <?php $date->add(new DateInterval('P1D')); $SA = $date->format('d'); ?> 
         <?php $classSA = isFerie($date) ? ' ferie' : ''; ?>        
         <th class='week <?php echo $classSA; ?>' width='70px'>Sa.</th>
-        <?php $date->add(new DateInterval('P1D')); ?> 
+        <?php $date->add(new DateInterval('P1D')); $DI = $date->format('d'); ?> 
         <?php $classDI = isFerie($date) ? ' ferie' : ''; ?>        
         <th class='week <?php echo $classDI; ?>' width='70px'>Di.</th>
         <th rowspan="2" width='70px'>Total</th>
     </tr>
     <tr>
         <!--calculer les jours fériés pour mettre le style week sur les jours fériés //-->
-
-        <th <?php echo $classLU; ?>><?php echo $date->format('d'); ?></th>
-        <th <?php echo $classMA; ?>><?php echo $date->format('d'); ?></th>
-        <th <?php echo $classME; ?>><?php echo $date->format('d'); ?></th>
-        <th <?php echo $classJE; ?>><?php echo $date->format('d'); ?></th>
-        <th <?php echo $classVE; ?>><?php echo $date->format('d'); ?></th>
-        <th class='week <?php echo $classSA; ?>'><?php echo $date->format('d'); ?></th>
-        <th class='week <?php echo $classDI; ?>'><?php echo $date->format('d'); ?>  </th>
+        <th <?php echo $classLU; ?>><?php echo $LU; ?></th>
+        <th <?php echo $classMA; ?>><?php echo $MA; ?></th>
+        <th <?php echo $classME; ?>><?php echo $ME; ?></th>
+        <th <?php echo $classJE; ?>><?php echo $JE; ?></th>
+        <th <?php echo $classVE; ?>><?php echo $VE; ?></th>
+        <th class='week <?php echo $classSA; ?>'><?php echo $SA; ?></th>
+        <th class='week <?php echo $classDI; ?>'><?php echo $DI; ?>  </th>
     </tr> 
     </thead>
     <tbody>

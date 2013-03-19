@@ -1,14 +1,3 @@
-<?php 
-    function dateIsEqual($date1,$date2){
-        $d1 = explode("/",$date1);
-        $n1 = $d1[2].$d1[1].$d1[0];
-        $d2 = explode("/",$date2);
-        $n2 = $d2[2].$d2[1].$d2[0];
-        return $n1==$n2 ? true: false;
-    }
-    
-
-?>
 <div class="activitesreelles index">
         <div class="navbar">
             <div class="navbar-inner">
@@ -65,7 +54,7 @@
             </div>
         </div>
         <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $fetat; ?> de <?php echo $futilisateur; ?> <?php echo $fperiode; ?></em></code><?php } ?>        
-        <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
+        <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" id="data">
         <thead>
 	<tr>
 			<th><?php echo 'Agent'; ?></th>
@@ -92,7 +81,6 @@
                 <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;"><?php echo $group['Utilisateur']['NOM']." ".$group['Utilisateur']['PRENOM']; ?></td>
                 <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: center;"><?php echo $group['Activitesreelle']['DATE']; ?></td>
         <?php endif; ?>
-        <?php $i = 0; ?>
         <?php foreach ($activitesreelles as $activitesreelle): ?>
             <?php if($activitesreelle['Activitesreelle']['utilisateur_id']==$group['Activitesreelle']['utilisateur_id'] && dateIsEqual($group['Activitesreelle']['DATE'], $activitesreelle['Activitesreelle']['DATE'])): ?>
                 <?php if ($row==1): ?>
@@ -104,26 +92,26 @@
                 <!--calculer les jours fériés pour mettre le style week sur les jours fériés //-->
                 <?php $date = new DateTime(CUSDate($group['Activitesreelle']['DATE'])); ?> 
                 <?php $classLu = isFerie($date) ? 'class="ferie"' : ''; ?>
-                <td style="text-align: center;" <?php echo $classLu; ?>><?php echo $activitesreelle['Activitesreelle']['LU']!=0 ? $activitesreelle['Activitesreelle']['LU'] : ""; ?></td> 
+                <td style="text-align: center;" <?php echo $classLu; ?>><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['LU']>0 && $activitesreelle['Activitesreelle']['LU']<1) ? $activitesreelle['Activitesreelle']['LU_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['LU']!=0 ? $activitesreelle['Activitesreelle']['LU'] : ""; ?></span></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classMA = isFerie($date) ? 'class="ferie"' : ''; ?>                
-                <td style="text-align: center;" <?php echo $classMA; ?>><?php echo $activitesreelle['Activitesreelle']['MA']!=0 ? $activitesreelle['Activitesreelle']['MA'] : ""; ?></td> 
+                <td style="text-align: center;" <?php echo $classMA; ?>><sapn <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['MA']>0 && $activitesreelle['Activitesreelle']['MA']<1) ? $activitesreelle['Activitesreelle']['MA_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['MA']!=0 ? $activitesreelle['Activitesreelle']['MA'] : ""; ?></span></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classME = isFerie($date) ? 'class="ferie"' : ''; ?>                
-                <td style="text-align: center;" <?php echo $classME; ?>><?php echo $activitesreelle['Activitesreelle']['ME']!=0 ? $activitesreelle['Activitesreelle']['ME'] : ""; ?></td> 
+                <td style="text-align: center;" <?php echo $classME; ?>><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['ME']>0 && $activitesreelle['Activitesreelle']['ME']<1) ? $activitesreelle['Activitesreelle']['ME_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['ME']!=0 ? $activitesreelle['Activitesreelle']['ME'] : ""; ?></span></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classJE = isFerie($date) ? 'class="ferie"' : ''; ?>                
-                <td style="text-align: center;" <?php echo $classJE; ?>><?php echo $activitesreelle['Activitesreelle']['JE']!=0 ? $activitesreelle['Activitesreelle']['JE'] : ""; ?></td> 
+                <td style="text-align: center;" <?php echo $classJE; ?>><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['JE']>0 && $activitesreelle['Activitesreelle']['JE']<1) ? $activitesreelle['Activitesreelle']['JE_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['JE']!=0 ? $activitesreelle['Activitesreelle']['JE'] : ""; ?></span></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classVE = isFerie($date) ? 'class="ferie"' : ''; ?>                
-                <td style="text-align: center;" <?php echo $classVE; ?>><?php echo $activitesreelle['Activitesreelle']['VE']!=0 ? $activitesreelle['Activitesreelle']['VE'] : ""; ?></td> 
+                <td style="text-align: center;" <?php echo $classVE; ?>><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['VE']>0 && $activitesreelle['Activitesreelle']['VE']<1) ? $activitesreelle['Activitesreelle']['VE_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['VE']!=0 ? $activitesreelle['Activitesreelle']['VE'] : ""; ?></span></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classSA = isFerie($date) ? ' ferie' : ''; ?> 
-                <td style="text-align: center;" class="week <?php echo $classSA; ?>"><?php echo $activitesreelle['Activitesreelle']['SA']!=0 ? $activitesreelle['Activitesreelle']['SA'] : ""; ?></td> 
+                <td style="text-align: center;" class="week <?php echo $classSA; ?>"><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['SA']>0 && $activitesreelle['Activitesreelle']['SA']<1) ? $activitesreelle['Activitesreelle']['SA_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['SA']!=0 ? $activitesreelle['Activitesreelle']['SA'] : ""; ?></span></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classDI = isFerie($date) ? ' ferie' : ''; ?>
-                <td style="text-align: center;" class="week <?php echo $classDI; ?>"><?php echo $activitesreelle['Activitesreelle']['DI']!=0 ? $activitesreelle['Activitesreelle']['DI'] : ""; ?></td> 
-                <td style="text-align: center;"><?php echo $activitesreelle['Activitesreelle']['TOTAL']; ?></td> 
+                <td style="text-align: center;" class="week <?php echo $classDI; ?>"><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['DI']>0 && $activitesreelle['Activitesreelle']['DI']<1) ? $activitesreelle['Activitesreelle']['DI_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['DI']!=0 ? $activitesreelle['Activitesreelle']['DI'] : ""; ?></span></td> 
+                <td style="text-align: center;" class="sstotal"><?php echo $activitesreelle['Activitesreelle']['TOTAL']; ?></td> 
                 <td style="text-align: center;">
                     <?php echo isset($activitesreelle['Activitesreelle']['action_id']) ? '<i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Objet: </contenttitle>'.h($activitesreelle['Action']['OBJET']).'<br/><contenttitle>Avancement: </contenttitle>'.h($activitesreelle['Action']['AVANCEMENT']).'%<br/><contenttitle>Crée le: </contenttitle>'.h($activitesreelle['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($activitesreelle['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>' : "<i class='icon-blank'></i>"; ?>
                     <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>
@@ -133,12 +121,31 @@
                     <?php echo $this->Html->link('<i class=" icon-tags"></i>', array('action' => 'autoduplicate', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>                    
                 </td>                 
             </tr>
-        <?php $i++; ?>
         <?php endif; ?>
         <?php endforeach; ?>
         <?php $r++; ?>
         <?php endforeach; ?> 
         <?php endif; ?> 
         </tbody>
+        <tfooter>
+	<tr>
+            <td colspan="10" class="footer" style="text-align:right;">Total :</td>
+            <td class="footer" id="totalactivites" style="text-align:right;"></td>
+            <td class="footer" width="90px" style="text-align:left;">jours</td>
+	</tr>            
+        </tfooter>
 	</table>        
 </div>
+<script>
+    function sumOfColumns() {
+        var tot = 0;
+        $(".sstotal").each(function() {
+          tot += parseFloat($(this).html());
+        });
+        return tot;
+     }
+     
+     $(document).ready(function () {
+         $("#totalactivites").html(sumOfColumns());
+     });
+</script>

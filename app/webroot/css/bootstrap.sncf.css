@@ -298,6 +298,7 @@ contenttitle,
 .horizontal {clear: both; display: inline !important;}
 .horizontal:after {content: " : " !important;}
 table thead th {background-color: #EAEAEA !important; text-align: center !important;}
+.footer {background-color: #EAEAEA !important; height: 14px; font-weight: bold;}
 .header {background-color: #f9f9f9 !important;}
 div ol li {list-style-type: none; padding: 0; margin-left: -25px;}
 .align-right {
@@ -382,9 +383,9 @@ a, a:focus {
     background-color: #AEA79F !important;
     color: #F7F7F7;
 }
-.indispo:after{
+/*.indispo:after{
     content: 'NP';
-}
+}*/
 .absday {
     width: 10px !important;
 }
