@@ -7,7 +7,7 @@
             $year = isset($this->data['Activitesreelle']['month']) ? date('Y',strtotime($this->data['Activitesreelle']['month'])) : date('Y');
             $strMonth = array('01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre');
             ?>
-            <?php echo $this->Form->create('Activitesreelle',array('action' => 'absences','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+            <?php echo $this->Form->create('Activitesreelle',array('action' => 'absences','style'=>'display:none;','inputDefaults' => array('label'=>false,'div' => false))); ?>
                 <tr>
                     <th colspan="<?php echo ($maxday*2)+1; ?>" class="text-center">
                         <?php echo $this->Form->button('<i class="icon-arrow-left""></i>', array('id'=>"previousMonth",'type'=>'button','class' => 'btn','style'=>'margin-right:75px;')); ?>
@@ -51,7 +51,7 @@
         <tbody>
             <?php foreach($utilisateurs as $utilisateur) : ?>
             <tr>
-                <td class="nopadding nomargin nowrap"><div rel="tooltip" data-title="<?php echo $utilisateur['Utilisateur']['NOMLONG']." (".$utilisateur['Utilisateur']['username'].")"; ?>"><?php echo substr($utilisateur['Utilisateur']['PRENOM'],0,1).". ".substr($utilisateur['Utilisateur']['NOM'],0,8).'...'; ?></div></td>
+                <td class="nopadding nomargin nowrap"><div rel="tooltip" data-title="<?php echo $utilisateur['Utilisateur']['NOMLONG']." (".$utilisateur['Utilisateur']['username'].")"; ?>"><?php echo substr($utilisateur['Utilisateur']['PRENOM'],0,1).". ".substr($utilisateur['Utilisateur']['NOM'],0,7).'...'; ?></div></td>
             <?php
             for ($i=1; $i<$maxday; $i++):
                 $absences = listIndispo($indisponibilites);                
