@@ -130,8 +130,8 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
     <?php //$url = $this->Session->read('history'); debug($this->params->url); 
     //debug(env('SERVER_ADDR')); ?>
     <!--<div id="debugguer" style="background-color: #cccccc;">SQL Debug :
-        <?php //echo $this->element('sql_dump'); ?>
-    </div>  //--> 
+        <?php echo $this->element('sql_dump'); ?>
+    </div>//-->
 
 </body>
 </html>

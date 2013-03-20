@@ -306,6 +306,7 @@ class ActivitesreellesController extends AppController {
             $mois = date('m',strtotime($date));
             $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
             $datedebut = $annee."-".$mois."-01";
+            $datedebut = startWeek(new DateTime($datedebut));            
             $datefin = $annee."-".$mois."-".$dernierjour;
             $indisponibilites = $this->Activitesreelle->find('all',array('conditions'=>array('Activite.projet_id'=>1,"Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'")));
             $this->set('indisponibilites',$indisponibilites);

@@ -1,34 +1,5 @@
 <?php
 $this->set('title_for_layout','Accueil');
-
-function listFolder($folder){
-    $result = array();
-    $dirname = $folder;
-    $urlname = '.'.$dirname;
-    $dir = @opendir($dirname); 
-    while($file = @readdir($dir)) {  
-        if($file != '.' && $file != '..'  && $file != 'Thumbs.db' && !is_dir($dirname.$file) && $file !='@eaDir') {
-             $nom = str_replace('_',' ', $file);
-             $fileList = array('nom'=>$nom,'ext'=>ext($file),'url'=>$urlname.$file);
-             array_push($result,$fileList);
-        }
-    } 
-    @closedir($dir);
-    asort($result);
-    return $result;
-}
-
-function ext($fichier)
-   {
-   // icone par defaut si l'extention n'a pas d'icone
-   $extention = "";   
-                       
-   // recupere extention sur le nom de fichier
-   $tab_fichier = explode(".",$fichier);   
-   $extention = $tab_fichier[count($tab_fichier)-1];
-   
-    return $extention;
-}  
 ?>
 <div class="alert alert-info">
     Ce site à pour objectif de suivre les activités, livrables réalisés sur le projet.<br/><br/>

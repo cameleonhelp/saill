@@ -340,7 +340,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`utilisateurs` (
   `FINMISSION` DATE NULL DEFAULT NULL ,
   `MAIL` VARCHAR(255) CHARACTER SET 'latin1' NULL DEFAULT NULL ,
   `TELEPHONE` VARCHAR(15) CHARACTER SET 'latin1' NULL DEFAULT NULL ,
-  `WORKCAPACITY` DECIMAL(1,1) NULL DEFAULT NULL ,
+  `WORKCAPACITY` INT(3) NULL DEFAULT NULL ,
   `CONGE` INT(15) NULL DEFAULT 0 ,
   `RQ` INT(15) NULL DEFAULT 0 ,
   `VT` INT(15) NULL DEFAULT 0 ,
@@ -915,7 +915,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `osact_cake230`;
-INSERT INTO `osact_cake230`.`utilisateurs` (`id`, `profil_id`, `societe_id`, `assistance_id`, `section_id`, `utilisateur_id`, `domaine_id`, `site_id`, `tjmagent_id`, `dotation_id`, `password`, `username`, `ACTIF`, `DATEDEBUTACTIF`, `NAISSANCE`, `NOM`, `PRENOM`, `COMMENTAIRE`, `FINMISSION`, `MAIL`, `TELEPHONE`, `WORKCAPACITY`, `CONGE`, `RQ`, `VT`, `HIERARCHIQUE`, `GESTIONABSENCES`, `created`, `modified`) VALUES (1, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, '6fb4f22992a0d164b77267fde5477248', '0000000A', 1, '2013-02-01', '2013-02-01', 'ADMINISTRATEUR', 'Administrateur', 'Mot de passe ADM', NULL, NULL, NULL, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`utilisateurs` (`id`, `profil_id`, `societe_id`, `assistance_id`, `section_id`, `utilisateur_id`, `domaine_id`, `site_id`, `tjmagent_id`, `dotation_id`, `password`, `username`, `ACTIF`, `DATEDEBUTACTIF`, `NAISSANCE`, `NOM`, `PRENOM`, `COMMENTAIRE`, `FINMISSION`, `MAIL`, `TELEPHONE`, `WORKCAPACITY`, `CONGE`, `RQ`, `VT`, `HIERARCHIQUE`, `GESTIONABSENCES`, `created`, `modified`) VALUES (1, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, '6fb4f22992a0d164b77267fde5477248', '0000000A', 1, '2013-02-01', '2013-02-01', 'ADMINISTRATEUR', 'Administrateur', 'Mot de passe ADM', NULL, NULL, NULL, 100, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
 
 COMMIT;
 

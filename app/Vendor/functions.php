@@ -120,5 +120,157 @@ App::uses('AppModel', 'Model');
         $interval = date_interval_create_from_date_string($num_day.' days');
         $date->sub($interval);
         return $date->format('Y-m-d');
+    }  
+
+/**
+ * listFolder
+ * 
+ * @param type $folder
+ * @return array
+ */    
+    function listFolder($folder){
+        $result = array();
+        $dirname = $folder;
+        $urlname = '.'.$dirname;
+        $dir = @opendir($dirname); 
+        while($file = @readdir($dir)) {  
+            if($file != '.' && $file != '..'  && $file != 'Thumbs.db' && !is_dir($dirname.$file) && $file !='@eaDir') {
+                 $nom = str_replace('_',' ', $file);
+                 $fileList = array('nom'=>$nom,'ext'=>ext($file),'url'=>$urlname.$file);
+                 array_push($result,$fileList);
+            }
+        } 
+        @closedir($dir);
+        asort($result);
+        return $result;
+    }
+
+/**
+ * ext
+ * 
+ * @param type $fichier
+ * @return string
+ */    
+    function ext($fichier)
+       {
+       // icone par defaut si l'extention n'a pas d'icone
+       $extention = "";   
+
+       // recupere extention sur le nom de fichier
+       $tab_fichier = explode(".",$fichier);   
+       $extention = $tab_fichier[count($tab_fichier)-1];
+       return $extention;
+    } 
+    
+/**
+ * listIndispo
+ * 
+ * @param type $folder
+ * @return array
+ */    
+    function listIndispo($indispos){
+        $result = array();
+        foreach($indispos as $indispo) {  
+            $day = CUSDate($indispo['Activitesreelle']['DATE']);
+            if ($indispo['Activitesreelle']['LU'] > 0) :
+                $date = new DateTime($day);
+                $periodeLU = $indispo['Activitesreelle']['LU_TYPE'];                 
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeLU,'NB'=>$indispo['Activitesreelle']['LU']);
+                array_push($result,$newIndispo);
+            endif;
+            if ($indispo['Activitesreelle']['MA'] > 0) :
+                $date = new DateTime($day);
+                $date->add(new DateInterval('P1D'));
+                $periodeMA = $indispo['Activitesreelle']['MA_TYPE'];                
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeMA,'NB'=>$indispo['Activitesreelle']['MA']);
+                array_push($result,$newIndispo);
+            endif;
+            if ($indispo['Activitesreelle']['ME'] > 0) :
+                $date = new DateTime($day);
+                $date->add(new DateInterval('P2D'));
+                $periodeME = $indispo['Activitesreelle']['ME_TYPE'];                
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeME,'NB'=>$indispo['Activitesreelle']['ME']);
+                array_push($result,$newIndispo);
+            endif;
+            if ($indispo['Activitesreelle']['JE'] > 0) :
+                $date = new DateTime($day);
+                $date->add(new DateInterval('P3D'));
+                $periodeJE = $indispo['Activitesreelle']['JE_TYPE'];                             
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeJE,'NB'=>$indispo['Activitesreelle']['JE']);
+                array_push($result,$newIndispo);
+            endif;
+            if ($indispo['Activitesreelle']['VE'] > 0) :
+                $date = new DateTime($day);
+                $date->add(new DateInterval('P4D'));
+                $periodeVE = $indispo['Activitesreelle']['VE_TYPE'];                
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeVE,'NB'=>$indispo['Activitesreelle']['VE']);
+                array_push($result,$newIndispo);
+            endif;            
+            if ($indispo['Activitesreelle']['SA'] > 0) :
+                $date = new DateTime($day);
+                $date->add(new DateInterval('P5D'));
+                $periodeSA = $indispo['Activitesreelle']['SA_TYPE'];                          
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeSA,'NB'=>$indispo['Activitesreelle']['SA']);
+                array_push($result,$newIndispo);
+            endif;
+            if ($indispo['Activitesreelle']['DI'] > 0) :
+                $date = new DateTime($day);
+                $date->add(new DateInterval('P6D'));
+                $periodeDI = $indispo['Activitesreelle']['DI_TYPE'];                
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeDI,'NB'=>$indispo['Activitesreelle']['DI']);
+                array_push($result,$newIndispo);
+            endif;            
+        } 
+        //asort($result);
+        return $result;
     }    
+    
+/**
+ * is_exist_in_array
+ * 
+ * @param type $value
+ * @param type $array
+ * @return boolean
+ */    
+    function is_date_utilisateur_in_array($date,$utilisateur_id,$arrays){
+        $result = false;
+        foreach ($arrays as $array):
+            if ($utilisateur_id==$array['utilisateur_id']):
+                if ($date==$array['DATE']):
+                    $result = true;
+                    break;
+                else:
+                    $result = false;
+                endif;
+            else :
+                $result = false;
+            endif;
+        endforeach;
+        return $result;
+    }
+    
+/**
+ * nb_periode
+ * 
+ * @param type $date
+ * @param type $utilisateur
+ * @param type $array
+ * @return array
+ */    
+    function nb_periode($date,$utilisateur_id,$arrays){
+        $result = array('nb'=>'','periode'=>'');
+        foreach ($arrays as $array):
+            if ($utilisateur_id==$array['utilisateur_id']):
+                if ($date==$array['DATE']):
+                    $result = array('nb'=>$array['NB'],'periode'=>$array['PERIODE']);
+                    break;
+                else:
+                    $result = array('nb'=>'','periode'=>'');
+                endif;
+            else :
+                $result = array('nb'=>'','periode'=>'');
+            endif;
+        endforeach;
+        return $result;
+    }
 ?>

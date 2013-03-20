@@ -63,16 +63,6 @@ class Utilisateur extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'NAISSANCE' => array(
-			/*'date' => array(
-				'rule' => array('date'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),*/
-		),
 		'NOM' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),

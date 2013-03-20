@@ -52,39 +52,35 @@
             <?php foreach($utilisateurs as $utilisateur) : ?>
             <tr>
                 <td class="nopadding nomargin nowrap"><div rel="tooltip" data-title="<?php echo $utilisateur['Utilisateur']['NOMLONG']." (".$utilisateur['Utilisateur']['username'].")"; ?>"><?php echo substr($utilisateur['Utilisateur']['PRENOM'],0,1).". ".substr($utilisateur['Utilisateur']['NOM'],0,8).'...'; ?></div></td>
-            <?php $i=1; 
-            /*while ($i<$maxday) :*/
-                foreach($indisponibilites as $indisponibilite) :                  
+            <?php
+            for ($i=1; $i<$maxday; $i++):
+                $absences = listIndispo($indisponibilites);                
                 $day = $i<10 ? '0'.$i : $i;
                 $date=new DateTime($year.'-'.$month.'-'.$day);
-                //calcul du premier jour de la semaine
-                $date = startWeek($date);
+                $weekend = $date->format('N');
+                $classweek = $weekend >5 ?  ' week': '';              
                 $class = "class='absday nopadding nomargin nowrap";
-                if (dateIsEqual($indisponibilite['Activitesreelle']['DATE'], CFRDate($date))) :
-                    $date = new DateTime($date);
+                if(is_date_utilisateur_in_array($date->format('Y-m-d'),$utilisateur['Utilisateur']['id'],$absences)):
+                    $result = nb_periode($date->format('Y-m-d'),$utilisateur['Utilisateur']['id'],$absences);
+                    if (substr($result['nb'],2,1)=='0') {
+                        $classIndispo1 = ' indispo';
+                        $classIndispo2 = ' indispo';
+                    }
+                    if (substr($result['nb'],2,1)=='5' && $result['periode']) {
+                        $classIndispo1 = ' indispo';
+                        $classIndispo2 = '';
+                    }
+                    if (substr($result['nb'],2,1)=='5' && !($result['periode'])) {
+                        $classIndispo1 = '';
+                        $classIndispo2 = ' indispo';
+                    }            
                     $classferie = isFerie($date) ? ' ferie' : '';
-                    //recherche si indispo ".$date->format('Y-m-d')."
-                    echo "<td ".$class.$classferie."'></td><td ".$class.$classferie."'></td>";
-                    echo "<td ".$class.$classferie."'>&nbsp;</td><td ".$class.$classferie."'>&nbsp;</td>";
-                    echo "<td ".$class.$classferie."'>&nbsp;</td><td ".$class.$classferie."'>&nbsp;</td>";
-                    echo "<td ".$class.$classferie."'>&nbsp;</td><td ".$class.$classferie."'>&nbsp;</td>";
-                    echo "<td ".$class.$classferie."'>&nbsp;</td><td ".$class.$classferie."'>&nbsp;</td>";
-                    echo "<td ".$class.$classferie." week'>&nbsp;</td><td ".$class.$classferie." week'>&nbsp;</td>";
-                    echo "<td ".$class.$classferie." week'>&nbsp;</td><td ".$class.$classferie." week'>&nbsp;</td>";
+                    echo "<td ".$class.$classweek.$classferie.$classIndispo1."'></td><td ".$class.$classweek.$classferie.$classIndispo2."'></td>";
                 else:
-                    $date = new DateTime($date);
                     $classferie = isFerie($date) ? ' ferie' : '';
-                    echo "<td ".$class.$classferie."'></td><td ".$class.$classferie."'></td>";
-                    echo "<td ".$class.$classferie."'>&nbsp;</td><td ".$class.$classferie."'>&nbsp;</td>";
-                    echo "<td ".$class.$classferie."'>&nbsp;</td><td ".$class.$classferie."'>&nbsp;</td>";
-                    echo "<td ".$class.$classferie."'>&nbsp;</td><td ".$class.$classferie."'>&nbsp;</td>";
-                    echo "<td ".$class.$classferie."'>&nbsp;</td><td ".$class.$classferie."'>&nbsp;</td>";
-                    echo "<td ".$class.$classferie." week'>&nbsp;</td><td ".$class.$classferie." week'>&nbsp;</td>";
-                    echo "<td ".$class.$classferie." week'>&nbsp;</td><td ".$class.$classferie." week'>&nbsp;</td>";                
+                    echo "<td ".$class.$classweek.$classferie."'></td><td ".$class.$classweek.$classferie."'></td>";               
                 endif; 
-                endforeach;
-                /*$i+=28; 
-            endwhile; */
+            endfor;
             ?>
             </tr>
             <?php 
@@ -113,4 +109,3 @@
          });          
      });
 </script>
-<?php debug($indisponibilites); ?>
