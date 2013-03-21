@@ -7,6 +7,10 @@ App::uses('AppController', 'Controller');
  */
 class MessagesController extends AppController {
 
+    public function beforeFilter() {
+        parent::beforeFilter();
+        $this->Auth->allow();
+    }  
     
     public $paginate = array(
         'limit' => 15,

@@ -1,3 +1,4 @@
+<?php $user = $this->Session->read('User'); ?>
 <div class="dropdown clearfix">
   <?php  $controller = $this->params['controller'] != 'pages' ? strtolower($this->params['controller'].'_'.$this->params['action']) : strtolower($this->params['controller'].'_'.$this->params['pass'][0]);?>  
   <!-- classes pour rendre le menu actif si en se situe sur le controller //-->  
@@ -42,11 +43,14 @@
   <?php $classContactUs = in_array($controller,array('contacts_add')) ? 'active' : ''; ?>               
   <?php $classAddFavorites = 'notactive'; ?>  
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: static; margin-bottom: 15px; margin-left: -20px; margin-top: 15px;">
-    <li class="dropdown-menu-nolink sstitre text-center">6404901Z</li>
-    <li class="<?php echo $classProfil; ?> disabled"><?php echo $this->Html->link('<i class="glyphicon_user"></i> Mon profil',array('controller'=>'utilisateurs','action'=>'profil'),array('escape' => false)); ?></li>
-    <li class="<?php echo $classLogout; ?> disabled"><?php echo $this->Html->link('<i class="glyphicon_power"></i> Se déconnecter',array('controller'=>'utilisateurs','action'=>'logout'),array('escape' => false)); ?></li>           
+    <li class="dropdown-menu-nolink sstitre text-center"><?php echo $user['username']; ?></li>
+    <?php if ($user['profil_id']!='2') : ?>
+    <li class="<?php echo $classProfil; ?>"><?php echo $this->Html->link('<i class="glyphicon_user"></i> Mon profil',array('controller'=>'utilisateurs','action'=>'profil',$user['id']),array('escape' => false)); ?></li>
+    <?php endif; ?>
+    <li class="<?php echo $classLogout; ?>"><?php echo $this->Html->link('<i class="glyphicon_power"></i> Se déconnecter',array('controller'=>'utilisateurs','action'=>'logout'),array('escape' => false)); ?></li>           
     <li class="divider"></li>
     <li class="<?php echo $classHome; ?>"><?php echo $this->Html->link('<i class="glyphicon_home"></i> Accueil',array('controller'=>'pages','action'=>'home'),array('escape' => false)); ?></li>                
+    <?php if ($user['profil_id']!='2') : ?>
     <li class="divider"></li>                
     <li class="<?php echo $classAction; ?>"><?php echo $this->Html->link('<i class="glyphicon_stopwatch"></i> Actions',array('controller'=>'actions','action'=>'index'),array('escape' => false)); ?></li>
     <li class="<?php echo $classActvitereelle; ?>"><?php echo $this->Html->link('<i class="icon-tasks"></i> Feuille de temps',array('controller'=>'activitesreelles','action'=>'index'),array('escape' => false)); ?></li>    
@@ -103,6 +107,7 @@
             <li class="<?php echo $classCRAPeriode; ?>"><?php echo $this->Html->link('Activités - Périodique',array('controller'=>'pages','action'=>'craperiode'),array('escape' => false)); ?></li>
         </ul>
     </li>
+    <?php endif; ?>
     <li class="divider"></li>
     <li class="<?php echo $classContactUs; ?>"><?php echo $this->Html->link('<i class="glyphicon_envelope"></i> Nous contacter',array('controller'=>'contacts','action'=>'add'),array('escape' => false)); ?></li>
     <li class="<?php echo $classAddFavorites; ?> jQueryBookmark"><?php echo $this->Html->link('<i class="glyphicon_star"></i> Ajouter aux favoris',array('action'=>"#"),array('escape' => false)); ?></li>

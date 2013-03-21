@@ -1,5 +1,5 @@
 <?php
-App::uses('AppModel', 'Model');
+App::uses('AppModel', 'Model','AuthComponent', 'Controller/Component');
 /**
  * Utilisateur Model
  *
@@ -422,7 +422,7 @@ class Utilisateur extends AppModel {
  */
         public function beforeSave() {
             if (!empty($this->data['Utilisateur']['password'])) {
-                $this->data['Utilisateur']['password'] = md5($this->data['Utilisateur']['password']); 
+                $this->data['Utilisateur']['password'] = Security::hash($this->data['Utilisateur']['password'],'md5',false); 
             }
             if (!empty($this->data['Utilisateur']['NAISSANCE'])) {
                 $this->data['Utilisateur']['NAISSANCE'] = $this->dateFormatBeforeSave($this->data['Utilisateur']['NAISSANCE']);

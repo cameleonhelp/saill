@@ -82,4 +82,19 @@ class AppController extends Controller {
         parent::beforeRender();
     }
     
+    public $components = array(
+        'Session',
+        'Auth' => array(
+            'logoutRedirect' => array('controller' => 'Utilisateurs','action' => 'login'),
+            'loginRedirect' => array('controller' => 'Pages','action' => 'display','home'),
+            'loginAction' => array('controller' => 'Utilisateurs','action' => 'login'),
+            'authError' => 'Cette action n\'est pas autorisé pour votre profil ?',
+            'authenticate' => array('Form' => array('userModel' => 'Utilisateurs')
+            )
+        )
+    );
+
+    public function beforeFilter() {
+        $this->Auth->allow();
+    }    
 }

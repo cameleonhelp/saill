@@ -7,12 +7,17 @@ App::uses('AppController', 'Controller');
  */
 class UtilisateursController extends AppController {
  
+    var $name = 'Utilisateurs';
     public $paginate = array(
         'limit' => 15,
         'order' => array('Utilisateur.NOM' => 'asc','Utilisateur.PRENOM' => 'asc'),
         'conditions'=>array('Utilisateur.id > '=> 1),
         );
-    
+
+    public function beforeFilter() {
+        parent::beforeFilter();
+        $this->Auth->allow('login','logout');
+    }    
 /**
  * index method
  *
@@ -211,30 +216,107 @@ class UtilisateursController extends AppController {
  * @param string $id
  * @return void
  */
-	public function profil() {
-                $id = $this->Utilisateur->id;
-                $this->set('title_for_layout',"Mon profils");
-                if (isset($id)){
-                    if (!$this->Utilisateur->exists($id)) {
-                            throw new NotFoundException(__('Utilisateur incorrect'));
+	public function profil($id=null) {
+            if (!$this->Utilisateur->exists($id)) {
+                    throw new NotFoundException(__('Utilisateur incorrect'),'default',array('class'=>'alert alert-error'));
+            }
+            if ($this->request->is('post') || $this->request->is('put')) {
+                $this->Utilisateur->id = $id;
+                if ($this->Utilisateur->save($this->request->data)) {
+                    $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
+                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur mis à jour";
+                    $this->Utilisateur->Historyutilisateur->save($history);                            
+                            $this->Session->setFlash(__('Utilisateur sauvegardé'),'default',array('class'=>'alert alert-success'));
+                            $this->redirect($this->goToPostion(1));
+                    } else {
+                            $this->Session->setFlash(__('Utilisateur incorrect, veuillez corriger l\'utilisateur'),'default',array('class'=>'alert alert-error'));
                     }
+            } else {
+                    $societe = $this->Utilisateur->Societe->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
+                    $this->set('societe',$societe);
+                    $section = $this->Utilisateur->Section->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
+                    $this->set('section',$section);
+                    $hierarchique = $this->Utilisateur->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'order'=>array('NOMLONG'=>'asc'),'conditions'=>array('HIERARCHIQUE'=>1)));
+                    $this->set('hierarchique',$hierarchique);
+                    $profil = $this->Utilisateur->Profil->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
+                    $this->set('profil',$profil);
+                    $assistance = $this->Utilisateur->Assistance->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
+                    $this->set('assistance',$assistance);                
+                    $site = $this->Utilisateur->Site->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
+                    $this->set('site',$site);
+                    $domaine = $this->Utilisateur->Domaine->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
+                    $this->set('domaine',$domaine);
+                    $tjmagent = $this->Utilisateur->Tjmagent->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
+                    $this->set('tjmagent',$tjmagent);  
+                    $outil = $this->Utilisateur->Outil->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
+                    $this->set('outil',$outil);  
+                    $listediffusion = $this->Utilisateur->Listediffusion->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
+                    $this->set('listediffusion',$listediffusion);
+                    $dossierpartage = $this->Utilisateur->Dossierpartage->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
+                    $this->set('dossierpartage',$dossierpartage);
+                    $activite = $this->Utilisateur->Activite->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
+                    $this->set('activite',$activite); 
+                    $workcapacite = Configure::read('workCapacity');
+                    $this->set('workcapacite',$workcapacite);
+                    $affectations = $this->Utilisateur->Affectation->find('all',array('fields'=>array('id','activite_id','Activite.NOM','Affectation.REPARTITION'),'conditions'=>array('Affectation.utilisateur_id'=>$id)));
+                    $this->set('affectations',$affectations);
+                    $dotations = $this->Utilisateur->Dotation->find('all',array('conditions'=>array('Dotation.utilisateur_id'=>$id)));
+                    $this->set('dotations',$dotations);
+                    $utiliseoutils = $this->Utilisateur->Utiliseoutil->find('all',array('fields'=>array('id','outil_id','Outil.NOM','listediffusion_id','Listediffusion.NOM','dossierpartage_id','Dossierpartage.NOM','Utiliseoutil.STATUT'),'conditions'=>array('Utiliseoutil.utilisateur_id'=>$id)));
+                    $this->set('utiliseoutils',$utiliseoutils);
                     $options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));
-                    $this->set('utilisateur', $this->Utilisateur->find('first', $options));    
+                    $this->request->data = $this->Utilisateur->find('first', $options);
+                    $this->set('utilisateur', $this->Utilisateur->find('first', $options));
+                    $options = array('conditions' => array('Historyutilisateur.utilisateur_id' => $id),'order'=>array('Historyutilisateur.created'=> 'desc','Historyutilisateur.HISTORIQUE'=>'desc'));
+                    $historyutilisateurs = $this->Utilisateur->Historyutilisateur->find('all',$options);
+                    $this->set('historyutilisateurs',$historyutilisateurs);
+                    $options = array('conditions' => array('Utiliseoutil.utilisateur_id' => $id));
+                    $utiliseoutils = $this->Utilisateur->Utiliseoutil->find('all',$options);
+                    $this->set('utiliseoutils',$utiliseoutils);
+                    $compteurs = $this->Utilisateur->Utiliseoutil->query("SELECT count(outil_id) AS nboutil, count(listediffusion_id) AS nbliste, count(dossierpartage_id) AS nbpartage FROM utiliseoutils WHERE utilisateur_id =".$id);
+                    $this->set('compteurs',$compteurs);
+                    $nbDotation = $this->Utilisateur->Dotation->query("SELECT count(id) AS nbDotation FROM dotations WHERE utilisateur_id =".$id);
+                    $this->set('nbDotation',$nbDotation);   
+                    $nbAffectation = $this->Utilisateur->Affectation->query("SELECT count(id) AS nbAffectation FROM affectations WHERE utilisateur_id =".$id);
+                    $this->set('nbAffectation',$nbAffectation);   
+            }  
+        }
+   
+/**
+ * Login method
+ * 
+ * @param none
+ * @return void
+ */        
+        public function login() {
+            $this->set('title_for_layout',"Connexion");
+            if ($this->request->is('post')) {
+                $password=Security::hash($this->Auth->request->data['Utilisateur']['password'],'md5',false);
+                $username = $this->Auth->request->data['Utilisateur']['username'];
+                if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username))))>0){
+                    if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username,'Utilisateur.password'=>$password))))>0) {
+                        $utilisateur = $this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username,'Utilisateur.password'=>$password)));
+                        $this->Session->write('User',$utilisateur['Utilisateur']);
+                        $this->redirect($this->Auth->redirect());
+                    } else {
+                        $this->Session->setFlash(__('Mot de passe invalide, réessayer'),'default',array('class'=>'alert alert-error'));
+                    }                    
                 } else {
-                    throw new NotFoundException(__('Utilisateur non renseigné'));
+                    $this->Session->setFlash(__('Login inexistant ou compte invalide, contacter l\'administrateur'),'default',array('class'=>'alert alert-error'));
                 }
-        }  
-        
+            }
+        }
+      
 /**
  * logout method
  *
- * @throws NotFoundException
- * @throws MethodNotAllowedException
  * @param none
  * @return void
  */
 	public function logout() {
-            $this->set('title_for_layout',"Déconnexion");
+            $this->set('title_for_layout',"Connexion");
+            $this->Session->delete('User');
+            $this->redirect($this->Auth->logout());
         }  
         
 /**
