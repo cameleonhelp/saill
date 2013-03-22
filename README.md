@@ -3,15 +3,7 @@ OSACT
 
 OSACT est un site pour suivre l'activité d'une équipe de développeurs, ainsi que le suivi logistique du matériel mis à disposition.
 
-**Nouvelle version car modification de la conception pour les actions**
-
-Maintenant une action et gérée à part. Le calcul de l'activité réelle et la facturation sont elles aussi distinctes pour une facilité de calcul et de restitution ensuite.
-
-Lorsque l'on enregistre une action une activité réelle est automatiquement enregistrée si la somme de la charge pour cette activité, de cet agent et la date est < 1
-
-Pour être certain en fin de mois que la saisie est correcte l'agent pourra via un tableau compléter le manque de saisie.
-
-Un administrateur pourra quand a lui saisir la facturation dans un autre tableau qui sera affiché en parallèle de la saisie réelle de l'agent. Ce tableau sera pré-rempli à partir du plan de charge.
+**Nouvelle version car modification de la conception pour les actions pour un suivi de l'activité réelle et de la facturation séparé**
 
 OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench](http://www.mysql.fr/products/workbench/)
 
@@ -25,19 +17,11 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench](http://www.mysql.f
 
 * [Datepicker pour BootStrap] (https://github.com/vitalets/bootstrap-datepicker) - Pour changer du datepicker de JQuery-UI
 
-* [ContextMenu pour BootStrap] (https://github.com/nikolka/bootstrap-contextmenu) - Pour le moment pas encore implémenté
-
-* [Editable pour BootStrap] (http://vitalets.github.com/bootstrap-editable/) - Testé pour utilisation dans une table
-
 * [Select pour BootStrap] (http://caseyjhol.github.com/bootstrap-select/) - Pour modifier l'aspect des select
 
 ## A venir l'utilisation de :
- 
-* [Authorize] (https://github.com/ceeram/Authorize) - Prévois de l'utiliser pour savoir gérer les profils
 
-* [CakePDF] (https://github.com/ceeram/CakePdf) - Pour exporter au format PDF je cherche la même chose pour Excel
-
-* [Authentificate] (https://github.com/ceeram/Authenticate) - Prévois de l'utiliser pour s'authentifier
+* [CakePDF] (https://github.com/ceeram/CakePdf) - Pour exporter au format PDF
 
 * Graphiques : 
 
