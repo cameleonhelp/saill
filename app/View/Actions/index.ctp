@@ -111,8 +111,6 @@ function styleBarre($avancement){
                          <?php endforeach; ?>
                      </ul>
                  </li>                
-                <li class="divider-vertical"></li>
-                <li><a href="#"><i class="ico-xls"></i></a></li>
                 </ul> 
                 <?php echo $this->Form->create("Action",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>

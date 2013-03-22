@@ -14,27 +14,33 @@
 </STYLE>
 <table>
 	<tr>
-		<td><b>Export To Excel Sample<b></td>
+		<td><b>Export des achats depuis le site OSACT<b></td>
 	</tr>
 	<tr>
 		<td><b>Date:</b></td>
-		<td><?php echo date("F j, Y, g:i a"); ?></td>
+		<td><?php echo date("d/m/Y H:i:s"); ?></td>
 	</tr>
 	<tr>
-		<td><b>Number of Rows:</b></td>
+		<td><b>Nombre de lignes:</b></td>
 		<td style="text-align:left"><?php echo count($rows);?></td>
 	</tr>
 	<tr>
 		<td></td>
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Column 1</td>
-			<td class="tableTd">Column 2</td>
+			<td class="tableTd">Activité</td>
+			<td class="tableTd">Achats</td>
+                        <td class="tableTd">Date d'achat</td>
+                        <td class="tableTd">Montant en euros</td>
+                        <td class="tableTd">Commentaire</td>
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
-			echo '<td class="tableTdContent">'.$row['Myview']['column1'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Myview']['column2'].'</td>';
+			echo '<td class="tableTdContent">'.$row['Activite']['NOM'].'</td>';
+			echo '<td class="tableTdContent">'.$row['Achat']['LIBELLEACHAT'].'</td>';
+                        echo '<td class="tableTdContent">'.$row['Achat']['DATE'].'</td>';
+                        echo '<td class="tableTdContent">'.$row['Achat']['MONTANT'].'</td>';
+                        echo '<td class="tableTdContent">'.$row['Achat']['DESCRIPTION'].'</td>';
 			echo '</tr>';
 			endforeach;
 		?>

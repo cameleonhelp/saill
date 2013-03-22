@@ -16,9 +16,7 @@
                             <li><?php echo $this->Html->link($profil['Profil']['NOM'], array('action' => 'index',$profil['Profil']['NOM'])); ?></li>
                          <?php endforeach; ?>
                       </ul>
-                 </li>   
-                <li class="divider-vertical"></li>
-                <li><a href="#"><i class="ico-xls"></i></a></li>                
+                 </li>                
                 </ul> 
                 <?php echo $this->Form->create("Autorisation",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>

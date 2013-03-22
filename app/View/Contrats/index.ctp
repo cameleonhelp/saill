@@ -16,8 +16,6 @@
                          <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif')); ?></li>
                      </ul>
                  </li>                 
-                <li class="divider-vertical"></li>
-                <li><a href="#"><i class="ico-xls"></i></a></li>
                 </ul> 
                 <?php echo $this->Form->create("Contrat",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>

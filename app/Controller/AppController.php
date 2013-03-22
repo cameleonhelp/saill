@@ -79,6 +79,7 @@ class AppController extends Controller {
                
     public function beforeRender() {
         if($this->params['action']=='index') $this->resetHistory();
+        if($this->params['action']=='export_xls') $this->resetHistory();
         parent::beforeRender();
     }
     
@@ -95,23 +96,6 @@ class AppController extends Controller {
     );
 
     public function beforeFilter() {
-        $this->Cookie->key = 'qSI232qs*&sXOw!adre@34SAv!@*(XSL#$%)asGb$@11~_+!@#HKis~#^';
-        $this->Cookie->httpOnly = true;
-
-        if (!$this->Auth->loggedIn() && $this->Cookie->read('remember_me_cookie')) {
-            $cookie = $this->Cookie->read('remember_me_cookie');
-
-            $utilisateur = $this->Utilisateur->find('first', array(
-                'conditions' => array(
-                    'Utilisateur.username' => $cookie['username'],
-                    'Utilisateur.password' => $cookie['password']
-                )
-            ));
-
-            if ($utilisateur && !$this->Auth->login($utilisateur)) {
-                $this->redirect('/utilisateur/logout'); // destroy session & cookie
-            }
-        }
         $this->Auth->allow(array('login','logout'));
     }    
     

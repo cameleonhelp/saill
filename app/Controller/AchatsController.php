@@ -32,8 +32,11 @@ class AchatsController extends AppController {
                 }  
                 $this->set('factivite',$factivite);            
 		$this->Achat->recursive = 0;
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->set('achats', $this->paginate());
-                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
+                $this->Session->delete('xls_export');
+                $this->Session->write('xls_export',$this->paginate());
+                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1')));
                 $this->set('activites',$activites); 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -152,11 +155,13 @@ class AchatsController extends AppController {
 	public function search() {
             if (isAuthorized('achats', 'index')) : 
                 $keyword=$this->params->data['Achat']['SEARCH']; 
-                $newconditions = array('OR'=>array("Activite.NOM LIKE '%".$keyword."%'","Achat.LIBELLEACHAT LIKE '%".$keyword."%'","Achat.DESCRIPTION LIKE '%".$keyword."%'"));
+                $newconditions = array('OR'=>array("Achat.DATE LIKE '%".$keyword."%'","Activite.NOM LIKE '%".$keyword."%'","Achat.LIBELLEACHAT LIKE '%".$keyword."%'","Achat.DESCRIPTION LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;
                 $this->Achat->recursive = 0;
                 $this->set('achats', $this->paginate());
+                $this->Session->delete('xls_export');
+                $this->Session->write('xls_export',$this->paginate());                
                 $activites = $this->Achat->Activite->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
                 $this->set('activites',$activites);  
                 $this->render('index');
@@ -166,4 +171,13 @@ class AchatsController extends AppController {
             endif;                  
         }    
        
+/**
+ * export_xls
+ * 
+ */       
+	function export_xls() {
+		$data = $this->Session->read('xls_export');
+		$this->set('rows',$data);
+		$this->render('export_xls','export_xls');
+	}        
 }

@@ -5,9 +5,7 @@
                 <ul class="nav">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('assistances', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
-                <li class="divider-vertical"></li>
                 <?php endif; ?>
-                <li><a href="#"><i class="ico-xls"></i></a></li>
                 </ul> 
                 <?php echo $this->Form->create("Assistance",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
