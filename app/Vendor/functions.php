@@ -1,5 +1,5 @@
 <?php
-App::uses('AppModel', 'Model');
+App::uses('AppModel', 'Model', 'Autorisation');
 /**
  * isFerie 
  * 
@@ -271,6 +271,68 @@ App::uses('AppModel', 'Model');
                 $result = array('nb'=>'','periode'=>'');
             endif;
         endforeach;
+        return $result;
+    }
+    
+/**
+ * userAuth
+ * 
+ * @param type $key
+ * @return Variable de session user
+ */    
+    function userAuth($key = null){
+        $user = SessionComponent::read('Auth.User');
+        if ($key === null) {
+            return $user;
+        } else {
+            return $user[$key];
+        }
+        
+    }
+    
+    @define(AUTHORIZED, 'Auth.Profil');
+    
+    function isAuthorized($model,$action){
+        $autorisations = SessionComponent::read(AUTHORIZED);
+        $result = false;
+        if (isset($autorisations)) :
+            foreach ($autorisations as $autorisation):
+                if($model == $autorisation['Autorisation']['MODEL']):
+                    switch (strtolower($action)):
+                        case 'index':
+                            $result = $autorisation['Autorisation']['INDEX'];
+                            break;
+                        case 'add':
+                            $result = $autorisation['Autorisation']['ADD'];
+                            break;
+                        case 'edit':
+                            $result = $autorisation['Autorisation']['EDIT'];
+                            break;
+                        case 'view':
+                            $result = $autorisation['Autorisation']['VIEW'];
+                            break;
+                        case 'delete':
+                            $result = $autorisation['Autorisation']['DELETE'];
+                            break;
+                        case 'duplicate':
+                            $result = $autorisation['Autorisation']['DUPLICATE'];
+                            break;
+                        case 'initpassword':
+                            $result = $autorisation['Autorisation']['INITPASSWORD'];
+                            break;
+                        case 'absences':
+                            $result = $autorisation['Autorisation']['ABSENCES'];
+                            break;
+                        case 'rapports':
+                            $result = $autorisation['Autorisation']['RAPPORTS'];
+                            break;
+                        default:
+                            $result = false;
+                            break;                    
+                    endswitch;
+                endif;           
+            endforeach;
+        endif;
         return $result;
     }
 ?>

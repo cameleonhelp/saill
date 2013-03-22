@@ -38,6 +38,8 @@
 			<th><?php echo $this->Paginator->sort('DELETE','Supprimer'); ?></th>
 			<th><?php echo $this->Paginator->sort('DUPLICATE','Dupliquer'); ?></th>
 			<th><?php echo $this->Paginator->sort('INITPASSWORD','Initialiser le mot de passe'); ?></th>
+                        <th><?php echo $this->Paginator->sort('ABSENCES','Calendrier des absences'); ?></th>
+                        <th><?php echo $this->Paginator->sort('RAPPORTS','Rapports'); ?></th>
 			<th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
@@ -53,6 +55,8 @@
 		<td style='text-align:center;'><?php echo h($autorisation['Autorisation']['DELETE'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
 		<td style='text-align:center;'><?php echo h($autorisation['Autorisation']['DUPLICATE'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
 		<td style='text-align:center;'><?php echo h($autorisation['Autorisation']['INITPASSWORD'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
+                <td style='text-align:center;'><?php echo h($autorisation['Autorisation']['ABSENCES'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
+                <td style='text-align:center;'><?php echo h($autorisation['Autorisation']['RAPPORTS'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
 		<td class="actions">
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Autorisation :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($autorisation['Autorisation']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($autorisation['Autorisation']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $autorisation['Autorisation']['id']),array('escape' => false)); ?>&nbsp;

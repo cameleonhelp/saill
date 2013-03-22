@@ -20,7 +20,7 @@
             <?php echo $this->Form->input('month',array('type'=>'hidden','value'=>$date)); ?>
             <?php echo $this->Form->end(); ?>
             <tr>
-            <th class="nopadding nomargin nowrap" style="vertical-align: middle;" rowspan="2">Login</th>
+            <th class="nopadding nomargin nowrap" style="vertical-align: middle;" rowspan="2">Nom</th>
             <?php 
             for($i=1;$i<$maxday;$i++) {
                 $nbday = date("N", mktime(0, 0, 0, $month, $i, $year))-1;

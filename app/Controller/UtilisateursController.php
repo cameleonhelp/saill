@@ -1,5 +1,5 @@
 <?php
-App::uses('AppController', 'Controller');
+App::uses('AppController', 'Controller','Authentification');
 /**
  * Utilisateurs Controller
  *
@@ -296,7 +296,10 @@ class UtilisateursController extends AppController {
                 if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username))))>0){
                     if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username,'Utilisateur.password'=>$password))))>0) {
                         $utilisateur = $this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username,'Utilisateur.password'=>$password)));
-                        $this->Session->write('User',$utilisateur['Utilisateur']);
+                        $autorisations = $this->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.profil_id'=>$utilisateur['Utilisateur']['profil_id'])));
+                        $this->Session->renew();
+                        $this->Session->write(AUTHORIZED,$autorisations);
+                        $this->Auth->login($utilisateur['Utilisateur']);
                         $this->redirect($this->Auth->redirect());
                     } else {
                         $this->Session->setFlash(__('Mot de passe invalide, réessayer'),'default',array('class'=>'alert alert-error'));

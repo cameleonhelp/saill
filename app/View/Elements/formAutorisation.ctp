@@ -32,6 +32,8 @@
             <th>Supprimer</th>
             <th>Dupliquer</th>
             <th>Initialiser le mot de passe</th>
+            <th>Calendrier des absences</th>
+            <th>Rapports</th>
             <th>Tout</th>
         </tr>
         </thead>
@@ -45,6 +47,8 @@
 		echo "<td style='text-align:center;'>".$this->Form->input('DELETE')."</td>";
 		echo "<td style='text-align:center;'>".$this->Form->input('DUPLICATE')."</td>";
 		echo "<td style='text-align:center;'>".$this->Form->input('INITPASSWORD')."</td>";
+                echo "<td style='text-align:center;'>".$this->Form->input('ABSENCES')."</td>";
+                echo "<td style='text-align:center;'>".$this->Form->input('RAPPORTS')."</td>";
                 echo "<td style='text-align:center;'>".$this->Form->input('ALL',array('type'=>'checkbox','id'=>"autorizeAll",'name'=>'autorizeAll','class'=>'checkall'))."</td>";
 	?>
         </tr>

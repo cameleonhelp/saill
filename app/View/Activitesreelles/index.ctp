@@ -59,7 +59,7 @@
 	<tr>
 			<th><?php echo 'Agent'; ?></th>
 			<th><?php echo 'Date'; ?></th>
-                        <th><?php echo $this->Paginator->sort('activite_id'); ?></th>
+                        <th><?php echo 'Activités'; ?></th>
 			<th width="20px"><?php echo 'Lu.'; ?></th>
 			<th width="20px"><?php echo 'Ma.'; ?></th>
 			<th width="20px"><?php echo 'Me.'; ?></th>
