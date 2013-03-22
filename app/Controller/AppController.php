@@ -83,7 +83,7 @@ class AppController extends Controller {
     }
     
     public $components = array(
-        'Session',
+        'Session','Cookie',
         'Auth' => array(
             'logoutRedirect' => array('controller' => 'Utilisateurs','action' => 'login'),
             'loginRedirect' => array('controller' => 'Pages','action' => 'display','home'),
@@ -95,6 +95,23 @@ class AppController extends Controller {
     );
 
     public function beforeFilter() {
+        $this->Cookie->key = 'qSI232qs*&sXOw!adre@34SAv!@*(XSL#$%)asGb$@11~_+!@#HKis~#^';
+        $this->Cookie->httpOnly = true;
+
+        if (!$this->Auth->loggedIn() && $this->Cookie->read('remember_me_cookie')) {
+            $cookie = $this->Cookie->read('remember_me_cookie');
+
+            $utilisateur = $this->Utilisateur->find('first', array(
+                'conditions' => array(
+                    'Utilisateur.username' => $cookie['username'],
+                    'Utilisateur.password' => $cookie['password']
+                )
+            ));
+
+            if ($utilisateur && !$this->Auth->login($utilisateur)) {
+                $this->redirect('/utilisateur/logout'); // destroy session & cookie
+            }
+        }
         $this->Auth->allow(array('login','logout'));
     }    
     

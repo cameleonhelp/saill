@@ -324,6 +324,17 @@ class UtilisateursController extends AppController {
                         $autorisations = $this->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.profil_id'=>$utilisateur['Utilisateur']['profil_id'])));
                         $this->Session->renew();
                         $this->Session->write(AUTHORIZED,$autorisations);
+                        /** cookie pour remember me **/
+                        if ($this->Auth->request->data['Utilisateur']['remember_me'] == 1) {
+                            // remove "remember me checkbox"
+                            unset($this->Auth->request->data['Utilisateur']['remember_me']);
+
+                            // hash the user's password
+                            $this->Auth->request->data['Utilisateur']['password'] = $this->Auth->password($this->request->data['Utilisateur']['password']);
+
+                            // write the cookie
+                            $this->Cookie->write('remember_me_cookie', $this->request->data['Utilisateur'], true, '2 weeks');
+                        }
                         $this->Auth->login($utilisateur['Utilisateur']);
                         $this->redirect($this->Auth->redirect());
                     } else {
@@ -331,6 +342,19 @@ class UtilisateursController extends AppController {
                     }                    
                 } else {
                     $this->Session->setFlash(__('Login inexistant ou compte invalide, contacter l\'administrateur'),'default',array('class'=>'alert alert-error'));
+                }
+            }
+            if (empty($this->data)) {
+                $cookie = $this->Cookie->read('Auth.User');
+                if (!is_null($cookie)) {
+                    if ($this->Auth->login($cookie)) {
+                        $this->Session->destroy('Message.Auth'); # clear auth message, just in case we use it.
+                        $this->redirect($this->Auth->redirect());
+                    } else {
+                        $this->Cookie->destroy('Auth.User'); # delete invalid cookie
+                        $this->Session->setFlash(__('Cookies invalide'),'default',array('class'=>'alert alert-error'));
+                        $this->redirect('login');
+                    }
                 }
             }
         }
@@ -343,6 +367,7 @@ class UtilisateursController extends AppController {
  */
 	public function logout() {
             $this->set('title_for_layout',"Connexion");
+            $this->Cookie->delete('remember_me_cookie');
             $this->Session->delete('User');
             $this->redirect($this->Auth->logout());
         }  

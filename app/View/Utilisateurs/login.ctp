@@ -14,9 +14,11 @@
         </div>
         <div class="control-group">
         <div class="controls">
-        <label class="checkbox">
-        <input type="checkbox"> Se souvenir de moi
-        </label>
+        <?php echo $this->Form->input('remember_me',array('type'=>'checkbox')); ?>&nbsp;<label class='labelAfter' for="UtilisateurRememberMe">Se souvenir de moi</label>
+        </div>
+        </div>
+        <div class="control-group">
+        <div class="controls">
             <?php echo $this->Form->button('Connexion', array('class' => 'btn btn-primary','type'=>'submit')); ?> 
         </div>
         </div>
