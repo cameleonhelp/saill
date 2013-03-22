@@ -3,8 +3,10 @@
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('assistances', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <?php endif; ?>
                 <li><a href="#"><i class="ico-xls"></i></a></li>
                 </ul> 
                 <?php echo $this->Form->create("Assistance",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -28,10 +30,16 @@
 		<td><?php echo h($assistance['Assistance']['NOM']); ?>&nbsp;</td>
 		<td><?php echo $assistance['Assistance']['DESCRIPTION']; ?>&nbsp;</td>
 		<td class="actions">
+                        <?php if (userAuth('profil_id')!='2' && isAuthorized('assistances', 'view')) : ?>
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Assistance :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($assistance['Assistance']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($assistance['Assistance']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $assistance['Assistance']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $assistance['Assistance']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette assistance ?')); ?>
-		</td>
+			<?php endif; ?>
+                        <?php if (userAuth('profil_id')!='2' && isAuthorized('assistances', 'edit')) : ?>
+                        <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $assistance['Assistance']['id']),array('escape' => false)); ?>&nbsp;
+			<?php endif; ?>
+                        <?php if (userAuth('profil_id')!='2' && isAuthorized('assistances', 'delete')) : ?>
+                        <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $assistance['Assistance']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette assistance ?')); ?>
+                        <?php endif; ?>
+                </td>
 	</tr>
 <?php endforeach; ?>
         </tbody>

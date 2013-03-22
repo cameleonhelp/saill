@@ -326,6 +326,9 @@ App::uses('AppModel', 'Model', 'Autorisation');
                         case 'rapports':
                             $result = $autorisation['Autorisation']['RAPPORTS'];
                             break;
+                        case 'update':
+                            $result = $autorisation['Autorisation']['UPDATE'];
+                            break;                        
                         default:
                             $result = false;
                             break;                    
@@ -335,4 +338,109 @@ App::uses('AppModel', 'Model', 'Autorisation');
         endif;
         return $result;
     }
+    
+/**
+* etatLivrable method
+*
+* @throws NotFoundException
+* @throws MethodNotAllowedException
+* @param string $etat
+* @return string class
+*/  
+        function etatLivrable($etat) {
+            $class = '';
+            switch ($etat){
+                 case 'à faire':
+                    $class = 'icon-edit icon-red';
+                    break;
+                 case 'en cours':
+                    $class = 'icon-edit';
+                    break;                
+                 case 'livré':
+                    $class = 'icon-share';
+                    break;          
+                 case 'validé':
+                    $class = 'icon-check icon-green';
+                    break;  
+                 case 'refusé':
+                    $class = 'icon-share icon-red';
+                    break;          
+                 case 'annulé':
+                    $class = 'icon-remove icon-red';
+                    break;                 
+            }
+            return $class;
+        } 
+        
+/**
+* etatMaterielInformatiqueImage method
+*
+* @throws NotFoundException
+* @throws MethodNotAllowedException
+* @param string $etat
+* @return string class
+*/  
+       function etatMaterielInformatiqueImage($etat) {
+           $class = '';
+           switch ($etat){
+                case 'En stock':
+                   $class = 'icon-inbox';
+                   break;
+                case 'En dotation':
+                   $class = 'icon-lock';
+                   break;                
+                case 'En réparation':
+                   $class = 'icon-wrench';
+                   break;          
+                case 'Au rebut':
+                   $class = 'icon-trash icon-grey';
+                   break;
+                case 'Non localisé':
+                   $class = 'icon-map-marker icon-red';
+                   break;                
+           }
+           return $class;
+       }
+       
+/**
+* etatMaterielInformatiqueImage method
+*
+* @throws NotFoundException
+* @throws MethodNotAllowedException
+* @param string $etat
+* @return string class
+*/  
+       function etatUtiliseOutilImage($etat) {
+           $class = '';
+           switch ($etat){
+                case 'Demandé':
+                   $class = 'icon-envelope';
+                   break;
+                case 'Pris en compte':
+                   $class = 'icon-flag';
+                   break;                
+                case 'En validation':
+                   $class = 'icon-bookmark icon-grey';
+                   break;          
+                case 'Validé':
+                   $class = 'icon-bookmark icon-green';
+                   break;
+                case 'Demande transférée':
+                   $class = 'icon-share-alt';
+                   break;                
+                case 'Demande traitée':
+                   $class = 'icon-ok';
+                   break;
+                case 'Retour utilisateur':
+                   $class = 'icon-ok icon-green';
+                   break;                
+                case 'A supprimer':
+                   $class = 'icon-remove';
+                   break;          
+                case 'Supprimée':
+                   $class = 'icon-remove icon-red';
+                   break; 
+           }
+           return $class;
+       }        
 ?>

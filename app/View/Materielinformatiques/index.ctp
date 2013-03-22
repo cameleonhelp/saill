@@ -1,41 +1,12 @@
- <?php
- /**
- * etatMaterielInformatiqueImage method
- *
- * @throws NotFoundException
- * @throws MethodNotAllowedException
- * @param string $etat
- * @return string class
- */  
-        function etatMaterielInformatiqueImage($etat) {
-            $class = '';
-            switch ($etat){
-                 case 'En stock':
-                    $class = 'icon-inbox';
-                    break;
-                 case 'En dotation':
-                    $class = 'icon-lock';
-                    break;                
-                 case 'En réparation':
-                    $class = 'icon-wrench';
-                    break;          
-                 case 'Au rebut':
-                    $class = 'icon-trash icon-grey';
-                    break;
-                 case 'Non localisé':
-                    $class = 'icon-map-marker icon-red';
-                    break;                
-            }
-            return $class;
-        } 
-?>        
 <div class="materielinformatiques index">
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <?php endif; ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
@@ -101,10 +72,15 @@
 		<td style='text-align:center;'><?php echo h($materielinformatique['Materielinformatique']['VPN'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
                 <td style='text-align:center;'><i class="<?php echo etatMaterielInformatiqueImage(h($materielinformatique['Materielinformatique']['ETAT'])); ?>" rel="tooltip" data-title="<?php echo h($materielinformatique['Materielinformatique']['ETAT']); ?>"></i>&nbsp;</td>
 		<td class="actions">
-                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Poste informatique :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($materielinformatique['Materielinformatique']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($materielinformatique['Materielinformatique']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $materielinformatique['Materielinformatique']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $materielinformatique['Materielinformatique']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce poste informatique ?')); ?>
-
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'view')) : ?>
+                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Poste informatique :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($materielinformatique['Materielinformatique']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($materielinformatique['Materielinformatique']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'edit')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $materielinformatique['Materielinformatique']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'delete')) : ?>
+                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $materielinformatique['Materielinformatique']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce poste informatique ?')); ?>
+                    <?php endif; ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

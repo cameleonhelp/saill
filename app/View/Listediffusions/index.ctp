@@ -3,8 +3,10 @@
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('listediffusions', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <?php endif; ?>
                 <li><a href="#"><i class="ico-xls"></i></a></li>
                 </ul> 
                 <?php echo $this->Form->create("Listediffusion",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -28,9 +30,15 @@
 		<td><?php echo h($listediffusion['Listediffusion']['NOM']); ?>&nbsp;</td>
 		<td><?php echo $listediffusion['Listediffusion']['DESCRIPTION']; ?>&nbsp;</td>
 		<td class="actions">
-                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>liste de diffusion :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($listediffusion['Listediffusion']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($listediffusion['Listediffusion']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $listediffusion['Listediffusion']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $listediffusion['Listediffusion']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette liste de diffusion ?')); ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('listediffusions', 'view')) : ?>
+                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>liste de diffusion :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($listediffusion['Listediffusion']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($listediffusion['Listediffusion']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('listediffusions', 'edit')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $listediffusion['Listediffusion']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('listediffusions', 'delete')) : ?>
+                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $listediffusion['Listediffusion']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette liste de diffusion ?')); ?>
+                    <?php endif; ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

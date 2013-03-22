@@ -1,44 +1,12 @@
- <?php
- /**
- * etatMaterielInformatiqueImage method
- *
- * @throws NotFoundException
- * @throws MethodNotAllowedException
- * @param string $etat
- * @return string class
- */  
-        function etatLivrable($etat) {
-            $class = '';
-            switch ($etat){
-                 case 'à faire':
-                    $class = 'icon-edit icon-red';
-                    break;
-                 case 'en cours':
-                    $class = 'icon-edit';
-                    break;                
-                 case 'livré':
-                    $class = 'icon-share';
-                    break;          
-                 case 'validé':
-                    $class = 'icon-check icon-green';
-                    break;  
-                 case 'refusé':
-                    $class = 'icon-share icon-red';
-                    break;          
-                 case 'annulé':
-                    $class = 'icon-remove icon-red';
-                    break;                 
-            }
-            return $class;
-        } 
-?>        
 <div class="livrables index">
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('livrables', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <?php endif; ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Chronologie<b class="caret"></b></a>
                      <ul class="dropdown-menu">
@@ -107,10 +75,15 @@
 		<td style="text-align: center;"><?php echo h(isset($livrable['Livrable']['ECHEANCE']) ? $livrable['Livrable']['ECHEANCE'] : ''); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h(isset($livrable['Livrable']['DATELIVRAISON']) ? $livrable['Livrable']['DATELIVRAISON'] : ''); ?>&nbsp;</td>
 		<td class="actions">
-                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Livrable :</h3>" data-content="<contenttitle>Validé le: </contenttitle>'.h(isset($livrable['Livrable']['DATEVALIDATION']) ? $livrable['Livrable']['DATEVALIDATION'] : '').'<br/><contenttitle>Crée le: </contenttitle>'.h($livrable['Livrable']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($livrable['Livrable']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $livrable['Livrable']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $livrable['Livrable']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce livrables ?')); ?>
-
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('livrables', 'view')) : ?>
+                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Livrable :</h3>" data-content="<contenttitle>Validé le: </contenttitle>'.h(isset($livrable['Livrable']['DATEVALIDATION']) ? $livrable['Livrable']['DATEVALIDATION'] : '').'<br/><contenttitle>Crée le: </contenttitle>'.h($livrable['Livrable']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($livrable['Livrable']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('livrables', 'edit')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $livrable['Livrable']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('livrables', 'delete')) : ?>
+                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $livrable['Livrable']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce livrables ?')); ?>
+                    <?php endif; ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

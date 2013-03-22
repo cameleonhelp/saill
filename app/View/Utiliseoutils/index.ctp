@@ -1,53 +1,12 @@
- <?php
- /**
- * etatMaterielInformatiqueImage method
- *
- * @throws NotFoundException
- * @throws MethodNotAllowedException
- * @param string $etat
- * @return string class
- */  
-        function etatUtiliseOutilImage($etat) {
-            $class = '';
-            switch ($etat){
-                 case 'Demandé':
-                    $class = 'icon-envelope';
-                    break;
-                 case 'Pris en compte':
-                    $class = 'icon-flag';
-                    break;                
-                 case 'En validation':
-                    $class = 'icon-bookmark icon-grey';
-                    break;          
-                 case 'Validé':
-                    $class = 'icon-bookmark icon-green';
-                    break;
-                 case 'Demande transférée':
-                    $class = 'icon-share-alt';
-                    break;                
-                 case 'Demande traitée':
-                    $class = 'icon-ok';
-                    break;
-                 case 'Retour utilisateur':
-                    $class = 'icon-ok icon-green';
-                    break;                
-                 case 'A supprimer':
-                    $class = 'icon-remove';
-                    break;          
-                 case 'Supprimée':
-                    $class = 'icon-remove icon-red';
-                    break; 
-            }
-            return $class;
-        } 
-?> 
 <div class="utiliseoutils index">
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <?php endif; ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
@@ -58,16 +17,6 @@
                          <?php endforeach; ?>
                       </ul>
                  </li>   
-                <!--<li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Utilisateurs <b class="caret"></b></a>
-                     <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',$this->params->pass[0])); ?></li>
-                     <li class="divider"></li>
-                         <?php foreach ($utilisateurs as $utilisateur): ?>
-                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'], array('action' => 'index',$this->params->pass[0],$utilisateur['Utilisateur']['id'])); ; ?></li>
-                         <?php endforeach; ?>
-                      </ul>
-                 </li>  //-->
                  <li class="divider-vertical"></li>
                 <li><a href="#"><i class="ico-xls"></i></a></li>                
                 </ul> 
@@ -97,12 +46,21 @@
 		<td><?php echo h($utiliseoutil['Outil']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($utiliseoutil['Listediffusion']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($utiliseoutil['Dossierpartage']['NOM']); ?>&nbsp;</td>
-                <td style='text-align:center;'><?php echo $this->Html->link('<i class="'.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'"></i>', array('action' => 'progressState', h($utiliseoutil['Utiliseoutil']['id'])), array('escape' => false), __('Etes-vous certain de vouloir mettre à jour le statut de cette demande de droit ?')); ?>
-                    </td>
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'update')) : ?>
+                <td style='text-align:center;'><?php echo $this->Html->link('<i class="'.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'"></i>', array('action' => 'progressState', h($utiliseoutil['Utiliseoutil']['id'])), array('escape' => false), __('Etes-vous certain de vouloir mettre à jour le statut de cette demande de droit ?')); ?></td>
+                <?php else : ?>
+                <td style='text-align:center;'><?php echo '<i class="'.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'"></i>'; ?></td>                
+                <?php endif; ?>
 		<td class="actions">
-                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Demande de droit :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($utiliseoutil['Utiliseoutil']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($utiliseoutil['Utiliseoutil']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $utiliseoutil['Utiliseoutil']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $utiliseoutil['Utiliseoutil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette demande de droit ?')); ?>                    
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'view')) : ?>
+                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Demande de droit :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($utiliseoutil['Utiliseoutil']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($utiliseoutil['Utiliseoutil']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'edit')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $utiliseoutil['Utiliseoutil']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'delete')) : ?>
+                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $utiliseoutil['Utiliseoutil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette demande de droit ?')); ?>                    
+                    <?php endif; ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

@@ -34,6 +34,7 @@
             <th>Initialiser le mot de passe</th>
             <th>Calendrier des absences</th>
             <th>Rapports</th>
+            <th>Mise à jour</th>
             <th>Tout</th>
         </tr>
         </thead>
@@ -49,6 +50,7 @@
 		echo "<td style='text-align:center;'>".$this->Form->input('INITPASSWORD')."</td>";
                 echo "<td style='text-align:center;'>".$this->Form->input('ABSENCES')."</td>";
                 echo "<td style='text-align:center;'>".$this->Form->input('RAPPORTS')."</td>";
+                echo "<td style='text-align:center;'>".$this->Form->input('UPDATE')."</td>";
                 echo "<td style='text-align:center;'>".$this->Form->input('ALL',array('type'=>'checkbox','id'=>"autorizeAll",'name'=>'autorizeAll','class'=>'checkall'))."</td>";
 	?>
         </tr>

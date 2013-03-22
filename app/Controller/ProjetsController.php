@@ -19,6 +19,7 @@ class ProjetsController extends AppController {
  * @return void
  */
 	public function index($filtreEtat=null,$filtreContrat=null) {
+            if (isAuthorized('projets', 'index')) :
                 switch ($filtreContrat){
                     case 'tous':
                     case null:
@@ -52,6 +53,10 @@ class ProjetsController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->Projet->recursive = 0;
 		$this->set('projets', $this->paginate());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -62,11 +67,16 @@ class ProjetsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('projets', 'view')) :
 		if (!$this->Projet->exists($id)) {
 			throw new NotFoundException(__('Projet incorrect'));
 		}
 		$options = array('conditions' => array('Projet.' . $this->Projet->primaryKey => $id));
 		$this->set('projet', $this->Projet->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -75,13 +85,14 @@ class ProjetsController extends AppController {
  * @return void
  */
 	public function add() {
+            if (isAuthorized('projets', 'add')) :
                 $contrats = $this->Projet->Contrat->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1'));
                 $this->set('contrats',$contrats);
                 $typeProjet = Configure::read('typeProjet');
                 $this->set('type',$typeProjet);
                 $factureProjet = Configure::read('factureProjet');
                 $this->set('facturation',$factureProjet);                
-                if ($this->request->is('post')) {
+                if ($this->request->is('post')) :
 			$this->Projet->create();
 			if ($this->Projet->save($this->request->data)) {
 				$this->Session->setFlash(__('Projet sauvegardé'),'default',array('class'=>'alert alert-success'));
@@ -89,7 +100,11 @@ class ProjetsController extends AppController {
 			} else {
 				$this->Session->setFlash(__('Projet incorrect, veuillez corriger le projet'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -100,6 +115,7 @@ class ProjetsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            if (isAuthorized('projets', 'edit')) :
                 $contrats = $this->Projet->Contrat->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1'));
                 $this->set('contrats',$contrats);  
                 $typeProjet = Configure::read('typeProjet');
@@ -120,6 +136,10 @@ class ProjetsController extends AppController {
 			$options = array('conditions' => array('Projet.' . $this->Projet->primaryKey => $id));
 			$this->request->data = $this->Projet->find('first', $options);
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -131,6 +151,7 @@ class ProjetsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('projets', 'delete')) :
 		$this->Projet->id = $id;
 		if (!$this->Projet->exists()) {
 			throw new NotFoundException(__('Projet incorrect'));
@@ -142,6 +163,10 @@ class ProjetsController extends AppController {
 		}
 		$this->Session->setFlash(__('Projet <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
         
         
@@ -151,6 +176,7 @@ class ProjetsController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('projets', 'index')) :
                 $keyword=$this->params->data['Projet']['SEARCH']; 
                 $newconditions = array('OR'=>array("Projet.NOM LIKE '%".$keyword."%'","Contrat.NOM LIKE '%".$keyword."%'","Projet.NUMEROGALLILIE LIKE '%".$keyword."%'","Projet.COMMENTAIRE LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
@@ -160,5 +186,9 @@ class ProjetsController extends AppController {
                 $contrats = $this->Projet->Contrat->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1'));
                 $this->set('contrats',$contrats);
                 $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
         }          
 }

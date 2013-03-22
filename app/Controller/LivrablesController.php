@@ -20,6 +20,7 @@ class LivrablesController extends AppController {
  * @return void
  */
 	public function index($filtreChrono=null,$filtreEtat=null,$filtregestionnaire=null) {
+            if (isAuthorized('livrables', 'index')) :
                 switch ($filtreChrono){
                     case 'toutes':
                     case null:    
@@ -98,8 +99,12 @@ class LivrablesController extends AppController {
                 $gestionnaires = $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('gestionnaires',$gestionnaires);                
 		$this->Livrable->recursive = 0;
-                  $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->set('livrables', $this->paginate());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -110,11 +115,16 @@ class LivrablesController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('livrables', 'view')) :
 		if (!$this->Livrable->exists($id)) {
 			throw new NotFoundException(__('Livrable incorrect'));
 		}
 		$options = array('conditions' => array('Livrable.' . $this->Livrable->primaryKey => $id));
 		$this->set('livrable', $this->Livrable->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -123,11 +133,12 @@ class LivrablesController extends AppController {
  * @return void
  */
 	public function add() {
+            if (isAuthorized('livrables', 'add')) :
                 $etats = Configure::read('etatLivrable');
                 $this->set('etats',$etats);             
                 $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('utilisateur',$utilisateur);
-		if ($this->request->is('post')) {
+		if ($this->request->is('post')) :
 			$this->Livrable->create();
 			if ($this->Livrable->save($this->request->data)) {
 				$this->Session->setFlash(__('Livrable sauvegardé'),'default',array('class'=>'alert alert-success'));
@@ -144,7 +155,11 @@ class LivrablesController extends AppController {
 			} else {
 				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -155,6 +170,7 @@ class LivrablesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            if (isAuthorized('livrables', 'edit')) :
                 $etats = Configure::read('etatLivrable');
                 $this->set('etats',$etats);             
                 $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
@@ -184,6 +200,10 @@ class LivrablesController extends AppController {
 			$options = array('conditions' => array('Livrable.' . $this->Livrable->primaryKey => $id));
 			$this->request->data = $this->Livrable->find('first', $options);
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -195,6 +215,7 @@ class LivrablesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('livrables', 'delete')) :
 		$this->Livrable->id = $id;
 		if (!$this->Livrable->exists()) {
 			throw new NotFoundException(__('Livrable incorrect'));
@@ -206,6 +227,10 @@ class LivrablesController extends AppController {
 		}
 		$this->Session->setFlash(__('Livrable <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
         
 /**
@@ -214,6 +239,7 @@ class LivrablesController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('livrables', 'index')) :
                 $keyword=$this->params->data['Livrable']['SEARCH']; 
                 $newconditions = array('OR'=>array("Livrable.NOM LIKE '%".$keyword."%'","Livrable.REFERENCE LIKE '%".$keyword."%'","Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Suivilivrable.ETAT LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 
@@ -221,5 +247,9 @@ class LivrablesController extends AppController {
                 $this->Livrable->recursive = 0;
                 $this->set('livrables', $this->paginate());              
                 $this->render('index'); 
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
         }           
 }

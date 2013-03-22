@@ -18,9 +18,14 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function index() {
+            if (isAuthorized('tjmagents', 'index')) :
 		$this->set('title_for_layout','TJM agents');
                 $this->Tjmagent->recursive = 0;
 		$this->set('tjmagents', $this->paginate());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -31,12 +36,17 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('tjmagents', 'view')) :
 		$this->set('title_for_layout','TJM agents');
                 if (!$this->Tjmagent->exists($id)) {
 			throw new NotFoundException(__('TJM agent incorrect'));
 		}
 		$options = array('conditions' => array('Tjmagent.' . $this->Tjmagent->primaryKey => $id));
 		$this->set('tjmagent', $this->Tjmagent->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -45,8 +55,9 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function add() {
+            if (isAuthorized('tjmagents', 'add')) :
 		$this->set('title_for_layout','TJM agents');
-                if ($this->request->is('post')) {
+                if ($this->request->is('post')) :
 			$this->Tjmagent->create();
 			if ($this->Tjmagent->save($this->request->data)) {
 				$this->Session->setFlash(__('TJM agent sauvegardé'),'default',array('class'=>'alert alert-success'));
@@ -54,7 +65,11 @@ class TjmagentsController extends AppController {
 			} else {
 				$this->Session->setFlash(__('TJM agent incorrect, veuillez corriger le TJM agent'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -65,6 +80,7 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            if (isAuthorized('tjmagents', 'edit')) :
 		$this->set('title_for_layout','TJM agents');
                 if (!$this->Tjmagent->exists($id)) {
 			throw new NotFoundException(__('TJM agent incorrect'));
@@ -80,6 +96,10 @@ class TjmagentsController extends AppController {
 			$options = array('conditions' => array('Tjmagent.' . $this->Tjmagent->primaryKey => $id));
 			$this->request->data = $this->Tjmagent->find('first', $options);
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -91,6 +111,7 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('tjmagents', 'delete')) :
 		$this->set('title_for_layout','TJM agents');
                 $this->Tjmagent->id = $id;
 		if (!$this->Tjmagent->exists()) {
@@ -103,6 +124,10 @@ class TjmagentsController extends AppController {
 		}
 		$this->Session->setFlash(__('TJM agent <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 /**
  * search method
@@ -110,6 +135,7 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('tjmagents', 'index')) :
                 $this->set('title_for_layout','TJM agents');
                 $keyword=$this->params->data['Tjmagent']['SEARCH']; 
                 $newconditions = array('OR'=>array("Tjmagent.NOM LIKE '%".$keyword."%'","Tjmagent.ANNEE LIKE '%".$keyword."%'","Tjmagent.TARIFHT LIKE '%".$keyword."%'","Tjmagent.TARIFTTC LIKE '%".$keyword."%'"));
@@ -118,5 +144,9 @@ class TjmagentsController extends AppController {
                 $this->Tjmagent->recursive = 0;
                 $this->set('tjmagents', $this->paginate());            
                 $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
         }         
 }

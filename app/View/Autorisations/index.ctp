@@ -3,8 +3,10 @@
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('autorisations', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <?php endif; ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Profils <b class="caret"></b></a>
                      <ul class="dropdown-menu">
@@ -40,6 +42,7 @@
 			<th><?php echo $this->Paginator->sort('INITPASSWORD','Initialiser le mot de passe'); ?></th>
                         <th><?php echo $this->Paginator->sort('ABSENCES','Calendrier des absences'); ?></th>
                         <th><?php echo $this->Paginator->sort('RAPPORTS','Rapports'); ?></th>
+                        <th><?php echo $this->Paginator->sort('UPDATE','Mise à jour'); ?></th>
 			<th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
@@ -57,11 +60,18 @@
 		<td style='text-align:center;'><?php echo h($autorisation['Autorisation']['INITPASSWORD'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
                 <td style='text-align:center;'><?php echo h($autorisation['Autorisation']['ABSENCES'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
                 <td style='text-align:center;'><?php echo h($autorisation['Autorisation']['RAPPORTS'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
+                <td style='text-align:center;'><?php echo h($autorisation['Autorisation']['UPDATE'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
 		<td class="actions">
-                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Autorisation :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($autorisation['Autorisation']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($autorisation['Autorisation']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $autorisation['Autorisation']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $autorisation['Autorisation']['profil_id']>1 ?  $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $autorisation['Autorisation']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette autorisation ?')) : ''; ?>                    
-		</td>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('autorisations', 'view')) : ?>
+                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Autorisation :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($autorisation['Autorisation']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($autorisation['Autorisation']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if ((userAuth('profil_id')!='1' || userAuth('profil_id')!='2') && h($autorisation['Autorisation']['MODEL'])!='autorisations' && isAuthorized('autorisations', 'edit')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $autorisation['Autorisation']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('autorisations', 'delete')) : ?>
+                    <?php echo $autorisation['Autorisation']['profil_id']>1 ?  $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $autorisation['Autorisation']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette autorisation ?')) : ''; ?>                    
+                    <?php endif; ?>
+                </td>
 	</tr>
 <?php endforeach; ?>
         </tbody>

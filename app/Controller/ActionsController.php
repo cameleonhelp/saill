@@ -18,6 +18,7 @@ class ActionsController extends AppController {
  * @return void
  */
 	public function index($filtrePriorite=null,$filtreEtat=null,$filtreResponsable=null) {
+            if (isAuthorized('actions', 'index')) :
                 switch ($filtrePriorite){
                     case 'tous':
                     case null:    
@@ -87,7 +88,11 @@ class ActionsController extends AppController {
                 $this->set('responsables',$responsables);                 
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Action->recursive = 0;
-                $this->set('actions', $this->paginate());              
+                $this->set('actions', $this->paginate());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -98,11 +103,16 @@ class ActionsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('actions', 'view')) :
 		if (!$this->Action->exists($id)) {
 			throw new NotFoundException(__('Action incorrecte'));
 		}
 		$options = array('conditions' => array('Action.' . $this->Action->primaryKey => $id));
 		$this->set('action', $this->Action->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();            
+            endif;                
 	}
 
 /**
@@ -111,6 +121,7 @@ class ActionsController extends AppController {
  * @return void
  */
 	public function add() {
+            if (isAuthorized('actions', 'add')) :
 		if ($this->request->is('post')) {
 			$this->Action->create();
 			if ($this->Action->save($this->request->data)) {
@@ -137,7 +148,11 @@ class ActionsController extends AppController {
                 $livrablesNonClos = $this->findLivrableNonTermine();
                 $this->set('livrablesNonClos',$livrablesNonClos);
                 $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM')));
-                $this->set('domaines',$domaines); 	
+                $this->set('domaines',$domaines); 
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();      
+            endif;                 
         }
 
 /**
@@ -147,7 +162,8 @@ class ActionsController extends AppController {
  * @param string $id
  * @return void
  */
-	public function edit($id = null) {  
+	public function edit($id = null) { 
+            if (isAuthorized('actions', 'edit')) :
                 if (!$this->Action->exists($id)) {
 			throw new NotFoundException(__('Action incorrecte'));
 		}
@@ -186,6 +202,10 @@ class ActionsController extends AppController {
                 $this->set('domaines',$domaines); 
                 $histories = $this->Action->Historyaction->find('all',array('conditions'=>array('Historyaction.action_id'=>$id),'order'=>array('Historyaction.id'=>'desc')));
                 $this->set('histories',$histories);
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();            
+            endif;                 
         }
 
 /**
@@ -197,6 +217,7 @@ class ActionsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('actions', 'delete')) :
 		$this->Action->id = $id;
 		if (!$this->Action->exists()) {
 			throw new NotFoundException(__('Action incorrecte'));
@@ -208,6 +229,10 @@ class ActionsController extends AppController {
 		}
 		$this->Session->setFlash(__('Action <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();        
+            endif;                 
 	}
         
 /**
@@ -216,6 +241,7 @@ class ActionsController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('actions', 'index')) :
                 $keyword=$this->params->data['Action']['SEARCH']; 
                 $newconditions = array('OR'=>array("Action.OBJET LIKE '%".$keyword."%'","Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Action.COMMENTAIRE LIKE '%".$keyword."%'","Activite.NOM LIKE '%".$keyword."%'","Domaine.NOM LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
@@ -223,6 +249,10 @@ class ActionsController extends AppController {
                 $this->Action->recursive = 0;
                 $this->set('actions', $this->paginate());
                 $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                 
         }     
         
         public function findActiviteForUtilisateur($utilisateur_id = null) {
@@ -264,7 +294,7 @@ class ActionsController extends AppController {
             $history['Historyaction']['CHARGEPREVUE']=$thisAction['Action']['DUREEPREVUE'];
             $history['Historyaction']['PRIORITE']=$thisAction['Action']['PRIORITE'];
             $history['Historyaction']['STATUT']=$thisAction['Action']['STATUT'];
-            $history['Historyaction']['COMMENTAIRE']=$thisAction['Action']['COMMENTAIRE'];
+            $history['Historyaction']['COMMENTAIRE']='Le '.date('d/m/Y').' par '.userAuth('NOMLONG').'<br>'.$thisAction['Action']['COMMENTAIRE'];
             $this->Action->Historyaction->create();
             $this->Action->Historyaction->save($history);            
         }

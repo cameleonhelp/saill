@@ -3,8 +3,10 @@
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('activites', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <?php endif; ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
@@ -62,10 +64,16 @@
 		<td style="text-align: right;"><?php echo h(isset($activite['Activite']['BUDGETREVU']) ? $activite['Activite']['BUDGETREVU'] : '0'); ?> k€&nbsp;</td>
 		<td style="text-align: center;"><?php echo $activite['Activite']['ACTIVE']==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
 		<td class="actions">
+                        <?php if (userAuth('profil_id')!='2' && isAuthorized('achats', 'view')) : ?>
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Activité :</h3>" data-content="<contenttitle>Description: </contenttitle>'.h($activite['Activite']['DESCRIPTION']).'<br/><contenttitle>Crée le: </contenttitle>'.h($activite['Activite']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($activite['Activite']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $activite['Activite']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo ($activite['Activite']['projet_id']!=1 || $activite['Activite']['id']>11) ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $activite['Activite']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette activité ?')):''; ?>                    
-		</td>
+                        <?php endif; ?>
+                        <?php if (userAuth('profil_id')!='2' && isAuthorized('achats', 'edit')) : ?>
+                        <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $activite['Activite']['id']),array('escape' => false)); ?>&nbsp;
+			<?php endif; ?>
+                        <?php if (userAuth('profil_id')!='2' && isAuthorized('achats', 'delete')) : ?>
+                        <?php echo ($activite['Activite']['projet_id']!=1 || $activite['Activite']['id']>11) ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $activite['Activite']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette activité ?')):''; ?>                    
+                        <?php endif; ?>
+                </td>
 	</tr>
 <?php endforeach; ?>
         </tbody>

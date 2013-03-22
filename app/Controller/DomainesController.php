@@ -20,8 +20,13 @@ class DomainesController extends AppController {
  * @return void
  */
 	public function index() {
+            if (isAuthorized('domaines', 'index')) :
 		$this->Domaine->recursive = 0;
 		$this->set('domaines', $this->paginate());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -32,11 +37,16 @@ class DomainesController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('domaines', 'view')) :
 		if (!$this->Domaine->exists($id)) {
 			throw new NotFoundException(__('Domaine incorrect'));
 		}
 		$options = array('conditions' => array('Domaine.' . $this->Domaine->primaryKey => $id));
 		$this->set('domaine', $this->Domaine->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -45,7 +55,8 @@ class DomainesController extends AppController {
  * @return void
  */
 	public function add() {
-		if ($this->request->is('post')) {
+            if (isAuthorized('domaines', 'add')) :
+		if ($this->request->is('post')) :
 			$this->Domaine->create();
 			if ($this->Domaine->save($this->request->data)) {
 				$this->Session->setFlash(__('Domaine sauvegardé'),'default',array('class'=>'alert alert-success'));
@@ -53,7 +64,11 @@ class DomainesController extends AppController {
 			} else {
 				$this->Session->setFlash(__('Domaine incorrect, veuillez corriger le domaine'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -64,6 +79,7 @@ class DomainesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            if (isAuthorized('domaines', 'edit')) :
 		if (!$this->Domaine->exists($id)) {
 			throw new NotFoundException(__('Domaine incorrect'));
 		}
@@ -78,6 +94,10 @@ class DomainesController extends AppController {
 			$options = array('conditions' => array('Domaine.' . $this->Domaine->primaryKey => $id));
 			$this->request->data = $this->Domaine->find('first', $options);
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -89,6 +109,7 @@ class DomainesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('domaines', 'delete')) :
 		$this->Domaine->id = $id;
 		if (!$this->Domaine->exists()) {
 			throw new NotFoundException(__('Domaine incorrect'));
@@ -100,6 +121,10 @@ class DomainesController extends AppController {
 		}
 		$this->Session->setFlash(__('Domaine NON supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
         
 /**
@@ -108,6 +133,7 @@ class DomainesController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('domaines', 'index')) :
                 $keyword=$this->params->data['Domaine']['SEARCH']; 
                 $newconditions = array('OR'=>array("Domaine.NOM LIKE '%".$keyword."%'","Domaine.DESCRIPTION LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
@@ -115,5 +141,9 @@ class DomainesController extends AppController {
                 $this->Domaine->recursive = 0;
                 $this->set('domaines', $this->paginate());               
                 $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
         }               
 }

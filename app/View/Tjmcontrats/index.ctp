@@ -3,8 +3,10 @@
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('tjmcontrats', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <?php endif; ?>
                 <li><a href="#"><i class="ico-xls"></i></a></li>
                 </ul> 
                 <?php echo $this->Form->create("Tjmcontrat",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -28,9 +30,15 @@
 		<td><?php echo h($tjmcontrat['Tjmcontrat']['TJM']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($tjmcontrat['Tjmcontrat']['ANNEE']); ?>&nbsp;</td>
 		<td class="actions">
-                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>TJM COntrat :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($tjmcontrat['Tjmcontrat']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($tjmcontrat['Tjmcontrat']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $tjmcontrat['Tjmcontrat']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $tjmcontrat['Tjmcontrat']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce TJM contrat ?')); ?>                    
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('tjmcontrats', 'view')) : ?>
+                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>TJM COntrat :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($tjmcontrat['Tjmcontrat']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($tjmcontrat['Tjmcontrat']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('tjmcontrats', 'edit')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $tjmcontrat['Tjmcontrat']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('tjmcontrats', 'delete')) : ?>
+                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $tjmcontrat['Tjmcontrat']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce TJM contrat ?')); ?>                    
+                    <?php endif; ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

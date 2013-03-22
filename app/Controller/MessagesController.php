@@ -25,8 +25,13 @@ class MessagesController extends AppController {
  * @return void
  */
 	public function index() {
+            if (isAuthorized('messages', 'index')) :
 		$this->Message->recursive = 0;
 		$this->set('messages', $this->paginate());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -37,11 +42,16 @@ class MessagesController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+               if (isAuthorized('messages', 'view')) :
 		if (!$this->Message->exists($id)) {
 			throw new NotFoundException(__('Message incorrect'));
 		}
 		$options = array('conditions' => array('Message.' . $this->Message->primaryKey => $id));
 		$this->set('message', $this->Message->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -50,7 +60,8 @@ class MessagesController extends AppController {
  * @return void
  */
 	public function add() {
-		if ($this->request->is('post')) {
+            if (isAuthorized('messages', 'add')) :
+		if ($this->request->is('post')) :
 			$this->Message->create();
 			if ($this->Message->save($this->request->data)) {
 				$this->Session->setFlash(__('Message sauvegardé'),'default',array('class'=>'alert alert-success'));
@@ -58,7 +69,11 @@ class MessagesController extends AppController {
 			} else {
 				$this->Session->setFlash(__('Message incorrect, veuillez corriger le message.'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -69,6 +84,7 @@ class MessagesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            if (isAuthorized('messages', 'edit')) :
 		if (!$this->Message->exists($id)) {
 			throw new NotFoundException(__('Message incorrect'));
 		}
@@ -83,6 +99,10 @@ class MessagesController extends AppController {
 			$options = array('conditions' => array('Message.' . $this->Message->primaryKey => $id));
 			$this->request->data = $this->Message->find('first', $options);
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -94,6 +114,7 @@ class MessagesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('messages', 'delete')) :
 		$this->Message->id = $id;
 		if (!$this->Message->exists()) {
 			throw new NotFoundException(__('Message incorrect'));
@@ -105,6 +126,10 @@ class MessagesController extends AppController {
 		}
 		$this->Session->setFlash(__('Message NON supprimé.'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -130,6 +155,7 @@ class MessagesController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('messages', 'index')) :
                 $keyword=$this->params->data['Message']['SEARCH']; 
                 //$newconditions = array('OR'=>array("Message.LIBELLE LIKE '%$keyword%'","ModelName.name LIKE '%$keyword%'", "ModelName.email LIKE '%$keyword%'")  );
                 $newconditions = array("Message.LIBELLE LIKE '%".$keyword."%'");
@@ -139,5 +165,9 @@ class MessagesController extends AppController {
                 $this->Message->recursive = 0;
                 $this->set('messages', $this->paginate());
                 $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
         }        
 }

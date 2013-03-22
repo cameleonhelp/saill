@@ -3,8 +3,10 @@
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('outils', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <?php endif; ?>
                 <li><a href="#"><i class="ico-xls"></i></a></li>
                 </ul> 
                 <?php echo $this->Form->create("Outil",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -30,9 +32,15 @@
                 <td><?php echo h($outil['Utilisateur']['NOMLONG']); ?>&nbsp;</td>
 		<td style="text-align:center;"><?php echo h($outil['Outil']['VALIDATION']) == 1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
 		<td class="actions">
-                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Outil :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($outil['Outil']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($outil['Outil']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $outil['Outil']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $outil['Outil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet outil ?')); ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('outils', 'view')) : ?>
+                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Outil :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($outil['Outil']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($outil['Outil']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('outils', 'edit')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $outil['Outil']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('outils', 'delete')) : ?>
+                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $outil['Outil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet outil ?')); ?>
+                    <?php endif; ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

@@ -19,6 +19,7 @@ class ActivitesController extends AppController {
  * @return void
  */
 	public function index($filtreEtat=null,$filtre=null) {
+            if (isAuthorized('activites', 'index')) :
                 switch ($filtre){
                     case 'tous':
                     case null:    
@@ -56,6 +57,10 @@ class ActivitesController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->Activite->recursive = 0;
 		$this->set('activites', $this->paginate());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();           
+            endif;                
 	}
 
 /**
@@ -66,11 +71,16 @@ class ActivitesController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('activites', 'view')) :
 		if (!$this->Activite->exists($id)) {
 			throw new NotFoundException(__('Activité incorrecte'));
 		}
 		$options = array('conditions' => array('Activite.' . $this->Activite->primaryKey => $id));
 		$this->set('activite', $this->Activite->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();        
+            endif;                
 	}
 
 /**
@@ -79,9 +89,10 @@ class ActivitesController extends AppController {
  * @return void
  */
 	public function add() {
+            if (isAuthorized('activites', 'add')) :
                 $projets = $this->Activite->Projet->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
                 $this->set('projets',$projets);               
-		if ($this->request->is('post')) {
+		if ($this->request->is('post')) :
 			$this->Activite->create();
 			if ($this->Activite->save($this->request->data)) {
 				$this->Session->setFlash(__('Activité sauvegardée'),'default',array('class'=>'alert alert-success'));
@@ -89,7 +100,11 @@ class ActivitesController extends AppController {
 			} else {
 				$this->Session->setFlash(__('Activité incorrecte, veuillez corriger l\'activité'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+                endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();    
+            endif;                
 	}
 
 /**
@@ -100,6 +115,7 @@ class ActivitesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            if (isAuthorized('activites', 'edit')) :
                 $projets = $this->Activite->Projet->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
                 $this->set('projets',$projets);               
 		if (!$this->Activite->exists($id)) {
@@ -116,6 +132,10 @@ class ActivitesController extends AppController {
 			$options = array('conditions' => array('Activite.' . $this->Activite->primaryKey => $id));
 			$this->request->data = $this->Activite->find('first', $options);
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();        
+            endif;                
 	}
 
 /**
@@ -127,6 +147,7 @@ class ActivitesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('activites', 'delete')) :
 		$this->Activite->id = $id;
 		if (!$this->Activite->exists()) {
 			throw new NotFoundException(__('Activité incorrecte'));
@@ -138,6 +159,10 @@ class ActivitesController extends AppController {
 		}
 		$this->Session->setFlash(__('Activité <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();         
+            endif;                
 	}
         
         
@@ -147,6 +172,7 @@ class ActivitesController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('activites', 'index')) :
                 $keyword=$this->params->data['Activite']['SEARCH']; 
                 $newconditions = array('OR'=>array("Activite.NOM LIKE '%".$keyword."%'","Projet.NOM LIKE '%".$keyword."%'","Activite.NUMEROGALLILIE LIKE '%".$keyword."%'","Activite.DESCRIPTION LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
@@ -156,5 +182,9 @@ class ActivitesController extends AppController {
                 $projets = $this->Activite->Projet->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Projet.id>1'));
                 $this->set('projets',$projets);  
                 $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();            
+            endif;               
         }          
 }

@@ -14,8 +14,12 @@
 		<td><?php echo h($affectation['Activite']['NOM']); ?>&nbsp;</td>
                 <td style="text-align: right;"><?php echo h(isset($affectation['Affectation']['REPARTITION']) ? $affectation['Affectation']['REPARTITION'].'%' : ''); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('controller'=>'Affectations','action' => 'edit', $affectation['Affectation']['id'], $this->params->pass[0]),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Html->link('<i class="icon-trash"></i>', array('controller'=>'Affectations','action' => 'delete', $affectation['Affectation']['id'], $this->params->pass[0]),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette affectation ?')); ?>                    
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('affectations', 'edit')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('controller'=>'Affectations','action' => 'edit', $affectation['Affectation']['id'], $this->params->pass[0]),array('escape' => false)); ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('affectations', 'delete')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-trash"></i>', array('controller'=>'Affectations','action' => 'delete', $affectation['Affectation']['id'], $this->params->pass[0]),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette affectation ?')); ?>                    
+                    <?php endif; ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

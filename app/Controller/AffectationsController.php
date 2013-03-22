@@ -13,9 +13,14 @@ class AffectationsController extends AppController {
  * @return void
  */
 	public function index($id = null) {
+            if (isAuthorized('affectations', 'index')) :
 		$this->Affectation->recursive = 0;
                 $liste = $this->Affectation->find('all',array('conditions'=>array('Affectation.utilisateur_id'=>$id)));                
 		$this->set('affectations', $liste);
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();           
+            endif;                
 	}
 
 /**
@@ -26,11 +31,16 @@ class AffectationsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('affectations', 'view')) :
 		if (!$this->Affectation->exists($id)) {
 			throw new NotFoundException(__('Affectation incorrecte'));
 		}
 		$options = array('conditions' => array('Affectation.' . $this->Affectation->primaryKey => $id));
 		$this->set('affectation', $this->Affectation->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();          
+            endif;                
 	}
 
 /**
@@ -39,9 +49,10 @@ class AffectationsController extends AppController {
  * @return void
  */
 	public function add($userid = null) {
+            if (isAuthorized('affectations', 'add')) :
                 $activites = $this->Affectation->Activite->find('list',array('fields'=>array('id','NOM')));
 		$this->set('activites', $activites);            
-		if ($this->request->is('post')) {
+		if ($this->request->is('post')) :
                         $this->Affectation->utilisateur_id = $userid;
 			$this->Affectation->create();
 			if ($this->Affectation->save($this->request->data)) {
@@ -53,7 +64,11 @@ class AffectationsController extends AppController {
 			} else {
 				$this->Session->setFlash(__('Affectation incorrecte, veuillez corriger l\'affectation'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();         
+            endif;                
 	}
 
 /**
@@ -64,6 +79,7 @@ class AffectationsController extends AppController {
  * @return void
  */
 	public function edit($id = null,$userid = null) {
+            if (isAuthorized('affectations', 'edit')) :
                 $activites = $this->Affectation->Activite->find('list',array('fields'=>array('id','NOM')));
 		$this->set('activites', $activites);             
 		if (!$this->Affectation->exists($id)) {
@@ -83,6 +99,10 @@ class AffectationsController extends AppController {
 			$options = array('conditions' => array('Affectation.' . $this->Affectation->primaryKey => $id));
 			$this->request->data = $this->Affectation->find('first', $options);
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();           
+            endif;                
 	}
 
 /**
@@ -94,6 +114,7 @@ class AffectationsController extends AppController {
  * @return void
  */
 	public function delete($id = null,$userid = null) {
+            if (isAuthorized('affectations', 'delete')) :
 		$this->Affectation->id = $id;
 		if (!$this->Affectation->exists()) {
 			throw new NotFoundException(__('Affectation incorrecte'));
@@ -108,5 +129,9 @@ class AffectationsController extends AppController {
 		}
 		$this->Session->setFlash(__('Affectation <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();           
+            endif;                
 	}
 }

@@ -13,9 +13,14 @@ class DotationsController extends AppController {
  * @return void
  */
 	public function index($id = null) {
+            if (isAuthorized('dotations', 'index')) :
 		$this->Dotation->recursive = 0;
                 $liste = $this->Dotation->find('all',array('conditions'=>array('Dotation.utilisateur_id'=>$id)));
 		$this->set('dotations', $liste);
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -26,11 +31,16 @@ class DotationsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('dotations', 'view')) :
 		if (!$this->Dotation->exists($id)) {
 			throw new NotFoundException(__('Dotation incorrecte'));
 		}
 		$options = isset($id) ? array('conditions' => array('Dotation.' . $this->Dotation->primaryKey => $id)) : '';
 		$this->set('dotation', $this->Dotation->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -39,11 +49,12 @@ class DotationsController extends AppController {
  * @return void
  */
 	public function add($userid = null) {
+            if (isAuthorized('dotations', 'add')) :
                 $matinformatique = $this->Dotation->Materielinformatique->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Materielinformatique.ETAT ='=>'En stock')));
 		$this->set('matinformatique', $matinformatique);
                 $matautre = $this->Dotation->Typemateriel->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Typemateriel.id >2')));
 		$this->set('matautre', $matautre);                
-		if ($this->request->is('post')) {
+		if ($this->request->is('post')) :
                         $this->Dotation->utilisateur_id = $userid;
 			$this->Dotation->create();
                         $idmat = $this->request->data['Dotation']['materielinformatiques_id'];
@@ -64,7 +75,11 @@ class DotationsController extends AppController {
 			} else {
 				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -74,7 +89,8 @@ class DotationsController extends AppController {
  * @param string $id
  * @return void
  */
-	public function edit($id = null,$userid = null) {         
+	public function edit($id = null,$userid = null) {
+            if (isAuthorized('dotations', 'edit')) :
 		if (!$this->Dotation->exists($id)) {
 			throw new NotFoundException(__('Dotation incorrecte'));
 		}
@@ -93,6 +109,10 @@ class DotationsController extends AppController {
 			$this->request->data = $this->Dotation->find('first', $options);
         		$this->set('dotation', $this->Dotation->find('first', $options));                        
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -104,6 +124,7 @@ class DotationsController extends AppController {
  * @return void
  */
 	public function delete($id = null,$userid = null) {
+            if (isAuthorized('dotations', 'delete')) :
 		$this->Dotation->id = $id;
 		if (!$this->Dotation->exists()) {
 			throw new NotFoundException(__('Dotation incorrecte'));
@@ -117,5 +138,9 @@ class DotationsController extends AppController {
 		}
 		$this->Session->setFlash(__('Dotation <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 }

@@ -3,8 +3,10 @@
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <?php endif; ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
@@ -47,10 +49,16 @@
 		<td style='text-align: right;'><?php echo h($contrat['Contrat']['MONTANT']); ?> k€&nbsp;</td>
 		<td style='text-align: center;'><?php echo $contrat['Contrat']['ACTIF']==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
 		<td class="actions">
-                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Contrat :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($contrat['Contrat']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($contrat['Contrat']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $contrat['Contrat']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $contrat['Tjmcontrat']['id']>1 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $contrat['Contrat']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce contrat ?')):''; ?>
-		</td>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'view')) : ?>
+                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Contrat :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($contrat['Contrat']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($contrat['Contrat']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'edit')) : ?>        
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $contrat['Contrat']['id']),array('escape' => false)); ?>&nbsp;
+		    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'delete')) : ?>
+                    <?php echo $contrat['Tjmcontrat']['id']>1 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $contrat['Contrat']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce contrat ?')):''; ?>
+                    <?php endif; ?>
+                </td>
 	</tr>
 <?php endforeach; ?>
         </tbody>

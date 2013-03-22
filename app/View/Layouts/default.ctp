@@ -84,8 +84,7 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
         <div class="row" >
             <div class="span7">
             <span class="logo"></span>
-            <?php $user = userAuth(); ?>
-            <?php if (userAuth('id')>1) echo $this->element('menu'); ?>
+            <?php if (userAuth('id')>0) echo $this->element('menu'); ?>
             <code class="span5"  style="margin-left: -22px;margin-bottom: 10px;margin-top: 10px;display: block;">
                 <div class="text-normal">Navigateurs compatibles :</div>
                 <div class='text-center'><?php echo $this->Html->link($this->Html->image("firefox.png",array("height" => "24px","width" => "24px")),"http://www.mozilla.org/fr/firefox/new/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"Firefox<br/>Recommandé")) ?>

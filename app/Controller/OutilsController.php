@@ -20,8 +20,13 @@ class OutilsController extends AppController {
  * @return void
  */
 	public function index() {
+            if (isAuthorized('outils', 'index')) :
 		$this->Outil->recursive = 0;
 		$this->set('outils', $this->paginate());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
         
 /**
@@ -32,11 +37,16 @@ class OutilsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('outils', 'view')) :
 		if (!$this->Outil->exists($id)) {
 			throw new NotFoundException(__('Outil incorrect'));
 		}
 		$options = array('conditions' => array('Outil.' . $this->Outil->primaryKey => $id));
 		$this->set('outil', $this->Outil->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -45,9 +55,10 @@ class OutilsController extends AppController {
  * @return void
  */
 	public function add() {
+            if (isAuthorized('outils', 'add')) :
                 $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1')));              
                 $this->set('gestionnaire',$gestionnaire);            
-		if ($this->request->is('post')) {
+		if ($this->request->is('post')) :
 			$this->Outil->create();
 			if ($this->Outil->save($this->request->data)) {
 				$this->Session->setFlash(__('Outil sauvegardé'),'default',array('class'=>'alert alert-success'));
@@ -55,7 +66,11 @@ class OutilsController extends AppController {
 			} else {
 				$this->Session->setFlash(__('Outil incorrect, veuillez corriger l\'outil'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -66,6 +81,7 @@ class OutilsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            if (isAuthorized('outils', 'edit')) :
                 $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1')));              
                 $this->set('gestionnaire',$gestionnaire);            
 		if (!$this->Outil->exists($id)) {
@@ -82,6 +98,10 @@ class OutilsController extends AppController {
 			$options = array('conditions' => array('Outil.' . $this->Outil->primaryKey => $id));
 			$this->request->data = $this->Outil->find('first', $options);
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -93,6 +113,7 @@ class OutilsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('outils', 'delete')) :
 		$this->Outil->id = $id;
 		if (!$this->Outil->exists()) {
 			throw new NotFoundException(__('Outil incorrect'));
@@ -104,6 +125,10 @@ class OutilsController extends AppController {
 		}
 		$this->Session->setFlash(__('Outil NON supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
         
 /**
@@ -112,6 +137,7 @@ class OutilsController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('outils', 'index')) :
                 $keyword=$this->params->data['Outil']['SEARCH']; 
                 $newconditions = array('OR'=>array("Outil.NOM LIKE '%".$keyword."%'","Outil.DESCRIPTION LIKE '%".$keyword."%'","(CONCAT(Utilisateur.NOM, ' ', Utilisateur.PRENOM)) LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
@@ -119,5 +145,9 @@ class OutilsController extends AppController {
                 $this->Outil->recursive = 0;
                 $this->set('outils', $this->paginate());              
                 $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
         }            
 }

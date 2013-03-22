@@ -18,8 +18,12 @@
                 <td width="100px" style="text-align:center;"><?php echo h($dotation['Dotation']['DATERECEPTION']); ?>&nbsp;</td>
                 <td width="100px" style="text-align:center;"><?php echo h($dotation['Dotation']['DATEREMISE']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('controller'=>'Dotations','action' => 'edit', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Html->link('<i class="icon-trash"></i>', array('controller'=>'Dotations','action' => 'delete', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette dotation ?')); ?>                    
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('dotations', 'edit')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('controller'=>'Dotations','action' => 'edit', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false)); ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('dotations', 'delete')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-trash"></i>', array('controller'=>'Dotations','action' => 'delete', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette dotation ?')); ?>                    
+                    <?php endif; ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

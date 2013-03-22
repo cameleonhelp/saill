@@ -24,6 +24,7 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function index($filtreUtilisateur=null,$filtreSection=null) {
+            if (isAuthorized('utilisateurs', 'index')) :
                 switch ($filtreUtilisateur){
                     case 'tous':
                     case null:    
@@ -65,6 +66,10 @@ class UtilisateursController extends AppController {
 		$this->set('utilisateurs', $this->paginate());
                 $sections = $this->Utilisateur->Section->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
                 $this->set('sections',$sections);
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -75,11 +80,16 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('utilisateurs', 'view')) :
 		if (!$this->Utilisateur->exists($id)) {
 			throw new NotFoundException(__('Utilisateur incorrect'));
 		}
 		$options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));
 		$this->set('utilisateur', $this->Utilisateur->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -88,20 +98,25 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function add() {
+            if (isAuthorized('utilisateurs', 'add')) :
                 $societe = $this->Utilisateur->Societe->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
                 $this->set('societe',$societe);
-                if ($this->request->is('post')) {
+                if ($this->request->is('post')) :
 			$this->Utilisateur->create();
 			if ($this->Utilisateur->save($this->request->data)) {
                                 $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
-                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur créé";
+                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur créé".' par '.userAuth('NOMLONG');
                                 $this->Utilisateur->Historyutilisateur->save($history);                              
 				$this->Session->setFlash(__('Utilisateur sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Utilisateur incorrect, veuillez corriger l\'utilisateur'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -112,6 +127,7 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            if (isAuthorized('utilisateurs', 'edit')) :
                 if (!$this->Utilisateur->exists($id)) {
 			throw new NotFoundException(__('Utilisateur incorrect'),'default',array('class'=>'alert alert-error'));
 		}
@@ -119,7 +135,7 @@ class UtilisateursController extends AppController {
                     $this->Utilisateur->id = $id;
                     if ($this->Utilisateur->save($this->request->data)) {
                         $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
-                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur mis à jour";
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur mis à jour".' par '.userAuth('NOMLONG');
                         $this->Utilisateur->Historyutilisateur->save($history);                            
 				$this->Session->setFlash(__('Utilisateur sauvegardé'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
@@ -175,6 +191,10 @@ class UtilisateursController extends AppController {
                         $nbAffectation = $this->Utilisateur->Affectation->query("SELECT count(id) AS nbAffectation FROM affectations WHERE utilisateur_id =".$id);
                         $this->set('nbAffectation',$nbAffectation);                          
                 }
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -186,6 +206,7 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('utilisateurs', 'delete')) :
 		$this->Utilisateur->id = $id;
 		if (!$this->Utilisateur->exists()) {
 			throw new NotFoundException(__('Utilisateur incorrect'));
@@ -199,13 +220,17 @@ class UtilisateursController extends AppController {
                 $record['Utilisateur']['modified'] = date('Y-m-d');                
                 if ($this->Utilisateur->save($record)) {
                         $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
-                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - utilisateur supprimé";
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - utilisateur supprimé".' par '.userAuth('NOMLONG');
                         $this->Utilisateur->Historyutilisateur->save($history);
 			$this->Session->setFlash(__('Utilisateur supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Utilisateur <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
         
 /**
@@ -224,7 +249,7 @@ class UtilisateursController extends AppController {
                 $this->Utilisateur->id = $id;
                 if ($this->Utilisateur->save($this->request->data)) {
                     $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
-                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur mis à jour";
+                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur mis à jour".' par '.userAuth('NOMLONG');
                     $this->Utilisateur->Historyutilisateur->save($history);                            
                             $this->Session->setFlash(__('Utilisateur sauvegardé'),'default',array('class'=>'alert alert-success'));
                             $this->redirect($this->goToPostion(1));
@@ -279,7 +304,7 @@ class UtilisateursController extends AppController {
                     $this->set('nbDotation',$nbDotation);   
                     $nbAffectation = $this->Utilisateur->Affectation->query("SELECT count(id) AS nbAffectation FROM affectations WHERE utilisateur_id =".$id);
                     $this->set('nbAffectation',$nbAffectation);   
-            }  
+            }             
         }
    
 /**
@@ -331,6 +356,7 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function dupliquer($id = null) {
+            if (isAuthorized('utilisateurs', 'duplicate')) :
 		$this->Utilisateur->id = $id;
                 $record = $this->Utilisateur->read();
                 $NOMLONG = $record['Utilisateur']['NOMLONG'];
@@ -356,13 +382,17 @@ class UtilisateursController extends AppController {
                 $this->Utilisateur->create();
                 if ($this->Utilisateur->save($record)) {
                         $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
-                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur dupliqué à partir de ".$NOMLONG;
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur dupliqué à partir de ".$NOMLONG.' par '.userAuth('NOMLONG');
                         $this->Utilisateur->Historyutilisateur->save($history);
                         $this->Session->setFlash(__('Utilisateur dupliqué'),'default',array('class'=>'alert alert-success'));
                         $this->redirect($this->goToPostion());
                 } 
 		$this->Session->setFlash(__('Utilisateur <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}   
     
 /**
@@ -374,6 +404,7 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function initpassword($id = null) {
+            if (isAuthorized('utilisateurs', 'initpassword')) :
 		$this->Utilisateur->id = $id;
                 $record = $this->Utilisateur->read();
                 unset($record['Utilisateur']['password']); 
@@ -384,13 +415,17 @@ class UtilisateursController extends AppController {
                 $record['Utilisateur']['modified'] = date('Y-m-d');                
                 if ($this->Utilisateur->save($record)) {
                         $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
-                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mot de passe initialisé";
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mot de passe initialisé".' par '.userAuth('NOMLONG');
                         $this->Utilisateur->Historyutilisateur->save($history);
                         $this->Session->setFlash(__('Mot de passe de l\'utilisateur initialisé'),'default',array('class'=>'alert alert-success'));
                         $this->redirect($this->goToPostion());
                 } 
 		$this->Session->setFlash(__('Mot de passe de l\'utilisateur <b>NON</b> initialisé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	} 
         
 /**
@@ -399,6 +434,7 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('utilisateurs', 'index')) :
                 $keyword=$this->params->data['Utilisateur']['SEARCH']; 
                 $newconditions = array('OR'=>array("Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Utilisateur.COMMENTAIRE LIKE '%".$keyword."%'","Utilisateur.TELEPHONE LIKE '%".$keyword."%'","Utilisateur.WORKCAPACITY LIKE '%".$keyword."%'","Profil.NOM LIKE '%".$keyword."%'","Societe.NOM LIKE '%".$keyword."%'","Assistance.NOM LIKE '%".$keyword."%'","Section.NOM LIKE '%".$keyword."%'","Tjmagent.NOM LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
@@ -408,5 +444,9 @@ class UtilisateursController extends AppController {
                 $sections = $this->Utilisateur->Section->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
                 $this->set('sections',$sections);
                 $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
         }         
 }

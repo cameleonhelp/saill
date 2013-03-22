@@ -20,6 +20,7 @@ class ActivitesreellesController extends AppController {
  * @return void
  */
 	public function index($etat=null,$utilisateur=null,$mois=null) {
+            if (isAuthorized('activitesreelles', 'index')) :
                 switch ($etat){
                     case 'tous':
                         $newconditions[]="1=1";
@@ -74,6 +75,10 @@ class ActivitesreellesController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
 		$this->Activitesreelle->recursive = 0;
 		$this->set('activitesreelles', $this->paginate());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();            
+            endif;                
 	}
 
 /**
@@ -84,12 +89,17 @@ class ActivitesreellesController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('activitesreelles', 'view')) :
                 $this->set('title_for_layout','Feuilles de temps');            
 		if (!$this->Activitesreelle->exists($id)) {
 			throw new NotFoundException(__('Feuille de temps incorrecte'));
 		}
 		$options = array('conditions' => array('Activitesreelle.' . $this->Activitesreelle->primaryKey => $id));
 		$this->set('activitesreelle', $this->Activitesreelle->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();          
+            endif;                
 	}
 
 /**
@@ -98,6 +108,7 @@ class ActivitesreellesController extends AppController {
  * @return void
  */
 	public function add($utilisateur_id=null,$action_id=null) {
+            if (isAuthorized('activitesreelles', 'add')) :
                 $this->set('title_for_layout','Feuilles de temps');            
 		if ($this->request->is('post')) {
                         if ($utilisateur_id!=null) $this->request->data['Activitesreelle']['utilisateur_id']=$utilisateur_id ;
@@ -122,12 +133,16 @@ class ActivitesreellesController extends AppController {
 		$this->set('activites', $activites);
 		$utilisateurs = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1')));
 		$this->set('utilisateurs', $utilisateurs);
-                if ($action_id != null) {
+                if ($action_id != null) :
                 $action = $this->Activitesreelle->Action->find('first',array('conditions'=>array('Action.id'=>$action_id)));
                     $this->request->data['Activitesreelle']['utilisateur_id'] = $action['Action']['utilisateur_id'];
                     $this->request->data['Activitesreelle']['DATE'] = $action['Action']['DEBUT'];
                     $this->request->data['Activitesreelle']['activite_id'] = $action['Action']['activite_id'];
-                }
+                endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();            
+            endif;                
         }
 
 /**
@@ -138,6 +153,7 @@ class ActivitesreellesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            if (isAuthorized('activitesreelles', 'edit')) :
                 $this->set('title_for_layout','Feuilles de temps');            
 		if (!$this->Activitesreelle->exists($id)) {
 			throw new NotFoundException(__('Feuille de temps incorrecte'));
@@ -153,6 +169,10 @@ class ActivitesreellesController extends AppController {
 			$options = array('conditions' => array('Activitesreelle.' . $this->Activitesreelle->primaryKey => $id));
 			$this->request->data = $this->Activitesreelle->find('first', $options);
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();       
+            endif;                
 	}
 
 /**
@@ -164,6 +184,7 @@ class ActivitesreellesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('activitesreelles', 'delete')) :
                 $this->set('title_for_layout','Feuilles de temps');            
 		$this->Activitesreelle->id = $id;
 		if (!$this->Activitesreelle->exists()) {
@@ -176,6 +197,10 @@ class ActivitesreellesController extends AppController {
 		}
 				$this->Session->setFlash(__('Feuille de temps <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
 		$this->redirect(array('action' => 'index'));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();        
+            endif;                
 	}
         
 /**
@@ -187,6 +212,7 @@ class ActivitesreellesController extends AppController {
  * @return void
  */
 	public function duplicate($id = null) {
+            if (isAuthorized('activitesreelles', 'duplicate')) :
                 $this->set('title_for_layout','Feuilles de temps');  
                 $this->Activitesreelle->id = $id;
                 $record = $this->Activitesreelle->read();
@@ -207,7 +233,11 @@ class ActivitesreellesController extends AppController {
                         $this->Session->setFlash(__('Feuille de temps dupliquée'),'default',array('class'=>'alert alert-success'));
                         $this->redirect(array('action' => 'edit',$this->Activitesreelle->getLastInsertID()));
                 } 
-		$this->Session->setFlash(__('Feuille de temps <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));            
+		$this->Session->setFlash(__('Feuille de temps <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));    
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}  
         
 /**
@@ -219,6 +249,7 @@ class ActivitesreellesController extends AppController {
  * @return void
  */
 	public function autoduplicate($id = null) {
+            if (isAuthorized('activitesreelles', 'update')) :
                 $this->set('title_for_layout','Feuilles de temps');  
                 $this->Activitesreelle->id = $id;
                 $record = $this->Activitesreelle->read();
@@ -239,7 +270,11 @@ class ActivitesreellesController extends AppController {
                     $this->Session->setFlash(__('Feuille de temps dupliquée'),'default',array('class'=>'alert alert-success'));
                     $this->redirect($this->goToPostion());
                 } 
-		$this->Session->setFlash(__('Feuille de temps <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));            
+		$this->Session->setFlash(__('Feuille de temps <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));  
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();        
+            endif;                
 	}   
         
 /**
@@ -251,6 +286,7 @@ class ActivitesreellesController extends AppController {
  * @return void
  */
 	public function updatefacturation($id = null) {
+            if (isAuthorized('activitesreelles', 'update')) :
                 $this->set('title_for_layout','Feuilles de temps');  
                 $this->Activitesreelle->id = $id;
                 $record = $this->Activitesreelle->read();
@@ -264,7 +300,11 @@ class ActivitesreellesController extends AppController {
                     $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation'),'default',array('class'=>'alert alert-success'));
                     $this->redirect($this->goToPostion());
                 } 
-		$this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation'),'default',array('class'=>'alert alert-error'));            
+		$this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation'),'default',array('class'=>'alert alert-error')); 
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();           
+            endif;                
 	}           
         
 /**
@@ -273,6 +313,7 @@ class ActivitesreellesController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('activitesreelles', 'index')) :
                 $this->set('title_for_layout','feuilles de temps');
                 $keyword=$this->params->data['Activitesreelle']['SEARCH']; 
                 $newconditions = array('OR'=>array("Activite.NOM LIKE '%".$keyword."%'","Action.OBJET LIKE '%".$keyword."%'"));
@@ -283,6 +324,10 @@ class ActivitesreellesController extends AppController {
                 $this->Activitesreelle->recursive = 0;
                 $this->set('activitesreelles', $this->paginate());              
                 $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();           
+            endif;                
         }          
         
 /**

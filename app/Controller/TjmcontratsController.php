@@ -18,9 +18,14 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function index() {
+            if (isAuthorized('tjmcontrats', 'index')) :
 		$this->set('title_for_layout','TJM contrats');
                 $this->Tjmcontrat->recursive = 0;
 		$this->set('tjmcontrats', $this->paginate());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -31,12 +36,17 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('tjmcontrats', 'view')) :
 		$this->set('title_for_layout','TJM contrats');
                 if (!$this->Tjmcontrat->exists($id)) {
 			throw new NotFoundException(__('TJM contrat incorrect'));
 		}
 		$options = array('conditions' => array('Tjmcontrat.' . $this->Tjmcontrat->primaryKey => $id));
 		$this->set('tjmcontrat', $this->Tjmcontrat->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -45,8 +55,9 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function add() {
+            if (isAuthorized('tjmcontrats', 'add')) :
 		$this->set('title_for_layout','TJM contrats');
-                if ($this->request->is('post')) {
+                if ($this->request->is('post')) :
 			$this->Tjmcontrat->create();
 			if ($this->Tjmcontrat->save($this->request->data)) {
 				$this->Session->setFlash(__('TJM contrat sauvegardé'),'default',array('class'=>'alert alert-success'));
@@ -54,7 +65,11 @@ class TjmcontratsController extends AppController {
 			} else {
 				$this->Session->setFlash(__('TJM contrat incorrect, veuillez corriger le TJM contrat'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -65,6 +80,7 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            if (isAuthorized('tjmcontrats', 'edit')) :
 		$this->set('title_for_layout','TJM contrats');
                 if (!$this->Tjmcontrat->exists($id)) {
 			throw new NotFoundException(__('TJM contrat incorrect'));
@@ -80,6 +96,10 @@ class TjmcontratsController extends AppController {
 			$options = array('conditions' => array('Tjmcontrat.' . $this->Tjmcontrat->primaryKey => $id));
 			$this->request->data = $this->Tjmcontrat->find('first', $options);
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -91,6 +111,7 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('tjmcontrats', 'delete')) :
 		$this->set('title_for_layout','TJM contrats');
                 $this->Tjmcontrat->id = $id;
 		if (!$this->Tjmcontrat->exists()) {
@@ -103,6 +124,10 @@ class TjmcontratsController extends AppController {
 		}
 		$this->Session->setFlash(__('TJM contrat <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
         
 /**
@@ -111,6 +136,7 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('tjmcontrats', 'index')) :
                 $this->set('title_for_layout','TJM contrats');
                 $keyword=$this->params->data['Tjmcontrat']['SEARCH']; 
                 $newconditions = array('OR'=>array("Tjmcontrat.TJM LIKE '%".$keyword."%'","Tjmcontrat.ANNEE LIKE '%".$keyword."%'"));
@@ -119,5 +145,9 @@ class TjmcontratsController extends AppController {
                 $this->Tjmcontrat->recursive = 0;
                 $this->set('tjmcontrats', $this->paginate());            
                 $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
         }         
 }

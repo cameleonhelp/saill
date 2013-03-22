@@ -20,6 +20,7 @@ class UtiliseoutilsController extends AppController {
  * @return void
  */
 	public function index($filtreetat=null) {
+            if (isAuthorized('utiliseoutils', 'index')) :
 		$this->set('title_for_layout','Ouvertures des droits');
                 switch ($filtreetat){
                     case 'tous':
@@ -36,7 +37,11 @@ class UtiliseoutilsController extends AppController {
                 $this->Utiliseoutil->recursive = 0;
 		$this->set('utiliseoutils', $this->paginate());
                 $etats = $this->Utiliseoutil->find('all',array('fields' => array('Utiliseoutil.STATUT'),'group'=>'Utiliseoutil.STATUT','order'=>array('Utiliseoutil.STATUT'=>'asc')));
-                $this->set('etats',$etats);                   
+                $this->set('etats',$etats); 
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -47,12 +52,17 @@ class UtiliseoutilsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('utiliseoutils', 'view')) :
 		$this->set('title_for_layout','Ouvertures des droits');
                 if (!$this->Utiliseoutil->exists($id)) {
 			throw new NotFoundException(__('Ouvertures des droits incorrecte'));
 		}
 		$options = array('conditions' => array('Utiliseoutil.' . $this->Utiliseoutil->primaryKey => $id));
 		$this->set('utiliseoutil', $this->Utiliseoutil->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -61,6 +71,7 @@ class UtiliseoutilsController extends AppController {
  * @return void
  */
 	public function add($id = null) {
+            if (isAuthorized('utiliseoutils', 'add')) :
 		$this->set('title_for_layout','Ouvertures des droits');
                 if($id==null){
                     $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'conditions'=>array('Utilisateur.id > 1')));
@@ -76,11 +87,11 @@ class UtiliseoutilsController extends AppController {
                 $this->set('dossierpartage',$dossierpartage );  
                 $etat = Configure::read('etatOuvertureDroit');
                 $this->set('etat',$etat);                 
-                if ($this->request->is('post')) {
+                if ($this->request->is('post')) :
 			$this->Utiliseoutil->create();
 			if ($this->Utiliseoutil->save($this->request->data)) {
                                 $history['Historyutilisateur']['utilisateur_id']=$this->request->data['Utiliseoutil']['utilisateur_id'];
-                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit";
+                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit".' par '.userAuth('NOMLONG');
                                 $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                            
 				$this->Session->setFlash(__('Ouvertures des droits sauvegardée'),'default',array('class'=>'alert alert-success'));
                                 if($id==null){
@@ -91,7 +102,11 @@ class UtiliseoutilsController extends AppController {
 			} else {
 				$this->Session->setFlash(__('Ouvertures des droits incorrecte, veuillez corriger cette ouverture de droit'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -102,6 +117,7 @@ class UtiliseoutilsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            if (isAuthorized('utiliseoutils', 'edit')) :
 		$this->set('title_for_layout','Ouvertures des droits');
                 $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOM'),'conditions'=>array('Utilisateur.id'=>$id)));
                 $this->set('utilisateur',$utilisateur);  
@@ -119,7 +135,7 @@ class UtiliseoutilsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Utiliseoutil->save($this->request->data)) {
                                 $history['Historyutilisateur']['utilisateur_id']=$this->request->data['Utiliseoutil']['utilisateur_id'];
-                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour d'une ouverture de droit";
+                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour d'une ouverture de droit".' par '.userAuth('NOMLONG');
                                 $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                               
 				$this->Session->setFlash(__('Ouvertures des droits sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
@@ -131,6 +147,10 @@ class UtiliseoutilsController extends AppController {
 			$this->request->data = $this->Utiliseoutil->find('first', $options);
                         $this->set('utiliseoutil', $this->Utiliseoutil->find('first', $options));
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -142,6 +162,7 @@ class UtiliseoutilsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('utiliseoutils', 'delete')) :
 		$this->set('title_for_layout','Ouvertures des droits');
                 $this->Utiliseoutil->id = $id;
                 $userid = $this->Utiliseoutil->read();
@@ -151,13 +172,17 @@ class UtiliseoutilsController extends AppController {
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Utiliseoutil->delete()) {
                         $history['Historyutilisateur']['utilisateur_id']=$userid['Utiliseoutil']['utilisateur_id'];
-                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une ouverture de droit";
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une ouverture de droit".' par '.userAuth('NOMLONG');
                         $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                         
 			$this->Session->setFlash(__('Ouvertures des droits supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
         
   /**
@@ -169,6 +194,7 @@ class UtiliseoutilsController extends AppController {
  * @return void
  */
 	public function progressState($id = null) {
+            if (isAuthorized('utiliseoutils', 'update')) :
 		$this->set('title_for_layout','Ouvertures des droits');
                 $newetat = '';
                 $this->Utiliseoutil->id = $id;
@@ -211,13 +237,17 @@ class UtiliseoutilsController extends AppController {
 		}
                 if ($this->Utiliseoutil->save($record)) { 
                     $history['Historyutilisateur']['utilisateur_id']=$record['Utiliseoutil']['utilisateur_id'];
-                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - changement d'état d'une ouverture de droit";
+                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - changement d'état d'une ouverture de droit".' par '.userAuth('NOMLONG');
                     $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                     
                     $this->Session->setFlash(__('Ouvertures des droits progression de l\'état'),'default',array('class'=>'alert alert-success'));
                     $this->redirect($this->goToPostion());
                 }
 		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> progression de l\'état'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}    
         
 /**
@@ -226,6 +256,7 @@ class UtiliseoutilsController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('utiliseoutils', 'index')) :
                 $this->set('title_for_layout','Ouvertures des droits');
                 $keyword=$this->params->data['Utiliseoutil']['SEARCH']; 
                 //$newconditions = array('OR'=>array("Message.LIBELLE LIKE '%$keyword%'","ModelName.name LIKE '%$keyword%'", "ModelName.email LIKE '%$keyword%'")  );
@@ -238,5 +269,9 @@ class UtiliseoutilsController extends AppController {
                 $etats = $this->Utiliseoutil->find('all',array('fields' => array('Utiliseoutil.STATUT'),'group'=>'Utiliseoutil.STATUT','order'=>array('Utiliseoutil.STATUT'=>'asc')));
                 $this->set('etats',$etats);                
                 $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
         }         
 }

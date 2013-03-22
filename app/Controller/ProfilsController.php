@@ -20,8 +20,13 @@ class ProfilsController extends AppController {
  * @return void
  */
 	public function index() {
+            if (isAuthorized('profils', 'index')) :
 		$this->Profil->recursive = 0;
 		$this->set('profils', $this->paginate());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -32,11 +37,16 @@ class ProfilsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+           if (isAuthorized('profils', 'view')) :
 		if (!$this->Profil->exists($id)) {
 			throw new NotFoundException(__('Profil incorrect'));
 		}
 		$options = array('conditions' => array('Profil.' . $this->Profil->primaryKey => $id));
 		$this->set('profil', $this->Profil->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -45,7 +55,8 @@ class ProfilsController extends AppController {
  * @return void
  */
 	public function add() {
-		if ($this->request->is('post')) {
+            if (isAuthorized('profils', 'add')) :
+		if ($this->request->is('post')) :
 			$this->Profil->create();
 			if ($this->Profil->save($this->request->data)) {
 				$this->Session->setFlash(__('Profil sauvegardé'),'default',array('class'=>'alert alert-success'));
@@ -53,7 +64,11 @@ class ProfilsController extends AppController {
 			} else {
 				$this->Session->setFlash(__('Profil incorrect, veuillez corriger le profil'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -64,6 +79,7 @@ class ProfilsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            if (isAuthorized('profils', 'edit')) :
 		if (!$this->Profil->exists($id)) {
 			throw new NotFoundException(__('Profil incorrect'));
 		}
@@ -78,6 +94,10 @@ class ProfilsController extends AppController {
 			$options = array('conditions' => array('Profil.' . $this->Profil->primaryKey => $id));
 			$this->request->data = $this->Profil->find('first', $options);
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -89,6 +109,7 @@ class ProfilsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('profils', 'delete')) :
 		$this->Profil->id = $id;
 		if (!$this->Profil->exists()) {
 			throw new NotFoundException(__('Profil incorrect'));
@@ -100,6 +121,10 @@ class ProfilsController extends AppController {
 		}
 		$this->Session->setFlash(__('Profil NON supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
         
 /**
@@ -108,6 +133,7 @@ class ProfilsController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('profils', 'index')) :
                 $keyword=$this->params->data['Profil']['SEARCH']; 
                 //$newconditions = array('OR'=>array("Message.LIBELLE LIKE '%$keyword%'","ModelName.name LIKE '%$keyword%'", "ModelName.email LIKE '%$keyword%'")  );
                 $newconditions = array('OR'=>array("Profil.NOM LIKE '%".$keyword."%'","Profil.COMMENTAIRE LIKE '%".$keyword."%'"));
@@ -117,5 +143,9 @@ class ProfilsController extends AppController {
                 $this->Profil->recursive = 0;
                 $this->set('profils', $this->paginate());
                 $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
         }         
 }

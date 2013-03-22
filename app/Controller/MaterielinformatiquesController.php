@@ -20,6 +20,7 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function index($filtreetat=null,$filtretype=null,$filtresection=null) {
+            if (isAuthorized('materielinformatiques', 'index')) :
                 switch ($filtreetat){
                     case 'tous':
                     case null:    
@@ -62,7 +63,11 @@ class MaterielinformatiquesController extends AppController {
                 $types = $this->Materielinformatique->find('all',array('fields' => array('Typemateriel.NOM'),'group'=>'Typemateriel.NOM','order'=>array('Typemateriel.NOM'=>'asc')));
                 $this->set('types',$types);    
                 $sections = $this->Materielinformatique->find('all',array('fields' => array('Section.NOM'),'group'=>'Section.NOM','order'=>array('Section.NOM'=>'asc')));
-                $this->set('sections',$sections);                 
+                $this->set('sections',$sections);  
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -73,12 +78,17 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+            if (isAuthorized('materielinformatiques', 'view')) :
 		$this->set('title_for_layout','Postes informatique');
                 if (!$this->Materielinformatique->exists($id)) {
 			throw new NotFoundException(__('Postes informatique incorrect'));
 		}
 		$options = array('conditions' => array('Materielinformatique.' . $this->Materielinformatique->primaryKey => $id));
 		$this->set('materielinformatique', $this->Materielinformatique->find('first', $options));
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -87,6 +97,7 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function add() {
+            if (isAuthorized('materielinformatiques', 'add')) :
                 $peripherique = $this->Materielinformatique->Typemateriel->find('list',array('fields' => array('id', 'NOM'),'conditions'=>array('id <'=>3)));
                 $this->set('peripherique',$peripherique);                
                 $section = $this->Materielinformatique->Section->find('list',array('fields' => array('id', 'NOM')));
@@ -96,7 +107,7 @@ class MaterielinformatiquesController extends AppController {
                 $etat = Configure::read('etatMaterielInformatique');
                 $this->set('etat',$etat); 
                 $this->set('title_for_layout','Postes informatique');
-                if ($this->request->is('post')) {
+                if ($this->request->is('post')) :
 			$this->Materielinformatique->create();
 			if ($this->Materielinformatique->save($this->request->data)) {
 				$this->Session->setFlash(__('Postes informatique sauvegardé'),'default',array('class'=>'alert alert-success'));
@@ -104,7 +115,11 @@ class MaterielinformatiquesController extends AppController {
 			} else {
 				$this->Session->setFlash(__('Postes informatique incorrect, veuillez corriger le poste informatique'),'default',array('class'=>'alert alert-error'));
 			}
-		}
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -115,6 +130,7 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            if (isAuthorized('materielinformatiques', 'edit')) :
 		$this->set('title_for_layout','Postes informatique');
                 $peripherique = $this->Materielinformatique->Typemateriel->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('peripherique',$peripherique);                
@@ -139,6 +155,10 @@ class MaterielinformatiquesController extends AppController {
 			$this->request->data = $this->Materielinformatique->find('first', $options);
                         $this->set('materielinformatique',$this->request->data);
 		}
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
 
 /**
@@ -150,6 +170,7 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            if (isAuthorized('materielinformatiques', 'delete')) :
 		$this->set('title_for_layout','Postes informatique');
                 $this->Materielinformatique->id = $id;
 		if (!$this->Materielinformatique->exists()) {
@@ -162,6 +183,10 @@ class MaterielinformatiquesController extends AppController {
 		}
 		$this->Session->setFlash(__('Postes informatique <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}
         
 /**
@@ -170,6 +195,7 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function search() {
+            if (isAuthorized('materielinformatiques', 'index')) :
                 $this->set('title_for_layout','Postes informatique');
                 $keyword=$this->params->data['Materielinformatique']['SEARCH']; 
                 $newconditions = array('OR'=>array("Materielinformatique.NOM LIKE '%".$keyword."%'","Materielinformatique.ETAT LIKE '%".$keyword."%'","Materielinformatique.COMMENTAIRE LIKE '%".$keyword."%'","Assistance.NOM LIKE '%".$keyword."%'","Section.NOM LIKE '%".$keyword."%'","Typemateriel.NOM LIKE '%".$keyword."%'"));
@@ -184,5 +210,9 @@ class MaterielinformatiquesController extends AppController {
                 $sections = $this->Materielinformatique->find('all',array('fields' => array('Section.NOM'),'group'=>'Section.NOM','order'=>array('Section.NOM'=>'asc')));
                 $this->set('sections',$sections);                 
                 $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
         }   
 }

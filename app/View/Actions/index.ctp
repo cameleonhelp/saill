@@ -73,8 +73,10 @@ function styleBarre($avancement){
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
+                <?php endif; ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Priorité <b class="caret"></b></a>
                      <ul class="dropdown-menu">
@@ -150,10 +152,16 @@ function styleBarre($avancement){
 		<td style="text-align:center;"><?php echo h($action['Action']['DUREEPREVUE']); ?> h</td>
 		<td style="text-align:center;"><?php echo h($action['Action']['PRIORITE']); ?>&nbsp;</td>
 		<td class="actions">
+                        <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'view')) : ?>
                         <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($action['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($action['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
-			<?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $action['Action']['id']),array('escape' => false)); ?>&nbsp;
-			<?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette action ?')); ?>                    
-		</td>
+			<?php endif; ?>
+                        <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'edit')) : ?>
+                        <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $action['Action']['id']),array('escape' => false)); ?>&nbsp;
+			<?php endif; ?>
+                        <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'delete')) : ?>
+                        <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette action ?')); ?>                    
+                        <?php endif; ?>
+                </td>
 	</tr>
 <?php endforeach; ?>
         </tbody>

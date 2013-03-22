@@ -623,3 +623,26 @@ class NotImplementedException extends CakeException {
 //@codingStandardsIgnoreEnd
 
 }
+
+
+/**
+ * Represents an HTTP 404 error.
+ *
+ * @package       Cake.Error
+ */
+class NotAuthorizedException extends HttpException {
+
+/**
+ * Constructor
+ *
+ * @param string $message If no message is given 'Not Found' will be the message
+ * @param string $code Status code, defaults to 999
+ */
+	public function __construct($message = null, $code = 900) {
+		if (empty($message)) {
+			$message = '';
+		}
+		parent::__construct($message, $code);
+	}
+
+}
