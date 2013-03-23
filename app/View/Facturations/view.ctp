@@ -11,9 +11,14 @@
 			<?php echo $this->Html->link($facturation['Utilisateur']['id'], array('controller' => 'utilisateurs', 'action' => 'view', $facturation['Utilisateur']['id'])); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Activite Id'); ?></dt>
+		<dt><?php echo __('Activite'); ?></dt>
 		<dd>
-			<?php echo h($facturation['Facturation']['activite_id']); ?>
+			<?php echo $this->Html->link($facturation['Activite']['id'], array('controller' => 'activites', 'action' => 'view', $facturation['Activite']['id'])); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('Activitesreelle Id'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['activitesreelle_id']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('DATE'); ?></dt>
@@ -21,14 +26,14 @@
 			<?php echo h($facturation['Facturation']['DATE']); ?>
 			&nbsp;
 		</dd>
+		<dt><?php echo __('VERSION'); ?></dt>
+		<dd>
+			<?php echo h($facturation['Facturation']['VERSION']); ?>
+			&nbsp;
+		</dd>
 		<dt><?php echo __('LU'); ?></dt>
 		<dd>
 			<?php echo h($facturation['Facturation']['LU']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('LU TYPE'); ?></dt>
-		<dd>
-			<?php echo h($facturation['Facturation']['LU_TYPE']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('MA'); ?></dt>
@@ -36,19 +41,9 @@
 			<?php echo h($facturation['Facturation']['MA']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('MA TYPE'); ?></dt>
-		<dd>
-			<?php echo h($facturation['Facturation']['MA_TYPE']); ?>
-			&nbsp;
-		</dd>
 		<dt><?php echo __('ME'); ?></dt>
 		<dd>
 			<?php echo h($facturation['Facturation']['ME']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('ME TYPE'); ?></dt>
-		<dd>
-			<?php echo h($facturation['Facturation']['ME_TYPE']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('JE'); ?></dt>
@@ -56,19 +51,9 @@
 			<?php echo h($facturation['Facturation']['JE']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('JE TYPE'); ?></dt>
-		<dd>
-			<?php echo h($facturation['Facturation']['JE_TYPE']); ?>
-			&nbsp;
-		</dd>
 		<dt><?php echo __('VE'); ?></dt>
 		<dd>
 			<?php echo h($facturation['Facturation']['VE']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('VE TYPE'); ?></dt>
-		<dd>
-			<?php echo h($facturation['Facturation']['VE_TYPE']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('SA'); ?></dt>
@@ -76,19 +61,14 @@
 			<?php echo h($facturation['Facturation']['SA']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('SA TYPE'); ?></dt>
-		<dd>
-			<?php echo h($facturation['Facturation']['SA_TYPE']); ?>
-			&nbsp;
-		</dd>
 		<dt><?php echo __('DI'); ?></dt>
 		<dd>
 			<?php echo h($facturation['Facturation']['DI']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('DI TYPE'); ?></dt>
+		<dt><?php echo __('NUMEROFTGALILEI'); ?></dt>
 		<dd>
-			<?php echo h($facturation['Facturation']['DI_TYPE']); ?>
+			<?php echo h($facturation['Facturation']['NUMEROFTGALILEI']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Created'); ?></dt>
@@ -112,7 +92,7 @@
 		<li><?php echo $this->Html->link(__('New Facturation'), array('action' => 'add')); ?> </li>
 		<li><?php echo $this->Html->link(__('List Utilisateurs'), array('controller' => 'utilisateurs', 'action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New Utilisateur'), array('controller' => 'utilisateurs', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Actions'), array('controller' => 'actions', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Action'), array('controller' => 'actions', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Activites'), array('controller' => 'activites', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Activite'), array('controller' => 'activites', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

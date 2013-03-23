@@ -156,10 +156,8 @@
             <?php if (userAuth('profil_id')!='2' && isAuthorized('tjmagents', 'index')) : ?>
             <li class="<?php echo $classTJMAgents; ?>"><?php echo $this->Html->link('TJM Agents',array('controller'=>'tjmagents','action'=>'index'),array('escape' => false)); ?></li>
             <?php endif; ?>
-            <?php if (userAuth('profil_id')!='2' && (isAuthorized('plandecharges', 'index')  || isAuthorized('facturations', 'index'))) : ?>
-            <li class="divider"></li>
-            <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('plandecharges', 'index')) : ?>
+            <li class="divider"></li>
             <li class="<?php echo $classPlanDeCharge; ?>"><?php echo $this->Html->link('Plan de charge',array('controller'=>'plandecharges','action'=>'index'),array('escape' => false)); ?></li>
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'index')) : ?>            

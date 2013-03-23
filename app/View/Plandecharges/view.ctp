@@ -6,19 +6,29 @@
 			<?php echo h($plandecharge['Plandecharge']['id']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Affectation'); ?></dt>
+		<dt><?php echo __('Utilisateur Id'); ?></dt>
 		<dd>
-			<?php echo $this->Html->link($plandecharge['Affectation']['id'], array('controller' => 'affectations', 'action' => 'view', $plandecharge['Affectation']['id'])); ?>
+			<?php echo h($plandecharge['Plandecharge']['utilisateur_id']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('CHARGE'); ?></dt>
+		<dt><?php echo __('Domaine Id'); ?></dt>
 		<dd>
-			<?php echo h($plandecharge['Plandecharge']['CHARGE']); ?>
+			<?php echo h($plandecharge['Plandecharge']['domaine_id']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('DATE'); ?></dt>
+		<dt><?php echo __('Activite Id'); ?></dt>
 		<dd>
-			<?php echo h($plandecharge['Plandecharge']['DATE']); ?>
+			<?php echo h($plandecharge['Plandecharge']['activite_id']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('CHARGEPREVUE'); ?></dt>
+		<dd>
+			<?php echo h($plandecharge['Plandecharge']['CHARGEPREVUE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('PERIODE'); ?></dt>
+		<dd>
+			<?php echo h($plandecharge['Plandecharge']['PERIODE']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Created'); ?></dt>
@@ -26,9 +36,9 @@
 			<?php echo h($plandecharge['Plandecharge']['created']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Modeified'); ?></dt>
+		<dt><?php echo __('Modified'); ?></dt>
 		<dd>
-			<?php echo h($plandecharge['Plandecharge']['modeified']); ?>
+			<?php echo h($plandecharge['Plandecharge']['modified']); ?>
 			&nbsp;
 		</dd>
 	</dl>

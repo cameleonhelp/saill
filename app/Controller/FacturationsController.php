@@ -48,8 +48,8 @@ class FacturationsController extends AppController {
 			}
 		}
 		$utilisateurs = $this->Facturation->Utilisateur->find('list');
-		$actions = $this->Facturation->Action->find('list');
-		$this->set(compact('utilisateurs', 'actions'));
+		$activites = $this->Facturation->Activite->find('list');
+		$this->set(compact('utilisateurs', 'activites'));
 	}
 
 /**
@@ -75,8 +75,8 @@ class FacturationsController extends AppController {
 			$this->request->data = $this->Facturation->find('first', $options);
 		}
 		$utilisateurs = $this->Facturation->Utilisateur->find('list');
-		$actions = $this->Facturation->Action->find('list');
-		$this->set(compact('utilisateurs', 'actions'));
+		$activites = $this->Facturation->Activite->find('list');
+		$this->set(compact('utilisateurs', 'activites'));
 	}
 
 /**

@@ -3,23 +3,25 @@
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('affectation_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('CHARGE'); ?></th>
-			<th><?php echo $this->Paginator->sort('DATE'); ?></th>
+			<th><?php echo $this->Paginator->sort('utilisateur_id'); ?></th>
+			<th><?php echo $this->Paginator->sort('domaine_id'); ?></th>
+			<th><?php echo $this->Paginator->sort('activite_id'); ?></th>
+			<th><?php echo $this->Paginator->sort('CHARGEPREVUE'); ?></th>
+			<th><?php echo $this->Paginator->sort('PERIODE'); ?></th>
 			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('modeified'); ?></th>
+			<th><?php echo $this->Paginator->sort('modified'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($plandecharges as $plandecharge): ?>
 	<tr>
 		<td><?php echo h($plandecharge['Plandecharge']['id']); ?>&nbsp;</td>
-		<td>
-			<?php echo $this->Html->link($plandecharge['Affectation']['id'], array('controller' => 'affectations', 'action' => 'view', $plandecharge['Affectation']['id'])); ?>
-		</td>
-		<td><?php echo h($plandecharge['Plandecharge']['CHARGE']); ?>&nbsp;</td>
-		<td><?php echo h($plandecharge['Plandecharge']['DATE']); ?>&nbsp;</td>
+		<td><?php echo h($plandecharge['Plandecharge']['utilisateur_id']); ?>&nbsp;</td>
+		<td><?php echo h($plandecharge['Plandecharge']['domaine_id']); ?>&nbsp;</td>
+		<td><?php echo h($plandecharge['Plandecharge']['activite_id']); ?>&nbsp;</td>
+		<td><?php echo h($plandecharge['Plandecharge']['CHARGEPREVUE']); ?>&nbsp;</td>
+		<td><?php echo h($plandecharge['Plandecharge']['PERIODE']); ?>&nbsp;</td>
 		<td><?php echo h($plandecharge['Plandecharge']['created']); ?>&nbsp;</td>
-		<td><?php echo h($plandecharge['Plandecharge']['modeified']); ?>&nbsp;</td>
+		<td><?php echo h($plandecharge['Plandecharge']['modified']); ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $plandecharge['Plandecharge']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $plandecharge['Plandecharge']['id'])); ?>

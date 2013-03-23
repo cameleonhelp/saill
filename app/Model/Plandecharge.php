@@ -3,7 +3,9 @@ App::uses('AppModel', 'Model');
 /**
  * Plandecharge Model
  *
- * @property Affectation $Affectation
+ * @property Utilisateur $Utilisateur
+ * @property Domaine $Domaine
+ * @property Activite $Activite
  */
 class Plandecharge extends AppModel {
 
@@ -13,7 +15,7 @@ class Plandecharge extends AppModel {
  * @var array
  */
 	public $validate = array(
-		'affectation_id' => array(
+		'utilisateur_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -23,7 +25,7 @@ class Plandecharge extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'CHARGE' => array(
+		'domaine_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -33,9 +35,9 @@ class Plandecharge extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'DATE' => array(
-			'date' => array(
-				'rule' => array('date'),
+		'activite_id' => array(
+			'numeric' => array(
+				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -43,7 +45,17 @@ class Plandecharge extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'modeified' => array(
+		'CHARGEPREVUE' => array(
+			'numeric' => array(
+				'rule' => array('numeric'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'PERIODE' => array(
 			'date' => array(
 				'rule' => array('date'),
 				//'message' => 'Your custom message here',
@@ -63,9 +75,23 @@ class Plandecharge extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Affectation' => array(
-			'className' => 'Affectation',
-			'foreignKey' => 'affectation_id',
+		'Utilisateur' => array(
+			'className' => 'Utilisateur',
+			'foreignKey' => 'utilisateur_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'Domaine' => array(
+			'className' => 'Domaine',
+			'foreignKey' => 'domaine_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'Activite' => array(
+			'className' => 'Activite',
+			'foreignKey' => 'activite_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

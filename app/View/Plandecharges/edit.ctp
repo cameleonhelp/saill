@@ -4,10 +4,11 @@
 		<legend><?php echo __('Edit Plandecharge'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
-		echo $this->Form->input('affectation_id');
-		echo $this->Form->input('CHARGE');
-		echo $this->Form->input('DATE');
-		echo $this->Form->input('modeified');
+		echo $this->Form->input('utilisateur_id');
+		echo $this->Form->input('domaine_id');
+		echo $this->Form->input('activite_id');
+		echo $this->Form->input('CHARGEPREVUE');
+		echo $this->Form->input('PERIODE');
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>
