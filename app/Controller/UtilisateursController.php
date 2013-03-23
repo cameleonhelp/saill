@@ -295,7 +295,7 @@ class UtilisateursController extends AppController {
                     $options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));
                     $this->request->data = $this->Utilisateur->find('first', $options);
                     $this->set('utilisateur', $this->Utilisateur->find('first', $options));
-                    $options = array('conditions' => array('Historyutilisateur.utilisateur_id' => $id),'order'=>array('Historyutilisateur.created'=> 'desc','Historyutilisateur.HISTORIQUE'=>'desc'));
+                    $options = array('conditions' => array('Historyutilisateur.utilisateur_id' => $id),'limit'=>10,'order'=>array('Historyutilisateur.created'=> 'desc','Historyutilisateur.HISTORIQUE'=>'desc'));
                     $historyutilisateurs = $this->Utilisateur->Historyutilisateur->find('all',$options);
                     $this->set('historyutilisateurs',$historyutilisateurs);
                     $options = array('conditions' => array('Utiliseoutil.utilisateur_id' => $id));
@@ -369,11 +369,13 @@ class UtilisateursController extends AppController {
                             }
                         } else {
                         $this->Session->renew();
-                        $this->Session->setFlash(__('Mot de passe invalide, réessayer'),'default',array('class'=>'alert alert-error'));
+                        $this->Cookie->delete('remember_me_cookie');
+                        $this->Session->setFlash(__('Cookie : Mot de passe invalide, réessayer'),'default',array('class'=>'alert alert-error'));
                         }                    
                     } else {
                     $this->Session->renew();
-                    $this->Session->setFlash(__('Login inexistant ou compte invalide, contacter l\'administrateur'),'default',array('class'=>'alert alert-error'));
+                    $this->Cookie->delete('remember_me_cookie');
+                    $this->Session->setFlash(__('Cookie : Login inexistant ou compte invalide, contacter l\'administrateur'),'default',array('class'=>'alert alert-error'));
                     }
                 }
             }
