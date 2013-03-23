@@ -43,7 +43,7 @@
                      </ul>
                 </li>                  
                 <li class="divider-vertical"></li>
-                <li><a href="#"><i class="ico-xls"></i></a></li>
+                <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>
                 </ul> 
                 <?php echo $this->Form->create("Livrable",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>

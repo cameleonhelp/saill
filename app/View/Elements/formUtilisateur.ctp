@@ -104,9 +104,9 @@
                         </div>
                     </div>                        
                     <div class="control-group">
-                        <label class="control-label sstitre" for="UtilisateurWORKCAPACITY">Capacité de travail : </label>
+                        <label class="control-label sstitre required" for="UtilisateurWORKCAPACITY">Capacité de travail : </label>
                         <div class="controls">
-                            <?php echo $this->Form->select('WORKCAPACITY',$workcapacite,array('selected' => $this->data['Utilisateur']['WORKCAPACITY'])); ?>
+                            <?php echo $this->Form->select('WORKCAPACITY',$workcapacite,array('data-rule-required'=>'true','data-msg-required'=>"La capacité de travail est obligatoire dans l'onglet administration",'selected' => $this->data['Utilisateur']['WORKCAPACITY'])); ?>
                         </div>
                     </div>                           
                      <div class="control-group">

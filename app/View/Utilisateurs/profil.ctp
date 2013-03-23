@@ -80,8 +80,9 @@
                     <div class="control-group">
                         <label class="control-label sstitre" for="UtilisateurPasswordNew">Mot de passe : </label>
                         <div class="controls">
-                            <?php echo $this->Form->input('password_new',array('placeholder'=>'Mot de passe')); ?>
-                            <?php echo $this->Form->input('password_confirm',array('placeholder'=>'Confirmation du mot de passe')); ?>
+                            <?php echo $this->Form->input('password_new',array('type'=>'password','data-rule-minlength'=>'5','data-msg-minlength'=>"Le mot de passe doit avoir au moins 5 caractères",'placeholder'=>'Mot de passe')); ?>
+                            &nbsp;<label class="sstitre horizontal form-inline" for="UtilisateurPassword">Confirmation </label>
+                            <?php echo $this->Form->input('password_confirm',array('type'=>'password','data-rule-equalto'=>'#UtilisateurPasswordNew','data-msg-equalto'=>"Les mots de passe ne sont pas identiques",'placeholder'=>'Confirmation du mot de passe','value'=>'')); ?>    
                         </div>
                     </div>                      
                     <div class="control-group">
@@ -329,5 +330,5 @@
             </div>
         </div>
     </div> 
-<?php if ($this->params->action == 'edit') echo $this->Form->input('id',array('type'=>'hidden')); ?>    
+<?php echo $this->Form->input('id',array('type'=>'hidden')); ?>    
 <?php echo $this->Form->end(); ?>

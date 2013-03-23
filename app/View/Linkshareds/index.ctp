@@ -33,7 +33,7 @@
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('linkshareds', 'view')) : ?>
                     <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Lien :</h3>" data-content="<contenttitle>Crée par: </contenttitle>'.h($linkshared['Utilisateur']['NOMLONG']).'<br/><contenttitle>Crée le: </contenttitle>'.h($linkshared['Linkshared']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($linkshared['Linkshared']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
                     <?php endif; ?>
-                    <?php if (userAuth('profil_id')!='2' && isAuthorized('linkshareds', 'edit')) : ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('linkshareds', 'edit') && userAuth('id')==$linkshared['Linkshared']['utilisateur_id']) : ?>
                     <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $linkshared['Linkshared']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('linkshareds', 'delete') && userAuth('id')==$linkshared['Linkshared']['utilisateur_id']) : ?>

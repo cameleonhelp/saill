@@ -101,6 +101,9 @@ class LivrablesController extends AppController {
 		$this->Livrable->recursive = 0;
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->set('livrables', $this->paginate());
+                $this->Session->delete('xls_export');
+                $export = $this->Livrable->find('all',array('conditions'=>$newconditions));
+                $this->Session->write('xls_export',$export);                   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
@@ -245,11 +248,24 @@ class LivrablesController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 
                 $this->autoRender = false;
                 $this->Livrable->recursive = 0;
-                $this->set('livrables', $this->paginate());              
+                $this->set('livrables', $this->paginate());
+                $this->Session->delete('xls_export');
+                $export = $this->Livrable->find('all',array('conditions'=>$newconditions));
+                $this->Session->write('xls_export',$export);                 
                 $this->render('index'); 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
             endif;                
-        }           
+        }       
+        
+/**
+ * export_xls
+ * 
+ */       
+	function export_xls() {
+		$data = $this->Session->read('xls_export');
+		$this->set('rows',$data);
+		$this->render('export_xls','export_xls');
+	}         
 }

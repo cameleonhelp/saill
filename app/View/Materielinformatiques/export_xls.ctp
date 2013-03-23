@@ -14,29 +14,42 @@
 </STYLE>
 <table>
 	<tr>
-		<td><b>Export To Excel Sample<b></td>
+		<td><b>Export des matériels informatiques depuis le site OSACT<b></td>
 	</tr>
 	<tr>
 		<td><b>Date:</b></td>
-		<td><?php echo date("F j, Y, g:i a"); ?></td>
+		<td><?php echo date("d/m/Y H:i:s"); ?></td>
 	</tr>
 	<tr>
-		<td><b>Number of Rows:</b></td>
+		<td><b>Nombre de lignes:</b></td>
 		<td style="text-align:left"><?php echo count($rows);?></td>
 	</tr>
 	<tr>
 		<td></td>
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Column 1</td>
-			<td class="tableTd">Column 2</td>
+			<td class="tableTd">Nom</td>
+			<td class="tableTd">Type</td>
+                        <td class="tableTd">Section</td>
+                        <td class="tableTd">Assistance</td>
+                        <td class="tableTd">Etat</td>
+                        <td class="tableTd">Wifi</td>
+                        <td class="tableTd">VPN</td>
+                        <td class="tableTd">Commentaire</td>
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
-			echo '<td class="tableTdContent">'.$row['Myview']['column1'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Myview']['column2'].'</td>';
-			echo '</tr>';
+			echo '<td class="tableTdContent">'.$row['Materielinformatique']['NOM'].'</td>';
+			echo '<td class="tableTdContent">'.$row['Typemateriel']['NOM'].'</td>';
+			echo '<td class="tableTdContent">'.$row['Section']['NOM'].'</td>';                        
+			echo '<td class="tableTdContent">'.$row['Assistance']['NOM'].'</td>';
+			echo '<td class="tableTdContent">'.$row['Materielinformatique']['ETAT'].'</td>';
+                        $wifi = $row['Materielinformatique']['WIFI']==1 ? 'Oui' : 'Non';
+			echo '<td class="tableTdContent">'.$wifi.'</td>';
+                        $vpn = $row['Materielinformatique']['VPN']==1 ? 'Oui' : 'Non';
+			echo '<td class="tableTdContent">'.$vpn.'</td>';
+			echo '<td class="tableTdContent">'.$row['Materielinformatique']['COMMENTAIRE'].'</td>';
+                        echo '</tr>';
 			endforeach;
 		?>
 </table>
-

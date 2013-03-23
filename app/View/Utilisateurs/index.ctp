@@ -26,12 +26,12 @@
                      <li><?php echo $this->Html->link('Toutes', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','allsections')); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($sections as $section): ?>
-                            <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$section['Section']['NOM'])); ?></li>
+                            <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$section['Section']['id'])); ?></li>
                          <?php endforeach; ?>
                       </ul>
                  </li>                  
                  <li class="divider-vertical"></li>
-                <li><a href="#"><i class="ico-xls"></i></a></li>
+                <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
                 </ul> 
                 <?php echo $this->Form->create("Utilisateur",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>

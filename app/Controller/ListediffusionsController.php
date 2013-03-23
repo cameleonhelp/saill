@@ -24,6 +24,9 @@ class ListediffusionsController extends AppController {
 		$this->set('title_for_layout','Listes de diffusion');
                 $this->Listediffusion->recursive = 0;
 		$this->set('listediffusions', $this->paginate());
+                $this->Session->delete('xls_export');
+                $export = $this->Listediffusion->find('all',array('conditions'=>$newconditions));
+                $this->Session->write('xls_export',$export);                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
@@ -149,11 +152,24 @@ class ListediffusionsController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;
                 $this->Listediffusion->recursive = 0;
-                $this->set('listediffusions', $this->paginate());              
+                $this->set('listediffusions', $this->paginate()); 
+                $this->Session->delete('xls_export');
+                $export = $this->Listediffusion->find('all',array('conditions'=>$newconditions));
+                $this->Session->write('xls_export',$export);                    
                 $this->render('index');
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
             endif;                
-        }         
+        }  
+        
+/**
+ * export_xls
+ * 
+ */       
+	function export_xls() {
+		$data = $this->Session->read('xls_export');
+		$this->set('rows',$data);
+		$this->render('export_xls','export_xls');
+	}         
 }

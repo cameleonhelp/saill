@@ -53,6 +53,9 @@ class ProjetsController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->Projet->recursive = 0;
 		$this->set('projets', $this->paginate());
+                $this->Session->delete('xls_export');
+                $export = $this->Projet->find('all',array('conditions'=>$newconditions));
+                $this->Session->write('xls_export',$export);                   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
@@ -183,6 +186,9 @@ class ProjetsController extends AppController {
                 $this->autoRender = false;
                 $this->Projet->recursive = 0;
                 $this->set('utilisateurs', $this->paginate());
+                $this->Session->delete('xls_export');
+                $export = $this->Projet->find('all',array('conditions'=>$newconditions));
+                $this->Session->write('xls_export',$export);                
                 $contrats = $this->Projet->Contrat->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1'));
                 $this->set('contrats',$contrats);
                 $this->render('index');
@@ -190,5 +196,15 @@ class ProjetsController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
             endif;                
-        }          
+        }      
+        
+/**
+ * export_xls
+ * 
+ */       
+	function export_xls() {
+		$data = $this->Session->read('xls_export');
+		$this->set('rows',$data);
+		$this->render('export_xls','export_xls');
+	}         
 }

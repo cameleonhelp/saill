@@ -58,6 +58,9 @@ class MaterielinformatiquesController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->Materielinformatique->recursive = 0;
 		$this->set('materielinformatiques', $this->paginate());
+                $this->Session->delete('xls_export');
+                $export = $this->Materielinformatique->find('all',array('conditions'=>$newconditions));
+                $this->Session->write('xls_export',$export);                
                 $etats = $this->Materielinformatique->find('all',array('fields' => array('ETAT'),'group'=>'ETAT','order'=>array('ETAT'=>'asc')));
                 $this->set('etats',$etats); 
                 $types = $this->Materielinformatique->find('all',array('fields' => array('Typemateriel.NOM'),'group'=>'Typemateriel.NOM','order'=>array('Typemateriel.NOM'=>'asc')));
@@ -203,6 +206,9 @@ class MaterielinformatiquesController extends AppController {
                 $this->autoRender = false;
                 $this->Materielinformatique->recursive = 0;
                 $this->set('materielinformatiques', $this->paginate());
+                $this->Session->delete('xls_export');
+                $export = $this->Materielinformatique->find('all',array('conditions'=>$newconditions));
+                $this->Session->write('xls_export',$export);                  
                 $etats = $this->Materielinformatique->find('all',array('fields' => array('ETAT'),'group'=>'ETAT','order'=>array('ETAT'=>'asc')));
                 $this->set('etats',$etats); 
                 $types = $this->Materielinformatique->find('all',array('fields' => array('Typemateriel.NOM'),'group'=>'Typemateriel.NOM','order'=>array('Typemateriel.NOM'=>'asc')));
@@ -215,4 +221,14 @@ class MaterielinformatiquesController extends AppController {
                 throw new NotAuthorizedException();
             endif;                
         }   
+        
+/**
+ * export_xls
+ * 
+ */       
+	function export_xls() {
+		$data = $this->Session->read('xls_export');
+		$this->set('rows',$data);
+		$this->render('export_xls','export_xls');
+	}         
 }

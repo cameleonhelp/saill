@@ -58,8 +58,9 @@ class UtilisateursController extends AppController {
                         $fsection = "toutes les sections";
                         break;
                     default :
-                        $newconditions[]="Section.NOM='".$filtreSection."'";
-                        $fsection = "la section ".$filtreSection;                        
+                        $newconditions[]="Section.id='".$filtreSection."'";
+                        $section = $this->Utilisateur->Section->find('first',array('conditions'=>array('Section.id'=>$filtreSection)));
+                        $fsection = "la section ".$section['Section']['NOM'];                        
                 }    
                 
                 $this->set('fsection',$fsection);
@@ -67,7 +68,11 @@ class UtilisateursController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Utilisateur->recursive = 0;
 		$this->set('utilisateurs', $this->paginate());
-                $sections = $this->Utilisateur->Section->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
+                $this->Session->delete('xls_export');
+                $newconditions = array_merge($newconditions,array('Utilisateur.id > '=> 1));
+                $export = $this->Utilisateur->find('all',array('conditions'=>$newconditions));
+                $this->Session->write('xls_export',$export);                  
+                $sections = $this->Utilisateur->Section->find('all',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
                 $this->set('sections',$sections);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -250,6 +255,7 @@ class UtilisateursController extends AppController {
             }
             if ($this->request->is('post') || $this->request->is('put')) {
                 $this->Utilisateur->id = $id;
+                if (!empty($this->request->data['Utilisateur']['password_confirm']))$this->request->data['Utilisateur']['password'] = $this->request->data['Utilisateur']['password_confirm'];
                 if ($this->Utilisateur->save($this->request->data)) {
                     $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur mis à jour".' par '.userAuth('NOMLONG');
@@ -488,6 +494,10 @@ class UtilisateursController extends AppController {
                 $this->autoRender = false;
                 $this->Utilisateur->recursive = 0;
                 $this->set('utilisateurs', $this->paginate());
+                $this->Session->delete('xls_export');
+                $newconditions = array_merge($newconditions,array('Utilisateur.id>1'));
+                $export = $this->Utilisateur->find('all',array('Utilisateur.id > '=> 1));
+                $this->Session->write('xls_export',$export);                                 
                 $sections = $this->Utilisateur->Section->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
                 $this->set('sections',$sections);
                 $this->render('index');
@@ -495,5 +505,15 @@ class UtilisateursController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
             endif;                
-        }         
+        }    
+        
+/**
+ * export_xls
+ * 
+ */       
+	function export_xls() {
+		$data = $this->Session->read('xls_export');
+		$this->set('rows',$data);
+		$this->render('export_xls','export_xls');
+	}         
 }

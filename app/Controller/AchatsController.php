@@ -35,7 +35,8 @@ class AchatsController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->set('achats', $this->paginate());
                 $this->Session->delete('xls_export');
-                $this->Session->write('xls_export',$this->paginate());
+                $export = $this->Achat->find('all',array('conditions'=>$newconditions));
+                $this->Session->write('xls_export',$export); 
                 $activites = $this->Achat->Activite->find('all',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1')));
                 $this->set('activites',$activites); 
             else :
@@ -161,7 +162,8 @@ class AchatsController extends AppController {
                 $this->Achat->recursive = 0;
                 $this->set('achats', $this->paginate());
                 $this->Session->delete('xls_export');
-                $this->Session->write('xls_export',$this->paginate());                
+                $export = $this->Achat->find('all',array('conditions'=>$newconditions));
+                $this->Session->write('xls_export',$export);                
                 $activites = $this->Achat->Activite->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
                 $this->set('activites',$activites);  
                 $this->render('index');

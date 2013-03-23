@@ -16,7 +16,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-$cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('version')));
+$cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('version').' '));
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -40,7 +40,8 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
                 echo $this->Html->script('jquery');
                 echo $this->Html->script('bootstrap');              
                 echo $this->Html->script('editable'); 
-                echo $this->Html->script('validate');                
+                echo $this->Html->script('validate');  
+                echo $this->Html->script('additional-methods');                  
                 echo $this->Html->script('messages_fr'); 
                 echo $this->Html->script('datepicker'); 
                 echo $this->Html->script('select'); 
