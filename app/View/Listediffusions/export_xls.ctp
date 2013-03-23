@@ -35,8 +35,9 @@
 		<?php foreach($rows as $row):
 			echo '<tr>';
 			echo '<td class="tableTdContent">'.$row['Listediffusion']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Utilisateur']['NOMLONG'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Listediffusion']['DESCRITPION'].'</td>';                        
+                        $utilisateur = !is_null($row['Utilisateur']['NOMLONG']) ? $row['Utilisateur']['NOMLONG'] : '';
+			echo '<td class="tableTdContent">'.$utilisateur.'</td>';
+			echo '<td class="tableTdContent">'.$row['Listediffusion']['DESCRIPTION'].'</td>';                        
 			echo '</tr>';
 			endforeach;
 		?>

@@ -35,7 +35,7 @@
                     <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $profil['Profil']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('profils', 'delete')) : ?>
-                    <?php echo $profil['Profil']['id'] != 1 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $profil['Profil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce profil ?') ): ''; ?>
+                    <?php echo $profil['Profil']['id'] > 9 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $profil['Profil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce profil ?') ): ''; ?>
                     <?php endif; ?>
 		</td>
 	</tr>
