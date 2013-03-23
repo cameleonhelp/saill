@@ -71,6 +71,8 @@ class AutorisationsController extends AppController {
 	public function add() {
             if (isAuthorized('autorisations', 'index')) :
                 $models = $this->Autorisation->findAllTables($this->Autorisation);
+                $models = array_merge($models,array('rapports'=>'rapports'));
+                asort($models);
                 $this->set('models',$models);
                 $profil = $this->Autorisation->Profil->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('profil',$profil);
