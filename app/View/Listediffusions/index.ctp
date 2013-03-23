@@ -20,6 +20,7 @@
         <thead>
 	<tr>
 			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
+                        <th><?php echo $this->Paginator->sort('NOMLONG','Gestionnaire'); ?></th>
 			<th><?php echo $this->Paginator->sort('DESCRIPTION','Description'); ?></th>
 			<th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
 	</tr>
@@ -28,6 +29,7 @@
 	<?php foreach ($listediffusions as $listediffusion): ?>
 	<tr>
 		<td><?php echo h($listediffusion['Listediffusion']['NOM']); ?>&nbsp;</td>
+                <td><?php echo h($listediffusion['Utilisateur']['NOMLONG']); ?>&nbsp;</td>
 		<td><?php echo $listediffusion['Listediffusion']['DESCRIPTION']; ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('listediffusions', 'view')) : ?>

@@ -68,6 +68,8 @@ class ListediffusionsController extends AppController {
 				$this->Session->setFlash(__('Liste de diffusion incorrecte, veuillez corriger la liste de diffusion'),'default',array('class'=>'alert alert-error'));
 			}
                 endif;
+                $utilisateurs = $this->Listediffusion->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1'),'order'=>'Utilisateur.NOMLONG ASC'));
+                $this->set('utilisateurs',$utilisateurs);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
@@ -98,6 +100,8 @@ class ListediffusionsController extends AppController {
 			$options = array('conditions' => array('Listediffusion.' . $this->Listediffusion->primaryKey => $id));
 			$this->request->data = $this->Listediffusion->find('first', $options);
 		}
+                $utilisateurs = $this->Listediffusion->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1'),'order'=>'Utilisateur.NOMLONG ASC'));
+                $this->set('utilisateurs',$utilisateurs);                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

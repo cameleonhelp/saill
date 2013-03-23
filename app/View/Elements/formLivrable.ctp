@@ -1,8 +1,12 @@
 <?php echo $this->Form->create('Livrable',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
     <div class="control-group">
         <label class="control-label sstitre required" for="LivrableUtilisateurId">Gestionnaire du livrable : </label>
-        <div class="controls">        
+        <div class="controls">  
+            <?php if ($this->params->action == 'add') : ?>
+            <?php echo $this->Form->select('utilisateur_id',$utilisateur,array('data-rule-required'=>'true','default' => userAuth('id'),'data-msg-required'=>'Le nom du gestionnaire est obligatoire','empty' => 'Choisir un gestionnaire')); ?>
+            <?php else : ?>
             <?php echo $this->Form->select('utilisateur_id',$utilisateur,array('data-rule-required'=>'true','data-msg-required'=>'Le nom du gestionnaire est obligatoire','empty' => 'Choisir un gestionnaire')); ?>
+            <?php endif; ?>
         </div>
     </div>
     <div class="control-group">

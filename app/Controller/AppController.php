@@ -96,7 +96,7 @@ class AppController extends Controller {
     );
 
     public function beforeFilter() {
-        $this->Auth->allow(array('login','logout'));
+        $this->Auth->allow(array('login','logout')); 
     }    
     
     public function autoriser($profil,$model,$action){

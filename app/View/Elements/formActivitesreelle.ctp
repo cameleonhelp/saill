@@ -13,7 +13,7 @@
     <tr>
         <td><label class="control-label sstitre required" for="ActivitesreelleUtilisateurId">Pour : </label></td>
         <td>
-            <?php echo $this->Form->select('utilisateur_id',$utilisateurs,array('data-rule-required'=>'true','data-msg-required'=>"Le nom de l'utilisateur est obligatoire", 'empty' => 'Choisir un utilisateur')); ?>                     
+            <?php echo $this->Form->select('utilisateur_id',$utilisateurs,array('data-rule-required'=>'true','default' => userAuth('id'),'data-msg-required'=>"Le nom de l'utilisateur est obligatoire", 'empty' => 'Choisir un utilisateur')); ?>                     
         </td>
         <td></td>
         <td></td>        

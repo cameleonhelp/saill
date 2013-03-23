@@ -6,6 +6,16 @@
         </div>
         </div>
         <div class="control-group">
+            <label class="control-label sstitre" for="LivrableUtilisateurId">Gestionnaire : </label>
+            <div class="controls">  
+                <?php if ($this->params->action == 'add') : ?>
+                <?php echo $this->Form->select('utilisateur_id',$utilisateurs,array('default' => userAuth('id'),'empty' => 'Choisir un gestionnaire')); ?>
+                <?php else : ?>
+                <?php echo $this->Form->select('utilisateur_id',$utilisateurs,array('empty' => 'Choisir un gestionnaire')); ?>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="control-group">
         <label class="control-label sstitre" for="ListediffusionDESCRIPTION">Description : </label>
         <div class="controls">
             <?php echo $this->Form->input('DESCRIPTION',array('type'=>'textarea','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
