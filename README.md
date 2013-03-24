@@ -1,11 +1,11 @@
-OSACT
+OSACT 2
 =======
 
 OSACT est un site pour suivre l'activité d'une équipe de développeurs, ainsi que le suivi logistique du matériel mis à disposition.
 
 **Nouvelle version car modification de la conception pour les actions pour un suivi de l'activité réelle et de la facturation séparé**
 
-OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench](http://www.mysql.fr/products/workbench/)
+OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.mysql.fr/products/workbench/)
 
 ## Cette version s'appuie sur :
 
@@ -19,24 +19,26 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench](http://www.mysql.f
 
 * [Select pour BootStrap] (http://caseyjhol.github.com/bootstrap-select/) - Pour modifier l'aspect des select
 
+* [Highcharts 3.0.0 et Highstock 1.3.0](http://www.highcharts.com) - bonne documentation (http://docs.highcharts.com)
+
 ## A venir l'utilisation de :
 
-* [CakePDF] (https://github.com/ceeram/CakePdf) - Pour exporter au format PDF
+* [CakePDF] (https://github.com/ceeram/CakePdf) - Pour exporter au format PDF pour les rapports
 
-* Graphiques : 
+## A venir jusqu'à fin avril :
 
- 1. [Highcharts](http://www.highcharts.com) - bonne documentation (http://docs.highcharts.com)
+* Facturation à faire
 
- 2. [amCharts](http://www.amcharts.com/download/)
+* Limitation du périmètre de vision en fonction de l'utilisateur (test sur profil ou est hiérarchique ?)
 
- 3. [Google api cakePhp](https://github.com/cjsaylor/Google-visualization-api-cakephp)
+* Incorporation des données référentielles
 
- 4. [GoogleChart API Helper](http://bakery.cakephp.org/articles/ixu38/2010/04/30/googlechart-api-helper)
+* Incorporation des données (Utilisateurs, Matériels informatique)
 
- 5. [FusionCharts](https://github.com/lecterror/cakephp-fusion-charts-plugin)
-
-
+* Utilisation limité de l'outil
 
 ## Bugs connus :
 
-Pour le moment un j'ai rescencé un bug sur l'utilisation de accordion (https://groups.google.com/forum/?fromgroups=#!topic/twitter-bootstrap/DhDWN1sGfTM) voici un test en ligne si vous avez une solution (http://jsfiddle.net/cameleonhelp/a5xxs/10/)
+* Pour le moment un j'ai rescencé un bug sur l'utilisation de accordion 
+(https://groups.google.com/forum/?fromgroups=#!topic/twitter-bootstrap/DhDWN1sGfTM) 
+voici un test en ligne si vous avez une solution (http://jsfiddle.net/cameleonhelp/a5xxs/10/)
