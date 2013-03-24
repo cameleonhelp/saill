@@ -346,6 +346,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`utilisateurs` (
   `VT` INT(15) NULL DEFAULT 0 ,
   `HIERARCHIQUE` TINYINT(1) NOT NULL DEFAULT 0 ,
   `GESTIONABSENCES` TINYINT(1) NOT NULL DEFAULT 0 ,
+  `WIDEAREA` TINYINT(1) NOT NULL DEFAULT 0 ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
@@ -846,6 +847,7 @@ INSERT INTO `osact_cake230`.`profils` (`id`, `NOM`, `COMMENTAIRE`, `created`, `m
 INSERT INTO `osact_cake230`.`profils` (`id`, `NOM`, `COMMENTAIRE`, `created`, `modified`) VALUES (7, 'Agents GROUPEMENT', 'Autorisations réduites avec un accès limité à son périmètre', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`profils` (`id`, `NOM`, `COMMENTAIRE`, `created`, `modified`) VALUES (8, 'Admin délégué', 'Autorisations d\'administration réduites', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`profils` (`id`, `NOM`, `COMMENTAIRE`, `created`, `modified`) VALUES (9, 'Agents MOA', 'Autorisations réduites avec un accès limité à son périmètre', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`profils` (`id`, `NOM`, `COMMENTAIRE`, `created`, `modified`) VALUES (10, 'Agent DSI-T SO gest. Outils', 'Autorisations standards avec un accès limité à son périmètre et pouvant mettre à jour les ouverture de droits', '2013-02-01', '2013-02-01');
 
 COMMIT;
 
@@ -855,6 +857,7 @@ COMMIT;
 START TRANSACTION;
 USE `osact_cake230`;
 INSERT INTO `osact_cake230`.`assistances` (`ID`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (1, 'SAMBA', 'Assistance utilisé par DSIT', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`assistances` (`ID`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (2, 'SAMU', 'Assistance localisée au 15T à PARIS en charge de la logistique pour le MATERIEL', '2013-02-01', '2013-02-01');
 
 COMMIT;
 
@@ -875,6 +878,8 @@ COMMIT;
 START TRANSACTION;
 USE `osact_cake230`;
 INSERT INTO `osact_cake230`.`sections` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (1, NULL, 'DSI-T/SO MAT GMAO-PANAM', 'Section gérant la GMAO ainsi que tous les autres projets sattelites et tout ce qui est transverse à tous ces projets.', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`sections` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (2, NULL, 'DSI-T/SO MAT INTEGRATION', 'Section gérant l\'intégration des applications du Matériel.', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`sections` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (3, NULL, 'DSI-T/SO MAT OSMOSE REF', 'Section gérant les applications référentielles du Matériel.', '2013-02-01', '2013-02-01');
 
 COMMIT;
 
@@ -922,7 +927,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `osact_cake230`;
-INSERT INTO `osact_cake230`.`utilisateurs` (`id`, `profil_id`, `societe_id`, `assistance_id`, `section_id`, `utilisateur_id`, `domaine_id`, `site_id`, `tjmagent_id`, `dotation_id`, `password`, `username`, `ACTIF`, `DATEDEBUTACTIF`, `NAISSANCE`, `NOM`, `PRENOM`, `COMMENTAIRE`, `FINMISSION`, `MAIL`, `TELEPHONE`, `WORKCAPACITY`, `CONGE`, `RQ`, `VT`, `HIERARCHIQUE`, `GESTIONABSENCES`, `created`, `modified`) VALUES (1, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, '30d799da0074745df45edf52713e1378', '0000000A', 1, '2013-02-01', '2013-02-01', 'ADMINISTRATEUR', 'Administrateur', 'Mot de passe @DMIN', NULL, NULL, NULL, 100, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`utilisateurs` (`id`, `profil_id`, `societe_id`, `assistance_id`, `section_id`, `utilisateur_id`, `domaine_id`, `site_id`, `tjmagent_id`, `dotation_id`, `password`, `username`, `ACTIF`, `DATEDEBUTACTIF`, `NAISSANCE`, `NOM`, `PRENOM`, `COMMENTAIRE`, `FINMISSION`, `MAIL`, `TELEPHONE`, `WORKCAPACITY`, `CONGE`, `RQ`, `VT`, `HIERARCHIQUE`, `GESTIONABSENCES`, `WIDEAREA`, `created`, `modified`) VALUES (1, 1, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, '30d799da0074745df45edf52713e1378', '0000000A', 1, '2013-02-01', '2013-02-01', 'ADMINISTRATEUR', 'Administrateur', 'Mot de passe @DMIN', NULL, NULL, NULL, 100, 0, 0, 0, 0, 0, 1, '2013-02-01', '2013-02-01');
 
 COMMIT;
 
@@ -959,12 +964,60 @@ INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`
 INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (26, 1, 'tjmcontrats', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (27, 1, 'typemateriels', 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (28, 1, 'utilisateurs', 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (29, 1, 'utiliseoutils', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (29, 1, 'utiliseoutils', 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (30, 1, 'actionslivrables', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (31, 1, 'activitesreelles', 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (32, 1, 'facturations', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (33, 1, 'plandecharges', 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (34, 1, 'rapports', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (35, 3, 'actions', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (36, 3, 'activitesreelles', 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (37, 3, 'livrables', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (38, 3, 'materielinformatiques', 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (39, 3, 'utilisateurs', 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (40, 3, 'achats', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (41, 3, 'activites', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (42, 3, 'affectations', 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (43, 3, 'contrats', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (44, 3, 'domaines', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (45, 3, 'listediffusions', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (46, 3, 'messages', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (47, 3, 'projets', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (48, 3, 'societes', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (49, 3, 'suivilivrables', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (50, 3, 'tjmagents', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (51, 3, 'tjmcontrats', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (52, 4, 'actions', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (53, 4, 'activitesreelles', 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (54, 4, 'livrables', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (55, 4, 'utilisateurs', 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (56, 4, 'affectations', 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (57, 4, 'listediffusions', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (58, 4, 'messages', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (59, 4, 'societes', 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (60, 4, 'suivilivrables', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (61, 4, 'materielinformatiques', 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (62, 5, 'actions', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (63, 5, 'activitesreelles', 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (64, 5, 'livrables', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (65, 5, 'utilisateurs', 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (66, 5, 'affectations', 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (67, 5, 'listediffusions', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (68, 5, 'messages', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (69, 5, 'societes', 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (70, 5, 'suivilivrables', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (71, 5, 'materielinformatiques', 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (72, 5, 'utiliseoutils', 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (73, 6, 'actions', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (74, 6, 'activitesreelles', 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (75, 6, 'livrables', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (76, 9, 'activitesreelles', 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (77, 10, 'actions', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (78, 10, 'activitesreelles', 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (79, 10, 'livrables', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (80, 10, 'utiliseoutils', 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (81, 8, 'materielinformatiques', 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`autorisations` (`id`, `profil_id`, `MODEL`, `INDEX`, `ADD`, `EDIT`, `VIEW`, `DELETE`, `DUPLICATE`, `INITPASSWORD`, `ABSENCES`, `RAPPORTS`, `UPDATE`, `created`, `modified`) VALUES (82, 8, 'utilisateurs', 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, '2013-02-01', '2013-02-01');
 
 COMMIT;
 
@@ -991,7 +1044,7 @@ USE `osact_cake230`;
 INSERT INTO `osact_cake230`.`linkshareds` (`id`, `utilisateur_id`, `NOM`, `LINK`, `created`, `modified`) VALUES (1, 1, 'MINIDOC OSMOSE', 'http://dsite.minidoc.sncf.fr/defaultOSMOSE.asp', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`linkshareds` (`id`, `utilisateur_id`, `NOM`, `LINK`, `created`, `modified`) VALUES (2, 1, 'Quality Center', 'http://quality-center.dsit.sncf.fr/qcbin/', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`linkshareds` (`id`, `utilisateur_id`, `NOM`, `LINK`, `created`, `modified`) VALUES (3, 1, 'Outils congés agents SNCF', 'https://conges.rh.sncf.fr/auth.php?etat=nocookie', '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`linkshareds` (`id`, `utilisateur_id`, `NOM`, `LINK`, `created`, `modified`) VALUES (4, 1, 'Service général', 'https://services.sg.sncf.fr/iporta/index.jsp', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`linkshareds` (`id`, `utilisateur_id`, `NOM`, `LINK`, `created`, `modified`) VALUES (4, 1, 'Service général', 'https://services.ddet.sncf.fr', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`linkshareds` (`id`, `utilisateur_id`, `NOM`, `LINK`, `created`, `modified`) VALUES (5, 1, 'Gare en mouvement Part-Dieu', 'http://www.gares-en-mouvement.com/fr/frlpd/horaires-temps-reel/dep/', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`linkshareds` (`id`, `utilisateur_id`, `NOM`, `LINK`, `created`, `modified`) VALUES (6, 1, 'DSIPEDIA', 'http://dsipedia.sncf.fr/index.php?title=Accueil', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`linkshareds` (`id`, `utilisateur_id`, `NOM`, `LINK`, `created`, `modified`) VALUES (7, 1, 'OSMOSE Flash actu', 'http://www9.mt.sncf.fr/osmose/index.php', '2013-02-01', '2013-02-01');
@@ -1042,6 +1095,15 @@ INSERT INTO `osact_cake230`.`listediffusions` (`id`, `utilisateur_id`, `NOM`, `D
 COMMIT;
 
 -- -----------------------------------------------------
+-- Data for table `osact_cake230`.`messages`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `osact_cake230`;
+INSERT INTO `osact_cake230`.`messages` (`id`, `LIBELLE`, `DATELIMITE`, `created`, `modified`) VALUES (1, 'Bienvenue sur le site de saisie de l\'activité, du suivi des livrables et de la logistique.', NULL, '2013-02-01', '2013-02-01');
+
+COMMIT;
+
+-- -----------------------------------------------------
 -- Data for table `osact_cake230`.`outils`
 -- -----------------------------------------------------
 START TRANSACTION;
@@ -1051,8 +1113,10 @@ INSERT INTO `osact_cake230`.`outils` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTIO
 INSERT INTO `osact_cake230`.`outils` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `VALIDATION`, `created`, `modified`) VALUES (3, 1, 'QUALITY CENTER', 'Outil de suivi des tests et anomalies\rEn cas d\'absence du gestionnaire il est possible de contacter JB DOUVALIAN\"', 0, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`outils` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `VALIDATION`, `created`, `modified`) VALUES (4, 1, 'SVN', 'Outils de gestion des sources\rNon disponible pour PANAM\"', 0, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`outils` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `VALIDATION`, `created`, `modified`) VALUES (5, 1, 'ARIANE', 'Outils de gestion des actions\rUtiliser également par le groupement comme outil de stockage de la documentation de travail.\rEn cas d\'absence du gestionnaire contacter #ARIANE-ADMIN\"', 0, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`outils` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `VALIDATION`, `created`, `modified`) VALUES (6, 1, 'SAMETIME', 'Outil de chat en réseau local SNCF', 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`outils` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `VALIDATION`, `created`, `modified`) VALUES (7, 1, 'INTERNET', 'Demande d\'accès internet soumis à  validation du chef de division', 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`outils` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `VALIDATION`, `created`, `modified`) VALUES (6, 1, 'SAMETIME', 'Outil de chat en réseau local SNCF soumis à  validation du chef de division', 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`outils` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `VALIDATION`, `created`, `modified`) VALUES (7, 1, 'INTERNET MULTIMEDIA', 'Demande d\'accès internet dérogatif soumis à  validation du chef de division<br>L\'accès à Internet est autorisé à tout agent avec un compte SNCF.', 1, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`outils` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `VALIDATION`, `created`, `modified`) VALUES (8, 1, 'PORTAIL ENV.', 'Outils de gestion des environnements', 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`outils` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `VALIDATION`, `created`, `modified`) VALUES (9, 1, 'VPN', 'Demande d\'accès au VPN soumis à  validation du chef de division', 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`outils` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `VALIDATION`, `created`, `modified`) VALUES (10, 1, 'WIFI', 'Demande d\'accès au WIFI soumis à  validation du chef de division', 1, '2013-02-01', '2013-02-01');
 
 COMMIT;

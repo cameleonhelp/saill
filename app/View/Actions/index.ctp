@@ -1,73 +1,3 @@
-<?php
-function styleBarre($avancement){
-    $result = '';
-    switch ($avancement){
-        case '10':
-        case '20':
-        case '30':            
-            $result = 'danger';
-            break;
-        case '40':
-        case '50':           
-        case '60':
-            $result = 'warning';
-            break;
-        case '70':
-        case '80':
-        case '90':
-            $result = 'info';
-            break;
-        case '100':
-            $result = 'success';
-            break;        
-    }
-    return $result;
-}
-
-    function etatAction($etat) {
-        $class = '';
-        switch ($etat){
-             case 'à faire':
-                $class = 'icon-tag icon-red';
-                break;
-             case 'en cours':
-                $class = 'icon-tag';
-                break;                
-             case 'livrée':
-                $class = 'icon-inbox icon-green';
-                break;          
-             case 'terminée':
-                $class = 'icon-tag icon-green';
-                break;         
-             case 'annulée':
-                $class = 'icon-remove icon-red';
-                break;                 
-        }
-        return $class;
-    } 
-    
-    function etatTooltip($etat) {
-        $tooltip = '';
-        switch ($etat){
-             case 'à faire':
-                $tooltip = 'À faire';
-                break;
-             case 'en cours':
-                $tooltip = 'En cours';
-                break;                
-             case 'livrée':
-                $tooltip = 'Livrée';
-                break;          
-             case 'terminée':
-                $tooltip = 'Terminée';
-                break;         
-             case 'annulée':
-                $tooltip = 'Annulée';
-                break;                 
-        }
-        return $tooltip;
-    }     
-?>
 <div class="actions index">
         <div class="navbar">
             <div class="navbar-inner">
@@ -100,7 +30,8 @@ function styleBarre($avancement){
                          <li class="divider"></li>
                          <li><?php echo $this->Html->link('Todolist', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','6',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      </ul>
-                </li>                
+                </li> 
+                <?php if (areaIsVisible()) :?>
                  <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Responsable <b class="caret"></b></a>
                      <ul class="dropdown-menu">
@@ -110,7 +41,8 @@ function styleBarre($avancement){
                             <li><?php echo $this->Html->link($responsable['Utilisateur']['NOMLONG'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$responsable['Utilisateur']['id'])); ; ?></li>
                          <?php endforeach; ?>
                      </ul>
-                 </li>                
+                 </li> 
+                 <?php  endif; ?>
                 </ul> 
                 <?php echo $this->Form->create("Action",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>

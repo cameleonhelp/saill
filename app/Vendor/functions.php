@@ -442,5 +442,81 @@ App::uses('AppModel', 'Model', 'Autorisation');
                    break; 
            }
            return $class;
-       }        
+       }  
+       
+function styleBarre($avancement){
+    $result = '';
+    switch ($avancement){
+        case '10':
+        case '20':
+        case '30':            
+            $result = 'danger';
+            break;
+        case '40':
+        case '50':           
+        case '60':
+            $result = 'warning';
+            break;
+        case '70':
+        case '80':
+        case '90':
+            $result = 'info';
+            break;
+        case '100':
+            $result = 'success';
+            break;        
+    }
+    return $result;
+}
+
+    function etatAction($etat) {
+        $class = '';
+        switch ($etat){
+             case 'à faire':
+                $class = 'icon-tag icon-red';
+                break;
+             case 'en cours':
+                $class = 'icon-tag';
+                break;                
+             case 'livrée':
+                $class = 'icon-inbox icon-green';
+                break;          
+             case 'terminée':
+                $class = 'icon-tag icon-green';
+                break;         
+             case 'annulée':
+                $class = 'icon-remove icon-red';
+                break;                 
+        }
+        return $class;
+    } 
+    
+    function etatTooltip($etat) {
+        $tooltip = '';
+        switch ($etat){
+             case 'à faire':
+                $tooltip = 'À faire';
+                break;
+             case 'en cours':
+                $tooltip = 'En cours';
+                break;                
+             case 'livrée':
+                $tooltip = 'Livrée';
+                break;          
+             case 'terminée':
+                $tooltip = 'Terminée';
+                break;         
+             case 'annulée':
+                $tooltip = 'Annulée';
+                break;                 
+        }
+        return $tooltip;
+    } 
+    
+    function areaIsVisible() {
+        $utilisateur = userAuth();
+        $result = false;
+        if (($utilisateur['profil_id'] < 6) || ($utilisateur['WIDEAREA']==1)) { $result = true; }
+        return $result;
+    }
 ?>

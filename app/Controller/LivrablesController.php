@@ -84,6 +84,7 @@ class LivrablesController extends AppController {
                         break;                      
                     }    
                 $this->set('fetat',$fetat);  
+                if (areaIsVisible() || $filtregestionnaire==userAuth('id')):
                 switch ($filtregestionnaire){
                     case 'tous':
                     case null:    
@@ -94,7 +95,12 @@ class LivrablesController extends AppController {
                         $newconditions[]="Livrable.utilisateur_id = '".$filtregestionnaire."'";
                         $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> $filtregestionnaire)));
                         $fgestionnaire = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG'];                     
-                    }    
+                    }  
+                else:
+                        $newconditions[]="Livrable.utilisateur_id = '".userAuth('id')."'";
+                        $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> userAuth('id'))));
+                        $fgestionnaire = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG'];                
+                endif;                     
                 $this->set('fgestionnaire',$fgestionnaire); 
                 $gestionnaires = $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('gestionnaires',$gestionnaires);                

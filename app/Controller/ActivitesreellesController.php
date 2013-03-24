@@ -36,7 +36,8 @@ class ActivitesreellesController extends AppController {
                         $fetat = "toutes les feuilles de temps facturées";
                         break;                      
                 }  
-                $this->set('fetat',$fetat);                 
+                $this->set('fetat',$fetat); 
+                if (areaIsVisible() || $utilisateur==userAuth('id')):
                 switch ($utilisateur){
                     case 'tous':
                     case null:
@@ -49,6 +50,11 @@ class ActivitesreellesController extends AppController {
                         $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];
                         break;                      
                 }  
+                else:
+                    $newconditions[]="Activitesreelle.utilisateur_id = ".userAuth('id');
+                    $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>userAuth('id'))));
+                    $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];                 
+                endif;                
                 $this->set('futilisateur',$futilisateur);
                 switch ($mois){
                     case 'tous':

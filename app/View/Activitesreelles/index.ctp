@@ -15,7 +15,8 @@
                          <li><?php echo $this->Html->link('Non facturé', array('action' => 'index','actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                          <li><?php echo $this->Html->link('Facturé', array('action' => 'index','facture',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      </ul>
-                 </li>                 
+                </li>  
+                <?php if (areaIsVisible()) :?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Utilisateurs <b class="caret"></b></a>
                      <ul class="dropdown-menu">
@@ -25,7 +26,8 @@
                             <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$utilisateur['Utilisateur']['id'],isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                          <?php endforeach; ?>
                       </ul>
-                 </li>                   
+                </li>   
+                <?php endif; ?> 
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Mois <b class="caret"></b></a>
                      <ul class="dropdown-menu">

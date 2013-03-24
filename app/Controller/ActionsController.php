@@ -71,6 +71,7 @@ class ActionsController extends AppController {
                         break;
                     }  
                 $this->set('fetat',$fetat); 
+                if (areaIsVisible() || $filtreResponsable==userAuth('id')):
                 switch ($filtreResponsable){
                     case 'tous':
                     case null:    
@@ -83,6 +84,11 @@ class ActionsController extends AppController {
                         $fresponsable = "dont le responsable est ".$nomlong['Utilisateur']['NOMLONG'];
                         break;                      
                 }  
+                else:
+                    $newconditions[]="Action.destinataire='".userAuth('id')."'";
+                    $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>userAuth('id'))));
+                    $fresponsable = "dont le responsable est ".$nomlong['Utilisateur']['NOMLONG'];
+                endif;
                 $this->set('fresponsable',$fresponsable); 
                 $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('responsables',$responsables);                 
@@ -92,7 +98,8 @@ class ActionsController extends AppController {
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
-            endif;                
+            endif; 
+
 	}
 
 /**

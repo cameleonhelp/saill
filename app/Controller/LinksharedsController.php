@@ -20,15 +20,10 @@ class LinksharedsController extends AppController {
  * @return void
  */
 	public function index() {
-            if (isAuthorized('linkshareds', 'index')) :
-                $this->set('title_for_layout','Liens partagés');
-                $this->Linkshared->recursive = 0;
-		$this->set('linkshareds', $this->paginate());
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
-                throw new NotAuthorizedException();
-            endif;                
-    }
+            $this->set('title_for_layout','Liens partagés');
+            $this->Linkshared->recursive = 0;
+            $this->set('linkshareds', $this->paginate());              
+        }
 
 /**
  * view method

@@ -30,7 +30,8 @@
                      <li class="divider"></li>
                      <li><?php echo $this->Html->link('Autre que validé', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes','notvalidated',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>                     
                      </ul>
-                 </li> 
+                </li> 
+                <?php if (areaIsVisible()) :?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Gestionnaire<b class="caret"></b></a>
                      <ul class="dropdown-menu">
@@ -41,7 +42,8 @@
                             <li><?php echo $this->Html->link($gestionnaire['Utilisateur']['NOMLONG'], array('action' => 'index',$this->params->pass[0],$this->params->pass[1],$gestionnaire['Utilisateur']['id'])); ; ?></li>
                          <?php endforeach; ?>
                      </ul>
-                </li>                  
+                </li>   
+                <?php endif; ?>
                 <li class="divider-vertical"></li>
                 <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>
                 </ul> 
