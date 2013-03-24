@@ -1,37 +1,3 @@
- <?php
- /**
- * etatMaterielInformatiqueImage method
- *
- * @throws NotFoundException
- * @throws MethodNotAllowedException
- * @param string $etat
- * @return string class
- */  
-        function etatLivrable($etat) {
-            $class = '';
-            switch ($etat){
-                 case 'à faire':
-                    $class = 'icon-edit icon-red';
-                    break;
-                 case 'en cours':
-                    $class = 'icon-edit';
-                    break;                
-                 case 'livré':
-                    $class = 'icon-share';
-                    break;          
-                 case 'validé':
-                    $class = 'icon-check icon-green';
-                    break;  
-                 case 'refusé':
-                    $class = 'icon-share icon-red';
-                    break;  
-                 case 'annulé':
-                    $class = 'icon-remove icon-red';
-                    break;                  
-            }
-            return $class;
-        } 
-?>    
 <br/>
 <div class="utiliseoutils index">
 	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">

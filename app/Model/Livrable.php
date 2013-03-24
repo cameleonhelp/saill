@@ -99,19 +99,6 @@ class Livrable extends AppModel {
  * @var array
  */
 	public $hasMany = array(
-		'Action' => array(
-			'className' => 'Action',
-			'foreignKey' => 'livrable_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		),
 		'Suivilivrable' => array(
 			'className' => 'Suivilivrable',
 			'foreignKey' => 'livrable_id',
