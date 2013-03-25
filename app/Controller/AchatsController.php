@@ -72,8 +72,8 @@ class AchatsController extends AppController {
  */
 	public function add() {
             if (isAuthorized('achats', 'add')) : 
-                $activites = $this->Achat->Activite->find('list',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
-                $this->set('activites',$activites);  
+                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
+                $this->set('activites',$activites);   
 		if ($this->request->is('post')) :
 			$this->Achat->create();
 			if ($this->Achat->save($this->request->data)) {
@@ -99,8 +99,8 @@ class AchatsController extends AppController {
  */
 	public function edit($id = null) {
             if (isAuthorized('achats', 'edit')) : 
-                $activites = $this->Achat->Activite->find('list',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
-                $this->set('activites',$activites);              
+                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
+                $this->set('activites',$activites);                
 		if (!$this->Achat->exists($id)) {
 			throw new NotFoundException(__('Achat incorrect'));
 		}
@@ -181,5 +181,6 @@ class AchatsController extends AppController {
 		$data = $this->Session->read('xls_export');
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
-	}        
+	}      
+             
 }

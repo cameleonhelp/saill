@@ -74,7 +74,7 @@
                     <div class="control-group">
                         <label class="control-label sstitre" for="UtilisateurUtilisateurId">Hiérarchique : </label>
                         <div class="controls">
-                            <?php echo $this->data['Utilisateur']['utilisateur_id']; ?>
+                            <?php echo $hierarchique['Utilisateur']['NOMLONG']; ?>
                         </div>
                     </div>  
                     <div class="control-group">

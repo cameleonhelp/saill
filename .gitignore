@@ -14,9 +14,9 @@ _git2_L2FF60
 *.ori.css
 *.ori.js
 osact_data.sql
-
 *.pdf
-
 *.ppt
-
 *.doc
+affectations.sql
+osact_utilisateurs.sql
+activitesreelles_exemple.sql

@@ -177,7 +177,7 @@ class UtilisateursController extends AppController {
                         $this->set('activite',$activite); 
                         $workcapacite = Configure::read('workCapacity');
                         $this->set('workcapacite',$workcapacite);
-                        $affectations = $this->Utilisateur->Affectation->find('all',array('fields'=>array('id','activite_id','Activite.NOM','Affectation.REPARTITION'),'conditions'=>array('Affectation.utilisateur_id'=>$id)));
+                        $affectations = $this->Utilisateur->Affectation->find('all',array('fields'=>array('id','activite_id','Activite.NOM','Affectation.REPARTITION','Activite.DESCRIPTION'),'conditions'=>array('Affectation.utilisateur_id'=>$id)));
                         $this->set('affectations',$affectations);
                         $dotations = $this->Utilisateur->Dotation->find('all',array('conditions'=>array('Dotation.utilisateur_id'=>$id)));
                         $this->set('dotations',$dotations);
@@ -292,7 +292,7 @@ class UtilisateursController extends AppController {
                     $this->set('activite',$activite); 
                     $workcapacite = Configure::read('workCapacity');
                     $this->set('workcapacite',$workcapacite);
-                    $affectations = $this->Utilisateur->Affectation->find('all',array('fields'=>array('id','activite_id','Activite.NOM','Affectation.REPARTITION'),'conditions'=>array('Affectation.utilisateur_id'=>$id)));
+                    $affectations = $this->Utilisateur->Affectation->find('all',array('fields'=>array('id','activite_id','Activite.NOM','Affectation.REPARTITION','Activite.DESCRIPTION'),'conditions'=>array('Affectation.utilisateur_id'=>$id)));
                     $this->set('affectations',$affectations);
                     $dotations = $this->Utilisateur->Dotation->find('all',array('conditions'=>array('Dotation.utilisateur_id'=>$id)));
                     $this->set('dotations',$dotations);
@@ -312,7 +312,10 @@ class UtilisateursController extends AppController {
                     $nbDotation = $this->Utilisateur->Dotation->query("SELECT count(id) AS nbDotation FROM dotations WHERE utilisateur_id =".$id);
                     $this->set('nbDotation',$nbDotation);   
                     $nbAffectation = $this->Utilisateur->Affectation->query("SELECT count(id) AS nbAffectation FROM affectations WHERE utilisateur_id =".$id);
-                    $this->set('nbAffectation',$nbAffectation);   
+                    $this->set('nbAffectation',$nbAffectation); 
+                    $currentUser = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$id)));
+                    $hierarchique = $this->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$currentUser['Utilisateur']['utilisateur_id'])));
+                    $this->set('hierarchique',$hierarchique);
             }             
         }
    
@@ -488,7 +491,7 @@ class UtilisateursController extends AppController {
  */
 	public function search() {
             if (isAuthorized('utilisateurs', 'index')) :
-                $keyword=$this->params->data['Utilisateur']['SEARCH']; 
+                $keyword=isset($this->params->data['Utilisateur']['SEARCH'])? $this->params->data['Utilisateur']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Utilisateur.COMMENTAIRE LIKE '%".$keyword."%'","Utilisateur.TELEPHONE LIKE '%".$keyword."%'","Utilisateur.WORKCAPACITY LIKE '%".$keyword."%'","Profil.NOM LIKE '%".$keyword."%'","Societe.NOM LIKE '%".$keyword."%'","Assistance.NOM LIKE '%".$keyword."%'","Section.NOM LIKE '%".$keyword."%'","Tjmagent.NOM LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

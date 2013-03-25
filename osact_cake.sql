@@ -88,7 +88,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`activites` (
   `BUDJETRA` DECIMAL(25,2) NULL DEFAULT NULL ,
   `BUDGETREVU` DECIMAL(25,2) NULL DEFAULT NULL ,
   `ACTIVE` TINYINT(1) NOT NULL DEFAULT 0 ,
-  `DELETABLE` TINYINT NOT NULL DEFAULT 1 ,
+  `DELETABLE` TINYINT(1) NOT NULL DEFAULT 1 ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )
@@ -734,12 +734,30 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
+-- Data for table `osact_cake230`.`tjmcontrats`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `osact_cake230`;
+INSERT INTO `osact_cake230`.`tjmcontrats` (`id`, `TJM`, `ANNEE`, `created`, `modified`) VALUES (1, 640, 2013, '2013-02-01', '2013-02-01');
+
+COMMIT;
+
+-- -----------------------------------------------------
 -- Data for table `osact_cake230`.`contrats`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `osact_cake230`;
 INSERT INTO `osact_cake230`.`contrats` (`id`, `tjmcontrat_id`, `NOM`, `ANNEEDEBUT`, `ANNEEFIN`, `MONTANT`, `ACTIF`, `DESCRIPTION`, `created`, `modified`) VALUES (1, NULL, 'absences', 2012, NULL, NULL, 1, NULL, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`contrats` (`id`, `tjmcontrat_id`, `NOM`, `ANNEEDEBUT`, `ANNEEFIN`, `MONTANT`, `ACTIF`, `DESCRIPTION`, `created`, `modified`) VALUES (2, NULL, 'OSMOSE', 2008, NULL, NULL, 1, NULL, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`contrats` (`id`, `tjmcontrat_id`, `NOM`, `ANNEEDEBUT`, `ANNEEFIN`, `MONTANT`, `ACTIF`, `DESCRIPTION`, `created`, `modified`) VALUES (3, NULL, 'COHERENCE', 2009, NULL, NULL, 1, NULL, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`contrats` (`id`, `tjmcontrat_id`, `NOM`, `ANNEEDEBUT`, `ANNEEFIN`, `MONTANT`, `ACTIF`, `DESCRIPTION`, `created`, `modified`) VALUES (4, NULL, 'ORCHESTRAL', 2009, NULL, NULL, 1, NULL, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`contrats` (`id`, `tjmcontrat_id`, `NOM`, `ANNEEDEBUT`, `ANNEEFIN`, `MONTANT`, `ACTIF`, `DESCRIPTION`, `created`, `modified`) VALUES (5, NULL, 'SGRM', 2010, NULL, NULL, 1, NULL, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`contrats` (`id`, `tjmcontrat_id`, `NOM`, `ANNEEDEBUT`, `ANNEEFIN`, `MONTANT`, `ACTIF`, `DESCRIPTION`, `created`, `modified`) VALUES (6, NULL, 'PANAM', 2010, NULL, NULL, 1, NULL, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`contrats` (`id`, `tjmcontrat_id`, `NOM`, `ANNEEDEBUT`, `ANNEEFIN`, `MONTANT`, `ACTIF`, `DESCRIPTION`, `created`, `modified`) VALUES (7, NULL, 'BAUME', 2010, NULL, NULL, 1, NULL, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`contrats` (`id`, `tjmcontrat_id`, `NOM`, `ANNEEDEBUT`, `ANNEEFIN`, `MONTANT`, `ACTIF`, `DESCRIPTION`, `created`, `modified`) VALUES (8, NULL, 'EMC²', 2010, NULL, NULL, 1, NULL, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`contrats` (`id`, `tjmcontrat_id`, `NOM`, `ANNEEDEBUT`, `ANNEEFIN`, `MONTANT`, `ACTIF`, `DESCRIPTION`, `created`, `modified`) VALUES (9, NULL, 'ITAC', 2010, NULL, NULL, 1, NULL, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`contrats` (`id`, `tjmcontrat_id`, `NOM`, `ANNEEDEBUT`, `ANNEEFIN`, `MONTANT`, `ACTIF`, `DESCRIPTION`, `created`, `modified`) VALUES (10, NULL, 'URBANISME', 2010, NULL, NULL, 1, NULL, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`contrats` (`id`, `tjmcontrat_id`, `NOM`, `ANNEEDEBUT`, `ANNEEFIN`, `MONTANT`, `ACTIF`, `DESCRIPTION`, `created`, `modified`) VALUES (11, NULL, 'FORMATION', 2010, NULL, NULL, 1, NULL, '2013-02-01', '2013-02-01');
 
 COMMIT;
 
@@ -750,8 +768,26 @@ START TRANSACTION;
 USE `osact_cake230`;
 INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (1, 1, 'indisponibilité', NULL, '2013-01-01', NULL, NULL, 1, 'indisponibilité', 'autre', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (2, 2, 'DEV M OSMOSE', '01328-0000064359', '2008-01-02', NULL, NULL, 1, 'projet', 'régie', '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (3, 2, 'DEV DSIT-X OSMOSE', NULL, '2008-01-02', NULL, NULL, 1, 'projet', 'forfait', '2013-02-01', '2013-01-02');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (3, 6, 'DEV M PANAM', '01328-0000068794', '2010-01-02', NULL, NULL, 1, 'projet', 'régie', '2013-02-01', '2013-01-02');
 INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (4, 2, 'MCO M EMM OSMOSE', '01328-0000068414', '2010-01-02', NULL, NULL, 1, 'MCO', 'forfait', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (5, 6, 'MCO PANAM', '01328-0000070662', '2010-01-02', NULL, NULL, 1, 'MCO', 'forfait', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (6, 3, 'DEV M EMM COHERENCE', '01328-0000061462', '2009-01-02', '2013-01-02', NULL, 0, 'projet', 'régie', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (7, 3, 'MCO M COHERENCE', '01328-0000068637', '2010-01-02', NULL, NULL, 1, 'MCO', 'forfait', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (8, 4, 'DEV M ORCHESTRAL', '01328-0000064997', '2009-01-02', '2013-01-02', NULL, 0, 'projet', 'régie', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (9, 4, 'MCO M ORCHESTRAL', '01328-0000068638', '2010-01-02', NULL, NULL, 1, 'MCO', 'forfait', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (10, 2, 'Contrat DSIT-X ==> MAT OSMOSE', '01328-0000064309', '2008-01-02', NULL, NULL, 1, 'projet', 'régie', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (11, 6, 'Contrat DSIT-X ==> MAT PANAM', '01328-0000000000', '2010-01-02', NULL, NULL, 1, 'projet', 'régie', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (12, 3, 'Contrat DSIT-X ==> MAT COHERENCE', '01328-0000064367', '2010-01-02', NULL, NULL, 1, 'projet', 'régie', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (13, 4, 'Contrat DSIT-X ==> MAT ORCHESTRAL', '01328-0000064641', '2010-01-02', NULL, NULL, 1, 'projet', 'régie', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (14, 5, 'DEV M OSMOSE SGRM', '01328-0000071134', '2010-01-02', NULL, NULL, 1, 'projet', 'régie', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (15, 5, 'MCO M OSMOSE SGRM', '01328-0000071712', '2010-01-02', NULL, NULL, 1, 'MCO', 'forfait', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (16, 3, 'EVO M EMM COHERENCE', '01328-0000072207', '2013-01-02', NULL, NULL, 1, 'Evolution', 'régie', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (17, 4, 'EVO M ORCHESTRAL', '01328-0000072209', '2013-01-02', NULL, NULL, 1, 'Evolution', 'régie', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (18, 7, 'PEV M BAUME DBC ', '01328-0000071232', '2010-01-02', NULL, NULL, 1, 'projet', 'régie', '2013-02-01', '2013-01-02');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (19, 7, 'BAUME DBC - MCO', '01328-0000071231', '2010-01-02', NULL, NULL, 1, 'MCO', 'forfait', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (20, 8, 'MCO M APPLICATION EMC2', '01328-0000061454', '2010-01-02', NULL, NULL, 1, 'MCO', 'forfait', '2013-02-01', '2013-01-02');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (21, 10, 'ASS M URBANISME ', '01328-0000064373', '2010-01-02', NULL, NULL, 1, 'projet', 'régie', '2013-02-01', '2013-01-02');
+INSERT INTO `osact_cake230`.`projets` (`id`, `contrat_id`, `NOM`, `NUMEROGALLILIE`, `DEBUT`, `FIN`, `COMMENTAIRE`, `ACTIF`, `TYPE`, `FACTURATION`, `created`, `modified`) VALUES (22, 9, 'DEV M ITACT ', '01328-0000070794', '2010-01-02', NULL, NULL, 1, 'projet', 'régie', '2013-02-01', '2013-01-02');
 
 COMMIT;
 
@@ -771,10 +807,32 @@ INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, 
 INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (9, 1, 'DC', NULL, NULL, NULL, '8h de grève', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (10, 1, 'DD', NULL, NULL, NULL, 'Journée de délégation', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (11, 1, 'DR', NULL, NULL, NULL, 'Journée de délégation', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (13, 2, 'Conception OSMOSE MR Lot 310', NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (14, 2, 'Conception OSMOSE ORGANE Lot 310', NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (15, 3, 'OSMOSE MCO', NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (13, 16, 'EVO COHERENCE', '2013-01-01', '2016-12-31', '000001', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (14, 17, 'EVO ORCHESTRAL', '2013-01-01', '2016-12-31', '000001', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (16, 4, 'OSMOSE MCO', '2010-01-01', '2016-12-31', NULL, NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (12, 1, 'ILD', NULL, NULL, NULL, 'Longue maladie', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (36, 2, 'Déformation SI', '2011-01-01', '2016-12-31', '000014', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (15, 2, 'Développement PUMA', '2011-01-01', '2016-12-31', '000015', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (17, 2, 'Pilotage Projet', '2011-01-01', '2016-12-31', '000000000000006', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (18, 2, 'Ingénierie formation', '2011-01-01', '2016-12-31', '000013', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (19, 2, 'Pilotage PROGRAMME', '2011-01-01', '2016-12-31', '000012', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (20, 2, 'Si essieux', '2011-01-01', '2016-12-31', '000016', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (21, 2, 'OSMOSE 310 MR', '2011-01-01', '2016-12-31', '000017', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (22, 2, 'ORGANES 310', '2011-01-01', '2016-12-31', '000018', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (23, 9, 'MCO ORCHESTRAL', '2011-01-01', '2016-12-31', '000001', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (24, 3, 'Réalisation Lot 2', '2011-01-01', '2014-12-31', '000005', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (25, 3, 'Pilotage programme', '2011-01-01', '2014-12-31', '000006', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (26, 3, 'Architecture Lot 1', '2011-01-01', '2014-12-31', '000007', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (27, 5, 'Maintenance courante', '2011-01-01', '2014-12-31', '000001', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (28, 14, 'Réalisation', '2011-01-01', '2016-12-31', '000001', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (29, 14, 'Pilotage de projet', '2011-01-01', '2016-12-31', '000002', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (30, 15, 'MCO OSMOSE SGRM', '2011-01-01', '2016-12-31', '000001', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (31, 18, 'Pilotage de projet', '2011-01-01', '2016-12-31', '000001', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (32, 19, 'Maintenance courante', '2011-01-01', '2016-12-31', '000001', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (33, 20, 'Maintenance courante', '2011-01-01', '2016-12-31', '000000000000001', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (34, 22, 'Réalisation', '2011-01-01', '2016-12-31', '000001', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (35, 21, 'Support Client', '2011-01-01', '2016-12-31', '000000000000001', NULL, NULL, NULL, 1, 1, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`activites` (`id`, `projet_id`, `NOM`, `DATEDEBUT`, `DATEFIN`, `NUMEROGALLILIE`, `DESCRIPTION`, `BUDJETRA`, `BUDGETREVU`, `ACTIVE`, `DELETABLE`, `created`, `modified`) VALUES (37, 1, 'Stages/Formations', NULL, NULL, NULL, 'Formation ou stages suivis', NULL, NULL, 1, 0, '2013-02-01', '2013-02-01');
 
 COMMIT;
 
@@ -789,7 +847,7 @@ INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `
 INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (4, 'LOGISTIQUE', 'Domaine lié à  la logistique pour tous les utilisateurs', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (5, 'EXIGENCES', 'Domaines lié aux exigence du projet', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (6, 'DOCUMENTATION', 'Domaine lié à  la gestion documentaire', '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (7, 'OSMOSE GMAO', 'Domaine lié à  MAXIMO', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (7, 'GMAO MR', 'Domaine lié à  MAXIMO', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (8, 'COHERENCE', 'Domaine lié au projet COHERENCE', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (9, 'ORCHESTRAL', 'Domaine lié au projet ORCHESTRAL', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (10, 'PANAM', 'Domaine lié au projet PANAM', '2013-02-01', '2013-02-01');
@@ -802,7 +860,13 @@ INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `
 INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (17, 'FORMATION', 'Domaine lié aux formations sur les projets', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (18, 'ASSISTANCE PC', 'Domaine lié à  l\'aide et aux retours du PC ASSISTANCE pour les utilisateurs', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (19, 'MCO', 'Domaine lié à  la maintenance en condition opérationnelle', '2013-02-01', '2013-02-01');
-INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (20, 'PPO', 'Domaine lié au projet PPO remplaçant de PANAM', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (20, 'PO', 'Domaine lié au projet PO remplaçant de PANAM', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (21, 'GMAO ORGANES', 'Domaine lié à la GMAO Organes', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (22, 'PUMA OSMOSE', 'Domaine lié à PUMA en relation avec le programme OSMOSE', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (23, 'SGRM', 'Domaine lié au projet SGRM', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (24, 'SI EXISTANTS', 'Domaine lié aux différents SI existant ayant un impact sur le progamme OSMOSE', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (25, 'TRANSVERSE', 'Domaine transverse au programme OSMOSE', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`domaines` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (26, 'INTEFRACES', 'Domaine lié aux insterfaces du programme OSMOSE avec les autres outils du SI', '2013-02-01', '2013-02-01');
 
 COMMIT;
 
@@ -869,6 +933,8 @@ USE `osact_cake230`;
 INSERT INTO `osact_cake230`.`sites` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (1, 'OXYGENE', 'SIte lyonnais de DSI-T', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`sites` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (2, 'INNOVIA', 'Site parision de DSI-T', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`sites` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (3, 'LUMIERE', 'Site parisien du client MATERIEL', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`sites` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (4, 'CAPGEMINI NANTES', 'Site de CAPGEMINI à NANTES pour le développement de PANAM ', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`sites` (`id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (5, 'SOGETIT VILLEURBANNE', 'Site de SOGETI à VILLEURBANNE pour le développement de COHERENCE et ORCHESTRAL ', '2013-02-01', '2013-02-01');
 
 COMMIT;
 
@@ -880,6 +946,38 @@ USE `osact_cake230`;
 INSERT INTO `osact_cake230`.`sections` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (1, NULL, 'DSI-T/SO MAT GMAO-PANAM', 'Section gérant la GMAO ainsi que tous les autres projets sattelites et tout ce qui est transverse à tous ces projets.', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`sections` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (2, NULL, 'DSI-T/SO MAT INTEGRATION', 'Section gérant l\'intégration des applications du Matériel.', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`sections` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (3, NULL, 'DSI-T/SO MAT OSMOSE REF', 'Section gérant les applications référentielles du Matériel.', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`sections` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (4, NULL, 'GROUPEMENT', 'Section fictive pour les personnes du groupement', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`sections` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (5, NULL, 'MOA', 'Section fictive pour les personnes de la MOA', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`sections` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (6, NULL, 'DSI-T/SO A&E CAMPUS SI', 'Section du CAMPUS SI pour la formation', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`sections` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (7, NULL, 'DSI-T/SO DELIVERY DDSP', 'Section du DELIVERY', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`sections` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (8, NULL, 'DSI-T/SO DECISION MATERIEL', 'Section du décisionnel matériel', '2013-02-01', '2013-02-01');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `osact_cake230`.`tjmagents`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `osact_cake230`;
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (1, '2012 - QUALIF G', NULL, 544, 2012, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (2, '2012 - ATOS AST PANAM', NULL, 645, 2012, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (3, '2012 - EURIWARE Tech. MAXIMO', NULL, 839, 2012, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (4, '2012 - EURIWARE EXPERT MAXIMO', NULL, 1271, 2012, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (5, '2012 - EURIWARE Gest. Exigences', NULL, 713, 2012, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (6, '2012 - STERIA 105', NULL, 713, 2012, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (7, '2012 - STERIA 101', NULL, 529, 2012, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (8, '2012 - STERIA 103', NULL, 632, 2012, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (9, '2012 - QUALIF CS', NULL, 878, 2012, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (10, '2012 - QUALIF H', NULL, 626, 2012, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (11, '2012 - QUALIF F', NULL, 477, 2012, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (12, '2012 - ESR GROUP Architecte', NULL, 709, 2012, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (13, '2013 - XLGROUP SMY', 603.20, NULL, 2013, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (14, '2013 - STERIA 107', 579, NULL, 2013, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (15, '2013 - STERIA 105', 604, NULL, 2013, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (16, '2013 - STERIA 101', 459, NULL, 2013, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (17, '2013 - STERIA 103', 547, NULL, 2013, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (18, '2013 - EURIWARE EXPERT MAXIMO', 1055.60, NULL, 2013, '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`tjmagents` (`id`, `NOM`, `TARIFHT`, `TARIFTTC`, `ANNEE`, `created`, `modified`) VALUES (19, '2013 - STERIA 302', 399, NULL, 2013, '2013-02-01', '2013-02-01');
 
 COMMIT;
 
@@ -1091,6 +1189,11 @@ INSERT INTO `osact_cake230`.`listediffusions` (`id`, `utilisateur_id`, `NOM`, `D
 INSERT INTO `osact_cake230`.`listediffusions` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (28, NULL, '*OSMOSE Intégrateur GMAO Tech', 'Liste de diffusion à disposition de l\'intégrateur', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`listediffusions` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (29, NULL, '*OSMOSE Intégrateur PANAM', 'Liste de diffusion à disposition de l\'intégrateur', '2013-02-01', '2013-02-01');
 INSERT INTO `osact_cake230`.`listediffusions` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (30, NULL, '*OSMOSE Intégrateur PMO', 'Liste de diffusion à disposition de l\'intégrateur', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`listediffusions` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (31, NULL, '*OSMOSE Intégrateur Sogeti', 'Liste de diffusion à disposition de l\'intégrateur', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`listediffusions` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (32, NULL, '*OSMOSE Intégrateur Technique', 'Liste de diffusion à disposition de l\'intégrateur', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`listediffusions` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (33, NULL, '*OSMOSE Intégrateur Tous', 'Liste de diffusion à disposition de l\'intégrateur', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`listediffusions` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (34, NULL, '*OSMOSE DSI-T Ordonnancement', 'Ajouter les personnes gérant l\'ordonnancement du programme OSMOSE', '2013-02-01', '2013-02-01');
+INSERT INTO `osact_cake230`.`listediffusions` (`id`, `utilisateur_id`, `NOM`, `DESCRIPTION`, `created`, `modified`) VALUES (35, NULL, '*DSI-T/SO OSMOSE Intégrateur GMAO MCO ', 'Liste de diffusion à disposition de l\'intégrateur', '2013-02-01', '2013-02-01');
 
 COMMIT;
 

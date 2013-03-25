@@ -2,11 +2,14 @@
     <div class="control-group">
         <label class="control-label sstitre  required" for="AchatActiviteId">Activité : </label>
         <div class="controls">
-            <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->Form->select('activite_id',$activites,array('data-rule-required'=>'true','data-msg-required'=>"Le nom de l'activité est obligatoire", 'selected' => $this->data['Activite']['projet_id'],'empty' => 'Choisir une activité')); ?>
-            <?php } else { ?>
-                <?php echo $this->Form->select('activite_id',$activites,array('data-rule-required'=>'true','data-msg-required'=>"Le nom de l'activité est obligatoire", 'empty' => 'Choisir une activité')); ?>
-            <?php } ?>
+            <select name="data[Achat][activite_id]" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="AchatActiviteId"> 
+                <option value="">Choisir une activité</option>
+                <?php foreach ($activites as $activite) : ?>
+                <?php $selected = ''; ?>
+                <?php if ($this->params->action == 'edit') $selected = $activite['Activite']['id']==$this->data['Achat']['activite_id'] ? 'selected="selected"' :''; ?>
+                    <option value="<?php echo $activite['Activite']['id']; ?>" <?php echo $selected; ?> data-subtext=" <?php echo $activite['Projet']['NOM']; ?>"><?php echo $activite['Activite']['NOM']; ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
     </div>
     <div class="control-group">

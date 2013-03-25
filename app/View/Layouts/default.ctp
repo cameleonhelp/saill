@@ -327,6 +327,22 @@ $(document).ready(function () {
             $('#progressbar').attr('style',"width:"+avancement+"%;");          
        }
    });
+   $('#AchatProjetID').on('change',function(e){
+        e.preventDefault();
+        //var selected = $(this).val();
+        alert('toto');
+        // ajax
+        /*$.ajax({
+                type: "POST",
+                url: '/achats/getActivitesByProjet',
+                data: "ajax=true&idProjet="+selected,
+                success: function(msg){
+                        //console.log(msg);
+                        $('.div_select').html(msg);
+
+                }
+        });*/
+   });   
       /** Accordion **/
    /*$("#accordion2").on('click',function(){
        $(this).find('.accordion-body').each(function(index){

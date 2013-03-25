@@ -51,6 +51,13 @@
         </div>
     </div>
     <div class="control-group">
+        <label class="control-label sstitre" for="ActiviteDELETABLE">Supprimable : </label>
+        <div class="controls">
+            <?php echo $this->Form->input('DELETABLE',array('class'=>'yesno','type'=>'checkbox')); ?>
+            &nbsp;<label class='labelAfter'></label>
+        </div>
+    </div>
+    <div class="control-group">
         <label class="control-label sstitre" for="ActiviteBUDJETRA">Budget initial : </label>
         <div class="controls">
             <?php echo $this->Form->input('BUDJETRA',array('placeholder'=>'Budget initial de la RA','class'=>'span8','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?> k€

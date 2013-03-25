@@ -84,7 +84,7 @@ class AppController extends Controller {
     }
     
     public $components = array(
-        'Session','Cookie',
+        'Session','Cookie','RequestHandler',
         'Auth' => array(
             'logoutRedirect' => array('controller' => 'Utilisateurs','action' => 'login'),
             'loginRedirect' => array('controller' => 'pages','action' => 'display','home'),

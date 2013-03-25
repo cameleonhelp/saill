@@ -100,8 +100,8 @@ class Activite extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		)
-	);
-
+	); 
+        
  /**
  * beforeSave method
  *

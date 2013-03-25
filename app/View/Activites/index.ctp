@@ -71,7 +71,7 @@
                         <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $activite['Activite']['id']),array('escape' => false)); ?>&nbsp;
 			<?php endif; ?>
                         <?php if (userAuth('profil_id')!='2' && isAuthorized('achats', 'delete')) : ?>
-                        <?php echo ($activite['Activite']['projet_id']!=1 || $activite['Activite']['id']>11) ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $activite['Activite']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette activité ?')):''; ?>                    
+                        <?php echo ($activite['Activite']['DELETABLE']==1) ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $activite['Activite']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette activité ?')):''; ?>                    
                         <?php endif; ?>
                 </td>
 	</tr>

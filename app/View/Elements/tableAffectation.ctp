@@ -4,6 +4,7 @@
         <thead>
 	<tr>
 			<th><?php echo 'Activités'; ?></th>
+                        <th><?php echo 'Commentaire'; ?></th>
                         <th><?php echo 'Répartition'; ?></th>
                     <?php if ($this->params->action != 'profil') : ?>                        
 			<th class="actions" width='40px'><?php echo __('Actions'); ?></th>
@@ -14,6 +15,7 @@
 	<?php foreach ($affectations as $affectation): ?>
 	<tr>
 		<td><?php echo h($affectation['Activite']['NOM']); ?>&nbsp;</td>
+                <td><?php echo h($affectation['Activite']['DESCRIPTION']); ?>&nbsp;</td>
                 <td style="text-align: right;"><?php echo h(isset($affectation['Affectation']['REPARTITION']) ? $affectation['Affectation']['REPARTITION'].'%' : ''); ?>&nbsp;</td>
                 <?php if ($this->params->action != 'profil') : ?>		
                 <td class="actions">

@@ -61,7 +61,7 @@ class Achat extends AppModel {
 			'order' => ''
 		)
 	);
-        
+              
  /**
  * beforeSave method
  *
