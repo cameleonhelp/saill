@@ -48,7 +48,7 @@ class UtiliseoutilsController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->Utiliseoutil->recursive = 0;
 		$this->set('utiliseoutils', $this->paginate());
-                $utilisateurs = $this->Utiliseoutil->find('all',array('fields' => array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>'Utilisateur.id > 1','order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $utilisateurs = $this->Utiliseoutil->Utilisateur->find('all',array('fields' => array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('utilisateurs',$utilisateurs);                 
                 $etats = $this->Utiliseoutil->find('all',array('fields' => array('Utiliseoutil.STATUT'),'group'=>'Utiliseoutil.STATUT','order'=>array('Utiliseoutil.STATUT'=>'asc')));
                 $this->set('etats',$etats); 
@@ -88,9 +88,9 @@ class UtiliseoutilsController extends AppController {
             if (isAuthorized('utiliseoutils', 'add')) :
 		$this->set('title_for_layout','Ouvertures des droits');
                 if($id==null){
-                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'order'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1')));
+                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'order'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1)));
                 } else {
-                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id','NOMLONG'),'order'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$id)));
+                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id','NOMLONG'),'order'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$id,'Utilisateur.ACTIF'=>1)));
                 }
                 $this->set('utilisateur',$utilisateur);  
                 $outil = $this->Utiliseoutil->Outil->find('list',array('fields' => array('id', 'NOM')));
@@ -133,7 +133,7 @@ class UtiliseoutilsController extends AppController {
 	public function edit($id = null) {
             if (isAuthorized('utiliseoutils', 'edit')) :
 		$this->set('title_for_layout','Ouvertures des droits');
-                $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOM'),'conditions'=>array('Utilisateur.id'=>$id)));
+                $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOM'),'conditions'=>array('Utilisateur.id'=>$id,'Utilisateur.ACTIF'=>1)));
                 $this->set('utilisateur',$utilisateur);  
                 $outil = $this->Utiliseoutil->Outil->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('outil',$outil);  
