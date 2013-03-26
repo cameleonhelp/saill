@@ -79,7 +79,7 @@ class ActionsController extends AppController {
                         $fresponsable = "de tous les agents";
                         break;                    
                     default :
-                        $newconditions[]="Action.destinataire='".$filtreResponsable."'";
+                        $newconditions[]="Action.destinataire='".$filtreResponsable."'AND Utilisateur.GESTIONABSENCES=1";
                         $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>$filtreResponsable)));
                         $fresponsable = "dont le responsable est ".$nomlong['Utilisateur']['NOMLONG'];
                         break;                      
@@ -90,7 +90,7 @@ class ActionsController extends AppController {
                     $fresponsable = "dont le responsable est ".$nomlong['Utilisateur']['NOMLONG'];
                 endif;
                 $this->set('fresponsable',$fresponsable); 
-                $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('responsables',$responsables);                 
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Action->recursive = 0;
@@ -146,7 +146,7 @@ class ActionsController extends AppController {
                 $this->set('priorites',$priorites); 
                 $types = Configure::read('typeAction');
                 $this->set('types',$types);    
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('destinataires',$destinataires); 
                 $activitesagent = $this->findActiviteForUtilisateur(2);
                 $this->set('activitesagent',$activitesagent); 
@@ -156,6 +156,8 @@ class ActionsController extends AppController {
                 $this->set('livrablesNonClos',$livrablesNonClos);
                 $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM')));
                 $this->set('domaines',$domaines); 
+		$nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
+		$this->set('nomlong', $nomlong);                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();      
@@ -201,7 +203,7 @@ class ActionsController extends AppController {
                 $this->set('priorites',$priorites); 
                 $types = Configure::read('typeAction');
                 $this->set('types',$types);    
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('destinataires',$destinataires); 
                 $activitesagent = $this->findActiviteForUtilisateur(2);
                 $this->set('activitesagent',$activitesagent);   
@@ -209,6 +211,8 @@ class ActionsController extends AppController {
                 $this->set('domaines',$domaines); 
                 $histories = $this->Action->Historyaction->find('all',array('conditions'=>array('Historyaction.action_id'=>$id),'order'=>array('Historyaction.id'=>'desc')));
                 $this->set('histories',$histories);
+		$nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
+		$this->set('nomlong', $nomlong);                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();            
@@ -263,23 +267,13 @@ class ActionsController extends AppController {
         }     
         
         public function findActiviteForUtilisateur($utilisateur_id = null) {
-            $list = array();
-            $sql = "SELECT affectations.activite_id, activites.NOM FROM affectations LEFT JOIN activites ON ( activites.id = affectations.activite_id ) WHERE utilisateur_id = ".$utilisateur_id;
-            $results = $this->Action->query($sql);
-            foreach ($results as $result) {
-                $list[$result['affectations']['activite_id']]=$result['activites']['NOM'];
-            }
-            return $list;
+            $results = $this->Action->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1')));
+            return $results;
         }        
 
         public function findActiviteActive() {
-            $list = array();
-            $sql = "SELECT activites.id, activites.NOM FROM activites WHERE activites.ACTIVE = 1";
-            $results = $this->Action->query($sql);
-            foreach ($results as $result) {
-                $list[$result['activites']['id']]=$result['activites']['NOM'];
-            }
-            return $list;
+            $results = $this->Action->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1','Activite.ACTIVE' => 1)));
+            return $results;
         } 
         
         public function findLivrableNonTermine() {

@@ -16,7 +16,17 @@
                             <li><?php echo $this->Html->link($etat['Utiliseoutil']['STATUT'], array('action' => 'index',$etat['Utiliseoutil']['STATUT'])); ?></li>
                          <?php endforeach; ?>
                       </ul>
-                 </li>                  
+                 </li>   
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Utilisateur <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous')); ?></li>
+                     <li class="divider"></li>
+                         <?php foreach ($utilisateurs as $utilisateur): ?>
+                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => 'index',$utilisateur['Utilisateur']['id'])); ?></li>
+                         <?php endforeach; ?>
+                      </ul>
+                 </li>                   
                 </ul> 
                 <?php echo $this->Form->create("Utiliseoutil",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
@@ -25,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste des droits <?php echo $fetat; ?></em></code><?php }?>   
+        <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste des droits <?php echo $fetat; ?> de <?php echo $futilisateur; ?></em></code><?php }?>   
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>

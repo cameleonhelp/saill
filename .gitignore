@@ -20,3 +20,5 @@ osact_data.sql
 affectations.sql
 osact_utilisateurs.sql
 activitesreelles_exemple.sql
+
+*.mno

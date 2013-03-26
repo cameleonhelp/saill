@@ -147,6 +147,8 @@ class LivrablesController extends AppController {
                 $this->set('etats',$etats);             
                 $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('utilisateur',$utilisateur);
+		$nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
+		$this->set('nomlong', $nomlong);                 
 		if ($this->request->is('post')) :
 			$this->Livrable->create();
 			if ($this->Livrable->save($this->request->data)) {
@@ -184,6 +186,8 @@ class LivrablesController extends AppController {
                 $this->set('etats',$etats);             
                 $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('utilisateur',$utilisateur);  
+		$nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
+		$this->set('nomlong', $nomlong);                 
                 $suivilivrables = $this->Livrable->Suivilivrable->find('all',array('conditions'=>array('Suivilivrable.livrable_id'=>$id),'order'=>array('Suivilivrable.created'=>'desc','Suivilivrable.id'=>'desc')));
                 $this->set('Suivilivrables',$suivilivrables);                 
 		if (!$this->Livrable->exists($id)) {

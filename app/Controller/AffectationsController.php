@@ -50,14 +50,14 @@ class AffectationsController extends AppController {
  */
 	public function add($userid = null) {
             if (isAuthorized('affectations', 'add')) :
-                $activites = $this->Affectation->Activite->find('list',array('fields'=>array('id','NOM')));
+                $activites = $this->Affectation->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1','Activite.ACTIVE'=>1)));
 		$this->set('activites', $activites);            
 		if ($this->request->is('post')) :
                         $this->Affectation->utilisateur_id = $userid;
 			$this->Affectation->create();
 			if ($this->Affectation->save($this->request->data)) {
                                 $history['Historyutilisateur']['utilisateur_id']=$userid;
-                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une affectation";
+                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une affectation par ".userAuth('NOMLONG');
                                 $this->Affectation->Utilisateur->Historyutilisateur->save($history);     
 				$this->Session->setFlash(__('Affectation sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(2));
@@ -80,7 +80,7 @@ class AffectationsController extends AppController {
  */
 	public function edit($id = null,$userid = null) {
             if (isAuthorized('affectations', 'edit')) :
-                $activites = $this->Affectation->Activite->find('list',array('fields'=>array('id','NOM')));
+                $activites = $this->Affectation->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1','Activite.ACTIVE'=>1)));
 		$this->set('activites', $activites);             
 		if (!$this->Affectation->exists($id)) {
 			throw new NotFoundException(__('Affectation incorrecte'));
@@ -88,7 +88,7 @@ class AffectationsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Affectation->save($this->request->data)) {
                                 $history['Historyutilisateur']['utilisateur_id']=$userid;
-                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour d'une affectation";
+                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour d'une affectation par ".userAuth('NOMLONG');
                                 $this->Affectation->Utilisateur->Historyutilisateur->save($history);                            
 				$this->Session->setFlash(__('Affectation sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(2));
@@ -119,10 +119,9 @@ class AffectationsController extends AppController {
 		if (!$this->Affectation->exists()) {
 			throw new NotFoundException(__('Affectation incorrecte'));
 		}
-		$this->request->onlyAllow('post', 'delete');
 		if ($this->Affectation->delete()) {
                         $history['Historyutilisateur']['utilisateur_id']=$userid;
-                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une affectation";
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une affectation par ".userAuth('NOMLONG');
                         $this->Affectation->Utilisateur->Historyutilisateur->save($history);                     
 			$this->Session->setFlash(__('Affectation supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -134,4 +133,21 @@ class AffectationsController extends AppController {
                 throw new NotAuthorizedException();           
             endif;                
 	}
+        
+        public function addIndisponibilite($id=null){
+            $absences = $this->Affectation->Activite->find('all',array('fields'=>array('Activite.id'),'conditions'=>array('Activite.projet_id'=>1)));
+            foreach ($absences as $absence) {
+                unset($record);
+                $record['Affectation']['utilisateur_id'] = $id;
+                $record['Affectation']['activite_id'] = $absence['Activite']['id'];
+                if ($this->Affectation->save($record)) {
+                    $history['Historyutilisateur']['utilisateur_id']=$id;
+                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une affectation par ".userAuth('NOMLONG');
+                    $this->Affectation->Utilisateur->Historyutilisateur->save($history);     
+                    $this->Session->setFlash(__('Affectation sauvegardée'),'default',array('class'=>'alert alert-success'));
+                }
+            }
+            $this->redirect($this->goToPostion());
+            
+        }
 }

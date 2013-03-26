@@ -230,7 +230,10 @@
                             <?php echo $this->Form->select('domaine_id',$domaine,array('selected' => $this->data['Utilisateur']['domaine_id'],'empty' => 'Choisir un domaine')); ?>
                         </div>
                     </div><hr/>
-                    <button type="button" class='btn btn-inverse pull-right' onclick="location.href='<?php echo $this->Html->url('/affectations/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter une activité</button>                    
+                    <span  class='pull-right'>
+                    <button type="button" class='btn btn-inverse' onclick="location.href='<?php echo $this->Html->url('/affectations/addIndisponibilite/'.$this->data['Utilisateur']['id']); ?>';">Ajouter indisponibilités</button>&nbsp;
+                    <button type="button" class='btn btn-inverse' onclick="location.href='<?php echo $this->Html->url('/affectations/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter une activité</button>    
+                    </span>
                     <label class="sstitre"><h4>Liste des activités</h4></label> 
                     <?php echo $this->element('tableAffectation'); ?>
                 </div>

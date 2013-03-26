@@ -6,11 +6,14 @@
         <label class="control-label sstitre  required" for="AffectationActiviteId">Activité : </label>
     </td>
     <td>
-            <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->Form->select('activite_id',$activites, array('data-rule-required'=>'true','selected' => $this->data['Affectation']['activite_id'],'empty'=>'Choisir une activité','data-msg-required'=>"L'activité est obligatoire")); ?>
-            <?php } else { ?>
-                <?php echo $this->Form->select('activite_id',$activites, array('data-rule-required'=>'true','empty'=>'Choisir une activité','class'=>'span8','data-msg-required'=>"L'activité est obligatoire")); ?>
-            <?php } ?>            
+            <select name="data[Affectation][activite_id]" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="AchatActiviteId"> 
+                <option value="">Choisir une activité</option>
+                <?php foreach ($activites as $activite) : ?>
+                <?php $selected = ''; ?>
+                <?php if ($this->params->action == 'edit') $selected = $activite['Activite']['id']==$this->data['Affectation']['activite_id'] ? 'selected="selected"' :''; ?>
+                    <option value="<?php echo $activite['Activite']['id']; ?>" <?php echo $selected; ?> data-subtext=" <?php echo $activite['Projet']['NOM']; ?>"><?php echo $activite['Activite']['NOM']; ?></option>
+                <?php endforeach; ?>
+            </select>           
     </td>
     <td>
         <label class="control-label sstitre" for="AffectationREPARTITION">Clé de répartition : </label>

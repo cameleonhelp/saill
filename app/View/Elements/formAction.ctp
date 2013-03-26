@@ -10,9 +10,19 @@
             <td><label class="control-label sstitre  required" for="ActionDestinataire">Responsable: </label></td>
             <td>
                 <?php if ($this->params->action == 'edit') { ?>
+                    <?php if (userAuth('WIDEAREA')==1): ?>
                     <?php echo $this->Form->select('destinataire',$destinataires,array('data-rule-required'=>'true','data-msg-required'=>"Le nom de l'utilisateur est obligatoire dans l'onglet Destinataire", 'selected' => $this->data['Action']['destinataire'],'empty' => 'Choisir un utilisateur')); ?>
+                    <?php else : ?>
+                    <?php echo $nomlong['Utilisateur']['NOMLONG']; ?>
+                    <?php echo $this->Form->input('destinataire',array('type'=>'hidden','value'=>userAuth('id'))); ?>
+                    <?php endif; ?>                
                 <?php } else { ?>
+                    <?php if (userAuth('WIDEAREA')==1): ?>
                     <?php echo $this->Form->select('destinataire',$destinataires,array('data-rule-required'=>'true','default'=>  userAuth('id'),'data-msg-required'=>"Le nom de l'utilisateur est obligatoire dans l'onglet Destinataire", 'empty' => 'Choisir un utilisateur')); ?>
+                    <?php else : ?>
+                    <?php echo $nomlong['Utilisateur']['NOMLONG']; ?>
+                    <?php echo $this->Form->input('destinataire',array('type'=>'hidden','value'=>userAuth('id'))); ?>
+                    <?php endif; ?>                
                 <?php } ?>                
             </td>
             <td><label class="control-label sstitre  required" for="ActionDomaineId">Domaine : </label></td>
@@ -29,11 +39,14 @@
             <td>&nbsp;</td>
             <td><label class="control-label sstitre  required" for="ActionActiviteId">Activité : </label></td>
             <td>
-                <?php if ($this->params->action == 'edit') { ?>
-                    <?php echo $this->Form->select('activite_id',$activitesagent,array('data-rule-required'=>'true','data-msg-required'=>"Le nom de l'activité est obligatoire dans l'onglet Facturation", 'selected' => $this->data['Action']['activite_id'],'empty' => 'Choisir une activité')); ?>
-                <?php } else { ?>
-                    <?php echo $this->Form->select('activite_id',$activitesagent,array('data-rule-required'=>'true','data-msg-required'=>"Le nom de l'activité est obligatoire dans l'onglet Facturation", 'empty' => 'Choisir une activité')); ?>
-                <?php } ?>                
+                <select name="data[Action][activite_id]" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="ActionActiviteId"> 
+                    <option value="">Choisir une activité</option>
+                    <?php foreach ($activitesagent as $activite) : ?>
+                    <?php $selected = ''; ?>
+                    <?php if ($this->params->action == 'edit') $selected = $activite['Activite']['id']==$this->data['Achat']['activite_id'] ? 'selected="selected"' :''; ?>
+                        <option value="<?php echo $activite['Activite']['id']; ?>" <?php echo $selected; ?> data-subtext=" <?php echo $activite['Projet']['NOM']; ?>"><?php echo $activite['Activite']['NOM']; ?></option>
+                    <?php endforeach; ?>
+                </select>                              
             </td>            
         </tr>
         <tr>
@@ -112,7 +125,7 @@
             </div>
         </div>
     </div>
-<?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>2)); ?> 
+<?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>userAuth('id'))); ?> 
 <?php if ($this->params->action == 'edit') echo $this->Form->input('id',array('type'=>'hidden')); ?>    
 <?php echo $this->Form->end(); ?>   
 <?php if ($this->params->action == 'edit') echo $this->element('tableHistoryAction'); ?>

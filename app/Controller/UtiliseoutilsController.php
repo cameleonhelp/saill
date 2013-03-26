@@ -19,7 +19,7 @@ class UtiliseoutilsController extends AppController {
  *
  * @return void
  */
-	public function index($filtreetat=null) {
+	public function index($filtreetat=null,$utilisateur_id=null) {
             if (isAuthorized('utiliseoutils', 'index')) :
 		$this->set('title_for_layout','Ouvertures des droits');
                 switch ($filtreetat){
@@ -32,10 +32,24 @@ class UtiliseoutilsController extends AppController {
                         $newconditions[]="Utiliseoutil.STATUT='".$filtreetat."'";
                         $fetat = "avec l'état ".$filtreetat;                        
                 }    
-                $this->set('fetat',$fetat);          
+                $this->set('fetat',$fetat);   
+                switch ($utilisateur_id){
+                    case 'tous':
+                    case null:    
+                        $newconditions[]="1=1";
+                        $futilisateur = "de tous les gestionnaires";
+                        break;                      
+                    default :
+                        $newconditions[]="Livrable.utilisateur_id = '".$utilisateur_id."'";
+                        $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> $utilisateur_id)));
+                        $futilisateur = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG'];                     
+                    }                     
+                $this->set('futilisateur',$futilisateur);                 
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->Utiliseoutil->recursive = 0;
 		$this->set('utiliseoutils', $this->paginate());
+                $utilisateurs = $this->Utiliseoutil->find('all',array('fields' => array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>'Utilisateur.id > 1','order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $this->set('utilisateurs',$utilisateurs);                 
                 $etats = $this->Utiliseoutil->find('all',array('fields' => array('Utiliseoutil.STATUT'),'group'=>'Utiliseoutil.STATUT','order'=>array('Utiliseoutil.STATUT'=>'asc')));
                 $this->set('etats',$etats); 
             else :
@@ -74,9 +88,9 @@ class UtiliseoutilsController extends AppController {
             if (isAuthorized('utiliseoutils', 'add')) :
 		$this->set('title_for_layout','Ouvertures des droits');
                 if($id==null){
-                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'conditions'=>array('Utilisateur.id > 1')));
+                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'order'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1')));
                 } else {
-                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id','NOMLONG'),'conditions'=>array('Utilisateur.id'=>$id)));
+                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id','NOMLONG'),'order'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$id)));
                 }
                 $this->set('utilisateur',$utilisateur);  
                 $outil = $this->Utiliseoutil->Outil->find('list',array('fields' => array('id', 'NOM')));
