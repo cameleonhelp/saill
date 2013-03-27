@@ -140,6 +140,7 @@ class AffectationsController extends AppController {
                 unset($record);
                 $record['Affectation']['utilisateur_id'] = $id;
                 $record['Affectation']['activite_id'] = $absence['Activite']['id'];
+                $this->Affectation->create();
                 if ($this->Affectation->save($record)) {
                     $history['Historyutilisateur']['utilisateur_id']=$id;
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une affectation par ".userAuth('NOMLONG');
