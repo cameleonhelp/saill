@@ -40,8 +40,8 @@ class UtiliseoutilsController extends AppController {
                         $futilisateur = "de tous les gestionnaires";
                         break;                      
                     default :
-                        $newconditions[]="Livrable.utilisateur_id = '".$utilisateur_id."'";
-                        $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> $utilisateur_id)));
+                        $newconditions[]="Utiliseoutil.utilisateur_id = '".$utilisateur_id."'";
+                        $nomlong = $this->Utiliseoutil->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> $utilisateur_id)));
                         $futilisateur = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG'];                     
                     }                     
                 $this->set('futilisateur',$futilisateur);                 
@@ -183,7 +183,7 @@ class UtiliseoutilsController extends AppController {
 		if (!$this->Utiliseoutil->exists()) {
 			throw new NotFoundException(__('Ouvertures des droits incorrecte'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Utiliseoutil->delete()) {
                         $history['Historyutilisateur']['utilisateur_id']=$userid['Utiliseoutil']['utilisateur_id'];
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une ouverture de droit".' par '.userAuth('NOMLONG');
@@ -272,8 +272,7 @@ class UtiliseoutilsController extends AppController {
 	public function search() {
             if (isAuthorized('utiliseoutils', 'index')) :
                 $this->set('title_for_layout','Ouvertures des droits');
-                $keyword=$this->params->data['Utiliseoutil']['SEARCH']; 
-                //$newconditions = array('OR'=>array("Message.LIBELLE LIKE '%$keyword%'","ModelName.name LIKE '%$keyword%'", "ModelName.email LIKE '%$keyword%'")  );
+                $keyword=isset($this->params->data['Utiliseoutil']['SEARCH']) ? $this->params->data['Utiliseoutil']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Utiliseoutil.STATUT LIKE '%".$keyword."%'","Utiliseoutil.TYPE LIKE '%".$keyword."%'","(CONCAT(Utilisateur.NOM, ' ', Utilisateur.PRENOM)) LIKE '%".$keyword."%'","Outil.NOM LIKE '%".$keyword."%'","Dossierpartage.NOM LIKE '%".$keyword."%'","Listediffusion.NOM LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 //$this->set('messages',$this->Message->search($this->data['Message']['MessageSEARCH'])); 

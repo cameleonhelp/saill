@@ -117,7 +117,7 @@ class TjmagentsController extends AppController {
 		if (!$this->Tjmagent->exists()) {
 			throw new NotFoundException(__('TJM agent incorrect'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Tjmagent->delete()) {
 			$this->Session->setFlash(__('TJM agent supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -137,7 +137,7 @@ class TjmagentsController extends AppController {
 	public function search() {
             if (isAuthorized('tjmagents', 'index')) :
                 $this->set('title_for_layout','TJM agents');
-                $keyword=$this->params->data['Tjmagent']['SEARCH']; 
+                $keyword=isset($this->params->data['Tjmagent']['SEARCH']) ? $this->params->data['Tjmagent']['SEARCH'] : '';  
                 $newconditions = array('OR'=>array("Tjmagent.NOM LIKE '%".$keyword."%'","Tjmagent.ANNEE LIKE '%".$keyword."%'","Tjmagent.TARIFHT LIKE '%".$keyword."%'","Tjmagent.TARIFTTC LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 
                 $this->autoRender = false;

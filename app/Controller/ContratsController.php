@@ -133,7 +133,7 @@ class ContratsController extends AppController {
 		if (!$this->Contrat->exists()) {
 			throw new NotFoundException(__('Contrat incorrect'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Contrat->delete()) {
 			$this->Session->setFlash(__('Contrat supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -153,7 +153,7 @@ class ContratsController extends AppController {
  */
 	public function search() {
             if (isAuthorized('contrats', 'index')) :
-                $keyword=$this->params->data['Contrat']['SEARCH']; 
+                $keyword=isset($this->params->data['Contrat']['SEARCH']) ? $this->params->data['Contrat']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Contrat.NOM LIKE '%".$keyword."%'","Contrat.DESCRIPTION LIKE '%".$keyword."%'","Contrat.ANNEEDEBUT LIKE '%".$keyword."%'","Contrat.ANNEEFIN LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

@@ -233,7 +233,7 @@ class ActionsController extends AppController {
 		if (!$this->Action->exists()) {
 			throw new NotFoundException(__('Action incorrecte'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Action->delete()) {
 			$this->Session->setFlash(__('Action supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -253,7 +253,7 @@ class ActionsController extends AppController {
  */
 	public function search() {
             if (isAuthorized('actions', 'index')) :
-                $keyword=$this->params->data['Action']['SEARCH']; 
+                $keyword=isset($this->params->data['Action']['SEARCH']) ? $this->params->data['Action']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Action.OBJET LIKE '%".$keyword."%'","Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Action.COMMENTAIRE LIKE '%".$keyword."%'","Activite.NOM LIKE '%".$keyword."%'","Domaine.NOM LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

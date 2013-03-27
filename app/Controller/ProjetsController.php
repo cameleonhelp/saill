@@ -159,7 +159,7 @@ class ProjetsController extends AppController {
 		if (!$this->Projet->exists()) {
 			throw new NotFoundException(__('Projet incorrect'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Projet->delete()) {
 			$this->Session->setFlash(__('Projet supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -180,7 +180,7 @@ class ProjetsController extends AppController {
  */
 	public function search() {
             if (isAuthorized('projets', 'index')) :
-                $keyword=$this->params->data['Projet']['SEARCH']; 
+                $keyword=isset($this->params->data['Projet']['SEARCH']) ? $this->params->data['Projet']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Projet.NOM LIKE '%".$keyword."%'","Contrat.NOM LIKE '%".$keyword."%'","Projet.NUMEROGALLILIE LIKE '%".$keyword."%'","Projet.COMMENTAIRE LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

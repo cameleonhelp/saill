@@ -13,7 +13,7 @@
                      <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous')); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($profils as $profil): ?>
-                            <li><?php echo $this->Html->link($profil['Profil']['NOM'], array('action' => 'index',$profil['Profil']['NOM'])); ?></li>
+                            <li><?php echo $this->Html->link($profil['Profil']['NOM'], array('action' => 'index',$profil['Profil']['id'])); ?></li>
                          <?php endforeach; ?>
                       </ul>
                  </li>                

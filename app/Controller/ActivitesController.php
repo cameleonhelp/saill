@@ -155,7 +155,7 @@ class ActivitesController extends AppController {
 		if (!$this->Activite->exists()) {
 			throw new NotFoundException(__('Activité incorrecte'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Activite->delete()) {
 			$this->Session->setFlash(__('Activité supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -176,7 +176,7 @@ class ActivitesController extends AppController {
  */
 	public function search() {
             if (isAuthorized('activites', 'index')) :
-                $keyword=$this->params->data['Activite']['SEARCH']; 
+                $keyword=isset($this->params->data['Activite']['SEARCH']) ? $this->params->data['Activite']['SEARCH'] : '';
                 $newconditions = array('OR'=>array("Activite.NOM LIKE '%".$keyword."%'","Projet.NOM LIKE '%".$keyword."%'","Activite.NUMEROGALLILIE LIKE '%".$keyword."%'","Activite.DESCRIPTION LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

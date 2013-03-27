@@ -92,7 +92,7 @@ class ActionslivrablesController extends AppController {
 		if (!$this->Actionslivrable->exists()) {
 			throw new NotFoundException(__('Invalid actionslivrable'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Actionslivrable->delete()) {
 			$this->Session->setFlash(__('Actionslivrable deleted'));
 			$this->redirect(array('action' => 'index'));

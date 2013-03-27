@@ -114,7 +114,7 @@ class ProfilsController extends AppController {
 		if (!$this->Profil->exists()) {
 			throw new NotFoundException(__('Profil incorrect'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Profil->delete()) {
 			$this->Session->setFlash(__('Profil supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -134,8 +134,7 @@ class ProfilsController extends AppController {
  */
 	public function search() {
             if (isAuthorized('profils', 'index')) :
-                $keyword=$this->params->data['Profil']['SEARCH']; 
-                //$newconditions = array('OR'=>array("Message.LIBELLE LIKE '%$keyword%'","ModelName.name LIKE '%$keyword%'", "ModelName.email LIKE '%$keyword%'")  );
+                $keyword=isset($this->params->data['Profil']['SEARCH']) ? $this->params->data['Profil']['SEARCH'] : '';  
                 $newconditions = array('OR'=>array("Profil.NOM LIKE '%".$keyword."%'","Profil.COMMENTAIRE LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 //$this->set('messages',$this->Message->search($this->data['Message']['MessageSEARCH'])); 

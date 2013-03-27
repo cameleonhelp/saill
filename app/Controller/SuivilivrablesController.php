@@ -89,7 +89,7 @@ class SuivilivrablesController extends AppController {
 		if (!$this->Suivilivrable->exists()) {
 			throw new NotFoundException(__('Invalid suivilivrable'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Suivilivrable->delete()) {
 			$this->Session->setFlash(__('Suivilivrable deleted'));
 			$this->redirect($this->goToPostion());

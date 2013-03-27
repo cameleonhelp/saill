@@ -117,7 +117,7 @@ class TjmcontratsController extends AppController {
 		if (!$this->Tjmcontrat->exists()) {
 			throw new NotFoundException(__('TJM contrat incorrect'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Tjmcontrat->delete()) {
 			$this->Session->setFlash(__('TJM contrat supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -138,7 +138,7 @@ class TjmcontratsController extends AppController {
 	public function search() {
             if (isAuthorized('tjmcontrats', 'index')) :
                 $this->set('title_for_layout','TJM contrats');
-                $keyword=$this->params->data['Tjmcontrat']['SEARCH']; 
+                $keyword=isset($this->params->data['Tjmcontrat']['SEARCH']) ? $this->params->data['Tjmcontrat']['SEARCH'] : '';   
                 $newconditions = array('OR'=>array("Tjmcontrat.TJM LIKE '%".$keyword."%'","Tjmcontrat.ANNEE LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 
                 $this->autoRender = false;

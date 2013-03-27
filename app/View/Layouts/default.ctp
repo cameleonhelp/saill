@@ -108,7 +108,7 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
                 <div class="navbar navbar-inverse">
                     <div class="navbar-inner">
                     <div class="navbar-text text-white">
-                        <div id="scroller_container">
+                        <div id="scroller_container" style="color:#EFEFEF">
                             <?php echo $this->element('messages_defilant'); ?>
                         </div>
                     </div>

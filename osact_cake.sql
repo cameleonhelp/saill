@@ -545,6 +545,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`livrables` (
   `DATEVALIDATION` DATE NOT NULL ,
   `ETAT` ENUM('à faire','en cours','validé','livré','refusé','annulé') NOT NULL ,
   `COMMENTAIRE` TEXT NULL DEFAULT NULL ,
+  `VERSION` VARCHAR(5) NULL DEFAULT NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )

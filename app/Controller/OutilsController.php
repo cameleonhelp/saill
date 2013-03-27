@@ -118,7 +118,7 @@ class OutilsController extends AppController {
 		if (!$this->Outil->exists()) {
 			throw new NotFoundException(__('Outil incorrect'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Outil->delete()) {
 			$this->Session->setFlash(__('Outil supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -138,7 +138,7 @@ class OutilsController extends AppController {
  */
 	public function search() {
             if (isAuthorized('outils', 'index')) :
-                $keyword=$this->params->data['Outil']['SEARCH']; 
+                $keyword=isset($this->params->data['Outil']['SEARCH']) ? $this->params->data['Outil']['SEARCH'] : '';  
                 $newconditions = array('OR'=>array("Outil.NOM LIKE '%".$keyword."%'","Outil.DESCRIPTION LIKE '%".$keyword."%'","(CONCAT(Utilisateur.NOM, ' ', Utilisateur.PRENOM)) LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

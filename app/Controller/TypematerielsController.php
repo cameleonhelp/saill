@@ -119,7 +119,7 @@ class TypematerielsController extends AppController {
 		if (!$this->Typemateriel->exists()) {
 			throw new NotFoundException(__('Type de matériel incorrect'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Typemateriel->delete()) {
 			$this->Session->setFlash(__('Type de matériel supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -140,7 +140,7 @@ class TypematerielsController extends AppController {
 	public function search() {
             if (isAuthorized('typemateriels', 'index')) :
                 $this->set('title_for_layout','Types de matériel');
-                $keyword=$this->params->data['Typemateriel']['SEARCH']; 
+                $keyword=isset($this->params->data['Typemateriel']['SEARCH']) ? $this->params->data['Typemateriel']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Typemateriel.NOM LIKE '%".$keyword."%'","Typemateriel.DESCRIPTION LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

@@ -50,9 +50,9 @@ class DotationsController extends AppController {
  */
 	public function add($userid = null) {
             if (isAuthorized('dotations', 'add')) :
-                $matinformatique = $this->Dotation->Materielinformatique->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Materielinformatique.ETAT ='=>'En stock')));
+                $matinformatique = $this->Dotation->Materielinformatique->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Materielinformatique.ETAT ='=>'En stock'),'order'=>array('Materielinformatique.NOM'=>'asc')));
 		$this->set('matinformatique', $matinformatique);
-                $matautre = $this->Dotation->Typemateriel->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Typemateriel.id >2')));
+                $matautre = $this->Dotation->Typemateriel->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Typemateriel.id >2'),'order'=>array('Typemateriel.NOM'=>"asc")));
 		$this->set('matautre', $matautre);                
 		if ($this->request->is('post')) :
                         $this->Dotation->utilisateur_id = $userid;

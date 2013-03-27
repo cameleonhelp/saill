@@ -114,7 +114,7 @@ class SocietesController extends AppController {
 		if (!$this->Societe->exists()) {
 			throw new NotFoundException(__('Société incorrecte'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Societe->delete()) {
 			$this->Session->setFlash(__('Société supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -134,7 +134,7 @@ class SocietesController extends AppController {
  */
 	public function search() {
             if (isAuthorized('societes', 'index')) :
-                $keyword=$this->params->data['Societe']['SEARCH']; 
+                $keyword=isset($this->params->data['Societe']['SEARCH']) ? $this->params->data['Societe']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Societe.NOM LIKE '%".$keyword."%'","Societe.NOMCONTACT LIKE '%".$keyword."%'","Societe.TELEPHONE LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

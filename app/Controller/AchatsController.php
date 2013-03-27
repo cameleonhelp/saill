@@ -135,7 +135,7 @@ class AchatsController extends AppController {
 		if (!$this->Achat->exists()) {
 			throw new NotFoundException(__('Achat incorrect'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Achat->delete()) {
 			$this->Session->setFlash(__('Achat supprimé'),'default',array('class'=>'alert alert-success'));
                         $this->redirect($this->goToPostion());
@@ -155,7 +155,7 @@ class AchatsController extends AppController {
  */
 	public function search() {
             if (isAuthorized('achats', 'index')) : 
-                $keyword=$this->params->data['Achat']['SEARCH']; 
+                $keyword=isset($this->params->data['Achat']['SEARCH']) ? $this->params->data['Achat']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Achat.DATE LIKE '%".$keyword."%'","Activite.NOM LIKE '%".$keyword."%'","Achat.LIBELLEACHAT LIKE '%".$keyword."%'","Achat.DESCRIPTION LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

@@ -53,7 +53,13 @@ class LivrablesController extends AppController {
                         $previousWeek = $date;
                         $newconditions[]="Livrable.ECHEANCE > '".$previousWeek->format('Y-m-d')."' AND (Livrable.DATELIVRAISON = '0000-00-00' OR Livrable.DATELIVRAISON = NULL)";
                         $fchronologie = "tous les livrables en retards";
-                        break;     
+                        break;  
+                    case 'otherweek':
+                        $date = new DateTime();
+                        $previousWeek = $date;
+                        $newconditions[]="Livrable.ECHEANCE <= '".$previousWeek->format('Y-m-d')."' AND (Livrable.DATELIVRAISON = '0000-00-00' OR Livrable.DATELIVRAISON = NULL)";
+                        $fchronologie = "tous les livrables à venir";
+                        break;                     
                 }
                 $this->set('fchronologie',$fchronologie); 
                 switch ($filtreEtat){
@@ -233,7 +239,7 @@ class LivrablesController extends AppController {
 		if (!$this->Livrable->exists()) {
 			throw new NotFoundException(__('Livrable incorrect'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Livrable->delete()) {
 			$this->Session->setFlash(__('Livrable supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -253,7 +259,7 @@ class LivrablesController extends AppController {
  */
 	public function search() {
             if (isAuthorized('livrables', 'index')) :
-                $keyword=$this->params->data['Livrable']['SEARCH']; 
+                $keyword=isset($this->params->data['Livrable']['SEARCH']) ? $this->params->data['Livrable']['SEARCH'] : '';  
                 $newconditions = array('OR'=>array("Livrable.NOM LIKE '%".$keyword."%'","Livrable.REFERENCE LIKE '%".$keyword."%'","Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Suivilivrable.ETAT LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 
                 $this->autoRender = false;

@@ -118,7 +118,7 @@ class SectionsController extends AppController {
 		if (!$this->Section->exists()) {
 			throw new NotFoundException(__('Section incorrecte'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Section->delete()) {
 			$this->Session->setFlash(__('Section supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -138,7 +138,7 @@ class SectionsController extends AppController {
  */
 	public function search() {
             if (isAuthorized('sections', 'index')) :
-                $keyword=$this->params->data['Section']['SEARCH']; 
+                $keyword=isset($this->params->data['Section']['SEARCH']) ? $this->params->data['Section']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Section.NOM LIKE '%".$keyword."%'","Section.DESCRIPTION LIKE '%".$keyword."%'","(CONCAT(Utilisateur.NOM, ' ', Utilisateur.PRENOM)) LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

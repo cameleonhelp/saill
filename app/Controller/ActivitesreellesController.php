@@ -198,7 +198,7 @@ class ActivitesreellesController extends AppController {
 		if (!$this->Activitesreelle->exists()) {
 			throw new NotFoundException(__('Feuille de temps incorrecte'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Activitesreelle->delete()) {
 				$this->Session->setFlash(__('Feuille de temps supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect(array('action' => 'index'));
@@ -323,7 +323,7 @@ class ActivitesreellesController extends AppController {
 	public function search() {
             if (isAuthorized('activitesreelles', 'index')) :
                 $this->set('title_for_layout','feuilles de temps');
-                $keyword=$this->params->data['Activitesreelle']['SEARCH']; 
+                $keyword=isset($this->params->data['Activitesreelle']['SEARCH']) ? $this->params->data['Activitesreelle']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Activite.NOM LIKE '%".$keyword."%'","Action.OBJET LIKE '%".$keyword."%'"));
                 $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc'),'conditions'=>$newconditions));
                 $this->set('groups',$group);                

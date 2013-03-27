@@ -51,7 +51,7 @@
 			<th  width="100px"><?php echo $this->Paginator->sort('FINMISSION','Date de fin de mission'); ?></th>
                         <th><?php echo $this->Paginator->sort('ACTIF','Etat du compte'); ?></th>
 
-			<th class="actions" width="90px"><?php echo __('Actions'); ?></th>
+			<th class="actions" width="110px"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
         <tbody>
@@ -87,6 +87,9 @@
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'duplicate')) : ?>
                     <?php echo $this->Form->postLink('<i class="icon-retweet"></i>', array('action' => 'dupliquer', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cet utilisateur ?')); ?>
                     <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'edit')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-shopping-cart"></i>', array('controller'=>'dotations','action' => 'add', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php endif; ?>                    
                 </td>
 	</tr>
 <?php endforeach; ?>

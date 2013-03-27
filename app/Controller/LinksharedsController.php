@@ -114,7 +114,7 @@ class LinksharedsController extends AppController {
 		if (!$this->Linkshared->exists()) {
 			throw new NotFoundException(__('Lien partagé incorrect'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Linkshared->delete()) {
 			$this->Session->setFlash(__('Lien partagé supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -135,7 +135,7 @@ class LinksharedsController extends AppController {
 	public function search() {
             if (isAuthorized('linkshareds', 'index')) :
                 $this->set('title_for_layout','Liens partagés');
-                $keyword=$this->params->data['Linkshared']['SEARCH']; 
+                $keyword=isset($this->params->data['Linkshared']['SEARCH']) ? $this->params->data['Linkshared']['SEARCH'] : '';  
                 $newconditions = array('OR'=>array("Linkshared.NOM LIKE '%".$keyword."%'","Linkshared.LINK LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 
                 $this->autoRender = false;

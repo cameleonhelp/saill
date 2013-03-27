@@ -179,7 +179,7 @@ class MaterielinformatiquesController extends AppController {
 		if (!$this->Materielinformatique->exists()) {
 			throw new NotFoundException(__('Postes informatique incorrect'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Materielinformatique->delete()) {
 			$this->Session->setFlash(__('Postes informatique supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -200,7 +200,7 @@ class MaterielinformatiquesController extends AppController {
 	public function search() {
             if (isAuthorized('materielinformatiques', 'index')) :
                 $this->set('title_for_layout','Postes informatique');
-                $keyword=$this->params->data['Materielinformatique']['SEARCH']; 
+                $keyword=isset($this->params->data['Materielinformatique']['SEARCH']) ? $this->params->data['Materielinformatique']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Materielinformatique.NOM LIKE '%".$keyword."%'","Materielinformatique.ETAT LIKE '%".$keyword."%'","Materielinformatique.COMMENTAIRE LIKE '%".$keyword."%'","Assistance.NOM LIKE '%".$keyword."%'","Section.NOM LIKE '%".$keyword."%'","Typemateriel.NOM LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 
                 $this->autoRender = false;

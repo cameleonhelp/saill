@@ -28,14 +28,15 @@ class AutorisationsController extends AppController {
                         $fprofil = "tous les profils";
                         break;
                     default :
-                        $newconditions[]="Profil.NOM='".$filtreautorisation."'";
-                        $fprofil = "le profil ".$filtreautorisation;                        
+                        $newconditions[]="Profil.id='".$filtreautorisation."'";
+                        $profil = $this->Autorisation->Profil->find('first',array('conditions'=>array('Profil.id'=>$filtreautorisation)));
+                        $fprofil = "le profil ".$profil['Profil']['NOM'];                        
                 }    
                 $this->set('fprofil',$fprofil); 
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Autorisation->recursive = 0;
 		$this->set('autorisations', $this->paginate());
-                $profils = $this->Autorisation->find('all',array('fields' => array('Profil.NOM'),'group'=>'Profil.NOM','order'=>array('Profil.NOM'=>'asc')));
+                $profils = $this->Autorisation->find('all',array('fields' => array('Profil.id','Profil.NOM'),'group'=>'Profil.NOM','order'=>array('Profil.NOM'=>'asc')));
                 $this->set('profils',$profils);                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -139,7 +140,7 @@ class AutorisationsController extends AppController {
 		if (!$this->Autorisation->exists()) {
 			throw new NotFoundException(__('Autorisation incorrecte'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Autorisation->delete()) {
 			$this->Session->setFlash(__('Autorisation supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -159,7 +160,7 @@ class AutorisationsController extends AppController {
  */
 	public function search() {
             if (isAuthorized('autorisations', 'index')) :
-                $keyword=$this->params->data['Autorisation']['SEARCH']; 
+                $keyword=isset($this->params->data['Autorisation']['SEARCH']) ? $this->params->data['Autorisation']['SEARCH'] : '';
                 //$newconditions = array('OR'=>array("Message.LIBELLE LIKE '%$keyword%'","ModelName.name LIKE '%$keyword%'", "ModelName.email LIKE '%$keyword%'")  );
                 $newconditions = array('OR'=>array("Profil.NOM LIKE '%".$keyword."%'","Autorisation.MODEL LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));

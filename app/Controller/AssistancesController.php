@@ -114,7 +114,7 @@ class AssistancesController extends AppController {
 		if (!$this->Assistance->exists()) {
 			throw new NotFoundException(__('Assistance incorrecte'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Assistance->delete()) {
 			$this->Session->setFlash(__('Assistance supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -134,7 +134,7 @@ class AssistancesController extends AppController {
  */
 	public function search() {
             if (isAuthorized('assistances', 'index')) :
-                $keyword=$this->params->data['Assistance']['SEARCH']; 
+                $keyword=isset($this->params->data['Assistance']['SEARCH']) ? $this->params->data['Assistance']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Assistance.NOM LIKE '%".$keyword."%'","Assistance.DESCRIPTION LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

@@ -119,7 +119,7 @@ class DossierpartagesController extends AppController {
 		if (!$this->Dossierpartage->exists()) {
 			throw new NotFoundException(__('Dossier partagé incorrecte'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Dossierpartage->delete()) {
 			$this->Session->setFlash(__('Dossier partagé supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -140,7 +140,7 @@ class DossierpartagesController extends AppController {
 	public function search() {
             if (isAuthorized('dossierpartages', 'index')) :
                 $this->set('title_for_layout','Partages réseaux');
-                $keyword=$this->params->data['Dossierpartage']['SEARCH']; 
+                $keyword=isset($this->params->data['Dossierpartage']['SEARCH']) ? $this->params->data['Dossierpartage']['SEARCH'] : '';  
                 $newconditions = array('OR'=>array("Dossierpartage.NOM LIKE '%".$keyword."%'","Dossierpartage.DESCRIPTION LIKE '%".$keyword."%'","Dossierpartage.GROUPEAD LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

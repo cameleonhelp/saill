@@ -114,7 +114,7 @@ class SitesController extends AppController {
 		if (!$this->Site->exists()) {
 			throw new NotFoundException(__('Site incorrect'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Site->delete()) {
 			$this->Session->setFlash(__('Site supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -134,7 +134,7 @@ class SitesController extends AppController {
  */
 	public function search() {
             if (isAuthorized('sites', 'index')) :
-                $keyword=$this->params->data['Site']['SEARCH']; 
+                $keyword=isset($this->params->data['Site']['SEARCH']) ? $this->params->data['Site']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Site.NOM LIKE '%".$keyword."%'","Site.DESCRIPTION LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

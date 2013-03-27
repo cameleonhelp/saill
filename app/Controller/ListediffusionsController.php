@@ -126,7 +126,7 @@ class ListediffusionsController extends AppController {
 		if (!$this->Listediffusion->exists()) {
 			throw new NotFoundException(__('Liste de diffusion incorrecte'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Listediffusion->delete()) {
 			$this->Session->setFlash(__('Liste de diffusion supprimée'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -147,7 +147,7 @@ class ListediffusionsController extends AppController {
 	public function search() {
             if (isAuthorized('listediffusions', 'index')) :
                 $this->set('title_for_layout','Listes de diffusion');
-                $keyword=$this->params->data['Listediffusion']['SEARCH']; 
+                $keyword=isset($this->params->data['Listediffusion']['SEARCH']) ? $this->params->data['Listediffusion']['SEARCH'] : '';   
                 $newconditions = array('OR'=>array("Listediffusion.NOM LIKE '%".$keyword."%'","Listediffusion.DESCRIPTION LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;

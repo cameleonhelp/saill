@@ -114,7 +114,7 @@ class DomainesController extends AppController {
 		if (!$this->Domaine->exists()) {
 			throw new NotFoundException(__('Domaine incorrect'));
 		}
-		$this->request->onlyAllow('post', 'delete');
+		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Domaine->delete()) {
 			$this->Session->setFlash(__('Domaine supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
@@ -134,7 +134,7 @@ class DomainesController extends AppController {
  */
 	public function search() {
             if (isAuthorized('domaines', 'index')) :
-                $keyword=$this->params->data['Domaine']['SEARCH']; 
+                $keyword=isset($this->params->data['Domaine']['SEARCH']) ? $this->params->data['Domaine']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Domaine.NOM LIKE '%".$keyword."%'","Domaine.DESCRIPTION LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;
