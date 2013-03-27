@@ -47,7 +47,7 @@
 		<td style="text-align: right;"><?php echo h(isset($achat['Achat']['MONTANT']) ? $achat['Achat']['MONTANT'] :'0'); ?> €&nbsp;</td>
 		<td class="actions">
                         <?php if (userAuth('profil_id')!='2' && isAuthorized('achats', 'view')) : ?>
-                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Achat :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($achat['Achat']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($achat['Achat']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Achat :</h3>" data-content="<contenttitle>Commentaire : </contenttitle>'.h($achat['Achat']['DESCRIPTION']).'<br/><contenttitle>Crée le: </contenttitle>'.h($achat['Achat']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($achat['Achat']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
 			<?php endif; ?>
                         <?php if (userAuth('profil_id')!='2' && isAuthorized('achats', 'edit')) : ?>
                         <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $achat['Achat']['id']),array('escape' => false)); ?>&nbsp;

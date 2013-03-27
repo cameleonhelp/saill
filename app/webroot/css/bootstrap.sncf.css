@@ -504,3 +504,9 @@ input.invalid {
     max-height: 300px !important;
     overflow: auto !important;
 }
+
+.popover {
+    overflow: no-content;
+    width: auto !important;
+    max-width: none !important;
+}
