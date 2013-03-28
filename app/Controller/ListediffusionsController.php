@@ -25,7 +25,7 @@ class ListediffusionsController extends AppController {
                 $this->Listediffusion->recursive = 0;
 		$this->set('listediffusions', $this->paginate());
                 $this->Session->delete('xls_export');
-                $export = $this->Listediffusion->find('all');
+                $export = $this->Listediffusion->find('all',array('order' => array('Listediffusion.NOM' => 'asc')));
                 $this->Session->write('xls_export',$export);                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));

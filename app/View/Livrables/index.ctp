@@ -12,13 +12,14 @@
                      <ul class="dropdown-menu">
                      <li><?php echo $this->Html->link('Toutes', array('action' => 'index','toutes',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      <li class="divider"></li>
+                     <li><?php echo $this->Html->link('En retard', array('action' => 'index','tolate',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                     <li class="divider"></li>
                      <li><?php echo $this->Html->link('Semaine précédente', array('action' => 'index','previousweek',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      <li><?php echo $this->Html->link('Semaine courante', array('action' => 'index','week',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      <li><?php echo $this->Html->link('Semaine suivante', array('action' => 'index','nextweek',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
-                     <li><?php echo $this->Html->link('En retard', array('action' => 'index','tolate',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
                      <li class="divider"></li>
-                     <li><?php echo $this->Html->link('Semaine à venir', array('action' => 'index','otherweek',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
-                                          </ul>
+                     <li><?php echo $this->Html->link('A venir', array('action' => 'index','otherweek',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                     </ul>
                  </li>                   
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etat<b class="caret"></b></a>
@@ -63,7 +64,8 @@
 			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
                         <th><?php echo $this->Paginator->sort('NOMLONG','Nom du gestionnaire'); ?></th>
 			<th width="60px"><?php echo $this->Paginator->sort('REFERENCE','Réf. MINIDOC'); ?></th>
-			<th width="40px"><?php echo $this->Paginator->sort('ETAT','Etat'); ?></th>
+			<th width="40px"><?php echo $this->Paginator->sort('VERSION','Version'); ?></th>
+                        <th width="40px"><?php echo $this->Paginator->sort('ETAT','Etat'); ?></th>
 			<th width="90px"><?php echo $this->Paginator->sort('ECHEANCE','Echéance'); ?></th>
 			<th width="90px"><?php echo $this->Paginator->sort('DATELIVRAISON','Date de livraison'); ?></th>                        
 			<th width="60px" class="actions"><?php echo __('Actions'); ?></th>
@@ -75,6 +77,7 @@
 		<td><?php echo h($livrable['Livrable']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($livrable['Utilisateur']['NOMLONG']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($livrable['Livrable']['REFERENCE']); ?>&nbsp;</td>
+                <td style="text-align: center;"><?php echo h($livrable['Livrable']['VERSION']); ?>&nbsp;</td>
                 <td style="text-align: center;"><?php echo isset($livrable['Livrable']['ETAT']) ? '<i class="'.etatLivrable(h($livrable['Livrable']['ETAT'])).'" rel="tooltip" data-title="'.h($livrable['Livrable']['ETAT']).'"></i>' : '' ; ?></td>
 		<td style="text-align: center;"><?php echo h(isset($livrable['Livrable']['ECHEANCE']) ? $livrable['Livrable']['ECHEANCE'] : ''); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h(isset($livrable['Livrable']['DATELIVRAISON']) ? $livrable['Livrable']['DATELIVRAISON'] : ''); ?>&nbsp;</td>

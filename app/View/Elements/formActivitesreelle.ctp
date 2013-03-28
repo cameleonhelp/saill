@@ -91,13 +91,13 @@
     <tbody>
     <tr>
         <td><?php echo $this->data['Activite']['NOM']; ?></td>
-        <td <?php echo $classLU; ?> width='15px'><?php echo $this->Form->input('LU',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du lundi")); ?> j</td>
-        <td <?php echo $classMA; ?> width='15px'><?php echo $this->Form->input('MA',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du mardi")); ?> j</td>
-        <td <?php echo $classME; ?> width='15px'><?php echo $this->Form->input('ME',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du mercredi")); ?> j</td>
-        <td <?php echo $classJE; ?> width='15px'><?php echo $this->Form->input('JE',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du jeudi")); ?> j</td>
-        <td <?php echo $classVE; ?> width='15px'><?php echo $this->Form->input('VE',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du vendredi")); ?> j</td>
-        <td class='week <?php echo $classSA; ?>' width='15px'><?php echo $this->Form->input('SA',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du samedi")); ?> j</td>
-        <td class='week <?php echo $classDI; ?>' width='15px'><?php echo $this->Form->input('DI',array('class'=>'span2 text-right day','data-rule-max'=>'1.0','data-msg-max'=>"Le maximum doit être de 1 sur la journée du dimanche")); ?> j</td>
+        <td <?php echo $classLU; ?> width='15px'><?php echo $this->Form->input('LU',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du lundi")); ?> j</td>
+        <td <?php echo $classMA; ?> width='15px'><?php echo $this->Form->input('MA',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mardi")); ?> j</td>
+        <td <?php echo $classME; ?> width='15px'><?php echo $this->Form->input('ME',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mercredi")); ?> j</td>
+        <td <?php echo $classJE; ?> width='15px'><?php echo $this->Form->input('JE',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du du jeudi")); ?> j</td>
+        <td <?php echo $classVE; ?> width='15px'><?php echo $this->Form->input('VE',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du vendredi")); ?> j</td>
+        <td class='week <?php echo $classSA; ?>' width='15px'><?php echo $this->Form->input('SA',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du samedi")); ?> j</td>
+        <td class='week <?php echo $classDI; ?>' width='15px'><?php echo $this->Form->input('DI',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche")); ?> j</td>
         <td width='15px'><?php echo $this->Form->input('TOTAL',array('class'=>'span2 text-right')); ?> j</td>        
     </tr>
     <?php if($this->data['Activite']['projet_id']==1) { ?>

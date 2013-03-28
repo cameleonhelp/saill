@@ -159,7 +159,21 @@ class Action extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
+		),
+		'Actionslivrable' => array(
+			'className' => 'Actionslivrable',
+			'foreignKey' => 'actions_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
 		)
+            
 	);      
 
 /**

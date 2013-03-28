@@ -37,7 +37,7 @@ class ActionslivrablesController extends AppController {
  *
  * @return void
  */
-	public function add() {
+	public function add($id=null) {
 		if ($this->request->is('post')) {
 			$this->Actionslivrable->create();
 			if ($this->Actionslivrable->save($this->request->data)) {
@@ -47,9 +47,9 @@ class ActionslivrablesController extends AppController {
 				$this->Session->setFlash(__('The actionslivrable could not be saved. Please, try again.'));
 			}
 		}
-		$livrables = $this->Actionslivrable->Livrable->find('list');
-		$actions = $this->Actionslivrable->Action->find('list');
-		$this->set(compact('livrables', 'actions'));
+		//$livrables = $this->Actionslivrable->find('list',array('fields'=>array('Livrable.id','Livrable.NOM'),'order'=>array('Livrable.NOM'=>'asc'),'conditions'=>array('Actionslivrables.actions_id'=>$id)));
+		//$actions = $this->Actionslivrable->find('list',array('fields'=>array('Action.id','Action.NOM'),'order'=>array('Action.NOM'=>'asc'),'conditions'=>array('Actionslivrables.actions_id'=>$id)));
+		//$this->set(compact('livrables', 'actions'));
 	}
 
 /**
@@ -74,9 +74,9 @@ class ActionslivrablesController extends AppController {
 			$options = array('conditions' => array('Actionslivrable.' . $this->Actionslivrable->primaryKey => $id));
 			$this->request->data = $this->Actionslivrable->find('first', $options);
 		}
-		$livrables = $this->Actionslivrable->Livrable->find('list');
-		$actions = $this->Actionslivrable->Action->find('list');
-		$this->set(compact('livrables', 'actions'));
+		//$livrables = $this->Actionslivrable->Livrable->find('list',array('fields'=>array('Livrable.id','Livrable.NOM'),'order'=>array('Livrable.NOM'=>'asc'),'conditions'=>array('Actionslivrable.actions_id'=>$id)));
+		//$actions = $this->Actionslivrable->Action->find('list',array('fields'=>array('Action.id','Action.NOM'),'order'=>array('Action.NOM'=>'asc'),'conditions'=>array('Actionslivrable.actions_id'=>$id)));
+		//$this->set(compact('livrables', 'actions'));
 	}
 
 /**

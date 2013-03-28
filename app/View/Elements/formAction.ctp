@@ -43,7 +43,7 @@
                     <option value="">Choisir une activité</option>
                     <?php foreach ($activitesagent as $activite) : ?>
                     <?php $selected = ''; ?>
-                    <?php if ($this->params->action == 'edit') $selected = $activite['Activite']['id']==$this->data['Achat']['activite_id'] ? 'selected="selected"' :''; ?>
+                    <?php if ($this->params->action == 'edit') $selected = $activite['Activite']['id']==$this->data['Action']['activite_id'] ? 'selected="selected"' :''; ?>
                         <option value="<?php echo $activite['Activite']['id']; ?>" <?php echo $selected; ?> data-subtext=" <?php echo $activite['Projet']['NOM']; ?>"><?php echo $activite['Activite']['NOM']; ?></option>
                     <?php endforeach; ?>
                 </select>                              
@@ -113,7 +113,12 @@
             <?php echo $this->Form->input('COMMENTAIRE'); ?>   
         </div>
     </div>  
-
+    <!-- ajout de la liste des livrables pouvant être associés //-->
+    <?php if ($this->params->action == 'edit') : ?>
+    <button type="button" class='btn btn-inverse pull-right' onclick="location.href='<?php echo $this->Html->url('/actionslivrables/add/'.$this->data['Action']['id']); ?>';">Ajouter un livrable</button>                    
+    <label class="sstitre">Liste des livrables associés</label>
+    <?php echo $this->element('tableLivrables'); ?>
+    <?php endif; ?>
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container" style="margin-top:2px;text-align:center;">

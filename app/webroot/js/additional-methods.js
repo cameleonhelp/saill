@@ -615,3 +615,32 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 	param = typeof param === "string" ? param.replace(/,/g, '|') : "png|jpe?g|gif";
 	return this.optional(element) || value.match(new RegExp(".(" + param + ")$", "i"));
 }, jQuery.format("Please enter a value with a valid extension."));
+// Accept a value from a file input based on a required mimetype
+jQuery.validator.addMethod("isAuthorize", function(value, element, param) {
+	// Split mime on commas in case we have multiple types we can accept
+	optionalValue = this.optional(element);
+
+	// Element is optional
+	if (optionalValue) {
+		return optionalValue;
+	}
+
+	var number = $(element).val();
+        var result = false;
+        
+        switch (number){
+            case '0':
+            case '0.0':
+            case '0.5':
+            case '1.0':
+            case '1':
+                result = true;
+                break;
+            default :
+                result = false;
+        }  
+
+	// Either return true because we've validated each file, or because the
+	// browser does not support element.files and the FileList feature
+	return result;
+}, jQuery.format("Please enter a valid value."));

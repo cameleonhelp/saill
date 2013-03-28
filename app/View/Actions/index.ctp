@@ -1,4 +1,4 @@
-<div class="actions index">
+<div class="actions index" id="ActionsRefresh">
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="container">
@@ -110,3 +110,9 @@
         </ul>
 	</div>
 </div>
+<script>
+$(document).ready(function () {
+    setInterval(function() {$('#ActionsRefresh').load('<?php echo $this->params->here; ?>');}, 30000); 
+    $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
+});
+</script>

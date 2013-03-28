@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste des droits <?php echo $fetat; ?> de <?php echo $futilisateur; ?></em></code><?php }?>   
+        <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste des droits <?php echo $fetat; ?> <?php echo $futilisateur; ?></em></code><?php }?>   
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>

@@ -161,9 +161,7 @@ $(document).ready(function () {
     /** Cache la zone de message d'erreur pour le formulaire **/
     $("#container_message").hide();
     /** Tooltip **/
-     if ($("[rel=tooltip]").length) {
-     $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
-     }   
+    $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
     /** PopOver **/ 
     var isVisible = false;
     var clickedAway = false;

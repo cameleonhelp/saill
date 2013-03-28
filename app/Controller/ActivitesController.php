@@ -58,7 +58,7 @@ class ActivitesController extends AppController {
 		$this->Activite->recursive = 0;
 		$this->set('activites', $this->paginate());
                 $this->Session->delete('xls_export');
-                $export = $this->Activite->find('all',array('conditions'=>$newconditions));
+                $export = $this->Activite->find('all',array('conditions'=>$newconditions,'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc')));
                 $this->Session->write('xls_export',$export);                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));

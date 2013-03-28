@@ -81,7 +81,8 @@ class ActionsController extends AppController {
                     default :
                         $newconditions[]="Action.destinataire='".$filtreResponsable."'AND Utilisateur.GESTIONABSENCES=1";
                         $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>$filtreResponsable)));
-                        $fresponsable = "dont le responsable est ".$nomlong['Utilisateur']['NOMLONG'];
+                        $fresponsable = "dont le responsable est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
+                        $this->set('nomlong',$filtreResponsable);
                         break;                      
                 }  
                 else:
@@ -154,7 +155,7 @@ class ActionsController extends AppController {
                 $this->set('activites',$activites);    
                 $livrablesNonClos = $this->findLivrableNonTermine();
                 $this->set('livrablesNonClos',$livrablesNonClos);
-                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM')));
+                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM')));
                 $this->set('domaines',$domaines); 
 		$nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
 		$this->set('nomlong', $nomlong);                 
@@ -206,8 +207,10 @@ class ActionsController extends AppController {
                 $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('destinataires',$destinataires); 
                 $activitesagent = $this->findActiviteForUtilisateur(2);
-                $this->set('activitesagent',$activitesagent);   
-                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM')));
+                $this->set('activitesagent',$activitesagent);  
+                $livrables = $this->findLivrable($id);
+                $this->set('livrables',$livrables);
+                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM')));
                 $this->set('domaines',$domaines); 
                 $histories = $this->Action->Historyaction->find('all',array('conditions'=>array('Historyaction.action_id'=>$id),'order'=>array('Historyaction.id'=>'desc')));
                 $this->set('histories',$histories);
@@ -276,6 +279,10 @@ class ActionsController extends AppController {
             return $results;
         } 
         
+        public function findLivrable($id=null) {
+            return $this->Action->Actionslivrable->find('all',array('conditions'=>array('Actionslivrable.actions_id'=>$id)));
+        }   
+        
         public function findLivrableNonTermine() {
             $list = array();
             $sql = "SELECT livrables.id, livrables.NOM FROM livrables WHERE livrables.ETAT NOT IN ('validé','livré','refusé','annulé')";
@@ -284,7 +291,7 @@ class ActionsController extends AppController {
                 $list[$result['livrables']['id']]=$result['livrables']['NOM'];
             }
             return $list;
-        }   
+        }           
         
         public function saveHistory($id){
             $thisAction = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id)));

@@ -59,7 +59,7 @@ class MaterielinformatiquesController extends AppController {
 		$this->Materielinformatique->recursive = 0;
 		$this->set('materielinformatiques', $this->paginate());
                 $this->Session->delete('xls_export');
-                $export = $this->Materielinformatique->find('all',array('conditions'=>$newconditions));
+                $export = $this->Materielinformatique->find('all',array('conditions'=>$newconditions,'order' => array('Materielinformatique.NOM' => 'asc')));
                 $this->Session->write('xls_export',$export);                
                 $etats = $this->Materielinformatique->find('all',array('fields' => array('ETAT'),'group'=>'ETAT','order'=>array('ETAT'=>'asc')));
                 $this->set('etats',$etats); 

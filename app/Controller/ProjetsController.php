@@ -54,7 +54,7 @@ class ProjetsController extends AppController {
 		$this->Projet->recursive = 0;
 		$this->set('projets', $this->paginate());
                 $this->Session->delete('xls_export');
-                $export = $this->Projet->find('all',array('conditions'=>$newconditions));
+                $export = $this->Projet->find('all',array('conditions'=>$newconditions,'order' => array('Projet.NOM' => 'asc')));
                 $this->Session->write('xls_export',$export);                   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));

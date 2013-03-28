@@ -26,7 +26,7 @@ class AchatsController extends AppController {
                         break;                 
                     default :
                         $newconditions[]="Activite.id='".$filtre."'";
-                        $activite = $this->Achat->Activite->find('first',array('fields'=>array('NOM'),'conditions'=>array('Activite.id'=>$filtre)));
+                        $activite = $this->Achat->Activite->find('first',array('fields'=>array('Activite.NOM'),'conditions'=>array('Activite.id'=>$filtre)));
                         $factivite = "l'activité ".$activite['Activite']['NOM'];
                         break;                      
                 }  
@@ -35,9 +35,9 @@ class AchatsController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->set('achats', $this->paginate());
                 $this->Session->delete('xls_export');
-                $export = $this->Achat->find('all',array('conditions'=>$newconditions));
+                $export = $this->Achat->find('all',array('conditions'=>$newconditions,'order'=>array('Achat.DATE'=>'desc')));
                 $this->Session->write('xls_export',$export); 
-                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1')));
+                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>"asc",'Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1')));
                 $this->set('activites',$activites); 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));

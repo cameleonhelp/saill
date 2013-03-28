@@ -13,7 +13,7 @@
                      <li><?php echo $this->Html->link('Toutes', array('action' => 'index','toutes')); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($activites as $activite): ?>
-                            <li><?php echo $this->Html->link($activite['Activite']['NOM'], array('action' => 'index',$activite['Activite']['id'])); ?></li>
+                            <li><?php echo $this->Html->link($activite['Activite']['NOM']." - ".$activite['Projet']['NOM'], array('action' => 'index',$activite['Activite']['id'])); ?></li>
                          <?php endforeach; ?>
                       </ul>
                  </li>                   

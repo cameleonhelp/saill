@@ -70,7 +70,7 @@ class UtilisateursController extends AppController {
 		$this->set('utilisateurs', $this->paginate());
                 $this->Session->delete('xls_export');
                 $newconditions = array_merge($newconditions,array('Utilisateur.id > '=> 1));
-                $export = $this->Utilisateur->find('all',array('conditions'=>$newconditions));
+                $export = $this->Utilisateur->find('all',array('conditions'=>$newconditions,'order' => array('Utilisateur.NOM' => 'asc','Utilisateur.PRENOM' => 'asc')));
                 $this->Session->write('xls_export',$export);                  
                 $sections = $this->Utilisateur->Section->find('all',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
                 $this->set('sections',$sections);
@@ -492,7 +492,7 @@ class UtilisateursController extends AppController {
 	public function search() {
             if (isAuthorized('utilisateurs', 'index')) :
                 $keyword=isset($this->params->data['Utilisateur']['SEARCH'])? $this->params->data['Utilisateur']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Utilisateur.COMMENTAIRE LIKE '%".$keyword."%'","Utilisateur.TELEPHONE LIKE '%".$keyword."%'","Utilisateur.WORKCAPACITY LIKE '%".$keyword."%'","Profil.NOM LIKE '%".$keyword."%'","Societe.NOM LIKE '%".$keyword."%'","Assistance.NOM LIKE '%".$keyword."%'","Section.NOM LIKE '%".$keyword."%'","Tjmagent.NOM LIKE '%".$keyword."%'"));
+                $newconditions = array('OR'=>array("Utilisateur.username LIKE '%".$keyword."%'","Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Utilisateur.COMMENTAIRE LIKE '%".$keyword."%'","Utilisateur.TELEPHONE LIKE '%".$keyword."%'","Utilisateur.WORKCAPACITY LIKE '%".$keyword."%'","Profil.NOM LIKE '%".$keyword."%'","Societe.NOM LIKE '%".$keyword."%'","Assistance.NOM LIKE '%".$keyword."%'","Section.NOM LIKE '%".$keyword."%'","Tjmagent.NOM LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;
                 $this->Utilisateur->recursive = 0;

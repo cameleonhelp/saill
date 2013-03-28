@@ -44,15 +44,15 @@ class Actionslivrable extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Livrables' => array(
-			'className' => 'Livrables',
+		'Livrable' => array(
+			'className' => 'Livrable',
 			'foreignKey' => 'livrables_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
 		),
-		'Actions' => array(
-			'className' => 'Actions',
+		'Action' => array(
+			'className' => 'Action',
 			'foreignKey' => 'actions_id',
 			'conditions' => '',
 			'fields' => '',

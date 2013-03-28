@@ -56,7 +56,7 @@ class OutilsController extends AppController {
  */
 	public function add() {
             if (isAuthorized('outils', 'add')) :
-                $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1')));              
+                $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1)));              
                 $this->set('gestionnaire',$gestionnaire);            
 		if ($this->request->is('post')) :
 			$this->Outil->create();
@@ -82,7 +82,7 @@ class OutilsController extends AppController {
  */
 	public function edit($id = null) {
             if (isAuthorized('outils', 'edit')) :
-                $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1')));              
+                $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1)));              
                 $this->set('gestionnaire',$gestionnaire);            
 		if (!$this->Outil->exists($id)) {
 			throw new NotFoundException(__('Outil incorrect'));

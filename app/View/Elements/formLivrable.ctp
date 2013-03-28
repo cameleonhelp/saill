@@ -32,6 +32,12 @@
         </div>
     </div>
     <div class="control-group">
+        <label class="control-label sstitre" for="LivrableVERSION">Version  : </label>
+        <div class="controls">
+            <?php echo $this->Form->input('VERSION',array('placeholder'=>'Version','class'=>'span6','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+        </div>
+    </div>
+    <div class="control-group">
         <label class="control-label sstitre required" for="LivrableECHEANCE">Echéance de livraison : </label>
         <div class="controls">
             <div class="input-append date" data-date="<?php echo empty($this->data['Livrable']['ECHEANCE']) ? date('d/m/Y') : $this->data['Livrable']['ECHEANCE']; ?>" data-date-format="dd/mm/yyyy">

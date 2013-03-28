@@ -123,6 +123,21 @@ App::uses('AppModel', 'Model', 'Autorisation');
     }  
 
 /**
+ * endWeek
+ * 
+ * @param type $year
+ * @param type $month
+ * @param type $day
+ * @return dateTime
+ */    
+    function endWeek($date) {
+        $num_day = 7-$date->format('N');
+        $interval = date_interval_create_from_date_string($num_day.' days');
+        $date->add($interval);
+        return $date->format('Y-m-d');
+    }  
+    
+/**
  * listFolder
  * 
  * @param type $folder

@@ -37,12 +37,12 @@ class UtiliseoutilsController extends AppController {
                     case 'tous':
                     case null:    
                         $newconditions[]="1=1";
-                        $futilisateur = "de tous les gestionnaires";
+                        $futilisateur = "de tous les utilisateurs";
                         break;                      
                     default :
                         $newconditions[]="Utiliseoutil.utilisateur_id = '".$utilisateur_id."'";
                         $nomlong = $this->Utiliseoutil->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> $utilisateur_id)));
-                        $futilisateur = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG'];                     
+                        $futilisateur = "de ".$nomlong['Utilisateur']['NOMLONG'];                     
                     }                     
                 $this->set('futilisateur',$futilisateur);                 
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
