@@ -4,7 +4,7 @@
   <?php $classProfil = in_array($controller,array('utilisateurs_profil')) ? 'active' : ''; ?>
   <?php $classLogout = in_array($controller,array('utilisateurs_logout')) ? 'active' : ''; ?>
   <?php $classHome = in_array($controller,array('pages_home')) ? 'active' : ''; ?>
-  <?php $classAction = in_array($controller,array('actions_index','actions_add','actions_edit','actions_delete','actions_search')) ? 'active' : ''; ?>
+  <?php $classAction = in_array($controller,array('actions_index','actions_add','actions_edit','actions_delete','actions_search','actionslivrables_add')) ? 'active' : ''; ?>
   <?php $classActvitereelle = in_array($controller,array('activitesreelles_index','activitesreelles_add','activitesreelles_edit','activitesreelles_delete','activitesreelles_search')) ? 'active' : ''; ?>  
   <?php $classLinkShared = in_array($controller,array('linkshareds_index','linkshareds_add','linkshareds_edit','linkshareds_delete','linkshareds_search')) ? 'active' : ''; ?>
   <?php $classLivrable = in_array($controller,array('livrables_index','livrables_add','livrables_edit','livrables_delete','livrables_search')) ? 'active' : ''; ?>

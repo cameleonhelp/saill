@@ -4,7 +4,7 @@ App::uses('AppModel', 'Model');
  * Livrable Model
  *
  * @property Utilisateur $Utilisateur
- * @property Action $Action
+ * @property Actionslivrable $Actionslivrable
  * @property Suivilivrable $Suivilivrable
  */
 class Livrable extends AppModel {
@@ -25,46 +25,6 @@ class Livrable extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'ETAT' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		), 
-		'ECHEANCE' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'DATELIVRAISON' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'DATEVALIDATION' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),            
 	);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -81,17 +41,8 @@ class Livrable extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),   
+		)
 	);
-        
- /**
- * hasMany associations
- *
- * @var array
- */
-	public $hasOne = array(
-            
-        );       
 
 /**
  * hasMany associations
@@ -99,22 +50,22 @@ class Livrable extends AppModel {
  * @var array
  */
 	public $hasMany = array(
-		'Suivilivrable' => array(
-			'className' => 'Suivilivrable',
+		'Actionslivrable' => array(
+			'className' => 'Actionslivrable',
 			'foreignKey' => 'livrable_id',
 			'dependent' => false,
 			'conditions' => '',
 			'fields' => '',
-			'order' => 'Suivilivrable.created desc, Suivilivrable.id desc',
+			'order' => '',
 			'limit' => '',
 			'offset' => '',
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'Actionslivrable' => array(
-			'className' => 'Actionslivrable',
-			'foreignKey' => 'livrables_id',
+		'Suivilivrable' => array(
+			'className' => 'Suivilivrable',
+			'foreignKey' => 'livrable_id',
 			'dependent' => false,
 			'conditions' => '',
 			'fields' => '',
@@ -126,7 +77,6 @@ class Livrable extends AppModel {
 			'counterQuery' => ''
 		)
 	);
-
         
  /**
  * beforeSave method

@@ -6,8 +6,8 @@ App::uses('AppModel', 'Model');
  * @property Utilisateur $Utilisateur
  * @property Domaine $Domaine
  * @property Activite $Activite
+ * @property Actionslivrable $Actionslivrable
  * @property Activitesreelle $Activitesreelle
- * @property Facturation $Facturation
  * @property Historyaction $Historyaction
  */
 class Action extends AppModel {
@@ -68,26 +68,6 @@ class Action extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'ECHEANCE' => array(
-			/*'date' => array(
-				'rule' => array('date'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),*/
-		),
-		'DEBUT' => array(
-			/*'date' => array(
-				'rule' => array('date'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),*/
-		),
 	);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -105,14 +85,7 @@ class Action extends AppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'Destinataire' => array(
-			'className' => 'Utilisateur',
-			'foreignKey' => 'destinataire',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),		
-                'Domaine' => array(
+		'Domaine' => array(
 			'className' => 'Domaine',
 			'foreignKey' => 'domaine_id',
 			'conditions' => '',
@@ -134,6 +107,19 @@ class Action extends AppModel {
  * @var array
  */
 	public $hasMany = array(
+		'Actionslivrable' => array(
+			'className' => 'Actionslivrable',
+			'foreignKey' => 'action_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
 		'Activitesreelle' => array(
 			'className' => 'Activitesreelle',
 			'foreignKey' => 'action_id',
@@ -159,22 +145,8 @@ class Action extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-		'Actionslivrable' => array(
-			'className' => 'Actionslivrable',
-			'foreignKey' => 'actions_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
 		)
-            
-	);      
+	);
 
 /**
  * beforeSave method
@@ -225,5 +197,5 @@ class Action extends AppModel {
                 }                 
             }
             return $results;
-        }  
+        } 
 }

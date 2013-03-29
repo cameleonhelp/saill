@@ -197,7 +197,13 @@ class UtilisateursController extends AppController {
                         $nbDotation = $this->Utilisateur->Dotation->query("SELECT count(id) AS nbDotation FROM dotations WHERE utilisateur_id =".$id);
                         $this->set('nbDotation',$nbDotation);   
                         $nbAffectation = $this->Utilisateur->Affectation->query("SELECT count(id) AS nbAffectation FROM affectations WHERE utilisateur_id =".$id);
-                        $this->set('nbAffectation',$nbAffectation);                          
+                        $this->set('nbAffectation',$nbAffectation); 
+                        $tabconges = $this->calculConge($id);
+                        $this->set('tabconges',$tabconges);
+                        $tabRQ = $this->calculRQ($id);
+                        $this->set('tabRQ',$tabRQ);
+                        $tabVT = $this->calculVT($id);
+                        $this->set('tabVT',$tabVT);                        
                 }
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -250,6 +256,7 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function profil($id=null) {
+            $this->set('title_for_layout','Mon profil');
             if (!$this->Utilisateur->exists($id)) {
                     throw new NotFoundException(__('Utilisateur incorrect'),'default',array('class'=>'alert alert-error'));
             }
@@ -316,7 +323,13 @@ class UtilisateursController extends AppController {
                     $currentUser = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$id)));
                     $hierarchique = $this->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$currentUser['Utilisateur']['utilisateur_id'])));
                     $this->set('hierarchique',$hierarchique);
-            }             
+                    $tabconges = $this->calculConge($id);
+                    $this->set('tabconges',$tabconges);
+                    $tabRQ = $this->calculRQ($id);
+                    $this->set('tabRQ',$tabRQ);
+                    $tabVT = $this->calculVT($id);
+                    $this->set('tabVT',$tabVT);
+                    }             
         }
    
 /**
@@ -518,5 +531,89 @@ class UtilisateursController extends AppController {
 		$data = $this->Session->read('xls_export');
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
-	}         
+	}   
+        
+/**
+ * calculConge
+ * 
+ * @param type $id
+ * @return array
+ */        
+        public function calculConge($id){
+            $indispos = array();
+            // array du genre 'type','mois','nb'
+            $sql ="select DATE_FORMAT(DATE,'%m') as MOIS,activite_id,SUM(TOTAL) as TOTAL
+                   from activitesreelles 
+                   where activitesreelles.utilisateur_id = ".$id."
+                   and activitesreelles.activite_id = 1
+                   and DATE_FORMAT(DATE,'%Y') = DATE_FORMAT(NOW(),'%Y')
+                   group by MOIS,activite_id";
+            $results = $this->Utilisateur->query($sql);
+            foreach($results as $result):
+                $indispos[$result[0]['MOIS']]=$result[0]['TOTAL'];
+            endforeach;
+            for($i=1;$i<13;$i++){
+                $mois = $i < 10 ? '0'.$i : (String)$i;
+                if (!array_key_exists($mois, $indispos)) {
+                    $indispos[$mois]='0';
+                }
+            }
+            return $indispos;
+        }
+        
+/**
+ * calculRQ
+ * 
+ * @param type $id
+ * @return array
+ */        
+        public function calculRQ($id){
+            $indispos = array();
+            // array du genre 'type','mois','nb'
+            $sql ="select DATE_FORMAT(DATE,'%m') as MOIS,activite_id,SUM(TOTAL) as TOTAL
+                   from activitesreelles 
+                   where activitesreelles.utilisateur_id = ".$id."
+                   and activitesreelles.activite_id = 2
+                   and DATE_FORMAT(DATE,'%Y') = DATE_FORMAT(NOW(),'%Y')                   
+                   group by MOIS,activite_id";
+            $results = $this->Utilisateur->query($sql);
+            foreach($results as $result):
+                $indispos[$result[0]['MOIS']]=$result[0]['TOTAL'];
+            endforeach;
+            for($i=1;$i<13;$i++){
+                $mois = $i < 10 ? '0'.$i : (String)$i;
+                if (!array_key_exists($mois, $indispos)) {
+                    $indispos[$mois]='0';
+                }
+            }
+            return $indispos;
+        }
+        
+/**
+ * calculVT
+ * 
+ * @param type $id
+ * @return array
+ */        
+        public function calculVT($id){
+            $indispos = array();
+            // array du genre 'type','mois','nb'
+            $sql ="select DATE_FORMAT(DATE,'%m') as MOIS,activite_id,SUM(TOTAL) as TOTAL
+                   from activitesreelles 
+                   where activitesreelles.utilisateur_id = ".$id."
+                   and activitesreelles.activite_id = 3
+                   and DATE_FORMAT(DATE,'%Y') = DATE_FORMAT(NOW(),'%Y')                   
+                   group by MOIS,activite_id";
+            $results = $this->Utilisateur->query($sql);
+            foreach($results as $result):
+                $indispos[$result[0]['MOIS']]=$result[0]['TOTAL'];
+            endforeach;
+            for($i=1;$i<13;$i++){
+                $mois = $i < 10 ? '0'.$i : (String)$i;
+                if (!array_key_exists($mois, $indispos)) {
+                    $indispos[$mois]='0';
+                }
+            }
+            return $indispos;
+        }        
 }

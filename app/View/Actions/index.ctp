@@ -71,7 +71,7 @@
 	<?php foreach ($actions as $action): ?>
 	<tr>
 		<td><?php echo h($action['Domaine']['NOM']); ?>&nbsp;</td>
-		<td><?php echo h($action['Destinataire']['NOM']." ".$action['Destinataire']['PRENOM']); ?>&nbsp;</td>
+		<td><?php echo h($action['Utilisateur']['NOM']." ".$action['Utilisateur']['PRENOM']); ?>&nbsp;</td>
 		<td><?php echo h($action['Action']['OBJET']); ?>&nbsp;</td>
                 <?php $style = styleBarre(h($action['Action']['AVANCEMENT'])); ?>
 		<td><div class="progress progress-<?php echo $style; ?>" style="margin-bottom:-10px;">

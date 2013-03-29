@@ -470,6 +470,34 @@ div.controls{
     }
 }
 
+@media (min-width: 1300px) {
+    .span29 {
+    width: 1117px;
+    margin-left: -60px;
+    }
+    
+    .container,
+    .navbar-static-top .container,
+    .navbar-fixed-top .container,
+    .navbar-fixed-bottom .container {
+      width: 1300px;
+    }
+}
+
+@media (min-width: 1600px) {
+    .span29 {
+    width: 1417px;
+    margin-left: -60px;
+    }
+    
+    .container,
+    .navbar-static-top .container,
+    .navbar-fixed-top .container,
+    .navbar-fixed-bottom .container {
+      width: 1600px;
+    }
+}
+
 .text-small{
     font-size: 8px;
 }

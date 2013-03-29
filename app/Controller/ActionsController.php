@@ -280,7 +280,7 @@ class ActionsController extends AppController {
         } 
         
         public function findLivrable($id=null) {
-            return $this->Action->Actionslivrable->find('all',array('conditions'=>array('Actionslivrable.actions_id'=>$id)));
+            return $this->Action->Actionslivrable->find('all',array('conditions'=>array('Actionslivrable.action_id'=>$id)));
         }   
         
         public function findLivrableNonTermine() {

@@ -38,18 +38,18 @@ class ActionslivrablesController extends AppController {
  * @return void
  */
 	public function add($id=null) {
+                $this->set('title_for_layout','Association d\'un livrable à une action');
 		if ($this->request->is('post')) {
 			$this->Actionslivrable->create();
 			if ($this->Actionslivrable->save($this->request->data)) {
-				$this->Session->setFlash(__('The actionslivrable has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('Livrable ajouté à l\'action'),'default',array('class'=>'alert alert-success'));
+				$this->redirect(array('controller'=>'actions','action' => 'edit',$id));
 			} else {
-				$this->Session->setFlash(__('The actionslivrable could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('Le livrable n\'a pas été ajouté à l\'action'),'default',array('class'=>'alert alert-error'));
 			}
 		}
-		//$livrables = $this->Actionslivrable->find('list',array('fields'=>array('Livrable.id','Livrable.NOM'),'order'=>array('Livrable.NOM'=>'asc'),'conditions'=>array('Actionslivrables.actions_id'=>$id)));
-		//$actions = $this->Actionslivrable->find('list',array('fields'=>array('Action.id','Action.NOM'),'order'=>array('Action.NOM'=>'asc'),'conditions'=>array('Actionslivrables.actions_id'=>$id)));
-		//$this->set(compact('livrables', 'actions'));
+		$livrables = $this->Actionslivrable->Livrable->find('list',array('fields'=>array('Livrable.id','Livrable.NOM'),'order'=>array('Livrable.NOM'=>'asc'))); //,'conditions'=>array('Actionslivrable.action_id'=>$id)
+		$this->set(compact('livrables'));
 	}
 
 /**
@@ -60,8 +60,9 @@ class ActionslivrablesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+                $this->set('title_for_layout','Association d\'un livrable à une action');
 		if (!$this->Actionslivrable->exists($id)) {
-			throw new NotFoundException(__('Invalid actionslivrable'));
+			throw new NotFoundException(__('Association incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Actionslivrable->save($this->request->data)) {
@@ -74,9 +75,9 @@ class ActionslivrablesController extends AppController {
 			$options = array('conditions' => array('Actionslivrable.' . $this->Actionslivrable->primaryKey => $id));
 			$this->request->data = $this->Actionslivrable->find('first', $options);
 		}
-		//$livrables = $this->Actionslivrable->Livrable->find('list',array('fields'=>array('Livrable.id','Livrable.NOM'),'order'=>array('Livrable.NOM'=>'asc'),'conditions'=>array('Actionslivrable.actions_id'=>$id)));
-		//$actions = $this->Actionslivrable->Action->find('list',array('fields'=>array('Action.id','Action.NOM'),'order'=>array('Action.NOM'=>'asc'),'conditions'=>array('Actionslivrable.actions_id'=>$id)));
-		//$this->set(compact('livrables', 'actions'));
+		$livrables = $this->Actionslivrable->Livrable->find('list',array('fields'=>array('Livrable.id','Livrable.NOM'),'order'=>array('Livrable.NOM'=>'asc'))); //,'conditions'=>array('Actionslivrable.action_id'=>$id)
+		$actions = $this->Actionslivrable->Action->find('list',array('fields'=>array('Action.id','Action.OBJET'),'order'=>array('Action.OBJET'=>'asc'))); //,'conditions'=>array('Actionslivrable.action_id'=>$id)
+		$this->set(compact('livrables', 'actions'));
 	}
 
 /**
@@ -88,16 +89,16 @@ class ActionslivrablesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+                $this->set('title_for_layout','Association d\'un livrable à une action');
 		$this->Actionslivrable->id = $id;
 		if (!$this->Actionslivrable->exists()) {
-			throw new NotFoundException(__('Invalid actionslivrable'));
+			throw new NotFoundException(__('Association incorrecte'));
 		}
-		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Actionslivrable->delete()) {
-			$this->Session->setFlash(__('Actionslivrable deleted'));
-			$this->redirect(array('action' => 'index'));
+			$this->Session->setFlash(__('Association supprimée'),'default',array('class'=>'alert alert-success'));
+			$this->redirect($this->goToPostion());
 		}
-		$this->Session->setFlash(__('Actionslivrable was not deleted'));
-		$this->redirect(array('action' => 'index'));
+		$this->Session->setFlash(__('Association <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
+		$this->redirect($this->goToPostion());
 	}
 }

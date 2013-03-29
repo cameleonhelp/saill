@@ -124,7 +124,7 @@
                     <div class="control-group">
                         <label class="control-label sstitre" for="UtilisateurVT">VT (temps partiel) : </label>
                         <div class="controls">
-                            <?php echo $this->Form->input('VT'); ?>
+                            <?php echo $this->Form->input('VT'); ?>&nbsp;<button class='btn btn-inverse pull-right' rel='tooltip' data-title="Pensez à remettre les valeurs<br>par défaut avant de faire<br>la mise à jour de vos compteurs." id='updateCompteur'>Mettre à jour compteurs</button>
                         </div>
                     </div>                          
                     <?php echo $this->element('suiviCongesAgent'); ?>

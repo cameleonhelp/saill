@@ -3,8 +3,8 @@ App::uses('AppModel', 'Model');
 /**
  * Actionslivrable Model
  *
- * @property Livrables $Livrables
- * @property Actions $Actions
+ * @property Action $Action
+ * @property Livrable $Livrable
  */
 class Actionslivrable extends AppModel {
 
@@ -14,7 +14,7 @@ class Actionslivrable extends AppModel {
  * @var array
  */
 	public $validate = array(
-		'livrables_id' => array(
+		'action_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -24,7 +24,7 @@ class Actionslivrable extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'actions_id' => array(
+		'livrable_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -44,16 +44,16 @@ class Actionslivrable extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Livrable' => array(
-			'className' => 'Livrable',
-			'foreignKey' => 'livrables_id',
+		'Action' => array(
+			'className' => 'Action',
+			'foreignKey' => 'action_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
 		),
-		'Action' => array(
-			'className' => 'Action',
-			'foreignKey' => 'actions_id',
+		'Livrable' => array(
+			'className' => 'Livrable',
+			'foreignKey' => 'livrable_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

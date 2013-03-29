@@ -129,7 +129,7 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
         </div>
     </div> 
     <?php  //debug(); 
-    //debug(env('SERVER_ADDR')); ?>
+    //debug($tabconges); ?>
     <!--<div id="debugguer" style="background-color: #cccccc;">SQL Debug :
         <?php echo $this->element('sql_dump'); ?>
     </div>//-->
@@ -324,6 +324,15 @@ $(document).ready(function () {
             $('#ActionAVANCEMENT').val(avancement);
             $('#progressbar').attr('style',"width:"+avancement+"%;");          
        }
+   });
+   $('#updateCompteur').on('click',function(e){
+       e.preventDefault();
+       var conges = $('#UtilisateurCONGE').val();
+       var rq = $('#UtilisateurRQ').val();
+       var vt = $('#UtilisateurVT').val();
+       $('#UtilisateurCONGE').val(parseFloat(conges)-parseFloat($('#totConge').text()));
+       $('#UtilisateurRQ').val(parseFloat(rq)-parseFloat($('#totRQ').text()));
+       $('#UtilisateurVT').val(parseFloat(vt)-parseFloat($('#totVT').text()));
    });
       /** Accordion **/
    /*$("#accordion2").on('click',function(){

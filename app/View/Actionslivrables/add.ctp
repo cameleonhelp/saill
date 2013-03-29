@@ -1,22 +1,18 @@
 <div class="actionslivrables form">
-<?php echo $this->Form->create('Actionslivrable'); ?>
-	<fieldset>
-		<legend><?php echo __('Add Actionslivrable'); ?></legend>
-	<?php
-		echo $this->Form->input('livrables_id');
-		echo $this->Form->input('actions_id');
-	?>
-	</fieldset>
-<?php echo $this->Form->end(__('Submit')); ?>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-
-		<li><?php echo $this->Html->link(__('List Actionslivrables'), array('action' => 'index')); ?></li>
-		<li><?php echo $this->Html->link(__('List Livrables'), array('controller' => 'livrables', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Livrables'), array('controller' => 'livrables', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Actions'), array('controller' => 'actions', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Actions'), array('controller' => 'actions', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
+<?php echo $this->Form->create('Actionslivrable',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+        <div class="control-group">
+            <label class="control-label sstitre required" for="ActionslivrableLivrableId">Livrable : </label>
+            <div class="controls">  
+                <?php echo $this->Form->select('livrable_id',$livrables,array('default' => userAuth('id'),'empty' => 'Choisir un livrable','data-rule-required'=>'true','data-msg-required'=>"Le livrable est obligatoire")); ?>
+            </div>
+        </div>	
+    <?php echo $this->Form->input('action_id',array('type'=>'hidden','value'=>$this->params->pass[0])); ?>
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="container" style="margin-top:2px;text-align:center;">
+                    <?php $url = $this->Session->read('history'); ?>
+                    <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url($url[0])."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
+                </div>
+            </div>
+        </div>
+<?php echo $this->Form->end(); ?>
