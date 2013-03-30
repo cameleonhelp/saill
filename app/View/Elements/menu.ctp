@@ -170,7 +170,7 @@
                 <li class="<?php echo $classFacturationTodo; ?>"><?php echo $this->Html->link('A facturer',array('controller'=>'activitesreelles','action'=>'afacturer'),array('escape' => false)); ?></li>
                 <?php endif; ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'index')) : ?>
-                <li class="<?php echo $classFacturationDo; ?>"><?php echo $this->Html->link('Facturé',array('controller'=>'facturation','action'=>'index'),array('escape' => false)); ?></li>
+                <li class="<?php echo $classFacturationDo; ?>"><?php echo $this->Html->link('Facturé',array('controller'=>'facturations','action'=>'index'),array('escape' => false)); ?></li>
                 <?php endif; ?>
             </ul>
             </li>
