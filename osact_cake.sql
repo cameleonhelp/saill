@@ -652,6 +652,33 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `osact_cake230`.`facturations`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `osact_cake230`.`facturations` ;
+
+CREATE  TABLE IF NOT EXISTS `osact_cake230`.`facturations` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `utilisateur_id` INT(15) NOT NULL ,
+  `activite_id` INT(15) NOT NULL ,
+  `activitesreelle_id` INT NOT NULL ,
+  `DATE` DATE NOT NULL ,
+  `VERSION` INT(2) NULL DEFAULT 0 ,
+  `LU` DECIMAL(1,1) NULL DEFAULT NULL ,
+  `MA` DECIMAL(1,1) NULL DEFAULT NULL ,
+  `ME` DECIMAL(1,1) NULL DEFAULT NULL ,
+  `JE` DECIMAL(1,1) NULL DEFAULT NULL ,
+  `VE` DECIMAL(1,1) NULL DEFAULT NULL ,
+  `SA` DECIMAL(1,1) NULL DEFAULT NULL ,
+  `DI` DECIMAL(1,1) NULL DEFAULT NULL ,
+  `NUMEROFTGALILEI` VARCHAR(15) NULL ,
+  `VERSION` INT(5) NULL DEFAULT NULL ,
+  `created` DATE NOT NULL ,
+  `modified` DATE NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `osact_cake230`.`activitesreelles`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `osact_cake230`.`activitesreelles` ;
@@ -660,6 +687,7 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`activitesreelles` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `utilisateur_id` INT(15) NOT NULL ,
   `action_id` INT(15) NULL DEFAULT NULL ,
+  `facturation_id` INT NULL DEFAULT NULL ,
   `activite_id` INT(15) NOT NULL ,
   `DATE` DATE NOT NULL ,
   `LU` DECIMAL(2,1) NOT NULL DEFAULT 0.0 ,
@@ -696,32 +724,6 @@ CREATE  TABLE IF NOT EXISTS `osact_cake230`.`plandecharges` (
   `activite_id` INT(15) NOT NULL ,
   `CHARGEPREVUE` INT NOT NULL ,
   `PERIODE` DATE NOT NULL COMMENT 'mois/année' ,
-  `created` DATE NOT NULL ,
-  `modified` DATE NOT NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `osact_cake230`.`facturations`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `osact_cake230`.`facturations` ;
-
-CREATE  TABLE IF NOT EXISTS `osact_cake230`.`facturations` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `utilisateur_id` INT(15) NOT NULL ,
-  `activite_id` INT(15) NOT NULL ,
-  `activitesreelle_id` INT NOT NULL ,
-  `DATE` DATE NOT NULL ,
-  `VERSION` INT(2) NULL DEFAULT 0 ,
-  `LU` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `MA` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `ME` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `JE` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `VE` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `SA` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `DI` DECIMAL(1,1) NULL DEFAULT NULL ,
-  `NUMEROFTGALILEI` VARCHAR(15) NULL ,
   `created` DATE NOT NULL ,
   `modified` DATE NOT NULL ,
   PRIMARY KEY (`id`) )

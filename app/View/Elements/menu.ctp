@@ -29,7 +29,9 @@
   <?php $classTJMAgents = in_array($controller,array('tjmagents_index','tjmagents_add','tjmagents_edit','tjmagents_delete','tjmagents_search')) ? 'active' : ''; ?>               
   <?php $classAchats = in_array($controller,array('achats_index','achats_add','achats_edit','achats_delete','achats_search')) ? 'active' : ''; ?>    
   <?php $classPlanDeCharge = in_array($controller,array('plandecharges_index','plandecharges_add','plandecharges_edit','plandecharges_delete','plandecharges_search')) ? 'active' : ''; ?>      
-  <?php $classFacturation = in_array($controller,array('facturations_index','facturations_add','facturations_edit','facturations_delete','facturations_search')) ? 'active' : ''; ?>        
+  <?php $classFacturationTodo = in_array($controller,array('activitesreelles_afacturer','facturations_add')) ? 'active' : ''; ?>        
+  <?php $classFacturationDo = in_array($controller,array('facturations_index','facturations_add','facturations_delete','facturations_search')) ? 'active' : ''; ?> 
+  <?php $classFacturation = in_array('active',array($classFacturationTodo,$classFacturationDo)) ? 'active' : ''; ?>        
   <?php $classBudget = in_array('active',array($classFacturation,$classPlanDeCharge,$classContrats,$classProjets,$classActivites,$classAchats,$classTJMProjets,$classTJMAgents)) ? 'active' : ''; ?>  
   <?php $classUtilisateurs = in_array($controller,array('utilisateurs_index','utilisateurs_add','utilisateurs_edit','utilisateurs_delete','utilisateurs_search','dotations_add','dotations_edit','dotations_delete','affectations_add','affectations_edit','affectations_delete')) ? 'active' : ''; ?> 
   <?php $classMateriels = in_array($controller,array('materielinformatiques_index','materielinformatiques_add','materielinformatiques_edit','materielinformatiques_delete','materielinformatiques_search')) ? 'active' : ''; ?>               
@@ -162,7 +164,16 @@
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'index')) : ?>            
             <li class="divider"></li>
-            <li class="<?php echo $classFacturation; ?>"><?php echo $this->Html->link('Facturation',array('controller'=>'facturations','action'=>'index'),array('escape' => false)); ?></li>
+            <li  class="dropdown-submenu <?php echo $classFacturation; ?>"><a href="#">Facturation</a>
+            <ul class="dropdown-menu">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'index')) : ?>
+                <li class="<?php echo $classFacturationTodo; ?>"><?php echo $this->Html->link('A facturer',array('controller'=>'activitesreelles','action'=>'afacturer'),array('escape' => false)); ?></li>
+                <?php endif; ?>
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'index')) : ?>
+                <li class="<?php echo $classFacturationDo; ?>"><?php echo $this->Html->link('Facturé',array('controller'=>'facturation','action'=>'index'),array('escape' => false)); ?></li>
+                <?php endif; ?>
+            </ul>
+            </li>
             <?php endif; ?>
         </ul>
     </li>
