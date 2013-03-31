@@ -6,6 +6,7 @@ App::uses('AppModel', 'Model');
  * @property Utilisateur $Utilisateur
  * @property Activite $Activite
  * @property Activitesreelle $Activitesreelle
+ * @property Activitesreelle $Activitesreelle
  */
 class Facturation extends AppModel {
 
@@ -45,16 +46,6 @@ class Facturation extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'DATE' => array(
-			'date' => array(
-				'rule' => array('date'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
 	);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -87,4 +78,65 @@ class Facturation extends AppModel {
 			'order' => ''
 		)
 	);
+
+/**
+ * hasMany associations
+ *
+ * @var array
+ */
+	public $hasMany = array(
+		'Activitesreelle' => array(
+			'className' => 'Activitesreelle',
+			'foreignKey' => 'facturation_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
+	);
+
+ /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {
+            if (!empty($this->data['Facturation']['DATE'])) {
+                $this->data['Facturation']['DATE'] = $this->dateFormatBeforeSave($this->debutsem($this->data['Facturation']['DATE']));
+            }
+            parent::beforeSave();
+            return true;
+        }
+        
+/**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Facturation']['created'])) {
+                    $results[$key]['Facturation']['created'] = $this->dateFormatAfterFind($val['Facturation']['created']);
+                }      
+                if (isset($val['Facturation']['modified'])) {
+                    $results[$key]['Facturation']['modified'] = $this->dateFormatAfterFind($val['Facturation']['modified']);
+                }                   
+                if (isset($val['Facturation']['DATE'])) {
+                    $results[$key]['Facturation']['DATE'] = $this->dateFormatAfterFind($val['Facturation']['DATE']);
+                }                    
+            }
+            return $results;
+        }  
+        
 }

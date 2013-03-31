@@ -5,7 +5,9 @@ App::uses('AppModel', 'Model');
  *
  * @property Utilisateur $Utilisateur
  * @property Action $Action
+ * @property Facturation $Facturation
  * @property Activite $Activite
+ * @property Facturation $Facturation
  */
 class Activitesreelle extends AppModel {
 
@@ -34,7 +36,87 @@ class Activitesreelle extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-		),            
+		),
+		'LU_TYPE' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'MA_TYPE' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'ME_TYPE' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'JE_TYPE' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'VE_TYPE' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'SA_TYPE' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'DI_TYPE' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'VEROUILLE' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
 	);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -57,8 +139,14 @@ class Activitesreelle extends AppModel {
 			'foreignKey' => 'action_id',
 			'conditions' => '',
 			'fields' => '',
-			'order' => '',
-                        'type'=>'left'
+			'order' => ''
+		),
+		'Facturation' => array(
+			'className' => 'Facturation',
+			'foreignKey' => 'facturation_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		),
 		'Activite' => array(
 			'className' => 'Activite',
@@ -68,10 +156,27 @@ class Activitesreelle extends AppModel {
 			'order' => ''
 		)
 	);
-        
-        /*public $virtualFields = array(
-            'NBACTIVITE' => 'COUNT( Activitesreelle.DATE )'
-        );*/
+
+/**
+ * hasMany associations
+ *
+ * @var array
+ */
+	public $hasMany = array(
+		'Facturation' => array(
+			'className' => 'Facturation',
+			'foreignKey' => 'activitesreelle_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
+	);
 
  /**
  * beforeSave method
@@ -116,7 +221,7 @@ class Activitesreelle extends AppModel {
  * debutsem method
  * 
  * @param type $date
- * @return date de début de semaine au format français
+ * @return date de d√©but de semaine au format fran√ßais
  */        
         public function debutsem($date) {
             $d = explode('/',$date);
@@ -149,5 +254,5 @@ class Activitesreelle extends AppModel {
         public function CFRDate($usdate){
             $day = explode('-',$usdate);
             return $day[0]."/".$day[1]."/".$day[2];
-        }        
+        }  
 }
