@@ -388,7 +388,37 @@ class ActivitesreellesController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();           
             endif;                
-	}           
+	}   
+        
+/**
+ * errorfacturation method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $id
+ * @return void
+ */
+	public function errorfacturation($id = null) {
+            if (isAuthorized('activitesreelles', 'update')) :
+                $this->set('title_for_layout','Feuilles de temps');  
+                $this->Activitesreelle->id = $id;
+                $record = $this->Activitesreelle->read();
+                unset($record['Activitesreelle']['created']);                
+                unset($record['Activitesreelle']['modified']);
+                $record['Activitesreelle']['created'] = $this->Activitesreelle->read('created');
+                $record['Activitesreelle']['modified'] = date('Y-m-d');                 
+                $record['Activitesreelle']['VEROUILLE'] = 1;
+                $this->Activitesreelle->create();
+                if ($this->Activitesreelle->save($record)) {
+                    $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation'),'default',array('class'=>'alert alert-success'));
+                    $this->redirect($this->goToPostion());
+                } 
+		$this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation'),'default',array('class'=>'alert alert-error')); 
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();           
+            endif;                
+	}          
         
 /**
  * search method

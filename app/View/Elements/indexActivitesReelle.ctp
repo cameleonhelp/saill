@@ -1,4 +1,4 @@
-<div class="activitesreelles index">
+<div class="activitesreelles index" id="ToRefresh">
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="container">
@@ -119,6 +119,7 @@
                 <td style="text-align: center;" class="week <?php echo $classDI; ?>"><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['DI']>0 && $activitesreelle['Activitesreelle']['DI']<1) ? $activitesreelle['Activitesreelle']['DI_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['DI']!=0 ? $activitesreelle['Activitesreelle']['DI'] : ""; ?></span></td> 
                 <td style="text-align: center;" class="sstotal"><?php echo $activitesreelle['Activitesreelle']['TOTAL']; ?></td> 
                 <td style="text-align: center;">
+                <?php if ($this->params->action != "afacturer") : ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'view')) : ?>
                     <?php echo isset($activitesreelle['Activitesreelle']['action_id']) ? '<i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Objet: </contenttitle>'.h($activitesreelle['Action']['OBJET']).'<br/><contenttitle>Avancement: </contenttitle>'.h($activitesreelle['Action']['AVANCEMENT']).'%<br/><contenttitle>Crée le: </contenttitle>'.h($activitesreelle['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($activitesreelle['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>' : "<i class='icon-blank'></i>"; ?>
                     <?php endif; ?>
@@ -135,6 +136,15 @@
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'duplicate')) : ?>
                     <?php echo $this->Html->link('<i class=" icon-tags"></i>', array('action' => 'autoduplicate', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>                    
                     <?php endif; ?>
+                <?php else : ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'edit')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-ok-sign"></i>', array('action' => 'edit', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'update')) : ?>
+                    <?php $img = 'icon-remove-sign'; ?>
+                    <?php echo $this->Form->postLink('<i class="'.$img.'"></i>', array('action' => 'errorfacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour correction ?')); ?>                    
+                    <?php endif; ?>
+                <?php endif; ?>
                 </td>                 
             </tr>
         <?php endif; ?>
@@ -162,6 +172,9 @@
      }
      
      $(document).ready(function () {
-         $("#totalactivites").html(sumOfColumns());
-     });
+        $("#totalactivites").html(sumOfColumns());
+
+        setInterval(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 30000); 
+        $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
+    });
 </script>
