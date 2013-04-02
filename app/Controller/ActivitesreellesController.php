@@ -80,7 +80,8 @@ class ActivitesreellesController extends AppController {
                 $this->set('groups',$group);
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
 		$this->Activitesreelle->recursive = 0;
-		$this->set('activitesreelles', $this->paginate());
+                $activitesreeelles = $this->Activitesreelle->find('all',$this->paginate);
+		$this->set('activitesreelles', $activitesreeelles);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();            

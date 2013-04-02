@@ -8,7 +8,7 @@
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
                 <?php endif; ?>
-                <?php if ($this->params->controller == "activitesreelles" && $this->params->action != "afacturer") : ?>
+                <?php if ($this->params->action != "afacturer") : ?>
                 <?php $defaultEtat = 'tous'; ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
@@ -138,7 +138,7 @@
                     <?php endif; ?>
                 <?php else : ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-ok-sign"></i>', array('action' => 'edit', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>
+                    <?php echo $this->Html->link('<i class="icon-ok-sign"></i>', array('controller' => 'facturations','action' => 'add', $activitesreelle['Activitesreelle']['utilisateur_id'], $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'update')) : ?>
                     <?php $img = 'icon-remove-sign'; ?>
