@@ -41,6 +41,7 @@ class UtiliseoutilsController extends AppController {
                         break;                      
                     default :
                         $newconditions[]="Utiliseoutil.utilisateur_id = '".$utilisateur_id."'";
+                        $this->Utiliseoutil->Utilisateur->recursive = -1;
                         $nomlong = $this->Utiliseoutil->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> $utilisateur_id)));
                         $futilisateur = "de ".$nomlong['Utilisateur']['NOMLONG'];                     
                     }                     
@@ -48,8 +49,10 @@ class UtiliseoutilsController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->Utiliseoutil->recursive = 0;
 		$this->set('utiliseoutils', $this->paginate());
+                $this->Utiliseoutil->Utilisateur->recursive = -1;
                 $utilisateurs = $this->Utiliseoutil->Utilisateur->find('all',array('fields' => array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
-                $this->set('utilisateurs',$utilisateurs);                 
+                $this->set('utilisateurs',$utilisateurs);   
+                $this->Utiliseoutil->recursive = -1;
                 $etats = $this->Utiliseoutil->find('all',array('fields' => array('Utiliseoutil.STATUT'),'group'=>'Utiliseoutil.STATUT','order'=>array('Utiliseoutil.STATUT'=>'asc')));
                 $this->set('etats',$etats); 
             else :
@@ -88,15 +91,20 @@ class UtiliseoutilsController extends AppController {
             if (isAuthorized('utiliseoutils', 'add')) :
 		$this->set('title_for_layout','Ouvertures des droits');
                 if($id==null){
+                    $this->Utiliseoutil->Utilisateur->recursive = -1;
                     $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'order'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1)));
                 } else {
+                    $this->Utiliseoutil->Utilisateur->recursive = -1;
                     $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id','NOMLONG'),'order'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$id,'Utilisateur.ACTIF'=>1)));
                 }
-                $this->set('utilisateur',$utilisateur);  
+                $this->set('utilisateur',$utilisateur);
+                $this->Utiliseoutil->Outil->recursive = -1;
                 $outil = $this->Utiliseoutil->Outil->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('outil',$outil);  
+                $this->Utiliseoutil->Listediffusion->recursive = -1;
                 $listediffusion = $this->Utiliseoutil->Listediffusion->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('listediffusion',$listediffusion); 
+                $this->Utiliseoutil->Dossierpartage->recursive = -1;
                 $dossierpartage  = $this->Utiliseoutil->Dossierpartage->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('dossierpartage',$dossierpartage );  
                 $etat = Configure::read('etatOuvertureDroit');
@@ -133,12 +141,16 @@ class UtiliseoutilsController extends AppController {
 	public function edit($id = null) {
             if (isAuthorized('utiliseoutils', 'edit')) :
 		$this->set('title_for_layout','Ouvertures des droits');
+                $this->Utiliseoutil->Utilisateur->recursive = -1;
                 $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOM'),'conditions'=>array('Utilisateur.id'=>$id,'Utilisateur.ACTIF'=>1)));
                 $this->set('utilisateur',$utilisateur);  
+                $this->Utiliseoutil->Outil->recursive = -1;
                 $outil = $this->Utiliseoutil->Outil->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('outil',$outil);  
+                $this->Utiliseoutil->Listediffusion->recursive = -1;
                 $listediffusion = $this->Utiliseoutil->Listediffusion->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('listediffusion',$listediffusion); 
+                $this->Utiliseoutil->Dossierpartage->recursive = -1;
                 $dossierpartage  = $this->Utiliseoutil->Dossierpartage->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('dossierpartage',$dossierpartage );  
                 $etat = Configure::read('etatOuvertureDroit');
@@ -279,7 +291,8 @@ class UtiliseoutilsController extends AppController {
                 $this->Utiliseoutil->recursive = 0;
                 $this->set('utiliseoutils', $this->paginate());
                 $etats = $this->Utiliseoutil->find('all',array('fields' => array('Utiliseoutil.STATUT'),'group'=>'Utiliseoutil.STATUT','order'=>array('Utiliseoutil.STATUT'=>'asc')));
-                $this->set('etats',$etats);                
+                $this->set('etats',$etats);  
+                $this->Utiliseoutil->Utilisateur->recursive = -1;
                 $utilisateurs = $this->Utiliseoutil->Utilisateur->find('all',array('fields' => array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('utilisateurs',$utilisateurs); 
                 $this->render('index');

@@ -268,15 +268,13 @@ class LivrablesController extends AppController {
  */
 	public function search() {
             if (isAuthorized('livrables', 'index')) :
-                $this->Livrable->Utilisateur->recursive = -1;
-                $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
-                $this->set('utilisateur',$utilisateur);                 
                 $keyword=isset($this->params->data['Livrable']['SEARCH']) ? $this->params->data['Livrable']['SEARCH'] : '';  
                 $newconditions = array('OR'=>array("Livrable.NOM LIKE '%".$keyword."%'","Livrable.REFERENCE LIKE '%".$keyword."%'","Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 
                 $this->autoRender = false;
                 $this->Livrable->recursive = 0;
                 $this->set('livrables', $this->paginate());
+                $this->Livrable->Utilisateur->recursive = -1;
                 $gestionnaires = $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('gestionnaires',$gestionnaires);                  
                 $this->Session->delete('xls_export');               

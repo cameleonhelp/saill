@@ -42,7 +42,7 @@
                      <li class="divider"></li>
                      <?php //debug($gestionnaires); ?>
                          <?php foreach ($gestionnaires as $gestionnaire): ?>
-                            <li><?php echo $this->Html->link($gestionnaire['Utilisateur']['NOMLONG'], array('action' => 'index',$this->params->pass[0],$this->params->pass[1],$gestionnaire['Utilisateur']['id'])); ; ?></li>
+                            <li><?php echo $this->Html->link($gestionnaire['Utilisateur']['NOMLONG'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$gestionnaire['Utilisateur']['id'])); ; ?></li>
                          <?php endforeach; ?>
                      </ul>
                 </li>   

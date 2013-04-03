@@ -59,12 +59,16 @@ class MaterielinformatiquesController extends AppController {
 		$this->Materielinformatique->recursive = 0;
 		$this->set('materielinformatiques', $this->paginate());
                 $this->Session->delete('xls_export');
+                $this->Materielinformatique->recursive = 0;
                 $export = $this->Materielinformatique->find('all',array('conditions'=>$newconditions,'order' => array('Materielinformatique.NOM' => 'asc')));
-                $this->Session->write('xls_export',$export);                
+                $this->Session->write('xls_export',$export); 
+                $this->Materielinformatique->recursive = -1;
                 $etats = $this->Materielinformatique->find('all',array('fields' => array('ETAT'),'group'=>'ETAT','order'=>array('ETAT'=>'asc')));
                 $this->set('etats',$etats); 
+                $this->Materielinformatique->recursive = 0;
                 $types = $this->Materielinformatique->find('all',array('fields' => array('Typemateriel.NOM'),'group'=>'Typemateriel.NOM','order'=>array('Typemateriel.NOM'=>'asc')));
                 $this->set('types',$types);    
+                $this->Materielinformatique->recursive = 0;
                 $sections = $this->Materielinformatique->find('all',array('fields' => array('Section.NOM'),'group'=>'Section.NOM','order'=>array('Section.NOM'=>'asc')));
                 $this->set('sections',$sections);  
             else :
@@ -101,10 +105,13 @@ class MaterielinformatiquesController extends AppController {
  */
 	public function add() {
             if (isAuthorized('materielinformatiques', 'add')) :
+                $this->Materielinformatique->Typemateriel->recursive = -1;
                 $peripherique = $this->Materielinformatique->Typemateriel->find('list',array('fields' => array('id', 'NOM'),'conditions'=>array('id <'=>3)));
-                $this->set('peripherique',$peripherique);                
+                $this->set('peripherique',$peripherique); 
+                $this->Materielinformatique->Section->recursive = -1;
                 $section = $this->Materielinformatique->Section->find('list',array('fields' => array('id', 'NOM')));
-                $this->set('section',$section);  
+                $this->set('section',$section); 
+                $this->Materielinformatique->Assistance->recursive = -1;
                 $assistance = $this->Materielinformatique->Assistance->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('assistance',$assistance); 
                 $etat = Configure::read('etatMaterielInformatique');
@@ -135,10 +142,13 @@ class MaterielinformatiquesController extends AppController {
 	public function edit($id = null) {
             if (isAuthorized('materielinformatiques', 'edit')) :
 		$this->set('title_for_layout','Postes informatique');
-                $peripherique = $this->Materielinformatique->Typemateriel->find('list',array('fields' => array('id', 'NOM')));
-                $this->set('peripherique',$peripherique);                
+                $this->Materielinformatique->Typemateriel->recursive = -1;
+                $peripherique = $this->Materielinformatique->Typemateriel->find('list',array('fields' => array('id', 'NOM'),'conditions'=>array('id <'=>3)));
+                $this->set('peripherique',$peripherique); 
+                $this->Materielinformatique->Section->recursive = -1;
                 $section = $this->Materielinformatique->Section->find('list',array('fields' => array('id', 'NOM')));
-                $this->set('section',$section);  
+                $this->set('section',$section); 
+                $this->Materielinformatique->Assistance->recursive = -1;
                 $assistance = $this->Materielinformatique->Assistance->find('list',array('fields' => array('id', 'NOM')));
                 $this->set('assistance',$assistance); 
                 $etat = Configure::read('etatMaterielInformatique');
