@@ -51,7 +51,7 @@
         <tbody>
             <?php foreach($utilisateurs as $utilisateur) : ?>
             <tr>
-                <td class="nopadding nomargin nowrap"><div rel="tooltip" data-title="<?php echo $utilisateur['Utilisateur']['NOMLONG']." (".$utilisateur['Utilisateur']['username'].")"; ?>"><?php echo substr($utilisateur['Utilisateur']['PRENOM'],0,1).". ".substr($utilisateur['Utilisateur']['NOM'],0,7).'...'; ?></div></td>
+                <td class="nopadding nomargin nowrap"><div rel="tooltip" data-title="<?php echo $utilisateur['Utilisateur']['NOMLONG']." (".$utilisateur['Utilisateur']['username'].")"; ?>"><?php echo substr($utilisateur['Utilisateur']['PRENOM'],0,1).". ".$utilisateur['Utilisateur']['NOM']; ?></div></td>
             <?php
             for ($i=1; $i<$maxday; $i++):
                 $absences = listIndispo($indisponibilites);                

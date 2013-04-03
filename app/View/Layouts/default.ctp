@@ -130,9 +130,9 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
     </div> 
     <?php  //debug(); 
     //debug($tabconges); ?>
-    <!--<div id="debugguer" style="background-color: #cccccc;">SQL Debug :
+    <div id="debugguer" style="background-color: #cccccc;">SQL Debug :
         <?php echo $this->element('sql_dump'); ?>
-    </div>//-->
+    </div>
 
 </body>
 </html>
@@ -150,7 +150,7 @@ $(document).ready(function () {
     /** Fermeture du message en cliquant dessus **/
     $('#flashMessage').on('click',function(){$(this).hide();});
     /** Application d'un style sur les select **/
-    $('select').selectpicker({size:5,});
+    $('select').selectpicker({size:7,});
     /** Application d'un style sur les select **/
     $(".yesno").each( function() { $(this).next(".labelAfter").text(this.checked ? "Oui" : "Non"); });
     $(".yesno").click(function() {

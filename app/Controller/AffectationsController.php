@@ -50,7 +50,7 @@ class AffectationsController extends AppController {
  */
 	public function add($userid = null) {
             if (isAuthorized('affectations', 'add')) :
-                $activites = $this->Affectation->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1','Activite.ACTIVE'=>1)));
+                $activites = $this->Affectation->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.ACTIVE'=>1)));
 		$this->set('activites', $activites);            
 		if ($this->request->is('post')) :
                         $this->Affectation->utilisateur_id = $userid;
@@ -135,7 +135,12 @@ class AffectationsController extends AppController {
 	}
         
         public function addIndisponibilite($id=null){
-            $absences = $this->Affectation->Activite->find('all',array('fields'=>array('Activite.id'),'conditions'=>array('Activite.projet_id'=>1)));
+            $societe = $this->Affectation->Utilisateur->find('first',array('fields'=>array('societe_id'),'conditions'=>array('Utilisateur.id'=>$id)));
+            if ($societe == 1 ):
+                $absences = $this->Affectation->Activite->find('all',array('fields'=>array('Activite.id'),'conditions'=>array('Activite.projet_id'=>1)));
+            else :
+                $absences = $this->Affectation->Activite->find('all',array('fields'=>array('Activite.id'),'conditions'=>array('Activite.projet_id'=>1,'Activite.id'=>array(1,5))));
+            endif;
             foreach ($absences as $absence) {
                 unset($record);
                 $record['Affectation']['utilisateur_id'] = $id;
@@ -144,10 +149,13 @@ class AffectationsController extends AppController {
                 if ($this->Affectation->save($record)) {
                     $history['Historyutilisateur']['utilisateur_id']=$id;
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une affectation par ".userAuth('NOMLONG');
+                    $this->Affectation->Utilisateur->Historyutilisateur->create();
                     $this->Affectation->Utilisateur->Historyutilisateur->save($history);     
                     $this->Session->setFlash(__('Affectation sauvegardée'),'default',array('class'=>'alert alert-success'));
+                } else {
+                    $this->Session->setFlash(__('Affectation <b>NON</b> sauvegardée'),'default',array('class'=>'alert alert-error'));
                 }
-            }
+            }            
             $this->redirect($this->goToPostion());
             
         }

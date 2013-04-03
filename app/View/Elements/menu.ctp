@@ -53,7 +53,7 @@
     <li class="<?php echo $classHome; ?>"><?php echo $this->Html->link('<i class="glyphicon_home"></i> Accueil',array('controller'=>'pages','action'=>'home'),array('escape' => false)); ?></li>                
     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'index')) : ?>
     <li class="divider"></li>                
-    <li class="<?php echo $classAction; ?>"><?php echo $this->Html->link('<i class="glyphicon_stopwatch"></i> Actions',array('controller'=>'actions','action'=>'index','tous','tous',userAuth('id')),array('escape' => false)); ?></li>
+    <li class="<?php echo $classAction; ?>"><?php echo $this->Html->link('<i class="glyphicon_stopwatch"></i> Actions',array('controller'=>'actions','action'=>'index','tous','6',userAuth('id')),array('escape' => false)); ?></li>
     <?php endif; ?>
     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'index')) : ?>
     <?php $mois = date('m'); ?>

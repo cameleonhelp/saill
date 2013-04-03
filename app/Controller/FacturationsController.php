@@ -100,4 +100,41 @@ class FacturationsController extends AppController {
 		$this->Session->setFlash(__('Facturation was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
+
+/**
+ * search method
+ *
+ * @return void
+ */
+	public function search() {
+            if (isAuthorized('facturations', 'index')) :
+                $this->set('title_for_layout','feuilles de temps à facturer');
+                $keyword=isset($this->params->data['Facturation']['SEARCH']) ? $this->params->data['Facturation']['SEARCH'] : ''; 
+                $newconditions = array('OR'=>array("Facturation.VERSION LIKE '%".$keyword."%'","Activite.NOM LIKE '%".$keyword."%'"));
+                $group = $this->Facturation->find('all',array('fields'=>array('Facturation.DATE','Facturation.utilisateur_id','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Facturation.DATE) AS NBACTIVITE'),'group'=>array('Facturation.DATE','Facturation.utilisateur_id'),'order'=>array('Facturation.utilisateur_id' => 'asc','Facturation.DATE' => 'desc'),'conditions'=>$newconditions));                    
+                $this->set('groups',$group); 
+                $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
+                $this->set('utilisateurs',$utilisateurs);                  
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                $this->autoRender = false;
+                $this->Facturation->recursive = 0;
+                $this->set('facturations', $this->paginate());              
+                $this->render('index');
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();           
+            endif;                
+        }  
+        
+/**
+ * getActivitiesForUserAndDate method
+ * 
+ * @param type $userid
+ * @param type $date
+ * @return array of activities
+ */        
+        public function getActivitiesForUserAndDate($userid=null,$date=null){
+                $sql = 'SELECT * FROM activitesreelles AS Activitesreelle WHERE Activitesreelle.utilisateur_id = '.$userid.' AND Activitesreelle.DATE = "'.$date.'"';
+                return $this->request->query($sql);
+        }
 }

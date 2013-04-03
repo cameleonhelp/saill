@@ -168,8 +168,8 @@ class AutorisationsController extends AppController {
                 $this->autoRender = false;
                 $this->Autorisation->recursive = 0;
                 $this->set('autorisations', $this->paginate());
-                $profils = $this->Autorisation->find('all',array('fields' => array('Profil.NOM'),'group'=>'Profil.NOM','order'=>array('Profil.NOM'=>'asc')));
-                $this->set('profils',$profils);                 
+                $profils = $this->Autorisation->find('all',array('fields' => array('Profil.id','Profil.NOM'),'group'=>'Profil.NOM','order'=>array('Profil.NOM'=>'asc')));
+                $this->set('profils',$profils);                   
                 $this->render('index');
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));

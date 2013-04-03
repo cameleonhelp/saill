@@ -99,15 +99,18 @@ class LivrablesController extends AppController {
                         break;                      
                     default :
                         $newconditions[]="Livrable.utilisateur_id = '".$filtregestionnaire."'";
+                        $this->Livrable->Utilisateur->recursive = -1;
                         $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> $filtregestionnaire)));
                         $fgestionnaire = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG'];                     
                     }  
                 else:
                         $newconditions[]="Livrable.utilisateur_id = '".userAuth('id')."'";
+                        $this->Livrable->Utilisateur->recursive = -1;
                         $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> userAuth('id'))));
                         $fgestionnaire = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG'];                
                 endif;                     
                 $this->set('fgestionnaire',$fgestionnaire); 
+                $this->Livrable->Utilisateur->recursive = -1;
                 $gestionnaires = $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('gestionnaires',$gestionnaires);                
 		$this->Livrable->recursive = 0;
@@ -150,9 +153,11 @@ class LivrablesController extends AppController {
 	public function add() {
             if (isAuthorized('livrables', 'add')) :
                 $etats = Configure::read('etatLivrable');
-                $this->set('etats',$etats);             
+                $this->set('etats',$etats);   
+                $this->Livrable->Utilisateur->recursive = -1;
                 $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('utilisateur',$utilisateur);
+                $this->Livrable->Utilisateur->recursive = -1;
 		$nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
 		$this->set('nomlong', $nomlong);                 
 		if ($this->request->is('post')) :
@@ -189,11 +194,14 @@ class LivrablesController extends AppController {
 	public function edit($id = null) {
             if (isAuthorized('livrables', 'edit')) :
                 $etats = Configure::read('etatLivrable');
-                $this->set('etats',$etats);             
+                $this->set('etats',$etats);      
+                $this->Livrable->Utilisateur->recursive = -1;
                 $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('utilisateur',$utilisateur);  
+                $this->Livrable->Utilisateur->recursive = -1;
 		$nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
-		$this->set('nomlong', $nomlong);                 
+		$this->set('nomlong', $nomlong);     
+                $this->Livrable->Suivilivrable->recursive = -1;
                 $suivilivrables = $this->Livrable->Suivilivrable->find('all',array('conditions'=>array('Suivilivrable.livrable_id'=>$id),'order'=>array('Suivilivrable.created'=>'desc','Suivilivrable.id'=>'desc')));
                 $this->set('Suivilivrables',$suivilivrables);                 
 		if (!$this->Livrable->exists($id)) {
@@ -216,6 +224,7 @@ class LivrablesController extends AppController {
 				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
+                        $this->Livrable->recursive = 0;
 			$options = array('conditions' => array('Livrable.' . $this->Livrable->primaryKey => $id));
 			$this->request->data = $this->Livrable->find('first', $options);
 		}
@@ -259,15 +268,19 @@ class LivrablesController extends AppController {
  */
 	public function search() {
             if (isAuthorized('livrables', 'index')) :
+                $this->Livrable->Utilisateur->recursive = -1;
+                $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $this->set('utilisateur',$utilisateur);                 
                 $keyword=isset($this->params->data['Livrable']['SEARCH']) ? $this->params->data['Livrable']['SEARCH'] : '';  
-                $newconditions = array('OR'=>array("Livrable.NOM LIKE '%".$keyword."%'","Livrable.REFERENCE LIKE '%".$keyword."%'","Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Suivilivrable.ETAT LIKE '%".$keyword."%'"));
+                $newconditions = array('OR'=>array("Livrable.NOM LIKE '%".$keyword."%'","Livrable.REFERENCE LIKE '%".$keyword."%'","Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 
                 $this->autoRender = false;
                 $this->Livrable->recursive = 0;
                 $this->set('livrables', $this->paginate());
-                $this->Session->delete('xls_export');
-                $export = $this->Livrable->find('all',array('conditions'=>$newconditions));
-                $this->Session->write('xls_export',$export);                 
+                $gestionnaires = $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $this->set('gestionnaires',$gestionnaires);                  
+                $this->Session->delete('xls_export');               
+                $this->Session->write('xls_export',$this->paginate());                
                 $this->render('index'); 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));

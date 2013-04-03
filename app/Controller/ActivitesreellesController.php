@@ -46,12 +46,14 @@ class ActivitesreellesController extends AppController {
                         break;
                     default:
                         $newconditions[]="Activitesreelle.utilisateur_id = ".$utilisateur;
+                        $this->Activitesreelle->Utilisateur->recursive = -1;
                         $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$utilisateur,'Utilisateur.GESTIONABSENCES'=>1)));
                         $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];
                         break;                      
                 }  
                 else:
                     $newconditions[]="Activitesreelle.utilisateur_id = ".userAuth('id');
+                    $this->Activitesreelle->Utilisateur->recursive = -1;
                     $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>userAuth('id'))));
                     $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];                 
                 endif;                
@@ -74,8 +76,10 @@ class ActivitesreellesController extends AppController {
                 }  
                 $this->set('fperiode',$fperiode);                
                 $this->set('title_for_layout','Feuilles de temps');
+                $this->Activitesreelle->Utilisateur->recursive = -1;
                 $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
                 $this->set('utilisateurs',$utilisateurs);
+                $this->Activitesreelle->recursive = 1;
                 $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc' ),'conditions'=>$newconditions));
                 $this->set('groups',$group);
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
@@ -122,12 +126,14 @@ class ActivitesreellesController extends AppController {
                         break;
                     default:
                         $newconditions[]="Activitesreelle.utilisateur_id = ".$utilisateur;
+                        $this->Activitesreelle->Utilisateur->recursive = -1;
                         $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$utilisateur,'Utilisateur.GESTIONABSENCES'=>1)));
                         $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];
                         break;                      
                 }  
                 else:
                     $newconditions[]="Activitesreelle.utilisateur_id = ".userAuth('id');
+                    $this->Activitesreelle->Utilisateur->recursive = -1;
                     $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>userAuth('id'))));
                     $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];                 
                 endif;                
@@ -150,13 +156,16 @@ class ActivitesreellesController extends AppController {
                 }  
                 $this->set('fperiode',$fperiode);                
                 $this->set('title_for_layout','Feuilles de temps à facturer');
+                $this->Activitesreelle->Utilisateur->recursive = -1;
                 $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
                 $this->set('utilisateurs',$utilisateurs);
+                $this->Activitesreelle->recursive = 1;
                 $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc' ),'conditions'=>$newconditions));
                 $this->set('groups',$group);
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
 		$this->Activitesreelle->recursive = 0;
-		$this->set('activitesreelles', $this->paginate());
+                $activitesreeelles = $this->Activitesreelle->find('all',$this->paginate);
+		$this->set('activitesreelles', $activitesreeelles);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();            
@@ -211,13 +220,17 @@ class ActivitesreellesController extends AppController {
                 if ($action_id != null) {
                     $condition = ('Activite.projet_id > 1');
                 }
+                $this->Activitesreelle->Activite->recursive = 0;
                 $activites = $this->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>$condition));
 		$this->set('activites', $activites);
+                $this->Activitesreelle->Utilisateur->recursive = -1;
 		$utilisateurs = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1','Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
 		$this->set('utilisateurs', $utilisateurs);
+                $this->Activitesreelle->Utilisateur->recursive = -1;
 		$nomlong = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
 		$this->set('nomlong', $nomlong);                
                 if ($action_id != null) :
+                $this->Activitesreelle->Action->recursive = -1;
                 $action = $this->Activitesreelle->Action->find('first',array('conditions'=>array('Action.id'=>$action_id)));
                     $this->request->data['Activitesreelle']['utilisateur_id'] = $action['Action']['utilisateur_id'];
                     $this->request->data['Activitesreelle']['DATE'] = $action['Action']['DEBUT'];
@@ -250,6 +263,7 @@ class ActivitesreellesController extends AppController {
 				$this->Session->setFlash(__('Feuille de temps incorrecte veuillez corriger la feuille de temps'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
+                        $this->Activitesreelle->recursive = 0;
 			$options = array('conditions' => array('Activitesreelle.' . $this->Activitesreelle->primaryKey => $id));
 			$this->request->data = $this->Activitesreelle->find('first', $options);
 		}
@@ -430,13 +444,17 @@ class ActivitesreellesController extends AppController {
             if (isAuthorized('activitesreelles', 'index')) :
                 $this->set('title_for_layout','feuilles de temps');
                 $keyword=isset($this->params->data['Activitesreelle']['SEARCH']) ? $this->params->data['Activitesreelle']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Activite.NOM LIKE '%".$keyword."%'","Action.OBJET LIKE '%".$keyword."%'"));
+                $newconditions = array('OR'=>array("Activite.NOM LIKE '%".$keyword."%'"));
+                $this->Activitesreelle->recursive = 0;
                 $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc'),'conditions'=>$newconditions));
-                $this->set('groups',$group);                
+                $this->set('groups',$group); 
+                $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
+                $this->set('utilisateurs',$utilisateurs);                
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;
                 $this->Activitesreelle->recursive = 0;
-                $this->set('activitesreelles', $this->paginate());              
+                $activitesreeelles = $this->Activitesreelle->find('all',$this->paginate);
+		$this->set('activitesreelles', $activitesreeelles);             
                 $this->render('index');
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -453,11 +471,13 @@ class ActivitesreellesController extends AppController {
  * @return l'id de l'activité si elle existe
  */        
         public function ActiviteExists($utilisateurId, $date, $activite){
+            $this->Activitesreelle->recursive = 0;
             $allActivite = $this->Activitesreelle->find('first',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$utilisateurId,'Activitesreelle.activite_id'=>$activite,'Activitesreelle.DATE'=>$this->Activitesreelle->CUSDate($this->Activitesreelle->debutsem($date)))));
             return isset($allActivite['Activitesreelle']) ? $allActivite['Activitesreelle']['id'] : 0;
         }   
         
         public function Absences(){
+            $this->Activitesreelle->Utilisateur->recursive = 0;
             $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
             $this->set('utilisateurs',$utilisateurs);  
             $date = isset($this->request->data['Activitesreelle']['month']) ? $this->request->data['Activitesreelle']['month'] : date('Y-m-d');
@@ -467,6 +487,7 @@ class ActivitesreellesController extends AppController {
             $datedebut = $annee."-".$mois."-01";
             $datedebut = startWeek(new DateTime($datedebut));            
             $datefin = $annee."-".$mois."-".$dernierjour;
+            $this->Activitesreelle->recursive = 0;
             $indisponibilites = $this->Activitesreelle->find('all',array('conditions'=>array('Activite.projet_id'=>1,"Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'")));
             $this->set('indisponibilites',$indisponibilites);
         }

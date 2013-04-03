@@ -112,7 +112,29 @@
 </div>
 <script>
 $(document).ready(function () {
-    setInterval(function() {$('#ActionsRefresh').load('<?php echo $this->params->here; ?>');}, 30000); 
+    setInterval(function() {$('#ActionsRefresh').load('<?php echo $this->params->here; ?>');}, 60000); 
     $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
+    /** PopOver **/ 
+    var isVisible = false;
+    var clickedAway = false;
+    if ($("[rel=popover]").length) {
+        $("[rel=popover]").popover({placement:'bottom',trigger:'manual',html:true}).click(function(e) {
+                $(this).popover('toggle');
+                clickedAway = false
+                isVisible = true
+                e.preventDefault()
+            });
+    }  
+    $('html').click(function(e) {
+        if(isVisible & clickedAway)
+        {
+          $("[rel=popover]").popover('hide')
+          isVisible = clickedAway = false
+        }
+        else
+        {
+          clickedAway = true
+        }
+    });
 });
 </script>

@@ -275,12 +275,13 @@ class UtiliseoutilsController extends AppController {
                 $keyword=isset($this->params->data['Utiliseoutil']['SEARCH']) ? $this->params->data['Utiliseoutil']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Utiliseoutil.STATUT LIKE '%".$keyword."%'","Utiliseoutil.TYPE LIKE '%".$keyword."%'","(CONCAT(Utilisateur.NOM, ' ', Utilisateur.PRENOM)) LIKE '%".$keyword."%'","Outil.NOM LIKE '%".$keyword."%'","Dossierpartage.NOM LIKE '%".$keyword."%'","Listediffusion.NOM LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                //$this->set('messages',$this->Message->search($this->data['Message']['MessageSEARCH'])); 
                 $this->autoRender = false;
                 $this->Utiliseoutil->recursive = 0;
                 $this->set('utiliseoutils', $this->paginate());
                 $etats = $this->Utiliseoutil->find('all',array('fields' => array('Utiliseoutil.STATUT'),'group'=>'Utiliseoutil.STATUT','order'=>array('Utiliseoutil.STATUT'=>'asc')));
                 $this->set('etats',$etats);                
+                $utilisateurs = $this->Utiliseoutil->Utilisateur->find('all',array('fields' => array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $this->set('utilisateurs',$utilisateurs); 
                 $this->render('index');
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
