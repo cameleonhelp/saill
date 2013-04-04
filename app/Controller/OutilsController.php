@@ -41,7 +41,7 @@ class OutilsController extends AppController {
 		if (!$this->Outil->exists($id)) {
 			throw new NotFoundException(__('Outil incorrect'));
 		}
-		$options = array('conditions' => array('Outil.' . $this->Outil->primaryKey => $id));
+		$options = array('conditions' => array('Outil.' . $this->Outil->primaryKey => $id),'recursive'=>0);
 		$this->set('outil', $this->Outil->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -82,7 +82,7 @@ class OutilsController extends AppController {
  */
 	public function edit($id = null) {
             if (isAuthorized('outils', 'edit')) :
-                $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1)));              
+                $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'recursive'=>-1));              
                 $this->set('gestionnaire',$gestionnaire);            
 		if (!$this->Outil->exists($id)) {
 			throw new NotFoundException(__('Outil incorrect'));
@@ -95,7 +95,7 @@ class OutilsController extends AppController {
 				$this->Session->setFlash(__('Outil incorrect, veuillez corriger l\'outil'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Outil.' . $this->Outil->primaryKey => $id));
+			$options = array('conditions' => array('Outil.' . $this->Outil->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Outil->find('first', $options);
 		}
             else :

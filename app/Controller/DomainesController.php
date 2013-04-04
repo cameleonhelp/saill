@@ -41,7 +41,7 @@ class DomainesController extends AppController {
 		if (!$this->Domaine->exists($id)) {
 			throw new NotFoundException(__('Domaine incorrect'));
 		}
-		$options = array('conditions' => array('Domaine.' . $this->Domaine->primaryKey => $id));
+		$options = array('conditions' => array('Domaine.' . $this->Domaine->primaryKey => $id),'recursive'=>0);
 		$this->set('domaine', $this->Domaine->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));

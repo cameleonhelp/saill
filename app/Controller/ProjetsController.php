@@ -48,13 +48,13 @@ class ProjetsController extends AppController {
                         break;                                         
                 }    
                 $this->set('fetat',$fetat); 
-                $contrats = $this->Projet->Contrat->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1'));
+                $contrats = $this->Projet->Contrat->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1','recursive'=>-1));
                 $this->set('contrats',$contrats);                
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->Projet->recursive = 0;
 		$this->set('projets', $this->paginate());
                 $this->Session->delete('xls_export');
-                $export = $this->Projet->find('all',array('conditions'=>$newconditions,'order' => array('Projet.NOM' => 'asc')));
+                $export = $this->Projet->find('all',array('conditions'=>$newconditions,'order' => array('Projet.NOM' => 'asc'),'recursive'=>0));
                 $this->Session->write('xls_export',$export);                   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -89,7 +89,7 @@ class ProjetsController extends AppController {
  */
 	public function add() {
             if (isAuthorized('projets', 'add')) :
-                $contrats = $this->Projet->Contrat->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1'));
+                $contrats = $this->Projet->Contrat->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1','recursive'=>-1));
                 $this->set('contrats',$contrats);
                 $typeProjet = Configure::read('typeProjet');
                 $this->set('type',$typeProjet);
@@ -119,7 +119,7 @@ class ProjetsController extends AppController {
  */
 	public function edit($id = null) {
             if (isAuthorized('projets', 'edit')) :
-                $contrats = $this->Projet->Contrat->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1'));
+                $contrats = $this->Projet->Contrat->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1','recursive'=>-1));
                 $this->set('contrats',$contrats);  
                 $typeProjet = Configure::read('typeProjet');
                 $this->set('type',$typeProjet);
@@ -136,7 +136,7 @@ class ProjetsController extends AppController {
 				$this->Session->setFlash(__('Projet incorrect, veuillez corriger le projet'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Projet.' . $this->Projet->primaryKey => $id));
+			$options = array('conditions' => array('Projet.' . $this->Projet->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Projet->find('first', $options);
 		}
             else :
@@ -189,7 +189,7 @@ class ProjetsController extends AppController {
                 $this->Session->delete('xls_export');
                 $export = $this->Projet->find('all',array('conditions'=>$newconditions));
                 $this->Session->write('xls_export',$export);                
-                $contrats = $this->Projet->Contrat->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1'));
+                $contrats = $this->Projet->Contrat->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id>1','recursive'=>0));
                 $this->set('contrats',$contrats);
                 $this->render('index');
             else :

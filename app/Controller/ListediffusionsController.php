@@ -25,7 +25,7 @@ class ListediffusionsController extends AppController {
                 $this->Listediffusion->recursive = 0;
 		$this->set('listediffusions', $this->paginate());
                 $this->Session->delete('xls_export');
-                $export = $this->Listediffusion->find('all',array('order' => array('Listediffusion.NOM' => 'asc')));
+                $export = $this->Listediffusion->find('all',array('order' => array('Listediffusion.NOM' => 'asc'),'recursive'=>0));
                 $this->Session->write('xls_export',$export);                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -71,7 +71,7 @@ class ListediffusionsController extends AppController {
 				$this->Session->setFlash(__('Liste de diffusion incorrecte, veuillez corriger la liste de diffusion'),'default',array('class'=>'alert alert-error'));
 			}
                 endif;
-                $utilisateurs = $this->Listediffusion->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1'),'order'=>'Utilisateur.NOMLONG ASC'));
+                $utilisateurs = $this->Listediffusion->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1'),'order'=>'Utilisateur.NOMLONG ASC','recursive'=>-1));
                 $this->set('utilisateurs',$utilisateurs);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -100,7 +100,7 @@ class ListediffusionsController extends AppController {
 				$this->Session->setFlash(__('Liste de diffusion incorrecte, veuillez corriger la liste de diffusion'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Listediffusion.' . $this->Listediffusion->primaryKey => $id));
+			$options = array('conditions' => array('Listediffusion.' . $this->Listediffusion->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Listediffusion->find('first', $options);
 		}
                 $utilisateurs = $this->Listediffusion->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1'),'order'=>'Utilisateur.NOMLONG ASC'));
@@ -154,7 +154,7 @@ class ListediffusionsController extends AppController {
                 $this->Listediffusion->recursive = 0;
                 $this->set('listediffusions', $this->paginate()); 
                 $this->Session->delete('xls_export');
-                $export = $this->Listediffusion->find('all',array('conditions'=>$newconditions));
+                $export = $this->Listediffusion->find('all',array('conditions'=>$newconditions,'recursive'=>0));
                 $this->Session->write('xls_export',$export);                    
                 $this->render('index');
             else :

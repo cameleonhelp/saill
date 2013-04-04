@@ -41,7 +41,7 @@ class SocietesController extends AppController {
 		if (!$this->Societe->exists($id)) {
 			throw new NotFoundException(__('Société incorrecte'));
 		}
-		$options = array('conditions' => array('Societe.' . $this->Societe->primaryKey => $id));
+		$options = array('conditions' => array('Societe.' . $this->Societe->primaryKey => $id),'recursive'=>0);
 		$this->set('societe', $this->Societe->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -91,7 +91,7 @@ class SocietesController extends AppController {
 				$this->Session->setFlash(__('Société incorrecte, veuillez corriger la société'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Societe.' . $this->Societe->primaryKey => $id));
+			$options = array('conditions' => array('Societe.' . $this->Societe->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Societe->find('first', $options);
 		}
             else :

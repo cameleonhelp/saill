@@ -50,7 +50,7 @@ class AffectationsController extends AppController {
  */
 	public function add($userid = null) {
             if (isAuthorized('affectations', 'add')) :
-                $activites = $this->Affectation->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.ACTIVE'=>1)));
+                $activites = $this->Affectation->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.ACTIVE'=>1),'recursive'=>0));
 		$this->set('activites', $activites);            
 		if ($this->request->is('post')) :
                         $this->Affectation->utilisateur_id = $userid;
@@ -80,7 +80,7 @@ class AffectationsController extends AppController {
  */
 	public function edit($id = null,$userid = null) {
             if (isAuthorized('affectations', 'edit')) :
-                $activites = $this->Affectation->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1','Activite.ACTIVE'=>1)));
+                $activites = $this->Affectation->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1','Activite.ACTIVE'=>1),'recursive'=>0));
 		$this->set('activites', $activites);             
 		if (!$this->Affectation->exists($id)) {
 			throw new NotFoundException(__('Affectation incorrecte'));
@@ -135,11 +135,11 @@ class AffectationsController extends AppController {
 	}
         
         public function addIndisponibilite($id=null){
-            $societe = $this->Affectation->Utilisateur->find('first',array('fields'=>array('societe_id'),'conditions'=>array('Utilisateur.id'=>$id)));
+            $societe = $this->Affectation->Utilisateur->find('first',array('fields'=>array('societe_id'),'conditions'=>array('Utilisateur.id'=>$id),'recursive'=>-1));
             if ($societe == 1 ):
-                $absences = $this->Affectation->Activite->find('all',array('fields'=>array('Activite.id'),'conditions'=>array('Activite.projet_id'=>1)));
+                $absences = $this->Affectation->Activite->find('all',array('fields'=>array('Activite.id'),'conditions'=>array('Activite.projet_id'=>1),'recursive'=>-1));
             else :
-                $absences = $this->Affectation->Activite->find('all',array('fields'=>array('Activite.id'),'conditions'=>array('Activite.projet_id'=>1,'Activite.id'=>array(1,5))));
+                $absences = $this->Affectation->Activite->find('all',array('fields'=>array('Activite.id'),'conditions'=>array('Activite.projet_id'=>1,'Activite.id'=>array(1,5)),'recursive'=>-1));
             endif;
             foreach ($absences as $absence) {
                 unset($record);

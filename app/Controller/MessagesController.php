@@ -96,7 +96,7 @@ class MessagesController extends AppController {
 				$this->Session->setFlash(__('Message incorrect, veuillez corriger le message.'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Message.' . $this->Message->primaryKey => $id));
+			$options = array('conditions' => array('Message.' . $this->Message->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Message->find('first', $options);
 		}
             else :
@@ -143,7 +143,7 @@ class MessagesController extends AppController {
         public function activeMessage() {
             $today = date('Y-m-d');
             if(isset($this->params['requested'])) { //s’il s’agit de l’appel pour l’élément
-                $activeMessages = $this->Message->find('all',array('conditions' => array("OR" => array('Message.DATELIMITE' => NULL,'Message.DATELIMITE >=' => $today)),'order'=>array('Message.id asc')));
+                $activeMessages = $this->Message->find('all',array('conditions' => array("OR" => array('Message.DATELIMITE' => NULL,'Message.DATELIMITE >=' => $today)),'order'=>array('Message.id asc'),'recursive'=>-1));
             return $activeMessages;
             }
            

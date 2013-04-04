@@ -43,7 +43,7 @@ class DossierpartagesController extends AppController {
                 if (!$this->Dossierpartage->exists($id)) {
 			throw new NotFoundException(__('Dossier partagé incorrecte'));
 		}
-		$options = array('conditions' => array('Dossierpartage.' . $this->Dossierpartage->primaryKey => $id));
+		$options = array('conditions' => array('Dossierpartage.' . $this->Dossierpartage->primaryKey => $id),'recursive'=>0);
 		$this->set('dossierpartage', $this->Dossierpartage->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -95,7 +95,7 @@ class DossierpartagesController extends AppController {
 				$this->Session->setFlash(__('Dossier partagé incorrecte, veuillez corriger le dossier partagé'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Dossierpartage.' . $this->Dossierpartage->primaryKey => $id));
+			$options = array('conditions' => array('Dossierpartage.' . $this->Dossierpartage->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Dossierpartage->find('first', $options);
 		}
             else :

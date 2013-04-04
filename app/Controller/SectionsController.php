@@ -41,7 +41,7 @@ class SectionsController extends AppController {
 		if (!$this->Section->exists($id)) {
 			throw new NotFoundException(__('Section incorrecte'));
 		}
-		$options = array('conditions' => array('Section.' . $this->Section->primaryKey => $id));
+		$options = array('conditions' => array('Section.' . $this->Section->primaryKey => $id),'recursive'=>0);
 		$this->set('section', $this->Section->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -95,7 +95,7 @@ class SectionsController extends AppController {
 				$this->Session->setFlash(__('Section incorrecte, veuillez corriger la section'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Section.' . $this->Section->primaryKey => $id));
+			$options = array('conditions' => array('Section.' . $this->Section->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Section->find('first', $options);
 		}
             else :

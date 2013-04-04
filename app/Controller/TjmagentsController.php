@@ -41,7 +41,7 @@ class TjmagentsController extends AppController {
                 if (!$this->Tjmagent->exists($id)) {
 			throw new NotFoundException(__('TJM agent incorrect'));
 		}
-		$options = array('conditions' => array('Tjmagent.' . $this->Tjmagent->primaryKey => $id));
+		$options = array('conditions' => array('Tjmagent.' . $this->Tjmagent->primaryKey => $id),'recursive'=>0);
 		$this->set('tjmagent', $this->Tjmagent->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -93,7 +93,7 @@ class TjmagentsController extends AppController {
 				$this->Session->setFlash(__('TJM agent incorrect, veuillez corriger le TJM agent'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Tjmagent.' . $this->Tjmagent->primaryKey => $id));
+			$options = array('conditions' => array('Tjmagent.' . $this->Tjmagent->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Tjmagent->find('first', $options);
 		}
             else :

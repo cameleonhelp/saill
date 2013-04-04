@@ -41,7 +41,7 @@ class ProfilsController extends AppController {
 		if (!$this->Profil->exists($id)) {
 			throw new NotFoundException(__('Profil incorrect'));
 		}
-		$options = array('conditions' => array('Profil.' . $this->Profil->primaryKey => $id));
+		$options = array('conditions' => array('Profil.' . $this->Profil->primaryKey => $id),'recursive'=>0);
 		$this->set('profil', $this->Profil->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -91,7 +91,7 @@ class ProfilsController extends AppController {
 				$this->Session->setFlash(__('Profil incorrect, veuillez corriger le profil'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Profil.' . $this->Profil->primaryKey => $id));
+			$options = array('conditions' => array('Profil.' . $this->Profil->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Profil->find('first', $options);
 		}
             else :

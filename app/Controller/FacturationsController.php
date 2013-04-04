@@ -37,7 +37,7 @@ class FacturationsController extends AppController {
  *
  * @return void
  */
-	public function add() {
+	public function add($userid=null,$reelid=null) {
 		if ($this->request->is('post')) {
 			$this->Facturation->create();
 			if ($this->Facturation->save($this->request->data)) {
@@ -47,10 +47,13 @@ class FacturationsController extends AppController {
 				$this->Session->setFlash(__('The facturation could not be saved. Please, try again.'));
 			}
 		}
-		$utilisateurs = $this->Facturation->Utilisateur->find('list');
-		$activites = $this->Facturation->Activite->find('list');
-		$this->set(compact('utilisateurs', 'activites'));
-	}
+                /** select all activités avec la même date et le même utilisateuyr **/
+                $date = $this->Facturation->Activitesreelle->find('first',array('fields'=>array('Activitesreelle.DATE'),'conditions'=>array('Activitesreelle.id'=>$reelid),'recursive'=>-1));
+                $activites = $this->Facturation->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.ACTIVE'=>1),'recursive'=>0));
+		$this->set('activites', $activites);
+                $activitesreelles = $this->Facturation->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$userid,'Activitesreelle.DATE'=>  CUSDate($date['Activitesreelle']['DATE'])),'recursive'=>-1));
+		$this->set('activitesreelles', $activitesreelles);
+         }
 
 /**
  * edit method

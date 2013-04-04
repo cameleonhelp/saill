@@ -43,7 +43,7 @@ class TypematerielsController extends AppController {
                 if (!$this->Typemateriel->exists($id)) {
 			throw new NotFoundException(__('Type de matériel incorrect'));
 		}
-		$options = array('conditions' => array('Typemateriel.' . $this->Typemateriel->primaryKey => $id));
+		$options = array('conditions' => array('Typemateriel.' . $this->Typemateriel->primaryKey => $id),'recursive'=>0);
 		$this->set('typemateriel', $this->Typemateriel->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -95,7 +95,7 @@ class TypematerielsController extends AppController {
 				$this->Session->setFlash(__('Type de matériel incorrect, veuillez corriger le type de matériel'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Typemateriel.' . $this->Typemateriel->primaryKey => $id));
+			$options = array('conditions' => array('Typemateriel.' . $this->Typemateriel->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Typemateriel->find('first', $options);
 		}
             else :

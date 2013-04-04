@@ -51,14 +51,15 @@ class ActivitesController extends AppController {
                         $fetat = "toutes les activités inactives";
                         break;                                         
                 }    
-                $this->set('fetat',$fetat);                 
+                $this->set('fetat',$fetat); 
+                $this->Activite->Projet->recursive = -1;
                 $projets = $this->Activite->Projet->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
                 $this->set('projets',$projets);  
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->Activite->recursive = 0;
 		$this->set('activites', $this->paginate());
                 $this->Session->delete('xls_export');
-                $export = $this->Activite->find('all',array('conditions'=>$newconditions,'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc')));
+                $export = $this->Activite->find('all',array('conditions'=>$newconditions,'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'recursive'=>0));
                 $this->Session->write('xls_export',$export);                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -78,7 +79,7 @@ class ActivitesController extends AppController {
 		if (!$this->Activite->exists($id)) {
 			throw new NotFoundException(__('Activité incorrecte'));
 		}
-		$options = array('conditions' => array('Activite.' . $this->Activite->primaryKey => $id));
+		$options = array('conditions' => array('Activite.' . $this->Activite->primaryKey => $id),'recursive'=>-1);
 		$this->set('activite', $this->Activite->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -93,7 +94,7 @@ class ActivitesController extends AppController {
  */
 	public function add() {
             if (isAuthorized('activites', 'add')) :
-                $projets = $this->Activite->Projet->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
+                $projets = $this->Activite->Projet->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'recursive'=>-1));
                 $this->set('projets',$projets);               
 		if ($this->request->is('post')) :
 			$this->Activite->create();
@@ -119,7 +120,7 @@ class ActivitesController extends AppController {
  */
 	public function edit($id = null) {
             if (isAuthorized('activites', 'edit')) :
-                $projets = $this->Activite->Projet->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
+                $projets = $this->Activite->Projet->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'recursive'=>0));
                 $this->set('projets',$projets);               
 		if (!$this->Activite->exists($id)) {
 			throw new NotFoundException(__('Activité incorrecte'));
@@ -132,7 +133,7 @@ class ActivitesController extends AppController {
 				$this->Session->setFlash(__('Activité incorrecte, veuillez corriger l\'activité'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Activite.' . $this->Activite->primaryKey => $id));
+			$options = array('conditions' => array('Activite.' . $this->Activite->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Activite->find('first', $options);
 		}
             else :
@@ -183,9 +184,9 @@ class ActivitesController extends AppController {
                 $this->Activite->recursive = 0;
                 $this->set('activites', $this->paginate());
                 $this->Session->delete('xls_export');
-                $export = $this->Activite->find('all',array('conditions'=>$newconditions));
+                $export = $this->Activite->find('all',array('conditions'=>$newconditions,'recursive'=>0));
                 $this->Session->write('xls_export',$export);               
-                $projets = $this->Activite->Projet->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Projet.id>1'));
+                $projets = $this->Activite->Projet->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Projet.id>1','recursive'=>-1));
                 $this->set('projets',$projets);  
                 $this->render('index');
             else :

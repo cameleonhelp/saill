@@ -538,3 +538,7 @@ input.invalid {
     width: auto !important;
     max-width: none !important;
 }
+
+#templateRow {
+    display:none;
+}

@@ -41,7 +41,7 @@ class SitesController extends AppController {
 		if (!$this->Site->exists($id)) {
 			throw new NotFoundException(__('Site incorrect'));
 		}
-		$options = array('conditions' => array('Site.' . $this->Site->primaryKey => $id));
+		$options = array('conditions' => array('Site.' . $this->Site->primaryKey => $id),'recursive'=>0);
 		$this->set('site', $this->Site->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -91,7 +91,7 @@ class SitesController extends AppController {
 				$this->Session->setFlash(__('Site incorrect, veuillez corriger le site'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Site.' . $this->Site->primaryKey => $id));
+			$options = array('conditions' => array('Site.' . $this->Site->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Site->find('first', $options);
 		}
             else :

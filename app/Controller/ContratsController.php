@@ -71,7 +71,7 @@ class ContratsController extends AppController {
  */
 	public function add() {
             if (isAuthorized('contrats', 'add')) :
-                $tjmcontrats = $this->Contrat->Tjmcontrat->find('list',array('fields' => array('id', 'TJM')));
+                $tjmcontrats = $this->Contrat->Tjmcontrat->find('list',array('fields' => array('id', 'TJM'),'recursive'=>-1));
                 $this->set('tjmcontrats',$tjmcontrats);             
 		if ($this->request->is('post')) :
 			$this->Contrat->create();
@@ -97,7 +97,7 @@ class ContratsController extends AppController {
  */
 	public function edit($id = null) {
             if (isAuthorized('contrats', 'edit')) :
-                $tjmcontrats = $this->Contrat->Tjmcontrat->find('list',array('fields' => array('id', 'TJM')));
+                $tjmcontrats = $this->Contrat->Tjmcontrat->find('list',array('fields' => array('id', 'TJM'),'recursive'=>-1));
                 $this->set('tjmcontrats',$tjmcontrats);            
 		if (!$this->Contrat->exists($id)) {
 			throw new NotFoundException(__('Contrat incorrect'));

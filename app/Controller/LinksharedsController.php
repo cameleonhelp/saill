@@ -114,7 +114,6 @@ class LinksharedsController extends AppController {
 		if (!$this->Linkshared->exists()) {
 			throw new NotFoundException(__('Lien partagé incorrect'));
 		}
-		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Linkshared->delete()) {
 			$this->Session->setFlash(__('Lien partagé supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());

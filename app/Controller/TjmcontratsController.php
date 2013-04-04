@@ -41,7 +41,7 @@ class TjmcontratsController extends AppController {
                 if (!$this->Tjmcontrat->exists($id)) {
 			throw new NotFoundException(__('TJM contrat incorrect'));
 		}
-		$options = array('conditions' => array('Tjmcontrat.' . $this->Tjmcontrat->primaryKey => $id));
+		$options = array('conditions' => array('Tjmcontrat.' . $this->Tjmcontrat->primaryKey => $id),'recursive'=>0);
 		$this->set('tjmcontrat', $this->Tjmcontrat->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -93,7 +93,7 @@ class TjmcontratsController extends AppController {
 				$this->Session->setFlash(__('TJM contrat incorrect, veuillez corriger le TJM contrat'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Tjmcontrat.' . $this->Tjmcontrat->primaryKey => $id));
+			$options = array('conditions' => array('Tjmcontrat.' . $this->Tjmcontrat->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Tjmcontrat->find('first', $options);
 		}
             else :

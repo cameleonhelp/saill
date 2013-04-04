@@ -50,9 +50,9 @@ class DotationsController extends AppController {
  */
 	public function add($userid = null) {
             if (isAuthorized('dotations', 'add')) :
-                $matinformatique = $this->Dotation->Materielinformatique->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Materielinformatique.ETAT ='=>'En stock'),'order'=>array('Materielinformatique.NOM'=>'asc')));
+                $matinformatique = $this->Dotation->Materielinformatique->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Materielinformatique.ETAT ='=>'En stock'),'order'=>array('Materielinformatique.NOM'=>'asc'),'recursive'=>-1));
 		$this->set('matinformatique', $matinformatique);
-                $matautre = $this->Dotation->Typemateriel->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Typemateriel.id >2'),'order'=>array('Typemateriel.NOM'=>"asc")));
+                $matautre = $this->Dotation->Typemateriel->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Typemateriel.id >2'),'order'=>array('Typemateriel.NOM'=>"asc"),'recursive'=>-1));
 		$this->set('matautre', $matautre);                
 		if ($this->request->is('post')) :
                         $this->Dotation->utilisateur_id = $userid;
@@ -105,7 +105,7 @@ class DotationsController extends AppController {
 				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Dotation.' . $this->Dotation->primaryKey => $id));
+			$options = array('conditions' => array('Dotation.' . $this->Dotation->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Dotation->find('first', $options);
         		$this->set('dotation', $this->Dotation->find('first', $options));                        
 		}

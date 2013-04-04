@@ -196,7 +196,7 @@ class UtilisateursController extends AppController {
                         $this->Utilisateur->Affectation->recursive = 0;
                         $affectations = $this->Utilisateur->Affectation->find('all',array('fields'=>array('id','activite_id','Activite.NOM','Affectation.REPARTITION','Activite.DESCRIPTION'),'conditions'=>array('Affectation.utilisateur_id'=>$id)));
                         $this->set('affectations',$affectations);
-                        $this->Utilisateur->Dotation->recursive = -1;
+                        $this->Utilisateur->Dotation->recursive = 0;
                         $dotations = $this->Utilisateur->Dotation->find('all',array('conditions'=>array('Dotation.utilisateur_id'=>$id)));
                         $this->set('dotations',$dotations);
                         $this->Utilisateur->Utiliseoutil->recursive = 0;

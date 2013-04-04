@@ -477,7 +477,7 @@ class ActivitesreellesController extends AppController {
         }   
         
         public function Absences(){
-            $this->Activitesreelle->Utilisateur->recursive = 0;
+            $this->Activitesreelle->Utilisateur->recursive = -1;
             $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
             $this->set('utilisateurs',$utilisateurs);  
             $date = isset($this->request->data['Activitesreelle']['month']) ? $this->request->data['Activitesreelle']['month'] : date('Y-m-d');
