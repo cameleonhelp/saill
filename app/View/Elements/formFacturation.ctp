@@ -61,7 +61,7 @@
                 <?php $selected = ''; ?>
                 <?php if ($this->params->action == 'edit') $selected = $activite['Activite']['id']==$facturation['Facturation']['activite_id'] ? 'selected="selected"' :''; ?>
                 <?php if ($this->params->action == 'add') $selected = $activite['Activite']['id']==$activitesreelle['Activitesreelle']['activite_id'] ? 'selected="selected"' :''; ?>
-                    <option value="<?php echo $activite['Activite']['id']; ?>" <?php echo $selected; ?> data-subtext=" <?php echo $activite['Projet']['NOM']; ?>"><?php echo $activite['Activite']['NOM']; ?></option>
+                    <option value="<?php echo $activite['Activite']['id']; ?>" <?php echo $selected; ?>><?php echo $activite['Projet']['NOM']; ?> - <?php echo $activite['Activite']['NOM']; ?></option>
                 <?php endforeach; ?>
             </select>              
         </td>
@@ -81,23 +81,25 @@
         <td class='week <?php echo $classDI; ?>' width='15px'><?php echo $this->Form->input('Facturation.'.$i.'.DI',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>$di_value)); ?> j</td>
         <?php if ($this->params->action == 'add') $total_value = $activitesreelle['Activitesreelle']['TOTAL']; ?>
         <td width='15px'><?php echo $this->Form->input('Facturation.'.$i.'.TOTAL',array('class'=>'span2 text-right','value'=>$total_value)); ?> j</td> 
-        <?php echo $this->Form->input('Facturation.'.$i.'.DATE',array('type'=>'hidden','value'=>isset($activitesreelle['Activitesreelle']['DATE']) ? $activitesreelle['Activitesreelle']['DATE'] : date('d/m/Y'))); ?>
+        <td style="display:none;"><?php echo $this->Form->input('Facturation.'.$i.'.DATE',array('type'=>'hidden','value'=>isset($activitesreelle['Activitesreelle']['DATE']) ? $activitesreelle['Activitesreelle']['DATE'] : date('d/m/Y'))); ?>
         <?php echo $this->Form->input('Facturation.'.$i.'.utilisateur_id',array('type'=>'hidden')); ?> 
         <?php echo $this->Form->input('Facturation.'.$i.'.activite_id',array('type'=>'hidden')); ?> 
         <?php echo $this->Form->input('Facturation.'.$i.'.VERSION',array('type'=>'hidden','class'=>'version')); ?> 
         <?php echo $this->Form->input('Facturation.'.$i.'.NUMEROFTGALILEI',array('type'=>'hidden','class'=>'ftgalilei')); ?>   
-        <?php if ($this->params->action == 'edit') echo $this->Form->input('Facturation.'.$i.'.id',array('type'=>'hidden')); ?> 
+        <?php if ($this->params->action == 'edit') echo $this->Form->input('Facturation.'.$i.'.id',array('type'=>'hidden')); ?>
+        <?php if ($this->params->action == 'add') echo $this->Form->input('Facturation.'.$i.'.activitesreelle_id',array('type'=>'hidden','value'=>$activitesreelle['Activitesreelle']['id'])); ?>
+        </td>
     </tr>
     <?php $i++; ?>
     <?php endforeach; ?>
     <tr id="templateRow">
         <td>
-            <select name="data[Facturation][¤][activite_id]" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Facturation0ActiviteId"> 
+            <select name="data[Facturation][¤][activite_id]" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Facturation¤ActiviteId"> 
                 <option value="">Choisir une activité</option>
                 <?php foreach ($activites as $activite) : ?>
-                    <option value="<?php echo $activite['Activite']['id']; ?>" data-subtext=" <?php echo $activite['Projet']['NOM']; ?>"><?php echo $activite['Activite']['NOM']; ?></option>
+                    <option value="<?php echo $activite['Activite']['id']; ?>"><?php echo $activite['Projet']['NOM']; ?> - <?php echo $activite['Activite']['NOM']; ?></option>
                 <?php endforeach; ?>
-            </select>
+            </select> <i class="icon-trash cursor" id="deleteRow"></i>
         </td>
         <td <?php echo $classLU; ?> width='15px'><?php echo $this->Form->input('Facturation.¤.LU',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du lundi",'value'=>"0.0")); ?> j</td>
         <td <?php echo $classMA; ?> width='15px'><?php echo $this->Form->input('Facturation.¤.MA',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mardi",'value'=>"0.0")); ?> j</td>
@@ -107,12 +109,14 @@
         <td class='week <?php echo $classSA; ?>' width='15px'><?php echo $this->Form->input('Facturation.¤.SA',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du samedi",'value'=>"0.0")); ?> j</td>
         <td class='week <?php echo $classDI; ?>' width='15px'><?php echo $this->Form->input('Facturation.¤.DI',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>"0.0")); ?> j</td>
         <td width='15px'><?php echo $this->Form->input('Facturation.¤.TOTAL',array('class'=>'span2 text-right','value'=>"0.0")); ?> j</td> 
+        <td style="display:none;">
         <?php echo $this->Form->input('Facturation.¤.DATE',array('type'=>'hidden','value'=>isset($activitesreelle['Activitesreelle']['DATE']) ? $activitesreelle['Activitesreelle']['DATE'] : date('d/m/Y'))); ?>
         <?php echo $this->Form->input('Facturation.¤.utilisateur_id',array('type'=>'hidden')); ?> 
         <?php echo $this->Form->input('Facturation.¤.activite_id',array('type'=>'hidden')); ?> 
         <?php echo $this->Form->input('Facturation.¤.VERSION',array('type'=>'hidden','class'=>'version')); ?> 
         <?php echo $this->Form->input('Facturation.¤.NUMEROFTGALILEI',array('type'=>'hidden','class'=>'ftgalilei')); ?>   
         <?php if ($this->params->action == 'edit') echo $this->Form->input('Facturation.¤.id',array('type'=>'hidden')); ?> 
+        </td>
     </tr>    
     </tbody>
 </table>
@@ -151,12 +155,20 @@ $(document).ready(function () {
         e.preventDefault;
         $('.ftgalilei').val($(this).val());
     });
+    $(document).on('click','#deleteRow',function(e){
+        e.preventDefault;
+        $(this).parent().parent('tr').remove();
+    });    
     $(document).on('click','#FacturationAddRow',function(e){
         e.preventDefault;
-        var nbRow = $('#FacturationTable tr').length-3;
-        if (confirm('Voulez-vous ajouter une nouvelle ligne ?\n\rCette ligne ne pourra pas être supprimée,\n\rVous devrez annuler votre saisie et recommencer')){
-            $("#templateRow").clone().removeAttr("id").appendTo( $("#templateRow").parent());
-        }
+        $("#templateRow").clone().removeAttr("id").appendTo( $("#templateRow").parent());
+        $("tr:last-child :input").each(function() {
+            var nameAttr = typeof $(this).attr('name') === "undefined" ? "" : $(this).attr('name');
+            var idAttr = typeof $(this).attr('id') === "undefined" ? "" : $(this).attr('id');;
+            var newIndex = $('#FacturationTable tr').length-4; 
+            if (nameAttr != "") $(this).attr('name',nameAttr.replace('¤',newIndex));
+            if (idAttr != "") $(this).attr('id',idAttr.replace('¤',newIndex));
+        });        
     });
 });
 </script>

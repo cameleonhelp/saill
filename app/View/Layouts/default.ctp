@@ -43,8 +43,7 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
                 echo $this->Html->script('validate');  
                 echo $this->Html->script('additional-methods');                  
                 echo $this->Html->script('messages_fr'); 
-                echo $this->Html->script('datepicker'); 
-                echo $this->Html->script('select'); 
+                echo $this->Html->script('datepicker');  
                 echo $this->Html->script('tiny_mce/tiny_mce');
                 echo $this->Html->script('jscroller2'); 
                 echo $this->Html->script('datetime');
@@ -150,8 +149,6 @@ $(document).ready(function () {
     /** Fermeture du message en cliquant dessus **/
     $('#flashMessage').on('click',function(){$(this).hide();});
     /** Application d'un style sur les select **/
-    $('select').selectpicker({size:7,});
-    /** Application d'un style sur les select **/
     $(".yesno").each( function() { $(this).next(".labelAfter").text(this.checked ? "Oui" : "Non"); });
     $(".yesno").click(function() {
         $(this).next(".labelAfter").text(this.checked ? "Oui" : "Non");
@@ -239,60 +236,45 @@ $(document).ready(function () {
        totalBrut = !isNaN(totalBrut) ? totalBrut : 0;       
        $("input[id=total]").val(parseFloat(totalBrut.toFixed(2)));       
    });
-   $('#UtiliseoutilOutilId').parent().on('click',function(e){
-       e.preventDefault();     
-   }); 
    $('#UtiliseoutilOutilId').on('change',function(){
        if (this.value != ''){
-           $('#UtiliseoutilDossierpartageId').parent().children().children('button').addClass('disabled');
-           $('#UtiliseoutilListediffusionId').parent().children().children('button').addClass('disabled');
+           $('#UtiliseoutilDossierpartageId').attr('disabled', 'disabled');
+           $('#UtiliseoutilListediffusionId').attr('disabled', 'disabled');
        } else {
-           $('#UtiliseoutilDossierpartageId').parent().children().children('button').removeClass('disabled');
-           $('#UtiliseoutilListediffusionId').parent().children().children('button').removeClass('disabled');
+           $('#UtiliseoutilDossierpartageId').removeAttr('disabled');
+           $('#UtiliseoutilListediffusionId').removeAttr('disabled');
        }
    });
-   $('#UtiliseoutilDossierpartageId').parent().on('click',function(e){
-       e.preventDefault();    
-   }); 
    $('#UtiliseoutilDossierpartageId').on('change',function(){
        if (this.value != ''){
-           $('#UtiliseoutilOutilId').parent().children().children('button').addClass('disabled');
-           $('#UtiliseoutilListediffusionId').parent().children().children('button').addClass('disabled');
+           $('#UtiliseoutilOutilId').attr('disabled', 'disabled');
+           $('#UtiliseoutilListediffusionId').attr('disabled', 'disabled');
        } else {
-           $('#UtiliseoutilOutilId').parent().children().children('button').removeClass('disabled');
-           $('#UtiliseoutilListediffusionId').parent().children().children('button').removeClass('disabled');
+           $('#UtiliseoutilOutilId').removeAttr('disabled');
+           $('#UtiliseoutilListediffusionId').removeAttr('disabled');
        }
    });
-   $('#UtiliseoutilListediffusionId').parent().on('click',function(e){
-       e.preventDefault();     
-   }); 
    $('#UtiliseoutilListediffusionId').on('change',function(){
        if (this.value != ''){
-           $('#UtiliseoutilDossierpartageId').parent().children().children('button').addClass('disabled');
-           $('#UtiliseoutilOutilId').parent().children().children('button').addClass('disabled');
+           $('#UtiliseoutilDossierpartageId').attr('disabled', 'disabled');
+           $('#UtiliseoutilOutilId').attr('disabled', 'disabled');
        } else {
-           $('#UtiliseoutilDossierpartageId').parent().children().children('button').removeClass('disabled');
-           $('#UtiliseoutilOutilId').parent().children().children('button').removeClass('disabled');
+           $('#UtiliseoutilDossierpartageId').removeAttr('disabled');
+           $('#UtiliseoutilOutilId').removeAttr('disabled');
        }
-   }); 
-   $('#DotationMaterielinformatiquesId').parent().on('click',function(e){
-       e.preventDefault();     
    }); 
    $('#DotationMaterielinformatiquesId').on('change',function(){
        if (this.value != ''){
-           $('#DotationTypematerielId').parent().children().children('button').addClass('disabled');
+           $('#DotationTypematerielId').attr('disabled', 'disabled');
        } else {
-           $('#DotationTypematerielId').parent().children().children('button').removeClass('disabled');
+           $('#DotationTypematerielId').removeAttr('disabled');
        }
    });  
-   $('#DotationTypematerielId').parent().on('click',function(e){
-       e.preventDefault();     
-   }); 
    $('#DotationTypematerielId').on('change',function(){
        if (this.value != ''){
-           $('#DotationMaterielinformatiquesId').parent().children().children('button').addClass('disabled');
+           $('#DotationMaterielinformatiquesId').attr('disabled', 'disabled');
        } else {
-           $('#DotationMaterielinformatiquesId').parent().children().children('button').removeClass('disabled');
+           $('#DotationMaterielinformatiquesId').removeAttr('disabled');
        }
    });   
    /** Changement de l'avancement d'une action **/
