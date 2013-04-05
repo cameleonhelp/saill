@@ -33,7 +33,6 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
                 echo $this->Html->css('editable');  
                 echo $this->Html->css('datepicker');                     
                 echo $this->Html->css('bootstrap.sncf');
-                echo $this->Html->css('select');
                 echo $this->Html->css('glyphicons');
                 echo $this->Html->css('jscroller2');                
                 
