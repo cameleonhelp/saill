@@ -110,7 +110,7 @@ class Facturation extends AppModel {
  */
         public function beforeSave() {
             if (!empty($this->data['Facturation']['DATE'])) {
-                $this->data['Facturation']['DATE'] = $this->dateFormatBeforeSave($this->debutsem($this->data['Facturation']['DATE']));
+                $this->data['Facturation']['DATE'] = $this->dateFormatBeforeSave($this->data['Facturation']['DATE']);
             }
             parent::beforeSave();
             return true;
@@ -137,6 +137,5 @@ class Facturation extends AppModel {
                 }                    
             }
             return $results;
-        }  
-        
+        } 
 }

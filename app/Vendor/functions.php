@@ -1,5 +1,5 @@
 <?php
-App::uses('AppModel', 'Model', 'Autorisation');
+App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
 /**
  * isFerie 
  * 

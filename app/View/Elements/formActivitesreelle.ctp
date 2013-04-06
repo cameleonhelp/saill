@@ -98,7 +98,7 @@
         <td <?php echo $classVE; ?> width='15px'><?php echo $this->Form->input('VE',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du vendredi")); ?> j</td>
         <td class='week <?php echo $classSA; ?>' width='15px'><?php echo $this->Form->input('SA',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du samedi")); ?> j</td>
         <td class='week <?php echo $classDI; ?>' width='15px'><?php echo $this->Form->input('DI',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche")); ?> j</td>
-        <td width='15px'><?php echo $this->Form->input('TOTAL',array('class'=>'span2 text-right')); ?> j</td>        
+        <td width='15px'><?php echo $this->Form->input('TOTAL',array('class'=>'span2 text-right','disabled'=>'disabled')); ?> j</td>        
     </tr>
     <?php if($this->data['Activite']['projet_id']==1) { ?>
     <tr>

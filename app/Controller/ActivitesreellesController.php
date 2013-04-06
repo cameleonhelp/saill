@@ -101,6 +101,7 @@ class ActivitesreellesController extends AppController {
  */
 	public function afacturer($etat=null,$utilisateur=null,$mois=null) {
             if (isAuthorized('activitesreelles', 'index')) :
+                $newconditions[]="Activitesreelle.facturation_id IS NULL";                
                 switch ($etat){
                     case 'tous':
                         $newconditions[]="1=1";
@@ -161,7 +162,7 @@ class ActivitesreellesController extends AppController {
                 $this->set('utilisateurs',$utilisateurs);
                 $this->Activitesreelle->recursive = 1;
                 $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc' ),'conditions'=>$newconditions));
-                $this->set('groups',$group);
+                $this->set('groups',$group);                
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
 		$this->Activitesreelle->recursive = 0;
                 $activitesreeelles = $this->Activitesreelle->find('all',$this->paginate);
@@ -393,6 +394,7 @@ class ActivitesreellesController extends AppController {
                 $record['Activitesreelle']['created'] = $this->Activitesreelle->read('created');
                 $record['Activitesreelle']['modified'] = date('Y-m-d');                 
                 $record['Activitesreelle']['VEROUILLE'] = 0;
+                $record['Activitesreelle']['facturation_id'] = null;                
                 $this->Activitesreelle->create();
                 if ($this->Activitesreelle->save($record)) {
                     $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation'),'default',array('class'=>'alert alert-success'));

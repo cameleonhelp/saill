@@ -38,20 +38,11 @@ class FacturationsController extends AppController {
  * @return void
  */
 	public function add($userid=null,$reelid=null) {
-		if ($this->request->is('post')) {
-			$this->Facturation->create();
-			if ($this->Facturation->save($this->request->data)) {
-				$this->Session->setFlash(__('The facturation has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The facturation could not be saved. Please, try again.'));
-			}
-		}
                 /** select all activités avec la même date et le même utilisateuyr **/
                 $date = $this->Facturation->Activitesreelle->find('first',array('fields'=>array('Activitesreelle.DATE'),'conditions'=>array('Activitesreelle.id'=>$reelid),'recursive'=>-1));
                 $activites = $this->Facturation->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.ACTIVE'=>1),'recursive'=>0));
 		$this->set('activites', $activites);
-                $activitesreelles = $this->Facturation->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$userid,'Activitesreelle.DATE'=>  CUSDate($date['Activitesreelle']['DATE'])),'recursive'=>-1));
+                $activitesreelles = $this->Facturation->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$userid,'Activitesreelle.DATE'=>CUSDate($date['Activitesreelle']['DATE']),'Activitesreelle.VEROUILLE'=>0),'recursive'=>-1));
 		$this->set('activitesreelles', $activitesreelles);
          }
 
@@ -139,5 +130,27 @@ class FacturationsController extends AppController {
         public function getActivitiesForUserAndDate($userid=null,$date=null){
                 $sql = 'SELECT * FROM activitesreelles AS Activitesreelle WHERE Activitesreelle.utilisateur_id = '.$userid.' AND Activitesreelle.DATE = "'.$date.'"';
                 return $this->request->query($sql);
+        }
+        
+        public function save(){
+            if ($this->request->is('post')) {
+                $facturations = $this->request->data['Facturation'];
+                foreach($facturations as $facturation):
+                    if (is_array($facturation) && $facturation['activite_id']!=''):
+                        $this->Facturation->create();
+                        if ($this->Facturation->save($facturation)) {
+                            if (isset($facturation['activitesreelle_id']) && $facturation['activitesreelle_id'] != ''):
+                                $lastId = $this->Facturation->getLastInsertID();
+                                $this->Facturation->Activitesreelle->id = $facturation['activitesreelle_id'];
+                                $this->Facturation->Activitesreelle->saveField('facturation_id', $lastId);
+                            endif;
+                            $this->Session->setFlash(__('La facturation est sauvegardée'),'default',array('class'=>'alert alert-success'));
+                        } else {
+                            $this->Session->setFlash(__('La facturation est incorrecte, veuillez corriger la facturation'),'default',array('class'=>'alert alert-success'));
+                        }                  
+                    endif;
+                endforeach;
+                $this->redirect($this->goToPostion(1));
+            }            
         }
 }
