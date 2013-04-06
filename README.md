@@ -40,5 +40,7 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.
 * Pour le moment un j'ai rescencé un bug sur l'utilisation de accordion 
 (https://groups.google.com/forum/?fromgroups=#!topic/twitter-bootstrap/DhDWN1sGfTM) 
 voici un test en ligne si vous avez une solution (http://jsfiddle.net/cameleonhelp/a5xxs/10/)
+https://github.com/twitter/bootstrap/issues/6874
 
-* [Select pour BootStrap] (http://caseyjhol.github.com/bootstrap-select/) - Pour modifier l'aspect des select, supprimé car impossible de sélectionner une valeur lors d'un ajout dynamique du contrôle
+* [Select pour BootStrap] (http://caseyjhol.github.com/bootstrap-select/) - Pour modifier l'aspect des select, 
+supprimé car impossible de sélectionner une valeur lors d'un ajout dynamique du contrôle

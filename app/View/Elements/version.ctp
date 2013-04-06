@@ -1,6 +1,6 @@
 <?php 
     $version = '2.0';
-    $build = 'b029';
+    $build = 'b030';
     echo $version.'.'.$build;
     //b020 => utilisation régulière pour le suivi de la logistique et mon usage personnel
     //b026 optimisation des requetes
