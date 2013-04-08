@@ -3,9 +3,8 @@
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
-                <?php $defaultEtat = $this->params->action == "afacturer" ? 'facture' : 'tous'; ?>
                 <?php $defaultAction = $this->params->action == "search" ? 'index' : $this->params->action; ?>
-                <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'add')) : ?>
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
                 <?php endif; ?>
@@ -14,10 +13,10 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Utilisateurs <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($utilisateurs as $utilisateur): ?>
-                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,$utilisateur['Utilisateur']['id'],isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => $defaultAction,$utilisateur['Utilisateur']['id'],isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
                          <?php endforeach; ?>
                       </ul>
                 </li>   
@@ -25,34 +24,27 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Mois <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous')); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous')); ?></li>
                      <li class="divider"></li>
-                     <li><?php echo $this->Html->link('Janvier', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','01')); ?></li>
-                     <li><?php echo $this->Html->link('Février', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','02')); ?></li>
-                     <li><?php echo $this->Html->link('Mars', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','03')); ?></li>
-                     <li><?php echo $this->Html->link('Avril', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','04')); ?></li>
-                     <li><?php echo $this->Html->link('Mai', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','05')); ?></li>
-                     <li><?php echo $this->Html->link('Juin', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','06')); ?></li>
-                     <li><?php echo $this->Html->link('Juillet', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','07')); ?></li>
-                     <li><?php echo $this->Html->link('Août', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','08')); ?></li>
-                     <li><?php echo $this->Html->link('Septembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','09')); ?></li>
-                     <li><?php echo $this->Html->link('Octobre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','10')); ?></li>
-                     <li><?php echo $this->Html->link('Novembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','11')); ?></li>
-                     <li><?php echo $this->Html->link('Décembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','12')); ?></li>                     
+                     <li><?php echo $this->Html->link('Janvier', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','01')); ?></li>
+                     <li><?php echo $this->Html->link('Février', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','02')); ?></li>
+                     <li><?php echo $this->Html->link('Mars', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','03')); ?></li>
+                     <li><?php echo $this->Html->link('Avril', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','04')); ?></li>
+                     <li><?php echo $this->Html->link('Mai', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','05')); ?></li>
+                     <li><?php echo $this->Html->link('Juin', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','06')); ?></li>
+                     <li><?php echo $this->Html->link('Juillet', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','07')); ?></li>
+                     <li><?php echo $this->Html->link('Août', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','08')); ?></li>
+                     <li><?php echo $this->Html->link('Septembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','09')); ?></li>
+                     <li><?php echo $this->Html->link('Octobre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','10')); ?></li>
+                     <li><?php echo $this->Html->link('Novembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','11')); ?></li>
+                     <li><?php echo $this->Html->link('Décembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','12')); ?></li>                     
                       </ul>
                 </li>  
                 </ul> 
-                <?php if ($this->params->controller == "activitesreelles" && $this->params->action == "index") : ?>
-                <?php echo $this->Form->create("Activitesreelle",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
-                    <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
-                    <button type="submit" class="btn">Rechercher</button>
-                <?php echo $this->Form->end(); ?>                    
-                <?php elseif ($this->params->controller == "facturations") : ?>
                 <?php echo $this->Form->create("Facturation",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
                     <button type="submit" class="btn">Rechercher</button>
                 <?php echo $this->Form->end(); ?>                     
-                <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -76,39 +68,63 @@
 			<th class="actions">Actions</th>
 	</tr>
 	</thead>
-        <tbody>         
-	<?php foreach ($facturations as $facturation): ?>
-	<tr>    
-		<td>
-			<?php echo $this->Html->link($facturation['Utilisateur']['NOMLONG'], array('controller' => 'utilisateurs', 'action' => 'view', $facturation['Utilisateur']['id'])); ?>
-		</td>
-		<td><?php echo h($facturation['Facturation']['DATE']); ?>&nbsp;</td>
-  		<td><?php echo h($facturation['Facturation']['NUMEROFTGALILEI']); ?>&nbsp;</td>
-		<td><?php echo h($facturation['Facturation']['VERSION']); ?>&nbsp;</td>
-                <td>
-			<?php echo $this->Html->link($facturation['Activite']['NOM'], array('controller' => 'activites', 'action' => 'view', $facturation['Activite']['id'])); ?>
-		</td>
-		<td><?php echo h($facturation['Facturation']['LU']); ?>&nbsp;</td>
-		<td><?php echo h($facturation['Facturation']['MA']); ?>&nbsp;</td>
-		<td><?php echo h($facturation['Facturation']['ME']); ?>&nbsp;</td>
-		<td><?php echo h($facturation['Facturation']['JE']); ?>&nbsp;</td>
-		<td><?php echo h($facturation['Facturation']['VE']); ?>&nbsp;</td>
-		<td><?php echo h($facturation['Facturation']['SA']); ?>&nbsp;</td>
-		<td><?php echo h($facturation['Facturation']['DI']); ?>&nbsp;</td>
-		<td><?php echo h($facturation['Facturation']['TOTAL']); ?>&nbsp;</td>
-		<td class="actions">
+        <tbody>  
+        <?php if (count($facturations)>0): ?>
+        <?php $r = 0; ?>
+        <?php foreach ($groups as $group) : ?>
+        <?php $row = $groups[$r][0]['NBACTIVITE']; ?>
+        <?php if($row > 1 && count($facturations)>1): ?>
+            <tr>
+                <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;"><?php echo $group['Utilisateur']['NOM']." ".$group['Utilisateur']['PRENOM']; ?></td>
+                <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: center;"><?php echo $group['Facturation']['DATE']; ?></td>
+                <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['NUMEROFTGALILEI']; ?></td>
+                <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['VERSION']; ?></td>                
+        <?php endif; ?>
+        <?php foreach ($facturations as $facturation): ?>
+            <?php if($facturation['Facturation']['utilisateur_id']==$group['Facturation']['utilisateur_id'] && $facturation['Facturation']['VERSION']==$group['Facturation']['VERSION'] && dateIsEqual($group['Facturation']['DATE'], $facturation['Facturation']['DATE'])): ?>
+                <?php if ($row==1): ?>
+                <tr>
+                <td class="header"><?php echo $facturation['Utilisateur']['NOMLONG']; ?></td>
+                <td class="header" style="text-align: center;" ><?php echo $group['Facturation']['DATE']; ?></td>
+                <?php endif; ?>
+                <td><?php echo $facturation['Activite']['NOM']; ?></td>  
+                <!--calculer les jours fériés pour mettre le style week sur les jours fériés //-->
+                <?php $date = new DateTime(CUSDate($group['Facturation']['DATE'])); ?> 
+                <?php $classLu = isFerie($date) ? 'class="ferie"' : ''; ?>
+                <td style="text-align: center;" <?php echo $classLu; ?>><span <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['LU']>0 && $facturation['Facturation']['LU']<1) ? $facturation['Facturation']['LU_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['LU']!=0 ? $facturation['Facturation']['LU'] : ""; ?></span></td> 
+                <?php $date->add(new DateInterval('P1D')); ?>
+                <?php $classMA = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <td style="text-align: center;" <?php echo $classMA; ?>><sapn <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['MA']>0 && $facturation['Facturation']['MA']<1) ? $facturation['Facturation']['MA_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['MA']!=0 ? $facturation['Facturation']['MA'] : ""; ?></span></td> 
+                <?php $date->add(new DateInterval('P1D')); ?>
+                <?php $classME = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <td style="text-align: center;" <?php echo $classME; ?>><span <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['ME']>0 && $facturation['Facturation']['ME']<1) ? $facturation['Facturation']['ME_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['ME']!=0 ? $facturation['Facturation']['ME'] : ""; ?></span></td> 
+                <?php $date->add(new DateInterval('P1D')); ?>
+                <?php $classJE = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <td style="text-align: center;" <?php echo $classJE; ?>><span <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['JE']>0 && $facturation['Facturation']['JE']<1) ? $facturation['Facturation']['JE_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['JE']!=0 ? $facturation['Facturation']['JE'] : ""; ?></span></td> 
+                <?php $date->add(new DateInterval('P1D')); ?>
+                <?php $classVE = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <td style="text-align: center;" <?php echo $classVE; ?>><span <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['VE']>0 && $facturation['Facturation']['VE']<1) ? $facturation['Facturation']['VE_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['VE']!=0 ? $facturation['Facturation']['VE'] : ""; ?></span></td> 
+                <?php $date->add(new DateInterval('P1D')); ?>
+                <?php $classSA = isFerie($date) ? ' ferie' : ''; ?> 
+                <td style="text-align: center;" class="week <?php echo $classSA; ?>"><span <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['SA']>0 && $facturation['Facturation']['SA']<1) ? $facturation['Facturation']['SA_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['SA']!=0 ? $facturation['Facturation']['SA'] : ""; ?></span></td> 
+                <?php $date->add(new DateInterval('P1D')); ?>
+                <?php $classDI = isFerie($date) ? ' ferie' : ''; ?>
+                <td style="text-align: center;" class="week <?php echo $classDI; ?>"><span <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['DI']>0 && $facturation['Facturation']['DI']<1) ? $facturation['Facturation']['DI_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['DI']!=0 ? $facturation['Facturation']['DI'] : ""; ?></span></td> 
+                <td style="text-align: center;" class="sstotal"><?php echo $facturation['Facturation']['TOTAL']; ?></td> 
+                <td style="text-align: center;">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'view')) : ?>
-                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Facturation :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($facturation['Facturation']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($facturation['Facturation']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Facturation :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($facturation['Facturation']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($facturation['Facturation']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'add', $facturation['Facturation']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $facturation['Facturation']['id'], $facturation['Facturation']['utilisateur_id']),array('escape' => false)); ?>
                     <?php endif; ?>
-                    <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'delete')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $facturation['Facturation']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce domaine ?')); ?>
-                    <?php endif; ?>
-                </td>
-	</tr>
-<?php endforeach; ?>
+                </td>                 
+                </tr>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        <?php $r++; ?>
+        <?php endforeach; ?> 
+        <?php endif; ?>             
         </tbody>
         <tfooter>
 	<tr>
@@ -118,17 +134,20 @@
 	</tr>            
         </tfooter>        
 	</table>
-        <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>
-        <div class="pull-right"><?php	echo $this->Paginator->counter('Nombre total d\'éléments : {:count}');	?></div>
-        <div class="pagination  pagination-centered">
-        <ul>
-	<?php
-                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";
-		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled'))."</li>";
-		echo "<li>".$this->Paginator->numbers(array('separator' => ''))."</li>";
-		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabled'))."</li>";
-                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled'))."</li>";
-	?>
-        </ul>
-	</div>
 </div>
+<script>
+    function sumOfColumns() {
+        var tot = 0;
+        $(".sstotal").each(function() {
+          tot += parseFloat($(this).html());
+        });
+        return tot;
+     }
+     
+     $(document).ready(function () {
+        $("#totalactivites").html(sumOfColumns());
+
+        setInterval(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 60000); 
+        $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
+    });
+</script>

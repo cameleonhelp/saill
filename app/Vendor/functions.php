@@ -534,4 +534,22 @@ function styleBarre($avancement){
         if (($utilisateur['profil_id'] < 6) || ($utilisateur['WIDEAREA']==1)) { $result = true; }
         return $result;
     }
+    
+    function nbJoursOuvres($date){
+	$nbopendays = 0;
+	$annee = $date->format('Y');
+	$mois = $date->format('m') > 10 ? '0'.$date->format('m') : $date->format('m');
+	$debutmois = $date->format('Y-m-01');
+	$finmois = $date->format('Y-m-t');
+	$nbdays = $date->format('t')+1;
+	for ($i=1; $i<$nbdays;$i++){
+		$d = $i < 10 ? '0'.$i : $i;
+		$day = $annee.'-'.$mois.'-'.$d;
+		$currentdate = new DateTime($day);
+		if (isFerie($currentdate)===false && ($currentdate->format('N'))<6) {
+				$nbopendays++;
+		}
+	}
+        return $nbopendays;
+    }
 ?>

@@ -6,15 +6,67 @@ App::uses('AppController', 'Controller');
  * @property Facturation $Facturation
  */
 class FacturationsController extends AppController {
-
+    
 /**
  * index method
  *
  * @return void
  */
-	public function index() {
+	public function index($utilisateur=null,$mois=null) {
+            if (isAuthorized('activitesreelles', 'index')) :            
+                if (areaIsVisible() || $utilisateur==userAuth('id')):
+                switch ($utilisateur){
+                    case 'tous':
+                    case null:
+                        $newconditions[]="1=1";
+                        $futilisateur = "tous les utilisateurs";
+                        break;
+                    default:
+                        $newconditions[]="Activitesreelle.utilisateur_id = ".$utilisateur;
+                        $this->Facturation->Utilisateur->recursive = -1;
+                        $utilisateur = $this->Facturation->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$utilisateur,'Utilisateur.GESTIONABSENCES'=>1)));
+                        $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];
+                        break;                      
+                }  
+                else:
+                    $newconditions[]="Activitesreelle.utilisateur_id = ".userAuth('id');
+                    $this->Facturation->Utilisateur->recursive = -1;
+                    $utilisateur = $this->Facturation->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>userAuth('id'))));
+                    $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];                 
+                endif;                
+                $this->set('futilisateur',$futilisateur);
+                switch ($mois){
+                    case 'tous':
+                    case null:
+                        $newconditions[]="1=1";
+                        $fperiode = "";
+                        break;
+                    default:
+                        $annee = date('Y');
+                        $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
+                        $datedebut = $annee."-".$mois."-01";
+                        $datefin = $annee."-".$mois."-".$dernierjour;
+                        $newconditions[]="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
+                        $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
+                        $fperiode = "pour le mois de ".$moiscal[$mois];
+                        break;                      
+                }  
+                $this->set('fperiode',$fperiode);                
+                $this->set('title_for_layout','Feuilles de temps facturées');
+                $this->Facturation->Utilisateur->recursive = -1;
+                $utilisateurs = $this->Facturation->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
+                $this->set('utilisateurs',$utilisateurs);
+                $this->Facturation->recursive = 1;
+                $group = $this->Facturation->find('all',array('fields'=>array('Facturation.VERSION','Facturation.DATE','Facturation.utilisateur_id','Facturation.NUMEROFTGALILEI','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Facturation.DATE) AS NBACTIVITE'),'group'=>array('Facturation.DATE','Facturation.utilisateur_id','VERSION'),'order'=>array('Facturation.utilisateur_id' => 'asc','Facturation.DATE' => 'desc' ),'conditions'=>$newconditions));
+                $this->set('groups',$group);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
 		$this->Facturation->recursive = 0;
-		$this->set('facturations', $this->paginate());
+                $facturations = $this->Facturation->find('all',$this->paginate);
+		$this->set('facturations', $facturations);
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();            
+            endif;                
 	}
 
 /**
@@ -53,24 +105,13 @@ class FacturationsController extends AppController {
  * @param string $id
  * @return void
  */
-	public function edit($id = null) {
-		if (!$this->Facturation->exists($id)) {
-			throw new NotFoundException(__('Invalid facturation'));
-		}
-		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Facturation->save($this->request->data)) {
-				$this->Session->setFlash(__('The facturation has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The facturation could not be saved. Please, try again.'));
-			}
-		} else {
-			$options = array('conditions' => array('Facturation.' . $this->Facturation->primaryKey => $id));
-			$this->request->data = $this->Facturation->find('first', $options);
-		}
-		$utilisateurs = $this->Facturation->Utilisateur->find('list');
-		$activites = $this->Facturation->Activite->find('list');
-		$this->set(compact('utilisateurs', 'activites'));
+	public function edit($id = null,$userid=null) {
+                $date = $this->Facturation->find('first',array('fields'=>array('Facturation.DATE'),'conditions'=>array('Facturation.id'=>$id),'recursive'=>-1));
+                $version = $this->Facturation->find('first',array('fields'=>array('Facturation.VERSION'),'conditions'=>array('Facturation.id'=>$id),'recursive'=>-1));
+                $activites = $this->Facturation->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.ACTIVE'=>1),'recursive'=>0));
+		$this->set('activites', $activites);
+                $activitesreelles = $this->Facturation->find('all',array('conditions'=>array('Facturation.utilisateur_id'=>$userid,'Facturation.DATE'=>CUSDate($date['Facturation']['DATE']),'Facturation.VERSION'=>$version['Facturation']['VERSION']),'recursive'=>-1));
+                $this->set('activitesreelles', $activitesreelles);
 	}
 
 /**

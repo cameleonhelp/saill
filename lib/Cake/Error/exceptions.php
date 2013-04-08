@@ -441,7 +441,7 @@ class MissingDatasourceConfigException extends CakeException {
  */
 class MissingDatasourceException extends CakeException {
 
-	protected $_messageTemplate = 'Datasource class %s could not be found.';
+	protected $_messageTemplate = 'Datasource class %s could not be found. %s';
 
 }
 
@@ -621,28 +621,5 @@ class NotImplementedException extends CakeException {
 		parent::__construct($message, $code);
 	}
 //@codingStandardsIgnoreEnd
-
-}
-
-
-/**
- * Represents an HTTP 404 error.
- *
- * @package       Cake.Error
- */
-class NotAuthorizedException extends HttpException {
-
-/**
- * Constructor
- *
- * @param string $message If no message is given 'Not Found' will be the message
- * @param string $code Status code, defaults to 999
- */
-	public function __construct($message = null, $code = 900) {
-		if (empty($message)) {
-			$message = '';
-		}
-		parent::__construct($message, $code);
-	}
 
 }

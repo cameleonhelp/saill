@@ -302,8 +302,6 @@ class UtilisateursController extends AppController {
                         $section = $this->Utilisateur->Section->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
                         $this->set('section',$section);
                         $this->Utilisateur->Utilisateur->recursive = -1;
-                        $hierarchique = $this->Utilisateur->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'order'=>array('NOMLONG'=>'asc'),'conditions'=>array('HIERARCHIQUE'=>1)));
-                        $this->set('hierarchique',$hierarchique);
                         $this->Utilisateur->Profil->recursive = -1;
                         $profil = $this->Utilisateur->Profil->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
                         $this->set('profil',$profil);
@@ -346,6 +344,8 @@ class UtilisateursController extends AppController {
                         $options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));
 			$this->request->data = $this->Utilisateur->find('first', $options);
                         $this->set('utilisateur', $this->Utilisateur->find('first', $options));
+                        $hierarchique = $this->Utilisateur->find('first',array('fields' => array('id', 'NOMLONG'),'order'=>array('NOMLONG'=>'asc'),'conditions'=>array('Utilisateur.HIERARCHIQUE'=>1,'Utilisateur.id'=>$this->request->data['Utilisateur']['utilisateur_id'])));
+                        $this->set('hierarchique',$hierarchique);                        
                         $this->Utilisateur->Historyutilisateur->recursive = -1;
                         $options = array('conditions' => array('Historyutilisateur.utilisateur_id' => $id),'order'=>array('Historyutilisateur.created'=> 'desc','Historyutilisateur.HISTORIQUE'=>'desc'));
                         $historyutilisateurs = $this->Utilisateur->Historyutilisateur->find('all',$options);

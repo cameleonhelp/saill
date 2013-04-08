@@ -100,6 +100,9 @@ class Facturation extends AppModel {
 		)
 	);
 
+        public $virtualFields = array(
+            //'MAXVERSION' => 'MAX(Facturation.VERSION)'
+        );
  /**
  * beforeSave method
  *

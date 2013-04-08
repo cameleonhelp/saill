@@ -323,12 +323,14 @@ class HttpSocket extends CakeSocket {
 
 		if (isset($this->request['uri']['user'], $this->request['uri']['pass'])) {
 			$this->configAuth('Basic', $this->request['uri']['user'], $this->request['uri']['pass']);
+		} elseif (isset($this->request['auth'], $this->request['auth']['method'], $this->request['auth']['user'], $this->request['auth']['pass'])) {
+			$this->configAuth($this->request['auth']['method'], $this->request['auth']['user'], $this->request['auth']['pass']);
 		}
 		$this->_setAuth();
 		$this->request['auth'] = $this->_auth;
 
 		if (is_array($this->request['body'])) {
-			$this->request['body'] = http_build_query($this->request['body']);
+			$this->request['body'] = http_build_query($this->request['body'], '', '&');
 		}
 
 		if (!empty($this->request['body']) && !isset($this->request['header']['Content-Type'])) {
@@ -696,7 +698,7 @@ class HttpSocket extends CakeSocket {
 		}
 
 		$uri['path'] = preg_replace('/^\//', null, $uri['path']);
-		$uri['query'] = http_build_query($uri['query']);
+		$uri['query'] = http_build_query($uri['query'], '', '&');
 		$uri['query'] = rtrim($uri['query'], '=');
 		$stripIfEmpty = array(
 			'query' => '?%query',
