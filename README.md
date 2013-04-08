@@ -25,15 +25,17 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.
 
 ## A venir jusqu'à fin avril :
 
-* Facturation à faire
+* Facturation **FAIT**
 
-* Limitation du périmètre de vision en fonction de l'utilisateur (test sur profil ou est hiérarchique ?)
+* Limitation du périmètre de vision en fonction de l'utilisateur (test sur profil ou est hiérarchique ?) **FAIT**
 
-* Incorporation des données référentielles
+* Incorporation des données référentielles **FAIT**
 
-* Incorporation des données (Utilisateurs, Matériels informatique)
+* Incorporation des données (Utilisateurs, Matériels informatique) **FAIT**
 
-* Utilisation limité de l'outil
+* Utilisation limité de l'outil ***En cours***
+
+* Ajout du plan de charge
 
 ## Bugs connus :
 
