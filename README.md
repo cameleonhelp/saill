@@ -17,8 +17,6 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.
 
 * [Datepicker pour BootStrap] (https://github.com/vitalets/bootstrap-datepicker) - Pour changer du datepicker de JQuery-UI
 
-* [Select pour BootStrap] (http://caseyjhol.github.com/bootstrap-select/) - Pour modifier l'aspect des select
-
 * [Highcharts 3.0.0 et Highstock 1.3.0](http://www.highcharts.com) - bonne documentation (http://docs.highcharts.com)
 
 ## A venir l'utilisation de :
@@ -42,3 +40,5 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.
 * Pour le moment un j'ai rescencé un bug sur l'utilisation de accordion 
 (https://groups.google.com/forum/?fromgroups=#!topic/twitter-bootstrap/DhDWN1sGfTM) 
 voici un test en ligne si vous avez une solution (http://jsfiddle.net/cameleonhelp/a5xxs/10/)
+
+* [Select pour BootStrap] (http://caseyjhol.github.com/bootstrap-select/) - Pour modifier l'aspect des select => mise à jour des composant ajouter dynamiquement impossible
