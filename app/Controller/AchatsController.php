@@ -46,26 +46,6 @@ class AchatsController extends AppController {
 	}
 
 /**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('achats', 'view')) : 
-		if (!$this->Achat->exists($id)) {
-			throw new NotFoundException(__('Achat incorrect'));
-		}
-		$options = array('conditions' => array('Achat.' . $this->Achat->primaryKey => $id));
-		$this->set('achat', $this->Achat->find('first', $options));
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
  * add method
  *
  * @return void

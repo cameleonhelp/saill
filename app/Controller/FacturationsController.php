@@ -57,7 +57,7 @@ class FacturationsController extends AppController {
                 $utilisateurs = $this->Facturation->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
                 $this->set('utilisateurs',$utilisateurs);
                 $this->Facturation->recursive = 1;
-                $group = $this->Facturation->find('all',array('fields'=>array('Facturation.VERSION','Facturation.DATE','Facturation.utilisateur_id','Facturation.NUMEROFTGALILEI','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Facturation.DATE) AS NBACTIVITE'),'group'=>array('Facturation.DATE','Facturation.utilisateur_id','VERSION'),'order'=>array('Facturation.utilisateur_id' => 'asc','Facturation.DATE' => 'desc' ),'conditions'=>$newconditions));
+                $group = $this->Facturation->find('all',array('fields'=>array('Facturation.VERSION','Facturation.DATE','Facturation.utilisateur_id','Facturation.NUMEROFTGALILEI','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Facturation.DATE) AS NBACTIVITE'),'group'=>array('Facturation.DATE','Facturation.utilisateur_id','Facturation.VERSION'),'order'=>array('Facturation.utilisateur_id' => 'asc','Facturation.DATE' => 'desc' ),'conditions'=>$newconditions));
                 $this->set('groups',$group);
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
 		$this->Facturation->recursive = 0;
@@ -194,4 +194,11 @@ class FacturationsController extends AppController {
                 $this->redirect($this->goToPostion(1));
             }            
         }
+        
+/**
+ * rapport
+ */        
+        public function rapport() {
+            $this->set('title_for_layout','Rapport des facturations');
+	}         
 }

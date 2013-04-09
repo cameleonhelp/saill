@@ -83,8 +83,9 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
         <div class="row" >
             <div class="span7">
             <span class="logo"></span>
+            <?php if (userAuth('id')>0) echo $this->element('server'); ?>
             <?php if (userAuth('id')>0) echo $this->element('menu'); ?>
-            <code class="span5"  style="width: 155px;margin-left: -22px;margin-bottom: 10px;margin-top: 10px;display: block;">
+            <code class="span5 box-info"  style="margin-top: 10px;">
                 <div class="text-normal">Navigateurs compatibles :</div>
                 <div class='text-center'><?php echo $this->Html->link($this->Html->image("firefox.png",array("height" => "24px","width" => "24px")),"http://www.mozilla.org/fr/firefox/new/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"Firefox<br/>Recommandé")) ?>
                 <?php echo $this->Html->link($this->Html->image("ie.png",array("height" => "24px","width" => "24px")),"http://www.internetexplorer.fr",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"Internet Explorer")) ?>                
@@ -92,7 +93,7 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
                 <div class="text-normal">Résolution recommandée :</div>
                 <div class='text-center'><?php echo $this->Html->image("1280.png",array('rel'=>"tooltip",'data-title'=>"Résolution minimum<br />recommandée")); ?></div>
             </code>
-            <code class="span5"  style="width: 155px;margin-left: -22px;margin-bottom: 10px;display: block;">
+            <code class="span5 box-info">
                 <div class="text-normal">Réalisé à partir de :</div>
                 <div class='text-center'><?php echo $this->Html->link($this->Html->image("cakephp.png",array("height" => "24px","width" => "24px")),"http://cakephp.org/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"CakePHP")) ?>
                 <?php echo $this->Html->link($this->Html->image("bootstrap.png",array("height" => "24px","width" => "24px")),"http://twitter.github.com/bootstrap/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"BootStrap")) ?>                
@@ -126,7 +127,7 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
             </div>
         </div>
     </div> 
-    <?php  //debug(); 
+    <?php  //debug($groups); 
     //debug(projetForActivite($activitesreelle['Activitesreelle']['activite_id'])); ?>
     <!--<div id="debugguer" style="background-color: #cccccc;">SQL Debug :
         <?php echo $this->element('sql_dump'); ?>

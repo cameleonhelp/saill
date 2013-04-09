@@ -493,4 +493,11 @@ class ActivitesreellesController extends AppController {
             $indisponibilites = $this->Activitesreelle->find('all',array('conditions'=>array('Activite.projet_id'=>1,"Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'")));
             $this->set('indisponibilites',$indisponibilites);
         }
+        
+/**
+ * rapport
+ */        
+        public function rapport() {
+               $this->set('title_for_layout','Rapport des activités réelles');
+	}         
 }

@@ -348,4 +348,11 @@ class ActionsController extends AppController {
             $allActivite = $this->Action->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.action_id'=>$id)));
             return count($allActivite);
         }
+        
+/**
+ * rapport
+ */        
+        public function rapport() {
+            $this->set('title_for_layout','Rapport des actions');
+	}        
 }

@@ -73,7 +73,7 @@
         <?php $r = 0; ?>
         <?php foreach ($groups as $group) : ?>
         <?php $row = $groups[$r][0]['NBACTIVITE']; ?>
-        <?php if($row > 1 && count($facturations)>1): ?>
+        <?php if($row > 1): ?>
             <tr>
                 <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;"><?php echo $group['Utilisateur']['NOM']." ".$group['Utilisateur']['PRENOM']; ?></td>
                 <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: center;"><?php echo $group['Facturation']['DATE']; ?></td>
@@ -86,6 +86,8 @@
                 <tr>
                 <td class="header"><?php echo $facturation['Utilisateur']['NOMLONG']; ?></td>
                 <td class="header" style="text-align: center;" ><?php echo $group['Facturation']['DATE']; ?></td>
+                <td class="header" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['NUMEROFTGALILEI']; ?></td>
+                <td class="header" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['VERSION']; ?></td> 
                 <?php endif; ?>
                 <td><?php echo $facturation['Activite']['NOM']; ?></td>  
                 <!--calculer les jours fériés pour mettre le style week sur les jours fériés //-->
