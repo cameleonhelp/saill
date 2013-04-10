@@ -1,6 +1,6 @@
 <?php 
     $version = '2.0';
-    $build = 'b033';
+    $build = 'b034';
     echo $version.'.'.$build;
     /** 
      * changelog :
@@ -20,6 +20,9 @@
      *      models plancharges et detailplancharges
      * b033 Modification du menu pour les rapports
      *      creation des methodes rapport pour les actions, activitesreelles, facturations
+     *      Correction utilisateur pour l'affichage des outils utiliser dans le détail de l'utilisateur
+     *      Ajout et édition du plan de charge, mise à jour du modéle pour restitution des dates au format FR
+     * b034 IHM du détail du plan de charge dans add.ctp et edit.ctp recopier le contenu de index.ctp et faire la boucle sur les bons objets retournés
      * 
      **/
 ?>

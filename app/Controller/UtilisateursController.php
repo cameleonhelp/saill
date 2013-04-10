@@ -210,7 +210,7 @@ class UtilisateursController extends AppController {
                         $options = array('conditions' => array('Historyutilisateur.utilisateur_id' => $id),'order'=>array('Historyutilisateur.created'=> 'desc','Historyutilisateur.HISTORIQUE'=>'desc'));
                         $historyutilisateurs = $this->Utilisateur->Historyutilisateur->find('all',$options);
                         $this->set('historyutilisateurs',$historyutilisateurs);
-                        $this->Utilisateur->Utiliseoutil->recursive = -1;
+                        $this->Utilisateur->Utiliseoutil->recursive = 0;
                         $options = array('conditions' => array('Utiliseoutil.utilisateur_id' => $id));
                         $utiliseoutils = $this->Utilisateur->Utiliseoutil->find('all',$options);
                         $this->set('utiliseoutils',$utiliseoutils);

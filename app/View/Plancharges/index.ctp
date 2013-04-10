@@ -3,7 +3,7 @@
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
-                <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'add')) : ?>
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
                 <?php endif; ?>
@@ -12,15 +12,19 @@
                      <ul class="dropdown-menu">
                          <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
                          <li class="divider"></li>
-                         <?php //liste des années ayant un plan de charge ?>
+                         <?php foreach ($annees as $annee) : ?>
+                            <li><?php echo $this->Html->link($annee['Plancharge']['ANNEE'], array('action' => 'index',$annee['Plancharge']['ANNEE'],isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                         <?php endforeach; ?>
                      </ul>
                  </li>                 
                 <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre projets <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre contrats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
                          <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous')); ?></li>
                          <li class="divider"></li>
-                         <?php //liste des projets ayant un plan de charge ?>
+                         <?php foreach ($contrats as $contrat) : ?>
+                            <li><?php echo $this->Html->link($contrat['Contrat']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$contrat['Plancharge']['contrat_id'])); ?></li>
+                         <?php endforeach; ?>
                      </ul>
                  </li> 
                 </ul> 
@@ -32,29 +36,35 @@
         <thead>
 	<tr>
 			<th><?php echo $this->Paginator->sort('ANNEE','Année'); ?></th>
-                        <th><?php echo $this->Paginator->sort('projet_id','Projet'); ?></th>
+                        <th><?php echo $this->Paginator->sort('Contrat.NOM','Contrat'); ?></th>
 			<th><?php echo $this->Paginator->sort('NOM','Nom du plan de charge'); ?></th>
 			<th><?php echo $this->Paginator->sort('ETP','etp'); ?></th>
 			<th><?php echo $this->Paginator->sort('CHARGES','Charges'); ?></th>
 			<th><?php echo $this->Paginator->sort('TJM','tjm'); ?></th>
 			<th><?php echo $this->Paginator->sort('VERSION','Version'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
+			<th class="actions"  width="60px;"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
         <tbody>        
 	<?php foreach ($plancharges as $plancharge): ?>
 	<tr>
-		<td><?php echo h($plancharge['Plancharge']['ANNEE']); ?>&nbsp;</td>
-                <td><?php echo h($plancharge['Plancharge']['projet_id']); ?>&nbsp;</td>
+		<td style='text-align:center;'><?php echo h($plancharge['Plancharge']['ANNEE']); ?>&nbsp;</td>
+                <td><?php echo h($plancharge['Contrat']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($plancharge['Plancharge']['NOM']); ?>&nbsp;</td>
-		<td><?php echo h($plancharge['Plancharge']['ETP']); ?>&nbsp;</td>
-		<td><?php echo h($plancharge['Plancharge']['CHARGES']); ?>&nbsp;</td>
-		<td><?php echo h($plancharge['Plancharge']['TJM']); ?>&nbsp;</td>
-		<td><?php echo h($plancharge['Plancharge']['VERSION']); ?>&nbsp;</td>
+		<td style='text-align:right;'><?php echo h($plancharge['Plancharge']['ETP']); ?>&nbsp;</td>
+		<td style='text-align:right;'><?php echo h($plancharge['Plancharge']['CHARGES']); ?>&nbsp;j</td>
+		<td style='text-align:right;'><?php echo h($plancharge['Plancharge']['TJM']); ?>&nbsp;€/j</td>
+		<td style='text-align:right;'><?php echo h($plancharge['Plancharge']['VERSION']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $plancharge['Plancharge']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $plancharge['Plancharge']['id'])); ?>
-                        <?php echo $this->Html->link(__('List'), array('controller'=>'detalplancharges','action' => 'index', $plancharge['Plancharge']['id'])); ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'view')) : ?>
+                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Plan de charge :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($plancharge['Plancharge']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($plancharge['Plancharge']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'edit')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $plancharge['Plancharge']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'add')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-th-list"></i>', array('controller'=>'detailplancharges','action' => 'edit', $plancharge['Plancharge']['id']),array('escape' => false)); ?>
+                    <?php endif; ?>                    
 		</td>
 	</tr>
 <?php endforeach; ?>

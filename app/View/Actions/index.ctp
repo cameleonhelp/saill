@@ -113,6 +113,7 @@
 <script>
 $(document).ready(function () {
     setInterval(function() {$('#ActionsRefresh').load('<?php echo $this->params->here; ?>');}, 60000); 
-    $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
+    /** PopOver **/ 
+    $("[rel=popover]").popover({placement:'bottom',trigger:'manual',html:true});
 });
 </script>

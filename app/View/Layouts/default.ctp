@@ -163,14 +163,15 @@ $(document).ready(function () {
     var isVisible = false;
     var clickedAway = false;
     if ($("[rel=popover]").length) {
-        $("[rel=popover]").popover({placement:'bottom',trigger:'manual',html:true}).click(function(e) {
-                $(this).popover('toggle');
-                clickedAway = false
-                isVisible = true
-                e.preventDefault()
-            });
+        $("[rel=popover]").popover({placement:'bottom',trigger:'manual',html:true});
+        $(document).on('click',"[rel=popover]",function(e){
+            e.preventDefault;
+            $(this).popover('toggle');
+            clickedAway = false
+            isVisible = true
+        });  
     }  
-    $('html').click(function(e) {
+    $(document).on('click',"html",function(e) {
         if(isVisible & clickedAway)
         {
           $("[rel=popover]").popover('hide')
@@ -200,12 +201,7 @@ $(document).ready(function () {
        $(this).parent().children("input").val('05/01/'+(d.getFullYear()+1));
        $(this).parent().datepicker('update', '05/01/'+(d.getFullYear()+1));
    }) 
-   /** Editable **/
-   $('#NOM').editable();
-   /** Fermeture des autres popovers de icon-zoom-in **/
-   //$(".icon-eye-open").on("click", function(e){
-   //    $(this).parents('.table').nextUntil($(this),".popover").removeClass('in').hide();
-   //});
+
    /** Connexion validation du formulaire **/
    var container = $('#container_message');
    $("#formValidate").submit(function() {

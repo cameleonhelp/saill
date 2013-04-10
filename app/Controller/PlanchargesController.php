@@ -10,7 +10,7 @@ class PlanchargesController extends AppController {
         public $paginate = array(
         'limit' => 15,
         //'threaded',
-        'order' => array('Plancharge.ANNEE' => 'asc','Projet.NOM' => 'asc'),
+        'order' => array('Plancharge.ANNEE' => 'asc','Contrat.NOM' => 'asc'),
         //'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),
         );
             
@@ -19,7 +19,7 @@ class PlanchargesController extends AppController {
  *
  * @return void
  */
-	public function index($annee=null,$projet_id=null) {
+	public function index($annee=null,$contrat_id=null) {
             if (isAuthorized('plancharges', 'index')) :
                 $this->set('title_for_layout','Plans de charge'); 
                 if ($annee==null){ $annee = new DateTime(); $annee = $annee->format('Y'); }
@@ -35,22 +35,26 @@ class PlanchargesController extends AppController {
                         break;                                         
                 }  
                 $this->set('fannee',$fannee);    
-                switch ($projet_id){
+                switch ($contrat_id){
                     case 'tous':
                     case null:
                         $newconditions[]="1=1";
-                        $fprojet = "de tous les projets";
+                        $fprojet = "de tous les contrats";
                         break;
                     default:
-                        $newconditions[]="Plancharge.projet_id = ".$projet_id;
-                        $projet = $this->Plancharge->Projet->find('first',array('fields'=>array('Projet.NOM'),'conditions'=>array('Projet.id'=>$projet_id),'recursive'=>-1));
-                        $fprojet = "du projet :".$projet['Projet']['NOM'];
+                        $newconditions[]="Plancharge.contrat_id = ".$contrat_id;
+                        $contrat = $this->Plancharge->Contrat->find('first',array('fields'=>array('Contrat.NOM'),'conditions'=>array('Contrat.id'=>$contrat_id),'recursive'=>-1));
+                        $fprojet = "du contrat :".$contrat['Contrat']['NOM'];
                         break;                                         
                 }  
                 $this->set('fprojet',$fprojet);                  
 		$this->Plancharge->recursive = 0;
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                   
 		$this->set('plancharges', $this->paginate());
+                $annees = $this->Plancharge->find('all',array('fields'=>array('Plancharge.ANNEE'),'group'=>'Plancharge.ANNEE','recursive'=>-1));
+                $this->set('annees',$annees);
+                $contrats = $this->Plancharge->find('all',array('fields'=>array('Plancharge.contrat_id','Contrat.NOM'),'group'=>'Contrat.NOM','recursive'=>0));
+                $this->set('contrats',$contrats);                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();            
@@ -68,12 +72,14 @@ class PlanchargesController extends AppController {
 		if ($this->request->is('post')) :
 			$this->Plancharge->create();
 			if ($this->Plancharge->save($this->request->data)) {
-				$this->Session->setFlash(__('Plan de charge créée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect(array('controller'=>'detailplancharges','action' => 'index',$this->Plancharge->getLastInsertID()));
+				$this->Session->setFlash(__('Plan de charge créé'),'default',array('class'=>'alert alert-success'));
+				$this->redirect(array('controller'=>'detailplancharges','action' => 'add',$this->Plancharge->getLastInsertID()));
 			} else {
 				$this->Session->setFlash(__('Plan de charge incorrect, veuillez corriger le plan de charge'),'default',array('class'=>'alert alert-error'));
 			}
 		endif;
+                $contrats = $this->Plancharge->Contrat->find('list',array('fields'=>array('Contrat.id','Contrat.NOM'),'conditions'=>array('Contrat.ACTIF'=>1,'Contrat.id>1'),'order'=>'Contrat.NOM'));
+                $this->set('contrats',$contrats);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();            
@@ -95,7 +101,18 @@ class PlanchargesController extends AppController {
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Plancharge->save($this->request->data)) {
-				$this->Session->setFlash(__('Plan de charge mis à jour'),'default',array('class'=>'alert alert-success'));
+                                $lastIdInsert = $this->Plancharge->getLastInsertID();
+                                $detailplancharges = $this->Plancharge->Detailplancharge->find('all',array('conditions'=>array('Detailplancharge.plancharge_id'=>$id)));
+                                foreach($detailplancharges as $detailplancharge):
+                                    $record = $detailplancharge;
+                                    unset($record['Detailplancharge']['id']);
+                                    unset($record['Detailplancharge']['created']);                
+                                    unset($record['Detailplancharge']['modified']);  
+                                    $record['Detailplancharge']['plancharge_id'] = $lastIdInsert;
+                                    $this->Plancharge->Detailplancharge->create();
+                                    $this->Plancharge->Detailplancharge->save($record);
+                                endforeach;
+				$this->Session->setFlash(__('Nouvelle version du plan de charge créée'),'default',array('class'=>'alert alert-success'));                                
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('Plan de charge incorrect, veuillez corriger le plan de charge'),'default',array('class'=>'alert alert-error'));

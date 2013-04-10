@@ -64,9 +64,9 @@ class Plancharge extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Projet' => array(
-			'className' => 'Projet',
-			'foreignKey' => 'projet_id',
+		'Contrat' => array(
+			'className' => 'Contrat',
+			'foreignKey' => 'contrat_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
@@ -94,4 +94,35 @@ class Plancharge extends AppModel {
 		)
 	);
 
+         /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {
+            parent::beforeSave();
+            return true;
+        }
+        
+/**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Plancharge']['created'])) {
+                    $results[$key]['Plancharge']['created'] = $this->dateFormatAfterFind($val['Plancharge']['created']);
+                }      
+                if (isset($val['Plancharge']['modified'])) {
+                    $results[$key]['Plancharge']['modified'] = $this->dateFormatAfterFind($val['Plancharge']['modified']);
+                }            }
+            return $results;
+        }   
 }
