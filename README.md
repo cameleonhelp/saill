@@ -17,7 +17,7 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.
 
 * [Datepicker pour BootStrap] (https://github.com/vitalets/bootstrap-datepicker) - Pour changer du datepicker de JQuery-UI
 
-* [Highcharts 3.0.0 et Highstock 1.3.0](http://www.highcharts.com) - bonne documentation (http://docs.highcharts.com)
+* [Highcharts 3.0.1 et Highstock 1.3.1](http://www.highcharts.com) - bonne documentation (http://docs.highcharts.com)
 
 ## A venir l'utilisation de :
 
