@@ -73,24 +73,24 @@
         <?php $r = 0; ?>
         <?php foreach ($groups as $group) : ?>
         <?php $row = $groups[$r][0]['NBACTIVITE']; ?>
-        <?php if($row > 1): ?>
-            <tr>
-                <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;"><?php echo $group['Utilisateur']['NOM']." ".$group['Utilisateur']['PRENOM']; ?></td>
-                <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: center;"><?php echo $group['Facturation']['DATE']; ?></td>
-                <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['NUMEROFTGALILEI']; ?></td>
-                <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['VERSION']; ?></td>                
-        <?php endif; ?>
+        <?php $newline = true; ?>
         <?php foreach ($facturations as $facturation): ?>
             <?php if($facturation['Facturation']['utilisateur_id']==$group['Facturation']['utilisateur_id'] && $facturation['Facturation']['VERSION']==$group['Facturation']['VERSION'] && dateIsEqual($group['Facturation']['DATE'], $facturation['Facturation']['DATE'])): ?>
-                <?php if ($row==1): ?>
-                <tr>
-                <td class="header"><?php echo $facturation['Utilisateur']['NOMLONG']; ?></td>
-                <td class="header" style="text-align: center;" ><?php echo $group['Facturation']['DATE']; ?></td>
-                <td class="header" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['NUMEROFTGALILEI']; ?></td>
-                <td class="header" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['VERSION']; ?></td> 
+                 <tr>  
+                 <?php if($row > 1 && $newline): ?>
+                       <?php $newline = false; ?>
+                       <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;"><?php echo $group['Utilisateur']['NOM']." ".$group['Utilisateur']['PRENOM']; ?></td>
+                       <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: center;"><?php echo $group['Facturation']['DATE']; ?></td>
+                       <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['NUMEROFTGALILEI']; ?></td>
+                       <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['VERSION']; ?></td>     
+                <?php elseif($row == 1  && $newline) : ?>
+                       <?php $newline = false; ?>
+                       <td class="header"><?php echo $facturation['Utilisateur']['NOMLONG']; ?></td>
+                       <td class="header" style="text-align: center;" ><?php echo $group['Facturation']['DATE']; ?></td>
+                       <td class="header" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['NUMEROFTGALILEI']; ?></td>
+                       <td class="header" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['VERSION']; ?></td>                 
                 <?php endif; ?>
                 <td><?php echo $facturation['Activite']['NOM']; ?></td>  
-                <!--calculer les jours fériés pour mettre le style week sur les jours fériés //-->
                 <?php $date = new DateTime(CUSDate($group['Facturation']['DATE'])); ?> 
                 <?php $classLu = isFerie($date) ? 'class="ferie"' : ''; ?>
                 <td style="text-align: center;" <?php echo $classLu; ?>><span <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['LU']>0 && $facturation['Facturation']['LU']<1) ? $facturation['Facturation']['LU_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['LU']!=0 ? $facturation['Facturation']['LU'] : ""; ?></span></td> 

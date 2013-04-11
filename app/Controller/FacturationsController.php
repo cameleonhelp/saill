@@ -6,14 +6,17 @@ App::uses('AppController', 'Controller');
  * @property Facturation $Facturation
  */
 class FacturationsController extends AppController {
-    
+
+    public $paginate = array(
+        //'limit'=>9999
+    );
 /**
  * index method
  *
  * @return void
  */
 	public function index($utilisateur=null,$mois=null) {
-            if (isAuthorized('activitesreelles', 'index')) :            
+            if (isAuthorized('facturations', 'index')) :            
                 if (areaIsVisible() || $utilisateur==userAuth('id')):
                 switch ($utilisateur){
                     case 'tous':
@@ -22,14 +25,14 @@ class FacturationsController extends AppController {
                         $futilisateur = "tous les utilisateurs";
                         break;
                     default:
-                        $newconditions[]="Activitesreelle.utilisateur_id = ".$utilisateur;
+                        $newconditions[]="Facturation.utilisateur_id = ".$utilisateur;
                         $this->Facturation->Utilisateur->recursive = -1;
                         $utilisateur = $this->Facturation->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$utilisateur,'Utilisateur.GESTIONABSENCES'=>1)));
                         $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];
                         break;                      
                 }  
                 else:
-                    $newconditions[]="Activitesreelle.utilisateur_id = ".userAuth('id');
+                    $newconditions[]="Facturation.utilisateur_id = ".userAuth('id');
                     $this->Facturation->Utilisateur->recursive = -1;
                     $utilisateur = $this->Facturation->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>userAuth('id'))));
                     $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];                 
@@ -46,7 +49,7 @@ class FacturationsController extends AppController {
                         $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
                         $datedebut = $annee."-".$mois."-01";
                         $datefin = $annee."-".$mois."-".$dernierjour;
-                        $newconditions[]="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
+                        $newconditions[]="Facturation.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
                         $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
                         $fperiode = "pour le mois de ".$moiscal[$mois];
                         break;                      
@@ -59,6 +62,7 @@ class FacturationsController extends AppController {
                 $this->Facturation->recursive = 1;
                 $group = $this->Facturation->find('all',array('fields'=>array('Facturation.VERSION','Facturation.DATE','Facturation.utilisateur_id','Facturation.NUMEROFTGALILEI','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Facturation.DATE) AS NBACTIVITE'),'group'=>array('Facturation.DATE','Facturation.utilisateur_id','Facturation.VERSION'),'order'=>array('Facturation.utilisateur_id' => 'asc','Facturation.DATE' => 'desc' ),'conditions'=>$newconditions));
                 $this->set('groups',$group);
+                $this->paginate = array('limit'=>$this->Facturation->find('count'));                
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
 		$this->Facturation->recursive = 0;
                 $facturations = $this->Facturation->find('all',$this->paginate);

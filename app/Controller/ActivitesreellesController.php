@@ -8,7 +8,7 @@ App::uses('AppController', 'Controller');
 class ActivitesreellesController extends AppController {
 
         public $paginate = array(
-        //'limit' => 15,
+        //'limit' => 9999,
         //'threaded',
         'order' => array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc'),
         //'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),
@@ -82,6 +82,7 @@ class ActivitesreellesController extends AppController {
                 $this->Activitesreelle->recursive = 1;
                 $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc' ),'conditions'=>$newconditions));
                 $this->set('groups',$group);
+                $this->paginate = array('limit'=>$this->Activitesreelle->find('count'));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
 		$this->Activitesreelle->recursive = 0;
                 $activitesreeelles = $this->Activitesreelle->find('all',$this->paginate);

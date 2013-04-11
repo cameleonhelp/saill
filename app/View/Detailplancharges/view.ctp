@@ -16,9 +16,9 @@
 			<?php echo $this->Html->link($detailplancharge['Utilisateur']['id'], array('controller' => 'utilisateurs', 'action' => 'view', $detailplancharge['Utilisateur']['id'])); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('CAPCITY'); ?></dt>
+		<dt><?php echo __('ETP'); ?></dt>
 		<dd>
-			<?php echo h($detailplancharge['Detailplancharge']['CAPCITY']); ?>
+			<?php echo h($detailplancharge['Detailplancharge']['ETP']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Domaine'); ?></dt>
@@ -31,19 +31,69 @@
 			<?php echo $this->Html->link($detailplancharge['Activite']['id'], array('controller' => 'activites', 'action' => 'view', $detailplancharge['Activite']['id'])); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('CHARGEPREVUE'); ?></dt>
+		<dt><?php echo __('JANVIER'); ?></dt>
 		<dd>
-			<?php echo h($detailplancharge['Detailplancharge']['CHARGEPREVUE']); ?>
+			<?php echo h($detailplancharge['Detailplancharge']['JANVIER']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('CHARGEREELLEE'); ?></dt>
+		<dt><?php echo __('FEVRIER'); ?></dt>
 		<dd>
-			<?php echo h($detailplancharge['Detailplancharge']['CHARGEREELLEE']); ?>
+			<?php echo h($detailplancharge['Detailplancharge']['FEVRIER']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('PERIODE'); ?></dt>
+		<dt><?php echo __('MARS'); ?></dt>
 		<dd>
-			<?php echo h($detailplancharge['Detailplancharge']['PERIODE']); ?>
+			<?php echo h($detailplancharge['Detailplancharge']['MARS']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('AVRIL'); ?></dt>
+		<dd>
+			<?php echo h($detailplancharge['Detailplancharge']['AVRIL']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('MAI'); ?></dt>
+		<dd>
+			<?php echo h($detailplancharge['Detailplancharge']['MAI']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('JUIN'); ?></dt>
+		<dd>
+			<?php echo h($detailplancharge['Detailplancharge']['JUIN']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('JUILLET'); ?></dt>
+		<dd>
+			<?php echo h($detailplancharge['Detailplancharge']['JUILLET']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('AOUT'); ?></dt>
+		<dd>
+			<?php echo h($detailplancharge['Detailplancharge']['AOUT']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('SEPTEMBRE'); ?></dt>
+		<dd>
+			<?php echo h($detailplancharge['Detailplancharge']['SEPTEMBRE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('OCTOBRE'); ?></dt>
+		<dd>
+			<?php echo h($detailplancharge['Detailplancharge']['OCTOBRE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('NOVEMBRE'); ?></dt>
+		<dd>
+			<?php echo h($detailplancharge['Detailplancharge']['NOVEMBRE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('DECEMBRE'); ?></dt>
+		<dd>
+			<?php echo h($detailplancharge['Detailplancharge']['DECEMBRE']); ?>
+			&nbsp;
+		</dd>
+		<dt><?php echo __('TOTAL'); ?></dt>
+		<dd>
+			<?php echo h($detailplancharge['Detailplancharge']['TOTAL']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Created'); ?></dt>
