@@ -500,5 +500,55 @@ class ActivitesreellesController extends AppController {
  */        
         public function rapport() {
                $this->set('title_for_layout','Rapport des activités réelles');
-	}         
+	} 
+        
+        public function facturer(){
+            $ids = explode('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):
+                foreach($ids as $id):
+                    $newFacturation = array();
+                    $record = $this->Activitesreelle->find('first',array('conditions'=>array('Activitesreelle.id'=>$id)));                  
+                    $newFacturation['Facturation']['activitesreelle_id']=$id;
+                    $newFacturation['Facturation']['utilisateur_id']=$record['Activitesreelle']['utilisateur_id'];
+                    $newFacturation['Facturation']['activite_id']=$record['Activitesreelle']['activite_id'];
+                    $newFacturation['Facturation']['VERSION']=0;                    
+                    $newFacturation['Facturation']['NUMEROFTGALILEI']="0000000000";
+                    $newFacturation['Facturation']['DATE']=$record['Activitesreelle']['DATE'];
+                    $newFacturation['Facturation']['LU']=$record['Activitesreelle']['LU'];
+                    $newFacturation['Facturation']['MA']=$record['Activitesreelle']['MA'];
+                    $newFacturation['Facturation']['ME']=$record['Activitesreelle']['ME'];
+                    $newFacturation['Facturation']['JE']=$record['Activitesreelle']['JE'];
+                    $newFacturation['Facturation']['VE']=$record['Activitesreelle']['VE'];
+                    $newFacturation['Facturation']['SA']=$record['Activitesreelle']['SA'];
+                    $newFacturation['Facturation']['DI']=$record['Activitesreelle']['DI'];
+                    $newFacturation['Facturation']['TOTAL']=$record['Activitesreelle']['TOTAL'];
+                    $this->Activitesreelle->Facturation->create();
+                    if($this->Activitesreelle->Facturation->save($newFacturation)){
+                        $lastInsert = $this->Activitesreelle->Facturation->getLastInsertID();
+                        $this->Activitesreelle->id = $id;
+                        $this->Activitesreelle->saveField('facturation_id', $lastInsert);
+                    }
+                endforeach;
+                echo $this->Session->setFlash(__('Feuilles de temps facturées'),'default',array('class'=>'alert alert-success'));
+            else:
+                echo $this->Session->setFlash(__('Aucune feuilles de temps sélectionnées'),'default',array('class'=>'alert alert-error'));
+            endif;
+            exit();
+            //$this->redirect($this->goToPostion());
+        }
+        
+        public function rejeter(){
+            $ids = explode ('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):            
+                foreach($ids as $id):
+                    $this->Activitesreelle->id = $id;
+                    $this->Activitesreelle->saveField('VEROUILLE', 1);                    
+                endforeach;
+                echo $this->Session->setFlash(__('Feuilles de temps rejetées'),'default',array('class'=>'alert alert-success'));
+            else:
+                echo $this->Session->setFlash(__('Aucune feuilles de temps sélectionnées'),'default',array('class'=>'alert alert-error'));                
+            endif;
+            exit();
+            //$this->redirect($this->goToPostion());
+        }        
 }

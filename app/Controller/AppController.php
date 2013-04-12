@@ -97,6 +97,7 @@ class AppController extends Controller {
 
     public function beforeFilter() {
         $this->Auth->allow(array('login','logout')); 
+        if ($this->request->isAjax()) $this->layout=null;
     }    
     
     public function autoriser($profil,$model,$action){

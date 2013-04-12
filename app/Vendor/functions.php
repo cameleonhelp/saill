@@ -38,8 +38,7 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
     function CUSDate($frdate){
     $day = explode('/',$frdate);
     return $day[2]."-".$day[1]."-".$day[0];
-    }
-    
+}
 /**
  * CFRDate
  * 

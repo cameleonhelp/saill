@@ -52,7 +52,17 @@
                      <li><?php echo $this->Html->link('Novembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','11')); ?></li>
                      <li><?php echo $this->Html->link('Décembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','12')); ?></li>                     
                       </ul>
-                </li>  
+                </li> 
+                <?php if ($this->params->action == "afacturer") : ?>
+                <li class="divider-vertical"></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-check"></i> Actions groupées <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Facturer', "#",array('id'=>'facturerlink')); ?></li>
+                     <li><?php echo $this->Html->link('Rejeter', "#",array('id'=>'rejeterlink')); ?></li>
+                     </ul>
+                </li>
+                <?php endif; ?>
                 </ul> 
                 <?php if ($this->params->controller == "activitesreelles" && $this->params->action == "index") : ?>
                 <?php echo $this->Form->create("Activitesreelle",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -72,10 +82,15 @@
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" id="data">
         <thead>
 	<tr>
-			<th><?php echo 'Agent'; ?></th>
+                        <th><?php echo 'Agent'; ?></th>
 			<th><?php echo 'Date'; ?></th>
+                        <?php if ($this->params->action == "afacturer") : ?>
+                        <th style="text-align:center;width:15px !important;vertical-align: middle;padding-left:5px;padding-right:0;"><?php echo $this->Form->input('checkall',array('type'=>'checkbox','label'=>false)) ; ?>
+                                <?php echo $this->Form->input('all_ids',array('type'=>'hidden')) ; ?>
+                        </th>	
+                        <?php endif; ?>
                         <th><?php echo 'Activités'; ?></th>
-			<th width="20px"><?php echo 'Lu.'; ?></th>
+                        <th width="20px"><?php echo 'Lu.'; ?></th>
 			<th width="20px"><?php echo 'Ma.'; ?></th>
 			<th width="20px"><?php echo 'Me.'; ?></th>
 			<th width="20px"><?php echo 'Je.'; ?></th>
@@ -94,15 +109,18 @@
         <?php if($row > 1 && count($activitesreelles)>1): ?>
             <tr>
                 <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;"><?php echo $group['Utilisateur']['NOM']." ".$group['Utilisateur']['PRENOM']; ?></td>
-                <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: center;"><?php echo $group['Activitesreelle']['DATE']; ?></td>
+                <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: center;"><?php echo $group['Activitesreelle']['DATE']; ?></td>   
         <?php endif; ?>
         <?php foreach ($activitesreelles as $activitesreelle): ?>
             <?php if($activitesreelle['Activitesreelle']['utilisateur_id']==$group['Activitesreelle']['utilisateur_id'] && dateIsEqual($group['Activitesreelle']['DATE'], $activitesreelle['Activitesreelle']['DATE'])): ?>
                 <?php if ($row==1): ?>
                 <tr>
                 <td class="header"><?php echo $activitesreelle['Utilisateur']['NOMLONG']; ?></td>
-                <td class="header" style="text-align: center;" ><?php echo $group['Activitesreelle']['DATE']; ?></td>
+                <td class="header" style="text-align: center;" ><?php echo $group['Activitesreelle']['DATE']; ?></td>               
                 <?php endif; ?>
+                <?php if ($this->params->action == "afacturer") : ?>
+                <td style="text-align:center;padding-left:5px;padding-right:0;vertical-align: middle;"><?php echo $this->Form->input('id',array('type'=>'checkbox','label'=>false,'class'=>'idselect','value'=>$activitesreelle['Activitesreelle']['id'])) ; ?></td>
+                <?php endif; ?>                 
                 <td><?php echo $activitesreelle['Activite']['NOM']; ?></td>  
                 <!--calculer les jours fériés pour mettre le style week sur les jours fériés //-->
                 <?php $date = new DateTime(CUSDate($group['Activitesreelle']['DATE'])); ?> 
@@ -110,7 +128,7 @@
                 <td style="text-align: center;" <?php echo $classLu; ?>><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['LU']>0 && $activitesreelle['Activitesreelle']['LU']<1) ? $activitesreelle['Activitesreelle']['LU_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['LU']!=0 ? $activitesreelle['Activitesreelle']['LU'] : ""; ?></span></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classMA = isFerie($date) ? 'class="ferie"' : ''; ?>                
-                <td style="text-align: center;" <?php echo $classMA; ?>><sapn <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['MA']>0 && $activitesreelle['Activitesreelle']['MA']<1) ? $activitesreelle['Activitesreelle']['MA_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['MA']!=0 ? $activitesreelle['Activitesreelle']['MA'] : ""; ?></span></td> 
+                <td style="text-align: center;" <?php echo $classMA; ?>><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['MA']>0 && $activitesreelle['Activitesreelle']['MA']<1) ? $activitesreelle['Activitesreelle']['MA_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['MA']!=0 ? $activitesreelle['Activitesreelle']['MA'] : ""; ?></span></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classME = isFerie($date) ? 'class="ferie"' : ''; ?>                
                 <td style="text-align: center;" <?php echo $classME; ?>><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['ME']>0 && $activitesreelle['Activitesreelle']['ME']<1) ? $activitesreelle['Activitesreelle']['ME_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['ME']!=0 ? $activitesreelle['Activitesreelle']['ME'] : ""; ?></span></td> 
@@ -164,7 +182,8 @@
         </tbody>
         <tfooter>
 	<tr>
-            <td colspan="10" class="footer" style="text-align:right;">Total :</td>
+            <?php $nbrows = $this->params->action == "afacturer" ? 11 : 10; ?>
+            <td colspan="<?php echo $nbrows; ?>" class="footer" style="text-align:right;">Total :</td>
             <td class="footer" id="totalactivites" style="text-align:right;"></td>
             <td class="footer" width="90px" style="text-align:left;">jours</td>
 	</tr>            
@@ -183,7 +202,69 @@
      $(document).ready(function () {
         $("#totalactivites").html(sumOfColumns());
 
-        setInterval(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 60000); 
+        setInterval(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 120000); 
         $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
+        
+        $(document).on('click','#facturerlink',function(e){
+            var ids = $("#all_ids").val();
+            var overlay = jQuery('<div id="overlay"> </div>');
+            overlay.appendTo(document.body)
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'activitesreelles','action'=>'facturer')); ?>/",
+                data: ({all_ids:ids})
+            }).done(function ( data ) {
+                location.reload();
+                overlay.remove();
+            });
+        });
+        
+        $(document).on('click','#rejeterlink',function(e){
+            var ids = $("#all_ids").val();
+            var overlay = jQuery('<div id="overlay"> </div>');
+            overlay.appendTo(document.body)            
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'activitesreelles','action'=>'rejeter')); ?>/",
+                data: ({all_ids:ids})     
+            }).done(function ( data ) {
+                location.reload();
+                overlay.remove();                
+            });
+        });  
+        
+        $(document).on('click','#checkall',function(e){
+            $(this).parents().find(':checkbox').prop('checked', this.checked);
+            if ($(this).is(':checked')){
+                $(".idselect").each(
+                        function() {
+                            if ($("#all_ids").val()==""){
+                                $("#all_ids").val($(this).val());                    
+                            }else{
+                                $("#all_ids").val($("#all_ids").val()+"-"+$(this).val());
+                            }
+                        });          
+            }else{
+                $("#all_ids").val("");
+            }
+        });
+        
+        $(document).on('click','.idselect',function(e){
+            if ($(this).is(':checked')){
+                if ($("#all_ids").val()==""){
+                    $("#all_ids").val($(this).val());                    
+                }else{
+                    $("#all_ids").val($("#all_ids").val()+"-"+$(this).val());
+                }
+            } else {
+                var list = $("#all_ids").val();
+                $("#all_ids").val("");
+                tmp = list.replace($(this).val()+"-", "");
+                if (tmp == list) tmp = list.replace("-"+$(this).val(), ""); 
+                $("#all_ids").val(tmp);
+            }
+        });
     });
 </script>

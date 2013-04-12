@@ -1,6 +1,6 @@
 <?php 
     $version = '2.0';
-    $build = 'b034';
+    $build = 'b035';
     echo $version.'.'.$build;
     /** 
      * changelog :
@@ -23,6 +23,7 @@
      *      Correction utilisateur pour l'affichage des outils utiliser dans le détail de l'utilisateur
      *      Ajout et édition du plan de charge, mise à jour du modéle pour restitution des dates au format FR
      * b034 IHM du détail du plan de charge dans add.ctp et edit.ctp recopier le contenu de index.ctp et faire la boucle sur les bons objets retournés
+     * b035 A facturer mise en place d'une checkbox et d'une validation en masse
      * 
      **/
 ?>

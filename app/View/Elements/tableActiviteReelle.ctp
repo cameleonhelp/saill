@@ -18,10 +18,6 @@ function joursemaine($usdate){
     return $jour;
 }
 
-function CUSDate($frdate){
-    $day = explode('/',$frdate);
-    return strtotime($day[2]."-".$day[1]."-".$day[0]);
-}
     $date = isset($_POST['Actionreelle.DATE']) ? $_POST['Actionreelle.DATE'] : date('Y-m-d');
     $day = date('d',strtotime($date));
     $mois = date('m',strtotime($date));

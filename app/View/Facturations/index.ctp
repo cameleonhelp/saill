@@ -93,25 +93,25 @@
                 <td><?php echo $facturation['Activite']['NOM']; ?></td>  
                 <?php $date = new DateTime(CUSDate($group['Facturation']['DATE'])); ?> 
                 <?php $classLu = isFerie($date) ? 'class="ferie"' : ''; ?>
-                <td style="text-align: center;" <?php echo $classLu; ?>><span <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['LU']>0 && $facturation['Facturation']['LU']<1) ? $facturation['Facturation']['LU_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['LU']!=0 ? $facturation['Facturation']['LU'] : ""; ?></span></td> 
+                <td style="text-align: center;" <?php echo $classLu; ?>><?php echo $facturation['Facturation']['LU']!=0 ? $facturation['Facturation']['LU'] : ""; ?></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classMA = isFerie($date) ? 'class="ferie"' : ''; ?>                
-                <td style="text-align: center;" <?php echo $classMA; ?>><sapn <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['MA']>0 && $facturation['Facturation']['MA']<1) ? $facturation['Facturation']['MA_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['MA']!=0 ? $facturation['Facturation']['MA'] : ""; ?></span></td> 
+                <td style="text-align: center;" <?php echo $classMA; ?>><?php echo $facturation['Facturation']['MA']!=0 ? $facturation['Facturation']['MA'] : ""; ?></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classME = isFerie($date) ? 'class="ferie"' : ''; ?>                
-                <td style="text-align: center;" <?php echo $classME; ?>><span <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['ME']>0 && $facturation['Facturation']['ME']<1) ? $facturation['Facturation']['ME_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['ME']!=0 ? $facturation['Facturation']['ME'] : ""; ?></span></td> 
+                <td style="text-align: center;" <?php echo $classME; ?>><?php echo $facturation['Facturation']['ME']!=0 ? $facturation['Facturation']['ME'] : ""; ?></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classJE = isFerie($date) ? 'class="ferie"' : ''; ?>                
-                <td style="text-align: center;" <?php echo $classJE; ?>><span <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['JE']>0 && $facturation['Facturation']['JE']<1) ? $facturation['Facturation']['JE_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['JE']!=0 ? $facturation['Facturation']['JE'] : ""; ?></span></td> 
+                <td style="text-align: center;" <?php echo $classJE; ?>><?php echo $facturation['Facturation']['JE']!=0 ? $facturation['Facturation']['JE'] : ""; ?></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classVE = isFerie($date) ? 'class="ferie"' : ''; ?>                
-                <td style="text-align: center;" <?php echo $classVE; ?>><span <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['VE']>0 && $facturation['Facturation']['VE']<1) ? $facturation['Facturation']['VE_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['VE']!=0 ? $facturation['Facturation']['VE'] : ""; ?></span></td> 
+                <td style="text-align: center;" <?php echo $classVE; ?>><?php echo $facturation['Facturation']['VE']!=0 ? $facturation['Facturation']['VE'] : ""; ?></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classSA = isFerie($date) ? ' ferie' : ''; ?> 
-                <td style="text-align: center;" class="week <?php echo $classSA; ?>"><span <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['SA']>0 && $facturation['Facturation']['SA']<1) ? $facturation['Facturation']['SA_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['SA']!=0 ? $facturation['Facturation']['SA'] : ""; ?></span></td> 
+                <td style="text-align: center;" class="week <?php echo $classSA; ?>"><?php echo $facturation['Facturation']['SA']!=0 ? $facturation['Facturation']['SA'] : ""; ?></td> 
                 <?php $date->add(new DateInterval('P1D')); ?>
                 <?php $classDI = isFerie($date) ? ' ferie' : ''; ?>
-                <td style="text-align: center;" class="week <?php echo $classDI; ?>"><span <?php echo ($facturation['Activite']['projet_id']==1 && $facturation['Facturation']['DI']>0 && $facturation['Facturation']['DI']<1) ? $facturation['Facturation']['DI_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $facturation['Facturation']['DI']!=0 ? $facturation['Facturation']['DI'] : ""; ?></span></td> 
+                <td style="text-align: center;" class="week <?php echo $classDI; ?>"><?php echo $facturation['Facturation']['DI']!=0 ? $facturation['Facturation']['DI'] : ""; ?></td> 
                 <td style="text-align: center;" class="sstotal"><?php echo $facturation['Facturation']['TOTAL']; ?></td> 
                 <td style="text-align: center;">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'view')) : ?>
