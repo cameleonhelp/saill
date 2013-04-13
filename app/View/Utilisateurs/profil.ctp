@@ -74,7 +74,7 @@
                     <div class="control-group">
                         <label class="control-label sstitre" for="UtilisateurUtilisateurId">Hiérarchique : </label>
                         <div class="controls">
-                            <?php echo $hierarchique['Utilisateur']['NOMLONG']; ?>
+                            <?php echo isset($hierarchique['Utilisateur']['NOMLONG']) ? $hierarchique['Utilisateur']['NOMLONG'] : ""; ?>
                         </div>
                     </div>  
                     <div class="control-group">

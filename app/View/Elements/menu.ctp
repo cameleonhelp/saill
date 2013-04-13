@@ -179,7 +179,7 @@
         </ul>
     </li>
     <?php endif; ?>
-    
+    <?php if (userAuth('profil_id')!='2' && (isAuthorized('actions', 'rapports' || isAuthorized('activitesreelles', 'rapports') || isAuthorized('facturations', 'rapports')))) : ?>
     <li class="divider"></li>
     <li  class="dropdown-submenu <?php echo $classRapports; ?>"><a href="#"><i class="glyphicon_charts"></i> Rapports</a>
         <ul class="dropdown-menu">
@@ -194,6 +194,7 @@
             <?php endif; ?>
         </ul>
     </li>
+    <?php endif; ?>
     <li class="divider"></li>
     <li class="<?php echo $classContactUs; ?>"><?php echo $this->Html->link('<i class="glyphicon_envelope"></i> Nous contacter',array('controller'=>'contacts','action'=>'add'),array('escape' => false)); ?></li>
     <li class="<?php echo $classAddFavorites; ?> jQueryBookmark"><?php echo $this->Html->link('<i class="glyphicon_star"></i> Ajouter aux favoris',array('action'=>"#"),array('escape' => false)); ?></li>

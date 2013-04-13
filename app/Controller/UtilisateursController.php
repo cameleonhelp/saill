@@ -71,7 +71,7 @@ class UtilisateursController extends AppController {
 		$this->set('utilisateurs', $this->paginate());
                 $this->Session->delete('xls_export');
                 $newconditions = array_merge($newconditions,array('Utilisateur.id > '=> 1));
-                $this->Utilisateur->recursive = -1;
+                $this->Utilisateur->recursive = 0;
                 $export = $this->Utilisateur->find('all',array('conditions'=>$newconditions,'order' => array('Utilisateur.NOM' => 'asc','Utilisateur.PRENOM' => 'asc')));
                 $this->Session->write('xls_export',$export);  
                 $this->Utilisateur->Section->recursive = -1;
