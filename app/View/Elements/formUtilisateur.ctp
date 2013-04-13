@@ -69,19 +69,31 @@
                     <div class="control-group">
                         <label class="control-label sstitre  required" for="UtilisateurSectionId">Section : </label>
                         <div class="controls">
+                        <?php if(userAuth('WIDEAREA')==1) : ?>
                             <?php echo $this->Form->select('section_id',$section,array('data-rule-required'=>'true','data-msg-required'=>"Le nom de la section est obligatoire dans l'onglet administration",'selected' => $this->data['Utilisateur']['section_id'],'empty' => 'Choisir une section')); ?>
+                        <?php else : ?>
+                            <?php echo $this->data['Section']['NOM']; ?>
+                        <?php endif; ?>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label sstitre" for="UtilisateurUtilisateurId">Hiérarchique : </label>
                         <div class="controls">
+                        <?php if(userAuth('WIDEAREA')==1) : ?>
                             <?php echo $this->Form->select('utilisateur_id',$hierarchique,array('selected' => $this->data['Utilisateur']['utilisateur_id'],'empty' => 'Choisir un hiérarchique')); ?>
+                        <?php else : ?>
+                            <?php echo isset($hierarchique['Utilisateur']['NOMLONG'])? $hierarchique['Utilisateur']['NOMLONG'] : ""; ?>
+                        <?php endif; ?>
                         </div>
                     </div>  
                     <div class="control-group">
                         <label class="control-label sstitre" for="UtilisateurTjmagentId">TJM : </label>
                         <div class="controls">
+                        <?php if(userAuth('WIDEAREA')==1) : ?>    
                             <?php echo $this->Form->select('tjmagent_id',$tjmagent,array('selected' => $this->data['Utilisateur']['tjmagent_id'],'empty' => 'Choisir un TJM pour l\'agent')); ?>
+                        <?php else : ?>
+                            <?php echo isset($this->data['Tjmagent']['NOM'])? $this->data['Tjmagent']['NOM'] : ""; ?>
+                        <?php endif; ?>
                         </div>
                     </div>                      
                     <div class="control-group">
@@ -108,8 +120,9 @@
                         <div class="controls">
                             <?php echo $this->Form->select('WORKCAPACITY',$workcapacite,array('data-rule-required'=>'true','data-msg-required'=>"La capacité de travail est obligatoire dans l'onglet administration",'selected' => $this->data['Utilisateur']['WORKCAPACITY'])); ?>
                         </div>
-                    </div>                           
-                     <div class="control-group">
+                    </div>   
+                    <?php if(userAuth('WIDEAREA')==1) : ?>
+                    <div class="control-group">
                         <label class="control-label sstitre" for="UtilisateurHIERARCHIQUE">Est hiérarchique : </label>
                         <div class="controls">
                             <?php echo $this->Form->input('HIERARCHIQUE',array('class'=>'yesno')); ?>
@@ -122,7 +135,8 @@
                             <?php echo $this->Form->input('WIDEAREA',array('class'=>'yesno')); ?>
                             &nbsp;<label class='labelAfter'></label>
                         </div>
-                    </div>                      
+                    </div>    
+                    <?php endif; ?>
                     <div class="control-group">
                         <label class="control-label sstitre" for="UtilisateurCONGE">Congés : </label>
                         <div class="controls">
@@ -157,13 +171,21 @@
                     <div class="control-group">
                         <label class="control-label sstitre required" for="UtilisateurProfilId">Profil : </label>
                         <div class="controls">
+                        <?php if(userAuth('WIDEAREA')==1) : ?>
                             <?php echo $this->Form->select('profil_id',$profil,array('data-rule-required'=>'true','data-msg-required'=>"Le profil est obligatoire dans l'onglet logistique",'selected' => $this->data['Utilisateur']['profil_id'],'empty' => 'Choisir un profil')); ?>
+                        <?php else : ?>
+                            <?php echo isset($this->data['Profil']['NOM'])? $this->data['Profil']['NOM'] : ""; ?>
+                        <?php endif; ?>                        
                         </div>
                     </div>  
                     <div class="control-group">
                         <label class="control-label sstitre required" for="UtilisateurAssistanceId">Assistance : </label>
                         <div class="controls">
+                        <?php if(userAuth('WIDEAREA')==1) : ?>    
                             <?php echo $this->Form->select('assistance_id',$assistance,array('data-rule-required'=>'true','data-msg-required'=>"L'assistance est obligatoire dans l'onglet logistique",'selected' => $this->data['Utilisateur']['assistance_id'],'empty' => 'Choisir une assistance')); ?>
+                        <?php else : ?>
+                            <?php echo isset($this->data['Assistance']['NOM'])? $this->data['Assistance']['NOM'] : ""; ?>
+                        <?php endif; ?>                        
                         </div>
                     </div>  
                     <div class="control-group">
@@ -190,13 +212,15 @@
                             <?php echo $this->Form->input('TELEPHONE'); ?>
                         </div>
                     </div>  
+                    <?php if(userAuth('WIDEAREA')==1) : ?>
                     <div class="control-group">
                         <label class="control-label sstitre" for="UtilisateurGESTIONABSENCES">Utilise le gestionnaire d'absence et plan de charge : </label>
                         <div class="controls">
                             <?php echo $this->Form->input('GESTIONABSENCES',array('class'=>'yesno')); ?>
                             &nbsp;<label class='labelAfter'></label>
                         </div>
-                    </div>                      
+                    </div>  
+                    <?php endif;  ?>
                     <div class="control-group">
                         <label class="control-label sstitre" for="UtilisateurDATEDEBUTACTIF">Date de début du compte actif : </label>
                         <div class="controls">
@@ -209,7 +233,9 @@
                         </div>
                     </div> 
                     <hr/>
+                    <?php if(isAuthorized('dotations', 'add')): ?>
                     <button type="button" class='btn btn-inverse pull-right' onclick="location.href='<?php echo $this->Html->url('/dotations/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter une dotation</button>                    
+                    <?php endif; ?>
                     <label class="sstitre">Liste des dotations</label>   
                     <?php echo $this->element('tableDotation'); ?>
                 </div>
@@ -230,10 +256,12 @@
                             <?php echo $this->Form->select('domaine_id',$domaine,array('selected' => $this->data['Utilisateur']['domaine_id'],'empty' => 'Choisir un domaine')); ?>
                         </div>
                     </div><hr/>
+                    <?php if(isAuthorized('affectations', 'add')): ?>
                     <span  class='pull-right'>
                     <button type="button" class='btn btn-inverse' onclick="location.href='<?php echo $this->Html->url('/affectations/addIndisponibilite/'.$this->data['Utilisateur']['id']); ?>';">Ajouter indisponibilités</button>&nbsp;
                     <button type="button" class='btn btn-inverse' onclick="location.href='<?php echo $this->Html->url('/affectations/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter une activité</button>    
                     </span>
+                    <?php endif; ?>
                     <label class="sstitre"><h4>Liste des activités</h4></label> 
                     <?php echo $this->element('tableAffectation'); ?>
                 </div>
@@ -248,7 +276,9 @@
             </div>
             <div id="collapse4" class="accordion-body collapse">
                 <div class="accordion-inner">
+                    <?php if(isAuthorized('utiliseoutils', 'add')) : ?>
                     <button type="button" class='btn btn-inverse pull-right' onclick="location.href='<?php echo $this->Html->url('/utiliseoutils/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter une ouverture de droit</button>                    
+                    <?php endif; ?>
                     <label class="sstitre">Liste des droits et état avancement des demandes à mettre dans un tableau</label> 
                     <?php echo $this->element('tableUtiliseOutil'); ?>
                 </div>

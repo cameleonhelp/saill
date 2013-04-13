@@ -75,7 +75,7 @@
             <?php if (userAuth('profil_id')!='2' && isAuthorized('messages', 'index')) : ?>
             <li class="<?php echo $classMessages; ?>"><?php echo $this->Html->link('Messages',array('controller'=>'messages','action'=>'index'),array('escape' => false)); ?></li>
             <?php endif; ?>
-            <?php if (userAuth('profil_id')!='2' && (isAuthorized('profils', 'index') || isAuthorized('assistances', 'index') || isAuthorized('autorisations', 'index') || isAuthorized('domaines', 'index') || isAuthorized('listediffusions', 'index') || isAuthorized('outils', 'index') || isAuthorized('dossierpartages', 'index') || isAuthorized('sections', 'index') || isAuthorized('sites', 'index') || isAuthorized('societes', 'index') || isAuthorized('typemateriels', 'index'))) : ?> 
+            <?php if (userAuth('profil_id')!='2' && (isAuthorized('profils', 'index') || isAuthorized('assistances', 'index') || isAuthorized('autorisations', 'index'))) : ?> 
             <li class="divider"></li>
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('profils', 'index')) : ?>
@@ -179,7 +179,7 @@
         </ul>
     </li>
     <?php endif; ?>
-    <?php if (userAuth('profil_id')!='2' && (isAuthorized('actions', 'rapports' || isAuthorized('activitesreelles', 'rapports') || isAuthorized('facturations', 'rapports')))) : ?>
+    <?php if (userAuth('profil_id')!='2' && (isAuthorized('actions', 'rapports') || isAuthorized('activitesreelles', 'rapports') || isAuthorized('facturations', 'rapports'))) : ?>
     <li class="divider"></li>
     <li  class="dropdown-submenu <?php echo $classRapports; ?>"><a href="#"><i class="glyphicon_charts"></i> Rapports</a>
         <ul class="dropdown-menu">

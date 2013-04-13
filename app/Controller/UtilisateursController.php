@@ -63,9 +63,9 @@ class UtilisateursController extends AppController {
                         $section = $this->Utilisateur->Section->find('first',array('conditions'=>array('Section.id'=>$filtreSection)));
                         $fsection = "la section ".$section['Section']['NOM'];                        
                 }    
-                
                 $this->set('fsection',$fsection);
                 $this->set('futilisateur',$futilisateur);
+                if (userAuth('WIDEAREA')==0) {$newconditions[]="Utilisateur.section_id=".userAuth('section_id');}
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Utilisateur->recursive = 0;
 		$this->set('utilisateurs', $this->paginate());
@@ -74,9 +74,16 @@ class UtilisateursController extends AppController {
                 $this->Utilisateur->recursive = 0;
                 $export = $this->Utilisateur->find('all',array('conditions'=>$newconditions,'order' => array('Utilisateur.NOM' => 'asc','Utilisateur.PRENOM' => 'asc')));
                 $this->Session->write('xls_export',$export);  
-                $this->Utilisateur->Section->recursive = -1;
-                $sections = $this->Utilisateur->Section->find('all',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
+                if (userAuth('WIDEAREA')==0) {
+                   $sections = $this->Utilisateur->Section->find('all',array('fields' => array('id','NOM'),'conditions'=>array('id'=>userAuth('section_id')),'recursive'=>-1));
+                } else {
+                   $sections = $this->Utilisateur->Section->find('all',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'recursive'=>-1));
+                }
                 $this->set('sections',$sections);
+                if (isset($this->request->data['Utilisateur'])) :
+                $hierarchique = $this->Utilisateur->find('first',array('fields' => array('id', 'NOMLONG'),'order'=>array('NOMLONG'=>'asc'),'conditions'=>array('Utilisateur.HIERARCHIQUE'=>1,'Utilisateur.id'=>$this->request->data['Utilisateur']['utilisateur_id'])));
+                $this->set('hierarchique',$hierarchique);  
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

@@ -55,6 +55,7 @@ class MaterielinformatiquesController extends AppController {
                 }    
                 $this->set('fsection',$fsection);                 
                 $this->set('title_for_layout','Postes informatique');
+                if (userAuth('WIDEAREA')==0) {$newconditions[]="Materielinformatique.section_id=".userAuth('section_id');}                
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->Materielinformatique->recursive = 0;
 		$this->set('materielinformatiques', $this->paginate());
@@ -68,8 +69,11 @@ class MaterielinformatiquesController extends AppController {
                 $this->Materielinformatique->recursive = 0;
                 $types = $this->Materielinformatique->find('all',array('fields' => array('Typemateriel.NOM'),'group'=>'Typemateriel.NOM','order'=>array('Typemateriel.NOM'=>'asc')));
                 $this->set('types',$types);    
-                $this->Materielinformatique->recursive = 0;
-                $sections = $this->Materielinformatique->find('all',array('fields' => array('Section.NOM'),'group'=>'Section.NOM','order'=>array('Section.NOM'=>'asc')));
+                if (userAuth('WIDEAREA')==0) {
+                   $sections = $this->Materielinformatique->Section->find('all',array('fields' => array('Section.NOM'),'conditions'=>array('Section.id'=>userAuth('section_id')),'recursive'=>0));
+                } else {
+                   $sections = $this->Materielinformatique->Section->find('all',array('fields' => array('Section.NOM'),'group'=>'Section.NOM','order'=>array('Section.NOM'=>'asc'),'recursive'=>0));
+                }
                 $this->set('sections',$sections);  
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
