@@ -504,8 +504,8 @@ div.controls{
 
 .td-error {
     background-color: #f2dede !important;
-    color:#b94a48;
-    font-weight: bold;
+    color:#b94a48 !important;
+    font-weight: bold !important;
 }
 .clearboth {
     clear: both !important;

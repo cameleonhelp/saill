@@ -1,10 +1,11 @@
 <?php 
     $version = '2.0';
-    $build = 'b036';
+    $build = 'b037';
     echo $version.'.'.$build;
     /** 
      * changelog :
      * 
+     * b037 Alerte si action ou livrable en retard au niveau de l'échéance ajout d'une class td-error sur les cellules
      * b036 Corrections de quelques bugs mineur en fonctions des profils et droits ouverts
      * b035 A facturer mise en place d'une checkbox et d'une validation en masse
      * b034 IHM du détail du plan de charge dans add.ctp et edit.ctp recopier le contenu de index.ctp et faire la boucle sur les bons objets retournés

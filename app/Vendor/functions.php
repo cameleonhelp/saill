@@ -551,4 +551,18 @@ function styleBarre($avancement){
 	}
         return $nbopendays;
     }
+    
+/**
+ * enretard method
+ * 
+ * @param type $date
+ * @return boolean
+ */    
+    function enretard($date){
+        $today = intval(date('Ymd'));
+        $date = explode("/",$date);
+        $d = intval($date[2].$date[1].$date[0]);
+        $result = ($d - $today) < 0 ? true: false;
+        return $result;
+    }
 ?>
