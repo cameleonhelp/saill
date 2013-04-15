@@ -44,7 +44,8 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.
  - Livrable (demander si nouvelle version)
  - Profil et autorisations associées
  - Poste informatique
- - Utilisateur : déjà fait mais ajouter la duplication des ouverture de droit à l'état demandé, et les affectations
+ - Utilisateur : déjà fait mais ajouter la duplication des ouverture de droit à l'état demandé, et les affectations.
+                 Donner la possibilité d'ajouter un utilisateur incomplet juste sur les champs de l'ajout
  
 * Prolongation des utilisateur en masse, ajouter une checkbox et si cocher faire la mise à jour.
 
@@ -53,6 +54,9 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.
 * Feuille de temps avoir la possibilité d'ajouter des lignes dynamiquement, 
   ne pas créer d'enregistrement avant juste donner le choix de l'utilisateur 
   et de la date et afficher une ligne avec choix de l'activité, possibilité de suppression comme pour facturation.
+  Voir si faisabilité en 2.0
+
+* Génération de rapport avec graphique au format pdf.
 
 ## Bugs connus :
 
