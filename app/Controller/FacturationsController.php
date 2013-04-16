@@ -15,7 +15,7 @@ class FacturationsController extends AppController {
  *
  * @return void
  */
-	public function index($utilisateur=null,$mois=null) {
+	public function index($utilisateur=null,$mois=null,$visible=null,$indisponibilite=null) {
             if (isAuthorized('facturations', 'index')) :            
                 if (areaIsVisible() || $utilisateur==userAuth('id')):
                 switch ($utilisateur){
@@ -53,9 +53,25 @@ class FacturationsController extends AppController {
                         $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
                         $fperiode = "pour le mois de ".$moiscal[$mois];
                         break;                      
-                }  
+                } 
                 $this->set('fperiode',$fperiode);                
                 $this->set('title_for_layout','Feuilles de temps facturées');
+                switch ($visible){
+                    case '1':
+                        $newconditions[]="Facturation.VISIBLE=0";
+                        break;
+                    default:
+                        $newconditions[]="1=1";
+                        break;                      
+                }  
+                switch ($indisponibilite){
+                    case '1':
+                        $newconditions[]="Activite.projet_id!=1";
+                        break;
+                    default:
+                        $newconditions[]="1=1";
+                        break;                      
+                }                  
                 $this->Facturation->Utilisateur->recursive = -1;
                 $utilisateurs = $this->Facturation->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
                 $this->set('utilisateurs',$utilisateurs);
@@ -67,6 +83,9 @@ class FacturationsController extends AppController {
 		$this->Facturation->recursive = 0;
                 $facturations = $this->Facturation->find('all',$this->paginate);
 		$this->set('facturations', $facturations);
+                $this->Facturation->recursive = 0;
+                $export = $this->Facturation->find('all',array('conditions'=>$newconditions,'order' => array('Facturation.DATE' => 'asc')));
+                $this->Session->write('xls_export',$export); 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();            
@@ -189,6 +208,12 @@ class FacturationsController extends AppController {
                                 $this->Facturation->Activitesreelle->id = $facturation['activitesreelle_id'];
                                 $this->Facturation->Activitesreelle->saveField('facturation_id', $lastId);
                             endif;
+                            if (isset($facturation['VERSION']) && $facturation['VERSION'] > 0):
+                                $version = $facturation['VERSION']-1;
+                                $oldFacturationId = $this->getOldFacturationId($facturation['utilisateur_id'], CUSDate($facturation['DATE']), $facturation['activite_id'], $version);
+                                $this->Facturation->id = $oldFacturationId;
+                                $this->Facturation->saveField('VISIBLE', 1);
+                            endif;
                             $this->Session->setFlash(__('La facturation est sauvegardée'),'default',array('class'=>'alert alert-success'));
                         } else {
                             $this->Session->setFlash(__('La facturation est incorrecte, veuillez corriger la facturation'),'default',array('class'=>'alert alert-success'));
@@ -199,10 +224,25 @@ class FacturationsController extends AppController {
             }            
         }
         
+        public function getOldFacturationId($utilisateur_id,$date,$activite_id,$version){
+            $oldId = $this->Facturation->find('first',array('fields'=>array('Facturation.id'),'conditions'=>array('Facturation.utilisateur_id'=>$utilisateur_id,'Facturation.DATE'=>$date,'Facturation.activite_id'=>$activite_id,'Facturation.VERSION'=>$version),'recursive'=>-1));
+            return $oldId['Facturation']['id'];
+        }
+        
 /**
  * rapport
  */        
         public function rapport() {
             $this->set('title_for_layout','Rapport des facturations');
-	}         
+	}   
+        
+/**
+ * export_xls
+ * 
+ */       
+	function export_xls() {
+		$data = $this->Session->read('xls_export');
+		$this->set('rows',$data);
+		$this->render('export_xls','export_xls');
+        }
 }

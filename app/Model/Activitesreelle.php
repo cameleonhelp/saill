@@ -212,11 +212,20 @@ class Activitesreelle extends AppModel {
                 }                   
                 if (isset($val['Activitesreelle']['DATE'])) {
                     $results[$key]['Activitesreelle']['DATE'] = $this->dateFormatAfterFind($val['Activitesreelle']['DATE']);
-                }                    
+                }   
+                if (isset($val['Activite']['projet_id'])) {
+                    $results[$key]['Activitesreelle']['projet_NOM'] = $this->getProjetForActivite($val['Activite']['projet_id']);
+                }                 
             }
             return $results;
         }  
         
+        public function getProjetForActivite($id){
+            $sql = "SELECT NOM FROM projets WHERE id='".$id."'";
+            $result = $this->query($sql);
+            return  !empty($result) ? $result[0]['projets']['NOM'] : "";
+        }    
+    
 /**
  * debutsem method
  * 

@@ -565,4 +565,5 @@ function styleBarre($avancement){
         $result = ($d - $today) < 0 ? true: false;
         return $result;
     }
+    
 ?>

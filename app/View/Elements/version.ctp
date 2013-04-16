@@ -1,10 +1,14 @@
 <?php 
     $version = '2.0';
-    $build = 'b037';
+    $build = 'b038';
     echo $version.'.'.$build;
     /** 
      * changelog :
      * 
+     * b038 Quelques corrections et évolutions (facturations et activités réelles : export excel, affichage du nom du projet, ...)
+     *      Correction de la navigation sur les feuilles de temps (patch en attendant une nouvelle navigation)
+     *      Mise en forme des exports Excel avec ajout de formule dans certains exports
+     *      Facturations applications de filtres supplémentaires reste à mettre dans l'IHM
      * b037 Alerte si action ou livrable en retard au niveau de l'échéance ajout d'une class td-error sur les cellules
      * b036 Corrections de quelques bugs mineur en fonctions des profils et droits ouverts
      * b035 A facturer mise en place d'une checkbox et d'une validation en masse

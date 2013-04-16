@@ -137,8 +137,17 @@ class Facturation extends AppModel {
                 }                   
                 if (isset($val['Facturation']['DATE'])) {
                     $results[$key]['Facturation']['DATE'] = $this->dateFormatAfterFind($val['Facturation']['DATE']);
-                }                    
+                }   
+                if (isset($val['Activite']['projet_id'])) {
+                    $results[$key]['Facturation']['projet_NOM'] = $this->getProjetForActivite($val['Activite']['projet_id']);
+                }                  
             }
             return $results;
         } 
+        
+        public function getProjetForActivite($id){
+            $sql = "SELECT NOM FROM projets WHERE id='".$id."'";
+            $result = $this->query($sql);
+            return $result[0]['projets']['NOM'];
+        }           
 }

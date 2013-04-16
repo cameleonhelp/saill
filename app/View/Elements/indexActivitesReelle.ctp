@@ -62,6 +62,8 @@
                      <li><?php echo $this->Html->link('Rejeter', "#",array('id'=>'rejeterlink')); ?></li>
                      </ul>
                 </li>
+                <li class="divider-vertical"></li>
+                <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>                 
                 <?php endif; ?>
                 </ul> 
                 <?php if ($this->params->controller == "activitesreelles" && $this->params->action == "index") : ?>
@@ -83,6 +85,7 @@
         <thead>
 	<tr>
                         <th><?php echo 'Agent'; ?></th>
+                        <th><?php echo 'Identifiant'; ?></th>
 			<th><?php echo 'Date'; ?></th>
                         <?php if ($this->params->action == "afacturer") : ?>
                         <th style="text-align:center;width:15px !important;vertical-align: middle;padding-left:5px;padding-right:0;"><?php echo $this->Form->input('checkall',array('type'=>'checkbox','label'=>false)) ; ?>
@@ -109,6 +112,7 @@
         <?php if($row > 1 && count($activitesreelles)>1): ?>
             <tr>
                 <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;"><?php echo $group['Utilisateur']['NOM']." ".$group['Utilisateur']['PRENOM']; ?></td>
+                <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;"><?php echo $group['Utilisateur']['username']; ?></td>
                 <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: center;"><?php echo $group['Activitesreelle']['DATE']; ?></td>   
         <?php endif; ?>
         <?php foreach ($activitesreelles as $activitesreelle): ?>
@@ -116,12 +120,13 @@
                 <?php if ($row==1): ?>
                 <tr>
                 <td class="header"><?php echo $activitesreelle['Utilisateur']['NOMLONG']; ?></td>
+                <td class="header"><?php echo $activitesreelle['Utilisateur']['username']; ?></td>
                 <td class="header" style="text-align: center;" ><?php echo $group['Activitesreelle']['DATE']; ?></td>               
                 <?php endif; ?>
                 <?php if ($this->params->action == "afacturer") : ?>
                 <td style="text-align:center;padding-left:5px;padding-right:0;vertical-align: middle;"><?php echo $this->Form->input('id',array('type'=>'checkbox','label'=>false,'class'=>'idselect','value'=>$activitesreelle['Activitesreelle']['id'])) ; ?></td>
                 <?php endif; ?>                 
-                <td><?php echo $activitesreelle['Activite']['NOM']; ?></td>  
+                <td><?php echo $activitesreelle['Activitesreelle']['projet_NOM'].' - '.$activitesreelle['Activite']['NOM']; ?></td>  
                 <!--calculer les jours fériés pour mettre le style week sur les jours fériés //-->
                 <?php $date = new DateTime(CUSDate($group['Activitesreelle']['DATE'])); ?> 
                 <?php $classLu = isFerie($date) ? 'class="ferie"' : ''; ?>
@@ -182,7 +187,7 @@
         </tbody>
         <tfooter>
 	<tr>
-            <?php $nbrows = $this->params->action == "afacturer" ? 11 : 10; ?>
+            <?php $nbrows = $this->params->action == "afacturer" ? 12 : 11; ?>
             <td colspan="<?php echo $nbrows; ?>" class="footer" style="text-align:right;">Total :</td>
             <td class="footer" id="totalactivites" style="text-align:right;"></td>
             <td class="footer" width="90px" style="text-align:left;">jours</td>
@@ -202,7 +207,7 @@
      $(document).ready(function () {
         $("#totalactivites").html(sumOfColumns());
 
-        setInterval(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 120000); 
+        setTimeout(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 120000); 
         $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
         
         $(document).on('click','#facturerlink',function(e){

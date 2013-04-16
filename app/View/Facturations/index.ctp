@@ -39,7 +39,9 @@
                      <li><?php echo $this->Html->link('Novembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','11')); ?></li>
                      <li><?php echo $this->Html->link('Décembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','12')); ?></li>                     
                       </ul>
-                </li>  
+                </li>
+                <li class="divider-vertical"></li>
+                <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>                 
                 </ul> 
                 <?php echo $this->Form->create("Facturation",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
@@ -90,7 +92,7 @@
                        <td class="header" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['NUMEROFTGALILEI']; ?></td>
                        <td class="header" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['VERSION']; ?></td>                 
                 <?php endif; ?>
-                <td><?php echo $facturation['Activite']['NOM']; ?></td>  
+                <td><?php echo $facturation['Facturation']['projet_NOM'].' - '.$facturation['Activite']['NOM']; ?></td>    
                 <?php $date = new DateTime(CUSDate($group['Facturation']['DATE'])); ?> 
                 <?php $classLu = isFerie($date) ? 'class="ferie"' : ''; ?>
                 <td style="text-align: center;" <?php echo $classLu; ?>><?php echo $facturation['Facturation']['LU']!=0 ? $facturation['Facturation']['LU'] : ""; ?></td> 
@@ -149,7 +151,7 @@
      $(document).ready(function () {
         $("#totalactivites").html(sumOfColumns());
 
-        setInterval(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 60000); 
+        setTimeout(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 60000); 
         $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
     });
 </script>

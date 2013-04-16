@@ -1,7 +1,9 @@
 ﻿<STYLE type="text/css">
-	.tableTd {
+	.tableTd,.footer {
 	   	border-width: 0.5pt; 
 		border: solid; 
+                background-color: #cc0044;
+                color: #EFEFEF;
 	}
 	.tableTdContent{
 		border-width: 0.5pt; 
@@ -18,7 +20,9 @@
 	</tr>
 	<tr>
 		<td><b>Date:</b></td>
-		<td><?php echo date("d/m/Y H:i:s"); ?></td>
+                <?php $date=new DateTime(); 
+                $date->setTimezone(new DateTimeZone('Europe/Paris'));?>
+		<td><?php echo $date->format("d/m/Y H:i:s"); ?></td>
 	</tr>
 	<tr>
 		<td><b>Nombre de lignes:</b></td>

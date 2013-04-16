@@ -128,8 +128,17 @@ class Materielinformatique extends AppModel {
                 }      
                 if (isset($val['Materielinformatique']['modified'])) {
                     $results[$key]['Materielinformatique']['modified'] = $this->dateFormatAfterFind($val['Materielinformatique']['modified']);
-                }            
+                }   
+                if (isset($val['Materielinformatique']['id'])) {
+                    $results[$key]['Materielinformatique']['utilisateur_NOMLONG'] = $this->getUtilisateurFromMateriel($val['Materielinformatique']['id']);
+                }                   
             }
             return $results;
         } 
+        
+        public function getUtilisateurFromMateriel($id){
+            $sql = "SELECT CONCAT( NOM, ' ', PRENOM ) AS NOMLONG FROM utilisateurs WHERE utilisateurs.id IN (SELECT dotations.utilisateur_id FROM dotations WHERE dotations.materielinformatiques_id =".$id.")";
+            $result = $this->query($sql);
+            return !empty($result) ? $result[0][0]['NOMLONG'] : "";            
+        }
 }
