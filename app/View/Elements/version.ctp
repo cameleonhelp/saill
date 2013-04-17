@@ -1,10 +1,19 @@
 <?php 
     $version = '2.0';
-    $build = 'b038';
+    $build = 'b039';
     echo $version.'.'.$build;
     /** 
      * changelog :
      * 
+     * version 2.0.0 finale
+     * bxxx Nouvelle navigation
+     * bxxx Rapports
+     * 
+     * b041 Travail sur le plan de charge (détail)
+     * b040 Travail sur une nouvelle feuille de facturation avec insertion de ligne
+     * b039 Filtres complémentaire sur facturation
+     *      déverouillage d'une facturation déjà faite pour avoir la possibilité de la rectifier pour l'agent (reste le problème de récupérer le numéro de la facturation et la version déjà existante)
+     *      Corriger le problème sur la récupération de la version et de la facturation existante
      * b038 Quelques corrections et évolutions (facturations et activités réelles : export excel, affichage du nom du projet, ...)
      *      Correction de la navigation sur les feuilles de temps (patch en attendant une nouvelle navigation)
      *      Mise en forme des exports Excel avec ajout de formule dans certains exports
@@ -30,6 +39,7 @@
      * b027 correction de bugs + facturations
      * b026 optimisation des requetes
      * b020 utilisation régulière pour le suivi de la logistique et mon usage personnel
+     *      Mis sur le serveur d'intégration
      * 
      **/
 ?>

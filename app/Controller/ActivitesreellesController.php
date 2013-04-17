@@ -554,6 +554,14 @@ class ActivitesreellesController extends AppController {
             exit();
             //$this->redirect($this->goToPostion());
         }  
+        
+        public function deverouiller($id){
+            $this->Activitesreelle->id = $id;
+            $this->Activitesreelle->saveField('VEROUILLE', 1);        
+            $this->Activitesreelle->saveField('facturation_id', null);            
+            echo $this->Session->setFlash(__('Feuille de temps déverouillée'),'default',array('class'=>'alert alert-success'));
+            $this->redirect($this->goToPostion());
+        } 
           
 /**
  * export_xls

@@ -16,6 +16,10 @@ class FacturationsController extends AppController {
  * @return void
  */
 	public function index($utilisateur=null,$mois=null,$visible=null,$indisponibilite=null) {
+            $utilisateur = $utilisateur==null ? userAuth('id'):$utilisateur;
+            $mois = $mois==null ? date('m') : $mois;
+            $visible = $visible==null ? 1 :$visible;
+            $indisponibilite = $indisponibilite==null ? 0 : $indisponibilite;
             if (isAuthorized('facturations', 'index')) :            
                 if (areaIsVisible() || $utilisateur==userAuth('id')):
                 switch ($utilisateur){
@@ -117,8 +121,13 @@ class FacturationsController extends AppController {
                 $date = $this->Facturation->Activitesreelle->find('first',array('fields'=>array('Activitesreelle.DATE'),'conditions'=>array('Activitesreelle.id'=>$reelid),'recursive'=>-1));
                 $activites = $this->Facturation->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.ACTIVE'=>1),'recursive'=>0));
 		$this->set('activites', $activites);
-                $activitesreelles = $this->Facturation->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$userid,'Activitesreelle.DATE'=>CUSDate($date['Activitesreelle']['DATE']),'Activitesreelle.VEROUILLE'=>0),'recursive'=>-1));
-		$this->set('activitesreelles', $activitesreelles);
+                $facturation = $this->Facturation->find('first',array('conditions'=>array('Facturation.utilisateur_id'=>$userid,'Facturation.activitesreelle_id'=>$reelid),'recursive'=>-1));
+                $activitesreelles = $this->Facturation->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$userid,'Activitesreelle.DATE'=>CUSDate($date['Activitesreelle']['DATE']),'Activitesreelle.VEROUILLE'=>0,'Activitesreelle.facturation_id'=>null),'recursive'=>-1));
+		if (isset($facturation['Facturation'])):
+                $activitesreelles[0]['Activitesreelle']['NUMEROFTGALILEI']=$facturation['Facturation']['NUMEROFTGALILEI'];
+                $activitesreelles[0]['Activitesreelle']['VERSION']=$facturation['Facturation']['VERSION'];
+                endif;
+                $this->set('activitesreelles', $activitesreelles);
          }
 
 /**
