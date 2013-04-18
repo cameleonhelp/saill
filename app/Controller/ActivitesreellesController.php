@@ -203,40 +203,28 @@ class ActivitesreellesController extends AppController {
  *
  * @return void
  */
-	public function add($utilisateur_id=null,$action_id=null) {
+	public function add($utilisateur_id=null,$date=null,$action_id=null) {
             if (isAuthorized('activitesreelles', 'add')) :
                 $this->set('title_for_layout','Feuilles de temps');            
 		if ($this->request->is('post')) {
-                        if ($utilisateur_id!=null) $this->request->data['Activitesreelle']['utilisateur_id']=$utilisateur_id ;
-                        $this->request->data['Activitesreelle']['action_id']=$action_id;
-                        if ($this->ActiviteExists($this->request->data['Activitesreelle']['utilisateur_id'], $this->request->data['Activitesreelle']['DATE'], $this->request->data['Activitesreelle']['activite_id']) > 0){
-                            $this->Session->setFlash(__('Feuille de temps existante'),'default',array('class'=>'alert alert-info'));
-                            $this->redirect(array('action' => 'edit',$this->ActiviteExists($this->request->data['Activitesreelle']['utilisateur_id'], $this->request->data['Activitesreelle']['DATE'], $this->request->data['Activitesreelle']['activite_id'])));
-                        }
-			$this->Activitesreelle->create();
-                        if ($this->Activitesreelle->save($this->request->data)) {
-				$this->Session->setFlash(__('Feuille de temps créée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'edit',$this->Activitesreelle->getLastInsertID()));
-			} else {
-				$this->Session->setFlash(__('Feuille de temps incorrecte, veuillez corriger la feuille de temps'),'default',array('class'=>'alert alert-error'));
-			}
-		}
-                $condition=array("1=1");
-                if ($action_id != null) {
-                    $condition = ('Activite.projet_id > 1');
+                $activitesreelles = $this->request->data['Activitesreelle'];  
+                foreach($activitesreelles as $activitesreelle):
+                    if (is_array($activitesreelle) && $activitesreelle['activite_id'] != ''):
+                        $this->Activitesreelle->create();
+                        if ($this->Activitesreelle->save($activitesreelle)):
+                            $this->Session->setFlash(__('La feuille de temps est sauvegardée'),'default',array('class'=>'alert alert-success'));
+                        else :
+                            $this->Session->setFlash(__('La feuille de temps est incorrecte, veuillez corriger la feuille de temps'),'default',array('class'=>'alert alert-error'));
+                        endif;   
+                    endif;
+                endforeach;  
                 }
                 $this->Activitesreelle->Activite->recursive = 0;
-                $activites = $this->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>$condition));
-		$this->set('activites', $activites);
-                $this->Activitesreelle->Utilisateur->recursive = -1;
-		$utilisateurs = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1','Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
-		$this->set('utilisateurs', $utilisateurs);
-                $this->Activitesreelle->Utilisateur->recursive = -1;
-		$nomlong = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
-		$this->set('nomlong', $nomlong);                
+                $activites = $this->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc')));
+		$this->set('activites', $activites);               
                 if ($action_id != null) :
-                $this->Activitesreelle->Action->recursive = -1;
-                $action = $this->Activitesreelle->Action->find('first',array('conditions'=>array('Action.id'=>$action_id)));
+                    $this->Activitesreelle->Action->recursive = -1;
+                    $action = $this->Activitesreelle->Action->find('first',array('conditions'=>array('Action.id'=>$action_id)));
                     $this->request->data['Activitesreelle']['utilisateur_id'] = $action['Action']['utilisateur_id'];
                     $this->request->data['Activitesreelle']['DATE'] = $action['Action']['DEBUT'];
                     $this->request->data['Activitesreelle']['activite_id'] = $action['Action']['activite_id'];
@@ -247,6 +235,26 @@ class ActivitesreellesController extends AppController {
             endif;                
         }
 
+/**
+ * newactivite method
+ * 
+ * liste des utilisateurs pour ensuite renvoyer vers la méthode add
+ */        
+        public function newactivite(){
+            if (isAuthorized('activitesreelles', 'add')) :
+                $this->set('title_for_layout','Feuilles de temps');            
+		if ($this->request->is('post')) {
+                    $this->redirect(array('action' => 'add',$this->data['Activitesreelle']['utilisateur_id'],  CUSDate($this->data['Activitesreelle']['DATE'])));
+		}
+                $this->Activitesreelle->Utilisateur->recursive = -1;
+		$utilisateurs = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1','Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+		$this->set('utilisateurs', $utilisateurs);
+                $this->Activitesreelle->Utilisateur->recursive = -1;             
+             else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();            
+            endif;                           
+        }
 /**
  * edit method
  *
@@ -261,16 +269,25 @@ class ActivitesreellesController extends AppController {
 			throw new NotFoundException(__('Feuille de temps incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Activitesreelle->save($this->request->data)) {
-				$this->Session->setFlash(__('Feuille de temps sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(2));
-			} else {
-				$this->Session->setFlash(__('Feuille de temps incorrecte veuillez corriger la feuille de temps'),'default',array('class'=>'alert alert-error'));
-			}
+                    $activitesreelles = $this->request->data['Activitesreelle'];  
+                    foreach($activitesreelles as $activitesreelle):
+                        if (is_array($activitesreelle) && $activitesreelle['activite_id'] != ''):
+                            $this->Activitesreelle->create();
+                            if ($this->Activitesreelle->save($activitesreelle)):
+                                $this->Session->setFlash(__('La feuille de temps est sauvegardée'),'default',array('class'=>'alert alert-success'));
+                                
+                            else :
+                                $this->Session->setFlash(__('La feuille de temps est incorrecte, veuillez corriger la feuille de temps'),'default',array('class'=>'alert alert-error'));
+                            endif;   
+                        endif;
+                    endforeach; 
+                    $this->redirect($this->goToPostion(2)); 
 		} else {
-                        $this->Activitesreelle->recursive = 0;
-			$options = array('conditions' => array('Activitesreelle.' . $this->Activitesreelle->primaryKey => $id));
-			$this->request->data = $this->Activitesreelle->find('first', $options);
+                    $date = $this->Activitesreelle->find('first',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'conditions'=>array('Activitesreelle.id'=>$id),'recursive'=>-1));
+                    $activitesreelles = $this->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$date['Activitesreelle']['utilisateur_id'],'Activitesreelle.DATE'=>CUSDate($date['Activitesreelle']['DATE'])),'recursive'=>-1));
+                    $this->set('activitesreelles', $activitesreelles);
+                    $activites = $this->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc')));
+                    $this->set('activites', $activites);
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -295,11 +312,11 @@ class ActivitesreellesController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Activitesreelle->delete()) {
-				$this->Session->setFlash(__('Feuille de temps supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect(array('action' => 'index'));
+                    $this->Session->setFlash(__('Feuille de temps supprimée'),'default',array('class'=>'alert alert-success'));
+                    $this->redirect($this->goToPostion());
 		}
-				$this->Session->setFlash(__('Feuille de temps <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect(array('action' => 'index'));
+                $this->Session->setFlash(__('Feuille de temps <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
+                $this->redirect($this->goToPostion());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();        

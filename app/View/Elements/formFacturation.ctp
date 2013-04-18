@@ -90,7 +90,7 @@
         <?php if ($this->params->action == 'edit') $total_value = $activitesreelle['Facturation']['TOTAL']; ?>
         <td width='15px' style="text-align: center;">
         <?php echo $this->Form->input('Facturation.'.$i.'.TOTAL',array('type'=>'hidden','value'=>$total_value)); ?>
-        <?php echo $this->Form->input('Facturation.'.$i.'.TOTAL',array('class'=>'span2 text-right','value'=>$total_value,'disabled'=>'disabled')); ?> j</td> 
+        <?php echo $this->Form->input('Facturation.'.$i.'.TotalDisabled',array('class'=>'span2 text-right','value'=>$total_value,'disabled'=>'disabled')); ?> j</td> 
         <td style="display:none;">
         <?php if ($this->params->action == 'add') echo $this->Form->input('Facturation.'.$i.'.DATE',array('type'=>'hidden','value'=>isset($activitesreelle['Activitesreelle']['DATE']) ? $activitesreelle['Activitesreelle']['DATE'] : date('d/m/Y'))); ?>
         <?php if ($this->params->action == 'edit') echo $this->Form->input('Facturation.'.$i.'.DATE',array('type'=>'hidden','value'=>isset($activitesreelle['Facturation']['DATE']) ? $activitesreelle['Facturation']['DATE'] : date('d/m/Y'))); ?>    
@@ -126,7 +126,7 @@
         <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.DI',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>"0.0")); ?> j</td>
         <td width='15px' style="text-align: center;">
         <?php echo $this->Form->input('Facturation.¤.TOTAL',array('type'=>'hidden','value'=>"0.0")); ?>
-        <?php echo $this->Form->input('Facturation.¤.TOTAL',array('class'=>'span2 text-right','value'=>"0.0",'disabled'=>'disabled')); ?> j</td> 
+        <?php echo $this->Form->input('Facturation.¤.TotalDisabled',array('class'=>'span2 text-right','value'=>"0.0",'disabled'=>'disabled')); ?> j</td> 
         <td style="display:none;">
         <?php if ($this->params->action == 'add') echo $this->Form->input('Facturation.¤.DATE',array('type'=>'hidden','value'=>isset($activitesreelle['Activitesreelle']['DATE']) ? $activitesreelle['Activitesreelle']['DATE'] : date('d/m/Y'))); ?>
         <?php if ($this->params->action == 'edit') echo $this->Form->input('Facturation.¤.DATE',array('type'=>'hidden','value'=>isset($activitesreelle['Facturation']['DATE']) ? $activitesreelle['Facturation']['DATE'] : date('d/m/Y'))); ?>           
@@ -172,6 +172,7 @@ $(document).ready(function () {
         parseFloat($(this).val()) > 1 ? $(this).addClass('invalid') : $(this).removeClass('invalid');
         parseFloat($(this).val()) > 1 ? $(this).focus() : '';
         $('#'+id+'TOTAL').val(parseFloat($('#'+id+'LU').val())+parseFloat($('#'+id+'MA').val())+parseFloat($('#'+id+'ME').val())+parseFloat($('#'+id+'JE').val())+parseFloat($('#'+id+'VE').val())+parseFloat($('#'+id+'SA').val())+parseFloat($('#'+id+'DI').val()));
+           $('#'+id+'TotalDisabled').val($('#'+id+'TOTAL').val());
     });
     $(document).on('change','#FacturationVERSION',function(e){
         e.preventDefault;

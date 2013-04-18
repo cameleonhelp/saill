@@ -150,7 +150,7 @@ $(document).ready(function () {
     $('#flashMessage').on('click',function(){$(this).hide();});
     /** Application d'un style sur les select **/
     $(".yesno").each( function() { $(this).next(".labelAfter").text(this.checked ? "Oui" : "Non"); });
-    $(".yesno").click(function() {
+    $(document).on('click',".yesno",function() {
         $(this).next(".labelAfter").text(this.checked ? "Oui" : "Non");
     });
     /** Messages error - info - warning - success **/

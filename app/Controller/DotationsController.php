@@ -63,7 +63,7 @@ class DotationsController extends AppController {
                                     $this->Dotation->Materielinformatique->id = $idmat;
                                     $record = $this->Dotation->Materielinformatique->read();
                                     $record['Materielinformatique']['ETAT'] = $record['Materielinformatique']['ETAT']=='En stock' ? 'En dotation' : 'En stock';
-                                    $record['Materielinformatique']['created'] = $record['Materielinformatique']['created'];
+                                    $record['Materielinformatique']['created'] = isset($record['Materielinformatique']['created']) ? $record['Materielinformatique']['created'] : date('Y-m-d');
                                     $record['Materielinformatique']['modified'] = date('Y-m-d');                
                                     $this->Dotation->Materielinformatique->save($record,false);
                                 }

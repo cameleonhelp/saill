@@ -5,8 +5,8 @@
                 <ul class="nav">
                 <?php $defaultEtat = $this->params->action == "afacturer" ? 'facture' : 'tous'; ?>
                 <?php $defaultAction = $this->params->action == "search" ? 'index' : $this->params->action; ?>
-                <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'add')) : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'add') && strtolower($this->params->controller)=='activitesreelles') : ?>
+                <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'newactivite'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
                 <?php endif; ?>
                 <?php if ($defaultEtat == "tous") : ?>

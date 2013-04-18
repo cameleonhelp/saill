@@ -566,4 +566,15 @@ function styleBarre($avancement){
         return $result;
     }
     
+/*
+ * is_date method
+ * 
+ * @param type date 
+ * @return boolean
+ */    
+    function is_date($date){
+        $result = false;
+        if (strpos($date, "/")!==false || strpos($date, "-")!==false) $result = true;
+        return $result;
+    }
 ?>

@@ -225,7 +225,7 @@ class FacturationsController extends AppController {
                             endif;
                             $this->Session->setFlash(__('La facturation est sauvegardée'),'default',array('class'=>'alert alert-success'));
                         } else {
-                            $this->Session->setFlash(__('La facturation est incorrecte, veuillez corriger la facturation'),'default',array('class'=>'alert alert-success'));
+                            $this->Session->setFlash(__('La facturation est incorrecte, veuillez corriger la facturation'),'default',array('class'=>'alert alert-error'));
                         }                  
                     endif;
                 endforeach;

@@ -50,8 +50,9 @@ class MaterielinformatiquesController extends AppController {
                         $fsection = "toutes les sections";
                         break;
                     default :
-                        $newconditions[]="Section.NOM='".$filtresection."'";
-                        $fsection = "la section ".$filtresection;                        
+                        $newconditions[]="Section.id='".$filtresection."'";
+                        $nomsection = $this->Materielinformatique->Section->find('first',array('conditions'=>array('Section.id'=>$filtresection),'recursive'=>-1));
+                        $fsection = "la section ".$nomsection['Section']['NOM'];                        
                 }    
                 $this->set('fsection',$fsection);                 
                 $this->set('title_for_layout','Postes informatique');
@@ -70,9 +71,9 @@ class MaterielinformatiquesController extends AppController {
                 $types = $this->Materielinformatique->find('all',array('fields' => array('Typemateriel.NOM'),'group'=>'Typemateriel.NOM','order'=>array('Typemateriel.NOM'=>'asc')));
                 $this->set('types',$types);    
                 if (userAuth('WIDEAREA')==0) {
-                   $sections = $this->Materielinformatique->Section->find('all',array('fields' => array('Section.NOM'),'conditions'=>array('Section.id'=>userAuth('section_id')),'recursive'=>0));
+                   $sections = $this->Materielinformatique->Section->find('all',array('fields' => array('Section.id','Section.NOM'),'conditions'=>array('Section.id'=>userAuth('section_id')),'recursive'=>0));
                 } else {
-                   $sections = $this->Materielinformatique->Section->find('all',array('fields' => array('Section.NOM'),'group'=>'Section.NOM','order'=>array('Section.NOM'=>'asc'),'recursive'=>0));
+                   $sections = $this->Materielinformatique->Section->find('all',array('fields' => array('Section.id','Section.NOM'),'group'=>'Section.NOM','order'=>array('Section.NOM'=>'asc'),'recursive'=>0));
                 }
                 $this->set('sections',$sections);  
             else :

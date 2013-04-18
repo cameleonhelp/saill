@@ -1,6 +1,6 @@
 <?php 
     $version = '2.0';
-    $build = 'b039';
+    $build = 'b040';
     echo $version.'.'.$build;
     /** 
      * changelog :
@@ -10,7 +10,7 @@
      * bxxx Rapports
      * 
      * b041 Travail sur le plan de charge (détail)
-     * b040 Travail sur une nouvelle feuille de facturation avec insertion de ligne
+     * b040 nouvelle feuille d'activité réelle avec insertion de ligne
      * b039 Filtres complémentaire sur facturation
      *      déverouillage d'une facturation déjà faite pour avoir la possibilité de la rectifier pour l'agent (reste le problème de récupérer le numéro de la facturation et la version déjà existante)
      *      Corriger le problème sur la récupération de la version et de la facturation existante
