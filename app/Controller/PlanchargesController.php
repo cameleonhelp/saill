@@ -54,7 +54,7 @@ class PlanchargesController extends AppController {
                 $annees = $this->Plancharge->find('all',array('fields'=>array('Plancharge.ANNEE'),'group'=>'Plancharge.ANNEE','recursive'=>-1));
                 $this->set('annees',$annees);
                 $contrats = $this->Plancharge->find('all',array('fields'=>array('Plancharge.contrat_id','Contrat.NOM'),'group'=>'Contrat.NOM','recursive'=>0));
-                $this->set('contrats',$contrats);                
+                $this->set('contrats',$contrats);                  
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();            
@@ -148,4 +148,16 @@ class PlanchargesController extends AppController {
 		$this->Session->setFlash(__('Plancharge was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
+        
+/**
+ * export_xls
+ * 
+ */       
+	function export_xls($id=null) {
+                /** export au format excel du détail du plan de charge **/
+                $data = $this->Plancharge->Detailplancharge->find('all',array('conditions'=>array('Detailplancharge.plancharge_id'=>$id),'recursive'=>0));
+		$this->set('rows',$data);
+		$this->render('export_xls','export_xls');
+        }     
+                
 }

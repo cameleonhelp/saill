@@ -30,11 +30,25 @@ class DetailplanchargesController extends AppController {
  */
 	public function add($id=null) {
             if (isAuthorized('plancharges', 'add')) :
+                $plancharge = $this->Detailplancharge->Plancharge->find('first',array('conditions'=>array('Plancharge.id'=>$id),'recursive'=>-1));
+                $this->set('annee',$plancharge['Plancharge']['ANNEE']);
                 $this->set('title_for_layout','Plan de charge');  
-                /** lister tous les utilisateur pouvant être ajouter au plan de charge **/
-                
-                $this->render('index');
-            else :
+                $utilisateurs = array();
+                $dsit = array('-1'=>'Ressource DSI-T');
+                $utilisateurs = array_merge($utilisateurs,$dsit);
+                $reserve = array('-2'=>'Réserve');
+                $utilisateurs = array_merge($utilisateurs,$reserve);
+                $autreressource = array('-3'=> 'Ressource à prévoir');                
+                $utilisateurs = array_merge($utilisateurs,$autreressource);
+                $utilisateursrequest = $this->Detailplancharge->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $utilisateurs = array_merge($utilisateurs,$utilisateursrequest);
+                $this->set('utilisateurs',$utilisateurs);
+                $domaines = $this->Detailplancharge->Domaine->find('list',array('fields'=>array('Domaine.id','Domaine.NOM'),'order'=>array('Domaine.NOM'=>'asc')));
+                $this->set('domaines',$domaines);
+                $projets = $this->getAllProjetsForContrat($plancharge['Plancharge']['contrat_id']);
+                $activites = $this->Detailplancharge->Activite->find('all',array('fields'=>array('Activite.id','Projet.NOM','Activite.NOM'),'conditions'=>array('Activite.ACTIVE'=>1,'Activite.projet_id in ('.$projets.')'),'order'=>array('Activite.NOM'=>'asc'),'recursive'=>0));
+                $this->set('activites',$activites);                
+                else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();            
             endif;  
@@ -44,14 +58,23 @@ class DetailplanchargesController extends AppController {
         public function save(){
                 $this->set('title_for_layout','Plan de charge');            
 		if ($this->request->is('post')) :
+                    $detailplancharges = $this->request->data['Detailplancharge'];
+                    foreach($detailplancharges as $detailplancharge): 
+                        if (is_array($detailplancharge) && $detailplancharge['utilisateur_id']!=''):
 			$this->Detailplancharge->create();
-			if ($this->Detailplancharge->save($this->request->data)) {
-				$this->Session->setFlash(__('Plan de charge sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect(array('action' => 'index'));
+			if ($this->Detailplancharge->save($detailplancharge)) {
+				$this->Session->setFlash(__('Plan de charge sauvegardé'),'default',array('class'=>'alert alert-success'));	
 			} else {
 				$this->Session->setFlash(__('Plan de charge incorrect, veuillez corriger le plan de charge'),'default',array('class'=>'alert alert-error'));
 			}
-		endif;               
+                        endif;
+                    endforeach;
+                    /** sauvegarde de l'etp du plan de charge et du total de charge **/
+                    $this->Detailplancharge->Plancharge->id = $detailplancharges[0]['plancharge_id'];
+                    $this->Detailplancharge->Plancharge->saveField('ETP', $detailplancharges[0]['TOTALETP']);
+                    $this->Detailplancharge->Plancharge->saveField('CHARGES', $detailplancharges[0]['TOTALCHARGE']);  
+		endif; 
+                $this->redirect(array('controller'=>'plancharges','action' => 'index'));              
 	}
 
 /**
@@ -62,13 +85,29 @@ class DetailplanchargesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            if (isAuthorized('plancharges', 'add')) :
+            if (isAuthorized('plancharges', 'edit')) :
                 $this->set('title_for_layout','Plan de charge'); 
+                $plancharge = $this->Detailplancharge->Plancharge->find('first',array('conditions'=>array('Plancharge.id'=>$id),'recursive'=>-1));
+                $this->set('annee',$plancharge['Plancharge']['ANNEE']); 
+                $utilisateurs = array();
+                $dsit = array('-1'=>'Ressource DSI-T');
+                $utilisateurs = array_merge($utilisateurs,$dsit);
+                $reserve = array('-2'=>'Réserve');
+                $utilisateurs = array_merge($utilisateurs,$reserve);
+                $autreressource = array('-3'=> 'Ressource à prévoir');                
+                $utilisateurs = array_merge($utilisateurs,$autreressource);
+                $utilisateursrequest = $this->Detailplancharge->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $utilisateurs = array_merge($utilisateurs,$utilisateursrequest);
+                $this->set('utilisateurs',$utilisateurs);
+                $domaines = $this->Detailplancharge->Domaine->find('list',array('fields'=>array('Domaine.id','Domaine.NOM'),'order'=>array('Domaine.NOM'=>'asc')));
+                $this->set('domaines',$domaines);
+                $projets = $this->getAllProjetsForContrat($plancharge['Plancharge']['contrat_id']);
+                $activites = $this->Detailplancharge->Activite->find('all',array('fields'=>array('Activite.id','Projet.NOM','Activite.NOM'),'conditions'=>array('Activite.ACTIVE'=>1,'Activite.projet_id in ('.$projets.')'),'order'=>array('Activite.NOM'=>'asc'),'recursive'=>0));
+                $this->set('activites',$activites);                 
                 $newconditions = array('Detailplancharge.plancharge_id'=>$id);
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));            
 		$this->Detailplancharge->recursive = 0;
 		$this->set('detailplancharges', $this->paginate());
-                $this->render('index');
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();            
@@ -94,5 +133,24 @@ class DetailplanchargesController extends AppController {
 		}
 		$this->Session->setFlash(__('Detailplancharge was not deleted'));
 		$this->redirect(array('action' => 'index'));
-	}
+	}        
+        
+/**
+ * getAllProjetsForContrat method
+ * 
+ * @param type $id
+ * @return array
+ */        
+        public function getAllProjetsForContrat($id=null){
+            $result = '';
+            $sql ="select id
+                   from projets 
+                   where projets.ACTIF = 1 AND projets.contrat_id = ".$id;
+            $results = $this->Detailplancharge->query($sql);
+            $countids = count($results);
+            foreach($results as $projetid):
+                $result .= $projetid['projets']['id'].",";
+            endforeach;
+            return substr($result, 0,(($countids*2)+1));
+        }       
 }

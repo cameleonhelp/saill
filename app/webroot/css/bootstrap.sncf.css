@@ -589,3 +589,27 @@ input.invalid {
     opacity: 0.5;
     z-index: 10000;
 }
+
+.month{
+    width: 17px !important;
+}
+
+.rowTotal{
+    width: 25px !important;    
+}
+
+.tdmonth{
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    text-wrap: none !important;
+}
+
+.control-label.center{
+    text-align: center !important;
+    margin-left: -10px !important;
+    margin-right: -25px !important;
+    padding-left: -10x !important;
+    padding-right: -25px !important;    
+}

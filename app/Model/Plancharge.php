@@ -122,7 +122,12 @@ class Plancharge extends AppModel {
                 }      
                 if (isset($val['Plancharge']['modified'])) {
                     $results[$key]['Plancharge']['modified'] = $this->dateFormatAfterFind($val['Plancharge']['modified']);
-                }            }
+                }                
+            }
             return $results;
         }   
+        
+        public function changeSeparator($value){
+             return str_replace('.', ',', $value);
+        }        
 }

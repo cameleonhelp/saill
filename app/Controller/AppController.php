@@ -73,7 +73,7 @@ class AppController extends Controller {
     }
     
     public function afterFilter() {
-        $this->addUrl();       
+        if($this->params['action']!='export_xls') $this->addUrl();       
         parent::afterFilter();
     }
                

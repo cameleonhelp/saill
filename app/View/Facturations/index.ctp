@@ -63,10 +63,12 @@
                 <li class="divider-vertical"></li>
                 <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>                 
                 </ul> 
-                <?php echo $this->Form->create("Facturation",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
+                <!--    
+                <?php echo $this->Form->create("Facturation",array('controller'=>'facturations','action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
                     <button type="submit" class="btn">Rechercher</button>
-                <?php echo $this->Form->end(); ?>                     
+                <?php echo $this->Form->end(); ?>     
+                //-->
                 </div>
             </div>
         </div>

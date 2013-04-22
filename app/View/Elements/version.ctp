@@ -1,6 +1,6 @@
 <?php 
     $version = '2.0';
-    $build = 'b040';
+    $build = 'b041';
     echo $version.'.'.$build;
     /** 
      * changelog :
@@ -10,7 +10,19 @@
      * bxxx Rapports
      * 
      * b041 Travail sur le plan de charge (détail)
-     * b040 nouvelle feuille d'activité réelle avec insertion de ligne
+     *      Ajout :
+     *      (IHM) Ajouter la ligne modèle et la première ligne de la table
+     *      (IHM) par défaut etp = 1 et jours pour chaque mois = jours ouvrés si etp change alors jours pour chaque mois = jours ouvrés * etp recalculer le total
+     *      (Controller) remonter la liste des utilisateurs pouvant être utilisés dans le plan de charge et ajouter des intervenants supplémentaires (Autre intervenant DSI-T, Réserve, Ressource prévisible)
+     *      (Controller) remonter les domaines, activité des projets du contrat
+     *      Edit :
+     *      (IHM) Ajouter les lignes existantes - tout reste modifible
+     *      (Controller) remonter la liste des utilisateurs pouvant être utilisés dans le plan de charge et ajouter des intervenants supplémentaires (Autre intervenant DSI-T, Réserve, Ressource prévisible)
+     *      (Controller) remonter les domaines, activité des projets du contrat
+     *      (Controller) remonter le détail existant
+     *      Index : possibilité d'exporter au format Excel le détail du plan de charge
+     *      Facturation search : pour le moment désactivation de la recherche car plantage sur timeout
+     * b040 nouvelle feuille d'activité réelle avec insertion de ligne => basculée en intégration
      * b039 Filtres complémentaire sur facturation
      *      déverouillage d'une facturation déjà faite pour avoir la possibilité de la rectifier pour l'agent (reste le problème de récupérer le numéro de la facturation et la version déjà existante)
      *      Corriger le problème sur la récupération de la version et de la facturation existante

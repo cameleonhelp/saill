@@ -537,7 +537,7 @@ function styleBarre($avancement){
     function nbJoursOuvres($date){
 	$nbopendays = 0;
 	$annee = $date->format('Y');
-	$mois = $date->format('m') > 10 ? '0'.$date->format('m') : $date->format('m');
+	$mois = $date->format('m');
 	$debutmois = $date->format('Y-m-01');
 	$finmois = $date->format('Y-m-t');
 	$nbdays = $date->format('t')+1;
@@ -549,6 +549,24 @@ function styleBarre($avancement){
 				$nbopendays++;
 		}
 	}
+        /* On supprime les vacances 6 semaines de 5 jours*/
+        switch ($mois){
+            case '02' :
+                $nbopendays -= 5;
+                break;
+            case '04' :
+                $nbopendays -= 5;
+                break;  
+            case '07' :
+                $nbopendays -= 5;
+                break;  
+            case '08' :
+                $nbopendays -= 10;
+                break;  
+            case '12' :
+                $nbopendays -= 5;
+                break;           
+        }
         return $nbopendays;
     }
     

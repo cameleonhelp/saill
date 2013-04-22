@@ -140,6 +140,9 @@ class Facturation extends AppModel {
                 }   
                 if (isset($val['Activite']['projet_id'])) {
                     $results[$key]['Facturation']['projet_NOM'] = $this->getProjetForActivite($val['Activite']['projet_id']);
+                }      
+                if (isset($val['Facturation']['TOTAL'])) {
+                    $results[$key]['Facturation']['TOTAL'] = $this->changeSeparator($val['Facturation']['TOTAL']);
                 }                  
             }
             return $results;
@@ -149,5 +152,9 @@ class Facturation extends AppModel {
             $sql = "SELECT NOM FROM projets WHERE id='".$id."'";
             $result = $this->query($sql);
             return $result[0]['projets']['NOM'];
-        }           
+        }
+        
+        public function changeSeparator($value){
+             return str_replace('.', ',', $value);
+        }
 }

@@ -95,4 +95,45 @@ class Detailplancharge extends AppModel {
 			'order' => ''
 		)
 	);
+
+/**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave() {
+            parent::beforeSave();
+            return true;
+        }
+        
+/**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Detailplancharge']['created'])) {
+                    $results[$key]['Detailplancharge']['created'] = $this->dateFormatAfterFind($val['Detailplancharge']['created']);
+                }      
+                if (isset($val['Detailplancharge']['modified'])) {
+                    $results[$key]['Detailplancharge']['modified'] = $this->dateFormatAfterFind($val['Detailplancharge']['modified']);
+                }                
+                if (isset($val['Detailplancharge']['ETP'])) {
+                    $results[$key]['Detailplancharge']['ETP'] = $this->changeSeparator($val['Detailplancharge']['ETP']);
+                } 
+            }
+            return $results;
+        }   
+        
+        public function changeSeparator($value){
+             return str_replace('.', ',', $value);
+        }          
+
 }
