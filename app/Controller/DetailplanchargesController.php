@@ -151,6 +151,6 @@ class DetailplanchargesController extends AppController {
             foreach($results as $projetid):
                 $result .= $projetid['projets']['id'].",";
             endforeach;
-            return substr($result, 0,(($countids*2)+1));
+            return substr($result, 0,-1);
         }       
 }

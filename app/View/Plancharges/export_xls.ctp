@@ -49,7 +49,8 @@
                         <td class="tableTd">Nov.</td>
                         <td class="tableTd">Déc</td>
                         <td class="tableTd">Total</td>                      
-		</tr>		
+		</tr>	
+                <?php $i=6; ?>
 		<?php foreach($rows as $row):
 			echo '<tr>';
 			echo '<td class="tableTdContent">'.$row['Utilisateur']['NOMLONG'].'</td>';
@@ -68,8 +69,9 @@
 			echo '<td class="tableTdContent">'.$row['Detailplancharge']['OCTOBRE'].'</td>';
 			echo '<td class="tableTdContent">'.$row['Detailplancharge']['NOVEMBRE'].'</td>';
 			echo '<td class="tableTdContent">'.$row['Detailplancharge']['DECEMBRE'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Detailplancharge']['TOTAL'].'</td>';                      
+			echo '<td class="tableTdContent">=SOMME(E'.$i.':P'.$i.')</td>';                      
 			echo '</tr>';
+                        $i++;
 			endforeach;
 		?>
 		<tr id="footer">

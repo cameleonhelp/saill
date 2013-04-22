@@ -131,10 +131,10 @@
     function sumOfETP() {
         var tot = 0;
         $(".etp").each(function() {
-          if($(this).parents('tr').attr('id')!='templateRow') tot += Math.round(parseFloat($(this).val()));
-          $('#Detailplancharge0TOTALETP').val(tot);
+          if($(this).parents('tr').attr('id')!='templateRow') tot += parseFloat($(this).val());
+          $('#Detailplancharge0TOTALETP').val(parseFloat(tot).toFixed(2));
         });
-        return tot;
+        return parseFloat(tot).toFixed(2);
      }
     function sumOfTotal() {
         var tot = 0;
