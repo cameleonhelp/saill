@@ -40,8 +40,9 @@
   <?php $classLogistique = in_array('active',array($classPetitMateriels,$classUtilisateurs,$classMateriels,$classUtiliseOutils)) ? 'active' : ''; ?> 
   <?php $classCRAActions = in_array($controller,array('actions_rapport')) ? 'active' : ''; ?>               
   <?php $classCRAActivites = in_array($controller,array('activitesreelles_rapport')) ? 'active' : ''; ?>    
-  <?php $classCRAFacturations = in_array($controller,array('facturations_rapport')) ? 'active' : ''; ?>    
-  <?php $classRapports = in_array('active',array($classCRAActions,$classCRAActivites,$classCRAFacturations)) ? 'active' : ''; ?> 
+  <?php $classCRAFacturations = in_array($controller,array('facturations_rapport')) ? 'active' : ''; ?>   
+  <?php $classCRAPlancharges = in_array($controller,array('plancharges_rapport')) ? 'active' : ''; ?>   
+  <?php $classRapports = in_array('active',array($classCRAActions,$classCRAActivites,$classCRAFacturations,$classCRAPlancharges)) ? 'active' : ''; ?> 
   <?php $classContactUs = in_array($controller,array('contacts_add')) ? 'active' : ''; ?>               
   <?php $classAddFavorites = 'notactive'; ?>  
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: static; margin-bottom: 15px; margin-left: -20px; margin-top: 15px;">
@@ -179,7 +180,7 @@
         </ul>
     </li>
     <?php endif; ?>
-    <?php if (userAuth('profil_id')!='2' && (isAuthorized('actions', 'rapports') || isAuthorized('activitesreelles', 'rapports') || isAuthorized('facturations', 'rapports'))) : ?>
+    <?php if (userAuth('profil_id')!='2' && (isAuthorized('actions', 'rapports') || isAuthorized('activitesreelles', 'rapports') || isAuthorized('facturations', 'rapports') || isAuthorized('plancharges', 'rapports'))) : ?>
     <li class="divider"></li>
     <li  class="dropdown-submenu <?php echo $classRapports; ?>"><a href="#"><i class="glyphicon_charts"></i> Rapports</a>
         <ul class="dropdown-menu">
@@ -192,6 +193,9 @@
             <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'rapports')) : ?>
             <li class="<?php echo $classCRAFacturations; ?>"><?php echo $this->Html->link('Facturations',array('controller'=>'facturations','action'=>'rapport'),array('escape' => false)); ?></li>            
             <?php endif; ?>
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'rapports')) : ?>
+            <li class="<?php echo $classCRAPlancharges; ?>"><?php echo $this->Html->link('Plan de charges',array('controller'=>'plancharges','action'=>'rapport'),array('escape' => false)); ?></li>            
+            <?php endif; ?>            
         </ul>
     </li>
     <?php endif; ?>

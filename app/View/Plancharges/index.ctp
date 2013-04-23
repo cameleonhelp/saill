@@ -51,8 +51,8 @@
 		<td style='text-align:center;'><?php echo h($plancharge['Plancharge']['ANNEE']); ?>&nbsp;</td>
                 <td><?php echo h($plancharge['Contrat']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($plancharge['Plancharge']['NOM']); ?>&nbsp;</td>
-		<td style='text-align:right;'><?php echo h($plancharge['Plancharge']['ETP']); ?>&nbsp;</td>
-		<td style='text-align:right;'><?php echo h($plancharge['Plancharge']['CHARGES']); ?>&nbsp;j</td>
+		<td style='text-align:right;' class="etprow"><?php echo h($plancharge['Plancharge']['ETP']); ?>&nbsp;</td>
+		<td style='text-align:right;' class="chargerow"><?php echo h($plancharge['Plancharge']['CHARGES']); ?>&nbsp;j</td>
 		<td style='text-align:right;'><?php echo h($plancharge['Plancharge']['TJM']); ?>&nbsp;€/j</td>
 		<td style='text-align:right;'><?php echo h($plancharge['Plancharge']['VERSION']); ?>&nbsp;</td>
 		<td>
@@ -72,6 +72,14 @@
 	</tr>
 <?php endforeach; ?>
         </tbody>
+        <tfooter>
+            <tr>
+                <td class="footer" colspan="3" style="text-align:right;">Total</td>
+                <td class="footer" style="text-align:right;" id="totaletp">0</td>
+                <td class="footer" style="text-align:right;" id="totalcharges">0</td>
+                <td class="footer" colspan="3">&nbsp;</td>  
+            </tr>
+        </tfooter>
 	</table>
         <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>
         <div class="pull-right"><?php	echo $this->Paginator->counter('Nombre total d\'éléments : {:count}');	?></div>
@@ -87,4 +95,23 @@
         </ul>
 	</div>
 </div>
-
+<script>
+    function sumOfETP() {
+        var tot = 0;
+        $(".etprow").each(function() {
+          tot += parseFloat($(this).html());
+        });
+        return parseFloat(tot).toFixed(2);
+     }
+    function sumOfCharges() {
+        var tot = 0;
+        $(".chargerow").each(function() {
+          tot += parseFloat($(this).html());
+        });
+        return tot+" j";
+     }     
+     $(document).ready(function () {
+        $("#totaletp").html(sumOfETP());
+        $("#totalcharges").html(sumOfCharges());
+    });
+</script>

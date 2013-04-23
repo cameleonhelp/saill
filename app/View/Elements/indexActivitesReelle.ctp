@@ -223,6 +223,7 @@
                 location.reload();
                 overlay.remove();
             });
+            $(this).parents().find(':checkbox').prop('checked', false); 
         });
         
         $(document).on('click','#rejeterlink',function(e){
@@ -238,6 +239,7 @@
                 location.reload();
                 overlay.remove();                
             });
+            $(this).parents().find(':checkbox').prop('checked', false); 
         });  
         
         $(document).on('click','#checkall',function(e){

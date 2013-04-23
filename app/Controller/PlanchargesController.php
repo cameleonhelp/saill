@@ -99,7 +99,11 @@ class PlanchargesController extends AppController {
 		if (!$this->Plancharge->exists($id)) {
 			throw new NotFoundException(__('Plan de charge incorrect'));
 		}
+                $options = array('conditions' => array('Plancharge.' . $this->Plancharge->primaryKey => $id));
+                $thisplancharge = $this->Plancharge->find('first', $options);
 		if ($this->request->is('post') || $this->request->is('put')) {
+                        $this->request->data['Plancharge']['ETP']=$thisplancharge['Plancharge']['ETP'];
+                        $this->request->data['Plancharge']['CHARGES']=$thisplancharge['Plancharge']['CHARGES'];
 			if ($this->Plancharge->save($this->request->data)) {
                                 $lastIdInsert = $this->Plancharge->getLastInsertID();
                                 $detailplancharges = $this->Plancharge->Detailplancharge->find('all',array('conditions'=>array('Detailplancharge.plancharge_id'=>$id)));
@@ -118,8 +122,7 @@ class PlanchargesController extends AppController {
 				$this->Session->setFlash(__('Plan de charge incorrect, veuillez corriger le plan de charge'),'default',array('class'=>'alert alert-error'));
 			}
 		} else {
-			$options = array('conditions' => array('Plancharge.' . $this->Plancharge->primaryKey => $id));
-			$this->request->data = $this->Plancharge->find('first', $options);
+			$this->request->data = $thisplancharge;
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -159,5 +162,11 @@ class PlanchargesController extends AppController {
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
         }     
-                
+
+/**
+ * rapport
+ */        
+        public function rapport() {
+            $this->set('title_for_layout','Rapport des plans de charges');
+	}            
 }

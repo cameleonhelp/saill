@@ -29,7 +29,15 @@
                             <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$section['Section']['id'])); ?></li>
                          <?php endforeach; ?>
                       </ul>
-                 </li>                  
+                 </li>
+                <li class="divider-vertical"></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-check"></i> Actions groupées <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Prolonger', "#",array('id'=>'prolongerlink')); ?></li>
+                     <li><?php echo $this->Html->link('Désactiver', "#",array('id'=>'desactiverlink')); ?></li>
+                     </ul>
+                </li>                 
                  <li class="divider-vertical"></li>
                 <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>
                 <li class="divider-vertical"></li>
@@ -47,6 +55,9 @@
 	<tr>
 			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
 			<th><?php echo $this->Paginator->sort('PRENOM','Prénom'); ?></th>
+                        <th style="text-align:center;width:15px !important;vertical-align: middle;padding-left:5px;padding-right:5px;"><?php echo $this->Form->input('checkall',array('type'=>'checkbox','label'=>false)) ; ?>
+                                <?php echo $this->Form->input('all_ids',array('type'=>'hidden')) ; ?>
+                        </th>	
 			<th><?php echo $this->Paginator->sort('section_id','Section'); ?></th>
 			<th  width="100px"><?php echo $this->Paginator->sort('FINMISSION','Date de fin de mission'); ?></th>
                         <th><?php echo $this->Paginator->sort('ACTIF','Etat du compte'); ?></th>
@@ -59,6 +70,7 @@
 	<tr>
 		<td><?php echo h($utilisateur['Utilisateur']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($utilisateur['Utilisateur']['PRENOM']); ?>&nbsp;</td>
+                <td style="text-align:center;padding-left:5px;padding-right:5px;vertical-align: middle;"><?php echo $this->Form->input('id',array('type'=>'checkbox','label'=>false,'class'=>'idselect','value'=>$utilisateur['Utilisateur']['id'])) ; ?></td>
 		<td><?php echo h($utilisateur['Section']['NOM']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($utilisateur['Utilisateur']['FINMISSION']); ?>&nbsp;</td>
                 <td  width="80px" style="text-align: center;"><?php echo h($utilisateur['Utilisateur']['ACTIF']) == 1 ? '<i class="icon-ok"></i>' : '<i class="icon-ok icon-grey"></i>'; ?>&nbsp;</td>
@@ -109,3 +121,72 @@
         </ul>
 	</div>
 </div>
+<script>
+    
+     $(document).ready(function () {
+       
+        $(document).on('click','#prolongerlink',function(e){
+            var ids = $("#all_ids").val();
+            var overlay = jQuery('<div id="overlay"> </div>');
+            overlay.appendTo(document.body)
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'utilisateurs','action'=>'prolonger')); ?>/",
+                data: ({all_ids:ids})
+            }).done(function ( data ) {
+                location.reload();
+                overlay.remove();
+            });
+            $(this).parents().find(':checkbox').prop('checked', false);             
+        });
+        
+        $(document).on('click','#desactiverlink',function(e){
+            var ids = $("#all_ids").val();
+            var overlay = jQuery('<div id="overlay"> </div>');
+            overlay.appendTo(document.body)
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'utilisateurs','action'=>'desactiver')); ?>/",
+                data: ({all_ids:ids})
+            }).done(function ( data ) {
+                location.reload();
+                overlay.remove();
+            });
+            $(this).parents().find(':checkbox').prop('checked', false);
+        });
+        
+        $(document).on('click','#checkall',function(e){
+            $(this).parents().find(':checkbox').prop('checked', this.checked);
+            if ($(this).is(':checked')){
+                $(".idselect").each(
+                        function() {
+                            if ($("#all_ids").val()==""){
+                                $("#all_ids").val($(this).val());                    
+                            }else{
+                                $("#all_ids").val($("#all_ids").val()+"-"+$(this).val());
+                            }
+                        });          
+            }else{
+                $("#all_ids").val("");
+            }
+        });
+        
+        $(document).on('click','.idselect',function(e){
+            if ($(this).is(':checked')){
+                if ($("#all_ids").val()==""){
+                    $("#all_ids").val($(this).val());                    
+                }else{
+                    $("#all_ids").val($("#all_ids").val()+"-"+$(this).val());
+                }
+            } else {
+                var list = $("#all_ids").val();
+                $("#all_ids").val("");
+                tmp = list.replace($(this).val()+"-", "");
+                if (tmp == list) tmp = list.replace("-"+$(this).val(), ""); 
+                $("#all_ids").val(tmp);
+            }
+        });
+    });
+</script>

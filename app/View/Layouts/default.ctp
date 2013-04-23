@@ -127,8 +127,8 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
             </div>
         </div>
     </div> 
-    <?php  //debug($activitesreelles); 
-    //debug(projetForActivite($activitesreelle['Activitesreelle']['activite_id'])); ?>
+    <?php  //debug($utilisateursrequest); 
+           //debug($utilisateurs); ?>
     <!--<div id="debugguer" style="background-color: #cccccc;">SQL Debug :
         <?php echo $this->element('sql_dump'); ?>
     </div>//-->

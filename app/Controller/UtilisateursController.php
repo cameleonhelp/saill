@@ -43,7 +43,7 @@ class UtilisateursController extends AppController {
                         $futilisateur = "tous les utilisateurs inactifs";
                         break;  
                     case 'incomplet':
-                        $newconditions[]="Utilisateur.ACTIF=1 AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.MAIL='')";
+                        $newconditions[]="Utilisateur.ACTIF=1 AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL)";
                         $futilisateur = "tous les utilisateurs actifs et incomplets";
                         break;  
                     case 'aprolonger':
@@ -120,7 +120,7 @@ class UtilisateursController extends AppController {
                 $this->Utilisateur->Societe->recursive = -1;
                 $societe = $this->Utilisateur->Societe->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
                 $this->set('societe',$societe);
-                if ($this->request->is('post')) :
+                if ($this->request->is('post')) :                  
 			$this->Utilisateur->create();
 			if ($this->Utilisateur->save($this->request->data)) {
                                 $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
@@ -253,15 +253,9 @@ class UtilisateursController extends AppController {
 		$this->Utilisateur->id = $id;
 		if (!$this->Utilisateur->exists()) {
 			throw new NotFoundException(__('Utilisateur incorrect'));
-		}
-                $record = $this->Utilisateur->read();
-                unset($record['Utilisateur']['ACTIF']); 
-                unset($record['Utilisateur']['created']);
-                unset($record['Utilisateur']['modified']);
-                $record['Utilisateur']['ACTIF']=0; 
-                $record['Utilisateur']['created'] = $this->Utilisateur->read('created');
-                $record['Utilisateur']['modified'] = date('Y-m-d');                
-                if ($this->Utilisateur->save($record)) {
+		}               
+                if ($this->Utilisateur->saveField('ACTIF',0)) {
+                        $this->Utilisateur->saveField('modified',date('Y-m-d'));
                         $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - utilisateur supprimé".' par '.userAuth('NOMLONG');
                         $this->Utilisateur->Historyutilisateur->save($history);
@@ -482,17 +476,60 @@ class UtilisateursController extends AppController {
                 unset($record['Utilisateur']['ACTIF']); 
                 unset($record['Utilisateur']['DATEDEBUTACTIF']); 
                 unset($record['Utilisateur']['NAISSANCE']);
+                $record['Utilisateur']['NAISSANCE']='00/00/0000';
                 unset($record['Utilisateur']['NOM']);
+                $record['Utilisateur']['NOM']='Inconnu';
                 unset($record['Utilisateur']['PRENOM']);
+                $record['Utilisateur']['PRENOM']='Inconnu';
                 unset($record['Utilisateur']['MAIL']);  
                 unset($record['Utilisateur']['TELEPHONE']);
                 unset($record['Utilisateur']['CONGE']);
                 unset($record['Utilisateur']['RQ']);
+                unset($record['Utilisateur']['tjmagent_id']);
+                unset($record['Utilisateur']['ACTIF']);
                 unset($record['Utilisateur']['VT']);                
+                unset($record['Utilisateur']['WORKCAPACITY']);
+                unset($record['Utilisateur']['HIERARCHIQUE']);
+                unset($record['Utilisateur']['GESTIONABSENCES']);
+                unset($record['Utilisateur']['WIDEAREA']);
                 unset($record['Utilisateur']['COMMENTAIRE']);
+                unset($record['Utilisateur']['NOMLONG']);
+                $record['Utilisateur']['COMMENTAIRE']='';
                 unset($record['Utilisateur']['created']);                
                 unset($record['Utilisateur']['modified']);
+                $record['Utilisateur']['societe_id']= isset($record['Utilisateur']['societe_id']) ? $record['Utilisateur']['societe_id'] : '';
+                if(isset($record['Utilisateur']['profil_id'])){
+                    $record['Utilisateur']['profil_id']=$record['Utilisateur']['profil_id'];  
+                } else {
+                    unset($record['Utilisateur']['profil_id']);
+                }
+                if (isset($record['Utilisateur']['assistance_id'])){
+                    $record['Utilisateur']['assistance_id']=$record['Utilisateur']['assistance_id'];
+                } else {
+                    unset($record['Utilisateur']['assistance_id']);
+                }
+                if (isset($record['Utilisateur']['section_id'])) {
+                    $record['Utilisateur']['section_id']=$record['Utilisateur']['section_id'];
+                } else {
+                    unset($record['Utilisateur']['section_id']);
+                }
+                if (isset($record['Utilisateur']['site_id'])) {
+                    $record['Utilisateur']['site_id']=$record['Utilisateur']['site_id'];
+                } else {
+                    unset($record['Utilisateur']['site_id']);
+                }
+                if (isset($record['Utilisateur']['domaine_id'])) {
+                    $record['Utilisateur']['domaine_id']=$record['Utilisateur']['domaine_id'];
+                } else {
+                    unset($record['Utilisateur']['domaine_id']);
+                }                
+                if (isset($record['Utilisateur']['FINMISSION'])){
+                    $record['Utilisateur']['FINMISSION']=$record['Utilisateur']['FINMISSION'];
+                } else {
+                    unset($record['Utilisateur']['FINMISSION']);
+                }
                 $this->Utilisateur->create();
+
                 if ($this->Utilisateur->save($record)) {
                         $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur dupliqué à partir de ".$NOMLONG.' par '.userAuth('NOMLONG');
@@ -659,5 +696,42 @@ class UtilisateursController extends AppController {
                 }
             }
             return $indispos;
+        }    
+        
+        public function prolonger(){
+            $ids = explode('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):
+                foreach($ids as $id):
+                    $this->Utilisateur->create();
+                    $this->Utilisateur->id = $id;
+                    $date = "05/01/".(date('Y')+2);
+                    $this->Utilisateur->saveField('FINMISSION', $date);
+                    $history['Historyutilisateur']['utilisateur_id']=$id;
+                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - compte prolongé jusqu'au ".$date.' par '.userAuth('NOMLONG');
+                    $this->Utilisateur->Historyutilisateur->save($history);
+                endforeach;
+                echo $this->Session->setFlash(__('Comptes prolongés'),'default',array('class'=>'alert alert-success'));
+            else:
+                echo $this->Session->setFlash(__('Aucun utilisateur sélectionné'),'default',array('class'=>'alert alert-error'));
+            endif;
+            exit();
+        }
+        
+        public function desactiver(){
+            $ids = explode('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):
+                foreach($ids as $id):
+                    $this->Utilisateur->create();
+                    $this->Utilisateur->id = $id;
+                    $this->Utilisateur->saveField('ACTIF', 0);
+                    $history['Historyutilisateur']['utilisateur_id']=$id;
+                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - compte désactivé par ".userAuth('NOMLONG');
+                    $this->Utilisateur->Historyutilisateur->save($history);
+                endforeach;
+                echo $this->Session->setFlash(__('Comptes désactivés'),'default',array('class'=>'alert alert-success'));
+            else:
+                echo $this->Session->setFlash(__('Aucun utilisateur sélectionné'),'default',array('class'=>'alert alert-error'));
+            endif;
+            exit();
         }        
 }

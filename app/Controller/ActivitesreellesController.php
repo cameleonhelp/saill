@@ -217,7 +217,8 @@ class ActivitesreellesController extends AppController {
                             $this->Session->setFlash(__('La feuille de temps est incorrecte, veuillez corriger la feuille de temps'),'default',array('class'=>'alert alert-error'));
                         endif;   
                     endif;
-                endforeach;  
+                endforeach; 
+                $this->redirect($this->goToPostion(2)); 
                 }
                 $this->Activitesreelle->Activite->recursive = 0;
                 $activites = $this->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc')));

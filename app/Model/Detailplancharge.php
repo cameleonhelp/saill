@@ -133,7 +133,10 @@ class Detailplancharge extends AppModel {
         }   
         
         public function changeSeparator($value){
-             return str_replace('.', ',', $value);
+            $result = $value;
+            $params = Router::getParams();
+            if ($params['action'] == 'export_xls') $result = str_replace('.', ',', $value);
+             return $result;
         }          
 
 }

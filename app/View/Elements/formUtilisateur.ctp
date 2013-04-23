@@ -41,9 +41,9 @@
                         <label class="control-label sstitre  required" for="UtilisateurSocieteId">Société : </label>
                         <div class="controls">
                             <?php if ($this->params->action == 'edit') { ?>
-                                <?php echo $this->Form->select('societe_id',$societe,array('data-rule-required'=>'true','data-msg-required'=>"Le nom de la société est obligatoire dans l'onglet identité",'selected' => $this->data['Utilisateur']['societe_id'],'empty' => 'Choisir une société')); ?>
+                                <?php echo $this->Form->select('societe_id',$societe,array('data-rule-required'=>'true','data-msg-required'=>"Le nom de la société est obligatoire dans l'onglet identité",'default' => $this->data['Utilisateur']['societe_id'],'empty' => 'Choisir une société')); ?>
                             <?php } else { ?>
-                                <?php echo $this->Form->select('societe_id',$societe,array('data-rule-required'=>'true','data-msg-required'=>"Le nom de la société est obligatoire dans l'onglet identité",'selected' => '','empty' => 'Choisir une société')); ?>
+                                <?php echo $this->Form->select('societe_id',$societe,array('data-rule-required'=>'true','data-msg-required'=>"Le nom de la société est obligatoire dans l'onglet identité",'default' => '','empty' => 'Choisir une société')); ?>
                             <?php } ?>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                         <label class="control-label sstitre  required" for="UtilisateurSectionId">Section : </label>
                         <div class="controls">
                         <?php if(userAuth('WIDEAREA')==1) : ?>
-                            <?php echo $this->Form->select('section_id',$section,array('data-rule-required'=>'true','data-msg-required'=>"Le nom de la section est obligatoire dans l'onglet administration",'selected' => $this->data['Utilisateur']['section_id'],'empty' => 'Choisir une section')); ?>
+                            <?php echo $this->Form->select('section_id',$section,array('data-rule-required'=>'true','data-msg-required'=>"Le nom de la section est obligatoire dans l'onglet administration",'default' => $this->data['Utilisateur']['section_id'],'empty' => 'Choisir une section')); ?>
                         <?php else : ?>
                             <?php echo $this->data['Section']['NOM']; ?>
                         <?php endif; ?>
@@ -80,7 +80,7 @@
                         <label class="control-label sstitre" for="UtilisateurUtilisateurId">Hiérarchique : </label>
                         <div class="controls">
                         <?php if(userAuth('WIDEAREA')==1) : ?>
-                            <?php echo $this->Form->select('utilisateur_id',$hierarchique,array('selected' => $this->data['Utilisateur']['utilisateur_id'],'empty' => 'Choisir un hiérarchique')); ?>
+                            <?php echo $this->Form->select('utilisateur_id',$hierarchique,array('default' => $this->data['Utilisateur']['utilisateur_id'],'empty' => 'Choisir un hiérarchique')); ?>
                         <?php else : ?>
                             <?php echo isset($hierarchique['Utilisateur']['NOMLONG'])? $hierarchique['Utilisateur']['NOMLONG'] : ""; ?>
                         <?php endif; ?>
@@ -90,7 +90,7 @@
                         <label class="control-label sstitre" for="UtilisateurTjmagentId">TJM : </label>
                         <div class="controls">
                         <?php if(userAuth('WIDEAREA')==1) : ?>    
-                            <?php echo $this->Form->select('tjmagent_id',$tjmagent,array('selected' => $this->data['Utilisateur']['tjmagent_id'],'empty' => 'Choisir un TJM pour l\'agent')); ?>
+                            <?php echo $this->Form->select('tjmagent_id',$tjmagent,array('default' => $this->data['Utilisateur']['tjmagent_id'],'empty' => 'Choisir un TJM pour l\'agent')); ?>
                         <?php else : ?>
                             <?php echo isset($this->data['Tjmagent']['NOM'])? $this->data['Tjmagent']['NOM'] : ""; ?>
                         <?php endif; ?>
@@ -118,7 +118,7 @@
                     <div class="control-group">
                         <label class="control-label sstitre required" for="UtilisateurWORKCAPACITY">Capacité de travail : </label>
                         <div class="controls">
-                            <?php echo $this->Form->select('WORKCAPACITY',$workcapacite,array('data-rule-required'=>'true','data-msg-required'=>"La capacité de travail est obligatoire dans l'onglet administration",'selected' => $this->data['Utilisateur']['WORKCAPACITY'])); ?>
+                            <?php echo $this->Form->select('WORKCAPACITY',$workcapacite,array('data-rule-required'=>'true','data-msg-required'=>"La capacité de travail est obligatoire dans l'onglet administration",'default' => $this->data['Utilisateur']['WORKCAPACITY'])); ?>
                         </div>
                     </div>   
                     <?php if(userAuth('WIDEAREA')==1) : ?>
@@ -172,7 +172,7 @@
                         <label class="control-label sstitre required" for="UtilisateurProfilId">Profil : </label>
                         <div class="controls">
                         <?php if(userAuth('WIDEAREA')==1) : ?>
-                            <?php echo $this->Form->select('profil_id',$profil,array('data-rule-required'=>'true','data-msg-required'=>"Le profil est obligatoire dans l'onglet logistique",'selected' => $this->data['Utilisateur']['profil_id'],'empty' => 'Choisir un profil')); ?>
+                            <?php echo $this->Form->select('profil_id',$profil,array('data-rule-required'=>'true','data-msg-required'=>"Le profil est obligatoire dans l'onglet logistique",'default' => $this->data['Utilisateur']['profil_id'],'empty' => 'Choisir un profil')); ?>
                         <?php else : ?>
                             <?php echo isset($this->data['Profil']['NOM'])? $this->data['Profil']['NOM'] : ""; ?>
                         <?php endif; ?>                        
@@ -182,7 +182,7 @@
                         <label class="control-label sstitre required" for="UtilisateurAssistanceId">Assistance : </label>
                         <div class="controls">
                         <?php if(userAuth('WIDEAREA')==1) : ?>    
-                            <?php echo $this->Form->select('assistance_id',$assistance,array('data-rule-required'=>'true','data-msg-required'=>"L'assistance est obligatoire dans l'onglet logistique",'selected' => $this->data['Utilisateur']['assistance_id'],'empty' => 'Choisir une assistance')); ?>
+                            <?php echo $this->Form->select('assistance_id',$assistance,array('data-rule-required'=>'true','data-msg-required'=>"L'assistance est obligatoire dans l'onglet logistique",'default' => $this->data['Utilisateur']['assistance_id'],'empty' => 'Choisir une assistance')); ?>
                         <?php else : ?>
                             <?php echo isset($this->data['Assistance']['NOM'])? $this->data['Assistance']['NOM'] : ""; ?>
                         <?php endif; ?>                        
@@ -191,7 +191,7 @@
                     <div class="control-group">
                         <label class="control-label sstitre required" for="UtilisateurSiteId">Site : </label>
                         <div class="controls">
-                            <?php echo $this->Form->select('site_id',$site,array('data-rule-required'=>'true','data-msg-required'=>"Le site est obligatoire dans l'onglet logistique",'selected' => $this->data['Utilisateur']['site_id'],'empty' => 'Choisir un site')); ?>
+                            <?php echo $this->Form->select('site_id',$site,array('data-rule-required'=>'true','data-msg-required'=>"Le site est obligatoire dans l'onglet logistique",'default' => $this->data['Utilisateur']['site_id'],'empty' => 'Choisir un site')); ?>
                         </div>
                     </div> 
                     <div class="control-group">
@@ -253,7 +253,7 @@
                     <div class="control-group">
                         <label class="control-label sstitre" for="UtilisateurDomaineId">Domaine : </label>
                         <div class="controls">                            
-                            <?php echo $this->Form->select('domaine_id',$domaine,array('selected' => $this->data['Utilisateur']['domaine_id'],'empty' => 'Choisir un domaine')); ?>
+                            <?php echo $this->Form->select('domaine_id',$domaine,array('default' => $this->data['Utilisateur']['domaine_id'],'empty' => 'Choisir un domaine')); ?>
                         </div>
                     </div><hr/>
                     <?php if(isAuthorized('affectations', 'add')): ?>

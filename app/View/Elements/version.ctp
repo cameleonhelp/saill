@@ -1,14 +1,29 @@
 <?php 
     $version = '2.0';
-    $build = 'b041';
+    $build = 'b042';
     echo $version.'.'.$build;
     /** 
      * changelog :
      * 
      * version 2.0.0 finale
-     * bxxx Nouvelle navigation
+     ****** mis sur serveur d'intégration ******
      * bxxx Rapports
-     * 
+     *      Actions -> nombre d'actions par mois par utilisateurs avec les états
+     *      Activités réelles -> nombre d'activités réelles par mois par utilisateurs
+     *      Facturation -> nombre de facturations par mois par utilisateurs
+     *      Plan de charge -> nombre de charges prévues par mois par utilisateurs /ou par domaines par projet
+     ****** mis sur serveur d'intégration ******
+     * bxxx Nouvelle navigation
+     * b042 Evolutions prévues en 2.1.0
+     *      Dupliquer action
+     *      Dupliquer livrable
+     *      Dupliquer profil et autorisations associées
+     *      Dupliquer poste informatique
+     *      Dupliquer utilisateur même si incomplet - ok
+     *      Prolongation en masse des utilisateurs - ok
+     *      Archiver en masse les utilisateurs - ok
+     *      Modification du menu pour ajouter les rapports des plans de charges - ok 
+     ****** mis sur serveur d'intégration ******
      * b041 Travail sur le plan de charge (détail)
      *      Ajout :
      *      (IHM) Ajouter la ligne modèle et la première ligne de la table
