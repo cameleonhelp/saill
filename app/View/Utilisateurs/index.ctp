@@ -89,17 +89,25 @@
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'edit')) : ?>
                     <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php else: ?>
+                    <i class="icon-blank"></i>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'delete')) : ?>
                     <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet utilisateur ?')); ?>                    
+                    <?php else: ?>
+                    <i class="icon-blank"></i>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'initpassword')) : ?>
                     <?php echo $this->Form->postLink('<i class="icon-asterisk"></i>', array('action' => 'initpassword', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir initialiser le mot de passe de cet utilisateur ?')); ?>                                            
+                    <?php else: ?>
+                    <i class="icon-blank"></i>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'duplicate')) : ?>
                     <?php echo $this->Form->postLink('<i class="icon-retweet"></i>', array('action' => 'dupliquer', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cet utilisateur ?')); ?>
+                    <?php else: ?>
+                    <i class="icon-blank"></i>
                     <?php endif; ?>
-                    <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'edit')) : ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('dotations', 'add')) : ?>
                     <?php echo $this->Html->link('<i class="icon-shopping-cart"></i>', array('controller'=>'dotations','action' => 'add', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>                    
                 </td>

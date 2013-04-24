@@ -63,8 +63,8 @@
 			<th width='90px'><?php echo $this->Paginator->sort('ECHEANCE','Echéance'); ?></th>
 			<th width='60px'><?php echo $this->Paginator->sort('STATUT','Statut'); ?></th>
 			<th width='50px'><?php echo $this->Paginator->sort('DUREEPREVUE','Durée prévue'); ?></th>
-			<th><?php echo $this->Paginator->sort('PRIORITE','Priorité'); ?></th>
-			<th class="actions" width='60px'><?php echo __('Actions'); ?></th>
+			<th width="70px"><?php echo $this->Paginator->sort('PRIORITE','Priorité'); ?></th>
+			<th class="actions" width='75px'><?php echo __('Actions'); ?></th>
 	</tr>
         </thead>
         <tbody>
@@ -81,17 +81,20 @@
 		<td <?php echo $classtd; ?> style="text-align:center;"><?php echo h($action['Action']['ECHEANCE']); ?>&nbsp;</td>
 		<td style="text-align:center;"><?php echo isset($action['Action']['STATUT']) ? '<i class="'.etatAction(h($action['Action']['STATUT'])).'" rel="tooltip" data-title="'.etatTooltip(h($action['Action']['STATUT'])).'"></i>' : '' ; ?>&nbsp;</td>
 		<td style="text-align:center;"><?php echo h($action['Action']['DUREEPREVUE']); ?> h</td>
-		<td style="text-align:center;"><?php echo h($action['Action']['PRIORITE']); ?>&nbsp;</td>
+		<td style="text-align:center;" class="<?php echo $action['Action']['PRIORITE']; ?>"><?php echo h($action['Action']['PRIORITE']); ?>&nbsp;</td>
 		<td class="actions">
-                        <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'view')) : ?>
-                        <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Commentaire : </contenttitle>'.h($action['Action']['COMMENTAIRE']).'<br/><contenttitle>Crée le: </contenttitle>'.h($action['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($action['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
-			<?php endif; ?>
-                        <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'edit')) : ?>
-                        <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $action['Action']['id']),array('escape' => false)); ?>&nbsp;
-			<?php endif; ?>
-                        <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'delete')) : ?>
-                        <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette action ?')); ?>                    
-                        <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'view')) : ?>
+                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Commentaire : </contenttitle>'.h($action['Action']['COMMENTAIRE']).'<br/><contenttitle>Crée le: </contenttitle>'.h($action['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($action['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'edit')) : ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $action['Action']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'delete')) : ?>
+                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette action ?')); ?>                    
+                    <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'duplicate')) : ?>
+                    <?php echo $this->Form->postLink('<i class="icon-retweet"></i>', array('action' => 'dupliquer', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cette action ?\r\nCette action vous sera attribuée.')); ?>
+                    <?php endif; ?>                        
                 </td>
 	</tr>
 <?php endforeach; ?>

@@ -20,6 +20,7 @@ class AutorisationsController extends AppController {
  * @return void
  */
 	public function index($filtreautorisation=null) {
+            $this->Session->delete('history');
             if (isAuthorized('autorisations', 'index')) :
                 switch ($filtreautorisation){
                     case 'tous':

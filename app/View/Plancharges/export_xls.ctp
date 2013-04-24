@@ -16,7 +16,7 @@
 </STYLE>
 <table>
 	<tr>
-		<td><b>Export du plan de charges depuis le site OSACT<b></td>
+		<td colspan="17"><b>Export du plan de charges <?php echo $rows[0]['Plancharge']['NOM']; ?> depuis le site OSACT<b></td>
 	</tr>
 	<tr>
 		<td><b>Date:</b></td>

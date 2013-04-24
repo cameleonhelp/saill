@@ -20,6 +20,7 @@ class OutilsController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             if (isAuthorized('outils', 'index')) :
 		$this->Outil->recursive = 0;
 		$this->set('outils', $this->paginate());

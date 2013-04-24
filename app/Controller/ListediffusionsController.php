@@ -20,6 +20,7 @@ class ListediffusionsController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             if (isAuthorized('listediffusions', 'index')) :
 		$this->set('title_for_layout','Listes de diffusion');
                 $this->Listediffusion->recursive = 0;
@@ -169,6 +170,7 @@ class ListediffusionsController extends AppController {
  */       
 	function export_xls() {
 		$data = $this->Session->read('xls_export');
+                $this->Session->delete('xls_export');
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
 	}         

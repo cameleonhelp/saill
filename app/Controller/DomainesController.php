@@ -20,6 +20,7 @@ class DomainesController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             if (isAuthorized('domaines', 'index')) :
 		$this->Domaine->recursive = 0;
 		$this->set('domaines', $this->paginate());

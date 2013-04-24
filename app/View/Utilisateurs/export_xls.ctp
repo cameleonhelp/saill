@@ -37,7 +37,10 @@
                         <td class="tableTd">Section</td>
                         <td class="tableTd">Site</td>
                         <td class="tableTd">Identifiant</td>
-                        <td class="tableTd">Fin de mission</td>
+                        <td class="tableTd">Assistance</td>
+                        <td class="tableTd">Email</td>
+                        <td class="tableTd">Téléphone</td>
+                        <td class="tableTd">Fin de mission</td>                        
                         <td class="tableTd">Commentaire</td>
 		</tr>		
 		<?php foreach($rows as $row):
@@ -47,9 +50,11 @@
 			echo '<td class="tableTdContent">'.$row['Section']['NOM'].'</td>';                        
 			echo '<td class="tableTdContent">'.$row['Site']['NOM'].'</td>';
 			echo '<td class="tableTdContent">'.$row['Utilisateur']['username'].'</td>'; 
+                        echo '<td class="tableTdContent">'.$row['Assistance']['NOM'].'</td>';
+                        echo '<td class="tableTdContent">'.$row['Utilisateur']['MAIL'].'</td>';
+                        echo '<td class="tableTdContent">'.$row['Utilisateur']['TELEPHONE'].'</td>';
 			echo '<td class="tableTdContent">'.$row['Utilisateur']['FINMISSION'].'</td>';
 			echo '<td class="tableTdContent">'.$row['Utilisateur']['COMMENTAIRE'].'</td>';
                         echo '</tr>';
-			endforeach;
-		?>
+                endforeach; ?>
 </table>

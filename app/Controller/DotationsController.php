@@ -50,7 +50,9 @@ class DotationsController extends AppController {
  */
 	public function add($userid = null) {
             if (isAuthorized('dotations', 'add')) :
-                $matinformatique = $this->Dotation->Materielinformatique->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Materielinformatique.ETAT ='=>'En stock'),'order'=>array('Materielinformatique.NOM'=>'asc'),'recursive'=>-1));
+                $conditions = array('Materielinformatique.ETAT ='=>'En stock');
+                if (userAuth('WIDEAREA')==0) {$restriction[]="Materielinformatique.section_id=".userAuth('section_id'); $conditions = array_merge_recursive($conditions,$restriction);}
+                $matinformatique = $this->Dotation->Materielinformatique->find('list',array('fields'=>array('id','NOM'),'conditions'=>$conditions,'order'=>array('Materielinformatique.NOM'=>'asc'),'recursive'=>-1));
 		$this->set('matinformatique', $matinformatique);
                 $matautre = $this->Dotation->Typemateriel->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Typemateriel.id >2'),'order'=>array('Typemateriel.NOM'=>"asc"),'recursive'=>-1));
 		$this->set('matautre', $matautre);                

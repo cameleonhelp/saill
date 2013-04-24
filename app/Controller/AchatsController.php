@@ -17,6 +17,7 @@ class AchatsController extends AppController {
  * @return void
  */
 	public function index($filtre=null) {
+            $this->Session->delete('history');
             if (isAuthorized('achats', 'index')) : 
                 switch ($filtre){
                     case 'toutes':

@@ -53,6 +53,9 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
 	?>
 </head>
 <body>
+    <?php  debug('toto');
+           debug($this->Session->read('history')); 
+           debug($this->Session->read('historydirection')); ?>    
 <script type="text/javascript"> 
     tinyMCE.init({ 
    // General options
@@ -127,8 +130,6 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
             </div>
         </div>
     </div> 
-    <?php  //debug($utilisateursrequest); 
-           //debug($utilisateurs); ?>
     <!--<div id="debugguer" style="background-color: #cccccc;">SQL Debug :
         <?php echo $this->element('sql_dump'); ?>
     </div>//-->

@@ -20,6 +20,7 @@ class SocietesController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             if (isAuthorized('societes', 'index')) :
 		$this->Societe->recursive = 0;
 		$this->set('societes', $this->paginate());

@@ -49,8 +49,8 @@ class AppController extends Controller {
         $this->History = $this->Session->read('history');
         if (count($this->Session->read('history')) > 0){
             $lastUrl = $this->History[0];
-            $this->Session->write('history',$this->History); 
-            array_shift($this->History);
+            $this->History = array_shift($this->History);
+            $this->Session->write('history',$this->History);  
         } else {
             $lastUrl = array();
         }        

@@ -20,6 +20,7 @@ class SitesController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             if (isAuthorized('sites', 'index')) :
 		$this->Site->recursive = 0;
 		$this->set('sites', $this->paginate());

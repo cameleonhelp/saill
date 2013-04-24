@@ -19,6 +19,7 @@ class ProjetsController extends AppController {
  * @return void
  */
 	public function index($filtreEtat=null,$filtreContrat=null) {
+            $this->Session->delete('history');
             if (isAuthorized('projets', 'index')) :
                 switch ($filtreContrat){
                     case 'tous':
@@ -204,6 +205,7 @@ class ProjetsController extends AppController {
  */       
 	function export_xls() {
 		$data = $this->Session->read('xls_export');
+                $this->Session->delete('xls_export');                
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
 	}         

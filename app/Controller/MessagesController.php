@@ -25,6 +25,7 @@ class MessagesController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             if (isAuthorized('messages', 'index')) :
 		$this->Message->recursive = 0;
 		$this->set('messages', $this->paginate());

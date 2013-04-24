@@ -20,6 +20,7 @@ class ProfilsController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             if (isAuthorized('profils', 'index')) :
 		$this->Profil->recursive = 0;
 		$this->set('profils', $this->paginate());
@@ -116,6 +117,11 @@ class ProfilsController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Profil->delete()) {
+                        $autorisations = $this->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.profil_id'=>$id)));
+                        foreach($autorisations as $autorisation):
+                            $this->Profil->Autorisation->id=$autorisation['Autorisation']['id'];
+                            $this->Profil->Autorisation->delete();
+                        endforeach;                    
 			$this->Session->setFlash(__('Profil supprimé'),'default',array('class'=>'alert alert-success'));
 			$this->redirect($this->goToPostion());
 		}
@@ -146,5 +152,44 @@ class ProfilsController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
             endif;                
-        }         
+        }  
+        
+/**
+ * dupliquer method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $id
+ * @return void
+ */
+	public function dupliquer($id = null) {
+            if (isAuthorized('profils', 'duplicate')) :
+		$this->Profil->id = $id;
+                $record = $this->Profil->read();
+                unset($record['Profil']['id']);
+                $record['Profil']['COMMENTAIRE']='Autorisations dupliquée à partir du profil '.$record['Profil']['NOM'];
+                $record['Profil']['NOM']='_'.$record['Profil']['NOM'].'(1)_';
+                unset($record['Profil']['created']);                
+                unset($record['Profil']['modified']);
+                $this->Profil->create();
+                if ($this->Profil->save($record)) {
+                        $autorisations = $this->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.profil_id'=>$id)));
+                        foreach($autorisations as $autorisation):
+                            unset($autorisation['Autorisation']['id']);
+                            $autorisation['Autorisation']['profil_id']= $this->Profil->getLastInsertID();
+                            unset($autorisation['Autorisation']['created']);
+                            unset($autorisation['Autorisation']['modified']);
+                            $this->Profil->Autorisation->create();
+                            $this->Profil->Autorisation->save($autorisation);
+                        endforeach;
+                        $this->Session->setFlash(__('Profil dupliqué'),'default',array('class'=>'alert alert-success'));
+                        $this->redirect($this->goToPostion());
+                } 
+		$this->Session->setFlash(__('Profil <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));
+		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
+	}           
 }

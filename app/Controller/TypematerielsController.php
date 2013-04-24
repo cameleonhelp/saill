@@ -20,6 +20,7 @@ class TypematerielsController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             if (isAuthorized('typemateriels', 'index')) :
 		$this->set('title_for_layout','Types de matériel');
                 $this->Typemateriel->recursive = 0;

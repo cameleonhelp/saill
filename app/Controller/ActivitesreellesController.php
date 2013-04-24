@@ -20,6 +20,7 @@ class ActivitesreellesController extends AppController {
  * @return void
  */
 	public function index($etat=null,$utilisateur=null,$mois=null) {
+            $this->Session->delete('history');
             if (isAuthorized('activitesreelles', 'index')) :
                 switch ($etat){
                     case 'tous':
@@ -587,6 +588,7 @@ class ActivitesreellesController extends AppController {
  */       
 	function export_xls() {
 		$data = $this->Session->read('xls_export');
+                $this->Session->delete('xls_export');                
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
         }        

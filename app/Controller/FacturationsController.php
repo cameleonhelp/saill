@@ -16,6 +16,7 @@ class FacturationsController extends AppController {
  * @return void
  */
 	public function index($utilisateur=null,$mois=null,$visible=null,$indisponibilite=null) {
+            $this->Session->delete('history');
             $utilisateur = $utilisateur==null ? userAuth('id'):$utilisateur;
             $mois = $mois==null ? date('m') : $mois;
             $visible = $visible==null ? 1 :$visible;
@@ -251,6 +252,7 @@ class FacturationsController extends AppController {
  */       
 	function export_xls() {
 		$data = $this->Session->read('xls_export');
+                $this->Session->delete('xls_export');                
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
         }

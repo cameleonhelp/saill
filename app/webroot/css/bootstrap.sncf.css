@@ -613,3 +613,15 @@ input.invalid {
     padding-left: -10x !important;
     padding-right: -25px !important;    
 }
+
+.haute {
+    background-color: #FFE7A1 !important;
+    color:#c09853 !important;
+    font-weight: bold !important;
+}
+
+.moyenne {
+    background-color: #b4edb4 !important;
+    color:#3B8230 !important;
+    font-weight: bold !important;
+}

@@ -20,6 +20,7 @@ class LinksharedsController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             $this->set('title_for_layout','Liens partagés');
             $this->Linkshared->recursive = 0;
             $this->set('linkshareds', $this->paginate());              

@@ -52,6 +52,7 @@ class PagesController extends AppController {
  * @return void
  */
 	public function display() {
+                $this->Session->delete('history');
 		$path = func_get_args();
 
 		$count = count($path);

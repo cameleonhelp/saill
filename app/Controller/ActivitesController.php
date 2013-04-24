@@ -19,6 +19,7 @@ class ActivitesController extends AppController {
  * @return void
  */
 	public function index($filtreEtat=null,$filtre=null) {
+            $this->Session->delete('history');
             if (isAuthorized('activites', 'index')) :
                 switch ($filtre){
                     case 'tous':

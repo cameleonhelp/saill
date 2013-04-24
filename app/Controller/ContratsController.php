@@ -18,6 +18,7 @@ class ContratsController extends AppController {
  * @return void
  */
 	public function index($filtre=null) {
+            $this->Session->delete('history');
             if (isAuthorized('contrats', 'index')) :
                 switch ($filtre){
                     case 'tous':    

@@ -68,7 +68,7 @@
                         <th width="40px"><?php echo $this->Paginator->sort('ETAT','Etat'); ?></th>
 			<th width="90px"><?php echo $this->Paginator->sort('ECHEANCE','Echéance'); ?></th>
 			<th width="90px"><?php echo $this->Paginator->sort('DATELIVRAISON','Date de livraison'); ?></th>                        
-			<th width="60px" class="actions"><?php echo __('Actions'); ?></th>
+			<th width="75px" class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
         </thead>
         <tbody>        
@@ -92,6 +92,9 @@
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('livrables', 'delete')) : ?>
                     <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $livrable['Livrable']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce livrables ?')); ?>
                     <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('livrables', 'duplicate')) : ?>
+                    <?php echo $this->Form->postLink('<i class="icon-retweet"></i>', array('action' => 'dupliquer', $livrable['Livrable']['id']),array('escape' => false), __('Etes-vous certain de vouloir créer une nouvelle version de ce livrable ?')); ?>
+                    <?php endif; ?>                    
 		</td>
 	</tr>
 <?php endforeach; ?>

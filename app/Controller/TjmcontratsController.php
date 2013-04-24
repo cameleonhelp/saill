@@ -18,6 +18,7 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             if (isAuthorized('tjmcontrats', 'index')) :
 		$this->set('title_for_layout','TJM contrats');
                 $this->Tjmcontrat->recursive = 0;

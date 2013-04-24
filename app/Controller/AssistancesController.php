@@ -20,6 +20,7 @@ class AssistancesController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             if (isAuthorized('assistances', 'index')) :
 		$this->Assistance->recursive = 0;
 		$this->set('assistances', $this->paginate());

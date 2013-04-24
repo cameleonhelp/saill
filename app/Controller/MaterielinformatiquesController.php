@@ -20,6 +20,7 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function index($filtreetat=null,$filtretype=null,$filtresection=null) {
+            $this->Session->delete('history');
             if (isAuthorized('materielinformatiques', 'index')) :
                 switch ($filtreetat){
                     case 'tous':
@@ -243,7 +244,38 @@ class MaterielinformatiquesController extends AppController {
  */       
 	function export_xls() {
 		$data = $this->Session->read('xls_export');
+                $this->Session->delete('xls_export');
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
+	}  
+        
+/**
+ * dupliquer method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $id
+ * @return void
+ */
+	public function dupliquer($id = null) {
+            if (isAuthorized('materielinformatiques', 'duplicate')) :
+		$this->Materielinformatique->id = $id;
+                $record = $this->Materielinformatique->read();
+                unset($record['Materielinformatique']['id']);
+                $record['Materielinformatique']['NOM']='_nouveau nom_';
+                $record['Materielinformatique']['ETAT']='En stock';
+                unset($record['Materielinformatique']['created']);                
+                unset($record['Materielinformatique']['modified']);
+                $this->Materielinformatique->create();
+                if ($this->Materielinformatique->save($record)) {
+                        $this->Session->setFlash(__('Poste informatique dupliqué'),'default',array('class'=>'alert alert-success'));
+                        $this->redirect($this->goToPostion());
+                } 
+		$this->Session->setFlash(__('Poste informatique <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));
+		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	}         
 }

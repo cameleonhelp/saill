@@ -18,6 +18,7 @@ class ActionsController extends AppController {
  * @return void
  */
 	public function index($filtrePriorite=null,$filtreEtat=null,$filtreResponsable=null) {
+            $this->Session->delete('history');
             if (isAuthorized('actions', 'index')) :
                 switch ($filtrePriorite){
                     case 'tous':
@@ -354,5 +355,40 @@ class ActionsController extends AppController {
  */        
         public function rapport() {
             $this->set('title_for_layout','Rapport des actions');
-	}        
+	}     
+           
+/**
+ * dupliquer method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $id
+ * @return void
+ */
+	public function dupliquer($id = null) {
+            if (isAuthorized('actions', 'duplicate')) :
+		$this->Action->id = $id;
+                $record = $this->Action->read();
+                unset($record['Action']['id']);
+                $record['Action']['AVANCEMENT']=0;
+                $record['Action']['destinataire']=  userAuth('id');
+                $record['Action']['DEBUT']=date('d/m/Y');
+                $record['Action']['STATUT']='à faire';
+                unset($record['Action']['COMMENTAIRE']);
+                unset($record['Action']['created']);                
+                unset($record['Action']['modified']);
+                unset($record['Historyaction']);
+                unset($record['Actionslivrable']);
+                $this->Action->create();
+                if ($this->Action->save($record)) {
+                        $this->Session->setFlash(__('Action dupliquée'),'default',array('class'=>'alert alert-success'));
+                        $this->redirect($this->goToPostion());
+                } 
+		$this->Session->setFlash(__('Action <b>NON</b> dupliquée'),'default',array('class'=>'alert alert-error'));
+		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
+	}           
 }

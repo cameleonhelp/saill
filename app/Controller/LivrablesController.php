@@ -20,6 +20,7 @@ class LivrablesController extends AppController {
  * @return void
  */
 	public function index($filtreChrono=null,$filtreEtat=null,$filtregestionnaire=null) {
+            $this->Session->delete('history');
             if (isAuthorized('livrables', 'index')) :
                 switch ($filtreChrono){
                     case 'toutes':
@@ -292,7 +293,39 @@ class LivrablesController extends AppController {
  */       
 	function export_xls() {
 		$data = $this->Session->read('xls_export');
+                $this->Session->delete('xls_export');                
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
-	}         
+	}     
+        
+/**
+ * dupliquer method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $id
+ * @return void
+ */
+	public function dupliquer($id = null) {
+            if (isAuthorized('livrables', 'duplicate')) :
+		$this->Livrable->id = $id;
+                $record = $this->Livrable->read();
+                unset($record['Livrable']['id']);
+                $record['Livrable']['VERSION']=isset($record['Livrable']['VERSION']) && $record['Livrable']['VERSION']!='' ? $record['Livrable']['VERSION']+1 : 1;
+                $record['Livrable']['ETAT']='à faire';
+                unset($record['Livrable']['created']);                
+                unset($record['Livrable']['modified']);
+                unset($record['Suivilivrable']);
+                $this->Livrable->create();
+                if ($this->Livrable->save($record)) {
+                        $this->Session->setFlash(__('Livrable dupliqué'),'default',array('class'=>'alert alert-success'));
+                        $this->redirect($this->goToPostion());
+                } 
+		$this->Session->setFlash(__('Livrable <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));
+		$this->redirect($this->goToPostion());
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
+	}          
 }

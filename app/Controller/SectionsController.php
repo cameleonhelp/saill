@@ -20,6 +20,7 @@ class SectionsController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             if (isAuthorized('sections', 'index')) :
 		$this->Section->recursive = 0;
 		$this->set('sections', $this->paginate());

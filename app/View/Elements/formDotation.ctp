@@ -9,6 +9,7 @@
                 <?php echo $this->Form->select('materielinformatiques_id',$matinformatique,array('selected' => '','empty' => 'Choisir un poste informatique')); ?>
             <?php } ?>
         </div>
+    <?php if (userAuth('profil_id')<6) : ?>
     </div> ou
     <div class="control-group">
         <label class="control-label sstitre" for="DotationTypematerielId">Périphérique : </label>
@@ -20,6 +21,7 @@
                 <?php echo $this->Form->select('typemateriel_id',$matautre,array('selected' => '','empty' => 'Choisir un périphérique')); ?>
             <?php } ?>
         </div>
+    <?php endif; ?>
     </div> 
     <div class="control-group">
         <label class="control-label sstitre" for="DotationDATERECEPTION">Date de remise du matériel : </label>

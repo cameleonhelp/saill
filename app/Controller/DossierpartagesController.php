@@ -20,6 +20,7 @@ class DossierpartagesController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             if (isAuthorized('dossierpartages', 'index')) :
 		$this->set('title_for_layout','Partages réseaux');
                 $this->Dossierpartage->recursive = 0;

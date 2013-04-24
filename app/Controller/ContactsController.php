@@ -18,6 +18,7 @@ class ContactsController extends AppController {
  * @return void
  */
     public function add() {
+        $this->Session->delete('history');
         if ($this->request->is('post')) {
             $this->Contact->set($this->data);
             //send email using the Email component

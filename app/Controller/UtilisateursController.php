@@ -27,6 +27,7 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function index($filtreUtilisateur=null,$filtreSection=null) {
+            $this->Session->delete('history');
             if (isAuthorized('utilisateurs', 'index')) :
                 switch ($filtreUtilisateur){
                     case 'tous':
@@ -123,6 +124,8 @@ class UtilisateursController extends AppController {
                 if ($this->request->is('post')) :                  
 			$this->Utilisateur->create();
 			if ($this->Utilisateur->save($this->request->data)) {
+                                $lastid = $this->Utilisateur->id;
+                                $this->addnewaction($lastid);
                                 $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur créé".' par '.userAuth('NOMLONG');
                                 $this->Utilisateur->Historyutilisateur->save($history);                              
@@ -279,6 +282,7 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function profil($id=null) {
+            $this->Session->delete('history');
             $this->set('title_for_layout','Mon profil');
             if (!$this->Utilisateur->exists($id)) {
                     throw new NotFoundException(__('Utilisateur incorrect'),'default',array('class'=>'alert alert-error'));
@@ -377,6 +381,7 @@ class UtilisateursController extends AppController {
  * @return void
  */        
         public function login() {
+            $this->Session->delete('history');
             $this->set('title_for_layout',"Connexion");
             if ($this->request->is('post')) {
                 $password=Security::hash($this->Auth->request->data['Utilisateur']['password'],'md5',false);
@@ -448,6 +453,7 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function logout() {
+            $this->Session->delete('history');
             $this->set('title_for_layout',"Connexion");
             $this->Cookie->delete('remember_me_cookie');
             $this->Session->delete('Auth.User');
@@ -531,6 +537,8 @@ class UtilisateursController extends AppController {
                 $this->Utilisateur->create();
 
                 if ($this->Utilisateur->save($record)) {
+                        $lastid = $this->Utilisateur->id;
+                        $this->addnewaction($lastid);
                         $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur dupliqué à partir de ".$NOMLONG.' par '.userAuth('NOMLONG');
                         $this->Utilisateur->Historyutilisateur->save($history);
@@ -610,6 +618,7 @@ class UtilisateursController extends AppController {
  */       
 	function export_xls() {
 		$data = $this->Session->read('xls_export');
+                //$this->Session->delete('xls_export');                
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
 	}   
@@ -733,5 +742,23 @@ class UtilisateursController extends AppController {
                 echo $this->Session->setFlash(__('Aucun utilisateur sélectionné'),'default',array('class'=>'alert alert-error'));
             endif;
             exit();
-        }        
+        }      
+        
+        public function addnewaction($id){
+            $date = new DateTime();
+            $record['Action']['utilisateur_id']=  userAuth('id');
+            $record['Action']['destinataire']=  userAuth('id');
+            $record['Action']['domaine_id']=  4;
+            $record['Action']['activite_id']=  21;
+            $record['Action']['OBJET']=  'Création d\'un nouvel utilisateur';
+            $record['Action']['AVANCEMENT']=  0;
+            $record['Action']['COMMENTAIRE']=  '<a href="'.FULL_BASE_URL.$this->params->base.'/utilisateurs/edit/'.$id.'">Lien vers le nouvel utilisateur</a>';
+            $record['Action']['DEBUT']=  $date->format('d/m/Y');            
+            $record['Action']['ECHEANCE']=  $date->add(new DateInterval('P5D'))->format('d/m/Y');
+            $record['Action']['STATUT']=  'à faire';
+            $record['Action']['DUREEPREVUE']=  2;
+            $record['Action']['PRIORITE']=  'haute';
+            $this->Utilisateur->Action->create();
+            $this->Utilisateur->Action->save($record);
+        }
 }

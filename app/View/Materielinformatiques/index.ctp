@@ -58,7 +58,7 @@
                         <th width="40px;"><?php echo $this->Paginator->sort('WIFI','Wifi'); ?></th>
 			<th width="40px;"><?php echo $this->Paginator->sort('VPN','Accès distant'); ?></th>
 			<th><?php echo $this->Paginator->sort('ETAT','Etat'); ?></th>
-                        <th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
+                        <th class="actions" width="75px;"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
         <tbody>
@@ -82,6 +82,9 @@
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'delete')) : ?>
                     <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $materielinformatique['Materielinformatique']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce poste informatique ?')); ?>
                     <?php endif; ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'duplicate')) : ?>
+                    <?php echo $this->Form->postLink('<i class="icon-retweet"></i>', array('action' => 'dupliquer', $materielinformatique['Materielinformatique']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer ce poste informatique ?')); ?>
+                    <?php endif; ?>                    
 		</td>
 	</tr>
 <?php endforeach; ?>

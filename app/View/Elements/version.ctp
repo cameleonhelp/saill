@@ -1,6 +1,6 @@
 <?php 
     $version = '2.0';
-    $build = 'b042';
+    $build = 'b043';
     echo $version.'.'.$build;
     /** 
      * changelog :
@@ -14,11 +14,14 @@
      *      Plan de charge -> nombre de charges prévues par mois par utilisateurs /ou par domaines par projet
      ****** mis sur serveur d'intégration ******
      * bxxx Nouvelle navigation
+     ******* mis sur serveur d'intégration ****** le 24/04/2013
+     * b043 Ajout d'action lors de la création d'utilisateur et d'ouverture de droit - ok
+     ****** mis sur serveur d'intégration ******
      * b042 Evolutions prévues en 2.1.0
-     *      Dupliquer action
-     *      Dupliquer livrable
-     *      Dupliquer profil et autorisations associées
-     *      Dupliquer poste informatique
+     *      Dupliquer action - ok
+     *      Dupliquer livrable - ok
+     *      Dupliquer profil et autorisations associées - ok y compris delete
+     *      Dupliquer poste informatique - ok
      *      Dupliquer utilisateur même si incomplet - ok
      *      Prolongation en masse des utilisateurs - ok
      *      Archiver en masse les utilisateurs - ok

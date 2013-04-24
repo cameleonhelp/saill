@@ -18,6 +18,7 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function index() {
+            $this->Session->delete('history');
             if (isAuthorized('tjmagents', 'index')) :
 		$this->set('title_for_layout','TJM agents');
                 $this->Tjmagent->recursive = 0;
