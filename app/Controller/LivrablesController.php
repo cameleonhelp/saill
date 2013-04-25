@@ -20,7 +20,7 @@ class LivrablesController extends AppController {
  * @return void
  */
 	public function index($filtreChrono=null,$filtreEtat=null,$filtregestionnaire=null) {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('livrables', 'index')) :
                 switch ($filtreChrono){
                     case 'toutes':
@@ -252,10 +252,10 @@ class LivrablesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Livrable->delete()) {
 			$this->Session->setFlash(__('Livrable supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Livrable <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
@@ -319,10 +319,10 @@ class LivrablesController extends AppController {
                 $this->Livrable->create();
                 if ($this->Livrable->save($record)) {
                         $this->Session->setFlash(__('Livrable dupliqué'),'default',array('class'=>'alert alert-success'));
-                        $this->redirect($this->goToPostion());
+                        $this->redirect($this->goToPostion(0));
                 } 
 		$this->Session->setFlash(__('Livrable <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

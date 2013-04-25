@@ -20,7 +20,7 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function index($filtreetat=null,$filtretype=null,$filtresection=null) {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('materielinformatiques', 'index')) :
                 switch ($filtreetat){
                     case 'tous':
@@ -198,10 +198,10 @@ class MaterielinformatiquesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Materielinformatique->delete()) {
 			$this->Session->setFlash(__('Postes informatique supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Postes informatique <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
@@ -269,10 +269,10 @@ class MaterielinformatiquesController extends AppController {
                 $this->Materielinformatique->create();
                 if ($this->Materielinformatique->save($record)) {
                         $this->Session->setFlash(__('Poste informatique dupliqué'),'default',array('class'=>'alert alert-success'));
-                        $this->redirect($this->goToPostion());
+                        $this->redirect($this->goToPostion(0));
                 } 
 		$this->Session->setFlash(__('Poste informatique <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

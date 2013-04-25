@@ -20,7 +20,7 @@ class PlanchargesController extends AppController {
  * @return void
  */
 	public function index($annee=null,$contrat_id=null) {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('plancharges', 'index')) :
                 $this->set('title_for_layout','Plans de charge'); 
                 if ($annee==null){ $annee = new DateTime(); $annee = $annee->format('Y'); }

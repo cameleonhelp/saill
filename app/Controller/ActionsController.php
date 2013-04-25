@@ -18,11 +18,12 @@ class ActionsController extends AppController {
  * @return void
  */
 	public function index($filtrePriorite=null,$filtreEtat=null,$filtreResponsable=null) {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('actions', 'index')) :
                 switch ($filtrePriorite){
                     case 'tous':
-                    case null:    
+                    case null:  
+                    case '<': 
                         $newconditions[]="1=1";
                         $fpriorite = "toutes les priorités";
                         break;                  
@@ -246,10 +247,10 @@ class ActionsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Action->delete()) {
 			$this->Session->setFlash(__('Action supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Action <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();        
@@ -382,10 +383,10 @@ class ActionsController extends AppController {
                 $this->Action->create();
                 if ($this->Action->save($record)) {
                         $this->Session->setFlash(__('Action dupliquée'),'default',array('class'=>'alert alert-success'));
-                        $this->redirect($this->goToPostion());
+                        $this->redirect($this->goToPostion(0));
                 } 
 		$this->Session->setFlash(__('Action <b>NON</b> dupliquée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

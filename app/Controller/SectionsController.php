@@ -20,7 +20,7 @@ class SectionsController extends AppController {
  * @return void
  */
 	public function index() {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('sections', 'index')) :
 		$this->Section->recursive = 0;
 		$this->set('sections', $this->paginate());
@@ -122,10 +122,10 @@ class SectionsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Section->delete()) {
 			$this->Session->setFlash(__('Section supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Section <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

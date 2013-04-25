@@ -18,7 +18,7 @@ class ContratsController extends AppController {
  * @return void
  */
 	public function index($filtre=null) {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('contrats', 'index')) :
                 switch ($filtre){
                     case 'tous':    
@@ -26,6 +26,7 @@ class ContratsController extends AppController {
                         $fcontrat = "tous les contrats";
                         break;
                     case 'actif':
+                    case '<':
                     case null:    
                         $newconditions[]="Contrat.ACTIF=1";
                         $fcontrat = "tous les contrats actifs";
@@ -137,10 +138,10 @@ class ContratsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Contrat->delete()) {
 			$this->Session->setFlash(__('Contrat supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Contrat <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

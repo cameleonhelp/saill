@@ -77,7 +77,7 @@
 		<td><div class="progress progress-<?php echo $style; ?>" style="margin-bottom:-10px;">
                 <div class="bar " style="width:<?php echo h($action['Action']['AVANCEMENT']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($action['Action']['AVANCEMENT']); ?>%"></div></div></td>
 		<td style="text-align:center;"><?php echo h($action['Action']['DEBUT']); ?>&nbsp;</td>
-                <?php $classtd = enretard($action['Action']['ECHEANCE']) ? "class='td-error'" : ""; ?>
+                <?php $classtd = enretard($action['Action']['STATUT'],$action['Action']['ECHEANCE']) ? "class='td-error'" : ""; ?>
 		<td <?php echo $classtd; ?> style="text-align:center;"><?php echo h($action['Action']['ECHEANCE']); ?>&nbsp;</td>
 		<td style="text-align:center;"><?php echo isset($action['Action']['STATUT']) ? '<i class="'.etatAction(h($action['Action']['STATUT'])).'" rel="tooltip" data-title="'.etatTooltip(h($action['Action']['STATUT'])).'"></i>' : '' ; ?>&nbsp;</td>
 		<td style="text-align:center;"><?php echo h($action['Action']['DUREEPREVUE']); ?> h</td>

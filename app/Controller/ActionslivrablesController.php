@@ -96,9 +96,9 @@ class ActionslivrablesController extends AppController {
 		}
 		if ($this->Actionslivrable->delete()) {
 			$this->Session->setFlash(__('Association supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Association <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
 	}
 }

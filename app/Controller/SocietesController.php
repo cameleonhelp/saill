@@ -20,7 +20,7 @@ class SocietesController extends AppController {
  * @return void
  */
 	public function index() {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('societes', 'index')) :
 		$this->Societe->recursive = 0;
 		$this->set('societes', $this->paginate());
@@ -118,10 +118,10 @@ class SocietesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Societe->delete()) {
 			$this->Session->setFlash(__('Société supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Société <b>NON</b> supprime'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

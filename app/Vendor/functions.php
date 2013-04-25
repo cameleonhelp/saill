@@ -40,6 +40,16 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
     return $day[2]."-".$day[1]."-".$day[0];
 }
 /**
+ * CIntDate
+ * 
+ * @param type $frdate
+ * @return date au format Y-m-d
+ */
+    function CIntDate($frdate){
+    $day = explode('/',$frdate);
+    return $day[2].$day[1].$day[0];
+}
+/**
  * CFRDate
  * 
  * @param type $frdate
@@ -148,7 +158,7 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
         $urlname = '.'.$dirname;
         $dir = @opendir($dirname); 
         while($file = @readdir($dir)) {  
-            if($file != '.' && $file != '..'  && $file != 'Thumbs.db' && !is_dir($dirname.$file) && $file !='@eaDir') {
+            if($file != 'empty' && $file != '.' && $file != '..'  && $file != 'Thumbs.db' && !is_dir($dirname.$file) && $file !='@eaDir') {
                  $nom = str_replace('_',' ', $file);
                  $fileList = array('nom'=>$nom,'ext'=>ext($file),'url'=>$urlname.$file);
                  array_push($result,$fileList);
@@ -296,12 +306,16 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
  */    
     function userAuth($key = null){
         $user = SessionComponent::read('Auth.User');
-        if ($key === null) {
-            return $user;
-        } else {
-            return $user[$key];
-        }
-        
+        //if (isset($user)):
+            if ($key === null) {
+                return $user;
+            } else {
+                return $user[$key];
+            }
+        //else :
+        //    $this->Session->setFlash(__('Votre session est expirée veuillez rafraîchir la page.<br />Vos données ont été prises en compte, si toutefois cela n\'était pas le cas, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+        //    throw new CakeSessionException();
+        //endif;      
     }
     
     @define(AUTHORIZED, 'Auth.Profil');
@@ -576,11 +590,14 @@ function styleBarre($avancement){
  * @param type $date
  * @return boolean
  */    
-    function enretard($date){
-        $today = intval(date('Ymd'));
-        $date = explode("/",$date);
-        $d = intval($date[2].$date[1].$date[0]);
-        $result = ($d - $today) < 0 ? true: false;
+    function enretard($etat,$date){
+        $result = false;
+        if ($etat == 'à faire' || $etat == 'en cours'):
+            $today = intval(date('Ymd'));
+            $date = explode("/",$date);
+            $d = intval($date[2].$date[1].$date[0]);
+            $result = ($d - $today) < 0 ? true: false;
+        endif;
         return $result;
     }
     

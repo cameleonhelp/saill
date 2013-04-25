@@ -20,7 +20,7 @@ class ActivitesreellesController extends AppController {
  * @return void
  */
 	public function index($etat=null,$utilisateur=null,$mois=null) {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('activitesreelles', 'index')) :
                 switch ($etat){
                     case 'tous':
@@ -28,6 +28,7 @@ class ActivitesreellesController extends AppController {
                         $fetat = "toutes les feuilles de temps";
                         break;
                     case 'actif':
+                    case '<':    
                     case null:
                         $newconditions[]="Activitesreelle.VEROUILLE = 1";
                         $fetat = "toutes les feuilles de temps actives";
@@ -283,7 +284,7 @@ class ActivitesreellesController extends AppController {
                             endif;   
                         endif;
                     endforeach; 
-                    $this->redirect($this->goToPostion(2)); 
+                    $this->redirect($this->goToPostion(1)); 
 		} else {
                     $date = $this->Activitesreelle->find('first',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'conditions'=>array('Activitesreelle.id'=>$id),'recursive'=>-1));
                     $activitesreelles = $this->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$date['Activitesreelle']['utilisateur_id'],'Activitesreelle.DATE'=>CUSDate($date['Activitesreelle']['DATE'])),'recursive'=>-1));
@@ -315,10 +316,10 @@ class ActivitesreellesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Activitesreelle->delete()) {
                     $this->Session->setFlash(__('Feuille de temps supprimée'),'default',array('class'=>'alert alert-success'));
-                    $this->redirect($this->goToPostion());
+                    $this->redirect($this->goToPostion(0));
 		}
                 $this->Session->setFlash(__('Feuille de temps <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-                $this->redirect($this->goToPostion());
+                $this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();        
@@ -385,12 +386,12 @@ class ActivitesreellesController extends AppController {
                 $record['Activitesreelle']['DATE'] = $date->format('d/m/Y');
                 if ($this->ActiviteExists($record['Activitesreelle']['utilisateur_id'], $record['Activitesreelle']['DATE'], $record['Activitesreelle']['activite_id']) > 0){
                     $this->Session->setFlash(__('Feuille de temps existante'),'default',array('class'=>'alert alert-info'));
-                    $this->redirect($this->goToPostion());
+                    $this->redirect($this->goToPostion(0));
                 }                
                 $this->Activitesreelle->create();
                 if ($this->Activitesreelle->save($record)) {
                     $this->Session->setFlash(__('Feuille de temps dupliquée'),'default',array('class'=>'alert alert-success'));
-                    $this->redirect($this->goToPostion());
+                    $this->redirect($this->goToPostion(0));
                 } 
 		$this->Session->setFlash(__('Feuille de temps <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));  
             else :
@@ -421,7 +422,7 @@ class ActivitesreellesController extends AppController {
                 $this->Activitesreelle->create();
                 if ($this->Activitesreelle->save($record)) {
                     $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation'),'default',array('class'=>'alert alert-success'));
-                    $this->redirect($this->goToPostion());
+                    $this->redirect($this->goToPostion(0));
                 } 
 		$this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation'),'default',array('class'=>'alert alert-error')); 
             else :
@@ -451,7 +452,7 @@ class ActivitesreellesController extends AppController {
                 $this->Activitesreelle->create();
                 if ($this->Activitesreelle->save($record)) {
                     $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation'),'default',array('class'=>'alert alert-success'));
-                    $this->redirect($this->goToPostion());
+                    $this->redirect($this->goToPostion(0));
                 } 
 		$this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation'),'default',array('class'=>'alert alert-error')); 
             else :
@@ -502,16 +503,17 @@ class ActivitesreellesController extends AppController {
         }   
         
         public function Absences(){
-            $this->Activitesreelle->Utilisateur->recursive = -1;
-            $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
-            $this->set('utilisateurs',$utilisateurs);  
+            $this->Session->delete('history');
             $date = isset($this->request->data['Activitesreelle']['month']) ? $this->request->data['Activitesreelle']['month'] : date('Y-m-d');
             $annee = date('Y',strtotime($date));
             $mois = date('m',strtotime($date));
-            $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
             $datedebut = $annee."-".$mois."-01";
+            $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
             $datedebut = startWeek(new DateTime($datedebut));            
             $datefin = $annee."-".$mois."-".$dernierjour;
+            $this->Activitesreelle->Utilisateur->recursive = -1;
+            $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'OR' => array('AND'=>array('OR'=>array('Utilisateur.DATEDEBUTACTIF < "'.$datefin.'"','Utilisateur.DATEDEBUTACTIF IS NULL'),'Utilisateur.FINMISSION > "'.$datedebut.'"'),'Utilisateur.FINMISSION IS NULL')),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
+            $this->set('utilisateurs',$utilisateurs);  
             $this->Activitesreelle->recursive = 0;
             $indisponibilites = $this->Activitesreelle->find('all',array('conditions'=>array('Activite.projet_id'=>1,"Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'")));
             $this->set('indisponibilites',$indisponibilites);
@@ -556,7 +558,6 @@ class ActivitesreellesController extends AppController {
                 echo $this->Session->setFlash(__('Aucune feuilles de temps sélectionnées'),'default',array('class'=>'alert alert-error'));
             endif;
             exit();
-            //$this->redirect($this->goToPostion());
         }
         
         public function rejeter(){
@@ -571,7 +572,6 @@ class ActivitesreellesController extends AppController {
                 echo $this->Session->setFlash(__('Aucune feuilles de temps sélectionnées'),'default',array('class'=>'alert alert-error'));                
             endif;
             exit();
-            //$this->redirect($this->goToPostion());
         }  
         
         public function deverouiller($id){
@@ -579,7 +579,7 @@ class ActivitesreellesController extends AppController {
             $this->Activitesreelle->saveField('VEROUILLE', 1);        
             $this->Activitesreelle->saveField('facturation_id', null);            
             echo $this->Session->setFlash(__('Feuille de temps déverouillée'),'default',array('class'=>'alert alert-success'));
-            $this->redirect($this->goToPostion());
+            $this->redirect($this->goToPostion(0));
         } 
           
 /**

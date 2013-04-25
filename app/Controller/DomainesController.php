@@ -20,7 +20,7 @@ class DomainesController extends AppController {
  * @return void
  */
 	public function index() {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('domaines', 'index')) :
 		$this->Domaine->recursive = 0;
 		$this->set('domaines', $this->paginate());
@@ -118,10 +118,10 @@ class DomainesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Domaine->delete()) {
 			$this->Session->setFlash(__('Domaine supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Domaine NON supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

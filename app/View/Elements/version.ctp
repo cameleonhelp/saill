@@ -1,6 +1,6 @@
 <?php 
     $version = '2.0';
-    $build = 'b043';
+    $build = 'b044';
     echo $version.'.'.$build;
     /** 
      * changelog :
@@ -12,8 +12,10 @@
      *      Activités réelles -> nombre d'activités réelles par mois par utilisateurs
      *      Facturation -> nombre de facturations par mois par utilisateurs
      *      Plan de charge -> nombre de charges prévues par mois par utilisateurs /ou par domaines par projet
-     ****** mis sur serveur d'intégration ******
-     * bxxx Nouvelle navigation
+     ****** mis sur serveur d'intégration ****** le 25/04/2013
+     * b044 Nouvelle navigation - ok
+     *      Corrections mineures (listage de fichier retirer les fichiers 'empty', class 'month' dupliquée pour le plan de charge) - ok
+     *      ! mise en place de la version 2.3.3 de cakephp - security patch !
      ******* mis sur serveur d'intégration ****** le 24/04/2013
      * b043 Ajout d'action lors de la création d'utilisateur et d'ouverture de droit - ok
      ****** mis sur serveur d'intégration ******

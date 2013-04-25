@@ -20,7 +20,7 @@ class DossierpartagesController extends AppController {
  * @return void
  */
 	public function index() {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('dossierpartages', 'index')) :
 		$this->set('title_for_layout','Partages réseaux');
                 $this->Dossierpartage->recursive = 0;
@@ -123,10 +123,10 @@ class DossierpartagesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Dossierpartage->delete()) {
 			$this->Session->setFlash(__('Dossier partagé supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Dossier partagé NON supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

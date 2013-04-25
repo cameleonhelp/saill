@@ -5,15 +5,15 @@ $this->set('title_for_layout','Accueil');
     Ce site à pour objectif de suivre les activités, livrables réalisés sur le projet.<br/><br/>
     Ce site est accessible à toutes personnes travaillant sur le projet.<br/><br/>
     Un accès à votre profil vous permettra de suivre certaines informations vous concernant.<br/>
-    A partir de cet emplacement vous pourrez poser vos jours d'absences qui seront soumis à validation si vous n'êtes pas agent SNCF.<br/>
+    A partir de ce site vous pourrez indiquer vos absences, cela ne dispense pas d'en faire la demande à votre responsable.<br/>
     Pour les agents SNCF la saisie des absences est à faire via l'application de suivi des absences.<br/><br/>
     Le menu 'Absences équipe' vous permettra de voir les indisponibilités de toutes les personnes travaillant sur le projet.<br/><br/>
     Dans les actions un filtre 'Todolist' vous permettra de suivre toutes vos activités ainsi que celles des personnes travaillant sur le même domaine que vous, 
     ou de toute votre équipe si vous avez la charge d'une équipe d'agents.<br/><br/>
-    Le suivi des livrables vous permettra de suivre l'avancement des livrables, ces livrables peuvent être liés à une action.<br/><br/>
-    Enfin des liens utiles à tous peuvent être partagés, seul celui qui a déposé le lien, ou un administrateur, peux le modifier ou le supprimer.<br/>
+    Le suivi des livrables vous permettra de suivre l'avancement des livrables, ces livrables peuvent être liés à des actions.<br/><br/>
+    Enfin des liens utiles à tous, peuvent être partagés, seul celui qui a déposé le lien, peux le modifier ou le supprimer.<br/>
     <br/>
-    Des fichiers d'aide sont à votre disposition ci-dessous.<br/>
+    Vous trouverez ci-dessous des fichiers qui sont à votre disposition ci-dessouspour vous aider dans votre activité ou des informations à connaître.<br/>
     <br/>
     Nous espérons que ce site vous facilitera votre restitution d'activité et un meilleur partage de l'information.
 </div>
@@ -30,7 +30,7 @@ $this->set('title_for_layout','Accueil');
 <tbody>
 <?php define("WDS", "/"); ?>
 <?php $files = listFolder('.'.WDS.'files'.WDS.'all'.WDS); ?>
-<?php $filesadm = listFolder('.'.WDS.'files'.WDS.'admin'.WDS); ?>    
+<?php $filesadm = (userAuth('profil_id')<6 || userAuth('profil_id')==8) ? listFolder('.'.WDS.'files'.WDS.'admin'.WDS) : array(); ?>    
 <?php $files = array_merge($files,$filesadm); ?>     
 <?php asort($files); ?>      
 <?php foreach ($files as $file): ?>

@@ -16,7 +16,7 @@ class FacturationsController extends AppController {
  * @return void
  */
 	public function index($utilisateur=null,$mois=null,$visible=null,$indisponibilite=null) {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             $utilisateur = $utilisateur==null ? userAuth('id'):$utilisateur;
             $mois = $mois==null ? date('m') : $mois;
             $visible = $visible==null ? 1 :$visible;
@@ -25,6 +25,7 @@ class FacturationsController extends AppController {
                 if (areaIsVisible() || $utilisateur==userAuth('id')):
                 switch ($utilisateur){
                     case 'tous':
+                    case '<':    
                     case null:
                         $newconditions[]="1=1";
                         $futilisateur = "tous les utilisateurs";

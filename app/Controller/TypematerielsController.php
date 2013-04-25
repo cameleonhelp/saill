@@ -20,7 +20,7 @@ class TypematerielsController extends AppController {
  * @return void
  */
 	public function index() {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('typemateriels', 'index')) :
 		$this->set('title_for_layout','Types de matériel');
                 $this->Typemateriel->recursive = 0;
@@ -123,10 +123,10 @@ class TypematerielsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Typemateriel->delete()) {
 			$this->Session->setFlash(__('Type de matériel supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Type de matériel <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

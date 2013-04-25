@@ -19,7 +19,7 @@ class ActivitesController extends AppController {
  * @return void
  */
 	public function index($filtreEtat=null,$filtre=null) {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('activites', 'index')) :
                 switch ($filtre){
                     case 'tous':
@@ -39,6 +39,7 @@ class ActivitesController extends AppController {
                 $this->set('fprojet',$fprojet); 
                 switch ($filtreEtat){
                     case 'tous':
+                    case '<':
                     case null:    
                         $newconditions[]="1=1";
                         $fetat = "toutes les activités";
@@ -160,10 +161,10 @@ class ActivitesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Activite->delete()) {
 			$this->Session->setFlash(__('Activité supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Activité <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();         

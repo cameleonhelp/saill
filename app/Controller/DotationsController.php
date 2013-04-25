@@ -73,7 +73,7 @@ class DotationsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une dotation";
                                 $this->Dotation->Utilisateur->Historyutilisateur->save($history);                               
 				$this->Session->setFlash(__('Dotation sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(2));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),'default',array('class'=>'alert alert-error'));
 			}
@@ -102,7 +102,7 @@ class DotationsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour de la dotation dotation";
                                 $this->Dotation->Utilisateur->Historyutilisateur->save($history); 				
                             $this->Session->setFlash(__('Dotation sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(2));
+				$this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),'default',array('class'=>'alert alert-error'));
 			}
@@ -136,7 +136,7 @@ class DotationsController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une dotation";
                         $this->Dotation->Utilisateur->Historyutilisateur->save($history);                     
 			$this->Session->setFlash(__('Dotation supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Dotation <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());

@@ -20,11 +20,12 @@ class UtiliseoutilsController extends AppController {
  * @return void
  */
 	public function index($filtreetat=null,$utilisateur_id=null) {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('utiliseoutils', 'index')) :
 		$this->set('title_for_layout','Ouvertures des droits');
                 switch ($filtreetat){
                     case 'tous':
+                    case '<':     
                     case null:    
                         $newconditions[]="Utiliseoutil.STATUT !='Retour utilisateur'";
                         $fetat = "de tous les états sauf 'Retour utilisateur'";
@@ -121,11 +122,7 @@ class UtiliseoutilsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit".' par '.userAuth('NOMLONG');
                                 $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                            
 				$this->Session->setFlash(__('Ouvertures des droits sauvegardée'),'default',array('class'=>'alert alert-success'));
-                                if($id==null){
-                                    $this->redirect($this->goToPostion(1));
-                                } else {
-                                    $this->redirect($this->goToPostion(2));
-                                }
+                                $this->redirect($this->goToPostion(1));
 			} else {
 				$this->Session->setFlash(__('Ouvertures des droits incorrecte, veuillez corriger cette ouverture de droit'),'default',array('class'=>'alert alert-error'));
 			}
@@ -206,10 +203,10 @@ class UtiliseoutilsController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une ouverture de droit".' par '.userAuth('NOMLONG');
                         $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                         
 			$this->Session->setFlash(__('Ouvertures des droits supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
@@ -271,10 +268,10 @@ class UtiliseoutilsController extends AppController {
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - changement d'état d'une ouverture de droit".' par '.userAuth('NOMLONG');
                     $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                     
                     $this->Session->setFlash(__('Ouvertures des droits progression de l\'état'),'default',array('class'=>'alert alert-success'));
-                    $this->redirect($this->goToPostion());
+                    $this->redirect($this->goToPostion(0));
                 }
 		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> progression de l\'état'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

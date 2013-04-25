@@ -20,10 +20,11 @@ class AutorisationsController extends AppController {
  * @return void
  */
 	public function index($filtreautorisation=null) {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('autorisations', 'index')) :
                 switch ($filtreautorisation){
                     case 'tous':
+                    case '<':
                     case null:    
                         $newconditions[]="1=1";
                         $fprofil = "tous les profils";
@@ -144,10 +145,10 @@ class AutorisationsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Autorisation->delete()) {
 			$this->Session->setFlash(__('Autorisation supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Autorisation NON supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

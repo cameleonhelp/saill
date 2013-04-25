@@ -20,7 +20,7 @@ class ListediffusionsController extends AppController {
  * @return void
  */
 	public function index() {
-            $this->Session->delete('history');
+            //$this->Session->delete('history');
             if (isAuthorized('listediffusions', 'index')) :
 		$this->set('title_for_layout','Listes de diffusion');
                 $this->Listediffusion->recursive = 0;
@@ -130,10 +130,10 @@ class ListediffusionsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Listediffusion->delete()) {
 			$this->Session->setFlash(__('Liste de diffusion supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->redirect($this->goToPostion(0));
 		}
 		$this->Session->setFlash(__('Liste de diffusion NON supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->redirect($this->goToPostion(0));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
