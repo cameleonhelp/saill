@@ -33,9 +33,17 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.
 
 * Incorporation des données (Utilisateurs, Matériels informatique) **FAIT**
 
-* Utilisation limité de l'outil ***En cours***
+* Utilisation limité de l'outil **FAIT**
 
-* Ajout du plan de charge ***En cours***
+* Ajout du plan de charge **FAIT**
+
+* Corrections mineures **FAIT**
+
+## A venir en mai :
+
+* Démonstration avant validation à venir courant MAI 
+
+* Utilisation par d'autres utilisateurs
 
 ## A venir en version 2.1 :
 
