@@ -47,13 +47,17 @@ class EmailConfig {
         );
 
         public $exchange = array(
-            'host' => 'server.Exchange',
-            'port' => 25,
-            'from' => 'mail@sncf.fr',
-            'password' => 'secret',
             'transport' => 'Smtp',
-            'charset' => 'utf-8',
-            'headerCharset' => 'utf-8',
+            'from' => array('email@example.com' => 'Admin OSACT'),
+            'host' => 'smtp.ex3.secureserver.net',
+            'port' => 587,
+            'timeout' => 30,
+            'username' => 'verifiedUserName',
+            'password' => 'verifiedPassword',
+            'client' => null,
+            'log' => true,
+            'delivery' => 'smtp',
+            'tls' => true
         );
 	public $default = array(
 		'transport' => 'Mail',
