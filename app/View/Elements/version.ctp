@@ -1,6 +1,6 @@
 <?php 
     $version = '2.0';
-    $build = 'b044';
+    $build = 'b045';
     echo $version.'.'.$build;
     /** 
      * changelog :
@@ -12,6 +12,11 @@
      *      Activités réelles -> nombre d'activités réelles par mois par utilisateurs
      *      Facturation -> nombre de facturations par mois par utilisateurs
      *      Plan de charge -> nombre de charges prévues par mois par utilisateurs /ou par domaines par projet
+     * b046 mise en place des liens en ajax/jquery pour une harmonisation des actions avec un overlay de la fenêtre entière
+     * b045 Mise à jour en masse des ouvertures de droits
+     *      correction sur la navigation 
+     *      mise à jour de l'affichage des absences si le compte est actif en cours de mois
+     *      passe sur les controllers pour s'asurer que les index par défaut sont bien prix en compte
      ****** mis sur serveur d'intégration ****** le 25/04/2013
      * b044 Nouvelle navigation - ok
      *      Corrections mineures (listage de fichier retirer les fichiers 'empty', class 'month' dupliquée pour le plan de charge) - ok

@@ -22,9 +22,9 @@ class MaterielinformatiquesController extends AppController {
 	public function index($filtreetat=null,$filtretype=null,$filtresection=null) {
             //$this->Session->delete('history');
             if (isAuthorized('materielinformatiques', 'index')) :
+                $filtreetat= $filtreetat==null ? 'En stock': $filtreetat;
                 switch ($filtreetat){
-                    case 'tous':
-                    case null:    
+                    case 'tous':  
                         $newconditions[]="1=1";
                         $fetat = "de tous les états";
                         break;

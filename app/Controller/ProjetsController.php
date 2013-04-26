@@ -35,11 +35,11 @@ class ProjetsController extends AppController {
                 $this->set('fcontrat',$fcontrat);
                 switch ($filtreEtat){
                     case 'tous':
-                    case null:
                         $newconditions[]="1=1";
                         $fetat = "tous les projets";
                         break;
                     case 'actif':
+                    case null:                        
                         $newconditions[]="Projet.ACTIF=1";
                         $fetat = "tous les projets actifs";
                         break;  

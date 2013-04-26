@@ -320,6 +320,19 @@ class UtiliseoutilsController extends AppController {
             $record['Action']['PRIORITE']=  'haute';
             $this->Utiliseoutil->Utilisateur->Action->create();
             $this->Utiliseoutil->Utilisateur->Action->save($record);
-        }        
+        }  
+        
+        public function allupdate($ids=null){
+            $ids = explode('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):
+                foreach($ids as $id):
+                    $this->progressState($id);
+                endforeach;
+                echo $this->Session->setFlash(__('Mises à jour complétées'),'default',array('class'=>'alert alert-success'));
+            else:
+                echo $this->Session->setFlash(__('Aucune ouverture de droit sélectionnée'),'default',array('class'=>'alert alert-error'));
+            endif;
+            exit();
+        }
         
 }

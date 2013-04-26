@@ -93,11 +93,16 @@ class LivrablesController extends AppController {
                 $this->set('fetat',$fetat);  
                 if (areaIsVisible() || $filtregestionnaire==userAuth('id')):
                 switch ($filtregestionnaire){
-                    case 'tous':
-                    case null:    
+                    case 'tous':   
                         $newconditions[]="1=1";
                         $fgestionnaire = "de tous les gestionnaires";
-                        break;                      
+                        break;  
+                    case null:   
+                        $newconditions[]="Livrable.utilisateur_id = '".userAuth('id')."'";
+                        $this->Livrable->Utilisateur->recursive = -1;
+                        $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> userAuth('id'))));
+                        $fgestionnaire = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG']; 
+                        break;                     
                     default :
                         $newconditions[]="Livrable.utilisateur_id = '".$filtregestionnaire."'";
                         $this->Livrable->Utilisateur->recursive = -1;

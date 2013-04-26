@@ -10,7 +10,7 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                     <li><?php echo $this->Html->link('Tous sans retour utilisateur', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($etats as $etat): ?>
                             <li><?php echo $this->Html->link($etat['Utiliseoutil']['STATUT'], array('action' => 'index',$etat['Utiliseoutil']['STATUT'],isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
@@ -26,7 +26,16 @@
                             <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$utilisateur['Utilisateur']['id'])); ?></li>
                          <?php endforeach; ?>
                       </ul>
-                 </li>                   
+                </li> 
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'update')) : ?>
+                <li class="divider-vertical"></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-check"></i> Actions groupées <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Mettre à jour l\'état', "#",array('id'=>'updatelink')); ?></li>
+                     </ul>
+                </li> 
+                <?php endif; ?>
                 </ul> 
                 <?php echo $this->Form->create("Utiliseoutil",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
@@ -43,6 +52,11 @@
 			<th><?php echo $this->Paginator->sort('outil_id','Outil'); ?></th>
                         <th><?php echo $this->Paginator->sort('outil_id','Liste de diffusion'); ?></th>
                         <th><?php echo $this->Paginator->sort('outil_id','Partage réseau'); ?></th>
+                        <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'update')) : ?>
+                        <th style="text-align:center;width:15px !important;vertical-align: middle;padding-left:5px;padding-right:5px;"><?php echo $this->Form->input('checkall',array('type'=>'checkbox','label'=>false)) ; ?>
+                                <?php echo $this->Form->input('all_ids',array('type'=>'hidden')) ; ?>
+                        </th>      
+                        <?php endif; ?>
 			<th><?php echo $this->Paginator->sort('STATUT','Etat'); ?></th>
 			<th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
 	</tr>
@@ -55,6 +69,7 @@
                 <td><?php echo h($utiliseoutil['Listediffusion']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($utiliseoutil['Dossierpartage']['NOM']); ?>&nbsp;</td>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'update')) : ?>
+                <td style="text-align:center;padding-left:5px;padding-right:5px;vertical-align: middle;"><?php echo $this->Form->input('id',array('type'=>'checkbox','label'=>false,'class'=>'idselect','value'=>$utiliseoutil['Utiliseoutil']['id'])) ; ?></td>                
                 <td style='text-align:center;'><?php echo $this->Html->link('<i class="'.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'"></i>', array('action' => 'progressState', h($utiliseoutil['Utiliseoutil']['id'])), array('escape' => false), __('Etes-vous certain de vouloir mettre à jour le statut de cette demande de droit ?')); ?></td>
                 <?php else : ?>
                 <td style='text-align:center;'><?php echo '<i class="'.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'"></i>'; ?></td>                
@@ -88,3 +103,56 @@
         </ul>
 	</div>
 </div>
+<script>
+    
+     $(document).ready(function () {
+       
+        $(document).on('click','#updatelink',function(e){
+            var ids = $("#all_ids").val();
+            var overlay = jQuery('<div id="overlay"> </div>');
+            overlay.appendTo(document.body)
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'utiliseoutils','action'=>'allupdate')); ?>/",
+                data: ({all_ids:ids})
+            }).done(function ( data ) {
+                location.reload();
+                overlay.remove();
+            });
+            $(this).parents().find(':checkbox').prop('checked', false);
+        });
+        
+        $(document).on('click','#checkall',function(e){
+            $(this).parents().find(':checkbox').prop('checked', this.checked);
+            if ($(this).is(':checked')){
+                $(".idselect").each(
+                        function() {
+                            if ($("#all_ids").val()==""){
+                                $("#all_ids").val($(this).val());                    
+                            }else{
+                                $("#all_ids").val($("#all_ids").val()+"-"+$(this).val());
+                            }
+                        });          
+            }else{
+                $("#all_ids").val("");
+            }
+        });
+        
+        $(document).on('click','.idselect',function(e){
+            if ($(this).is(':checked')){
+                if ($("#all_ids").val()==""){
+                    $("#all_ids").val($(this).val());                    
+                }else{
+                    $("#all_ids").val($("#all_ids").val()+"-"+$(this).val());
+                }
+            } else {
+                var list = $("#all_ids").val();
+                $("#all_ids").val("");
+                tmp = list.replace($(this).val()+"-", "");
+                if (tmp == list) tmp = list.replace("-"+$(this).val(), ""); 
+                $("#all_ids").val(tmp);
+            }
+        });
+    });
+</script>

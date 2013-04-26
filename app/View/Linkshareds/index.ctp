@@ -36,8 +36,8 @@
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('linkshareds', 'edit') && userAuth('id')==$linkshared['Linkshared']['utilisateur_id']) : ?>
                     <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $linkshared['Linkshared']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
-                    <?php if (userAuth('profil_id')!='2' && isAuthorized('linkshareds', 'delete') && userAuth('id')==$linkshared['Linkshared']['utilisateur_id']) : ?>
-                    <?php echo $linkshared['Linkshared']['utilisateur_id']==1 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $linkshared['Linkshared']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce lien ?')):''; ?>
+                    <?php if (isAuthorized('linkshareds', 'delete') && userAuth('id')==$linkshared['Linkshared']['utilisateur_id']) : ?>
+                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $linkshared['Linkshared']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce lien ?')); ?>
                     <?php endif; ?>
 		</td>
 	</tr>

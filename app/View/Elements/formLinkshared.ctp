@@ -19,6 +19,6 @@
                 </div>
             </div>
         </div>
-<?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>usertAuth('id'))); ?>
+<?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>userAuth('id'))); ?>
 <?php if ($this->params->action == 'edit') echo $this->Form->input('id',array('type'=>'hidden')); ?>
 <?php echo $this->Form->end(); ?>

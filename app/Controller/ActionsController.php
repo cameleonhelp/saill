@@ -75,17 +75,23 @@ class ActionsController extends AppController {
                 $this->set('fetat',$fetat); 
                 if (areaIsVisible() || $filtreResponsable==userAuth('id')):
                 switch ($filtreResponsable){
-                    case 'tous':
-                    case null:    
+                    case 'tous':   
                         $newconditions[]="1=1";
                         $fresponsable = "de tous les agents";
-                        break;                    
+                        break;     
+                    case null :
+                        $newconditions[]="Action.destinataire='".userAuth('id')."'AND Utilisateur.GESTIONABSENCES=1";
+                        $nomlong = $this->Action->Utilisateur->recursive = -1;
+                        $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>userAuth('id'))));
+                        $fresponsable = "dont le responsable est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
+                        $this->set('nomlong',isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG']);
+                        break;                      
                     default :
                         $newconditions[]="Action.destinataire='".$filtreResponsable."'AND Utilisateur.GESTIONABSENCES=1";
                         $nomlong = $this->Action->Utilisateur->recursive = -1;
                         $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>$filtreResponsable)));
                         $fresponsable = "dont le responsable est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
-                        $this->set('nomlong',$filtreResponsable);
+                        $this->set('nomlong',isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG']);
                         break;                      
                 }  
                 else:

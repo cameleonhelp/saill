@@ -54,7 +54,7 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
 </head>
 <body>
     <?php  
-           //debug($this->Session->read('history')); 
+            //debug($this->Session->read('history')); 
            //debug($this->Session->read('historydirection')); ?>    
 <script type="text/javascript"> 
     tinyMCE.init({ 

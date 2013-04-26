@@ -53,6 +53,8 @@
             <tr>
                 <td class="nopadding nomargin nowrap"><div rel="tooltip" data-title="<?php echo $utilisateur['Utilisateur']['NOMLONG']." (".$utilisateur['Utilisateur']['username'].")"; ?>"><?php echo substr($utilisateur['Utilisateur']['PRENOM'],0,1).". ".$utilisateur['Utilisateur']['NOM']; ?></div></td>
             <?php
+            $debutactif = CIntDateDeb($utilisateur['Utilisateur']['DATEDEBUTACTIF']); 
+            $debutinactif = CIntDateFin($utilisateur['Utilisateur']['FINMISSION']);
             for ($i=1; $i<$maxday; $i++):
                 $absences = listIndispo($indisponibilites);                
                 $day = $i<10 ? '0'.$i : $i;
@@ -60,13 +62,11 @@
                 $weekend = $date->format('N');
                 $classweek = $weekend >5 ?  ' week': '';              
                 $class = "class='absday nopadding nomargin nowrap";
-                //tester si pas encore actif ou date de fin de mission est dépassée
-                //if (isset($utilisateur['Utilisateur']['DATEDEBUTACTIF']))
-                //if(CIntDate($utilisateur['Utilisateur']['DATEDEBUTACTIF']) < CIntDate($date->format('d/m/Y')) || CIntDate($utilisateur['Utilisateur']['FINMISSION']) > CIntDate($date->format('d/m/Y'))):
-                    //$classIndispo = ' indispo';
-                    //echo "<td ".$class.$classIndispo.$classweek.$classferie."'></td><td ".$class.$classweek.$classferie.$classIndispo."'></td>";
-               // endif;
-               // else :
+                $classferie = isFerie($date) ? ' ferie' : '';
+                if($debutactif > CIntDate($date->format('d/m/Y')) || $debutinactif < CIntDate($date->format('d/m/Y'))):
+                    $classIndispo = ' indispo';
+                    echo "<td ".$class.$classIndispo.$classweek.$classferie."'></td><td ".$class.$classIndispo.$classweek.$classferie."'></td>";
+                else :
                     if(is_date_utilisateur_in_array($date->format('Y-m-d'),$utilisateur['Utilisateur']['id'],$absences)):
                         $result = nb_periode($date->format('Y-m-d'),$utilisateur['Utilisateur']['id'],$absences);
                         if (substr($result['nb'],2,1)=='0') {
@@ -81,13 +81,11 @@
                             $classIndispo1 = '';
                             $classIndispo2 = ' indispo';
                         }            
-                        $classferie = isFerie($date) ? ' ferie' : '';
                         echo "<td ".$class.$classweek.$classferie.$classIndispo1."'></td><td ".$class.$classweek.$classferie.$classIndispo2."'></td>";
                     else:
-                        $classferie = isFerie($date) ? ' ferie' : '';
                         echo "<td ".$class.$classweek.$classferie."'></td><td ".$class.$classweek.$classferie."'></td>";               
                     endif; 
-                //endif;
+                endif;
             endfor;
             ?>
             </tr>

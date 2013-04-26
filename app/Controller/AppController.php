@@ -38,9 +38,11 @@ class AppController extends Controller {
         if (strpos($this->params->url,'activeMessage')===false){
             $this->History = $this->Session->read('history');
             $url = ucfirst($this->params->url);
+            $pos = @strpos('/index/', $url);   
+            $nottoadd = array('search','allupdate');
+            $url = in_array($this->params['action'],$nottoadd)  ? str_replace($this->params['action'],'index',$url) : $url;
             $exist = in_array('index',explode('/',$url));
-            $pos = @strpos('/index/', $url);            
-            $url = $this->params['action']=='search' ? str_replace('search','index',$url) : ($this->params['action']=='index' && !$exist) ? $url.'/index' : $url;
+            $url = ($this->params['action']=='index' && !$exist) ? $url.'/index' : $url;
             $root = strpos(ROOT,'/')!==false ? explode('/',ROOT) : explode('\\',ROOT);
             $last = count($root)-1;            
             if(count($this->History)==0) :
@@ -53,6 +55,7 @@ class AppController extends Controller {
                     $this->History[0]=$newurl;
                 endif;
             endif;
+            $this->Session->delete('history');
             $this->Session->write('history',$this->History);  
         }
     } 
@@ -96,12 +99,12 @@ class AppController extends Controller {
     }
 
     public function isUrlEqual($newurl){
-        $result = false;
         $history = $this->getHistory();
         $url2 = explode('/',$history[0]);
-        if (isset($url2[4]) && isset($url2[5])):
-            $result = (strtolower($url2[4])==strtolower($this->params->controller) && strtolower($url2[5])==strtolower($this->params->action))? true : false ;
-        endif;
+        $newurl2 = explode('/',$newurl);
+        $samecontroller = strtolower((string)$url2[4])===strtolower((string)$newurl2[4]);
+        $sameaction = strtolower((string)$url2[5])===strtolower((string)$newurl2[5]);
+        $result = $samecontroller && $sameaction;
         return $result;
     }
     

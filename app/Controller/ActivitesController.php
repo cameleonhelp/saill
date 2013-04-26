@@ -39,12 +39,12 @@ class ActivitesController extends AppController {
                 $this->set('fprojet',$fprojet); 
                 switch ($filtreEtat){
                     case 'tous':
-                    case '<':
-                    case null:    
+                    case '<':   
                         $newconditions[]="1=1";
                         $fetat = "toutes les activités";
                         break;
                     case 'actif':
+                    case null:                         
                         $newconditions[]="Projet.ACTIF=1";
                         $fetat = "toutes les activités actives";
                         break;  

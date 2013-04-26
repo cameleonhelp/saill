@@ -30,13 +30,13 @@ class UtilisateursController extends AppController {
             //$this->Session->delete('history');
             if (isAuthorized('utilisateurs', 'index')) :
                 switch ($filtreUtilisateur){
-                    case 'tous':
-                    case '<':     
-                    case null:    
+                    case 'tous':   
                         $newconditions[]="1=1";
                         $futilisateur = "tous les utilisateurs";
                         break;
                     case 'actif':
+                    case '<':     
+                    case null:                         
                         $newconditions[]="Utilisateur.ACTIF=1";
                         $futilisateur = "tous les utilisateurs actifs";
                         break;  

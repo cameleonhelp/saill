@@ -42,10 +42,15 @@ class ActivitesreellesController extends AppController {
                 if (areaIsVisible() || $utilisateur==userAuth('id')):
                 switch ($utilisateur){
                     case 'tous':
-                    case null:
                         $newconditions[]="1=1";
                         $futilisateur = "tous les utilisateurs";
                         break;
+                    case null:
+                        $newconditions[]="Activitesreelle.utilisateur_id = ".userAuth('id');
+                        $this->Activitesreelle->Utilisateur->recursive = -1;
+                        $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>userAuth('id'),'Utilisateur.GESTIONABSENCES'=>1)));
+                        $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];
+                        break;                     
                     default:
                         $newconditions[]="Activitesreelle.utilisateur_id = ".$utilisateur;
                         $this->Activitesreelle->Utilisateur->recursive = -1;
@@ -105,29 +110,26 @@ class ActivitesreellesController extends AppController {
 	public function afacturer($etat=null,$utilisateur=null,$mois=null) {
             if (isAuthorized('activitesreelles', 'index')) :
                 $newconditions[]="Activitesreelle.facturation_id IS NULL";                
-                switch ($etat){
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $fetat = "toutes les feuilles de temps";
-                        break;
-                    case 'actif':
-                        $newconditions[]="Activitesreelle.VEROUILLE = 1";
-                        $fetat = "toutes les feuilles de temps actives";
-                        break;                    
+                switch ($etat){                  
                     case 'facture':
                     case null:
                         $newconditions[]="Activitesreelle.VEROUILLE = 0";
-                        $fetat = "toutes les feuilles de temps facturées";
+                        $fetat = "toutes les feuilles de temps à facturer";
                         break;                      
                 }  
                 $this->set('fetat',$fetat); 
                 if (areaIsVisible() || $utilisateur==userAuth('id')):
                 switch ($utilisateur){
                     case 'tous':
-                    case null:
                         $newconditions[]="1=1";
                         $futilisateur = "tous les utilisateurs";
                         break;
+                    case null:
+                        $newconditions[]="Activitesreelle.utilisateur_id = ".userAuth('id');
+                        $this->Activitesreelle->Utilisateur->recursive = -1;
+                        $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>userAuth('id'),'Utilisateur.GESTIONABSENCES'=>1)));
+                        $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];
+                        break;                     
                     default:
                         $newconditions[]="Activitesreelle.utilisateur_id = ".$utilisateur;
                         $this->Activitesreelle->Utilisateur->recursive = -1;
@@ -144,10 +146,19 @@ class ActivitesreellesController extends AppController {
                 $this->set('futilisateur',$futilisateur);
                 switch ($mois){
                     case 'tous':
-                    case null:
                         $newconditions[]="1=1";
                         $fperiode = "";
                         break;
+                    case null:
+                        $mois=date('m');
+                        $annee = date('Y');
+                        $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
+                        $datedebut = $annee."-".$mois."-01";
+                        $datefin = $annee."-".$mois."-".$dernierjour;
+                        $newconditions[]="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
+                        $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
+                        $fperiode = "pour le mois de ".$moiscal[$mois];
+                        break;                        
                     default:
                         $annee = date('Y');
                         $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
@@ -512,7 +523,7 @@ class ActivitesreellesController extends AppController {
             $datedebut = startWeek(new DateTime($datedebut));            
             $datefin = $annee."-".$mois."-".$dernierjour;
             $this->Activitesreelle->Utilisateur->recursive = -1;
-            $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'OR' => array('AND'=>array('OR'=>array('Utilisateur.DATEDEBUTACTIF < "'.$datefin.'"','Utilisateur.DATEDEBUTACTIF IS NULL'),'Utilisateur.FINMISSION > "'.$datedebut.'"'),'Utilisateur.FINMISSION IS NULL')),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
+            $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Utilisateur.DATEDEBUTACTIF','Utilisateur.FINMISSION'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'OR' => array('AND'=>array('OR'=>array('Utilisateur.DATEDEBUTACTIF < "'.$datefin.'"','Utilisateur.DATEDEBUTACTIF IS NULL'),'Utilisateur.FINMISSION > "'.$datedebut.'"'),'Utilisateur.FINMISSION IS NULL')),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
             $this->set('utilisateurs',$utilisateurs);  
             $this->Activitesreelle->recursive = 0;
             $indisponibilites = $this->Activitesreelle->find('all',array('conditions'=>array('Activite.projet_id'=>1,"Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'")));

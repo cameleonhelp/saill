@@ -368,6 +368,10 @@ a, a:focus {
   text-decoration: none !important;
   color: #90034e !important;
 }
+.indispo{
+    background-color: #AEA79F !important;
+    color: #F7F7F7;
+}
 .week {
     background-color: #CB0044 !important;
     color: #F7F7F7;
@@ -379,10 +383,7 @@ a, a:focus {
 /*.ferie:after{
     content: 'F';
 }*/
-.indispo{
-    background-color: #AEA79F !important;
-    color: #F7F7F7;
-}
+
 /*.indispo:after{
     content: 'NP';
 }*/

@@ -81,6 +81,7 @@
             </div>
         </div>
         <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $fetat; ?> de <?php echo $futilisateur; ?> <?php echo $fperiode; ?></em></code><?php } ?>        
+        <?php if ($this->params['action']=='afacturer') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $fetat; ?> de <?php echo $futilisateur; ?> <?php echo $fperiode; ?></em></code><?php } ?>                
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" id="data">
         <thead>
 	<tr>

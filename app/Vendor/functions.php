@@ -40,14 +40,49 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
     return $day[2]."-".$day[1]."-".$day[0];
 }
 /**
+ * CIntDateDeb
+ * 
+ * @param type $frdate
+ * @return date au format Y-m-d
+ */
+    function CIntDateDeb($frdate=null){
+    if($frdate!=null && $frdate!='0000/00/00'):
+        $day = explode('/',$frdate);
+        $result = (int)($day[2].$day[1].$day[0]);
+    else :
+        $result = (int)'0';
+    endif;
+    return $result;
+}
+/**
+ * CIntDateFin
+ * 
+ * @param type $frdate
+ * @return date au format Y-m-d
+ */
+    function CIntDateFin($frdate=null){
+    if($frdate!=null && $frdate!='0000/00/00'):
+        $day = explode('/',$frdate);
+        $result = (int)($day[2].$day[1].$day[0]);
+    else :
+        $result = (int)'99999999';
+    endif;
+    return $result;
+}
+/**
  * CIntDate
  * 
  * @param type $frdate
  * @return date au format Y-m-d
  */
-    function CIntDate($frdate){
-    $day = explode('/',$frdate);
-    return $day[2].$day[1].$day[0];
+    function CIntDate($frdate=null){
+    if($frdate!=null && $frdate!='0000/00/00'):
+        $day = explode('/',$frdate);
+        $result = (int)($day[2].$day[1].$day[0]);
+    else :
+        $result = (int)'00000000';
+    endif;
+    return $result;
 }
 /**
  * CFRDate
@@ -245,7 +280,6 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
                 array_push($result,$newIndispo);
             endif;            
         } 
-        //asort($result);
         return $result;
     }    
     
@@ -305,17 +339,17 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
  * @return Variable de session user
  */    
     function userAuth($key = null){
-        $user = SessionComponent::read('Auth.User');
-        //if (isset($user)):
+        try{
+            $user = SessionComponent::read('Auth.User');
             if ($key === null) {
                 return $user;
             } else {
                 return $user[$key];
             }
-        //else :
-        //    $this->Session->setFlash(__('Votre session est expirée veuillez rafraîchir la page.<br />Vos données ont été prises en compte, si toutefois cela n\'était pas le cas, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
-        //    throw new CakeSessionException();
-        //endif;      
+        } catch (Exception $e) {
+            $this->Session->setFlash(__('Votre session est expirée veuillez rafraîchir la page.<br />Vos données ont été prises en compte, si toutefois cela n\'était pas le cas, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+            throw new Exception( 'Votre session a expiré veuillez rafraîchir la page.', 0, $e);
+        }   
     }
     
     @define(AUTHORIZED, 'Auth.Profil');
