@@ -18,3 +18,4 @@ _git2_L2FF60
 *.doc
 *.mno
 sql/*
+.gitignore
