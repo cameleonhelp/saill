@@ -146,7 +146,8 @@
                 location.reload();
                 overlay.remove();
             });
-            $(this).parents().find(':checkbox').prop('checked', false);             
+            $(this).parents().find(':checkbox').prop('checked', false);  
+            $("#all_ids").val('');
         });
         
         $(document).on('click','#desactiverlink',function(e){
@@ -163,6 +164,7 @@
                 overlay.remove();
             });
             $(this).parents().find(':checkbox').prop('checked', false);
+            $("#all_ids").val('');
         });
         
         $(document).on('click','#checkall',function(e){

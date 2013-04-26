@@ -121,6 +121,7 @@
                 overlay.remove();
             });
             $(this).parents().find(':checkbox').prop('checked', false);
+            $("#all_ids").val('');
         });
         
         $(document).on('click','#checkall',function(e){
