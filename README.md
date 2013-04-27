@@ -1,7 +1,7 @@
-OSACT 2
+SAILL 2
 =======
 
-OSACT est un site pour suivre l'activité d'une équipe de développeurs, ainsi que le suivi logistique du matériel mis à disposition.
+SAILL [Suivi d'Activités, d'Indisponibilité, des Livrables et de la Logistique] anciennement OSACT est un site pour suivre l'activité d'une équipe de développeurs, ainsi que le suivi logistique du matériel mis à disposition.
 
 **Nouvelle version car modification de la conception pour les actions pour un suivi de l'activité réelle et de la facturation séparé**
 
