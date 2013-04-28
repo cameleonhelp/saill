@@ -1,6 +1,8 @@
 SAILL 2
 =======
 
+[![SAILL 2](http://store.olympe.in/img/saill.fw.png)]
+
 SAILL [Suivi d'Activités, d'Indisponibilité, des Livrables et de la Logistique]  *anciennement OSACT*  est un site pour suivre l'activité d'une équipe de développeurs, ainsi que le suivi logistique du matériel mis à disposition.
 
 **Nouvelle version car modification de la conception pour les actions pour un suivi de l'activité réelle et de la facturation séparé**
