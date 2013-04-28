@@ -7,7 +7,7 @@ SAILL [Suivi d'Activités, d'Indisponibilité, des Livrables et de la Logistique
 
 **Nouvelle version car modification de la conception pour les actions pour un suivi de l'activité réelle et de la facturation séparé**
 
-OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.mysql.fr/products/workbench/)
+OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.mysql.fr/downloads/workbench/)
 
 ## Cette version s'appuie sur :
 
