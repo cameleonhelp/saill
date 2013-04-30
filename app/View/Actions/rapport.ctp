@@ -79,6 +79,7 @@
         <thead>
             <tr>
             <th>Période</th>
+            <th>Domaine</th>
             <th>Objet</th>
             <th>Etat</th>
             </tr>
@@ -87,6 +88,7 @@
             <?php foreach($detailrapportresults as $result): ?>
             <tr>
                 <td><?php echo strMonth($result[0]['MONTH']).' '.$result[0]['YEAR']; ?></td>
+                <td><?php echo $result['Domaine']['NOM']; ?></td>
                 <td><?php echo $result['Action']['OBJET']; ?></td>
                 <td style="text-align:center"><?php echo ucfirst_utf8($result['Action']['STATUT']); ?></td> 
             </tr>           
@@ -94,6 +96,9 @@
         </tbody>
     </table>
 </div>
+<?php if($israpport==0) : ?>
+<div class="alert alert-block"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
+<?php endif; ?>
 <script>
 $(document).ready(function (){ 
     

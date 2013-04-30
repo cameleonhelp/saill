@@ -365,13 +365,13 @@ class ActionsController extends AppController {
             if (isAuthorized('actions', 'rapports')) :
                 if ($this->request->is('post')):
                     $destinataire = $this->request->data['Action']['destinataire'] == "tous" ? '1=1' : array('Action.destinataire'=>$this->request->data['Action']['destinataire']);
-                    $domaine = $this->request->data['Action']['domaine_id'] == "tous" ? '1=1' : array('Action.domaine_id'=>$this->request->data['Action']['domiane_id']);
+                    $domaine = $this->request->data['Action']['domaine_id'] == "tous" ? '1=1' : array('Action.domaine_id'=>$this->request->data['Action']['domaine_id']);
                     $periode = 'Action.ECHEANCE BETWEEN "'.  CUSDate($this->request->data['Action']['START']).'" AND "'.CUSDate($this->request->data['Action']['END']).'"';
                     $rapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('Action.destinataire','MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)','Action.STATUT'),'recursive'=>0));
                     $this->set('rapportresults',$rapportresult);
                     $chartresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)'),'recursive'=>0));
                     $this->set('chartresults',$chartresult);                    
-                    $detailrapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Action.STATUT','Action.OBJET'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'recursive'=>0));
+                    $detailrapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Action.STATUT','Action.OBJET','Domaine.NOM'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'recursive'=>0));
                     $this->set('detailrapportresults',$detailrapportresult);
                     $this->Session->delete('rapportresults');  
                     $this->Session->delete('detailrapportresults');                      
