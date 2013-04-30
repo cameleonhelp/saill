@@ -646,4 +646,17 @@ function styleBarre($avancement){
         if (strpos($date, "/")!==false || strpos($date, "-")!==false) $result = true;
         return $result;
     }
+    
+    function strMonth($month){
+        $moisentier = array(1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin',7=>'Juillet',8=>'Août',9=>'Setpembre',10=>'Octobre',11=>'Novembre',12=>'Décembre');
+        return $moisentier[(int)$month];
+    }
+    
+    function ucfirst_utf8($stri){ 
+        if($stri{0}>="\xc3") 
+            return (($stri{1}>="\xa0")? 
+            ($stri{0}.chr(ord($stri{1})-32)): 
+            ($stri{0}.$stri{1})).substr($stri,2); 
+        else return ucfirst($stri); 
+    }     
 ?>

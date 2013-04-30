@@ -48,6 +48,8 @@ $cakeDescription = __d('cake_dev', 'OSACT '.  htmlspecialchars($this->element('v
                 echo $this->Html->script('datetime');
                 echo $this->Html->script('navigation');
                 echo $this->Html->script('jquery.session');
+                echo $this->Html->script('highcharts');
+                echo $this->Html->script('modules/exporting');                
                 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');

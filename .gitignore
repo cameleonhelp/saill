@@ -1,0 +1,8 @@
+nbproject/*
+*.DS_Store
+app/tmp/*
+*.pdf
+*.ppt
+*.doc
+*.db
+sql/*

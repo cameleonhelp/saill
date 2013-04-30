@@ -362,6 +362,32 @@ class ActionsController extends AppController {
  */        
         public function rapport() {
             $this->set('title_for_layout','Rapport des actions');
+            if (isAuthorized('actions', 'rapports')) :
+                if ($this->request->is('post')):
+                    $destinataire = $this->request->data['Action']['destinataire'] == "tous" ? '1=1' : array('Action.destinataire'=>$this->request->data['Action']['destinataire']);
+                    $domaine = $this->request->data['Action']['domaine_id'] == "tous" ? '1=1' : array('Action.domaine_id'=>$this->request->data['Action']['domiane_id']);
+                    $periode = 'Action.ECHEANCE BETWEEN "'.  CUSDate($this->request->data['Action']['START']).'" AND "'.CUSDate($this->request->data['Action']['END']).'"';
+                    $rapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('Action.destinataire','MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)','Action.STATUT'),'recursive'=>0));
+                    $this->set('rapportresults',$rapportresult);
+                    $chartresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)'),'recursive'=>0));
+                    $this->set('chartresults',$chartresult);                    
+                    $detailrapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Action.STATUT','Action.OBJET'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'recursive'=>0));
+                    $this->set('detailrapportresults',$detailrapportresult);
+                    $this->Session->delete('rapportresults');  
+                    $this->Session->delete('detailrapportresults');                      
+                    $this->Session->write('rapportresults',$rapportresult);
+                    $this->Session->write('detailrapportresults',$detailrapportresult);
+                endif;
+                $alldestinataire = array('tous'=>'Tous les responsables');
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $this->set('destinataires',$alldestinataire+$destinataires);  
+                $alldomaine = array('tous'=>'Tous les domaines');
+                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
+                $this->set('domaines',$alldomaine+$domaines);                
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif; 
 	}     
            
 /**
@@ -397,5 +423,13 @@ class ActionsController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
             endif;                
-	}           
+	} 
+        
+	function export_doc() {
+                $data = $this->Session->read('rapportresults');
+                $this->set('rowsrapport',$data);
+                $data = $this->Session->read('detailrapportresults'); 
+                $this->set('rowsdetail',$data);              
+		$this->render('export_doc','export_doc');
+        }        
 }

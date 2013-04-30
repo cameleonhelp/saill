@@ -235,7 +235,7 @@ table th a.desc:after,
 }
 [class^="ico-"],
 [class*="ico-"] {
-  display: block;
+  display: inline-block;
   width: 16px;
   height: 16px;
   margin-top: -1px;
