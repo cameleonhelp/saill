@@ -29,6 +29,6 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.
 
 ## A venir en version 2.0.1 :
 
-* Génération de rapport avec graphique au format doc (*mis en place sur les rapports d'actions*).
+* Génération de rapport avec graphique au format doc ( *mis en place sur les rapports d'actions* ).
 
 * Prise en compte des retours utilisateurs.
