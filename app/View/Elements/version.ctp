@@ -1,6 +1,6 @@
 <?php 
     $version = '2.0';
-    $build = 'b047';
+    $build = 'b048';
     echo $version.'.'.$build;
     /** 
      * changelog :
@@ -8,9 +8,9 @@
      * version 2.0.0 finale
      ****** mis sur serveur d'intégration ******
      * bxxx Rapports
-     *      Activités réelles -> nombre d'activités réelles par mois par utilisateurs
+     *      Plan de charge -> nombre de charges prévues par mois par utilisateurs /ou par domaines par projet      
+     * b048 Activités réelles -> nombre d'activités réelles par mois par utilisateurs
      *      Facturation -> nombre de facturations par mois par utilisateurs
-     *      Plan de charge -> nombre de charges prévues par mois par utilisateurs /ou par domaines par projet
      * b047 Actions -> nombre d'actions par mois par utilisateurs avec les états avec graphique et export au format doc
      * b046 mise en place des liens en ajax/jquery pour une harmonisation des actions avec un overlay de la fenêtre entière
      * b045 Mise à jour en masse des ouvertures de droits

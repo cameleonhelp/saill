@@ -364,8 +364,14 @@ class ActionsController extends AppController {
             $this->set('title_for_layout','Rapport des actions');
             if (isAuthorized('actions', 'rapports')) :
                 if ($this->request->is('post')):
-                    $destinataire = $this->request->data['Action']['destinataire'] == "tous" ? '1=1' : array('Action.destinataire'=>$this->request->data['Action']['destinataire']);
-                    $domaine = $this->request->data['Action']['domaine_id'] == "tous" ? '1=1' : array('Action.domaine_id'=>$this->request->data['Action']['domaine_id']);
+                    foreach ($this->request->data['Action']['destinataire'] as &$value) {
+                        @$destinatairelist .= $value.',';
+                    }  
+                    $destinataire = 'Action.destinataire IN ('.substr_replace($destinatairelist ,"",-1).')';
+                    foreach ($this->request->data['Action']['domaine_id'] as &$value) {
+                        @$projetlist .= $value.',';
+                    }  
+                    $domaine = 'Action.domaine_id IN ('.substr_replace($projetlist ,"",-1).')';
                     $periode = 'Action.ECHEANCE BETWEEN "'.  CUSDate($this->request->data['Action']['START']).'" AND "'.CUSDate($this->request->data['Action']['END']).'"';
                     $rapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('Action.destinataire','MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)','Action.STATUT'),'recursive'=>0));
                     $this->set('rapportresults',$rapportresult);
@@ -378,12 +384,10 @@ class ActionsController extends AppController {
                     $this->Session->write('rapportresults',$rapportresult);
                     $this->Session->write('detailrapportresults',$detailrapportresult);
                 endif;
-                $alldestinataire = array('tous'=>'Tous les responsables');
                 $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
-                $this->set('destinataires',$alldestinataire+$destinataires);  
-                $alldomaine = array('tous'=>'Tous les domaines');
+                $this->set('destinataires',$destinataires);  
                 $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
-                $this->set('domaines',$alldomaine+$domaines);                
+                $this->set('domaines',$domaines);                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
@@ -426,10 +430,15 @@ class ActionsController extends AppController {
 	} 
         
 	function export_doc() {
+            if($this->Session->check('rapportresults') && $this->Session->check('detailrapportresults')):
                 $data = $this->Session->read('rapportresults');
                 $this->set('rowsrapport',$data);
                 $data = $this->Session->read('detailrapportresults'); 
                 $this->set('rowsdetail',$data);              
 		$this->render('export_doc','export_doc');
+            else:
+                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport'),'default',array('class'=>'alert alert-error'));             
+                $this->redirect(array('action'=>'rapport'));
+            endif;
         }        
 }

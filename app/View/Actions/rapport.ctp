@@ -4,11 +4,13 @@
         <tr>
             <td><label class="control-label sstitre  required" for="ActionDestinataire">Responsable: </label></td>
             <td>
-                    <?php echo $this->Form->select('destinataire',$destinataires,array('data-rule-required'=>'true','data-msg-required'=>"Le nom du responsable est obligatoire", 'empty' => 'Choisir un responsable')); ?>               
+                    <?php echo $this->Form->select('destinataire',$destinataires,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le nom du responsable est obligatoire", 'empty' => 'Choisir un responsable')); ?>               
+                <br><?php echo $this->Form->input('SelectAll',array('type'=>'checkbox')); ?><label class="labelAfter" for="ActionSelectAll">&nbsp;Tout sélectionner</label>            
             </td>
             <td><label class="control-label sstitre  required" for="ActionDomaineId">Domaine : </label></td>
             <td>
-                    <?php echo $this->Form->select('domaine_id',$domaines,array('data-rule-required'=>'true','data-msg-required'=>"Le domaine est obligatoire", 'empty' => 'Choisir un domaine')); ?>               
+                    <?php echo $this->Form->select('domaine_id',$domaines,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le domaine est obligatoire", 'empty' => 'Choisir un domaine')); ?>               
+                <br><?php echo $this->Form->input('SelectAllDomaine',array('type'=>'checkbox')); ?><label class="labelAfter" for="ActionSelectAllDomaine">&nbsp;Tout sélectionner</label>            
             </td>            
         </tr>        
         <tr>
@@ -96,11 +98,35 @@
         </tbody>
     </table>
 </div>
-<?php if($israpport==0) : ?>
+<?php if(isset($rapportresults) && $israpport==0) : ?>
 <div class="alert alert-block"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
 <?php endif; ?>
 <script>
 $(document).ready(function (){ 
+
+   $(document).on('click','#ActionSelectAll',function() {
+        if($(this).is(':checked')){
+            $('#ActionDestinataire option').prop('selected', 'selected');
+        } else {
+            $('#ActionDestinataire option').prop('selected', '');
+        }
+   });   
+    
+   $(document).on('click','#ActionDestinataire',function() {
+            $('#ActionSelectAll').prop('checked', false);
+    }); 
+    
+   $(document).on('click','#ActionSelectAllDomaine',function() {
+        if($(this).is(':checked')){
+            $('#ActionDomaineId option').prop('selected', 'selected');
+        } else {
+            $('#ActionDomaineId option').prop('selected', '');
+        }
+    });   
+    
+   $(document).on('click','#ActionDomaineId',function() {
+            $('#ActionSelectAllDomaine').prop('checked', false);
+    }); 
     
     function sumOfColumns() {
         var tot = 0;
@@ -126,7 +152,7 @@ $(document).ready(function (){
         $('#ActionEND').datepicker('update', newDate);
         $('#ActionEND').focus();
     })    
-
+<?php if(isset($chartresults)): ?>
     <?php foreach($chartresults as $result): 
        $data[] = "[".$result[0]['MONTH'].",".$result[0]['NB']."]";
     endforeach; ?>
@@ -136,6 +162,7 @@ $(document).ready(function (){
         chart: {
             type: 'column', 
         },  
+        colors: ['#A1006B','#E05206','#CCDC00','#009AA6','#CB0044','#FFB612','#7ABB00','#00BBCE','#6E267B'],        
         credits: {
             enabled: false,
         },
@@ -174,5 +201,6 @@ $(document).ready(function (){
             data: [<?php echo join($data, ',') ?>]
         }]
     });
+    <?php endif; ?>
 });
 </script>

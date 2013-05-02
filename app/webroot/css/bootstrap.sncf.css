@@ -629,3 +629,7 @@ input.invalid {
     color:#3B8230 !important;
     font-weight: bold !important;
 }
+
+.datepicker thead th {
+  background: #ffffff !important;
+}

@@ -339,16 +339,15 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
  * @return Variable de session user
  */    
     function userAuth($key = null){
-        try{
+        if(SessionComponent::check('Auth.User')){
             $user = SessionComponent::read('Auth.User');
             if ($key === null) {
                 return $user;
             } else {
                 return $user[$key];
             }
-        } catch (Exception $e) {
-            $this->Session->setFlash(__('Votre session est expirée veuillez rafraîchir la page.<br />Vos données ont été prises en compte, si toutefois cela n\'était pas le cas, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
-            throw new Exception( 'Votre session a expiré veuillez rafraîchir la page.', 0, $e);
+        } else {
+            $this->Session->setFlash(__('Votre session est expirée veuillez rafraîchir la page.<br />Vos données ont été prises en compte, si toutefois cela n\'était pas le cas, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-error'));
         }   
     }
     

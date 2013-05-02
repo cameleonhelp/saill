@@ -169,5 +169,44 @@ class PlanchargesController extends AppController {
  */        
         public function rapport() {
             $this->set('title_for_layout','Rapport des plans de charges');
-	}            
+            if (isAuthorized('plancharges', 'rapports')) :
+                if ($this->request->is('post')):
+                    $destinataire = $this->request->data['Plancharge']['destinataire'] == "tous" ? '1=1' : array('Plancharge.destinataire'=>$this->request->data['Plancharge']['destinataire']);
+                    $domaine = $this->request->data['Plancharge']['domaine_id'] == "tous" ? '1=1' : array('Plancharge.domaine_id'=>$this->request->data['Plancharge']['domaine_id']);
+                    $periode = 'Plancharge.ECHEANCE BETWEEN "'.  CUSDate($this->request->data['Plancharge']['START']).'" AND "'.CUSDate($this->request->data['Plancharge']['END']).'"';
+                    $rapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Plancharge.ECHEANCE) AS MONTH', 'YEAR(Plancharge.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Plancharge.id) AS NB','Plancharge.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Plancharge.ECHEANCE)'=>'asc','YEAR(Plancharge.ECHEANCE)'=>'asc'),'group'=>array('Plancharge.destinataire','MONTH(Plancharge.ECHEANCE)','YEAR(Plancharge.ECHEANCE)','Plancharge.STATUT'),'recursive'=>0));
+                    $this->set('rapportresults',$rapportresult);
+                    $chartresult = $this->Plancharge->find('all',array('fields'=>array('MONTH(Plancharge.ECHEANCE) AS MONTH', 'YEAR(Plancharge.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Plancharge.id) AS NB','Plancharge.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Plancharge.ECHEANCE)'=>'asc','YEAR(Plancharge.ECHEANCE)'=>'asc'),'group'=>array('MONTH(Plancharge.ECHEANCE)','YEAR(Plancharge.ECHEANCE)'),'recursive'=>0));
+                    $this->set('chartresults',$chartresult);                    
+                    $detailrapportresult = $this->Plancharge->find('all',array('fields'=>array('MONTH(Plancharge.ECHEANCE) AS MONTH', 'YEAR(Plancharge.ECHEANCE) AS YEAR','Plancharge.STATUT','Plancharge.OBJET','Domaine.NOM'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Plancharge.ECHEANCE)'=>'asc','YEAR(Plancharge.ECHEANCE)'=>'asc'),'recursive'=>0));
+                    $this->set('detailrapportresults',$detailrapportresult);
+                    $this->Session->delete('rapportresults');  
+                    $this->Session->delete('detailrapportresults');                      
+                    $this->Session->write('rapportresults',$rapportresult);
+                    $this->Session->write('detailrapportresults',$detailrapportresult);
+                endif;
+                $alldestinataire = array('tous'=>'Tous les responsables');
+                $destinataires = $this->Plancharge->Detailplancharge->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $this->set('destinataires',$alldestinataire+$destinataires);  
+                $domaines = $this->Plancharge->Detailplancharge->Activite->Projet->find('list',array('fields'=>array('id','NOM'),'order'=>array('Projet.NOM'),'conditions'=>array('id>1'),'recursive'=>-1));
+                $this->set('domaines',$domaines);                
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;               
+	}    
+        
+	function export_doc() {
+            if($this->Session->check('rapportresults') && $this->Session->check('detailrapportresults')):
+                $data = $this->Session->read('rapportresults');
+                $this->set('rowsrapport',$data);
+                $data = $this->Session->read('detailrapportresults'); 
+                $this->set('rowsdetail',$data);              
+		$this->render('export_doc','export_doc');
+            else:
+                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport'),'default',array('class'=>'alert alert-error'));             
+                $this->redirect(array('action'=>'rapport'));
+            endif;
+        }         
+        
 }
