@@ -535,7 +535,51 @@ class ActivitesreellesController extends AppController {
  */        
         public function rapport() {
                $this->set('title_for_layout','Rapport des activités réelles');
+            if (isAuthorized('activitesreelles', 'rapports')) :
+                if ($this->request->is('post')):
+                    foreach ($this->request->data['Activitesreelle']['utilisateur_id'] as &$value) {
+                        @$destinatairelist .= $value.',';
+                    }  
+                    $destinataire = 'Activitesreelle.utilisateur_id IN ('.substr_replace($destinatairelist ,"",-1).')';
+                    foreach ($this->request->data['Activitesreelle']['projet_id'] as &$value) {
+                        @$projetlist .= $value.',';
+                    }  
+                    $domaine = 'Activite.projet_id IN ('.substr_replace($projetlist ,"",-1).')';
+                    $periode = 'Activitesreelle.DATE BETWEEN "'.  CUSDate($this->request->data['Activitesreelle']['START']).'" AND "'.CUSDate($this->request->data['Activitesreelle']['END']).'"';
+                    $rapportresult = $this->Activitesreelle->find('all',array('fields'=>array('MONTH(Activitesreelle.DATE) AS MONTH', 'YEAR(Activitesreelle.DATE) AS YEAR','Activite.projet_id','SUM(Activitesreelle.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Activitesreelle.DATE)'=>'asc','YEAR(Activitesreelle.DATE)'=>'asc'),'group'=>array('Activite.projet_id','MONTH(Activitesreelle.DATE)','YEAR(Activitesreelle.DATE)'),'recursive'=>0));
+                    $this->set('rapportresults',$rapportresult);
+                    $chartresult = $this->Activitesreelle->find('all',array('fields'=>array('Activite.projet_id','SUM(Activitesreelle.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('Activite.projet_id'=>'asc'),'group'=>array('Activite.projet_id'),'recursive'=>0));
+                    $this->set('chartresults',$chartresult);                    
+                    $detailrapportresult = $this->Activitesreelle->find('all',array('fields'=>array('MONTH(Activitesreelle.DATE) AS MONTH', 'YEAR(Activitesreelle.DATE) AS YEAR','Activite.NOM','Activite.projet_id','SUM(Activitesreelle.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Activitesreelle.DATE)'=>'asc','YEAR(Activitesreelle.DATE)'=>'asc'),'group'=>array('Activite.projet_id','Activite.NOM','MONTH(Activitesreelle.DATE)','YEAR(Activitesreelle.DATE)'),'recursive'=>0));
+                    $this->set('detailrapportresults',$detailrapportresult);
+                    $this->Session->delete('rapportresults');  
+                    $this->Session->delete('detailrapportresults');                      
+                    $this->Session->write('rapportresults',$rapportresult);
+                    $this->Session->write('detailrapportresults',$detailrapportresult);
+                endif;
+                $alldestinataire = array('tous'=>'Tous les responsables');
+                $destinataires = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $this->set('destinataires',$destinataires);  
+                $domaines = $this->Activitesreelle->Activite->Projet->find('list',array('fields'=>array('id','NOM'),'order'=>array('Projet.NOM'),'recursive'=>-1));
+                $this->set('domaines',$domaines);                
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
 	} 
+        
+	function export_doc() {
+            if($this->Session->check('rapportresults') && $this->Session->check('detailrapportresults')):
+                $data = $this->Session->read('rapportresults');
+                $this->set('rowsrapport',$data);
+                $data = $this->Session->read('detailrapportresults'); 
+                $this->set('rowsdetail',$data);              
+		$this->render('export_doc','export_doc');
+            else:
+                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport'),'default',array('class'=>'alert alert-error'));             
+                $this->redirect(array('action'=>'rapport'));
+            endif;
+        }         
         
         public function facturer(){
             $ids = explode('-', $this->request->data('all_ids'));
