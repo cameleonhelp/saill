@@ -4,12 +4,12 @@
         <tr>
             <td><label class="control-label sstitre  required" for="ActionDestinataire">Responsable: </label></td>
             <td>
-                    <?php echo $this->Form->select('destinataire',$destinataires,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le nom du responsable est obligatoire", 'empty' => 'Choisir un responsable')); ?>               
+                    <?php echo $this->Form->select('destinataire',$destinataires,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le nom du responsable est obligatoire")); ?>               
                 <br><?php echo $this->Form->input('SelectAll',array('type'=>'checkbox')); ?><label class="labelAfter" for="ActionSelectAll">&nbsp;Tout sélectionner</label>            
             </td>
             <td><label class="control-label sstitre  required" for="ActionDomaineId">Domaine : </label></td>
             <td>
-                    <?php echo $this->Form->select('domaine_id',$domaines,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le domaine est obligatoire", 'empty' => 'Choisir un domaine')); ?>               
+                    <?php echo $this->Form->select('domaine_id',$domaines,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le domaine est obligatoire")); ?>               
                 <br><?php echo $this->Form->input('SelectAllDomaine',array('type'=>'checkbox')); ?><label class="labelAfter" for="ActionSelectAllDomaine">&nbsp;Tout sélectionner</label>            
             </td>            
         </tr>        
