@@ -38,10 +38,10 @@
   <?php $classPetitMateriels = in_array($controller,array('materielautres_index','materielautres_add','materielautres_edit','materielautres_delete','materielautres_search')) ? 'active' : ''; ?>               
   <?php $classUtiliseOutils = in_array($controller,array('utiliseoutils_index','utiliseoutils_add','utiliseoutils_edit','utiliseoutils_delete','utiliseoutils_search')) ? 'active' : ''; ?>    
   <?php $classLogistique = in_array('active',array($classPetitMateriels,$classUtilisateurs,$classMateriels,$classUtiliseOutils)) ? 'active' : ''; ?> 
-  <?php $classCRAActions = in_array($controller,array('actions_rapport')) ? 'active' : ''; ?>               
-  <?php $classCRAActivites = in_array($controller,array('activitesreelles_rapport')) ? 'active' : ''; ?>    
-  <?php $classCRAFacturations = in_array($controller,array('facturations_rapport')) ? 'active' : ''; ?>   
-  <?php $classCRAPlancharges = in_array($controller,array('plancharges_rapport')) ? 'active' : ''; ?>   
+  <?php $classCRAActions = in_array($controller,array('actions_rapport','actions_export_doc')) ? 'active' : ''; ?>               
+  <?php $classCRAActivites = in_array($controller,array('activitesreelles_rapport','activitesreelles_export_doc')) ? 'active' : ''; ?>    
+  <?php $classCRAFacturations = in_array($controller,array('facturations_rapport','facturations_export_doc')) ? 'active' : ''; ?>   
+  <?php $classCRAPlancharges = in_array($controller,array('plancharges_rapport','plancharges_export_doc')) ? 'active' : ''; ?>   
   <?php $classRapports = in_array('active',array($classCRAActions,$classCRAActivites,$classCRAFacturations,$classCRAPlancharges)) ? 'active' : ''; ?> 
   <?php $classContactUs = in_array($controller,array('contacts_add')) ? 'active' : ''; ?>               
   <?php $classAddFavorites = 'notactive'; ?>  

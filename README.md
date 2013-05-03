@@ -5,9 +5,7 @@ SAILL 2
 
 SAILL [Suivi d'Activités, d'Indisponibilité, des Livrables et de la Logistique]  *anciennement OSACT*  est un site pour suivre l'activité d'une équipe de développeurs, ainsi que le suivi logistique du matériel mis à disposition.
 
-**Nouvelle version car modification de la conception pour les actions pour un suivi de l'activité réelle et de la facturation séparé**
-
-OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.mysql.fr/downloads/workbench/)
+SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.mysql.fr/downloads/workbench/)
 
 ## Cette version s'appuie sur :
 
@@ -19,7 +17,7 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.
 
 * [Datepicker pour BootStrap] (https://github.com/vitalets/bootstrap-datepicker) - Pour changer du datepicker de JQuery-UI
 
-* [Highcharts 3.0.1 et Highstock 1.3.1](http://www.highcharts.com) - bonne documentation (http://docs.highcharts.com)
+* [Highcharts 3.0.1](http://www.highcharts.com) - bonne documentation (http://docs.highcharts.com)
 
 ## A venir en mai :
 
@@ -29,6 +27,6 @@ OSACT_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www.
 
 ## A venir en version 2.0.1 :
 
-* Génération de rapport avec graphique au format doc ( *mis en place sur les rapports d'actions* ).
+* Génération de rapport avec graphique au format doc ( *mis en place sur les rapports d'actions, activités réelles et facturation* ).
 
 * Prise en compte des retours utilisateurs.
