@@ -45,7 +45,7 @@
 <?php $style = $israpport==0 ? 'style="display:none;"' : ''; ?>
 <div id="rapport" <?php echo $style; ?>>
     <div class="pull-right"><?php echo $this->Html->link('<i class="ico-doc"></i> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn','escape' => false)); ?></div>
-<div id="chartcontainer" style="width:80%; height:400px; margin-left: 10%;"></div>
+<div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'actions par mois, par destinataire et par état</div><br>
     <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
@@ -176,7 +176,7 @@ $(document).ready(function (){
             text: 'Nombre d\'actions'
         },
         subtitle:{
-               text:'(de '+$('#ActionDestinataire :selected').text().toLowerCase()+', sur '+$('#ActionDomaineId :selected').text().toLowerCase()+' et de tous les états)'
+               text:'(des utilisateurs, sur les domaines et pour tous les états)'
         },
         xAxis: {
             title: {
@@ -186,7 +186,13 @@ $(document).ready(function (){
                 formatter: function() {
                     $mois = ['','Janv.','Fév.','Mars','Avril','Mai','Juin','Juil.','Août','Setp.','Oct.','Nov.','Déc.'];
                     return $mois[this.value];
-                }
+                },
+                rotation: -45,
+                align: 'right',
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }                
             },
             tickInterval: 1
         },
@@ -199,7 +205,14 @@ $(document).ready(function (){
         series: [{
             name: 'Actions (tout état)',
             data: [<?php echo join($data, ',') ?>]
-        }]
+        }],
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        }
     });
     <?php endif; ?>
 });

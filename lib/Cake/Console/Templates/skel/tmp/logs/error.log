@@ -1,0 +1,4 @@
+2013-05-03 07:34:36 Warning: include(PHPUnit\Autoload.php): failed to open stream: No such file or directory in [V:\saill.200\lib\Cake\TestSuite\CakeTestSuiteDispatcher.php, line 150]
+2013-05-03 07:34:37 Warning: include(): Failed opening 'PHPUnit\Autoload.php' for inclusion (include_path='V:\saill.200\lib;.;C:\php\pear') in [V:\saill.200\lib\Cake\TestSuite\CakeTestSuiteDispatcher.php, line 150]
+2013-05-03 07:34:39 Warning: include(PHPUnit\Autoload.php): failed to open stream: No such file or directory in [V:\saill.200\lib\Cake\TestSuite\CakeTestSuiteDispatcher.php, line 150]
+2013-05-03 07:34:39 Warning: include(): Failed opening 'PHPUnit\Autoload.php' for inclusion (include_path='V:\saill.200\lib;.;C:\php\pear') in [V:\saill.200\lib\Cake\TestSuite\CakeTestSuiteDispatcher.php, line 150]
