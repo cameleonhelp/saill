@@ -1,13 +1,14 @@
 <?php 
     $version = '2.0';
-    $build = 'b048';
+    $build = 'b049';
     echo $version.'.'.$build;
     /** 
      * changelog :
      * 
      * version 2.0.0 finale
      ****** mis sur serveur d'intégration ******
-     * bxxx Rapports
+     * b050 Tableau de bord accostage contrat,facturé reste à faire ? si faisable
+     * b049 Rapports
      *      Plan de charge -> nombre de charges prévues par mois par utilisateurs /ou par domaines par projet      
      * b048 Activités réelles -> nombre d'activités réelles par mois par utilisateurs
      *      Facturation -> nombre de facturations par mois par utilisateurs

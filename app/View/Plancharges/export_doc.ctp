@@ -22,7 +22,7 @@
 	}
    
 </STYLE>
-<p><b>Rapport sur les actions<b></p>
+<p><b>Rapport sur les plans de charge<b></p>
 <br />
 <p><b>Date :<b>
 <?php $date=new DateTime(); 
@@ -31,43 +31,45 @@ $date->setTimezone(new DateTimeZone('Europe/Paris'));?>
 <br />
 <p><em>Ici vous pouvez ajouter le graphe après l'avoir enregistrer au format "jpg"</em></p>
 <br />
-<p style="text-align: center;">Nombre d'actions par mois, par destinataire et par état</p><br>
+<p style="text-align: center;">Répartition des plans de charge par domaines</p><br>
 <table  cellpadding="0" cellspacing="0">
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Période</td>
-			<td class="tableTd">Responsable</td>
-                        <td class="tableTd">Nombre</td>
-                        <td class="tableTd">Etat</td>
+			<td class="tableTd">Année</td>
+			<td class="tableTd">Domaine</td>
+                        <td class="tableTd">ETP</td>
+                        <td class="tableTd">Charges prévues</td>
 		</tr>	
                 <?php $fin = count($rowsrapport); ?>
 		<?php foreach($rowsrapport as $row):
 			echo '<tr>'; ?>
-                        <td class="tableTdContent"><?php echo strMonth($row[0]['MONTH']).' '.$row[0]['YEAR']; ?></td>
-                        <td class="tableTdContent"><?php echo $row['Utilisateur']['NOM'].' '.$row['Utilisateur']['PRENOM']; ?></td>
-                        <td class="tableTdContent" style="text-align:center"><?php echo $row[0]['NB']; ?></td>
-                        <td class="tableTdContent" style="text-align:center"><?php echo ucfirst_utf8($row['Action']['STATUT']); ?></td> 
+                        <td class="tableTdContent"><?php echo $row['Plancharge']['ANNEE']; ?></td>
+                        <td class="tableTdContent"><?php echo $row['Domaine']['NOM']; ?></td>
+                        <td class="tableTdContent" style="text-align:center"><?php echo $row[0]['ETP']; ?></td>
+                        <td class="tableTdContent" style="text-align:center"><?php echo $row[0]['TOTAL']; ?></td> 
                         <?php
                         echo '</tr>';
 			endforeach;
 		?>            
 </table>
 <br />
-<p style="text-align: center;">Détail des actions par mois</p><br>
+<p style="text-align: center;">Détail de la répartition des plans de charge</p><br>
 <table  cellpadding="0" cellspacing="0">
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Période</td>
+			<td class="tableTd">Année</td>
                         <td class="tableTd">Domaine</td>
-			<td class="tableTd">Action</td>
-                        <td class="tableTd">Etat</td>
+			<td class="tableTd">Projet/Activité</td>
+                        <td class="tableTd">ETP</td>
+                        <td class="tableTd">Charges prévues</td>
 		</tr>	
 		<?php foreach($rowsdetail as $row):
 			echo '<tr>'; ?>
-                        <td class="tableTdContent"><?php echo strMonth($row[0]['MONTH']).' '.$row[0]['YEAR']; ?></td>
+                        <td class="tableTdContent"><?php echo $row['Plancharge']['ANNEE']; ?></td>
                         <td class="tableTdContent"><?php echo $row['Domaine']['NOM']; ?></td>
-                        <td class="tableTdContent"><?php echo $row['Action']['OBJET']; ?></td>
-                        <td class="tableTdContent" style="text-align:center"><?php echo ucfirst_utf8($row['Action']['STATUT']); ?></td> 
+                        <td class="tableTdContent"><?php echo $row['Detailplancharge']['projet_NOM'].' - '.$row['Activite']['NOM']; ?></td>
+                        <td class="tableTdContent" style="text-align:center"><?php echo $row[0]['ETP']; ?></td>
+                        <td class="tableTdContent" style="text-align:center"><?php echo $row[0]['TOTAL']; ?></td> 
                         <?php
                         echo '</tr>';
 			endforeach;
