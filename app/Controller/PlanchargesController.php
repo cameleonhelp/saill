@@ -171,24 +171,30 @@ class PlanchargesController extends AppController {
             $this->set('title_for_layout','Rapport des plans de charges');
             if (isAuthorized('plancharges', 'rapports')) :
                 if ($this->request->is('post')):
-                    $destinataire = $this->request->data['Plancharge']['destinataire'] == "tous" ? '1=1' : array('Plancharge.destinataire'=>$this->request->data['Plancharge']['destinataire']);
-                    $domaine = $this->request->data['Plancharge']['domaine_id'] == "tous" ? '1=1' : array('Plancharge.domaine_id'=>$this->request->data['Plancharge']['domaine_id']);
-                    $periode = 'Plancharge.ECHEANCE BETWEEN "'.  CUSDate($this->request->data['Plancharge']['START']).'" AND "'.CUSDate($this->request->data['Plancharge']['END']).'"';
-                    $rapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Plancharge.ECHEANCE) AS MONTH', 'YEAR(Plancharge.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Plancharge.id) AS NB','Plancharge.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Plancharge.ECHEANCE)'=>'asc','YEAR(Plancharge.ECHEANCE)'=>'asc'),'group'=>array('Plancharge.destinataire','MONTH(Plancharge.ECHEANCE)','YEAR(Plancharge.ECHEANCE)','Plancharge.STATUT'),'recursive'=>0));
-                    $this->set('rapportresults',$rapportresult);
-                    $chartresult = $this->Plancharge->find('all',array('fields'=>array('MONTH(Plancharge.ECHEANCE) AS MONTH', 'YEAR(Plancharge.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Plancharge.id) AS NB','Plancharge.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Plancharge.ECHEANCE)'=>'asc','YEAR(Plancharge.ECHEANCE)'=>'asc'),'group'=>array('MONTH(Plancharge.ECHEANCE)','YEAR(Plancharge.ECHEANCE)'),'recursive'=>0));
-                    $this->set('chartresults',$chartresult);                    
-                    $detailrapportresult = $this->Plancharge->find('all',array('fields'=>array('MONTH(Plancharge.ECHEANCE) AS MONTH', 'YEAR(Plancharge.ECHEANCE) AS YEAR','Plancharge.STATUT','Plancharge.OBJET','Domaine.NOM'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Plancharge.ECHEANCE)'=>'asc','YEAR(Plancharge.ECHEANCE)'=>'asc'),'recursive'=>0));
+                    foreach ($this->request->data['Plancharge']['id'] as &$value) {
+                        @$planchargelist .= $value.',';
+                    }  
+                    $plancharges = 'Detailplancharge.plancharge_id IN ('.substr_replace(@$planchargelist ,"",-1).')';
+                    foreach ($this->request->data['Plancharge']['domaine_id'] as &$value) {
+                        @$domainelist .= $value.',';
+                    }  
+                    $domaines = 'Detailplancharge.domaine_id IN ('.substr_replace(@$domainelist ,"",-1).')';
+                    $detailrapportresult = $this->Plancharge->Detailplancharge->find('all',array('fields'=>array('Plancharge.ANNEE', 'Domaine.NOM','Detailplancharge.activite_id','Activite.NOM','SUM(Detailplancharge.ETP) AS ETP','SUM(Detailplancharge.TOTAL) AS TOTAL'),'conditions'=>array($plancharges,$domaines),'order'=>array('Domaine.NOM'=>'asc'),'group'=>array('Plancharge.ANNEE', 'Domaine.NOM','Detailplancharge.activite_id'),'recursive'=>0));
                     $this->set('detailrapportresults',$detailrapportresult);
+                    $chartchargeresults = $this->Plancharge->Detailplancharge->find('all',array('fields'=>array('Plancharge.ANNEE', 'Domaine.NOM','SUM(Detailplancharge.TOTAL) AS TOTAL'),'conditions'=>array($plancharges,$domaines),'order'=>array('Domaine.NOM'=>'asc'),'group'=>array('Plancharge.ANNEE', 'Domaine.NOM'),'recursive'=>0));
+                    $this->set('chartchargeresults',$chartchargeresults);  
+                    $chartetpresults = $this->Plancharge->Detailplancharge->find('all',array('fields'=>array('Plancharge.ANNEE', 'Domaine.NOM','SUM(Detailplancharge.ETP) AS ETP'),'conditions'=>array($plancharges,$domaines),'order'=>array('Domaine.NOM'=>'asc'),'group'=>array('Plancharge.ANNEE', 'Domaine.NOM'),'recursive'=>0));
+                    $this->set('chartetpresults',$chartetpresults);                      
+                    $rapportresult = $this->Plancharge->Detailplancharge->find('all',array('fields'=>array('Plancharge.ANNEE', 'Domaine.NOM','Detailplancharge.activite_id','Activite.NOM','SUM(Detailplancharge.ETP) AS ETP','SUM(Detailplancharge.TOTAL) AS TOTAL'),'conditions'=>array($plancharges,$domaines),'order'=>array('Domaine.NOM'=>'asc'),'group'=>array('Plancharge.ANNEE', 'Domaine.NOM'),'recursive'=>0));
+                    $this->set('rapportresults',$rapportresult);
                     $this->Session->delete('rapportresults');  
                     $this->Session->delete('detailrapportresults');                      
                     $this->Session->write('rapportresults',$rapportresult);
                     $this->Session->write('detailrapportresults',$detailrapportresult);
                 endif;
-                $alldestinataire = array('tous'=>'Tous les responsables');
-                $destinataires = $this->Plancharge->Detailplancharge->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
-                $this->set('destinataires',$alldestinataire+$destinataires);  
-                $domaines = $this->Plancharge->Detailplancharge->Activite->Projet->find('list',array('fields'=>array('id','NOM'),'order'=>array('Projet.NOM'),'conditions'=>array('id>1'),'recursive'=>-1));
+                $plancharge = $this->Plancharge->find('list',array('fields'=>array('id','NOM'),'order'=>array('Plancharge.NOM'=>'asc'),'recursive'=>-1));
+                $this->set('plancharges',$plancharge);
+                $domaines = $this->Plancharge->Detailplancharge->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));

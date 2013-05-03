@@ -45,7 +45,7 @@
 <?php $style = $israpport==0 ? 'style="display:none;"' : ''; ?>
 <div id="rapport" <?php echo $style; ?>>
     <div class="pull-right"><?php echo $this->Html->link('<i class="ico-doc"></i> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn','escape' => false)); ?></div>
-    <div id="chartcontainer" style="width:80%; height:400px; margin-left: 10%;"></div>
+    <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jour réels consommés par projet</div><br>
     <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
@@ -184,7 +184,15 @@ $(document).ready(function (){
         },
         xAxis: {
             name :'Projets',         
-            categories : [<?php echo join($categories, ',') ?>]
+            categories : [<?php echo join($categories, ',') ?>],
+            labels: {
+                rotation: -45,
+                align: 'right',
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
         },
         yAxis: {
             title: {
@@ -195,7 +203,14 @@ $(document).ready(function (){
         series: [{
             name: 'Consommation réelles',
             data: [<?php echo join($data, ',') ?>]
-        }]
+        }],
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        }
     });
 <?php endif; ?>
 });

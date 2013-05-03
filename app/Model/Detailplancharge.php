@@ -128,6 +128,9 @@ class Detailplancharge extends AppModel {
                 if (isset($val['Detailplancharge']['ETP'])) {
                     $results[$key]['Detailplancharge']['ETP'] = $this->changeSeparator($val['Detailplancharge']['ETP']);
                 } 
+                if (isset($val['Detailplancharge']['activite_id'])) {
+                    $results[$key]['Detailplancharge']['projet_NOM'] = $this->getProjetForActivite($val['Detailplancharge']['activite_id']);
+                }                
             }
             return $results;
         }   
@@ -137,6 +140,12 @@ class Detailplancharge extends AppModel {
             $params = Router::getParams();
             if ($params['action'] == 'export_xls') $result = str_replace('.', ',', $value);
              return $result;
-        }          
+        }  
+        
+        public function getProjetForActivite($id){
+            $sql = "SELECT projets.NOM FROM projets LEFT JOIN activites ON projets.id = activites.projet_id WHERE activites.id='".$id."'";
+            $result = $this->query($sql);
+            return $result[0]['projets']['NOM'];
+        }           
 
 }
