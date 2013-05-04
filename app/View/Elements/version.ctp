@@ -1,18 +1,21 @@
 <?php 
     $version = '2.0';
-    $build = 'b049';
+    $build = 'b050';
     echo $version.'.'.$build;
     /** 
      * changelog :
      * 
      * version 2.0.0 finale
      ****** mis sur serveur d'intégration ******
-     * b050 Tableau de bord accostage contrat,facturé reste à faire ? si faisable
+     * b051 Historiser les budgets sur les actions par années, sélectionner le budget à prendre par défaut
+     *      modifier le schéma de base pour cela en ajoutant une table historybudget
+     * b050 Tableau de bord accostage contrat,facturé reste à faire -> requetage fait reste à mettre en forme
      * b049 Rapports
      *      Plan de charge -> nombre de charges prévues par mois par utilisateurs /ou par domaines par projet      
      * b048 Activités réelles -> nombre d'activités réelles par mois par utilisateurs
      *      Facturation -> nombre de facturations par mois par utilisateurs
      * b047 Actions -> nombre d'actions par mois par utilisateurs avec les états avec graphique et export au format doc
+     *      ! mise en place de la version 2.3.4 de cakephp - security patch !
      * b046 mise en place des liens en ajax/jquery pour une harmonisation des actions avec un overlay de la fenêtre entière
      * b045 Mise à jour en masse des ouvertures de droits
      *      correction sur la navigation 

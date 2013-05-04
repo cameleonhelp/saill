@@ -51,7 +51,8 @@ $cakeDescription = __d('cake_dev', 'SAILL '.  htmlspecialchars($this->element('v
                 echo $this->Html->script('navigation');
                 echo $this->Html->script('jquery.session');
                 echo $this->Html->script('highcharts');
-                echo $this->Html->script('modules/exporting');                
+                echo $this->Html->script('modules/exporting');   
+                echo $this->Html->script('modules/data');
                 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
