@@ -33,6 +33,4 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
 
 * Prise en compte des retours utilisateurs.
 
-* Tableau de bord des projets avec vu sur accostage, pourcentage d'avancement, charge prévue, contractualisée, consommée, facturée, reste à consommer (prévu - consommé) et reste à faire (contractualisé - facturé)
-
-* Faire un historique des budgets contractualisés sur les activités
+* Corrections des bugs au fur et à mesure de leur découverte.
