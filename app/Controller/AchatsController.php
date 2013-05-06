@@ -163,6 +163,10 @@ class AchatsController extends AppController {
 		$data = $this->Session->read('xls_export');
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
-	}      
+	}    
+        
+    public function returnTo($pos=null){
+        
+    }        
              
 }

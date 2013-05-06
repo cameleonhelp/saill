@@ -51,7 +51,8 @@ $cakeDescription = __d('cake_dev', 'SAILL '.  htmlspecialchars($this->element('v
                 echo $this->Html->script('navigation');
                 echo $this->Html->script('jquery.session');
                 echo $this->Html->script('highcharts');
-                echo $this->Html->script('modules/exporting');                
+                echo $this->Html->script('modules/exporting');   
+                echo $this->Html->script('modules/data');
                 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
@@ -125,20 +126,16 @@ $cakeDescription = __d('cake_dev', 'SAILL '.  htmlspecialchars($this->element('v
                     <div class="navbar-inner">
                     <div class="brand" ><?php echo $title_for_layout; ?></div>
                     </div>
-                </div>
+                </div>  
 		<div id="content">
                         <div style="cursor:pointer;"><?php echo $this->Session->flash(); ?></div>
                         <div id="container_message" name="container_message" class="alert alert-error"><ol><li></li></ol></div>
 			
 			<?php echo $this->fetch('content'); ?>
 		</div>
-            </div>
+            </div> 
         </div>
     </div> 
-    <!--<div id="debugguer" style="background-color: #cccccc;">SQL Debug :
-        <?php echo $this->element('sql_dump'); ?>
-    </div>//-->
-
 </body>
 </html>
 <script>

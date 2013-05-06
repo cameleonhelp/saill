@@ -6,3 +6,5 @@ app/tmp/*
 *.doc
 *.db
 sql/*
+
+*.bak

@@ -31,4 +31,7 @@ App::uses('Helper', 'View');
  * @package       app.View.Helper
  */
 class AppHelper extends Helper {
+    public function returnTo($pos=null){
+        
+    }
 }

@@ -3,10 +3,14 @@ App::uses('AppModel', 'Model');
 /**
  * Activite Model
  *
- * @property Activite $Activite
+ * @property Projet $Projet
  * @property Achat $Achat
  * @property Action $Action
+ * @property Activitesreelle $Activitesreelle
  * @property Affectation $Affectation
+ * @property Detailplancharge $Detailplancharge
+ * @property Facturation $Facturation
+ * @property HistoryBudget $HistoryBudget
  */
 class Activite extends AppModel {
 
@@ -29,6 +33,26 @@ class Activite extends AppModel {
 		'NOM' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'ACTIVE' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'DELETABLE' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -87,6 +111,19 @@ class Activite extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
+		'Activitesreelle' => array(
+			'className' => 'Activitesreelle',
+			'foreignKey' => 'activite_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
 		'Affectation' => array(
 			'className' => 'Affectation',
 			'foreignKey' => 'activite_id',
@@ -99,9 +136,48 @@ class Activite extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
+		),
+		'Detailplancharge' => array(
+			'className' => 'Detailplancharge',
+			'foreignKey' => 'activite_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'Facturation' => array(
+			'className' => 'Facturation',
+			'foreignKey' => 'activite_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'Historybudget' => array(
+			'className' => 'Historybudget',
+			'foreignKey' => 'activite_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
 		)
-	); 
-        
+	);
+
  /**
  * beforeSave method
  *
@@ -145,5 +221,5 @@ class Activite extends AppModel {
                 } 
             }
             return $results;
-        }  
+        }          
 }

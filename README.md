@@ -15,7 +15,7 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
 
 * [JQuery 1.9.1] (http://jquery.com) - La dernière version de JQuery
 
-* [Datepicker pour BootStrap] (https://github.com/vitalets/bootstrap-datepicker) - Pour changer du datepicker de JQuery-UI
+* [Datepicker pour BootStrap] (https://github.com/eternicode/bootstrap-datepicker) - Pour changer du datepicker de JQuery-UI
 
 * [Highcharts 3.0.1](http://www.highcharts.com) - bonne documentation (http://docs.highcharts.com)
 
@@ -27,6 +27,6 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
 
 ## A venir en version 2.0.1 :
 
-* Génération de rapport avec graphique au format doc ( *mis en place sur les rapports d'actions, activités réelles et facturation* ).
-
 * Prise en compte des retours utilisateurs.
+
+* Corrections des bugs au fur et à mesure de leur découverte.

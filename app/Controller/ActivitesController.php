@@ -32,8 +32,9 @@ class ActivitesController extends AppController {
                         $fprojet = "tous les projets autres que indisponibilité";
                         break;                    
                     default :
-                        $newconditions[]="Projet.NOM='".$filtre."'";
-                        $fprojet = "le projet ".$filtre;
+                        $newconditions[]="Projet.id='".$filtre."'";
+                        $projet = $this->Activite->find('first',array('fields'=>array('Projet.NOM'),'recusrsive'=>0,'conditions'=>array('projet_id'=>$filtre)));
+                        $fprojet = "le projet ".$projet['Projet']['NOM'];
                         break;                      
                 }  
                 $this->set('fprojet',$fprojet); 
@@ -55,7 +56,7 @@ class ActivitesController extends AppController {
                 }    
                 $this->set('fetat',$fetat); 
                 $this->Activite->Projet->recursive = -1;
-                $projets = $this->Activite->Projet->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
+                $projets = $this->Activite->Projet->find('all',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
                 $this->set('projets',$projets);  
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->Activite->recursive = 0;
@@ -123,7 +124,9 @@ class ActivitesController extends AppController {
 	public function edit($id = null) {
             if (isAuthorized('activites', 'edit')) :
                 $projets = $this->Activite->Projet->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'recursive'=>0));
-                $this->set('projets',$projets);               
+                $this->set('projets',$projets);  
+                $historybudgets = $this->Activite->Historybudget->find('all',array('conditions'=>array('activite_id'=>$id),'recursive'=>-1,'order'=>array('ANNEE'=>'desc','Historybudget.created'=>'desc')));
+                $this->set('historybudgets', $historybudgets);                
 		if (!$this->Activite->exists($id)) {
 			throw new NotFoundException(__('Activité incorrecte'));
 		}
@@ -134,7 +137,7 @@ class ActivitesController extends AppController {
 			} else {
 				$this->Session->setFlash(__('Activité incorrecte, veuillez corriger l\'activité'),'default',array('class'=>'alert alert-error'));
 			}
-		} else {
+		} else {                    
 			$options = array('conditions' => array('Activite.' . $this->Activite->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Activite->find('first', $options);
 		}
@@ -205,5 +208,10 @@ class ActivitesController extends AppController {
 		$data = $this->Session->read('xls_export');
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
-	}          
+	}  
+        
+        public function savehistory(){
+            $this->Session->write('test',$this->request->data['HistoryBudget'][0]['ANNEE']);
+            exit();
+        }
 }

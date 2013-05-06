@@ -23,7 +23,7 @@
                      <li><?php echo $this->Html->link('Autres que indisponibilité', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','autres')); ?></li>                     
                      <li class="divider"></li>
                          <?php foreach ($projets as $projet): ?>
-                            <li><?php echo $this->Html->link($projet['Projet']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$projet['Projet']['NOM'])); ?></li>
+                            <li><?php echo $this->Html->link($projet['Projet']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$projet['Projet']['id'])); ?></li>
                          <?php endforeach; ?>
                       </ul>
                  </li>                   

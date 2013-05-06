@@ -135,7 +135,7 @@ $(document).ready(function (){
 <?php if(isset($chartetpresults) && isset($chartchargeresults)): ?>
     <?php foreach($chartetpresults as $result): 
        $dataetp[] = "[".$result[0]['ETP']."]";
-    $categories[] = "['".$result['Domaine']['NOM']."']";
+    $categories[] = "['".$result['Domaine']['NOM']."-".$result['Plancharge']['ANNEE']."']";
     endforeach; ?>
     <?php foreach($chartchargeresults as $result): 
        $datacharge[] = "[".$result[0]['TOTAL']."]";

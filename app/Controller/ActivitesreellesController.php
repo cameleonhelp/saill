@@ -526,7 +526,17 @@ class ActivitesreellesController extends AppController {
             $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Utilisateur.DATEDEBUTACTIF','Utilisateur.FINMISSION'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'OR' => array('AND'=>array('OR'=>array('Utilisateur.DATEDEBUTACTIF < "'.$datefin.'"','Utilisateur.DATEDEBUTACTIF IS NULL'),'Utilisateur.FINMISSION > "'.$datedebut.'"'),'Utilisateur.FINMISSION IS NULL')),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
             $this->set('utilisateurs',$utilisateurs);  
             $this->Activitesreelle->recursive = 0;
-            $indisponibilites = $this->Activitesreelle->find('all',array('conditions'=>array('Activite.projet_id'=>1,"Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'")));
+            $viewabsences = "SELECT 
+                            Activitesreelle.DATE,
+                            Activitesreelle.LU, Activitesreelle.MA, Activitesreelle.ME,  Activitesreelle.JE, Activitesreelle.VE, Activitesreelle.SA, Activitesreelle.DI,
+                            Activitesreelle.LU_TYPE, Activitesreelle.MA_TYPE, Activitesreelle.ME_TYPE,  Activitesreelle.JE_TYPE, Activitesreelle.VE_TYPE, Activitesreelle.SA_TYPE, Activitesreelle.DI_TYPE,
+                            Activitesreelle.utilisateur_id
+                            FROM osact_cake230.activitesreelles AS Activitesreelle 
+                            LEFT JOIN osact_cake230.activites AS Activite ON (Activitesreelle.activite_id = Activite.id) 
+                            WHERE Activite.projet_id = 1 
+                            AND Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'
+                            ORDER BY Activitesreelle.DATE ASC;";
+            $indisponibilites = $this->Activitesreelle->query($viewabsences);
             $this->set('indisponibilites',$indisponibilites);
         }
         

@@ -34,25 +34,31 @@ App::uses('Controller', 'Controller');
 class AppController extends Controller {
     public $History = array();
 
+    public $navigation=array('controller'=>'','action'=>'','page'=>'','sort'=>'','direction'=>'','here'=>'');
+    
     public function addUrl(){
-        if (strpos($this->params->url,'activeMessage')===false){
+        if (strpos($this->params->url,'activeMessage')===false && !$this->isajax()){
             $this->History = $this->Session->read('history');
-            $url = ucfirst($this->params->url);
-            $pos = @strpos('/index/', $url);   
+            $navigation['controller']=$this->params['controller'];
+            $navigation['action']=$this->params['action'];
+            $navigation['page']=isset($this->params['named']['page']) ? $this->params['named']['page']: null;
+            $navigation['sort']=isset($this->params['named']['sort']) ? $this->params['named']['sort']: null;
+            $navigation['direction']=isset($this->params['named']['direction']) ? $this->params['named']['direction'] : null;
+            $navigation['here']=str_replace('\\','/',FULL_BASE_URL).str_replace('/%3C','',$this->params->here);
+            
             $nottoadd = array('search','allupdate');
-            $url = in_array($this->params['action'],$nottoadd)  ? str_replace($this->params['action'],'index',$url) : $url;
-            $exist = in_array('index',explode('/',$url));
-            $url = ($this->params['action']=='index' && !$exist) ? $url.'/index' : $url;
-            $root = strpos(ROOT,'/')!==false ? explode('/',ROOT) : explode('\\',ROOT);
-            $last = count($root)-1;            
+            if (in_array($this->params['action'],$nottoadd)):
+                $navigation['here'] = str_replace($this->params['action'],'index',$navigation['here']);
+                $navigation['action']='index';
+            endif;
+                       
             if(count($this->History)==0) :
-                $this->History[] = str_replace('\\','/',FULL_BASE_URL.DS.$root[$last].DS.$url);
+                $this->History[] = $navigation;
             else :
-                $newurl = str_replace('\\','/',FULL_BASE_URL.DS.$root[$last].DS.$url);
-                if (!$this->isUrlEqual($newurl)) :
-                    array_unshift($this->History, $newurl);
+                if (!$this->isUrlEqual($navigation)) :
+                    array_unshift($this->History, $navigation);
                 else :
-                    $this->History[0]=$newurl;
+                    $this->History[0]=$navigation;
                 endif;
             endif;
             $this->Session->delete('history');
@@ -65,46 +71,42 @@ class AppController extends Controller {
     }
     
     public function removeUrl($nb=null){
-        $nb = $nb==null ? 1 : $nb;
-        $this->History = $this->Session->read('history');
-        if(count($this->History)>1):
-            for ($i=0;$i<$nb;$i++):
-                @array_shift($this->History);
-            endfor;
+        if(!$this->isajax()):
+            $nb = $nb==null ? 1 : $nb;
+            $this->History = $this->Session->read('history');
+            if(count($this->History)>1):
+                for ($i=0;$i<$nb;$i++):
+                    @array_shift($this->History);
+                endfor;
+            endif;
+            $this->Session->write('history',$this->History);
         endif;
-        $this->Session->write('history',$this->History);
     }
     
     public function goToBack(){
         $result = false;
         if (strpos($this->params->url,'activeMessage')===false):
-            if(isset($this->params->pass[0])):
-                $nbPass = count($this->params->pass)>0 ? count($this->params->pass)-1 : 0;
-                $lastPass = $this->params->pass[$nbPass];
-                $result = $lastPass=="<" ? true : false;
-            endif;
+              $result = (substr($this->params->url, -4, 4)=="/%3C");
         endif;
         return $result;
     }
     
     public function compareController(){
-        $result = false;
         $history = $this->getHistory();
-        $start = count($this->getHistory())> 1 ? count($this->getHistory())-1 : 0;
-        $url2 = explode('/',$history[$start]);
-        if (isset($url2[4])):
-            $result = strtolower($url2[4])==strtolower($this->params->controller) ? true : false ;
-        endif;
+        
+        $result = strtolower($history[0]['controller'])==strtolower($this->params->controller) ? true : false ;
         return $result;
     }
 
     public function isUrlEqual($newurl){
         $history = $this->getHistory();
-        $url2 = explode('/',$history[0]);
-        $newurl2 = explode('/',$newurl);
-        $samecontroller = strtolower((string)$url2[4])===strtolower((string)$newurl2[4]);
-        $sameaction = strtolower((string)$url2[5])===strtolower((string)$newurl2[5]);
-        $result = $samecontroller && $sameaction;
+        $samecontroller = ($history[0]['controller']==$newurl['controller']);
+        $sameaction = ($history[0]['action']==$newurl['action']);
+        $samepage = ($history[0]['page']==$newurl['page']);
+        $samesort = ($history[0]['sort']==$newurl['sort']);
+        $samedirection = ($history[0]['direction']==$newurl['direction']);
+        
+        $result = ($samecontroller && $sameaction && $samepage && $samesort && $samedirection);
         return $result;
     }
     
@@ -115,23 +117,19 @@ class AppController extends Controller {
     public function goToPostion($pos = null){
         $url = $this->getHistory();
         $max = count($url)-1;
-        $pos = $pos==null ? $max-1 : $pos;
-        $pos = ($pos > $max) ? $max-1 : ($pos <= 0) ? 0 : $pos;
+        $pos = $pos==null ? 0 : $pos;
+        $pos = ($pos > $max) ? $max : ($pos <= 0) ? 0 : $pos;
         if ($pos > 1) { $this->removeUrl($pos); }
-        return $url[$pos].'/<';
+        return $url[$pos]['here'].'/<';
     }
-    
-    public function afterFilter() {
-        parent::afterFilter();
-    }
-               
+                  
     public function beforeRender() {
         if($this->params['action']=='index' && !$this->compareController()){
             $this->Session->delete('history');
         }            
-        if($this->params['action']!='export_xls' && !$this->goToBack()) :
-            $this->addUrl();     
-        elseif($this->params['action']!='export_xls' && $this->goToBack()) :
+        if(($this->params['action']!='export_xls' || $this->params['action']!='export_doc') && !$this->goToBack()) :
+            $this->addUrl();    
+        elseif(($this->params['action']!='export_xls' || $this->params['action']!='export_doc') && $this->goToBack()) :
             $this->removeUrl();
         endif;
         parent::beforeRender();
