@@ -120,11 +120,11 @@ class FacturationsController extends AppController {
  */
 	public function add($userid=null,$reelid=null) {
                 /** select all activités avec la même date et le même utilisateuyr **/
-                $date = $this->Facturation->Facturation->find('first',array('fields'=>array('Facturation.DATE'),'conditions'=>array('Facturation.id'=>$reelid),'recursive'=>-1));
-                $activites = $this->Facturation->Facturation->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.ACTIVE'=>1),'recursive'=>0));
+                $date = $this->Facturation->Activitesreelle->find('first',array('fields'=>array('Activitesreelle.DATE'),'conditions'=>array('Activitesreelle.id'=>$reelid),'recursive'=>-1));
+                $activites = $this->Facturation->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.ACTIVE'=>1),'recursive'=>0));
 		$this->set('activites', $activites);
                 $facturation = $this->Facturation->find('first',array('conditions'=>array('Facturation.utilisateur_id'=>$userid,'Facturation.activitesreelle_id'=>$reelid),'recursive'=>-1));
-                $activitesreelles = $this->Facturation->Facturation->find('all',array('conditions'=>array('Facturation.utilisateur_id'=>$userid,'Facturation.DATE'=>CUSDate($date['Facturation']['DATE']),'Facturation.VEROUILLE'=>0,'Facturation.facturation_id'=>null),'recursive'=>-1));
+                $activitesreelles = $this->Facturation->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$userid,'Activitesreelle.DATE'=>CUSDate($date['Activitesreelle']['DATE']),'Activitesreelle.VEROUILLE'=>0,'Activitesreelle.facturation_id'=>null),'recursive'=>-1));
 		if (isset($facturation['Facturation'])):
                 $activitesreelles[0]['Facturation']['NUMEROFTGALILEI']=$facturation['Facturation']['NUMEROFTGALILEI'];
                 $activitesreelles[0]['Facturation']['VERSION']=$facturation['Facturation']['VERSION'];
@@ -216,8 +216,8 @@ class FacturationsController extends AppController {
                         if ($this->Facturation->save($facturation)) {
                             if (isset($facturation['activitesreelle_id']) && $facturation['activitesreelle_id'] != ''):
                                 $lastId = $this->Facturation->getLastInsertID();
-                                $this->Facturation->Facturation->id = $facturation['activitesreelle_id'];
-                                $this->Facturation->Facturation->saveField('facturation_id', $lastId);
+                                $this->Facturation->ActivitesreelleActivitesreelle->id = $facturation['activitesreelle_id'];
+                                $this->Facturation->Activitesreelle->saveField('facturation_id', $lastId);
                             endif;
                             if (isset($facturation['VERSION']) && $facturation['VERSION'] > 0):
                                 $version = $facturation['VERSION']-1;
@@ -273,7 +273,6 @@ class FacturationsController extends AppController {
                         $this->Session->write('repartitionresults',$repartitions);
                     endif;
                 endif;
-                $alldestinataire = array('tous'=>'Tous les responsables');
                 $destinataires = $this->Facturation->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
                 $this->set('destinataires',$destinataires);  
                 $domaines = $this->Facturation->Activite->Projet->find('list',array('fields'=>array('id','NOM'),'order'=>array('Projet.NOM'),'recursive'=>-1));
