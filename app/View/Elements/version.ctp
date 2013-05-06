@@ -1,14 +1,16 @@
 <?php 
     $version = '2.0';
-    $build = 'b050';
+    $build = 'b052';
     echo $version.'.'.$build;
     /** 
      * changelog :
      * 
      * version 2.0.0 finale
      ****** mis sur serveur d'intégration ******
+     * b052 Révision de la navigation en enregistrant sous forme de tableau les valeurs à tester et l'url
      * b051 Historiser les budgets sur les actions par années, sélectionner le budget à prendre par défaut
      *      modifier le schéma de base pour cela en ajoutant une table historybudget
+     *      optimisation requete absences
      * b050 Tableau de bord accostage contrat,facturé reste à faire -> requetage fait reste à mettre en forme
      * b049 Rapports
      *      Plan de charge -> nombre de charges prévues par mois par utilisateurs /ou par domaines par projet      

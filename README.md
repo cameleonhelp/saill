@@ -25,10 +25,6 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
 
 * Utilisation par d'autres utilisateurs
 
-## Version 2.0.0 :
-
-* Ajout d'une historisation des budgets sur les actions, sélection du budget actif, si possible en ajax
-
 ## A venir en version 2.0.1 :
 
 * Prise en compte des retours utilisateurs.

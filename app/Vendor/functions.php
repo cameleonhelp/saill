@@ -36,9 +36,13 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
  * @return date au format Y-m-d
  */
     function CUSDate($frdate){
+    $result = $frdate;
+    if(strstr($frdate, '/')==!false):
     $day = explode('/',$frdate);
-    return $day[2]."-".$day[1]."-".$day[0];
-}
+    $result = $day[2]."-".$day[1]."-".$day[0];
+    endif;
+    return $result;
+    }
 /**
  * CIntDateDeb
  * 
@@ -91,8 +95,12 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
  * @return date au format Y-m-d
  */
     function CFRDate($usdate){
+    $result = $usdate;
+    if(strstr($usdate, '-')==!false):
     $day = explode('-',$usdate);
-    return $day[2]."/".$day[1]."/".$day[0];
+    $result = $day[2]."/".$day[1]."/".$day[0];
+    endif;
+    return $result;
     }
     
 /**
@@ -162,6 +170,7 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
     function startWeek($date) {
         $num_day = $date->format('N')-1;
         $interval = date_interval_create_from_date_string($num_day.' days');
+        $date->format('Y-m-d');
         $date->sub($interval);
         return $date->format('Y-m-d');
     }  
@@ -346,9 +355,10 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
             } else {
                 return $user[$key];
             }
-        } else {
-            $this->Session->setFlash(__('Votre session est expirée veuillez rafraîchir la page.<br />Vos données ont été prises en compte, si toutefois cela n\'était pas le cas, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-error'));
-        }   
+        }
+        /*else {
+            SessionComponent::setFlash(__('Votre session est expirée veuillez rafraîchir la page.<br />Vos données ont été prises en compte, si toutefois cela n\'était pas le cas, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-error'));
+        }*/ 
     }
     
     @define(AUTHORIZED, 'Auth.Profil');
@@ -657,5 +667,26 @@ function styleBarre($avancement){
             ($stri{0}.chr(ord($stri{1})-32)): 
             ($stri{0}.$stri{1})).substr($stri,2); 
         else return ucfirst($stri); 
-    }     
+    }   
+    
+    function returnTo($pos=null){
+        $url = $_SESSION['history'];
+        $max = count($url)-1;
+        $pos = $pos==null ? 0 : $pos;
+        $pos = ($pos > $max) ? $max : ($pos <= 0) ? 0 : $pos;
+        removeTo($pos);
+        return $url[$pos]['here'];
+    } 
+    
+    function removeTo($nb=null){
+            $nb = $nb==null ? 1 : $nb;
+            $History = $_SESSION['history'];
+            if(count($History)>1):
+                for ($i=0;$i<$nb;$i++):
+                    @array_shift($History);
+                endfor;
+            endif;
+            unset($_SESSION['history']);
+            $_SESSION['history']=$History;
+    }    
 ?>

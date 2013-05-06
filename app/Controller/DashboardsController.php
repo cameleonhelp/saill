@@ -62,16 +62,23 @@ class DashboardsController extends AppController {
                                 LEFT JOIN FACTURATION ON FACTURATION.id = CONTRAT.id
                                 ORDER BY NOM asc;";
 
+                    $this->Dashboard->query("DROP VIEW IF EXISTS CONTRAT;");
+                    $this->Dashboard->query("DROP VIEW IF EXISTS PREVISION;");
+                    $this->Dashboard->query("DROP VIEW IF EXISTS CONSOMMATION;");
+                    $this->Dashboard->query("DROP VIEW IF EXISTS FACTURATION;");
                     $this->Dashboard->query($viewcontrat);
                     $this->Dashboard->query($viewprevu);
                     $this->Dashboard->query($viewreel);
                     $this->Dashboard->query($viewfacture);
                     $results = $this->Dashboard->query($select);
                     $this->set('results',$results);
-                    $this->Dashboard->query("DROP VIEW CONTRAT;");
-                    $this->Dashboard->query("DROP VIEW PREVISION;");
-                    $this->Dashboard->query("DROP VIEW CONSOMMATION;");
-                    $this->Dashboard->query("DROP VIEW FACTURATION;");
+                    $this->Dashboard->query("DROP VIEW IF EXISTS CONTRAT;");
+                    $this->Dashboard->query("DROP VIEW IF EXISTS PREVISION;");
+                    $this->Dashboard->query("DROP VIEW IF EXISTS CONSOMMATION;");
+                    $this->Dashboard->query("DROP VIEW IF EXISTS FACTURATION;");
+                    
+                    $this->Session->delete('rapportresults');  
+                    $this->Session->write('rapportresults',$results);
                 endif;
                 $allprojets = array();
                 $allpplancharges = array();
@@ -92,6 +99,17 @@ class DashboardsController extends AppController {
                 throw new NotAuthorizedException();
             endif;                     
     }
+    
+	function export_doc() {
+            if($this->Session->check('rapportresults')):
+                $data = $this->Session->read('rapportresults');
+                $this->set('rowsrapport',$data);              
+		$this->render('export_doc','export_doc');
+            else:
+                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport'),'default',array('class'=>'alert alert-error'));             
+                $this->redirect(array('action'=>'rapport'));
+            endif;
+        }        
 }
 
 ?>

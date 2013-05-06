@@ -57,18 +57,29 @@
             &nbsp;<label class='labelAfter'></label>
         </div>
     </div>
+    <?php if($this->params->action=='edit') : ?>
     <div class="control-group">
         <label class="control-label sstitre" for="ActiviteBUDJETRA">Budget initial : </label>
         <div class="controls">
-            <?php echo $this->Form->input('BUDJETRA',array('placeholder'=>'Budget initial de la RA','class'=>'span8','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?> k€
+            <?php echo $this->Form->input('BUDJETRA',array('placeholder'=>'Budget initial de la RA',"readonly"=>'true','class'=>'span8','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?> k€
         </div>
     </div>
     <div class="control-group">
         <label class="control-label sstitre" for="ActiviteBUDGETREVU">Dernier budget : </label>
         <div class="controls">
-            <?php echo $this->Form->input('BUDGETREVU',array('placeholder'=>'Budget revue = Budget RA à l\'initialisation','class'=>'span8','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?> k€
+            <?php echo $this->Form->input('BUDGETREVU',array('placeholder'=>'Budget revue = Budget RA à l\'initialisation','class'=>'span8',"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?> k€
         </div>
     </div>
+    <div class="control-group">
+            <label class="control-label sstitre">Historique budget : </label>
+            <div class="controls"><?php echo $this->element('tableHistoryBudget'); ?></div>
+    </div>
+    <?php else : ?>
+    <div class="control-group">
+    <label class="control-label sstitre">Budgets : </label>
+    <div class="controls"><em>Vous pouvez ajouter un nouveau budget après l'enregistrement de l'activité</em></div>
+    </div>
+    <?php endif; ?>
     <div class="control-group">
         <label class="control-label sstitre" for="ActiviteDESCRIPTION">Commentaire : </label>
         <div class="controls">
@@ -79,7 +90,7 @@
         <div class="navbar-inner">
             <div class="container" style="margin-top:2px;text-align:center;">
                 <?php $url = $this->Session->read('history'); $index = count($url) > 1 ? 1 : 0; ?>
-                <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url($url[$index])."/<'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
+                <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url($url[$index]['here'])."/<'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
             </div>
         </div>
     </div>
