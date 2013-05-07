@@ -60,9 +60,13 @@ $cakeDescription = __d('cake_dev', 'SAILL '.  htmlspecialchars($this->element('v
 	?>
 </head>
 <body>
-    <?php  
+    <?php  /*
+            debug(in_array($this->params['action'], explode('/',$this->params->here)));*/ 
+            //debug($this->params['action']);  
+            //debug($this->params->here);
             //debug($this->Session->read('history')); 
-           //debug($this->Session->read('historydirection')); ?>    
+      ?>
+
 <script type="text/javascript"> 
     tinyMCE.init({ 
    // General options

@@ -23,14 +23,18 @@ class PlanchargesController extends AppController {
             //$this->Session->delete('history');
             if (isAuthorized('plancharges', 'index')) :
                 $this->set('title_for_layout','Plans de charge'); 
-                if ($annee==null){ $annee = new DateTime(); $annee = $annee->format('Y'); }
+                if ($annee==null || $annee=='<'){ $annee = new DateTime(); $annee = $annee->format('Y'); }
                 switch ($annee){
                     case 'tous':
                         $newconditions[]="1=1";
                         $fannee = "de tous les plans de charge pour toutes les années";
                         break;
-                    default:
                     case null:
+                    case '<':
+                        $newconditions[]="Plancharge.ANNEE = '".$annee."'";
+                        $fannee = "tous les plans de charge de ".$annee;
+                        break;                         
+                    default:
                         $newconditions[]="Plancharge.ANNEE = '".$annee."'";
                         $fannee = "tous les plans de charge de ".$annee;
                         break;                                         
@@ -118,7 +122,7 @@ class PlanchargesController extends AppController {
                                     $this->Plancharge->Detailplancharge->save($record);
                                 endforeach;
 				$this->Session->setFlash(__('Nouvelle version du plan de charge créée'),'default',array('class'=>'alert alert-success'));                                
-				$this->redirect(array('action' => 'index'));
+				$this->redirect($this->goToPostion(0));;
 			} else {
 				$this->Session->setFlash(__('Plan de charge incorrect, veuillez corriger le plan de charge'),'default',array('class'=>'alert alert-error'));
 			}

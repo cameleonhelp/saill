@@ -1,12 +1,13 @@
 <?php 
     $version = '2.0';
-    $build = 'b052';
+    $build = '0'; //b053
     echo $version.'.'.$build;
     /** 
      * changelog :
      * 
      * version 2.0.0 finale
      ****** mis sur serveur d'intégration ******
+     * b053 Corrections mineures avant démonstrations et création du manuel utilisateur
      * b052 Révision de la navigation en enregistrant sous forme de tableau les valeurs à tester et l'url
      * b051 Historiser les budgets sur les actions par années, sélectionner le budget à prendre par défaut
      *      modifier le schéma de base pour cela en ajoutant une table historybudget

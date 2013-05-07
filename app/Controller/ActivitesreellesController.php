@@ -327,10 +327,10 @@ class ActivitesreellesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Activitesreelle->delete()) {
                     $this->Session->setFlash(__('Feuille de temps supprimée'),'default',array('class'=>'alert alert-success'));
-                    $this->redirect($this->goToPostion(0));
+                    $this->redirect($this->goToPostion());
 		}
                 $this->Session->setFlash(__('Feuille de temps <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-                $this->redirect($this->goToPostion(0));
+                $this->redirect($this->goToPostion());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();        
@@ -397,12 +397,12 @@ class ActivitesreellesController extends AppController {
                 $record['Activitesreelle']['DATE'] = $date->format('d/m/Y');
                 if ($this->ActiviteExists($record['Activitesreelle']['utilisateur_id'], $record['Activitesreelle']['DATE'], $record['Activitesreelle']['activite_id']) > 0){
                     $this->Session->setFlash(__('Feuille de temps existante'),'default',array('class'=>'alert alert-info'));
-                    $this->redirect($this->goToPostion(0));
+                    $this->redirect($this->goToPostion());
                 }                
                 $this->Activitesreelle->create();
                 if ($this->Activitesreelle->save($record)) {
                     $this->Session->setFlash(__('Feuille de temps dupliquée'),'default',array('class'=>'alert alert-success'));
-                    $this->redirect($this->goToPostion(0));
+                    $this->redirect($this->goToPostion());
                 } 
 		$this->Session->setFlash(__('Feuille de temps <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));  
             else :
@@ -463,7 +463,7 @@ class ActivitesreellesController extends AppController {
                 $this->Activitesreelle->create();
                 if ($this->Activitesreelle->save($record)) {
                     $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation'),'default',array('class'=>'alert alert-success'));
-                    $this->redirect($this->goToPostion(0));
+                    $this->redirect($this->goToPostion());
                 } 
 		$this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation'),'default',array('class'=>'alert alert-error')); 
             else :
@@ -644,7 +644,7 @@ class ActivitesreellesController extends AppController {
             $this->Activitesreelle->saveField('VEROUILLE', 1);        
             $this->Activitesreelle->saveField('facturation_id', null);            
             echo $this->Session->setFlash(__('Feuille de temps déverouillée'),'default',array('class'=>'alert alert-success'));
-            $this->redirect($this->goToPostion(0));
+            $this->redirect($this->goToPostion());
         } 
           
 /**

@@ -100,10 +100,10 @@ class HistorybudgetsController extends AppController {
 		if ($this->Historybudget->delete()) {
                         if ($newhistory['Historybudget']['ACTIF']==1){$this->resethistory($id,$newhistory['Historybudget']['activite_id']);}
                         $this->Session->setFlash(__('Historique de l\'activité supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion(0));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Historique de l\'activité <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion(0));
+		$this->redirect($this->goToPostion());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();         

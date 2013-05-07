@@ -164,10 +164,10 @@ class ActivitesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Activite->delete()) {
 			$this->Session->setFlash(__('Activité supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion(0));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Activité <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion(0));
+		$this->redirect($this->goToPostion());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();         

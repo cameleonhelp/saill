@@ -253,10 +253,10 @@ class ActionsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Action->delete()) {
 			$this->Session->setFlash(__('Action supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion(0));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Action <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion(0));
+		$this->redirect($this->goToPostion());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();        
@@ -419,10 +419,10 @@ class ActionsController extends AppController {
                 $this->Action->create();
                 if ($this->Action->save($record)) {
                         $this->Session->setFlash(__('Action dupliquée'),'default',array('class'=>'alert alert-success'));
-                        $this->redirect($this->goToPostion(0));
+                        $this->redirect($this->goToPostion());
                 } 
 		$this->Session->setFlash(__('Action <b>NON</b> dupliquée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion(0));
+		$this->redirect($this->goToPostion());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
