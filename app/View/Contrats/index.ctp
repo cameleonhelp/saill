@@ -32,7 +32,7 @@
                         <th width="60px;"><?php echo $this->Paginator->sort('tjmcontrat_id','TJM moyen'); ?></th>
 			<th width="60px;"><?php echo $this->Paginator->sort('ANNEEDEBUT','Début'); ?></th>
 			<th width="60px;"><?php echo $this->Paginator->sort('ANNEEFIN','Fin'); ?></th>
-			<th><?php echo $this->Paginator->sort('MONTANT','Montant en k€'); ?></th>
+			<!--<th><?php echo $this->Paginator->sort('MONTANT','Montant en k€'); ?></th>//-->
 			<th width="40px;"><?php echo $this->Paginator->sort('ACTIF','Actif'); ?></th>
 			<th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
 	</tr>
@@ -44,7 +44,7 @@
                 <td style='text-align: center;'><?php echo h($contrat['Tjmcontrat']['TJM']); ?>&nbsp;</td>
 		<td style='text-align: center;'><?php echo h($contrat['Contrat']['ANNEEDEBUT']); ?>&nbsp;</td>
 		<td style='text-align: center;'><?php echo h($contrat['Contrat']['ANNEEFIN']); ?>&nbsp;</td>
-		<td style='text-align: right;'><?php echo h($contrat['Contrat']['MONTANT']); ?> k€&nbsp;</td>
+		<!--<td style='text-align: right;'><?php echo h($contrat['Contrat']['MONTANT']); ?> k€&nbsp;</td>//-->
 		<td style='text-align: center;'><?php echo $contrat['Contrat']['ACTIF']==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'view')) : ?>

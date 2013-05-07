@@ -136,7 +136,7 @@ class DotationsController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une dotation";
                         $this->Dotation->Utilisateur->Historyutilisateur->save($history);                     
 			$this->Session->setFlash(__('Dotation supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion(0));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Dotation <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
 		$this->redirect($this->goToPostion());

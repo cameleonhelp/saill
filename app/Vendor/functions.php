@@ -633,13 +633,13 @@ function styleBarre($avancement){
  * @param type $date
  * @return boolean
  */    
-    function enretard($etat,$date){
+    function enretard($date,$etat=null){
         $result = false;
-        if ($etat == 'à faire' || $etat == 'en cours'):
+        if ($etat == null || $etat == 'à faire' || $etat == 'en cours'):
             $today = intval(date('Ymd'));
             $date = explode("/",$date);
             $d = intval($date[2].$date[1].$date[0]);
-            $result = ($d - $today) < 0 ? true: false;
+            $result = ($d - $today) < 0 ? true: false;         
         endif;
         return $result;
     }

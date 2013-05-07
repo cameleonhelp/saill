@@ -27,12 +27,12 @@
             <?php echo $this->Form->input('ANNEEFIN',array('type'=>'text','placeholder'=>'Année de fin du contrat','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
         </div>
-    <div class="control-group">
+    <!--<div class="control-group">
         <label class="control-label sstitre" for="ContratMONTANT">Montant (k€) : </label>
         <div class="controls">
             <?php echo $this->Form->input('MONTANT',array('type'=>'text','placeholder'=>'Montant en k€ du contrat','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
-        </div>
+        </div>//-->
     <div class="control-group">
         <label class="control-label sstitre" for="ContratACTIF">Actif : </label>
         <div class="controls">

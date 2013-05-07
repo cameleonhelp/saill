@@ -123,10 +123,10 @@ class ProfilsController extends AppController {
                             $this->Profil->Autorisation->delete();
                         endforeach;                    
 			$this->Session->setFlash(__('Profil supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion(0));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Profil NON supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion(0));
+		$this->redirect($this->goToPostion());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
@@ -183,10 +183,10 @@ class ProfilsController extends AppController {
                             $this->Profil->Autorisation->save($autorisation);
                         endforeach;
                         $this->Session->setFlash(__('Profil dupliqué'),'default',array('class'=>'alert alert-success'));
-                        $this->redirect($this->goToPostion(0));
+                        $this->redirect($this->goToPostion());
                 } 
 		$this->Session->setFlash(__('Profil <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion(0));
+		$this->redirect($this->goToPostion());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

@@ -62,7 +62,7 @@
 			<th  width="100px"><?php echo $this->Paginator->sort('FINMISSION','Date de fin de mission'); ?></th>
                         <th><?php echo $this->Paginator->sort('ACTIF','Etat du compte'); ?></th>
 
-			<th class="actions" width="110px"><?php echo __('Actions'); ?></th>
+			<th class="actions" width="111px"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
         <tbody>

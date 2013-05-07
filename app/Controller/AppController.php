@@ -36,19 +36,22 @@ class AppController extends Controller {
 
     public $navigation=array('controller'=>'','action'=>'','page'=>'','sort'=>'','direction'=>'','here'=>'');
     
+    
     public function addUrl(){
-        if (strpos($this->params->url,'activeMessage')===false && !$this->isajax()){
+        if (strpos($this->params->url,'activeMessage')===false && !$this->isajax() && !$this->isException()){
             $this->History = $this->Session->read('history');
             $navigation['controller']=$this->params['controller'];
             $navigation['action']=$this->params['action'];
             $navigation['page']=isset($this->params['named']['page']) ? $this->params['named']['page']: null;
             $navigation['sort']=isset($this->params['named']['sort']) ? $this->params['named']['sort']: null;
             $navigation['direction']=isset($this->params['named']['direction']) ? $this->params['named']['direction'] : null;
-            $navigation['here']=str_replace('\\','/',FULL_BASE_URL).str_replace('/%3C','',$this->params->here);
+            $navigation['pass']=isset($this->params->pass) ? $this->params->pass : null;
+            $completeURL = in_array($this->params['action'], explode('/',$this->params->here)) ? $this->params->here : $this->params->here.'/'.$this->params['action'];
+            $navigation['here']=str_replace('\\','/',FULL_BASE_URL).str_replace('/%3C','',$completeURL);
             
-            $nottoadd = array('search','allupdate');
+            $nottoadd = array('search','allupdate','export_xls','export_doc','addIndisponibilite');
             if (in_array($this->params['action'],$nottoadd)):
-                $navigation['here'] = str_replace($this->params['action'],'index',$navigation['here']);
+                $navigation['here'] = $this->History[count($this->History)-1]['here'];
                 $navigation['action']='index';
             endif;
                        
@@ -79,6 +82,10 @@ class AppController extends Controller {
                     @array_shift($this->History);
                 endfor;
             endif;
+            if($this->params['action']=='index'):
+                $this->Session->delete('history');
+                $this->addUrl();
+            endif;            
             $this->Session->write('history',$this->History);
         endif;
     }
@@ -86,15 +93,74 @@ class AppController extends Controller {
     public function goToBack(){
         $result = false;
         if (strpos($this->params->url,'activeMessage')===false):
-              $result = (substr($this->params->url, -4, 4)=="/%3C");
+              $result = (substr($this->params->url, -4)=="/%3C" || substr($this->params->url, -4)=="/<");
         endif;
         return $result;
     }
     
     public function compareController(){
         $history = $this->getHistory();
+        $oldaction = isset($history[0]['action']) ? $history[0]['action'] : null;
+        $newaction = $this->params['action'];
+        switch(strtolower($this->params['controller'])){
+            case 'historybudgets':
+                $newController = 'activites';
+                break;
+            case 'actionslivrables':
+                $newController = 'actions';
+                break;     
+            case 'activitesreelles':
+                if (strtolower($this->params['action'])=="add" && count($this->params->pass)>0) :
+                    $newController = 'actions';
+                    $newaction = $history[0]['action'];
+                else:
+                    $newController = 'activitesreelles';             
+                endif;
+                break; 
+            case 'dotations':
+                $newController = 'utilisateurs';
+                break; 
+            case 'affectations':
+                $newController = 'utilisateurs';
+                break; 
+            case 'utiliseoutils':
+                if (strtolower($this->params['action'])=="add" && count($this->params->pass)>0) :
+                    $newController = 'utilisateurs';
+                    $newaction = $history[0]['action'];
+                else:
+                    $newController = 'utiliseoutils';             
+                endif;
+                break;             
+            default :
+                $newController = strtolower($this->params['controller']);
+        }
         
-        $result = strtolower($history[0]['controller'])==strtolower($this->params->controller) ? true : false ;
+        switch(strtolower($history[0]['controller'])){
+            case 'historybudgets':
+                $oldcontroller = 'activites';
+                break;
+            case 'actionslivrables':
+                $oldcontroller = 'actions';
+                break; 
+            case 'activitesreelles':
+                $oldcontroller = 'actions';             
+                break;  
+            case 'dotations':
+                $oldcontroller = 'utilisateurs';
+                break;   
+            case 'affectations':
+                $oldcontroller = 'utilisateurs';
+                break; 
+            case 'utiliseoutils':
+                $oldcontroller = 'utilisateurs';
+                break;             
+            default :
+                $oldcontroller = strtolower($history[0]['controller']);
+        }
+        debug($oldcontroller.'-'.$newController);
+        debug($history[0]['action'].'-'.$this->params['action']);
+        $result = ($oldcontroller==$newController) ? true : false ;
+        //if ($this->params['action']=='index'): $result = false; endif;
         return $result;
     }
 
@@ -116,27 +182,35 @@ class AppController extends Controller {
     
     public function goToPostion($pos = null){
         $url = $this->getHistory();
+        debug($url[0]);
         $max = count($url)-1;
         $pos = $pos==null ? 0 : $pos;
         $pos = ($pos > $max) ? $max : ($pos <= 0) ? 0 : $pos;
-        if ($pos > 1) { $this->removeUrl($pos); }
-        return $url[$pos]['here'].'/<';
+        if ($pos > 0) { if(!$this->isException()) : $this->removeUrl(); endif; }
+        $symbole = $pos==null ? '' : '/<';
+        return $url[$pos]['here'].$symbole;
+    }
+    
+    public function isException(){
+        $exceptions = array('addIndisponibilite','delete','export_xls','export_doc');
+        return in_array($this->params['action'],$exceptions);
     }
                   
-    public function beforeRender() {
-        if($this->params['action']=='index' && !$this->compareController()){
+    public function beforeRender() { 
+        if($this->params['action']=='index'):
             $this->Session->delete('history');
-        }            
-        if(($this->params['action']!='export_xls' || $this->params['action']!='export_doc') && !$this->goToBack()) :
-            $this->addUrl();    
-        elseif(($this->params['action']!='export_xls' || $this->params['action']!='export_doc') && $this->goToBack()) :
-            $this->removeUrl();
+            //$this->addUrl();
+        endif; 
+        if($this->goToBack()!=1) :
+            $this->addUrl();
+        else :
+            if(!$this->isException()) : $this->removeUrl(); endif;
         endif;
         parent::beforeRender();
     }
     
     public $components = array(
-        'Session','Cookie','RequestHandler',
+        'Navigation','Session','Cookie','RequestHandler',
         'Auth' => array(
             'logoutRedirect' => array('controller' => 'Utilisateurs','action' => 'login'),
             'loginRedirect' => array('controller' => 'pages','action' => 'display','home'),
