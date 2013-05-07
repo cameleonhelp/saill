@@ -66,7 +66,7 @@
                     <?php echo $this->Html->link('<i class="icon-th-list"></i>', array('controller'=>'detailplancharges','action' => 'edit', $plancharge['Plancharge']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?> 
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'view')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-list-alt"></i>', array('action' => 'export_xls', $plancharge['Plancharge']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<i class="ico-xls" style="height:14px;width:14px;"></i>', array('action' => 'export_xls', $plancharge['Plancharge']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>                    
 		</td>
 	</tr>

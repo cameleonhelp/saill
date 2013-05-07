@@ -92,9 +92,9 @@ class SuivilivrablesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Suivilivrable->delete()) {
 			//$this->Session->setFlash(__('Suivilivrable deleted'));
-			$this->redirect($this->goToPostion(0));
+			$this->redirect($this->goToPostion());
 		}
 		//$this->Session->setFlash(__('Suivilivrable was not deleted'));
-		$this->redirect($this->goToPostion(0));
+		$this->redirect($this->goToPostion());
 	}
 }

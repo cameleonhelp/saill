@@ -121,10 +121,10 @@ class TjmagentsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Tjmagent->delete()) {
 			$this->Session->setFlash(__('TJM agent supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion(0));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('TJM agent <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion(0));
+		$this->redirect($this->goToPostion());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

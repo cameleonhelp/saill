@@ -24,7 +24,7 @@
   <?php $classAdministration = in_array('active',array($classSections,$classSocietes,$classSites,$classDossierPartages,$classAutorisations,$classDomaines,$classOutils,$classAssistances,$classProfils,$classListeDiffusions,$classTypeMateriels,$classMessages)) ? 'active' : ''; ?>               
   <?php $classContrats = in_array($controller,array('contrats_index','contrats_add','contrats_edit','contrats_delete','contrats_search')) ? 'active' : ''; ?> 
   <?php $classProjets = in_array($controller,array('projets_index','projets_add','projets_edit','projets_delete','projets_search')) ? 'active' : ''; ?> 
-  <?php $classActivites = in_array($controller,array('activites_index','activites_add','activites_edit','activites_delete','activites_search')) ? 'active' : ''; ?>               
+  <?php $classActivites = in_array($controller,array('activites_index','activites_add','activites_edit','activites_delete','activites_search','historybudgets_add','historybudgets_edit','historybudgets_delete')) ? 'active' : ''; ?>               
   <?php $classTJMProjets = in_array($controller,array('tjmcontrats_index','tjmcontrats_add','tjmcontrats_edit','tjmcontrats_delete','tjmcontrats_search')) ? 'active' : ''; ?> 
   <?php $classTJMAgents = in_array($controller,array('tjmagents_index','tjmagents_add','tjmagents_edit','tjmagents_delete','tjmagents_search')) ? 'active' : ''; ?>               
   <?php $classAchats = in_array($controller,array('achats_index','achats_add','achats_edit','achats_delete','achats_search')) ? 'active' : ''; ?>    

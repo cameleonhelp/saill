@@ -208,10 +208,10 @@ class UtiliseoutilsController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une ouverture de droit".' par '.userAuth('NOMLONG');
                         $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                         
 			$this->Session->setFlash(__('Ouvertures des droits supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion(0));
+			$this->redirect($this->goToPostion());
 		}
 		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion(0));
+		$this->redirect($this->goToPostion());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
@@ -283,6 +283,49 @@ class UtiliseoutilsController extends AppController {
             endif;                
 	}    
         
+	public function autoprogressState($id = null) {
+                $newetat = '';
+                $this->Utiliseoutil->id = $id;
+                $record = $this->Utiliseoutil->read();
+                if($record['Outil']['VALIDATION']==0 && $record['Utiliseoutil']['STATUT']=='Pris en compte') $record['Utiliseoutil']['STATUT']='Validé';
+                switch ($record['Utiliseoutil']['STATUT']) {
+                    case 'Demandé':
+                       $newetat = 'Pris en compte';
+                       break;
+                    case 'Pris en compte':
+                       $newetat = 'En validation';
+                       break;                
+                    case 'En validation':
+                       $newetat = 'Validé';
+                       break;          
+                    case 'Validé':
+                       $newetat = 'Demande transférée';
+                       break;
+                    case 'Demande transférée':
+                       $newetat = 'Demande traitée';
+                       break;                
+                    case 'Demande traitée':
+                       $newetat = 'Retour utilisateur';
+                       break;
+                    case 'Retour utilisateur':
+                       $newetat = 'A supprimer';
+                       break;                
+                    case 'A supprimer':
+                       $newetat = 'Supprimée';
+                       break;          
+                    case 'Supprimée':
+                       $newetat = 'Demandé';
+                       break; 
+                }
+                $record['Utiliseoutil']['STATUT'] = $newetat;
+                $record['Utiliseoutil']['created'] = $this->Utiliseoutil->read('created');
+                $record['Utiliseoutil']['modified'] = date('Y-m-d');
+                if ($this->Utiliseoutil->save($record)) { 
+                    $history['Historyutilisateur']['utilisateur_id']=$record['Utiliseoutil']['utilisateur_id'];
+                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - changement d'état d'une ouverture de droit".' par '.userAuth('NOMLONG');
+                    $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                     
+                }              
+	}        
 /**
  * search method
  *
@@ -331,7 +374,7 @@ class UtiliseoutilsController extends AppController {
             $ids = explode('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
-                    $this->progressState($id);
+                    $this->autoprogressState($id);
                 endforeach;
                 echo $this->Session->setFlash(__('Mises à jour complétées'),'default',array('class'=>'alert alert-success'));
             else:

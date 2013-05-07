@@ -433,6 +433,12 @@ class Utilisateur extends AppModel {
             if (!empty($this->data['Utilisateur']['DATEDEBUTACTIF'])) {
                 $this->data['Utilisateur']['DATEDEBUTACTIF'] = $this->dateFormatBeforeSave($this->data['Utilisateur']['DATEDEBUTACTIF']);
             }
+            if (!empty($this->data['Utilisateur']['NOM'])) {
+                $this->data['Utilisateur']['NOM'] = strtoupper($this->data['Utilisateur']['NOM']);
+            }    
+            if (!empty($this->data['Utilisateur']['PRENOM'])) {
+                $this->data['Utilisateur']['PRENOM'] = ucfirst_utf8($this->data['Utilisateur']['PRENOM']);
+            }                 
             parent::beforeSave();
             return true;
         }
