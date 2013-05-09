@@ -16,7 +16,7 @@ class NavigationComponent extends Component {
 
     public $navigation=array('controller'=>'','action'=>'','page'=>'','sort'=>'','direction'=>'','pass'=>'','here'=>'');
     
-    function currentNavigation(){
+    public function currentNavigation(){
             $navigation['controller']=$this->params['controller'];
             $navigation['action']=$this->params['action'];
             $navigation['page']=isset($this->params['named']['page']) ? $this->params['named']['page']: null;
@@ -28,7 +28,7 @@ class NavigationComponent extends Component {
             return $navigation;
     }
     
-    function ajouterUrl() {
+    public function ajouterUrl() {
         if (strpos($this->params->url,'activeMessage')===false && !$this->isajax() && !$this->isException()){
             $this->History = $this->Session->read('history');
             

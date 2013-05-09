@@ -35,3 +35,13 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
 * Prise en compte des retours utilisateurs.
 
 * Corrections des bugs au fur et à mesure de leur découverte.
+
+* Page de paramètrage du site 
+
+    * Changer le mot de passe administrateur
+    
+    * Changer le contact qui reçoit les mails du formulaire Nous contacter
+
+    * Changer d'autres informations pouvant être paramètrées
+
+    * Sauvegarder et restaurer la base de données
