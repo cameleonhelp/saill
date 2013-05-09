@@ -6,5 +6,6 @@ app/tmp/*
 *.doc
 *.db
 sql/*
-
 *.bak
+manuel SAILL.2/*
+
