@@ -126,7 +126,7 @@
             <li class="<?php echo $classUtilisateurs; ?>"><?php echo $this->Html->link('Utilisateurs',array('controller'=>'utilisateurs','action'=>'index','actif','allsections'),array('escape' => false)); ?></li>
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'index')) : ?>
-            <li class="<?php echo $classMateriels; ?>"><?php echo $this->Html->link('Postes informatique',array('controller'=>'materielinformatiques','action'=>'index','En stock','tous','toutes'),array('escape' => false)); ?></li>
+            <li class="<?php echo $classMateriels; ?>"><?php echo $this->Html->link('Postes informatiques',array('controller'=>'materielinformatiques','action'=>'index','En stock','tous','toutes'),array('escape' => false)); ?></li>
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'index')) : ?>
             <li class="<?php echo $classUtiliseOutils; ?>"><?php echo $this->Html->link('Ouvertures des droits',array('controller'=>'utiliseoutils','action'=>'index','tous','tous'),array('escape' => false)); ?></li>

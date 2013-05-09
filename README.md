@@ -27,6 +27,11 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
 
 ## A venir en version 2.0.1 :
 
+<<<<<<< HEAD
+=======
+* Génération de rapport avec graphique au format doc ( *mis en place sur les rapports d'actions* ).
+
+>>>>>>> Update README.md
 * Prise en compte des retours utilisateurs.
 
 * Corrections des bugs au fur et à mesure de leur découverte.
