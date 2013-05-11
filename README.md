@@ -9,7 +9,7 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
 
 ## Cette version s'appuie sur :
 
-* [CakePhp 2.3.4] (http://cakephp.org) - Framework
+* [CakePhp 2.3.5] (http://cakephp.org) - Framework
 
 * [BootStrap 2.3.1] (http://twitter.github.com/bootstrap/) - Style et javascript
 
@@ -27,8 +27,6 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
 
 ## A venir en version 2.0.1 :
 
-* Génération de rapport avec graphique au format doc ( *mis en place sur les rapports d'actions* ).
-
 * Prise en compte des retours utilisateurs.
 
 * Corrections des bugs au fur et à mesure de leur découverte.
@@ -42,3 +40,5 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
     * Changer d'autres informations pouvant être paramètrées
 
     * Sauvegarder et restaurer la base de données
+    
+    * Statistiques de l'utilisateur sur la page d'accueil **Fait**
