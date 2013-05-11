@@ -688,5 +688,18 @@ function styleBarre($avancement){
             endif;
             unset($_SESSION['history']);
             $_SESSION['history']=$History;
-    }    
+    } 
+    
+    function getallmonday($mois=null,$annee=null){
+        $mois = $mois==null ? date('m'):$mois;
+        $annee = $annee==null ? date('Y'):$annee;
+        $nbdays = date('t',mktime(0, 0, 0, $mois, 1,$annee))+1;
+        for ($i=1;$i<$nbdays;$i++):
+            if(date('N',mktime(0, 0, 0, $mois, $i,$annee))==1):
+                $mondays[]=date('d/m/Y',mktime(0, 0, 0, $mois, $i,$annee));
+            endif;
+        endfor;
+        return $mondays;
+    }
+    
 ?>

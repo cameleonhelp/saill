@@ -333,5 +333,26 @@ class LivrablesController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
             endif;                
-	}          
+	}  
+        
+        
+        public function homeListeLivrables(){
+            $listactions = $this->Livrable->find('all',array('conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT NOT IN ("A faire","En cours")'),'order'=>array('ECHEANCE'=>'ASC'),'limit' => 5,'recursive'=>-1));
+            return $listactions;
+        }   
+        
+        public function homeNBAFAIRELivrables(){
+            $nbactions = $this->Livrable->find('all',array('fields'=>array('COUNT(id) AS NB','ETAT'),'conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT'=>"A faire"),'group'=>'ETAT','recursive'=>-1));
+            return $nbactions;
+        }    
+        
+        public function homeNBENCOURSLivrables(){
+            $nbactions = $this->Livrable->find('all',array('fields'=>array('COUNT(id) AS NB','ETAT'),'conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT'=>"En cours"),'group'=>'ETAT','recursive'=>-1));
+            return $nbactions;
+        }            
+        
+        public function homeNBRETARDLivrables(){
+            $nbactions = $this->Livrable->find('all',array('fields'=>array('COUNT(id) AS NB','ETAT','ECHEANCE'),'conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT NOT IN ("A faire","En cours")',"ECHEANCE <"=>date('Y-m-d')),'group'=>'ETAT','recursive'=>-1));
+            return $nbactions;
+        }         
 }

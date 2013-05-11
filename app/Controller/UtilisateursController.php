@@ -573,7 +573,7 @@ class UtilisateursController extends AppController {
                 unset($record['Utilisateur']['password']); 
                 unset($record['Utilisateur']['created']);
                 unset($record['Utilisateur']['modified']);
-                $record['Utilisateur']['password']='OSACT'; 
+                $record['Utilisateur']['password']='123soleil'; 
                 $record['Utilisateur']['created'] = $this->Utilisateur->read('created');
                 $record['Utilisateur']['modified'] = date('Y-m-d');                
                 if ($this->Utilisateur->save($record)) {
@@ -766,4 +766,5 @@ class UtilisateursController extends AppController {
             $this->Utilisateur->Action->create();
             $this->Utilisateur->Action->save($record);
         }
+                
 }

@@ -1,10 +1,14 @@
 <?php 
     $version = '2.0';
-    $build = '0'; //b053
+    $build = '1b001'; //b053
     echo $version.'.'.$build;
     /** 
      * changelog :
      * 
+     * version 2.0.1
+     * b003 corrections
+     * b002 Paramétrage du site
+     * b001 Mes statistiques
      * version 2.0.0 finale
      ****** mis sur serveur d'intégration ******
      * b053 Corrections mineures avant démonstrations et création du manuel utilisateur

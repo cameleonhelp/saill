@@ -16,7 +16,7 @@
 </STYLE>
 <table>
 	<tr>
-		<td><b>Export des projets depuis le site OSACT<b></td>
+		<td><b>Export des projets depuis le site SAILL<b></td>
 	</tr>
 	<tr>
 		<td><b>Date:</b></td>

@@ -1,4 +1,5 @@
-<div class="offset4">
+<div style="text-align: center;padding-bottom: 25px;"><?php echo $this->Html->image('SAILL.png') ?></div>
+<div class="offset7">
 <?php echo $this->Form->create('Utilisateur',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
         <div class="control-group">
         <label class="control-label sstitre  required" for="UtilisateurUsername">Login : </label>

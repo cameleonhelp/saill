@@ -440,5 +440,25 @@ class ActionsController extends AppController {
                 $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport'),'default',array('class'=>'alert alert-error'));             
                 $this->redirect(array('action'=>'rapport'));
             endif;
+        } 
+        
+        public function homeListeActions(){
+            $listactions = $this->Action->find('all',array('conditions'=>array('destinataire'=>userAuth('id'),'STATUT <>'=>"terminée"),'order'=>array('ECHEANCE'=>'ASC'),'limit' => 5,'recursive'=>-1));
+            return $listactions;
+        }   
+        
+        public function homeNBAFAIREActions(){
+            $nbactions = $this->Action->find('all',array('fields'=>array('COUNT(id) AS NB','STATUT'),'conditions'=>array('destinataire'=>userAuth('id'),'STATUT'=>"à faire"),'group'=>'STATUT','recursive'=>-1));
+            return $nbactions;
+        }    
+        
+        public function homeNBENCOURSActions(){
+            $nbactions = $this->Action->find('all',array('fields'=>array('COUNT(id) AS NB','STATUT'),'conditions'=>array('destinataire'=>userAuth('id'),'STATUT'=>"en cours"),'group'=>'STATUT','recursive'=>-1));
+            return $nbactions;
+        }            
+        
+        public function homeNBRETARDActions(){
+            $nbactions = $this->Action->find('all',array('fields'=>array('COUNT(id) AS NB','STATUT','ECHEANCE'),'conditions'=>array('destinataire'=>userAuth('id'),'STATUT <>'=>"terminée","ECHEANCE <"=>date('Y-m-d')),'group'=>'STATUT','recursive'=>-1));
+            return $nbactions;
         }        
 }

@@ -1,4 +1,3 @@
-<div class="span24" style="margin-right: 25px !important;margin-left: 0px !important;">
 <?php
 $this->set('title_for_layout','Accueil');
 ?>
@@ -23,9 +22,9 @@ $this->set('title_for_layout','Accueil');
 <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
 <thead>
 <tr>
-                <th width="18px;">&nbsp;</th>
+                <th width="20px;">&nbsp;</th>
                 <th>Nom du fichier</th>
-                <th width="18px;">&nbsp;</th>
+                <th width="20px;">&nbsp;</th>
 </tr>
 </thead>
 <tbody>
@@ -43,7 +42,3 @@ $this->set('title_for_layout','Accueil');
 <?php endforeach; ?>
 </tbody>
 </table>
-</div>
-<div class='offset24 block'>
-<?php echo $this->element('mystats'); ?>
-</div>

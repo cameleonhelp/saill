@@ -28,7 +28,7 @@ class ContactsController extends AppController {
             $email->emailFormat('html');
             $email->from($this->data['Contact']['EMAIL']);
             $email->to('jacques.levavasseur@sncf.fr');
-            $email->subject('OSACT : ' . $this->data['Contact']['OBJET']);
+            $email->subject('SAILL : ' . $this->data['Contact']['OBJET']);
             if ($email->send($this->data['Contact']['MESSAGE'])) {
                 $this->Session->setFlash(__('Message envoyé avec succès'),'default',array('class'=>'alert alert-success'));
             } else {

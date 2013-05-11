@@ -656,5 +656,11 @@ class ActivitesreellesController extends AppController {
                 $this->Session->delete('xls_export');                
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
+        } 
+        
+        public function homeNBActivitesReelles(){
+            $lastMonthDay = date('Y-m-').date('t');
+            $nbactions = $this->Activitesreelle->find('all',array('fields'=>array('SUM(TOTAL) AS TOTAL','DATE','VEROUILLE'),'conditions'=>array('utilisateur_id'=>userAuth('id'),"DATE BETWEEN '".date('Y-m-01')."' AND '".$lastMonthDay."'"),'group'=>'DATE','recursive'=>-1));
+            return $nbactions;
         }        
 }
