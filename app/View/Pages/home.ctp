@@ -1,4 +1,4 @@
-<div class="span24" style="margin-right: 25px !important;margin-left: 0px !important;">
+<div class="span22" style="margin-right: 25px !important;margin-left: 0px !important;">
 <?php
 $this->set('title_for_layout','Accueil');
 ?>
@@ -18,7 +18,7 @@ $this->set('title_for_layout','Accueil');
     <br/>
     Nous espérons que ce site vous facilitera votre restitution d'activité et un meilleur partage de l'information.
 </div>
-
+<div style='display: table;width: 100%;'>
 <h4>Liste des fichiers d'aide à votre disposition :</h4>
 <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
 <thead>
@@ -44,6 +44,7 @@ $this->set('title_for_layout','Accueil');
 </tbody>
 </table>
 </div>
-<div class='offset24 block'>
+</div>
+<div class='offset22 block'>
 <?php echo $this->element('mystats'); ?>
 </div>

@@ -1,10 +1,10 @@
 <div class="block-title">
-    <h2>Mes statistiques</h2>
+    <h4>Mes statistiques</h4>
 </div>
 <div class="block-content">
     <div style='text-align:center;'><h4>Mes 5 prochaines échéances:</h4></div>
-    <div style='display: table;width: 100%''>
-    <table>
+    <div style='display: table;width: 95%;margin-left: auto;margin-right:auto;'>
+    <table cellpadding="0" cellspacing="0">
         <thead>
          <tr><th colspan='2' style='text-align:center;'>Actions</th></tr>
         </thead>
@@ -30,7 +30,7 @@
          </tr>
         <?php endforeach; ?>
     </table>
-    <table>    
+    <table cellpadding="0" cellspacing="0">    
         <thead>
          <tr><th style='text-align:center;'>Livrables</th></tr>
         </thead>
@@ -45,27 +45,27 @@
     </div>
     <hr class="hrstat">
     <h4>Mes actions et livrables:</h4>
-    <div style='display: table;width: 100%'>
+    <div style='display: table;width: 95%;margin-left: auto;margin-right:auto;'>
         <table  cellpadding="0" cellspacing="0">
             <thead>
                 <tr><th>Actions</th><th>Livrables</th></tr>
                 <tr>
                     <td>
-                        <table>
+                        <table  cellpadding="0" cellspacing="0" style="margin:0px;">
                         <thead>
                          <tr><th style='text-align:center;' class='info-danger'>En retard</th></tr>
                         </thead>
                         <?php $nbactions = $this->requestAction('actions/homeNBRETARDActions'); ?>
                         <tr><td align='center'><div class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($nbactions[0][0]['NB']) ? $nbactions[0][0]['NB'] : 0; ?></div></div></div></td></tr>
                         </table>
-                        <table>
+                        <table  cellpadding="0" cellspacing="0" style="margin:0px;">
                         <thead>
                          <tr><th style='text-align:center;' class='info-warning'>En cours</th></tr>
                         </thead>
                         <?php $nbactions = $this->requestAction('actions/homeNBENCOURSActions'); ?>
                         <tr><td align='center'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($nbactions[0][0]['NB']) ? $nbactions[0][0]['NB'] : 0; ?></div></div></span></td></tr>
                         </table>
-                        <table>
+                        <table  cellpadding="0" cellspacing="0" style="margin:0px;">
                         <thead>
                         <?php $nbactions = $this->requestAction('actions/homeNBAFAIREActions'); ?>
                         <tr><th style='text-align:center;' class='info-success'>A faire</th></tr>
@@ -74,21 +74,21 @@
                         </table>                        
                     </td>
                     <td>
-                        <table>
+                        <table  cellpadding="0" cellspacing="0" style="margin:0px;">
                         <thead>
                          <tr><th style='text-align:center;' class='info-danger'>En retard</th></tr>
                         </thead>
                         <?php $nblivrables = $this->requestAction('livrables/homeNBRETARDLivrables'); ?>
                         <tr><td align='center'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($nblivrables[0][0]['NB']) ? $nblivrables[0][0]['NB'] : 0; ?></div></div></span></td></tr>
                         </table>
-                        <table>
+                        <table  cellpadding="0" cellspacing="0" style="margin:0px;">
                         <thead>
                          <tr><th style='text-align:center;' class='info-warning'>En cours</th></tr>
                         </thead>
                         <?php $nblivrables = $this->requestAction('livrables/homeNBENCOURSLivrables'); ?>
                         <tr><td align='center'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($nblivrables[0][0]['NB']) ? $nblivrables[0][0]['NB'] : 0; ?></div></div></span></td></tr>
                         </table>
-                        <table>
+                        <table  cellpadding="0" cellspacing="0" style="margin:0px;">
                         <thead>
                         <?php $nblivrables = $this->requestAction('livrables/homeNBAFAIRELivrables'); ?>
                         <tr><th style='text-align:center;' class='info-success'>A faire</th></tr>
@@ -102,7 +102,7 @@
     </div> 
     <hr class="hrstat">
     <h4>Ma saisie d'activité :</h4>
-    <div style='display: table;width: 100%'>
+    <div style='display: table;width: 95%;margin-left: auto;margin-right:auto;'>
         <table  cellpadding="0" cellspacing="0">
         <?php $mondays = getallmonday(); ?>
         <?php foreach($mondays as $monday) : ?>
@@ -123,7 +123,7 @@
             if (isset($activitesreelle[0]['TOTAL']) && $activitesreelle[0]['TOTAL']<5) : $etatsaisie = ucfirst_utf8('à compléter'); $badge = 'badge-important'; endif;
             if (!isset($activitesreelle[0]['TOTAL'])) : $etatsaisie = ucfirst_utf8('à faire'); $badge = 'badge-important'; endif;
         ?>
-        <tr><td align='center' width='10px'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($activitesreelle[0]['TOTAL']) ? $activitesreelle[0]['TOTAL']: 0; ?></div></div></span></td><td style='text-align:left;padding-left: 20px;font-size: 18px;'><span class="badgeround <?php echo $badge; ?>">&nbsp;</span> <?php echo $etatsaisie; ?></td></tr>
+        <tr><td align='center' width='10px'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($activitesreelle[0]['TOTAL']) ? $activitesreelle[0]['TOTAL']: 0; ?></div></div></span></td><td style='text-align:left;padding-left: 20px;font-size: 14px;'><span class="badgeround <?php echo $badge; ?>">&nbsp;</span> <?php echo $etatsaisie; ?></td></tr>
         <?php endif; ?>
         <?php endforeach; ?>
         <?php endforeach; ?>

@@ -638,6 +638,7 @@ input.invalid {
   background: #ffffff !important;
 }
 .block {
+  float: start;
   font-size: 12px;
   z-index: 1010;
   padding: 1px;
@@ -671,7 +672,7 @@ input.invalid {
 
 .sleek{
     margin-top: 5px;
-    margin-bottom: -5px;
+    margin-bottom: 5px;
     border: 1px solid #3E3D40;
     background: #3E3D40;
     text-transform: uppercase;
