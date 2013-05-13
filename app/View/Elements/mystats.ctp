@@ -113,15 +113,16 @@
         <?php foreach($activitesreelles as $activitesreelle) : ?>
         <?php if ($monday == $activitesreelle['Activitesreelle']['DATE']): ?>
         <?php 
-            if (isset($activitesreelle[0]['TOTAL']) && $activitesreelle[0]['TOTAL']==5 && $activitesreelle['Activitesreelle']['VEROUILLE']==true) : 
+            if ((isset($activitesreelle[0]['TOTAL']) && $activitesreelle[0]['TOTAL']==5) && $activitesreelle['Activitesreelle']['VEROUILLE']==false) : 
                 $etatsaisie = ucfirst_utf8('facturé');
                 $badge = 'badge-success';
             else:
                 $etatsaisie = ucfirst_utf8('à facturer'); 
                 $badge = 'badge-warning';
             endif;
-            if (isset($activitesreelle[0]['TOTAL']) && $activitesreelle[0]['TOTAL']<5) : $etatsaisie = ucfirst_utf8('à compléter'); $badge = 'badge-important'; endif;
+            if (isset($activitesreelle[0]['TOTAL']) && $activitesreelle[0]['TOTAL']<5 && $activitesreelle['Activitesreelle']['VEROUILLE']==true) : $etatsaisie = ucfirst_utf8('à compléter'); $badge = 'badge-important'; endif;
             if (!isset($activitesreelle[0]['TOTAL'])) : $etatsaisie = ucfirst_utf8('à faire'); $badge = 'badge-important'; endif;
+			if ($activitesreelle['Activitesreelle']['VEROUILLE']==false): $etatsaisie = ucfirst_utf8('facturé'); $badge = 'badge-success'; endif;
         ?>
         <tr><td align='center' width='10px'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($activitesreelle[0]['TOTAL']) ? $activitesreelle[0]['TOTAL']: 0; ?></div></div></span></td><td style='text-align:left;padding-left: 20px;font-size: 14px;'><span class="badgeround <?php echo $badge; ?>">&nbsp;</span> <?php echo $etatsaisie; ?></td></tr>
         <?php endif; ?>

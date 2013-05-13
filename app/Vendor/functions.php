@@ -19,9 +19,9 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
         // Récupération de paques. Permet ensuite d'obtenir le jour de l'ascension et celui de la pentecôte
         $paques = easter_date($an);
         // le coefficient n'est aps identique s'il s'agit d'un serveur sous Windows ou sous Unix
-        $i = substr($_SERVER['DOCUMENT_ROOT'], 0, 1) == '/' ? 1 : 2;
-        $j = substr($_SERVER['DOCUMENT_ROOT'], 0, 1) == '/' ? 39 : 40;
-        $k = substr($_SERVER['DOCUMENT_ROOT'], 0, 1) == '/' ? 50 : 51;       
+        $i = 1; //substr($_SERVER['DOCUMENT_ROOT'], 0, 1) == '/' ? 1 : 2;
+        $j = 39; //substr($_SERVER['DOCUMENT_ROOT'], 0, 1) == '/' ? 39 : 40;
+        $k = 50; //substr($_SERVER['DOCUMENT_ROOT'], 0, 1) == '/' ? 50 : 51;       
         $tab_feries[] = date($an.'-m-d', $paques + (86400*$i)); // Paques
         $tab_feries[] = date($an.'-m-d', $paques + (86400*$j)); // Ascension
         $tab_feries[] = date($an.'-m-d', $paques + (86400*$k)); // Pentecote        

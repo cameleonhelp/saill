@@ -154,7 +154,6 @@
                 if (tmp == list) tmp = list.replace("-"+$(this).val(), ""); 
                 $("#all_ids").val(tmp);
             }
-            alert($("#all_ids").val());
         });
     });
 </script>
