@@ -159,13 +159,23 @@ class Action extends AppModel {
         public function beforeSave() {
             if (!empty($this->data['Action']['ECHEANCE'])) {
                 $this->data['Action']['ECHEANCE'] = $this->dateFormatBeforeSave($this->data['Action']['ECHEANCE']);
-            }
+            } else {
+                $this->data['Action']['ECHEANCE'] = $this->dateFormatBeforeSave(date('d/m/Y'));
+            }  
             if (!empty($this->data['Action']['DEBUT'])) {
                 $this->data['Action']['DEBUT'] = $this->dateFormatBeforeSave($this->data['Action']['DEBUT']);
-            }
+            } else {
+                $this->data['Action']['DEBUT'] = $this->dateFormatBeforeSave(date('d/m/Y'));
+            }            
             if (!empty($this->data['Action']['DEBUTREELLE'])) {
                 $this->data['Action']['DEBUTREELLE'] = $this->dateFormatBeforeSave($this->data['Action']['DEBUTREELLE']);
             }
+            if (empty($this->data['Action']['PRIORITE'])) {
+                $this->data['Action']['PRIORITE'] = 'normale';
+            }
+            if (empty($this->data['Action']['STATUT'])) {
+                $this->data['Action']['STATUT'] = 'en cours';
+            }            
             parent::beforeSave();
             return true;
         }

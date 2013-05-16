@@ -59,7 +59,7 @@
  */
 class DATABASE_CONFIG {
  
-    var $developmenthome = array( 
+   /* var $developmenthome = array( 
         'datasource' => 'Database/Mysql',
         'driver' => 'mysql',
         'connect' => 'mysql_connect',
@@ -67,7 +67,7 @@ class DATABASE_CONFIG {
         'host' => '10.0.0.8',
         'login' => 'root',
         'password' => '',
-        'database' => 'osact_cake230',
+        'database' => 'saill_200',
         'prefix' => '',        
         'encoding' => 'utf8'
     );
@@ -80,7 +80,7 @@ class DATABASE_CONFIG {
         'host' => 'localhost',
         'login' => 'root',
         'password' => '',
-        'database' => 'osact_cake230',
+        'database' => 'saill_200',
         'prefix' => '', 
         'encoding' => 'utf8'
     );
@@ -93,7 +93,7 @@ class DATABASE_CONFIG {
         'host' => 'localhost',
         'login' => 'root',
         'password' => '',
-        'database' => 'osact_cake230',
+        'database' => 'saill_200',
         'prefix' => '', 
         'encoding' => 'utf8'
     );
@@ -108,19 +108,19 @@ class DATABASE_CONFIG {
     function DATABASE_CONFIG()
     {
         $this->__construct();
-    }
+    }*/
     
     /** a décommenter pour faire un bake all **/
-    /*public $default = array( 
+    public $default = array( 
         'datasource' => 'Database/Mysql',
         'driver' => 'mysql',
         'connect' => 'mysql_connect',
         'persistent' => false,
-        'host' => '10.0.0.8',
-        'login' => 'root',
-        'password' => '',
-        'database' => 'osact_cake230',
+        'host' => '10.0.0.8', //localhost - 10.0.0.8
+        'login' => 'SAILLADM',
+        'password' => 'S@ILL@DM',
+        'database' => 'saill_200',
         'prefix' => '',        
         'encoding' => 'utf8'
-    );*/
+    );
 }

@@ -31,6 +31,12 @@
                 </div> 
             </td>            
         </tr> 
+        <tr>
+            <td><label class="control-label sstitre  required"  for="ActionRepartitionUtilisateur">Afficher répartition par utilisateur : </label></td>
+            <td>
+                <?php echo $this->Form->input('RepartitionUtilisateur',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class="labelAfter" for="ActionRepartitionUtilisateur"></label>            
+            </td>          
+        </tr>        
     </table>
     <div class="navbar">
         <div class="navbar-inner">
@@ -47,6 +53,28 @@
     <div class="pull-right"><?php echo $this->Html->link('<i class="ico-doc"></i> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn','escape' => false)); ?></div>
 <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br>
+    <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Détail des actions par mois</div><br>
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+            <th>Période</th>
+            <th>Domaine</th>
+            <th>Objet</th>
+            <th>Etat</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($detailrapportresults as $result): ?>
+            <tr>
+                <td><?php echo strMonth($result[0]['MONTH']).' '.$result[0]['YEAR']; ?></td>
+                <td><?php echo $result['Domaine']['NOM']; ?></td>
+                <td><?php echo $result['Action']['OBJET']; ?></td>
+                <td style="text-align:center"><?php echo ucfirst_utf8($result['Action']['STATUT']); ?></td> 
+            </tr>           
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'actions par mois, par destinataire et par état</div><br>
     <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
         <thead>
@@ -75,28 +103,39 @@
 	</tr> 
         </tfooter>
     </table>
-<br>
-    <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Détail des actions par mois</div><br>
+    <?php if (isset($repartitions)): ?>
+    <br />
+        <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'actions par mois, par destinataire, par domaine et par état</div><br>
     <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
         <thead>
             <tr>
             <th>Période</th>
+            <th>Utilisateur</th>
             <th>Domaine</th>
-            <th>Objet</th>
+            <th width="50px">Nombre</th>
             <th>Etat</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach($detailrapportresults as $result): ?>
+            <?php foreach($repartitions as $result): ?>
             <tr>
                 <td><?php echo strMonth($result[0]['MONTH']).' '.$result[0]['YEAR']; ?></td>
+                <td><?php echo $result['Utilisateur']['NOM'].' '.$result['Utilisateur']['PRENOM']; ?></td>
                 <td><?php echo $result['Domaine']['NOM']; ?></td>
-                <td><?php echo $result['Action']['OBJET']; ?></td>
-                <td style="text-align:center"><?php echo ucfirst_utf8($result['Action']['STATUT']); ?></td> 
+                <td style="text-align:center" class="nbrepartition"><?php echo $result[0]['NB']; ?></td> 
+                <td style="text-align:center"><?php echo $result['Action']['STATUT']; ?></td> 
             </tr>           
             <?php endforeach; ?>
-        </tbody>
+        </tbody>  
+        <tfooter>
+	<tr>
+            <td colspan="3" class="footer" style="text-align:right;">Total :</td>
+            <td class="footer" id="totalrepartition" style="text-align:center;"></td>
+            <td class="footer"> actions</td>
+	</tr> 
+        </tfooter>          
     </table>
+    <?php endif; ?>    
 </div>
 <?php if(isset($rapportresults) && $israpport==0) : ?>
 <div class="alert alert-block"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
@@ -128,13 +167,13 @@ $(document).ready(function (){
             $('#ActionSelectAllDomaine').prop('checked', false);
     }); 
     
-    function sumOfColumns() {
+    function sumOfColumns(id) {
         var tot = 0;
-        $(".nbaction").each(function() {
+        $("."+id).each(function() {
           tot += parseFloat($(this).html());
         });
         return tot;
-     }    
+     }   
     
     function addMonth($date,$nb){
         var dateTimeSplit = $date.split(' ');
@@ -144,7 +183,8 @@ $(document).ready(function (){
         return currentDate;
     }
     
-    $("#total").html(sumOfColumns());
+    $("#total").html(sumOfColumns('nbaction'));
+    $("#totalrepartition").html(sumOfColumns('nbrepartition'));
     
     $(document).on('change','#ActionSTART',function(e){
         newDate = addMonth($(this).val(),1);

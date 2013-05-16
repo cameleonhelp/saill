@@ -37,7 +37,7 @@ class DetailplanchargesController extends AppController {
                 $dsit = array('-1'=>'Ressource DSI-T');
                 $reserve = array('-2'=>'Réserve');
                 $autreressource = array('-3'=> 'Ressource à prévoir');                
-                $utilisateursrequest = $this->Detailplancharge->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $utilisateursrequest = $this->Detailplancharge->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
                 $utilisateurs = $dsit+$reserve+$autreressource+$utilisateursrequest;
                 $this->set('utilisateurs',$utilisateurs);
                 $domaines = $this->Detailplancharge->Domaine->find('list',array('fields'=>array('Domaine.id','Domaine.NOM'),'order'=>array('Domaine.NOM'=>'asc')));
@@ -99,7 +99,7 @@ class DetailplanchargesController extends AppController {
                 $dsit = array('-1'=>'Ressource DSI-T');
                 $reserve = array('-2'=>'Réserve');
                 $autreressource = array('-3'=> 'Ressource à prévoir');                
-                $utilisateursrequest = $this->Detailplancharge->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $utilisateursrequest = $this->Detailplancharge->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
                 $utilisateurs = $dsit+$reserve+$autreressource+$utilisateursrequest;
                 $this->set('utilisateurs',$utilisateurs);
                 $domaines = $this->Detailplancharge->Domaine->find('list',array('fields'=>array('Domaine.id','Domaine.NOM'),'order'=>array('Domaine.NOM'=>'asc')));

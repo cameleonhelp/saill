@@ -52,7 +52,15 @@
                         <div class="controls">
                             <?php echo $this->Form->input('COMMENTAIRE',array('type'=>'textarea',"readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                         </div>
-                    </div>                    
+                    </div>  
+                    <?php if($this->params->action=="add" && userAuth('profil_id')<6 && isAuthorized('utilisateurs', 'add')): ?>
+                    <div class="control-group">
+                        <label class="control-label sstitre" for="UtilisateurProfilId"></label>
+                        <div class="controls">
+                            <?php echo $this->Form->input('profil_id',array('type'=>'checkbox','value'=>'-1')); ?>&nbsp;<label class='labelAfter' for="UtilisateurProfilId">Compte générique</label>
+                        </div>
+                    </div>  
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

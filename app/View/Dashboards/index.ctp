@@ -105,7 +105,7 @@
             <th colspan="2">Contrat</th>
             <th colspan="2">Prévision</th>
             <th colspan="2">Consommation</th>
-            <th colspan="2">Facturation</th>
+            <th colspan="2">Facturation estimée</th>
             <th colspan="2">% Avancement</th>
             <th rowspan="2" style="vertical-align: middle;">Ecart<br><span rel="tooltip" title="Charges réelles - charges facturées"><i class="icon-question-sign"></i></span></th>
             <th colspan="2">Reste à</th>

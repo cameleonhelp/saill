@@ -48,7 +48,7 @@ class EmailConfig {
 
         public $exchange = array(
             'transport' => 'Smtp',
-            'from' => array('email@example.com' => 'Admin OSACT'),
+            'from' => array('email@example.com' => 'Admin SAILL'),
             'host' => 'smtp.ex3.secureserver.net',
             'port' => 587,
             'timeout' => 30,

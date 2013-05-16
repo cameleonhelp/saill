@@ -50,31 +50,31 @@
             </td>            
         </tr>
         <tr>
-            <td><label class="control-label sstitre  required" for="ActionPRIORITE">Priorité : </label></td>
+            <td><label class="control-label sstitre" for="ActionPRIORITE">Priorité : </label></td>
             <td>
                 <?php if ($this->params->action == 'edit') { ?>
-                    <?php echo $this->Form->select('PRIORITE',$priorites,array('data-rule-required'=>'true','data-msg-required'=>"La priorité est obligatoire dans l'onglet Chronologie", 'selected' => $this->data['Action']['PRIORITE'],'empty' => 'Choisir une priorité')); ?>
+                    <?php echo $this->Form->select('PRIORITE',$priorites,array('selected' => $this->data['Action']['PRIORITE'],'empty' => 'Choisir une priorité')); ?>
                 <?php } else { ?>
-                    <?php echo $this->Form->select('PRIORITE',$priorites,array('data-rule-required'=>'true','data-msg-required'=>"La priorité est obligatoire dans l'onglet Chronologie",'empty' => 'Choisir une priorité')); ?>
+                    <?php echo $this->Form->select('PRIORITE',$priorites,array('empty' => 'Choisir une priorité')); ?>
                 <?php } ?>                
             </td>
-            <td><label class="control-label sstitre required" for="ActionECHEANCE">Echéance de l'Action : </label></td>
+            <td><label class="control-label sstitre" for="ActionECHEANCE">Echéance de l'Action : </label></td>
             <td>
                 <div class="input-prepend date" data-date="<?php echo empty($this->data['Action']['ECHEANCE']) ? date('d/m/Y') : $this->data['Action']['ECHEANCE']; ?>" data-date-format="dd/mm/yyyy">
                 <?php $today = date('d/m/Y'); ?>
                 <span class="add-on"><i class="glyphicon_calendar"></i></span>
                 <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>                
-                <?php echo $this->Form->input('ECHEANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>"L'échéance de l'action est obligatoire dans l'onglet Chronologie",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->input('ECHEANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 </div>                
             </td>            
         </tr>
         <tr>
-            <td><label class="control-label sstitre  required" for="ActionSTATUT">Statut : </label></td>
+            <td><label class="control-label sstitre" for="ActionSTATUT">Statut : </label></td>
             <td>
                 <?php if ($this->params->action == 'edit') { ?>
-                    <?php echo $this->Form->select('STATUT',$etats,array('data-rule-required'=>'true','data-msg-required'=>"Le statut est obligatoire dans l'onglet Avancement - Livrable attaché", 'selected' => $this->data['Action']['STATUT'],'empty' => 'Choisir un statut')); ?>
+                    <?php echo $this->Form->select('STATUT',$etats,array( 'selected' => $this->data['Action']['STATUT'],'empty' => 'Choisir un statut')); ?>
                 <?php } else { ?>
-                    <?php echo $this->Form->select('STATUT',$etats,array('data-rule-required'=>'true','data-msg-required'=>"Le statut est obligatoire dans l'onglet Avancement - Livrable attaché",'empty' => 'Choisir un statut')); ?>
+                    <?php echo $this->Form->select('STATUT',$etats,array('empty' => 'Choisir un statut')); ?>
                 <?php } ?>                
             </td>
             <td><label class="control-label sstitre" for="ActionAVANCEMENT">Avancement : </label></td>
@@ -90,19 +90,19 @@
             </td>            
         </tr> 
         <tr>
-            <td><label class="control-label sstitre required" for="ActionDEBUT">Début prévu de l'action : </label></td>
+            <td><label class="control-label sstitre" for="ActionDEBUT">Début prévu de l'action : </label></td>
             <td>
             <div class="input-append date" data-date="<?php echo empty($this->data['Action']['DEBUT']) ? date('d/m/Y') : $this->data['Action']['DEBUT']; ?>" data-date-format="dd/mm/yyyy">
                 <?php $today = date('d/m/Y'); ?>
-                <?php echo $this->Form->input('DEBUT',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>"La date de début de l'action est obligatoire dans l'onglet Chronologie",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->input('DEBUT',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
                 <span class="add-on"><i class="glyphicon_calendar"></i></span>
                 </div>                
             </td>
-            <td><label class="control-label sstitre required" for="ActionDUREEPREVUE">Durée prévue : </label></td>
+            <td><label class="control-label sstitre" for="ActionDUREEPREVUE">Durée prévue : </label></td>
             <td class="form-inline">
                 <?php $value = isset($this->data['Action']['DUREEPREVUE']) ? $this->data['Action']['DUREEPREVUE'] : 0; ?>
-                <?php echo $this->Form->input('DUREEPREVUE',array('type'=>"number", 'min'=>"0", 'step'=>"2",'maxlength'=>'3','class' => 'span2 text-right', 'value'=>$value,'data-msg-required'=>"La durée prévue de l'action est obligatoire dans l'onglet Chronologie")); ?> heures soit : <label id="ActionLblDUREEPREVUE"></label>              
+                <?php echo $this->Form->input('DUREEPREVUE',array('type'=>"number", 'min'=>"0", 'step'=>"2",'maxlength'=>'3','class' => 'span2 text-right', 'value'=>$value)); ?> heures soit : <label id="ActionLblDUREEPREVUE"></label>              
             </td>            
         </tr>      
     </table> 

@@ -37,7 +37,7 @@
                         <td class="tableTd">N° GALILEI</td>
                         <td class="tableTd">Etat</td>
                         <td class="tableTd">Type</td>
-                        <td class="tableTd">Facturation</td>
+                        <td class="tableTd">Facturation estimée</td>
                         <td class="tableTd">Commentaire</td>
 		</tr>		
 		<?php foreach($rows as $row):

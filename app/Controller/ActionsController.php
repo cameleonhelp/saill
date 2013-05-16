@@ -100,7 +100,7 @@ class ActionsController extends AppController {
                     $fresponsable = "dont le responsable est ".$nomlong['Utilisateur']['NOMLONG'];
                 endif;
                 $this->set('fresponsable',$fresponsable); 
-                $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 2'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('responsables',$responsables);                 
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Action->recursive = 0;
@@ -143,7 +143,6 @@ class ActionsController extends AppController {
 			$this->Action->create();
 			if ($this->Action->save($this->request->data)) {
                                 $this->saveHistory($this->Action->getInsertID()); 
-                                //$this->initActiviteReelle($this->Action->getInsertID());
 				$this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
 				$this->redirect($this->goToPostion(1));
 			} else {
@@ -157,7 +156,7 @@ class ActionsController extends AppController {
                 $types = Configure::read('typeAction');
                 $this->set('types',$types); 
                 $nomlong = $this->Action->Utilisateur->recursive = -1;
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('destinataires',$destinataires); 
                 $activitesagent = $this->findActiviteForUtilisateur(userAuth('id'));
                 $this->set('activitesagent',$activitesagent);    
@@ -215,7 +214,7 @@ class ActionsController extends AppController {
                 $types = Configure::read('typeAction');
                 $this->set('types',$types);    
                 $this->Action->Utilisateur->recursive = -1;
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('destinataires',$destinataires); 
                 $activitesagent = $this->findActiviteForUtilisateur(userAuth('id'));
                 $this->set('activitesagent',$activitesagent);  
@@ -277,7 +276,7 @@ class ActionsController extends AppController {
                 $this->Action->recursive = 0;
                 $this->set('actions', $this->paginate());
                 $this->Action->Utilisateur->recursive = -1;
-                $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('responsables',$responsables);                   
                 $this->render('index');
             else :
@@ -372,19 +371,25 @@ class ActionsController extends AppController {
                         @$projetlist .= $value.',';
                     }  
                     $domaine = 'Action.domaine_id IN ('.substr_replace($projetlist ,"",-1).')';
-                    $periode = 'Action.ECHEANCE BETWEEN "'.  CUSDate($this->request->data['Action']['START']).'" AND "'.CUSDate($this->request->data['Action']['END']).'"';
+                    $periode = 'Action.ECHEANCE BETWEEN "'.  startWeek(CUSDate($this->request->data['Action']['START'])).'" AND "'.  endWeek(CUSDate($this->request->data['Action']['END'])).'"';
                     $rapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('Action.destinataire','MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)','Action.STATUT'),'recursive'=>0));
                     $this->set('rapportresults',$rapportresult);
-                    $chartresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)'),'recursive'=>0));
+                    $chartresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode,'Action.CRA'=>1),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)'),'recursive'=>0));
                     $this->set('chartresults',$chartresult);                    
-                    $detailrapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Action.STATUT','Action.OBJET','Domaine.NOM'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'recursive'=>0));
+                    $detailrapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Action.STATUT','Action.OBJET','Domaine.NOM'),'conditions'=>array($destinataire,$domaine,$periode,'Action.CRA'=>1),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'recursive'=>0));
                     $this->set('detailrapportresults',$detailrapportresult);
                     $this->Session->delete('rapportresults');  
                     $this->Session->delete('detailrapportresults');                      
                     $this->Session->write('rapportresults',$rapportresult);
                     $this->Session->write('detailrapportresults',$detailrapportresult);
+                    if ($this->request->data['Action']['RepartitionUtilisateur']==1):
+                        $repartitions = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','Domaine.NOM', 'COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc','Action.destinataire'=>'asc'),'group'=>array('Action.destinataire','MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)','Action.STATUT','Action.domaine_id'),'recursive'=>0));
+                        $this->set('repartitions',$repartitions);
+                        $this->Session->delete('repartitionresults');
+                        $this->Session->write('repartitionresults',$repartitions);
+                    endif;                    
                 endif;
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
                 $this->set('destinataires',$destinataires);  
                 $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
@@ -440,7 +445,85 @@ class ActionsController extends AppController {
                 $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport'),'default',array('class'=>'alert alert-error'));             
                 $this->redirect(array('action'=>'rapport'));
             endif;
-        } 
+        }       
+
+/**
+ * progressstatut method
+ * 
+ * @param type $id
+ */
+        public function progressstatut($id=null){
+                $newetat = '';
+                $this->Action->id = $id;
+                $record = $this->Action->read();
+                switch (strtolower($record['Action']['STATUT'])) {
+                    case 'à faire':
+                       $newetat = 'en cours';
+                       $avancement = '10';
+                       $echeance = $record['Action']['ECHEANCE'];
+                       break;
+                    case 'en cours':
+                       $newetat = 'terminée';
+                       $echeance = date('Y-m-d');
+                       $avancement = '100';
+                       break;                
+                    case 'terminée':
+                       $newetat = 'livré';
+                       $avancement = '100';
+                       $echeance = date('Y-m-d');
+                       break;          
+                    case 'livré':
+                       $newetat = 'annulée';
+                       $avancement = '0';
+                       $echeance = date('Y-m-d');
+                       break;
+                    case 'annulée':
+                       $newetat = 'à faire';
+                       $avancement = '0';
+                       $echeance = $record['Action']['ECHEANCE'];
+                       break;                
+                }
+                $record['Action']['STATUT'] = $newetat;
+                $record['Action']['AVANCEMENT'] = $avancement;
+                $record['Action']['ECHEANCE'] = $echeance;
+                $record['Action']['created'] = $this->Action->read('created');
+                $record['Action']['modified'] = date('Y-m-d');
+                $this->Action->save($record);
+                $this->saveHistory($id); 
+                $this->redirect($this->goToPostion(0));
+        }        
+        
+        public function progressavancement(){
+            $id = $this->request->data('id');
+            $avancement = $this->request->data('avancement');
+            $this->Action->id = $id;
+            $record = $this->Action->read();
+            $record['Action']['STATUT'] = $avancement==100 ? 'terminée' : $avancement==0 ? 'à faire' : $record['Action']['STATUT'];
+            $record['Action']['AVANCEMENT'] = $avancement;
+            $record['Action']['ECHEANCE'] = $avancement==100 ? date('Y-m-d') : $record['Action']['ECHEANCE'];
+            $record['Action']['created'] = $this->Action->read('created');
+            $record['Action']['modified'] = date('Y-m-d');
+            $this->saveHistory($id); 
+            $this->Action->save($record);
+            exit();
+        }
+        
+        public function progressduree(){
+            $id = $this->request->data('id');
+            $duree = $this->request->data('duree');
+            $this->Action->id = $id;
+            $this->saveHistory($id); 
+            $this->Action->saveField('DUREEPREVUE',$duree);
+            exit();
+        }        
+        
+        public function incra($id=null){
+            $this->Action->id = $id;
+            $cra = $this->Action->find('first',array('fields'=>array('CRA'),'conditions'=>array('Action.id'=>$id),'recursive'=>-1));
+            $this->Action->saveField('CRA', !$cra['Action']['CRA']);
+            $this->redirect($this->goToPostion());
+        }
+        
         
         public function homeListeActions(){
             $listactions = $this->Action->find('all',array('conditions'=>array('destinataire'=>userAuth('id'),'STATUT <>'=>"terminée"),'order'=>array('ECHEANCE'=>'ASC'),'limit' => 5,'recursive'=>-1));
@@ -460,5 +543,5 @@ class ActionsController extends AppController {
         public function homeNBRETARDActions(){
             $nbactions = $this->Action->find('all',array('fields'=>array('COUNT(id) AS NB','STATUT','ECHEANCE'),'conditions'=>array('destinataire'=>userAuth('id'),'STATUT <>'=>"terminée","ECHEANCE <"=>date('Y-m-d')),'group'=>'STATUT','recursive'=>-1));
             return $nbactions;
-        }        
+        }         
 }

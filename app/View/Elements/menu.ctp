@@ -18,7 +18,6 @@
   <?php $classAssistances = in_array($controller,array('assistances_index','assistances_add','assistances_edit','assistances_delete','assistances_search')) ? 'active' : ''; ?> 
   <?php $classListeDiffusions = in_array($controller,array('listediffusions_index','listediffusions_add','listediffusions_edit','listediffusions_delete','listediffusions_search')) ? 'active' : ''; ?>               
   <?php $classProfils = in_array($controller,array('profils_index','profils_add','profils_edit','profils_delete','profils_search')) ? 'active' : ''; ?>  
-  <?php $classParameters = in_array($controller,array('parameters_index')) ? 'active' : ''; ?>    
   <?php $classAutorisations = in_array($controller,array('autorisations_index','autorisations_add','autorisations_edit','autorisations_delete','autorisations_search')) ? 'active' : ''; ?>                
   <?php $classTypeMateriels = in_array($controller,array('typemateriels_index','typemateriels_add','typemateriels_edit','typemateriels_delete','typemateriels_search')) ? 'active' : ''; ?> 
   <?php $classMessages = in_array($controller,array('messages_index','messages_add','messages_edit','messages_delete','messages_search')) ? 'active' : ''; ?>
@@ -71,25 +70,17 @@
     <li class="<?php echo $classCalendardAbs; ?>"><?php echo $this->Html->link('<i class="glyphicon_beach_umbrella"></i> Absences équipe',array('controller'=>'activitesreelles','action'=>'absences'),array('escape' => false)); ?></li>
     <?php endif; ?>    
     
-    <?php if (userAuth('profil_id')!='2' && (isAuthorized('messages', 'index') || isAuthorized('profils', 'index') || isAuthorized('autorisations', 'index') || isAuthorized('assistances', 'index') || isAuthorized('domaines', 'index') || isAuthorized('listediffusions', 'index') || isAuthorized('outils', 'index') || isAuthorized('dossierpartages', 'index') || isAuthorized('sections', 'index') || isAuthorized('sites', 'index') || isAuthorized('societes', 'index') || isAuthorized('parameters', 'index') || isAuthorized('typemateriels', 'index'))) : ?> 
+    <?php if (userAuth('profil_id')!='2' && (isAuthorized('messages', 'index') || isAuthorized('profils', 'index') || isAuthorized('autorisations', 'index') || isAuthorized('assistances', 'index') || isAuthorized('domaines', 'index') || isAuthorized('listediffusions', 'index') || isAuthorized('outils', 'index') || isAuthorized('dossierpartages', 'index') || isAuthorized('sections', 'index') || isAuthorized('sites', 'index') || isAuthorized('societes', 'index') || isAuthorized('typemateriels', 'index'))) : ?> 
     <li class="divider"></li>
     <li  class="dropdown-submenu  <?php echo $classAdministration; ?>"><a href="#"><i class="glyphicon_lock"></i> Administration</a>
         <ul class="dropdown-menu">
             <?php if (userAuth('profil_id')!='2' && isAuthorized('messages', 'index')) : ?>
             <li class="<?php echo $classMessages; ?>"><?php echo $this->Html->link('Messages',array('controller'=>'messages','action'=>'index'),array('escape' => false)); ?></li>
             <?php endif; ?>
-            <?php if (userAuth('profil_id')!='2' && isAuthorized('parameters', 'index')) : ?> 
-            <li class="divider"></li>
-            <?php endif; ?>
-            <?php if (userAuth('profil_id')!='2' && isAuthorized('parameters', 'index')) : ?>
-            <li class="<?php echo $classParameters; ?>"><?php echo $this->Html->link('Paramètres du site',array('controller'=>'parameters','action'=>'index'),array('escape' => false)); ?></li>
-            <li class="divider"></li>
-            <li class="<?php echo $classParameters; ?>"><?php echo $this->Html->link('Sauvegarder',array('controller'=>'parameters','action'=>'savebdd'),array('escape' => false)); ?></li>
-            <li class="<?php echo $classParameters; ?>"><?php echo $this->Html->link('Restaurer',array('controller'=>'parameters','action'=>'restorebdd'),array('escape' => false)); ?></li>            
-            <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && (isAuthorized('profils', 'index') || isAuthorized('assistances', 'index') || isAuthorized('autorisations', 'index'))) : ?> 
             <li class="divider"></li>
-            <?php endif; ?>            <?php if (userAuth('profil_id')!='2' && isAuthorized('profils', 'index')) : ?>
+            <?php endif; ?>
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('profils', 'index')) : ?>
             <li class="<?php echo $classProfils; ?>"><?php echo $this->Html->link('Profils',array('controller'=>'profils','action'=>'index'),array('escape' => false)); ?></li>
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('autorisations', 'index')) : ?>            
@@ -176,7 +167,7 @@
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'index')) : ?>            
             <li class="divider"></li>
-            <li  class="dropdown-submenu <?php echo $classFacturation; ?>"><a href="#">Facturation</a>
+            <li  class="dropdown-submenu <?php echo $classFacturation; ?>"><a href="#">Facturation estimée</a>
             <ul class="dropdown-menu">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'index')) : ?>
                 <li class="<?php echo $classFacturationTodo; ?>"><?php echo $this->Html->link('A facturer',array('controller'=>'activitesreelles','action'=>'afacturer'),array('escape' => false)); ?></li>
@@ -201,7 +192,7 @@
             <li class="<?php echo $classCRAActivites; ?>"><?php echo $this->Html->link('Activités réelles',array('controller'=>'activitesreelles','action'=>'rapport'),array('escape' => false)); ?></li>
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'rapports')) : ?>
-            <li class="<?php echo $classCRAFacturations; ?>"><?php echo $this->Html->link('Facturations',array('controller'=>'facturations','action'=>'rapport'),array('escape' => false)); ?></li>            
+            <li class="<?php echo $classCRAFacturations; ?>"><?php echo $this->Html->link('Facturations estimées',array('controller'=>'facturations','action'=>'rapport'),array('escape' => false)); ?></li>            
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'rapports')) : ?>
             <li class="<?php echo $classCRAPlancharges; ?>"><?php echo $this->Html->link('Plan de charges',array('controller'=>'plancharges','action'=>'rapport'),array('escape' => false)); ?></li>            
@@ -214,7 +205,9 @@
     </li>
     <?php endif; ?>
     <li class="divider"></li>
+    <?php if (isAuthorized('plancharges', 'rapport')) : ?>
     <li class="<?php echo $classContactUs; ?>"><?php echo $this->Html->link('<i class="glyphicon_envelope"></i> Nous contacter',array('controller'=>'contacts','action'=>'add'),array('escape' => false)); ?></li>
+    <?php endif; ?>
     <li class="<?php echo $classAddFavorites; ?> jQueryBookmark"><?php echo $this->Html->link('<i class="glyphicon_star"></i> Ajouter aux favoris',array('action'=>"#"),array('escape' => false)); ?></li>
     <li  class="dropdown-menu-nolink sstitre text-center">Version : <?php echo $this->element('version') ?></li>
   </ul>

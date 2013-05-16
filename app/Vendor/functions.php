@@ -20,7 +20,7 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
         $paques = easter_date($an);
         // le coefficient n'est aps identique s'il s'agit d'un serveur sous Windows ou sous Unix
         $i = 1; //substr($_SERVER['DOCUMENT_ROOT'], 0, 1) == '/' ? 1 : 2;
-        $j = 39; //substr($_SERVER['DOCUMENT_ROOT'], 0, 1) == '/' ? 39 : 40;
+        $j = 39; //ubstr($_SERVER['DOCUMENT_ROOT'], 0, 1) == '/' ? 39 : 40;
         $k = 50; //substr($_SERVER['DOCUMENT_ROOT'], 0, 1) == '/' ? 50 : 51;       
         $tab_feries[] = date($an.'-m-d', $paques + (86400*$i)); // Paques
         $tab_feries[] = date($an.'-m-d', $paques + (86400*$j)); // Ascension
@@ -168,6 +168,7 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
  * @return dateTime
  */    
     function startWeek($date) {
+        $date = new DateTime($date);
         $num_day = $date->format('N')-1;
         $interval = date_interval_create_from_date_string($num_day.' days');
         $date->format('Y-m-d');
@@ -184,6 +185,38 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
  * @return dateTime
  */    
     function endWeek($date) {
+        $date = new DateTime($date);
+        $num_day = 7-$date->format('N');
+        $interval = date_interval_create_from_date_string($num_day.' days');
+        $date->add($interval);
+        return $date->format('Y-m-d');
+    }  
+
+/**
+ * startWeek
+ * 
+ * @param type $year
+ * @param type $month
+ * @param type $day
+ * @return dateTime
+ */    
+    function absstartWeek($date) {
+        $num_day = $date->format('N')-1;
+        $interval = date_interval_create_from_date_string($num_day.' days');
+        $date->format('Y-m-d');
+        $date->sub($interval);
+        return $date->format('Y-m-d');
+    }  
+
+/**
+ * endWeek
+ * 
+ * @param type $year
+ * @param type $month
+ * @param type $day
+ * @return dateTime
+ */    
+    function absendWeek($date) {
         $num_day = 7-$date->format('N');
         $interval = date_interval_create_from_date_string($num_day.' days');
         $date->add($interval);
@@ -550,6 +583,7 @@ function styleBarre($avancement){
                 $class = 'icon-tag';
                 break;                
              case 'livrée':
+             case 'livré':
                 $class = 'icon-inbox icon-green';
                 break;          
              case 'terminée':
@@ -688,7 +722,7 @@ function styleBarre($avancement){
             endif;
             unset($_SESSION['history']);
             $_SESSION['history']=$History;
-    } 
+    }    
     
     function getallmonday($mois=null,$annee=null){
         $mois = $mois==null ? date('m'):$mois;
@@ -702,4 +736,7 @@ function styleBarre($avancement){
         return $mondays;
     }
     
+    function CHours2Days($hours){
+        return ($hours/8);
+    }
 ?>

@@ -58,11 +58,12 @@
 			<th><?php echo $this->Paginator->sort('Domaine.NOM','Domaine'); ?></th>
 			<th><?php echo $this->Paginator->sort('Destinataire.NOMLGDEST','Responsable de l\'action'); ?></th>
 			<th><?php echo $this->Paginator->sort('OBJET','Objet'); ?></th>
-			<th><?php echo $this->Paginator->sort('AVANCEMENT','% avancement'); ?></th>
+			<th width='90px'><?php echo $this->Paginator->sort('AVANCEMENT','% avancement'); ?></th>
 			<th width='90px'><?php echo $this->Paginator->sort('DEBUT','Date de début'); ?></th>
 			<th width='90px'><?php echo $this->Paginator->sort('ECHEANCE','Echéance'); ?></th>
 			<th width='60px'><?php echo $this->Paginator->sort('STATUT','Statut'); ?></th>
-			<th width='50px'><?php echo $this->Paginator->sort('DUREEPREVUE','Durée prévue'); ?></th>
+                        <th width='60px'><?php echo $this->Paginator->sort('CRA','CRA'); ?></th>
+			<th width='65px'><?php echo $this->Paginator->sort('DUREEPREVUE','Durée prévue'); ?></th>
 			<th width="70px"><?php echo $this->Paginator->sort('PRIORITE','Priorité'); ?></th>
 			<th class="actions" width='75px'><?php echo __('Actions'); ?></th>
 	</tr>
@@ -74,13 +75,23 @@
 		<td><?php echo h($action['Utilisateur']['NOM']." ".$action['Utilisateur']['PRENOM']); ?>&nbsp;</td>
 		<td><?php echo h($action['Action']['OBJET']); ?>&nbsp;</td>
                 <?php $style = styleBarre(h($action['Action']['AVANCEMENT'])); ?>
-		<td><div class="progress progress-<?php echo $style; ?>" style="margin-bottom:-10px;">
-                <div class="bar " style="width:<?php echo h($action['Action']['AVANCEMENT']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($action['Action']['AVANCEMENT']); ?>%"></div></div></td>
+		<td>
+                <a href="#" class="reculer cursor" style="float:left;margin-left: -8px;margin-right:2px;" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo $action['Action']['AVANCEMENT']; ?>"><i class="icon-circle-arrow-left"></i></a>
+                <div class="progress progress-<?php echo $style; ?>" style="margin-bottom:-10px;width: 80%;float: left;">
+                <div class="bar " style="width:<?php echo h($action['Action']['AVANCEMENT']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($action['Action']['AVANCEMENT']); ?>%" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo $action['Action']['AVANCEMENT']; ?>"></div></div>
+                <a href="#" class="avancer cursor" style="float:right;margin-right: -8px;" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo $action['Action']['AVANCEMENT']; ?>"><i class="icon-circle-arrow-right"></i></a></td>
 		<td style="text-align:center;"><?php echo h($action['Action']['DEBUT']); ?>&nbsp;</td>
                 <?php $classtd = enretard($action['Action']['ECHEANCE'],$action['Action']['STATUT']) ? "class='td-error'" : ""; ?>
 		<td <?php echo $classtd; ?> style="text-align:center;"><?php echo h($action['Action']['ECHEANCE']); ?>&nbsp;</td>
-		<td style="text-align:center;"><?php echo isset($action['Action']['STATUT']) ? '<i class="'.etatAction(h($action['Action']['STATUT'])).'" rel="tooltip" data-title="'.etatTooltip(h($action['Action']['STATUT'])).'"></i>' : '' ; ?>&nbsp;</td>
-		<td style="text-align:center;"><?php echo h($action['Action']['DUREEPREVUE']); ?> h</td>
+		<td style="text-align:center;"><?php $image = isset($action['Action']['STATUT']) ? etatAction(h($action['Action']['STATUT'])) : 'icon-blank' ; ?>
+                    <?php echo $this->Html->link('<i class="'.$image.'" rel="tooltip" data-title="'.etatTooltip(h($action['Action']['STATUT'])).'"></i>', array('action' => 'progressstatut', $action['Action']['id']),array('escape' => false)); ?>&nbsp;&nbsp;</td>
+		<td style="text-align:center;"><?php $image = (isset($action['Action']['CRA']) && $action['Action']['CRA']==true) ? 'icon-ok' : 'icon-ok icon-grey' ; ?>
+                    <?php echo $this->Html->link('<i class="'.$image.'"></i>', array('action' => 'incra', $action['Action']['id']),array('escape' => false)); ?>&nbsp;&nbsp;</td>                
+                <td style="text-align:center;">
+                    <a href="#" class="moins cursor" style="float:left;margin-left: -3px;margin-right:2px;" idaction="<?php echo $action['Action']['id']; ?>" duree="<?php echo $action['Action']['DUREEPREVUE']; ?>"><i class="icon-minus-sign"></i></a>
+                    <span rel="tooltip" data-title="<?php echo CHours2Days($action['Action']['DUREEPREVUE']); ?> jour(s)" style="float: left;width: 55%;"><?php echo h($action['Action']['DUREEPREVUE']); ?> h</span>
+                    <a href="#" class="plus cursor" style="float:left;" idaction="<?php echo $action['Action']['id']; ?>" duree="<?php echo $action['Action']['DUREEPREVUE']; ?>"><i class="icon-plus-sign"></i></a>
+                </td>
 		<td style="text-align:center;" class="<?php echo $action['Action']['PRIORITE']; ?>"><?php echo h($action['Action']['PRIORITE']); ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'view')) : ?>
@@ -119,5 +130,67 @@ $(document).ready(function () {
     setTimeout(function() {$('#ActionsRefresh').load('<?php echo $this->params->here; ?>');}, 60000); 
     /** PopOver **/ 
     $("[rel=popover]").popover({placement:'bottom',trigger:'manual',html:true});
+    
+    $(document).on('click','.avancer',function(e){
+        var id = $(this).attr('idaction');
+        var avancement = parseInt($(this).attr('avancement'))+10;
+        var $bar = $(this).parent().find('.bar');
+        if (avancement <= 100){
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'progressavancement')); ?>/",
+                data: ({id:id,avancement:avancement})
+            }).done(function ( data ) {
+                location.reload();
+            });
+        }
+    }); 
+    
+    $(document).on('click','.reculer',function(e){
+        var id = $(this).attr('idaction');
+        var avancement = parseInt($(this).attr('avancement'))-10;
+        var $bar = $(this).parent().find('.bar'); 
+        if (avancement >= 0){
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'progressavancement')); ?>/",
+                data: ({id:id,avancement:avancement})
+            }).done(function ( data ) {
+                location.reload();
+            });
+        }
+    }); 
+    
+    $(document).on('click','.plus',function(e){
+        var id = $(this).attr('idaction');
+        var duree = parseInt($(this).attr('duree'))+2;
+        var $bar = $(this).parent().find('.bar');
+        $.ajax({
+            dataType: "html",
+            type: "POST",
+            url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'progressduree')); ?>/",
+            data: ({id:id,duree:duree})
+        }).done(function ( data ) {
+            location.reload();
+        });
+    }); 
+    
+    $(document).on('click','.moins',function(e){
+        var id = $(this).attr('idaction');
+        var duree = parseInt($(this).attr('duree'))-2;
+        var $bar = $(this).parent().find('.bar');   
+        if(duree >= 0){
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'progressduree')); ?>/",
+                data: ({id:id,duree:duree})
+            }).done(function ( data ) {
+                location.reload();
+            });
+        }
+    });  
 });
 </script>

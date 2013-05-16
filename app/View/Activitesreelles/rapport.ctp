@@ -73,6 +73,34 @@
         </tfooter>
     </table>
 <br>
+    <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jour réels consommés par projet et par domaines</div><br>
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+            <th>Période</th>
+            <th>Projet</th>
+            <th>Domaine</th>
+            <th>Nombre</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($rapportdomainesresults as $result): ?>
+            <tr>
+                <td><?php echo strMonth($result[0]['MONTH']).' '.$result[0]['YEAR']; ?></td>
+                <td><?php echo $result['Activitesreelle']['projet_NOM']; ?></td>
+                <td><?php echo $result['Domaine']['NOM']; ?></td>
+                <td style="text-align:center" class="nbactionbydomaine"><?php echo $result[0]['NB']; ?></td>
+            </tr>           
+            <?php endforeach; ?>
+        </tbody>
+        <tfooter>
+	<tr>
+            <td colspan="3" class="footer" style="text-align:right;">Total :</td>
+            <td class="footer" id="totalbydomaine" style="text-align:center;"></td>
+	</tr> 
+        </tfooter>
+    </table>
+<br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jours réels consommés par projet et activité</div><br>
     <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
         <thead>
@@ -148,6 +176,7 @@ $(document).ready(function (){
     }
     
     $("#total").html(sumOfColumns('nbaction'));
+    $("#totalbydomaine").html(sumOfColumns('nbactionbydomaine'));
     $("#totaldetail").html(sumOfColumns('nbactiondetail'));
     
     $(document).on('change','#ActionSTART',function(e){

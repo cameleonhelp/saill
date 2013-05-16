@@ -16,7 +16,7 @@
 </STYLE>
 <table>
 	<tr>
-		<td><b>Export des facturations à faire depuis le site SAILL<b></td>
+		<td><b>Export des facturations estimées à faire depuis le site SAILL<b></td>
 	</tr>
 	<tr>
 		<td><b>Date:</b></td>

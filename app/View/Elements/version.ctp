@@ -1,14 +1,19 @@
 <?php 
     $version = '2.0';
-    $build = '1b001'; //b053
+    $build = '0'; //b053
     echo $version.'.'.$build;
     /** 
      * changelog :
-     * 
-     * version 2.0.1
-     * b003 corrections
-     * b002 Paramétrage du site
-     * b001 Mes statistiques
+     * b055 création de compte générique
+     *      Ouverture de droits ajout de la date de dernière mise à jour dans l'index
+     *      Affichage d'un message lors de la saisie des feuille de temps pour avertir que les semaines doivent être saisie en entier et par semaine entière
+     *      si dé"but de semaine en mois 0 et fin de semaine sur le mois suivant alors saisir la semaine entière
+     ******* mis sur serveur d'intégration ******
+     * b054 corrections mineures
+     *      actions ajouts du choix si CRA ou pas
+     *      actions rapports rapport par domaine
+     *      activitésréelles ajout du domaines et rapport modifié en conséquence
+     *      activitésréelles comme facturation donner la possibilité de faire des actions groupées
      * version 2.0.0 finale
      ****** mis sur serveur d'intégration ******
      * b053 Corrections mineures avant démonstrations et création du manuel utilisateur

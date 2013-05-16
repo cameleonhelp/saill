@@ -154,6 +154,13 @@ class Activitesreelle extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'Domaine' => array(
+			'className' => 'Domaine',
+			'foreignKey' => 'domaine_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
 

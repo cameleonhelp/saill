@@ -33,14 +33,14 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
     public $History = array();
-
+    
     public $navigation=array('controller'=>'','action'=>'','page'=>'','sort'=>'','direction'=>'','here'=>'');
     
     
     public function addUrl(){
         if (strpos($this->params->url,'activeMessage')===false && !$this->isajax() && !$this->isException()){
             $this->History = $this->Session->read('history');
-            $navigation['controller']=$this->params['controller'];
+            $navigation['controller']=$this->params['controller']=='<'? 'index': $this->params['controller'];
             $navigation['action']=$this->params['action'];
             $navigation['page']=isset($this->params['named']['page']) ? $this->params['named']['page']: null;
             $navigation['sort']=isset($this->params['named']['sort']) ? $this->params['named']['sort']: null;
@@ -182,13 +182,13 @@ class AppController extends Controller {
     
     public function goToPostion($pos = null){
         $url = $this->getHistory();
-        debug($url[0]);
         $max = count($url)-1;
+        $symbole = $pos==null ? '' : '/<';
         $pos = $pos==null ? 0 : $pos;
         $pos = ($pos > $max) ? $max : ($pos <= 0) ? 0 : $pos;
+        $here = $url[$pos]['here'].$symbole; //($url[$pos]['controller']!=null && $url[$pos]['action']!=null) ?  : "";//$this->Html->url(array('controller'=>'pages','action'=>'display'));
         if ($pos > 0) { if(!$this->isException()) : $this->removeUrl(); endif; }
-        $symbole = $pos==null ? '' : '/<';
-        return $url[$pos]['here'].$symbole;
+        return $here;
     }
     
     public function isException(){
@@ -207,6 +207,15 @@ class AppController extends Controller {
             if(!$this->isException()) : $this->removeUrl(); endif;
         endif;
         parent::beforeRender();
+    }
+    
+    public function beforeRedirect($url, $status = null, $exit = true) {
+        $activecontroller = $this->params->controller;
+        $activeaction = $this->params->action;
+        if ($activecontroller == '<' || $activeaction == "<"):
+            $this->redirect(array('controller'=>'pages','action'=>'display'));
+        endif;
+        parent::beforeRedirect($url, $status, $exit);
     }
     
     public $components = array(

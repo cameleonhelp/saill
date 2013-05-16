@@ -38,7 +38,7 @@ $date->setTimezone(new DateTimeZone('Europe/Paris'));?>
                         <td class="tableTd" rowspan="2" style="vertical-align: middle;">Projet</td>
                         <td class="tableTd" rowspan="2" width="60px" style="vertical-align: middle;">TJM</td>
                         <td class="tableTd" colspan="2">Contrat</td>
-                        <td class="tableTd" colspan="2">Facturation</td>
+                        <td class="tableTd" colspan="2">Facturation estimée</td>
                         <td class="tableTd" colspan="2">% Avancement</td>
                         <td class="tableTd" rowspan="2" style="vertical-align: middle;" width="70px">Reste à faire</td>
                         </tr>
@@ -76,7 +76,7 @@ $date->setTimezone(new DateTimeZone('Europe/Paris'));?>
                         <td class="tableTd" colspan="2">Contrat</td>
                         <td class="tableTd" colspan="2">Prévision</td>
                         <td class="tableTd" colspan="2">Consommation</td>
-                        <td class="tableTd" colspan="2">Facturation</td>
+                        <td class="tableTd" colspan="2">Facturation estimée</td>
                         <td class="tableTd" colspan="2">% Avancement</td>
                         <td class="tableTd" rowspan="2" style="vertical-align: middle;">Ecart</td>
                         <td class="tableTd" colspan="2">Reste à</td>

@@ -47,7 +47,7 @@
 			<th width="90px;"><?php echo $this->Paginator->sort('FIN','Fin'); ?></th>
 			<th width="50px;"><?php echo $this->Paginator->sort('ACTIF','Etat'); ?></th>
 			<th width="60px;"><?php echo $this->Paginator->sort('TYPE','Type'); ?></th>
-			<th width="60px;"><?php echo $this->Paginator->sort('FACTURATION','Facturation'); ?></th>
+			<th width="60px;"><?php echo $this->Paginator->sort('FACTURATION','Facturation estimée'); ?></th>
 			<th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>

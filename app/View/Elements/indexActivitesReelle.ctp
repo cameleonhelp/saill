@@ -65,6 +65,20 @@
                 <li class="divider-vertical"></li>
                 <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>                 
                 <?php endif; ?>
+                <?php if ($this->params->action != "afacturer") : ?>
+                <li class="divider-vertical"></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-check"></i> Actions groupées <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'update')) : ?>
+                     <li><?php echo $this->Html->link('Soumettre', "#",array('id'=>'soumettrelink')); ?></li>
+                     <?php endif; ?>
+                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'deleteall')) : ?>
+                     <li><?php echo $this->Html->link('Supprimer', "#",array('id'=>'deletelink'), __('Etes-vous certain de vouloir supprimer ces feuilles de temps ?')); ?></li>
+                     <?php endif; ?>
+                     </ul>
+                </li>   
+                <?php endif; ?>                
                 </ul> 
                 <?php if ($this->params->controller == "activitesreelles" && $this->params->action == "index") : ?>
                 <?php echo $this->Form->create("Activitesreelle",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -79,20 +93,23 @@
                 <?php endif; ?>
                 </div>
             </div>
-        </div>
+        </div> 
         <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $fetat; ?> de <?php echo $futilisateur; ?> <?php echo $fperiode; ?></em></code><?php } ?>        
         <?php if ($this->params['action']=='afacturer') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste de <?php echo $fetat; ?> de <?php echo $futilisateur; ?> <?php echo $fperiode; ?></em></code><?php } ?>                
+        <div class="alert alert-info">
+            Vous devez saisir des semaines entières, en ce qui concerne les jours ouvrés.<br>
+            Si la semaine commence sur le mois courant et se termine sur le mois suivant vous devez saisir la semaine entière, même sur le mois suivant.
+        </div>   
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" id="data">
         <thead>
 	<tr>
                         <th><?php echo 'Agent'; ?></th>
                         <th><?php echo 'Identifiant'; ?></th>
 			<th><?php echo 'Date'; ?></th>
-                        <?php if ($this->params->action == "afacturer") : ?>
-                        <th style="text-align:center;width:15px !important;vertical-align: middle;padding-left:5px;padding-right:0;"><?php echo $this->Form->input('checkall',array('type'=>'checkbox','label'=>false)) ; ?>
+                        <?php $margeright = $this->params->action=='afacturer' ? '0px':'5px'; ?>
+                        <th style="text-align:center;width:15px !important;vertical-align: middle;padding-left:5px;padding-right:<?php echo $margeright; ?>;"><?php echo $this->Form->input('checkall',array('type'=>'checkbox','label'=>false)) ; ?>
                                 <?php echo $this->Form->input('all_ids',array('type'=>'hidden')) ; ?>
                         </th>	
-                        <?php endif; ?>
                         <th><?php echo 'Activités'; ?></th>
                         <th width="20px"><?php echo 'Lu.'; ?></th>
 			<th width="20px"><?php echo 'Ma.'; ?></th>
@@ -124,10 +141,13 @@
                 <td class="header"><?php echo $activitesreelle['Utilisateur']['username']; ?></td>
                 <td class="header" style="text-align: center;" ><?php echo $group['Activitesreelle']['DATE']; ?></td>               
                 <?php endif; ?>
-                <?php if ($this->params->action == "afacturer") : ?>
-                <td style="text-align:center;padding-left:5px;padding-right:0;vertical-align: middle;"><?php echo $this->Form->input('id',array('type'=>'checkbox','label'=>false,'class'=>'idselect','value'=>$activitesreelle['Activitesreelle']['id'])) ; ?></td>
-                <?php endif; ?>                 
-                <td><?php echo $activitesreelle['Activitesreelle']['projet_NOM'].' - '.$activitesreelle['Activite']['NOM']; ?></td>  
+                <?php $margeright = $this->params->action=='afacturer' ? '0px':'5px'; ?>
+                <td style="text-align:center;padding-left:5px;padding-right:<?php echo $margeright; ?>;vertical-align: middle;"><?php echo $this->Form->input('id',array('type'=>'checkbox','label'=>false,'class'=>'idselect','value'=>$activitesreelle['Activitesreelle']['id'])) ; ?></td>                
+                <td><?php echo $activitesreelle['Activitesreelle']['projet_NOM'].' - '.$activitesreelle['Activite']['NOM']; ?>
+                <?php if($this->params->controller=='activitesreelles' && $activitesreelle['Domaine']['NOM']): ?>
+                    <small class="muted">(<?php echo strtoupper($activitesreelle['Domaine']['NOM']); ?>)</small>
+                <?php endif; ?>
+                </td>  
                 <!--calculer les jours fériés pour mettre le style week sur les jours fériés //-->
                 <?php $date = new DateTime(CUSDate($group['Activitesreelle']['DATE'])); ?> 
                 <?php $classLu = isFerie($date) ? 'class="ferie"' : ''; ?>
@@ -167,7 +187,7 @@
                     <?php echo $this->Form->postLink('<i class="'.$img.'"></i>', array('action' => 'updatefacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour facturation ?')); ?>                    
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'duplicate') && $activitesreelle['Activitesreelle']['VEROUILLE'] == 1) : ?>
-                    <?php echo $this->Html->link('<i class=" icon-tags"></i>', array('action' => 'autoduplicate', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>                    
+                    <?php echo $this->Html->link('<i class=" icon-retweet"></i>', array('action' => 'autoduplicate', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>                    
                     <?php endif; ?>
                 <?php else : ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'edit')) : ?>
@@ -188,7 +208,7 @@
         </tbody>
         <tfooter>
 	<tr>
-            <?php $nbrows = $this->params->action == "afacturer" ? 12 : 11; ?>
+            <?php $nbrows = $this->params->action == "afacturer" ? 12 : 12; ?>
             <td colspan="<?php echo $nbrows; ?>" class="footer" style="text-align:right;">Total :</td>
             <td class="footer" id="totalactivites" style="text-align:right;"></td>
             <td class="footer" width="90px" style="text-align:left;">jours</td>
@@ -244,6 +264,42 @@
             $(this).parents().find(':checkbox').prop('checked', false); 
             $("#all_ids").val('');
         });  
+        
+        $(document).on('click','#soumettrelink',function(e){
+            var ids = $("#all_ids").val();
+            var overlay = jQuery('<div id="overlay"><?php echo $this->Html->image("loading.gif"); ?> Travail en cours, veuillez patienter ...</div>');
+            overlay.appendTo(document.body)            
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'activitesreelles','action'=>'soumettre')); ?>/",
+                data: ({all_ids:ids})     
+            }).done(function ( data ) {
+                location.reload();
+                overlay.remove();                
+            });
+            $(this).parents().find(':checkbox').prop('checked', false); 
+            $("#all_ids").val('');
+        }); 
+        
+        $(document).on('click','#deletelink',function(e){
+                var ids = $("#all_ids").val();
+                var overlay = jQuery('<div id="overlay"><?php echo $this->Html->image("loading.gif"); ?> Travail en cours, veuillez patienter ...</div>');
+                overlay.appendTo(document.body)            
+                $.ajax({
+                    dataType: "html",
+                    type: "POST",
+                    url: "<?php echo $this->Html->url(array('controller'=>'activitesreelles','action'=>'deleteall')); ?>/",
+                    data: ({all_ids:ids})     
+                }).done(function ( data ) {
+                    location.reload();
+                    overlay.remove();                
+                }).succes(function(e){
+                    overlay.remove();
+                });
+            $(this).parents().find(':checkbox').prop('checked', false); 
+            $("#all_ids").val('');
+        }); 
         
         $(document).on('click','#checkall',function(e){
             $(this).parents().find(':checkbox').prop('checked', this.checked);

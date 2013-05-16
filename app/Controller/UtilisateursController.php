@@ -42,19 +42,19 @@ class UtilisateursController extends AppController {
                     case 'actif':
                     case '<':     
                     case null:                         
-                        $newconditions[]="Utilisateur.ACTIF=1";
+                        $newconditions[]="Utilisateur.ACTIF=1 AND Utilisateur.profil_id >1";
                         $futilisateur = "tous les utilisateurs actifs";
                         break;  
                     case 'inactif':
-                        $newconditions[]="Utilisateur.ACTIF=0";
+                        $newconditions[]="Utilisateur.ACTIF=0 AND Utilisateur.profil_id >1";
                         $futilisateur = "tous les utilisateurs inactifs";
                         break;  
                     case 'incomplet':
-                        $newconditions[]="Utilisateur.ACTIF=1 AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL)";
+                        $newconditions[]="Utilisateur.ACTIF=1 AND Utilisateur.profil_id >1 AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL)";
                         $futilisateur = "tous les utilisateurs actifs et incomplets";
                         break;  
                     case 'aprolonger':
-                        $newconditions[]="Utilisateur.ACTIF=1 AND Utilisateur.FINMISSION IS NOT NULL AND Utilisateur.FINMISSION < DATE_ADD(CURDATE(), INTERVAL 1 MONTH)";
+                        $newconditions[]="Utilisateur.ACTIF=1 AND Utilisateur.profil_id >1 AND Utilisateur.FINMISSION IS NOT NULL AND Utilisateur.FINMISSION < DATE_ADD(CURDATE(), INTERVAL 1 MONTH)";
                         $futilisateur = "tous les utilisateurs actifs, dont la date de fin de mission est proche de son terme";
                         break;                      
                 }
@@ -573,7 +573,7 @@ class UtilisateursController extends AppController {
                 unset($record['Utilisateur']['password']); 
                 unset($record['Utilisateur']['created']);
                 unset($record['Utilisateur']['modified']);
-                $record['Utilisateur']['password']='123soleil'; 
+                $record['Utilisateur']['password']='SAILL'; 
                 $record['Utilisateur']['created'] = $this->Utilisateur->read('created');
                 $record['Utilisateur']['modified'] = date('Y-m-d');                
                 if ($this->Utilisateur->save($record)) {
@@ -606,7 +606,7 @@ class UtilisateursController extends AppController {
                 $this->set('utilisateurs', $this->paginate());
                 $this->Session->delete('xls_export');
                 $newconditions = array_merge($newconditions,array('Utilisateur.id>1'));
-                $export = $this->Utilisateur->find('all',array('Utilisateur.id > '=> 1));
+                $export = $this->Utilisateur->find('all',array('Utilisateur.id > '=> 1,'Utilisateur.profil_id > 0'));
                 $this->Session->write('xls_export',$export);                                 
                 $sections = $this->Utilisateur->Section->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
                 $this->set('sections',$sections);
@@ -766,5 +766,4 @@ class UtilisateursController extends AppController {
             $this->Utilisateur->Action->create();
             $this->Utilisateur->Action->save($record);
         }
-                
 }

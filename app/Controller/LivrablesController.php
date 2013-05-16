@@ -118,7 +118,7 @@ class LivrablesController extends AppController {
                 endif;                     
                 $this->set('fgestionnaire',$fgestionnaire); 
                 $this->Livrable->Utilisateur->recursive = -1;
-                $gestionnaires = $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $gestionnaires = $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('gestionnaires',$gestionnaires);                
 		$this->Livrable->recursive = 0;
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
@@ -162,7 +162,7 @@ class LivrablesController extends AppController {
                 $etats = Configure::read('etatLivrable');
                 $this->set('etats',$etats);   
                 $this->Livrable->Utilisateur->recursive = -1;
-                $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('utilisateur',$utilisateur);
                 $this->Livrable->Utilisateur->recursive = -1;
 		$nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
@@ -203,7 +203,7 @@ class LivrablesController extends AppController {
                 $etats = Configure::read('etatLivrable');
                 $this->set('etats',$etats);      
                 $this->Livrable->Utilisateur->recursive = -1;
-                $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $utilisateur = $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('utilisateur',$utilisateur);  
                 $this->Livrable->Utilisateur->recursive = -1;
 		$nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
@@ -282,7 +282,7 @@ class LivrablesController extends AppController {
                 $this->Livrable->recursive = 0;
                 $this->set('livrables', $this->paginate());
                 $this->Livrable->Utilisateur->recursive = -1;
-                $gestionnaires = $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $gestionnaires = $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('gestionnaires',$gestionnaires);                  
                 $this->Session->delete('xls_export');               
                 $this->Session->write('xls_export',$this->paginate());                
@@ -335,7 +335,6 @@ class LivrablesController extends AppController {
             endif;                
 	}  
         
-        
         public function homeListeLivrables(){
             $listactions = $this->Livrable->find('all',array('conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT NOT IN ("A faire","En cours")'),'order'=>array('ECHEANCE'=>'ASC'),'limit' => 5,'recursive'=>-1));
             return $listactions;
@@ -354,5 +353,5 @@ class LivrablesController extends AppController {
         public function homeNBRETARDLivrables(){
             $nbactions = $this->Livrable->find('all',array('fields'=>array('COUNT(id) AS NB','ETAT','ECHEANCE'),'conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT NOT IN ("A faire","En cours")',"ECHEANCE <"=>date('Y-m-d')),'group'=>'ETAT','recursive'=>-1));
             return $nbactions;
-        }         
+        }            
 }
