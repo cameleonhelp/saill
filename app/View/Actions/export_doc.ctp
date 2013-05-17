@@ -1,4 +1,4 @@
-﻿<STYLE type="text/css">
+<STYLE type="text/css">
         p, table th, table td {
             font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;
             font-size:16pt;

@@ -31,9 +31,10 @@ class UtilisateursController extends AppController {
  *
  * @return void
  */
-	public function index($filtreUtilisateur=null,$filtreSection=null) {
+	public function index($filtreUtilisateur=null,$filtreSection=null,$filtreAlpha=null) {
             //$this->Session->delete('history');
             if (isAuthorized('utilisateurs', 'index')) :
+                $falpha='';
                 switch ($filtreUtilisateur){
                     case 'tous':   
                         $newconditions[]="1=1";
@@ -42,19 +43,19 @@ class UtilisateursController extends AppController {
                     case 'actif':
                     case '<':     
                     case null:                         
-                        $newconditions[]="Utilisateur.ACTIF=1 AND Utilisateur.profil_id >1";
+                        $newconditions[]="Utilisateur.ACTIF=1 AND Utilisateur.profil_id >0";
                         $futilisateur = "tous les utilisateurs actifs";
                         break;  
                     case 'inactif':
-                        $newconditions[]="Utilisateur.ACTIF=0 AND Utilisateur.profil_id >1";
+                        $newconditions[]="Utilisateur.ACTIF=0 AND Utilisateur.profil_id >0";
                         $futilisateur = "tous les utilisateurs inactifs";
                         break;  
                     case 'incomplet':
-                        $newconditions[]="Utilisateur.ACTIF=1 AND Utilisateur.profil_id >1 AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL)";
+                        $newconditions[]="Utilisateur.ACTIF=1 AND Utilisateur.profil_id >0 AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL)";
                         $futilisateur = "tous les utilisateurs actifs et incomplets";
                         break;  
                     case 'aprolonger':
-                        $newconditions[]="Utilisateur.ACTIF=1 AND Utilisateur.profil_id >1 AND Utilisateur.FINMISSION IS NOT NULL AND Utilisateur.FINMISSION < DATE_ADD(CURDATE(), INTERVAL 1 MONTH)";
+                        $newconditions[]="Utilisateur.ACTIF=1 AND Utilisateur.profil_id >0 AND Utilisateur.FINMISSION IS NOT NULL AND Utilisateur.FINMISSION < DATE_ADD(CURDATE(), INTERVAL 1 MONTH)";
                         $futilisateur = "tous les utilisateurs actifs, dont la date de fin de mission est proche de son terme";
                         break;                      
                 }
@@ -70,8 +71,14 @@ class UtilisateursController extends AppController {
                         $section = $this->Utilisateur->Section->find('first',array('conditions'=>array('Section.id'=>$filtreSection)));
                         $fsection = "la section ".$section['Section']['NOM'];                        
                 }    
+                if (isset($filtreAlpha)){
+                    $alphabet=array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+                    $newconditions[]="Utilisateur.NOM LIKE '".$alphabet[$filtreAlpha]."%'";
+                    $falpha = ", dont le nom commence par ".$alphabet[$filtreAlpha];
+                }
                 $this->set('fsection',$fsection);
                 $this->set('futilisateur',$futilisateur);
+                $this->set('falpha',$falpha);
                 if (userAuth('WIDEAREA')==0) {$newconditions[]="Utilisateur.section_id=".userAuth('section_id');}
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Utilisateur->recursive = 0;

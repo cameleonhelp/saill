@@ -78,7 +78,7 @@
 		<td>
                 <a href="#" class="reculer cursor" style="float:left;margin-left: -8px;margin-right:2px;" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo $action['Action']['AVANCEMENT']; ?>"><i class="icon-circle-arrow-left"></i></a>
                 <div class="progress progress-<?php echo $style; ?>" style="margin-bottom:-10px;width: 80%;float: left;">
-                <div class="bar " style="width:<?php echo h($action['Action']['AVANCEMENT']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($action['Action']['AVANCEMENT']); ?>%" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo $action['Action']['AVANCEMENT']; ?>"></div></div>
+                <div class="bar" style="width:<?php echo h($action['Action']['AVANCEMENT']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($action['Action']['AVANCEMENT']); ?>%" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo $action['Action']['AVANCEMENT']; ?>"><?php echo $action['Action']['AVANCEMENT'] > 0 ? $action['Action']['AVANCEMENT']."%" : ''; ?></div></div>
                 <a href="#" class="avancer cursor" style="float:right;margin-right: -8px;" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo $action['Action']['AVANCEMENT']; ?>"><i class="icon-circle-arrow-right"></i></a></td>
 		<td style="text-align:center;"><?php echo h($action['Action']['DEBUT']); ?>&nbsp;</td>
                 <?php $classtd = enretard($action['Action']['ECHEANCE'],$action['Action']['STATUT']) ? "class='td-error'" : ""; ?>

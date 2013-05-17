@@ -1,4 +1,4 @@
-﻿<STYLE type="text/css">
+<STYLE type="text/css">
 	.tableTd,.footer {
 	   	border-width: 0.5pt; 
 		border: solid; 

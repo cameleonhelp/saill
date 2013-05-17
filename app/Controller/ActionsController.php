@@ -100,7 +100,7 @@ class ActionsController extends AppController {
                     $fresponsable = "dont le responsable est ".$nomlong['Utilisateur']['NOMLONG'];
                 endif;
                 $this->set('fresponsable',$fresponsable); 
-                $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 2'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('responsables',$responsables);                 
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Action->recursive = 0;

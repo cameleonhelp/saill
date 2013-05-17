@@ -18,10 +18,13 @@
   <?php $classAssistances = in_array($controller,array('assistances_index','assistances_add','assistances_edit','assistances_delete','assistances_search')) ? 'active' : ''; ?> 
   <?php $classListeDiffusions = in_array($controller,array('listediffusions_index','listediffusions_add','listediffusions_edit','listediffusions_delete','listediffusions_search')) ? 'active' : ''; ?>               
   <?php $classProfils = in_array($controller,array('profils_index','profils_add','profils_edit','profils_delete','profils_search')) ? 'active' : ''; ?>  
+  <?php $classParameters = in_array($controller,array('params_index')) ? 'active' : ''; ?>    
+  <?php $classParametersSave = in_array($controller,array('params_savebdd')) ? 'active' : ''; ?>    
+  <?php $classParametersRestore = in_array($controller,array('params_restorebdd')) ? 'active' : ''; ?>    
   <?php $classAutorisations = in_array($controller,array('autorisations_index','autorisations_add','autorisations_edit','autorisations_delete','autorisations_search')) ? 'active' : ''; ?>                
   <?php $classTypeMateriels = in_array($controller,array('typemateriels_index','typemateriels_add','typemateriels_edit','typemateriels_delete','typemateriels_search')) ? 'active' : ''; ?> 
   <?php $classMessages = in_array($controller,array('messages_index','messages_add','messages_edit','messages_delete','messages_search')) ? 'active' : ''; ?>
-  <?php $classAdministration = in_array('active',array($classSections,$classSocietes,$classSites,$classDossierPartages,$classAutorisations,$classDomaines,$classOutils,$classAssistances,$classProfils,$classListeDiffusions,$classTypeMateriels,$classMessages)) ? 'active' : ''; ?>               
+  <?php $classAdministration = in_array('active',array($classParametersRestore,$classParametersSave,$classParameters,$classSections,$classSocietes,$classSites,$classDossierPartages,$classAutorisations,$classDomaines,$classOutils,$classAssistances,$classProfils,$classListeDiffusions,$classTypeMateriels,$classMessages)) ? 'active' : ''; ?>               
   <?php $classContrats = in_array($controller,array('contrats_index','contrats_add','contrats_edit','contrats_delete','contrats_search')) ? 'active' : ''; ?> 
   <?php $classProjets = in_array($controller,array('projets_index','projets_add','projets_edit','projets_delete','projets_search')) ? 'active' : ''; ?> 
   <?php $classActivites = in_array($controller,array('activites_index','activites_add','activites_edit','activites_delete','activites_search','historybudgets_add','historybudgets_edit','historybudgets_delete')) ? 'active' : ''; ?>               
@@ -77,6 +80,15 @@
             <?php if (userAuth('profil_id')!='2' && isAuthorized('messages', 'index')) : ?>
             <li class="<?php echo $classMessages; ?>"><?php echo $this->Html->link('Messages',array('controller'=>'messages','action'=>'index'),array('escape' => false)); ?></li>
             <?php endif; ?>
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('params', 'index')) : ?> 
+            <li class="divider"></li>
+            <?php endif; ?>
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('params', 'index')) : ?>
+            <li class="<?php echo $classParameters; ?>"><?php echo $this->Html->link('Paramètres du site',array('controller'=>'params','action'=>'index'),array('escape' => false)); ?></li>
+            <li class="divider"></li>
+            <li class="<?php echo $classParametersSave; ?>"><?php echo $this->Html->link('Sauvegarder',array('controller'=>'params','action'=>'savebdd'),array('escape' => false)); ?></li>
+            <li class="<?php echo $classParametersRestore; ?>"><?php echo $this->Html->link('Restaurer',array('controller'=>'params','action'=>'restorebdd'),array('escape' => false)); ?></li>            
+            <?php endif; ?>            
             <?php if (userAuth('profil_id')!='2' && (isAuthorized('profils', 'index') || isAuthorized('assistances', 'index') || isAuthorized('autorisations', 'index'))) : ?> 
             <li class="divider"></li>
             <?php endif; ?>

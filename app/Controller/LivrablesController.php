@@ -31,34 +31,34 @@ class LivrablesController extends AppController {
                         break;
                     case 'previousweek':
                         $date = new DateTime();
-                        $today = startWeek($date->sub(new DateInterval('P1W')));
-                        $previousWeek = endWeek($date);
+                        $today = absstartWeek($date->sub(new DateInterval('P1W')));
+                        $previousWeek = absendWeek($date);
                         $newconditions[]="Livrable.ECHEANCE BETWEEN '".$today."' AND '".$previousWeek."'";
                         $fchronologie = "tous les livrables de la semaine précédente (entre le ".CFRDate($today)." et le ".CFRDate($previousWeek).")";
                         break;  
                     case 'week':
                         $date = new DateTime();
-                        $today = startWeek($date);
-                        $previousWeek = endWeek($date);
+                        $today = absstartWeek($date);
+                        $previousWeek = absendWeek($date);
                         $newconditions[]="Livrable.ECHEANCE BETWEEN '".$today."' AND '".$previousWeek."'";            
                         $fchronologie = "tous les livrables de la semaine en cours (entre le ".CFRDate($today)." et le ".CFRDate($previousWeek).")";
                         break;  
                     case 'nextweek':
                         $date = new DateTime();
-                        $today = startWeek($date->add(new DateInterval('P1W')));
-                        $previousWeek = endWeek($date);
+                        $today = absstartWeek($date->add(new DateInterval('P1W')));
+                        $previousWeek = absendWeek($date);
                         $newconditions[]="Livrable.ECHEANCE BETWEEN '".$today."' AND '".$previousWeek."'";                       
                         $fchronologie = "tous les livrables de la semaine suivante (entre le ".CFRDate($today)." et le ".CFRDate($previousWeek).")";
                         break;  
                     case 'tolate':
                         $date = new DateTime();
-                        $previousWeek = startWeek($date->sub(new DateInterval('P1W')));
+                        $previousWeek = absstartWeek($date->sub(new DateInterval('P1W')));
                         $newconditions[]="Livrable.ECHEANCE < '".$previousWeek."' OR (Livrable.DATELIVRAISON = 0000-00-00 OR Livrable.DATELIVRAISON = NULL OR Livrable.DATELIVRAISON < ".$previousWeek.")";
                         $fchronologie = "tous les livrables avec une échéance ou une date de livraison avant le ".CFRDate($previousWeek);
                         break;  
                     case 'otherweek':
                         $date = new DateTime();
-                        $previousWeek = endWeek($date->add(new DateInterval('P1W')));
+                        $previousWeek = absendWeek($date->add(new DateInterval('P1W')));
                         $newconditions[]="Livrable.ECHEANCE >= '".$previousWeek."'";
                         $fchronologie = "tous les livrables avec une échéance après le ".CFRDate($previousWeek);
                         break;                     
