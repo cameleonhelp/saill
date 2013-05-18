@@ -11,7 +11,7 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
 
 * [CakePhp 2.3.5] (http://cakephp.org) - Framework
 
-* [BootStrap 2.3.1] (http://twitter.github.com/bootstrap/) - Style et javascript
+* [BootStrap 2.3.2] (http://twitter.github.com/bootstrap/) - Style et javascript
 
 * [JQuery 1.9.1] (http://jquery.com) - La dernière version de JQuery
 
