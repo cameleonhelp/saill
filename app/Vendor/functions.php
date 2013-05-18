@@ -432,7 +432,10 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
                             break;
                         case 'update':
                             $result = $autorisation['Autorisation']['UPDATE'];
-                            break;                        
+                            break;    
+                        case 'myprofil':
+                            $result = $autorisation['Autorisation']['MYPROFIL'];
+                            break;                         
                         default:
                             $result = false;
                             break;                    
@@ -677,6 +680,28 @@ function styleBarre($avancement){
         endif;
         return $result;
     }
+    
+/**
+ * enretard method
+ * 
+ * @param type $date
+ * @return boolean
+ */    
+    function livrableenretard($echeance,$livraison=null,$etat=null){
+        $result = false;
+        $echeance = explode("/",$echeance);
+        $d = intval($echeance[2].$echeance[1].$echeance[0]);
+        if ($livraison!=null):
+            $livraison = explode("/",$livraison);
+            $dl = intval($livraison[2].$livraison[1].$livraison[0]);  
+            $result = ($d - $dl) < 0 ? true: false;
+        endif;
+        if (($etat == null || $etat == 'à faire' || $etat == 'en cours') && !$result):
+            $today = intval(date('Ymd'));            
+            $result = ($d - $today) < 0 ? true: false;        
+        endif;
+        return $result;
+    }    
     
 /*
  * is_date method

@@ -2980,7 +2980,12 @@ a.badge:hover {
 
 .divider-vertical-only{
   height: 30px;
-  margin: 0 0px;
+  margin: 0px 0px;
+  padding: 0px 0px;
   border-left: 1px solid #f2f2f2;
   border-right: 1px solid #ffffff;    
+}
+
+.navbar .nav > li > a {
+  padding: 7px  7px 7px;
 }

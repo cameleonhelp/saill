@@ -31,7 +31,7 @@ App::uses('Debugger', 'Utility');
             <li><a href="#">Inactif</a></li>
             <li><a href="#">Fin de mission</a></li>
             <li><a href="#">Incomplet</a></li>
-            <li class="divider-vertical"></li>
+            <li class="divider-vertical-only"></li>
             </ul> 
             <form class="navbar-form clearfix pull-right ">
                 <input class="span6" type="text">
@@ -257,10 +257,10 @@ App::uses('Debugger', 'Utility');
             <div class="container">
             <ul class="nav">
             <li><a href="#"><i class="icon-plus"></i></a></li>
-            <li class="divider-vertical"></li>
+            <li class="divider-vertical-only"></li>
             <li><a href="#">Prolonger</a></li>
             <li><a href="#">Supprimer</a></li>
-            <li class="divider-vertical"></li>
+            <li class="divider-vertical-only"></li>
             <li><a href="#"><i class="ico-xls"></i></a></li>
             </ul> 
             </div>

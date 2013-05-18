@@ -28,7 +28,7 @@ $this->set('title_for_layout','Accueil');
             <li><a href="#">Inactif</a></li>
             <li><a href="#">Fin de mission</a></li>
             <li><a href="#">Incomplet</a></li>
-            <li class="divider-vertical"></li>
+            <li class="divider-vertical-only"></li>
             </ul> 
             <form class="navbar-form clearfix pull-right ">
                 <input class="span6" type="text">

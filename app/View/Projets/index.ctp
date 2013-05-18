@@ -5,7 +5,7 @@
                 <ul class="nav">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('projets', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
-                <li class="divider-vertical"></li>
+                <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
@@ -26,7 +26,7 @@
                          <?php endforeach; ?>
                       </ul>
                  </li>                   
-                <li class="divider-vertical"></li>                
+                <li class="divider-vertical-only"></li>                
                 <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>
                 </ul> 
                 <?php echo $this->Form->create("Projet",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>

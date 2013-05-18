@@ -96,7 +96,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '.  htmlspecialchars($this->element('v
         <div class="row" >
             <div class="span7">
             <span class="logo"></span>
-            <?php if (userAuth('id')>0) echo $this->element('server'); ?>
+            <?php echo $this->element('server'); ?>
             <?php if (userAuth('id')>0) echo $this->element('menu'); ?>
             <code class="span5 box-info"  style="margin-top: 10px;">
                 <div class="text-normal">Navigateurs compatibles :</div>

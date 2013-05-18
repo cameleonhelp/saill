@@ -130,7 +130,8 @@
             </div>
         </div>
     </div>
-<?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>userAuth('id'))); ?> 
+<?php if ($this->params->action == 'add') echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>userAuth('id'))); ?> 
+<?php if ($this->params->action == 'edit') echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>$this->data['Action']['utilisateur_id'])); ?> 
 <?php if ($this->params->action == 'edit') echo $this->Form->input('id',array('type'=>'hidden')); ?>    
 <?php echo $this->Form->end(); ?>   
 <?php if ($this->params->action == 'edit') echo $this->element('tableHistoryAction'); ?>

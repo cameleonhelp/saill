@@ -4,6 +4,11 @@
     echo $version.'.'.$build;
     /** 
      * changelog :
+     * b057 Livrables dates rendues facultatives sauf échéance (idem pour suivilivrable)
+     *      actions : corriger le changement d'émetteur de l'action en cas de mise à jour l'émetteur reste inchangé
+     * b056 filtre alphabétique sur les utilisateurs
+     *      préparation des fichiers pour le paramétrage, les mails
+     *      quelques corrections mineures
      * b055 création de compte générique
      *      Ouverture de droits ajout de la date de dernière mise à jour dans l'index
      *      Affichage d'un message lors de la saisie des feuille de temps pour avertir que les semaines doivent être saisie en entier et par semaine entière

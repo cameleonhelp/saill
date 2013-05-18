@@ -13,7 +13,7 @@
                 ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
-                <li class="divider-vertical"></li>
+                <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                  <li><?php echo $this->Html->link('A facturer', array('controller'=>'activitesreelles','action' => 'afacturer'),array('escape' => false)); ?></li>
                  <?php if (areaIsVisible()) :?>
@@ -60,7 +60,7 @@
                      <li><?php echo $this->Html->link('<i class='.$img_indisponible.'></i> Indisponibilité', array('action' => $defaultAction,$filtre_utilisateur,$filtre_mois,$filtre_visible,$inverse_indisponible),array('escape' => false)); ?></li>                    
                       </ul>
                 </li>                
-                <li class="divider-vertical"></li>
+                <li class="divider-vertical-only"></li>
                 <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>                 
                 </ul> 
                 <!--    

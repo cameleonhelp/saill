@@ -13,7 +13,7 @@ class DotationsController extends AppController {
  * @return void
  */
 	public function index($id = null) {
-            if (isAuthorized('dotations', 'index')) :
+            if (isAuthorized('dotations', 'index') || isAuthorized('dotations', 'myprofil')) :
 		$this->Dotation->recursive = 0;
                 $liste = $this->Dotation->find('all',array('conditions'=>array('Dotation.utilisateur_id'=>$id)));
 		$this->set('dotations', $liste);
@@ -49,7 +49,7 @@ class DotationsController extends AppController {
  * @return void
  */
 	public function add($userid = null) {
-            if (isAuthorized('dotations', 'add')) :
+            if (isAuthorized('dotations', 'add') || isAuthorized('dotations', 'myprofil')) :
                 $conditions = array('Materielinformatique.ETAT ='=>'En stock');
                 if (userAuth('WIDEAREA')==0) {$restriction[]="Materielinformatique.section_id=".userAuth('section_id'); $conditions = array_merge_recursive($conditions,$restriction);}
                 $matinformatique = $this->Dotation->Materielinformatique->find('list',array('fields'=>array('id','NOM'),'conditions'=>$conditions,'order'=>array('Materielinformatique.NOM'=>'asc'),'recursive'=>-1));
@@ -92,7 +92,7 @@ class DotationsController extends AppController {
  * @return void
  */
 	public function edit($id = null,$userid = null) {
-            if (isAuthorized('dotations', 'edit')) :
+            if (isAuthorized('dotations', 'edit') || isAuthorized('dotations', 'myprofil')) :
 		if (!$this->Dotation->exists($id)) {
 			throw new NotFoundException(__('Dotation incorrecte'));
 		}

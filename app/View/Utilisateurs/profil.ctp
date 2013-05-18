@@ -183,6 +183,9 @@
                         </div>
                     </div>                      
                     <hr/>
+                    <?php if(isAuthorized('dotations', 'myprofil')): ?>
+                    <button type="button" class='btn btn-inverse pull-right' onclick="location.href='<?php echo $this->Html->url('/dotations/add/'.userAuth('id')); ?>';">Ajouter une dotation</button>                    
+                    <?php endif; ?>                    
                     <label class="sstitre">Liste des dotations</label>   
                     <?php echo $this->element('tableDotation'); ?>
                 </div>

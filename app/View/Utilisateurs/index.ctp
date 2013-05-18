@@ -5,7 +5,7 @@
                 <ul class="nav">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
-                <li class="divider-vertical"></li>
+                <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <li class="dropdown">
                 <?php 
@@ -35,9 +35,9 @@
                          <?php endforeach; ?>
                       </ul>
                  </li>
-                <li class="divider-vertical"></li>
+                <li class="divider-vertical-only"></li>
                 <li><?php echo $this->Html->link('Filtre alphabétique','#',array('escape' => false,'id'=>'tooglealphafilter')); ?></li>
-                <li class="divider-vertical"></li>                
+                <li class="divider-vertical-only"></li>                
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-check"></i> Actions groupées <b class="caret"></b></a>
                      <ul class="dropdown-menu">
@@ -45,9 +45,9 @@
                      <li><?php echo $this->Html->link('Désactiver', "#",array('id'=>'desactiverlink')); ?></li>
                      </ul>
                 </li>                 
-                 <li class="divider-vertical"></li>
+                 <li class="divider-vertical-only"></li>
                 <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>
-                <li class="divider-vertical"></li>
+                <li class="divider-vertical-only"></li>
                 </ul> 
                 <?php echo $this->Form->create("Utilisateur",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>

@@ -535,7 +535,7 @@ input.invalid {
 
 .nav .dropdown .dropdown-menu {
     max-height: 300px !important;
-    overflow: auto !important;
+    overflow-y: auto !important;
 }
 
 .popover {

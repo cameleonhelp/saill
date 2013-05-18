@@ -5,7 +5,7 @@
                 <ul class="nav">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('livrables', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
-                <li class="divider-vertical"></li>
+                <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Chronologie<b class="caret"></b></a>
@@ -47,7 +47,7 @@
                      </ul>
                 </li>   
                 <?php endif; ?>
-                <li class="divider-vertical"></li>
+                <li class="divider-vertical-only"></li>
                 <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>
                 </ul> 
                 <?php echo $this->Form->create("Livrable",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -79,7 +79,7 @@
 		<td style="text-align: center;"><?php echo h($livrable['Livrable']['REFERENCE']); ?>&nbsp;</td>
                 <td style="text-align: center;"><?php echo h($livrable['Livrable']['VERSION']); ?>&nbsp;</td>
                 <td style="text-align: center;"><?php echo isset($livrable['Livrable']['ETAT']) ? '<i class="'.etatLivrable(h($livrable['Livrable']['ETAT'])).'" rel="tooltip" data-title="'.h($livrable['Livrable']['ETAT']).'"></i>' : '' ; ?></td>
-                <?php $classtd = enretard($livrable['Livrable']['ECHEANCE']) ? "class='td-error'" : ""; ?>
+                <?php $classtd = livrableenretard($livrable['Livrable']['ECHEANCE'],$livrable['Livrable']['DATELIVRAISON'],$livrable['Livrable']['ETAT']) ? "class='td-error'" : ""; ?>
 		<td <?php echo $classtd; ?> style="text-align: center;"><?php echo h(isset($livrable['Livrable']['ECHEANCE']) ? $livrable['Livrable']['ECHEANCE'] : ''); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h(isset($livrable['Livrable']['DATELIVRAISON']) ? $livrable['Livrable']['DATELIVRAISON'] : ''); ?>&nbsp;</td>
 		<td class="actions">

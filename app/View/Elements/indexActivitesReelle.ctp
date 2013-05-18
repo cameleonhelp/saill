@@ -7,7 +7,7 @@
                 <?php $defaultAction = $this->params->action == "search" ? 'index' : $this->params->action; ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'add') && strtolower($this->params->controller)=='activitesreelles') : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'newactivite'),array('escape' => false)); ?></li>
-                <li class="divider-vertical"></li>
+                <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <?php if ($defaultEtat == "tous") : ?>
                 <li class="dropdown">
@@ -54,7 +54,7 @@
                       </ul>
                 </li> 
                 <?php if ($this->params->action == "afacturer") : ?>
-                <li class="divider-vertical"></li>
+                <li class="divider-vertical-only"></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-check"></i> Actions groupées <b class="caret"></b></a>
                      <ul class="dropdown-menu">
@@ -62,11 +62,11 @@
                      <li><?php echo $this->Html->link('Rejeter', "#",array('id'=>'rejeterlink')); ?></li>
                      </ul>
                 </li>
-                <li class="divider-vertical"></li>
+                <li class="divider-vertical-only"></li>
                 <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>                 
                 <?php endif; ?>
                 <?php if ($this->params->action != "afacturer") : ?>
-                <li class="divider-vertical"></li>
+                <li class="divider-vertical-only"></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-check"></i> Actions groupées <b class="caret"></b></a>
                      <ul class="dropdown-menu">
