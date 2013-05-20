@@ -3,7 +3,7 @@
  * Sur la création d'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l'objet >>FAIT<<
  * Créer une action automatiquement lors de la création d'un livrable avec le livrable associé rediriger vers cette action pour la compléter >>FAIT<<
  * Importation des fichier ics >>Parser mis en place. Prendre en compte un fichier généré à partir de l'outil RH<<
- *** Reste à faire ***
+ * **Reste à faire**
  * Revoir la navigation
  * Vue des paramétrage
  * Méthode de sauvegarde de la base de données (data uniquement)
