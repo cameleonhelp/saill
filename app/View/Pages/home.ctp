@@ -19,30 +19,7 @@ $this->set('title_for_layout','Accueil');
     Nous espérons que ce site vous facilitera votre restitution d'activité et un meilleur partage de l'information.
 </div>
 <div style='display: table;width: 100%;'>
-<h4>Liste des fichiers d'aide à votre disposition :</h4>
-<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
-<thead>
-<tr>
-                <th width="18px;">&nbsp;</th>
-                <th>Nom du fichier</th>
-                <th width="18px;">&nbsp;</th>
-</tr>
-</thead>
-<tbody>
-<?php define("WDS", "/"); ?>
-<?php $files = listFolder('.'.WDS.'files'.WDS.'all'.WDS); ?>
-<?php $filesadm = (userAuth('profil_id')<6 || userAuth('profil_id')==8) ? listFolder('.'.WDS.'files'.WDS.'admin'.WDS) : array(); ?>    
-<?php $files = array_merge($files,$filesadm); ?>     
-<?php asort($files); ?>      
-<?php foreach ($files as $file): ?>
-<tr>
-        <td style="text-align:center;"><i class="<?php echo $file['ext'] != '' ?'ico-'.$file['ext']  : 'icon-blank' ;?>">&nbsp;</i></td>
-        <td><?php echo $file['nom']; ?></td>
-        <td style="text-align:center;"><?php echo $this->Html->link('<i class="icon-download-alt"></i>',$file['url'],array('target'=>'blank','escape' => false)); ?>&nbsp;</td>
-</tr>
-<?php endforeach; ?>
-</tbody>
-</table>
+<?php echo $this->element('elementsfields'); ?>
 </div>
 </div>
 <div class='offset22 block'>

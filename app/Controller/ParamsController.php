@@ -26,8 +26,34 @@ class ParamsController extends AppController {
         
 	public function restorebdd() {
                 $this->set('title_for_layout','Restauration du site');
-                $this->goToPostion();
+                $this->redirect($this->goToPostion());
 	}          
+        
+        public function deletebackup($sqlfile=null){
+        if($sqlfile!=null):
+            //$name = str_replace('+', '/', $name);
+            $name = str_replace('..','.',$sqlfile);
+            $name = explode('+',$name);
+            $path =  '';
+            for($i=0;$i<count($name)-1;$i++):
+                if ($path == ''):
+                    $path = $name[$i];
+                else :
+                    $path .= DS.$name[$i]; 
+                endif;
+            endfor;
+            $fileurl = realpath($path).DS.$name[count($name)-1];
+            if(file_exists($fileurl)):
+               unlink($fileurl);
+               $this->Session->setFlash(__('Sauvegarde du site supprimée'),'default',array('class'=>'alert alert-success'));
+            else  :
+               $this->Session->setFlash(__('Sauvegarde <b>INCONNUE NON</b> supprimée'),'default',array('class'=>'alert alert-error')); 
+            endif;
+        else :
+            $this->Session->setFlash(__('Sauvegarde <b>INEXISTANTE</b>'),'default',array('class'=>'alert alert-error'));
+        endif;
+        $this->redirect($this->goToPostion());   
+        }
 
 /**
  * view method

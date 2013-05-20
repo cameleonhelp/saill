@@ -36,7 +36,6 @@ class AppController extends Controller {
     
     public $navigation=array('controller'=>'','action'=>'','page'=>'','sort'=>'','direction'=>'','here'=>'');
     
-    
     public function addUrl(){
         if (strpos($this->params->url,'activeMessage')===false && !$this->isajax() && !$this->isException()){
             $this->History = $this->Session->read('history');

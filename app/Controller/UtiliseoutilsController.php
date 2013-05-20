@@ -122,7 +122,23 @@ class UtiliseoutilsController extends AppController {
                 if ($this->request->is('post')) :
 			$this->Utiliseoutil->create();
 			if ($this->Utiliseoutil->save($this->request->data)) {
-                                $this->addnewaction($this->Utiliseoutil->getLastInsertID());
+                                $nomoutil = "inconnu";
+                                $outil_id = isset($this->request->data['Utiliseoutil']['outil_id']) ? $this->request->data['Utiliseoutil']['outil_id'] : '';
+                                $listediffusion_id = isset($this->request->data['Utiliseoutil']['listediffusion_id']) ? $this->request->data['Utiliseoutil']['listediffusion_id'] : '';
+                                $dossierpartage_id = isset($this->request->data['Utiliseoutil']['dossierpartage_id']) ? $this->request->data['Utiliseoutil']['dossierpartage_id'] : '';
+                                if ($outil_id!='') :
+                                    $outils = $this->Utiliseoutil->Outil->find('first',array('fields'=>array('NOM'),'conditions'=>array('Outil.id'=>$outil_id),'recursive'=>-1));
+                                    $nomoutil = $outils['Outil']['NOM'];
+                                endif;
+                                if ($listediffusion_id!='') :
+                                    $outils = $this->Utiliseoutil->Listediffusion->find('first',array('fields'=>array('NOM'),'conditions'=>array('Listediffusion.id'=>$listediffusion_id),'recursive'=>-1));
+                                    $nomoutil = $outils['Listediffusion']['NOM'];
+                                endif;
+                                if ($dossierpartage_id!='') :
+                                    $outils = $this->Utiliseoutil->Dossierpartage->find('first',array('fields'=>array('NOM'),'conditions'=>array('Dossierpartage.id'=>$dossierpartage_id),'recursive'=>-1));
+                                    $nomoutil = $outils['Dossierpartage']['NOM'];
+                                endif;                                
+                                $this->addnewaction($this->Utiliseoutil->getLastInsertID(),$nomoutil);
                                 $history['Historyutilisateur']['utilisateur_id']=$this->request->data['Utiliseoutil']['utilisateur_id'];
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit".' par '.userAuth('NOMLONG');
                                 $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                            
@@ -352,13 +368,13 @@ class UtiliseoutilsController extends AppController {
             endif;                
         }         
 
-        public function addnewaction($id){
+        public function addnewaction($id,$outil){
             $date = new DateTime();
             $record['Action']['utilisateur_id']=  userAuth('id');
             $record['Action']['destinataire']=  userAuth('id');
             $record['Action']['domaine_id']=  4;
             $record['Action']['activite_id']=  21;
-            $record['Action']['OBJET']=  'Création d\'une nouvelle demande d\'ouverture de droit';
+            $record['Action']['OBJET']=  'Création d\'une nouvelle demande d\'ouverture de droit : '.$outil;
             $record['Action']['AVANCEMENT']=  0;
             $record['Action']['COMMENTAIRE']=  '<a href="'.FULL_BASE_URL.$this->params->base.'/utiliseoutils/edit/'.$id.'">Lien vers la nouvelle demande d\'ouverture de droit</a>';
             $record['Action']['DEBUT']=  $date->format('d/m/Y');            

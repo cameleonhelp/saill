@@ -100,8 +100,10 @@ $cakeDescription = __d('cake_dev', 'SAILL '.  htmlspecialchars($this->element('v
             <?php if (userAuth('id')>0) echo $this->element('menu'); ?>
             <code class="span5 box-info"  style="margin-top: 10px;">
                 <div class="text-normal">Navigateurs compatibles :</div>
-                <div class='text-center'><?php echo $this->Html->link($this->Html->image("firefox.png",array("height" => "24px","width" => "24px")),"http://www.mozilla.org/fr/firefox/new/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"Firefox<br/>Recommandé")) ?>
-                <?php echo $this->Html->link($this->Html->image("ie.png",array("height" => "24px","width" => "24px")),"http://www.internetexplorer.fr",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"Internet Explorer")) ?>                
+                <div class='text-center'>
+                    <?php echo $this->Html->link($this->Html->image("firefox.png",array("height" => "24px","width" => "24px")),"http://www.mozilla.org/fr/firefox/new/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"Firefox<br/>Recommandé")) ?>
+                    <?php echo $this->Html->link($this->Html->image("chrome.png",array("height" => "24px","width" => "24px")),"http://www.google.fr/intl/fr/chrome/business/browser/admin//",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"Chrome<br/>Recommandé")) ?>
+                    <?php echo $this->Html->link($this->Html->image("ie.png",array("height" => "24px","width" => "24px")),"http://www.internetexplorer.fr",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"Internet Explorer<br/> compatible en partie")) ?>                
                 </div>
                 <div class="text-normal">Résolution recommandée :</div>
                 <div class='text-center'><?php echo $this->Html->image("1280.png",array('rel'=>"tooltip",'data-title'=>"Résolution minimum<br />recommandée")); ?></div>

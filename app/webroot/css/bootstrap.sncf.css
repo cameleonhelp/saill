@@ -248,6 +248,10 @@ table th a.desc:after,
     background-image: url("../img/xls.png");
     background-position: 0 0;    
 }
+.ico-ics{
+    background-image: url("../img/ics.png");
+    background-position: 0 0;    
+}
 .ico-doc{
     background-image: url("../img/doc.png");
     background-position: 0 0;    
@@ -755,4 +759,17 @@ input.invalid {
     margin-top: 0px !important;
     padding-bottom: 0px !important;
     margin-bottom: 5px !important;    
+}
+
+.inline_labels label
+{
+    display: inline-block;
+    margin-right: 10px;
+    margin-left: 10px;
+    padding-top: 3px;
+    vertical-align: top;
+}
+
+.well-small{
+    padding-bottom: 0px;
 }

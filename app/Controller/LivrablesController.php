@@ -180,7 +180,8 @@ class LivrablesController extends AppController {
                                 $suiviliv['Suivilivrable']['DATEVALIDATION']=$thisLivrable['Livrable']['DATEVALIDATION'];
                                 $this->Livrable->Suivilivrable->create();
                                 $this->Livrable->Suivilivrable->save($suiviliv);
-				$this->redirect($this->goToPostion(1));
+                                $action_id = $this->addnewaction($this->Livrable->getInsertID());
+				$this->redirect(array('controller'=>'actions','action'=>'edit',$action_id));
 			} else {
 				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable'),'default',array('class'=>'alert alert-error'));
 			}
@@ -336,22 +337,46 @@ class LivrablesController extends AppController {
 	}  
         
         public function homeListeLivrables(){
-            $listactions = $this->Livrable->find('all',array('conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT NOT IN ("A faire","En cours")'),'order'=>array('ECHEANCE'=>'ASC'),'limit' => 5,'recursive'=>-1));
+            $listactions = $this->Livrable->find('all',array('conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT IN ("à faire","en cours","refusé")'),'order'=>array('ECHEANCE'=>'ASC'),'limit' => 5,'recursive'=>-1));
             return $listactions;
         }   
         
         public function homeNBAFAIRELivrables(){
-            $nbactions = $this->Livrable->find('all',array('fields'=>array('COUNT(id) AS NB','ETAT'),'conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT'=>"A faire"),'group'=>'ETAT','recursive'=>-1));
+            $nbactions = $this->Livrable->find('all',array('fields'=>array('COUNT(id) AS NB','ETAT'),'conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT'=>"à faire"),'group'=>'ETAT','recursive'=>-1));
             return $nbactions;
         }    
         
         public function homeNBENCOURSLivrables(){
-            $nbactions = $this->Livrable->find('all',array('fields'=>array('COUNT(id) AS NB','ETAT'),'conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT'=>"En cours"),'group'=>'ETAT','recursive'=>-1));
+            $nbactions = $this->Livrable->find('all',array('fields'=>array('COUNT(id) AS NB','ETAT'),'conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT'=>"en cours"),'group'=>'ETAT','recursive'=>-1));
             return $nbactions;
         }            
         
         public function homeNBRETARDLivrables(){
-            $nbactions = $this->Livrable->find('all',array('fields'=>array('COUNT(id) AS NB','ETAT','ECHEANCE'),'conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT NOT IN ("A faire","En cours")',"ECHEANCE <"=>date('Y-m-d')),'group'=>'ETAT','recursive'=>-1));
+            $nbactions = $this->Livrable->find('all',array('fields'=>array('COUNT(id) AS NB','ETAT','ECHEANCE'),'conditions'=>array('utilisateur_id'=>userAuth('id'),'ETAT  IN ("à faire","en cours","refusé")',"ECHEANCE <"=>date('Y-m-d')),'group'=>'ETAT','recursive'=>-1));
             return $nbactions;
-        }            
+        }  
+        
+        public function addnewaction($id){
+            $date = new DateTime();
+            $record['Action']['utilisateur_id']=  userAuth('id');
+            $record['Action']['destinataire']=  userAuth('id');
+            $record['Action']['domaine_id']=  7;
+            $record['Action']['activite_id']=  16;
+            $record['Action']['OBJET']=  'Création d\'un nouveau livrable';
+            $record['Action']['AVANCEMENT']=  0;
+            $record['Action']['COMMENTAIRE']=  '';
+            $record['Action']['DEBUT']=  $date->format('d/m/Y');            
+            $record['Action']['ECHEANCE']=  $date->add(new DateInterval('P5D'))->format('d/m/Y');
+            $record['Action']['STATUT']=  'à faire';
+            $record['Action']['DUREEPREVUE']=  0;
+            $record['Action']['PRIORITE']=  'haute';
+            $this->Livrable->Actionslivrable->Action->create();
+            $this->Livrable->Actionslivrable->Action->save($record);
+            $action_id = $this->Livrable->Actionslivrable->Action->getLastInsertID();
+            $livrable['Actionslivrable']['livrable_id'] = $id;
+            $livrable['Actionslivrable']['action_id'] = $action_id;
+            $this->Livrable->Actionslivrable->create();
+            $this->Livrable->Actionslivrable->save($livrable);            
+            return $action_id;
+        }          
 }

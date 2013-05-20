@@ -1,4 +1,5 @@
-<div class="offset4">
+<div style="text-align: center;"><h2><em style='color:#CB0044;'>S</em>uivi d'<em style='color:#CB0044;'>A</em>ctivités, d'<em style='color:#CB0044;'>I</em>ndisponibilités, des <em style='color:#CB0044;'>L</em>ivrables et de la <em style='color:#CB0044;'>L</em>ogistique</h2></div>
+<div style='margin-left:auto;margin-right:auto;width:500px;' >
 <?php echo $this->Form->create('Utilisateur',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
         <div class="control-group">
         <label class="control-label sstitre  required" for="UtilisateurUsername">Login : </label>

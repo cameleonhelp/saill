@@ -63,7 +63,13 @@
                      </ul>
                 </li>
                 <li class="divider-vertical-only"></li>
-                <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>                 
+                <li><?php echo $this->Html->link('<i class="ico-ics"></i>', '#',array('escape' => false,'id'=>'importics')); ?></li> 
+                <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>  
+                <?php else: ?>
+                <?php if(userAuth('societe_id')==1): ?>
+                <li class="divider-vertical-only"></li>
+                <li><?php echo $this->Html->link('<i class="ico-ics"></i>', '#',array('escape' => false,'id'=>'importics')); ?></li>                 
+                <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($this->params->action != "afacturer") : ?>
                 <li class="divider-vertical-only"></li>
@@ -100,6 +106,19 @@
             Vous devez saisir des semaines entières, en ce qui concerne les jours ouvrés.<br>
             Si la semaine commence sur le mois courant et se termine sur le mois suivant vous devez saisir la semaine entière, même sur le mois suivant.
         </div>   
+        <?php if(userAuth('societe_id')==1): ?>
+        <div class="well well-small" id="icsparser">
+        <?php echo $this->Form->create('Fileshared',array('action'=>'parseICS','id'=>'formValidate','class'=>'form-horizontal', 'style'=>'margin-bottom:-7px !important;','type' => 'file','inputDefaults' => array('label'=>false,'div' => false))); ?>
+        <div class="control-group">   
+            <label class="control-label sstitre" for="FilesharedFile">Fichiers ICS à intégrer : </label>
+            <div class="controls">
+                <?php echo $this->Form->input('file', array('type' => 'file','size'=>"40")); ?>  
+                <?php echo $this->Form->button('Intégrer', array('class' => 'btn btn-primary pull-right','type'=>'submit')); ?>
+            </div>
+        </div>
+        <?php echo $this->Form->end(); ?>
+        </div>
+        <?php endif; ?>        
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" id="data">
         <thead>
 	<tr>
@@ -227,9 +246,14 @@
      
      $(document).ready(function () {
         $("#totalactivites").html(sumOfColumns());
+        $('#icsparser').hide();
 
-        setTimeout(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 120000); 
-        $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
+        //setTimeout(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 120000); 
+        //$("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
+        
+        $(document).on('click','#importics',function(e){
+            $('#icsparser').fadeToggle('slow');
+        });
         
         $(document).on('click','#facturerlink',function(e){
             var ids = $("#all_ids").val();

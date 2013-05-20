@@ -298,7 +298,7 @@ class ActionsController extends AppController {
         } 
         
         public function findLivrable($id=null) {
-            $this->Action->Actionslivrable->recursive = -1;
+            $this->Action->Actionslivrable->recursive = 0;
             return $this->Action->Actionslivrable->find('all',array('conditions'=>array('Actionslivrable.action_id'=>$id)));
         }   
         

@@ -1,3 +1,16 @@
+## b058 
+ * Gestions des fichiers des dossiers admin, all avec add, delete >>FAIT<<
+ * Sur la création d'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l'objet >>FAIT<<
+ * Créer une action automatiquement lors de la création d'un livrable avec le livrable associé rediriger vers cette action pour la compléter >>FAIT<<
+ * Importation des fichier ics >>Parser mis en place. Prendre en compte un fichier généré à partir de l'outil RH<<
+ * Revoir la navigation
+ * Vue des paramétrage
+ * Méthode de sauvegarde de la base de données (data uniquement)
+ * vue de restauration + méthode
+ * Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.
+ * Template d'email avec envois si demandé (choix laissé à l'utilisateur ou action de notification, envois automatique sur certaines actions)
+ * validation ou avertissement d'un valideur d'indisponibilité (spécifique aux prestataires, concerne un petite population)
+
 ## b057 
  * Livrables dates rendues facultatives sauf échéance (idem pour suivilivrable)
  * actions : corriger le changement d'émetteur de l'action en cas de mise à jour l'émetteur reste inchangé
