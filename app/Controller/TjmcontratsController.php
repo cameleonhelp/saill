@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Tjmcontrat $Tjmcontrat
  */
 class TjmcontratsController extends AppController {
- 
+        public $components = array('History'); 
     public $paginate = array(
         'limit' => 15,
         'order' => array('Tjmcontrat.TJM' => 'asc'),
@@ -62,7 +62,7 @@ class TjmcontratsController extends AppController {
 			$this->Tjmcontrat->create();
 			if ($this->Tjmcontrat->save($this->request->data)) {
 				$this->Session->setFlash(__('TJM contrat sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('TJM contrat incorrect, veuillez corriger le TJM contrat'),'default',array('class'=>'alert alert-error'));
 			}
@@ -89,7 +89,7 @@ class TjmcontratsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Tjmcontrat->save($this->request->data)) {
 				$this->Session->setFlash(__('TJM contrat sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('TJM contrat incorrect, veuillez corriger le TJM contrat'),'default',array('class'=>'alert alert-error'));
 			}
@@ -121,10 +121,10 @@ class TjmcontratsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Tjmcontrat->delete()) {
 			$this->Session->setFlash(__('TJM contrat supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('TJM contrat <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

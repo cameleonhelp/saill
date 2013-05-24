@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Actionslivrable $Actionslivrable
  */
 class ActionslivrablesController extends AppController {
-
+        public $components = array('History');
 /**
  * index method
  *
@@ -43,7 +43,7 @@ class ActionslivrablesController extends AppController {
 			$this->Actionslivrable->create();
 			if ($this->Actionslivrable->save($this->request->data)) {
 				$this->Session->setFlash(__('Livrable ajouté à l\'action'),'default',array('class'=>'alert alert-success'));
-				$this->redirect(array('controller'=>'actions','action' => 'edit',$id));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Le livrable n\'a pas été ajouté à l\'action'),'default',array('class'=>'alert alert-error'));
 			}
@@ -96,9 +96,9 @@ class ActionslivrablesController extends AppController {
 		}
 		if ($this->Actionslivrable->delete()) {
 			$this->Session->setFlash(__('Association supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Association <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
 	}
 }

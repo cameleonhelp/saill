@@ -6,13 +6,13 @@ App::uses('AppController', 'Controller');
  * @property Autorisation $Autorisation
  */
 class AutorisationsController extends AppController {
- 
-    public $paginate = array(
-        'limit' => 15,
-        'order' => array('Autorisation.profil_id' => 'asc','Autorisation.MODEL' => 'asc'),
-        /*'order' => array(
-            'Post.title' => 'asc' /*/
-        );
+        public $components = array('History'); 
+        public $paginate = array(
+            'limit' => 15,
+            'order' => array('Autorisation.profil_id' => 'asc','Autorisation.MODEL' => 'asc'),
+            /*'order' => array(
+                'Post.title' => 'asc' /*/
+            );
     
  /**
  * index method
@@ -83,7 +83,7 @@ class AutorisationsController extends AppController {
 			$this->Autorisation->create();
 			if ($this->Autorisation->save($this->request->data)) {
 				$this->Session->setFlash(__('Autorisation sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Autorisation incorrecte, veuillez corriger l\'autorisation'),'default',array('class'=>'alert alert-error'));
 			}
@@ -113,7 +113,7 @@ class AutorisationsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Autorisation->save($this->request->data)) {
 				$this->Session->setFlash(__('Autorisation sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Autorisation incorrecte, veuillez corriger l\'autorisation'),'default',array('class'=>'alert alert-error'));
 			}
@@ -145,10 +145,10 @@ class AutorisationsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Autorisation->delete()) {
 			$this->Session->setFlash(__('Autorisation supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Autorisation NON supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

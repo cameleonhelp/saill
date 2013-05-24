@@ -42,17 +42,17 @@
         <tbody>
         <tr>
         <?php
-		echo "<td style='text-align:center;'>".$this->Form->input('INDEX')."</td>";
-		echo "<td style='text-align:center;'>".$this->Form->input('ADD')."</td>";
-		echo "<td style='text-align:center;'>".$this->Form->input('EDIT')."</td>";
-		echo "<td style='text-align:center;'>".$this->Form->input('VIEW')."</td>";
-		echo "<td style='text-align:center;'>".$this->Form->input('DELETE')."</td>";
-		echo "<td style='text-align:center;'>".$this->Form->input('DUPLICATE')."</td>";
-		echo "<td style='text-align:center;'>".$this->Form->input('INITPASSWORD')."</td>";
-                echo "<td style='text-align:center;'>".$this->Form->input('ABSENCES')."</td>";
-                echo "<td style='text-align:center;'>".$this->Form->input('RAPPORTS')."</td>";
-                echo "<td style='text-align:center;'>".$this->Form->input('UPDATE')."</td>";
-                echo "<td style='text-align:center;'>".$this->Form->input('MYPROFIL')."</td>";
+		echo "<td style='text-align:center;'>".$this->Form->input('INDEX',array('type'=>'checkbox'))."</td>";
+		echo "<td style='text-align:center;'>".$this->Form->input('ADD',array('type'=>'checkbox'))."</td>";
+		echo "<td style='text-align:center;'>".$this->Form->input('EDIT',array('type'=>'checkbox'))."</td>";
+		echo "<td style='text-align:center;'>".$this->Form->input('VIEW',array('type'=>'checkbox'))."</td>";
+		echo "<td style='text-align:center;'>".$this->Form->input('DELETE',array('type'=>'checkbox'))."</td>";
+		echo "<td style='text-align:center;'>".$this->Form->input('DUPLICATE',array('type'=>'checkbox'))."</td>";
+		echo "<td style='text-align:center;'>".$this->Form->input('INITPASSWORD',array('type'=>'checkbox'))."</td>";
+                echo "<td style='text-align:center;'>".$this->Form->input('ABSENCES',array('type'=>'checkbox'))."</td>";
+                echo "<td style='text-align:center;'>".$this->Form->input('RAPPORTS',array('type'=>'checkbox'))."</td>";
+                echo "<td style='text-align:center;'>".$this->Form->input('UPDATE',array('type'=>'checkbox'))."</td>";
+                echo "<td style='text-align:center;'>".$this->Form->input('MYPROFIL',array('type'=>'checkbox'))."</td>";
                 echo "<td style='text-align:center;'>".$this->Form->input('ALL',array('type'=>'checkbox','id'=>"autorizeAll",'name'=>'autorizeAll','class'=>'checkall'))."</td>";
 	?>
         </tr>
@@ -63,7 +63,7 @@
             <div class="navbar-inner">
                 <div class="container" style="margin-top:2px;text-align:center;">
                     <?php $url = $this->Session->read('history'); $index = count($url) > 1 ? 1 : 0; ?>
-                    <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url($url[$index]['here'])."/<'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
+                    <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
                 </div>
             </div>
         </div> 

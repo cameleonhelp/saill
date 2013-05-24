@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Historybudget $Historybudget
  */
 class HistorybudgetsController extends AppController {
-
+        public $components = array('History');
 /**
  * index method
  *
@@ -40,7 +40,7 @@ class HistorybudgetsController extends AppController {
                             if ($history['Historybudget']['ACTIF']==1) {$this->saveActiviteBudget($history['Historybudget']['activite_id'], $history_id,$lastidcheck);}                          
 			} 
                         $this->Session->setFlash(__('Historique du budget sauvegardé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion(1));                        
+			$this->History->goBack(1);                        
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -71,7 +71,7 @@ class HistorybudgetsController extends AppController {
                             if ($newhistory['Historybudget']['ACTIF']==1) {$this->saveActiviteBudget($newhistory['Historybudget']['activite_id'], $id,$lastidcheck);}
                             if ($history['Historybudget']['ACTIF']==1 && $newhistory['Historybudget']['ACTIF']==0){$this->resethistory($id,$newhistory['Historybudget']['activite_id']);}
                             $this->Session->setFlash(__('Historique du budget modifié'),'default',array('class'=>'alert alert-success'));
-                            $this->redirect($this->goToPostion(1));                             
+                            $this->History->goBack(1);                             
 			} 
 		} else {
 			$options = array('conditions' => array('Historybudget.' . $this->Historybudget->primaryKey => $id));
@@ -100,10 +100,10 @@ class HistorybudgetsController extends AppController {
 		if ($this->Historybudget->delete()) {
                         if ($newhistory['Historybudget']['ACTIF']==1){$this->resethistory($id,$newhistory['Historybudget']['activite_id']);}
                         $this->Session->setFlash(__('Historique de l\'activité supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Historique de l\'activité <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();         

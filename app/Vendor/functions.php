@@ -393,9 +393,7 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
             SessionComponent::setFlash(__('Votre session est expirée veuillez rafraîchir la page.<br />Vos données ont été prises en compte, si toutefois cela n\'était pas le cas, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-error'));
         }*/ 
     }
-    
-    @define(AUTHORIZED, 'Auth.Profil');
-    
+        
     function isAuthorized($model,$action){
         $autorisations = SessionComponent::read(AUTHORIZED);
         $result = false;
@@ -763,5 +761,11 @@ function styleBarre($avancement){
     
     function CHours2Days($hours){
         return ($hours/8);
+    }
+    
+    function goPrev(){
+        $history = SessionComponent::read('User.history');
+        $pos = count($history)-2 < 0 ? 0 : count($history)-2;
+        return $history[$pos];
     }
 ?>

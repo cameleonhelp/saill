@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Assistance $Assistance
  */
 class AssistancesController extends AppController {
-
+        public $components = array('History');
         public $paginate = array(
         'limit' => 15,
         'order' => array('Assistance.NOM' => 'asc'),
@@ -61,7 +61,7 @@ class AssistancesController extends AppController {
 			$this->Assistance->create();
 			if ($this->Assistance->save($this->request->data)) {
 				$this->Session->setFlash(__('Assistance sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Assistance incorrecte, veuillez corriger l\'assistance'),'default',array('class'=>'alert alert-error'));
 			}
@@ -87,7 +87,7 @@ class AssistancesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Assistance->save($this->request->data)) {
 				$this->Session->setFlash(__('Assistance sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Assistance incorrecte, veuillez corriger l\'assistance'),'default',array('class'=>'alert alert-error'));
 			}
@@ -118,10 +118,10 @@ class AssistancesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Assistance->delete()) {
 			$this->Session->setFlash(__('Assistance supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Assistance NON supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

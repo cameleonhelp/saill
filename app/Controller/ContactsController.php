@@ -11,7 +11,7 @@ App::uses('CakeEmail', 'Network/Email');
  * @author JLR
  */
 class ContactsController extends AppController {
-
+        public $components = array('History');
 /**
  * add method
  *

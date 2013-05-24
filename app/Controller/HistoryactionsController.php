@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Historyaction $Historyaction
  */
 class HistoryactionsController extends AppController {
-
+        public $components = array('History');
 /**
  * index method
  *

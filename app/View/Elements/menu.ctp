@@ -221,7 +221,7 @@
     <li class="<?php echo $classContactUs; ?>"><?php echo $this->Html->link('<i class="glyphicon_envelope"></i> Nous contacter',array('controller'=>'contacts','action'=>'add'),array('escape' => false)); ?></li>
     <?php endif; ?>
     <li class="<?php echo $classAddFavorites; ?> jQueryBookmark"><?php echo $this->Html->link('<i class="glyphicon_star"></i> Ajouter aux favoris',array('action'=>"#"),array('escape' => false)); ?></li>
-    <li  class="dropdown-menu-nolink sstitre text-center">Version : <?php echo $this->element('version') ?></li>
+    <li  class="dropdown-menu-nolink sstitre text-center">Version : <?php $version = $this->requestAction('params/get_version'); echo $version['Param']['param']; ?></li>
   </ul>
 </div>
 <script language="javascript" type="text/javascript">

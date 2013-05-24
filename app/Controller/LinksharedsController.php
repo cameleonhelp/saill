@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Linkshared $Linkshared
  */
 class LinksharedsController extends AppController {
- 
+        public $components = array('History'); 
     public $paginate = array(
         'limit' => 15,
         'order' => array('Linkshared.NOM' => 'asc'),
@@ -59,7 +59,7 @@ class LinksharedsController extends AppController {
 			$this->Linkshared->create();
 			if ($this->Linkshared->save($this->request->data)) {
 				$this->Session->setFlash(__('Lien partagé sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Lien partagé incorrect, veuillez corriger le lien partagé'),'default',array('class'=>'alert alert-error'));
 			}
@@ -86,7 +86,7 @@ class LinksharedsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Linkshared->save($this->request->data)) {
 				$this->Session->setFlash(__('Lien partagé sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Lien partagé incorrect, veuillez corriger le lien partagé'),'default',array('class'=>'alert alert-error'));
 			}
@@ -117,10 +117,10 @@ class LinksharedsController extends AppController {
 		}
 		if ($this->Linkshared->delete()) {
 			$this->Session->setFlash(__('Lien partagé supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Lien partagé <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

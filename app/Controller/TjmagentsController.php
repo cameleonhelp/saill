@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Tjmagent $Tjmagent
  */
 class TjmagentsController extends AppController {
- 
+        public $components = array('History');
     public $paginate = array(
         'limit' => 15,
         'order' => array('Tjmagent.NOM' => 'asc'),
@@ -62,7 +62,7 @@ class TjmagentsController extends AppController {
 			$this->Tjmagent->create();
 			if ($this->Tjmagent->save($this->request->data)) {
 				$this->Session->setFlash(__('TJM agent sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('TJM agent incorrect, veuillez corriger le TJM agent'),'default',array('class'=>'alert alert-error'));
 			}
@@ -89,7 +89,7 @@ class TjmagentsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Tjmagent->save($this->request->data)) {
 				$this->Session->setFlash(__('TJM agent sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('TJM agent incorrect, veuillez corriger le TJM agent'),'default',array('class'=>'alert alert-error'));
 			}
@@ -121,10 +121,10 @@ class TjmagentsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Tjmagent->delete()) {
 			$this->Session->setFlash(__('TJM agent supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('TJM agent <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

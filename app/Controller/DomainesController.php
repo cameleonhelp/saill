@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Domaine $Domaine
  */
 class DomainesController extends AppController {
-
+        public $components = array('History');
         public $paginate = array(
         'limit' => 15,
         'order' => array('Domaine.NOM' => 'asc'),
@@ -61,7 +61,7 @@ class DomainesController extends AppController {
 			$this->Domaine->create();
 			if ($this->Domaine->save($this->request->data)) {
 				$this->Session->setFlash(__('Domaine sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Domaine incorrect, veuillez corriger le domaine'),'default',array('class'=>'alert alert-error'));
 			}
@@ -87,7 +87,7 @@ class DomainesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Domaine->save($this->request->data)) {
 				$this->Session->setFlash(__('Domaine sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Domaine incorrect, veuillez corriger le domaine'),'default',array('class'=>'alert alert-error'));
 			}
@@ -118,10 +118,10 @@ class DomainesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Domaine->delete()) {
 			$this->Session->setFlash(__('Domaine supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Domaine NON supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Replacestring $Replacestring
  */
 class ReplacestringsController extends AppController {
-
+        public $components = array('History');
 /**
  * index method
  *

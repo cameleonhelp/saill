@@ -7,7 +7,7 @@ App::import('Vendor', 'ical', array('file'=>'class.iCalReader.php'));
  * @author JLR
  */
 class FilesharedsController extends AppController {
-
+        public $components = array('History');
     public function shared(){
         $file = isset($this->data['Fileshared']['file']['name']) ? $this->data['Fileshared']['file']['name'] : '';
         $file_type = strrchr($file,'.');

@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Site $Site
  */
 class SitesController extends AppController {
- 
+        public $components = array('History'); 
     public $paginate = array(
         'limit' => 15,
         'order' => array('Site.NOM' => 'asc'),
@@ -61,7 +61,7 @@ class SitesController extends AppController {
 			$this->Site->create();
 			if ($this->Site->save($this->request->data)) {
 				$this->Session->setFlash(__('Site sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Site incorrecte, veuillez corriger le site'),'default',array('class'=>'alert alert-error'));
 			}
@@ -87,7 +87,7 @@ class SitesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Site->save($this->request->data)) {
 				$this->Session->setFlash(__('Site sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Site incorrect, veuillez corriger le site'),'default',array('class'=>'alert alert-error'));
 			}
@@ -118,10 +118,10 @@ class SitesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Site->delete()) {
 			$this->Session->setFlash(__('Site supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(___('Site <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

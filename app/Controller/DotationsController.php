@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Dotation $Dotation
  */
 class DotationsController extends AppController {
-
+        public $components = array('History');
 /**
  * index method
  *
@@ -73,7 +73,7 @@ class DotationsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une dotation";
                                 $this->Dotation->Utilisateur->Historyutilisateur->save($history);                               
 				$this->Session->setFlash(__('Dotation sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),'default',array('class'=>'alert alert-error'));
 			}
@@ -102,7 +102,7 @@ class DotationsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour de la dotation dotation";
                                 $this->Dotation->Utilisateur->Historyutilisateur->save($history); 				
                             $this->Session->setFlash(__('Dotation sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),'default',array('class'=>'alert alert-error'));
 			}
@@ -136,10 +136,10 @@ class DotationsController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une dotation";
                         $this->Dotation->Utilisateur->Historyutilisateur->save($history);                     
 			$this->Session->setFlash(__('Dotation supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Dotation <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

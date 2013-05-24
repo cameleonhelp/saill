@@ -1,48 +1,71 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Vendor', 'dump', array('file'=>'backup_restore.class.php'));
 /**
  * Params Controller
  *
  * @property Param $Param
  */
 class ParamsController extends AppController {
-
+        public $components = array('History');
+               
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
-		$this->Param->recursive = 0;
-		$this->set('params', $this->paginate());
                 $this->set('title_for_layout','Paramètres du site');
+                $urlMinidoc = $this->Param->find('first',array('conditions'=>array('nom'=>'urlminidoc'),'recursive'=>-1));
+                $this->set('urlminidoc',$urlMinidoc);
+                $contact = $this->Param->find('first',array('conditions'=>array('nom'=>'contact'),'recursive'=>-1));
+                $this->set('contact',$contact);
+                $version = $this->Param->find('first',array('conditions'=>array('nom'=>'version'),'recursive'=>-1));
+                $this->set('version',$version);                
 	}
         
 	public function savebdd() {
                 $this->set('title_for_layout','Sauvegarde du site');
-                $this->Session->setFlash(__('Base de données sauvegardé'),'default',array('class'=>'alert alert-success'));
-                $this->redirect(array('action' => 'restorebdd'));
+                $database = $this->Param->getDataSource();
+                $path = WWW_ROOT.DS.'files'.DS.'sql_backup';
+                $obj = new backup_restore($database->config['host'], $database->config['database'], $database->config['login'], $database->config['password'], $path);
+                $backup = $obj->backup();
+                if($backup) :
+                    $this->Session->setFlash(__('Base de données sauvegardée'),'default',array('class'=>'alert alert-success'));
+                    $this->redirect(array('action' => 'listebackup'));
+                else:
+                    $this->Session->setFlash(__('Base de données <b>NON</b> sauvegardée'),'default',array('class'=>'alert alert-error'));
+                    $this->History->goBack();
+                endif;
+                exit();
+	}  
+
+	public function listebackup() {
+                $this->set('title_for_layout','Sauvegardes du site');
+                //$this->History->goBack();
 	}  
         
 	public function restorebdd() {
                 $this->set('title_for_layout','Restauration du site');
-                $this->redirect($this->goToPostion());
+                $database = $this->Param->getDataSource();
+                $path = WWW_ROOT.DS.'files'.DS.'sql_backup';
+                $file = $this->data->file;
+                $obj = new backup_restore($database->config['host'], $database->config['database'], $database->config['login'], $database->config['password'], $path);
+                $backup = $obj->restore($file);
+                if($backup) :
+                    $this->Session->setFlash(__('Base de données restaurée'),'default',array('class'=>'alert alert-success'));
+                    $this->redirect(array('action' => 'listebackup'));
+                else:
+                    $this->Session->setFlash(__('Base de données <b>NON</b> restaurée '.$backup),'default',array('class'=>'alert alert-error'));
+                    $this->History->goBack();
+                endif;
+                exit();
 	}          
         
         public function deletebackup($sqlfile=null){
         if($sqlfile!=null):
-            //$name = str_replace('+', '/', $name);
-            $name = str_replace('..','.',$sqlfile);
-            $name = explode('+',$name);
-            $path =  '';
-            for($i=0;$i<count($name)-1;$i++):
-                if ($path == ''):
-                    $path = $name[$i];
-                else :
-                    $path .= DS.$name[$i]; 
-                endif;
-            endfor;
-            $fileurl = realpath($path).DS.$name[count($name)-1];
+            $path = WWW_ROOT.DS.'files'.DS.'sql_backup';
+            $fileurl = realpath($path).DS.$sqlfile;
             if(file_exists($fileurl)):
                unlink($fileurl);
                $this->Session->setFlash(__('Sauvegarde du site supprimée'),'default',array('class'=>'alert alert-success'));
@@ -52,9 +75,38 @@ class ParamsController extends AppController {
         else :
             $this->Session->setFlash(__('Sauvegarde <b>INEXISTANTE</b>'),'default',array('class'=>'alert alert-error'));
         endif;
-        $this->redirect($this->goToPostion());   
+        $this->History->goBack();   
         }
 
+        /**
+         * 
+         */
+        public function saveParam() {
+              $id = $this->data['Param']['id'];
+              $this->Param->id = $id;
+              if ($this->Param->saveField('param', $this->data['Param']['param'])):
+                  $this->Session->setFlash(__('Paramètre mis à jour'),'default',array('class'=>'alert alert-success'));
+              else:
+                  $this->Session->setFlash(__('Paramètre <b>NON</b> mis à jour'),'default',array('class'=>'alert alert-error')); 
+              endif;
+              $this->History->goBack();
+	}
+        
+        
+        public function get_version(){
+            $version = $this->Param->find('first',array('conditions'=>array('nom'=>'version'),'recursive'=>-1));
+            return $version;
+        }
+        
+        public function get_minidocurl(){
+            $version = $this->Param->find('first',array('conditions'=>array('nom'=>'urlminidoc'),'recursive'=>-1));
+            return $version;
+        } 
+        
+        public function get_contact(){
+            $version = $this->Param->find('first',array('conditions'=>array('nom'=>'contact'),'recursive'=>-1));
+            return $version;
+        }         
 /**
  * view method
  *

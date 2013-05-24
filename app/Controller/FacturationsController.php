@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Facturation $Facturation
  */
 class FacturationsController extends AppController {
-
+        public $components = array('History');
     public $paginate = array(
         //'limit'=>9999
     );
@@ -53,7 +53,8 @@ class FacturationsController extends AppController {
                     default:
                         $annee = date('Y');
                         $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
-                        $datedebut = $annee."-".$mois."-01";
+                        $debut = $annee."-".$mois."-01";
+                        $datedebut = startWeek($debut);
                         $datefin = $annee."-".$mois."-".$dernierjour;
                         $newconditions[]="Facturation.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
                         $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
@@ -214,9 +215,9 @@ class FacturationsController extends AppController {
                     if (is_array($facturation) && $facturation['activite_id']!=''):
                         $this->Facturation->create();
                         if ($this->Facturation->save($facturation)) {
-                            if (isset($facturation['activitesreelle_id']) && $facturation['activitesreelle_id'] != ''):
+                            if (!isset($facturation['new'])):
                                 $lastId = $this->Facturation->getLastInsertID();
-                                $this->Facturation->ActivitesreelleActivitesreelle->id = $facturation['activitesreelle_id'];
+                                $this->Facturation->Activitesreelle->id = $facturation['activitesreelle_id'];
                                 $this->Facturation->Activitesreelle->saveField('facturation_id', $lastId);
                             endif;
                             if (isset($facturation['VERSION']) && $facturation['VERSION'] > 0):
@@ -231,7 +232,7 @@ class FacturationsController extends AppController {
                         }                  
                     endif;
                 endforeach;
-                $this->redirect($this->goToPostion(1));
+                $this->History->goBack(1);
             }            
         }
         

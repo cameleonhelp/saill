@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Achat $Achat
  */
 class AchatsController extends AppController {
-  
+        public $components = array('History');  
         public $paginate = array(
         'limit' => 15,
         'order' => array('Achat.DATE' => 'desc','Achat.LIBELLEACHAT' => 'asc'),
@@ -61,7 +61,7 @@ class AchatsController extends AppController {
 			$this->Achat->create();
 			if ($this->Achat->save($this->request->data)) {
 				$this->Session->setFlash(__('Achat sauvegardé'),'default',array('class'=>'alert alert-success'));
-                                $this->redirect($this->goToPostion(1));
+                                $this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Achat incorrect, veuillez corriger l\'achat'),'default',array('class'=>'alert alert-error'));
 			}
@@ -90,7 +90,7 @@ class AchatsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Achat->save($this->request->data)) {
 				$this->Session->setFlash(__('Achat sauvegardé'),'default',array('class'=>'alert alert-success'));
-                                $this->redirect($this->goToPostion(1));
+                                $this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Achat incorrect, veuillez corriger l\'achat'),'default',array('class'=>'alert alert-error'));
 			}
@@ -121,10 +121,10 @@ class AchatsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Achat->delete()) {
 			$this->Session->setFlash(__('Achat supprimé'),'default',array('class'=>'alert alert-success'));
-                        $this->redirect($this->goToPostion());
+                        $this->History->goBack();
 		}
 		$this->Session->setFlash(__('Achat <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-                $this->redirect($this->goToPostion());
+                $this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

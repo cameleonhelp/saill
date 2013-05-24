@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Typemateriel $Typemateriel
  */
 class TypematerielsController extends AppController {
- 
+        public $components = array('History'); 
     public $paginate = array(
         'limit' => 15,
         'order' => array('Typemateriel.NOM' => 'asc'),
@@ -64,7 +64,7 @@ class TypematerielsController extends AppController {
 			$this->Typemateriel->create();
 			if ($this->Typemateriel->save($this->request->data)) {
 				$this->Session->setFlash(__('Type de matériel sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Type de matériel incorrect, veuillez corriger le type de matériel'),'default',array('class'=>'alert alert-error'));
 			}
@@ -91,7 +91,7 @@ class TypematerielsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Typemateriel->save($this->request->data)) {
 				$this->Session->setFlash(__('Type de matériel sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Type de matériel incorrect, veuillez corriger le type de matériel'),'default',array('class'=>'alert alert-error'));
 			}
@@ -123,10 +123,10 @@ class TypematerielsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Typemateriel->delete()) {
 			$this->Session->setFlash(__('Type de matériel supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Type de matériel <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

@@ -33,7 +33,7 @@
                 </li> 
                 <?php if (areaIsVisible()) :?>
                  <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Responsable <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Destinataire <b class="caret"></b></a>
                      <ul class="dropdown-menu">
                          <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous')); ?></li>
                          <li class="divider"></li>
@@ -56,7 +56,7 @@
         <thead>
 	<tr>
 			<th><?php echo $this->Paginator->sort('Domaine.NOM','Domaine'); ?></th>
-			<th><?php echo $this->Paginator->sort('Destinataire.NOMLGDEST','Responsable de l\'action'); ?></th>
+			<th><?php echo $this->Paginator->sort('Destinataire.NOMLGDEST','Emetteur de l\'action'); ?></th>
 			<th><?php echo $this->Paginator->sort('OBJET','Objet'); ?></th>
 			<th width='90px'><?php echo $this->Paginator->sort('AVANCEMENT','% avancement'); ?></th>
 			<th width='90px'><?php echo $this->Paginator->sort('DEBUT','Date de début'); ?></th>
@@ -84,9 +84,9 @@
                 <?php $classtd = enretard($action['Action']['ECHEANCE'],$action['Action']['STATUT']) ? "class='td-error'" : ""; ?>
 		<td <?php echo $classtd; ?> style="text-align:center;"><?php echo h($action['Action']['ECHEANCE']); ?>&nbsp;</td>
 		<td style="text-align:center;"><?php $image = isset($action['Action']['STATUT']) ? etatAction(h($action['Action']['STATUT'])) : 'icon-blank' ; ?>
-                    <?php echo $this->Html->link('<i class="'.$image.'" rel="tooltip" data-title="'.etatTooltip(h($action['Action']['STATUT'])).'"></i>', array('action' => 'progressstatut', $action['Action']['id']),array('escape' => false)); ?>&nbsp;&nbsp;</td>
+                    <a href="#" class="changeetat cursor" idaction="<?php echo $action['Action']['id']; ?>" ><i class="<?php echo $image; ?>" rel="tooltip" data-title="<?php echo etatTooltip(h($action['Action']['STATUT'])); ?>"></i></a></td>
 		<td style="text-align:center;"><?php $image = (isset($action['Action']['CRA']) && $action['Action']['CRA']==true) ? 'icon-ok' : 'icon-ok icon-grey' ; ?>
-                    <?php echo $this->Html->link('<i class="'.$image.'"></i>', array('action' => 'incra', $action['Action']['id']),array('escape' => false)); ?>&nbsp;&nbsp;</td>                
+                    <a href="#" class="incra cursor" idaction="<?php echo $action['Action']['id']; ?>" ><i class="<?php echo $image; ?>"></i></a></td>               
                 <td style="text-align:center;">
                     <a href="#" class="moins cursor" style="float:left;margin-left: -3px;margin-right:2px;" idaction="<?php echo $action['Action']['id']; ?>" duree="<?php echo $action['Action']['DUREEPREVUE']; ?>"><i class="icon-minus-sign"></i></a>
                     <span rel="tooltip" data-title="<?php echo CHours2Days($action['Action']['DUREEPREVUE']); ?> jour(s)" style="float: left;width: 55%;"><?php echo h($action['Action']['DUREEPREVUE']); ?> h</span>
@@ -165,6 +165,30 @@ $(document).ready(function () {
             });
         }
     }); 
+    
+    $(document).on('click','.changeetat',function(e){
+        var id = $(this).attr('idaction');
+        $.ajax({
+            dataType: "html",
+            type: "POST",
+            url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'progressstatut')); ?>/",
+            data: ({id:id})
+        }).done(function ( data ) {
+            location.reload();
+        });
+    }); 
+    
+    $(document).on('click','.incra',function(e){
+        var id = $(this).attr('idaction');
+        $.ajax({
+            dataType: "html",
+            type: "POST",
+            url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'incra')); ?>/",
+            data: ({id:id})
+        }).done(function ( data ) {
+            location.reload();
+        });
+    });    
     
     $(document).on('click','.plus',function(e){
         var id = $(this).attr('idaction');

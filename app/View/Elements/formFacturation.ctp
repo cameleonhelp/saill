@@ -1,4 +1,7 @@
 <?php 
+    /**
+     * Savoir sur quelle date porte la facturation
+     */
     if ($this->params->action == 'add' ) $date = isset($activitesreelles[0]['Activitesreelle']['DATE']) ? $activitesreelles[0]['Activitesreelle']['DATE'] : date('d/m/Y');
     if ($this->params->action == 'edit' ) $date = isset($activitesreelles[0]['Facturation']['DATE']) ? $activitesreelles[0]['Facturation']['DATE'] : date('d/m/Y');
     $d = explode('/',$date);
@@ -52,6 +55,11 @@
     </thead>
     <tbody> 
     <?php $i=1; ?>
+    <?php
+    /**
+     * S'il existe déjà des facturation pour cette période on les affiche => si EDIT sinon affichage d'une seule ligne
+     */
+    ?>
     <?php foreach($activitesreelles as $activitesreelle): ?>        
     <tr>
         <td>
@@ -108,6 +116,11 @@
     </tr>
     <?php $i++; ?>
     <?php endforeach; ?>
+    <?php
+    /**
+     * Template de ligne à utiliser
+     */
+    ?>    
     <tr id="templateRow">
         <td>
             <select name="data[Facturation][¤][activite_id]" id="Facturation¤ActiviteId" class="selectActivite"> 
@@ -138,6 +151,8 @@
         <?php $valFTGAL = $this->params->action == 'edit' ? !isset($activitesreelle['Facturation']['NUMEROFTGALILEI']) ? '' : $activitesreelle['Facturation']['NUMEROFTGALILEI']: $valFTGAL; ?>                    
         <?php echo $this->Form->input('Facturation.¤.NUMEROFTGALILEI',array('type'=>'hidden','class'=>'ftgalilei','value'=>$valFTGAL)); ?>   
         <?php if ($this->params->action == 'edit') echo $this->Form->input('Facturation.¤.id',array('type'=>'hidden')); ?> 
+        <?php if ($this->params->action == 'add') echo $this->Form->input('Facturation.¤.activitesreelle_id',array('type'=>'hidden','value'=>$activitesreelle['Activitesreelle']['id'])); ?>
+        <?php if ($this->params->action == 'add') echo $this->Form->input('Facturation.¤.new',array('type'=>'hidden','value'=>'new')); ?>
         </td>
     </tr>    
     </tbody>
@@ -159,7 +174,7 @@
     <div class="navbar-inner">
         <div class="container" style="margin-top:2px;text-align:center;">
             <?php $url = $this->Session->read('history'); $index = count($url) > 1 ? 1 : 0; ?>
-            <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url($url[$index]['here'])."/<'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                  
+            <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                  
         </div>
     </div>
 </div>  
@@ -192,7 +207,7 @@ $(document).ready(function () {
         $("tr:last-child .selectActivite").attr('data-rule-required',"true").attr('data-msg-required',"Le nom de l'activité est obligatoire");
         $("tr:last-child :input").each(function() {
             var nameAttr = typeof $(this).attr('name') === "undefined" ? "" : $(this).attr('name');
-            var idAttr = typeof $(this).attr('id') === "undefined" ? "" : $(this).attr('id');;
+            var idAttr = typeof $(this).attr('id') === "undefined" ? "" : $(this).attr('id');
             var newIndex = $('#FacturationTable tr').length-4; 
             if (nameAttr != "") $(this).attr('name',nameAttr.replace('¤',newIndex));
             if (idAttr != "") $(this).attr('id',idAttr.replace('¤',newIndex));

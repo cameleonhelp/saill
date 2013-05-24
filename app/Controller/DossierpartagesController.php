@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Dossierpartage $Dossierpartage
  */
 class DossierpartagesController extends AppController {
-
+        public $components = array('History');
     public $paginate = array(
         'limit' => 15,
         'order' => array('Dossierpartage.NOM' => 'asc'),
@@ -64,7 +64,7 @@ class DossierpartagesController extends AppController {
 			$this->Dossierpartage->create();
 			if ($this->Dossierpartage->save($this->request->data)) {
 				$this->Session->setFlash(__('Dossier partagé sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Dossier partagé incorrecte, veuilez corriger le dossier partagé'),'default',array('class'=>'alert alert-error'));
 			}
@@ -91,7 +91,7 @@ class DossierpartagesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Dossierpartage->save($this->request->data)) {
 				$this->Session->setFlash(__('Dossier partagé sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Dossier partagé incorrecte, veuillez corriger le dossier partagé'),'default',array('class'=>'alert alert-error'));
 			}
@@ -123,10 +123,10 @@ class DossierpartagesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Dossierpartage->delete()) {
 			$this->Session->setFlash(__('Dossier partagé supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Dossier partagé NON supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

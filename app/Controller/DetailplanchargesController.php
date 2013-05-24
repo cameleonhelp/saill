@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Detailplancharge $Detailplancharge
  */
 class DetailplanchargesController extends AppController {
-
+        public $components = array('History');
 /**
  * index method
  *

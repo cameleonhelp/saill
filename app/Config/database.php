@@ -116,7 +116,7 @@ class DATABASE_CONFIG {
         'driver' => 'mysql',
         'connect' => 'mysql_connect',
         'persistent' => false,
-        'host' => '10.0.0.8', //localhost - 10.0.0.8
+        'host' => 'localhost', //localhost - 10.0.0.8
         'login' => 'SAILLADM',
         'password' => 'S@ILL@DM',
         'database' => 'saill_200',

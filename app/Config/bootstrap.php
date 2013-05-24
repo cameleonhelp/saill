@@ -162,6 +162,7 @@ Cache::config('default', array('engine' => 'File'));
  */
 
 App::import('Vendor', 'functions'); 
+App::import('Vendor', 'define'); 
 
 Configure::write('Dispatcher.filters', array(
 	'AssetDispatcher',
@@ -182,6 +183,12 @@ CakeLog::config('error', array(
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
 ));
+
+CakePlugin::load('DebugKit');
+
+/**
+ * Déclaration des variables globales
+ */
 
 Configure::write(
     'etatOuvertureDroit',array('Demandé'=>'Demandé','Pris en compte'=>'Pris en compte','En validation'=>'En validation','Validé'=>'Validé','Demande transférée'=>'Demande transférée','Demande traitée'=>'Demande traitée','Retour utilisateur'=>'Retour utilisateur','A supprimer'=>"A supprimer",'Supprimée'=>'Supprimée')

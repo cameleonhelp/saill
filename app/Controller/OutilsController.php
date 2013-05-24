@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Outil $Outil
  */
 class OutilsController extends AppController {
-
+        public $components = array('History');
         public $paginate = array(
         'limit' => 15,
         'order' => array('Outil.NOM' => 'asc'),
@@ -63,7 +63,7 @@ class OutilsController extends AppController {
 			$this->Outil->create();
 			if ($this->Outil->save($this->request->data)) {
 				$this->Session->setFlash(__('Outil sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Outil incorrect, veuillez corriger l\'outil'),'default',array('class'=>'alert alert-error'));
 			}
@@ -91,7 +91,7 @@ class OutilsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Outil->save($this->request->data)) {
 				$this->Session->setFlash(__('Outil sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Outil incorrect, veuillez corriger l\'outil'),'default',array('class'=>'alert alert-error'));
 			}
@@ -122,10 +122,10 @@ class OutilsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Outil->delete()) {
 			$this->Session->setFlash(__('Outil supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Outil NON supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

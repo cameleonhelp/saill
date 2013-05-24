@@ -63,10 +63,9 @@
                      </ul>
                 </li>
                 <li class="divider-vertical-only"></li>
-                <li><?php echo $this->Html->link('<i class="ico-ics"></i>', '#',array('escape' => false,'id'=>'importics')); ?></li> 
                 <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>  
                 <?php else: ?>
-                <?php if(userAuth('societe_id')==1): ?>
+                <?php if(userAuth('societe_id')==1 && $this->params->action != "afacturer"): ?>
                 <li class="divider-vertical-only"></li>
                 <li><?php echo $this->Html->link('<i class="ico-ics"></i>', '#',array('escape' => false,'id'=>'importics')); ?></li>                 
                 <?php endif; ?>

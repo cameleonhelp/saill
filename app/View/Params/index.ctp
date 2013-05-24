@@ -1,46 +1,48 @@
 <div class="params index">
-	<h2><?php echo __('Params'); ?></h2>
-	<table cellpadding="0" cellspacing="0">
-	<tr>
-			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('nom'); ?></th>
-			<th><?php echo $this->Paginator->sort('param'); ?></th>
-			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('modified'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
-	<?php foreach ($params as $param): ?>
-	<tr>
-		<td><?php echo h($param['Param']['id']); ?>&nbsp;</td>
-		<td><?php echo h($param['Param']['nom']); ?>&nbsp;</td>
-		<td><?php echo h($param['Param']['param']); ?>&nbsp;</td>
-		<td><?php echo h($param['Param']['created']); ?>&nbsp;</td>
-		<td><?php echo h($param['Param']['modified']); ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $param['Param']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $param['Param']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $param['Param']['id']), null, __('Are you sure you want to delete # %s?', $param['Param']['id'])); ?>
-		</td>
-	</tr>
-<?php endforeach; ?>
-	</table>
-	<p>
-	<?php
-	echo $this->Paginator->counter(array(
-	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
-	));
-	?>	</p>
-	<div class="paging">
-	<?php
-		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-		echo $this->Paginator->numbers(array('separator' => ''));
-		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
-	?>
-	</div>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New Param'), array('action' => 'add')); ?></li>
-	</ul>
+    <?php /* Changer le mot de passe administrateur */ ?>
+    <?php echo $this->Form->create('Utilisateur',array('action'=>'saveAdmPassword','id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+        <div class="control-group">
+            <label class="control-label sstitre required" for="UtilisateurPasswordNew">Mot de passe administrateur : </label>
+            <div class="controls">
+                <?php echo $this->Form->input('password_new',array('type'=>'password','data-rule-required'=>'true','data-msg-required'=>"Le mot de passe est obligatoire",'data-rule-minlength'=>'5','data-msg-minlength'=>"Le mot de passe doit avoir au moins 5 caractères",'placeholder'=>'Mot de passe')); ?>
+                &nbsp;<label class="sstitre horizontal form-inline" for="UtilisateurPassword">Confirmation </label>
+                <?php echo $this->Form->input('password_confirm',array('type'=>'password','data-rule-equalto'=>'#UtilisateurPasswordNew','data-msg-equalto'=>"Les mots de passe ne sont pas identiques",'placeholder'=>'Confirmation du mot de passe','value'=>'')); ?>    
+                <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>
+            </div>
+        </div> 
+    <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>1)); ?>
+    <?php echo $this->Form->end(); ?>  
+    <?php /* Gérer url MINIDOC */ ?>
+    <?php echo $this->Form->create('Param',array('action'=>'saveParam','id'=>'formValidate2','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+        <div class="control-group">
+            <label class="control-label sstitre" for="ParamParam">URL Minidoc : </label>
+            <div class="controls">
+                <?php echo $this->Form->input('param',array('class'=>'span20','type'=>'text','placeholder'=>'url de Minidoc','value'=>$urlminidoc['Param']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>
+            </div> 
+        </div>
+    <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>$urlminidoc['Param']['id'])); ?>
+    <?php echo $this->Form->end(); ?>
+    <?php /* Gérer contact Webmaster */ ?>
+    <?php echo $this->Form->create('Param',array('action'=>'saveParam','id'=>'formValidate3','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+        <div class="control-group">
+            <label class="control-label sstitre" for="ParamParam">Email contact : </label>
+            <div class="controls">
+                <?php echo $this->Form->input('param',array('class'=>'span10','type'=>'text','placeholder'=>'Email du contact','value'=>$contact['Param']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>
+            </div> 
+        </div>
+    <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>$contact['Param']['id'])); ?>
+    <?php echo $this->Form->end(); ?>
+    <?php /* Gérer version du site à la place du fichier version dans elements */ ?>
+    <?php echo $this->Form->create('Param',array('action'=>'saveParam','id'=>'formValidate4','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+        <div class="control-group">
+            <label class="control-label sstitre" for="ParamParam">Version : </label>
+            <div class="controls">
+                <?php echo $this->Form->input('param',array('class'=>'span7','type'=>'text','placeholder'=>'N° de version','value'=>$version['Param']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>
+            </div> 
+        </div>
+    <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>$version['Param']['id'])); ?>
+    <?php echo $this->Form->end(); ?>
 </div>

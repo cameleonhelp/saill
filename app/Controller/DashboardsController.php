@@ -7,6 +7,7 @@ App::uses('AppController', 'Controller');
  * @property Dashboard $Dashboard
  */
 class DashboardsController extends AppController {
+        public $components = array('History');    
     public function index() {
             $this->set('title_for_layout','Tableau de bord');
             if (isAuthorized('facturations', 'rapports') || isAuthorized('activitesreelles', 'rapports') || isAuthorized('plancharges', 'rapports')) :

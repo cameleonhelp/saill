@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Affectation $Affectation
  */
 class AffectationsController extends AppController {
-
+        public $components = array('History');
 /**
  * index method
  *
@@ -60,7 +60,7 @@ class AffectationsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une affectation par ".userAuth('NOMLONG');
                                 $this->Affectation->Utilisateur->Historyutilisateur->save($history);     
 				$this->Session->setFlash(__('Affectation sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Affectation incorrecte, veuillez corriger l\'affectation'),'default',array('class'=>'alert alert-error'));
 			}
@@ -91,7 +91,7 @@ class AffectationsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour d'une affectation par ".userAuth('NOMLONG');
                                 $this->Affectation->Utilisateur->Historyutilisateur->save($history);                            
 				$this->Session->setFlash(__('Affectation sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Affectation incorrecte, veuillez corriger làffectation'),'default',array('class'=>'alert alert-error'));
 			}
@@ -124,10 +124,10 @@ class AffectationsController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une affectation par ".userAuth('NOMLONG');
                         $this->Affectation->Utilisateur->Historyutilisateur->save($history);                     
 			$this->Session->setFlash(__('Affectation supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Affectation <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();           
@@ -156,7 +156,7 @@ class AffectationsController extends AppController {
                     $this->Session->setFlash(__('Affectation <b>NON</b> sauvegardée'),'default',array('class'=>'alert alert-error'));
                 }
             }            
-            $this->redirect($this->goToPostion());
+            $this->History->goBack();
             
         }
 }

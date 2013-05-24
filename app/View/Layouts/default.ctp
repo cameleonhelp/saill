@@ -15,8 +15,8 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-
-$cakeDescription = __d('cake_dev', 'SAILL '.  htmlspecialchars($this->element('version').' '));
+$version = $this->requestAction('params/get_version'); 
+$cakeDescription = __d('cake_dev', 'SAILL '.  htmlspecialchars($version['Param']['param'].' '));
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -62,7 +62,6 @@ $cakeDescription = __d('cake_dev', 'SAILL '.  htmlspecialchars($this->element('v
 <body>
     <?php  /*
             debug(in_array($this->params['action'], explode('/',$this->params->here)));*/ 
-            //debug($this->params['action']);  
             //debug($this->params->here);
             //debug($this->Session->read('history')); 
       ?>

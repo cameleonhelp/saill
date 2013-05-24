@@ -54,7 +54,11 @@ class AppModel extends Model {
  */           
         public function dateFormatBeforeSave($dateString) {
             $d = explode('/',$dateString);
-            return date('Y-m-d', mktime(0, 0, 0, $d[1], $d[0], $d[2]));
+            if(isset($d[1])):
+                return date('Y-m-d', mktime(0, 0, 0, $d[1], $d[0], $d[2]));
+            else:
+                return $dateString;
+            endif;
         } 
 
  /**

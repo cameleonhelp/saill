@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Section $Section
  */
 class SectionsController extends AppController {
- 
+        public $components = array('History'); 
     public $paginate = array(
         'limit' => 15,
         'order' => array('Section.NOM' => 'asc'),
@@ -63,7 +63,7 @@ class SectionsController extends AppController {
 			$this->Section->create();
 			if ($this->Section->save($this->request->data)) {
 				$this->Session->setFlash(__('Section sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Section incorrecte, veuillez corriger la section'),'default',array('class'=>'alert alert-error'));
 			}
@@ -91,7 +91,7 @@ class SectionsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Section->save($this->request->data)) {
 				$this->Session->setFlash(__('Section sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Section incorrecte, veuillez corriger la section'),'default',array('class'=>'alert alert-error'));
 			}
@@ -122,10 +122,10 @@ class SectionsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Section->delete()) {
 			$this->Session->setFlash(__('Section supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Section <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

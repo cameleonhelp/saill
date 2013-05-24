@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Contrat $Contrat
  */
 class ContratsController extends AppController {
-
+        public $components = array('History');
         public $paginate = array(
         'limit' => 15,
         'order' => array('Contrat.NOM' => 'asc'),
@@ -79,7 +79,7 @@ class ContratsController extends AppController {
 			$this->Contrat->create();
 			if ($this->Contrat->save($this->request->data)) {
 				$this->Session->setFlash(__('Contrat sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Contrat incorrect, veuillez corriger le contrat'),'default',array('class'=>'alert alert-error'));
 			}
@@ -107,7 +107,7 @@ class ContratsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Contrat->save($this->request->data)) {
 				$this->Session->setFlash(__('Contrat sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Contrat incorrect, veuillez corriger le contrat'),'default',array('class'=>'alert alert-error'));
 			}
@@ -138,10 +138,10 @@ class ContratsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Contrat->delete()) {
 			$this->Session->setFlash(__('Contrat supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Contrat <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

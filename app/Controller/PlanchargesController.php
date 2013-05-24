@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Plancharge $Plancharge
  */
 class PlanchargesController extends AppController {
-
+        public $components = array('History');
         public $paginate = array(
         'limit' => 15,
         //'threaded',
@@ -122,7 +122,7 @@ class PlanchargesController extends AppController {
                                     $this->Plancharge->Detailplancharge->save($record);
                                 endforeach;
 				$this->Session->setFlash(__('Nouvelle version du plan de charge créée'),'default',array('class'=>'alert alert-success'));                                
-				$this->redirect($this->goToPostion(0));;
+				$this->History->goBack();;
 			} else {
 				$this->Session->setFlash(__('Plan de charge incorrect, veuillez corriger le plan de charge'),'default',array('class'=>'alert alert-error'));
 			}

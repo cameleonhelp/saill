@@ -11,7 +11,12 @@ class ActionsController extends AppController {
         'limit' => 15,
         'order' => array('Action.ECHEANCE' => 'asc','Action.PRIORITE'=>'asc'),
         );
+
+        public $components = array('History');
         
+        public function beforeRender() {             
+            parent::beforeRender();
+        }
 /**
  * index method
  *
@@ -144,7 +149,7 @@ class ActionsController extends AppController {
 			if ($this->Action->save($this->request->data)) {
                                 $this->saveHistory($this->Action->getInsertID()); 
 				$this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Action incorrecte, veuillez corriger l\'action'),'default',array('class'=>'alert alert-error'));
 			}
@@ -188,7 +193,7 @@ class ActionsController extends AppController {
 			if ($this->Action->save($this->request->data)) {
                                 $this->saveHistory($id);                                
 				$this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Action incorrecte, veuilelz corriger l\'action'),'default',array('class'=>'alert alert-error'));
 			}
@@ -252,10 +257,10 @@ class ActionsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Action->delete()) {
 			$this->Session->setFlash(__('Action supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Action <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();        
@@ -424,10 +429,10 @@ class ActionsController extends AppController {
                 $this->Action->create();
                 if ($this->Action->save($record)) {
                         $this->Session->setFlash(__('Action dupliquée'),'default',array('class'=>'alert alert-success'));
-                        $this->redirect($this->goToPostion());
+                        $this->History->goBack();
                 } 
 		$this->Session->setFlash(__('Action <b>NON</b> dupliquée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
@@ -452,8 +457,9 @@ class ActionsController extends AppController {
  * 
  * @param type $id
  */
-        public function progressstatut($id=null){
+        public function progressstatut(){
                 $newetat = '';
+                $id = $this->request->data('id');
                 $this->Action->id = $id;
                 $record = $this->Action->read();
                 switch (strtolower($record['Action']['STATUT'])) {
@@ -490,7 +496,8 @@ class ActionsController extends AppController {
                 $record['Action']['modified'] = date('Y-m-d');
                 $this->Action->save($record);
                 $this->saveHistory($id); 
-                $this->redirect($this->goToPostion(0));
+                exit();
+                //$this->History->goBack();
         }        
         
         public function progressavancement(){
@@ -517,11 +524,13 @@ class ActionsController extends AppController {
             exit();
         }        
         
-        public function incra($id=null){
+        public function incra(){
+            $id = $this->request->data('id');
             $this->Action->id = $id;
             $cra = $this->Action->find('first',array('fields'=>array('CRA'),'conditions'=>array('Action.id'=>$id),'recursive'=>-1));
             $this->Action->saveField('CRA', !$cra['Action']['CRA']);
-            $this->redirect($this->goToPostion());
+            //$this->History->goBack();
+            exit();
         }
         
         

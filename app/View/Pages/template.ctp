@@ -201,7 +201,7 @@ App::uses('Debugger', 'Utility');
         <tr><th><a class="asc" href="#">Nom</a></th><th>Prénom</th><th>Login</th><th>Assistance</th><th>Société</th><th style="width:100px;">Actions</th></tr>
         </thead>
         <tbody>
-        <tr><td><div id="NOM" data-type="text" data-pk="1" data-name="NOM" data-url="post.php" data-original-title="Saisir le nom" style="cursor:url(img/pen_i.cur),pointer;;">Truc</div></td><td>Marcel</td><td>0000000</td><td>SAMBA</td><td>SNCF</td><td>
+        <tr><td><div id="NOM" data-type="text" data-pk="1" data-name="NOM" data-url="post.php" data-original-title="Saisir le nom" style="cursor:url(img/pen_i.cur),pointer;">Truc</div></td><td>Marcel</td><td>0000000</td><td>SAMBA</td><td>SNCF</td><td>
     <i class="icon-pencil"></i>
     <i class="icon-retweet"></i>  
     <i class="icon-zoom-in" rel="popover" data-title="<h3>Fiche identité :</h3>" data-content="<contenttitle>Tél:</contenttitle> 000000<br/><contenttitle>Mail:</contenttitle> <a href='mailto:marcel.truc@sncf.fr'>marcel.truc@sncf.fr</a>" data-trigger="click" style="cursor: pointer;"></i>

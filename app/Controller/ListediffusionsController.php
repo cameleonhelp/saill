@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Listediffusion $Listediffusion
  */
 class ListediffusionsController extends AppController {
-
+        public $components = array('History');
         public $paginate = array(
         'limit' => 15,
         'order' => array('Listediffusion.NOM' => 'asc'),
@@ -67,7 +67,7 @@ class ListediffusionsController extends AppController {
 			$this->Listediffusion->create();
 			if ($this->Listediffusion->save($this->request->data)) {
 				$this->Session->setFlash(__('Liste de diffusion sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Liste de diffusion incorrecte, veuillez corriger la liste de diffusion'),'default',array('class'=>'alert alert-error'));
 			}
@@ -96,7 +96,7 @@ class ListediffusionsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Listediffusion->save($this->request->data)) {
 				$this->Session->setFlash(__('Liste de diffusion sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Liste de diffusion incorrecte, veuillez corriger la liste de diffusion'),'default',array('class'=>'alert alert-error'));
 			}
@@ -130,10 +130,10 @@ class ListediffusionsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Listediffusion->delete()) {
 			$this->Session->setFlash(__('Liste de diffusion supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Liste de diffusion NON supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

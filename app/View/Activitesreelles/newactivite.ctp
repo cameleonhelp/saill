@@ -6,7 +6,7 @@
             <?php if (userAuth('WIDEAREA')==1): ?>
             <?php echo $this->Form->select('utilisateur_id',$utilisateurs,array('data-rule-required'=>'true','default' => userAuth('id'),'data-msg-required'=>"Le nom de l'utilisateur est obligatoire", 'empty' => 'Choisir un utilisateur')); ?>                     
             <?php else : ?>
-            <?php echo $nomlong['Utilisateur']['NOMLONG']; ?>
+            <?php echo $utilisateur['Utilisateur']['NOMLONG']; ?><?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>$utilisateur['Utilisateur']['id'])); ?>
             <?php endif; ?>
         </td>
         <td><label class="control-label sstitre required" for="ActivitesreelleDATE">Date début de semaine : </label></td>
@@ -24,7 +24,7 @@
     <div class="navbar-inner">
         <div class="container" style="margin-top:2px;text-align:center;">
             <?php $url = $this->Session->read('history');  $index = count($url) > 1 ? 1 : 0;?>
-            <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".$this->Html->url($url[$index]['here'])."/<'")); ?>&nbsp;<?php echo $this->Form->button('Continuer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                  
+            <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Continuer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                  
         </div>
     </div>
 </div>  

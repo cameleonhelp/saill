@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Utiliseoutil $Utiliseoutil
  */
 class UtiliseoutilsController extends AppController {
- 
+        public $components = array('History'); 
     public $paginate = array(
         'limit' => 15,
         'order' => array('Utiliseoutil.created' => 'desc'),
@@ -143,7 +143,7 @@ class UtiliseoutilsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit".' par '.userAuth('NOMLONG');
                                 $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                            
 				$this->Session->setFlash(__('Ouvertures des droits sauvegardée'),'default',array('class'=>'alert alert-success'));
-                                $this->redirect($this->goToPostion(1));
+                                $this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Ouvertures des droits incorrecte, veuillez corriger cette ouverture de droit'),'default',array('class'=>'alert alert-error'));
 			}
@@ -187,7 +187,7 @@ class UtiliseoutilsController extends AppController {
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour d'une ouverture de droit".' par '.userAuth('NOMLONG');
                                 $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                               
 				$this->Session->setFlash(__('Ouvertures des droits sauvegardée'),'default',array('class'=>'alert alert-success'));
-				$this->redirect($this->goToPostion(1));
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Ouvertures des droits incorrecte, veuillez corriger cette ouverture de droit'),'default',array('class'=>'alert alert-error'));
 			}
@@ -224,10 +224,10 @@ class UtiliseoutilsController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une ouverture de droit".' par '.userAuth('NOMLONG');
                         $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                         
 			$this->Session->setFlash(__('Ouvertures des droits supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->redirect($this->goToPostion());
+			$this->History->goBack();
 		}
 		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion());
+		$this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
@@ -242,10 +242,11 @@ class UtiliseoutilsController extends AppController {
  * @param string $id
  * @return void
  */
-	public function progressState($id = null) {
+	public function progressstate($id = null) {
             if (isAuthorized('utiliseoutils', 'update')) :
 		$this->set('title_for_layout','Ouvertures des droits');
                 $newetat = '';
+                $id = $id==null ? $this->request->data('id') : $id;
                 $this->Utiliseoutil->id = $id;
                 $record = $this->Utiliseoutil->read();
                 if($record['Outil']['VALIDATION']==0 && $record['Utiliseoutil']['STATUT']=='Pris en compte') $record['Utiliseoutil']['STATUT']='Validé';
@@ -289,10 +290,10 @@ class UtiliseoutilsController extends AppController {
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - changement d'état d'une ouverture de droit".' par '.userAuth('NOMLONG');
                     $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                     
                     $this->Session->setFlash(__('Ouvertures des droits progression de l\'état'),'default',array('class'=>'alert alert-success'));
-                    $this->redirect($this->goToPostion(0));
+                    exit();
                 }
 		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> progression de l\'état'),'default',array('class'=>'alert alert-error'));
-		$this->redirect($this->goToPostion(0));
+		exit();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

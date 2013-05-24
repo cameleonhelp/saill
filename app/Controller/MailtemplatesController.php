@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Mailtemplate $Mailtemplate
  */
 class MailtemplatesController extends AppController {
-
+        public $components = array('History');
 /**
  * index method
  *

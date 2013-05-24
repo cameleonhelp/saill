@@ -71,7 +71,7 @@
                 <td><?php echo h($utiliseoutil['Dossierpartage']['NOM']); ?>&nbsp;</td>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'update')) : ?>
                 <td style="text-align:center;padding-left:5px;padding-right:5px;vertical-align: middle;"><?php echo $this->Form->input('id',array('type'=>'checkbox','label'=>false,'class'=>'idselect','value'=>$utiliseoutil['Utiliseoutil']['id'])) ; ?></td>                
-                <td style='text-align:center;'><?php echo $this->Html->link('<i class="'.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'"></i>', array('action' => 'progressState', h($utiliseoutil['Utiliseoutil']['id'])), array('escape' => false), __('Etes-vous certain de vouloir mettre à jour le statut de cette demande de droit ?')); ?></td>
+                <td style='text-align:center;'><?php echo $this->Html->link('<i class="changeetat '.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'" idaction="'.$utiliseoutil['Utiliseoutil']['id'].'"></i>', '#', array('escape' => false,'idaction'=>$utiliseoutil['Utiliseoutil']['id'])); ?></td>
                 <td style="text-align: center;"><?php echo h($utiliseoutil['Utiliseoutil']['modified']); ?>&nbsp;</td>
                 <?php else : ?>
                 <td style='text-align:center;'><?php echo '<i class="'.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'"></i>'; ?></td>                
@@ -142,6 +142,20 @@
             }
         });
         
+        $(document).on('click','.changeetat',function(e){
+            var id = $(this).attr('idaction');
+            if(confirm('Etes-vous certain de vouloir mettre à jour le statut de cette demande de droit ?')){
+                $.ajax({
+                    dataType: "html",
+                    type: "POST",
+                    url: "<?php echo $this->Html->url(array('controller'=>'utiliseoutils','action'=>'progressstate')); ?>/",
+                    data: ({id:id})
+                }).done(function ( data ) {
+                    location.reload();
+                });
+            }
+        });
+    
         $(document).on('click','.idselect',function(e){
             if ($(this).is(':checked')){
                 if ($("#all_ids").val()==""){
