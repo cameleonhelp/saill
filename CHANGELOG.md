@@ -5,11 +5,12 @@
  * Importation des fichier ics >>Parser mis en place. Prendre en compte un fichier généré à partir de l'outil RH<<
  * ne pas afficher la possibilité d'intégrer un ics si action = afacturer >>FAIT<<
  * Problème sur la facturation création d'une ligne vide >>FAIT<<
- * **Reste à faire**
- * Revoir la navigation >>En cours - passer en revu tous les controller pour s'assurer de la bonne navigation<<
- * Vue des paramétrage
- * Méthode de sauvegarde de la base de données (data uniquement)
- * vue de restauration + méthode
+ * Revoir la navigation >>FAIT<<
+ * Méthode de sauvegarde de la base de données (data uniquement) >>FAIT<<
+  
+ **Reste à faire**
+
+ * vue de restauration >>En cours<< + méthode >>FAIT<<
  * Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.
  * Template d'email avec envois si demandé (choix laissé à l'utilisateur ou action de notification, envois automatique sur certaines actions)
  * validation ou avertissement d'un valideur d'indisponibilité (spécifique aux prestataires, concerne un petite population)
