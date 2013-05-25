@@ -15,8 +15,8 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-$version = $this->requestAction('params/get_version'); 
-$cakeDescription = __d('cake_dev', 'SAILL '.  htmlspecialchars($version['Param']['param'].' '));
+//$version = $this->requestAction('parameters/get_version'); 
+$cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Parameter']['param'])
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -60,12 +60,6 @@ $cakeDescription = __d('cake_dev', 'SAILL '.  htmlspecialchars($version['Param']
 	?>
 </head>
 <body>
-    <?php  /*
-            debug(in_array($this->params['action'], explode('/',$this->params->here)));*/ 
-            //debug($this->params->here);
-            //debug($this->Session->read('history')); 
-      ?>
-
 <script type="text/javascript"> 
     tinyMCE.init({ 
    // General options
@@ -144,8 +138,6 @@ $cakeDescription = __d('cake_dev', 'SAILL '.  htmlspecialchars($version['Param']
 </body>
 </html>
 <script>
-$.fn.editable.defaults.mode = 'inline';
-
 $(document).ready(function () {
     /** Initialisation des durée des actions **/
     $('#ActionDUREEPREVUE').val()=='' ? $('#ActionLblDUREEPREVUE').text('0 jour') : $('#ActionLblDUREEPREVUE').text(($('#ActionDUREEPREVUE').val()/8)+' jours');

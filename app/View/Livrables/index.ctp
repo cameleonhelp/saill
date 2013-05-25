@@ -76,7 +76,9 @@
 	<tr>
 		<td><?php echo h($livrable['Livrable']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($livrable['Utilisateur']['NOMLONG']); ?>&nbsp;</td>
-		<td style="text-align: center;"><?php echo h($livrable['Livrable']['REFERENCE']); ?>&nbsp;</td>
+                <?php $urlminidoc = $this->requestAction('parameters/get_minidocurl'); ?>
+                <?php $urlreference = !empty($urlminidoc['Parameter']['param']) ? $urlminidoc['Parameter']['param'].$livrable['Livrable']['REFERENCE'] : '#'; ?>
+		<td style="text-align: center;"><?php echo $this->Html->link(h($livrable['Livrable']['REFERENCE']),$urlreference,array('target'=>'blank')); ?>&nbsp;</td>
                 <td style="text-align: center;"><?php echo h($livrable['Livrable']['VERSION']); ?>&nbsp;</td>
                 <td style="text-align: center;"><?php echo isset($livrable['Livrable']['ETAT']) ? '<i class="'.etatLivrable(h($livrable['Livrable']['ETAT'])).'" rel="tooltip" data-title="'.h($livrable['Livrable']['ETAT']).'"></i>' : '' ; ?></td>
                 <?php $classtd = livrableenretard($livrable['Livrable']['ECHEANCE'],$livrable['Livrable']['DATELIVRAISON'],$livrable['Livrable']['ETAT']) ? "class='td-error'" : ""; ?>

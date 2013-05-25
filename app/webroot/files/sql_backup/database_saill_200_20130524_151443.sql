@@ -1,6 +1,6 @@
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -37,94 +37,14 @@ CREATE TABLE `achats` (
 #
  
 INSERT INTO `achats` VALUES (1, 40, 'Casque téléphonie', '2013-02-11', '224.60', 'Sur le contrat : CTR00035630 ITANCIA<br />2 Micro casque téléphonique - Binaural réf. GAM09', '2013-03-27', '2013-03-27') ; 
-INSERT INTO `achats` VALUES (2, 40, 'Ordinateur portable - Ecran - Accessoires', '2013-03-21', '3413.50', '<table style="width: 671px; height: 234px;" border="0" cellspacing="0" cellpadding="0"><colgroup><col width="100" /> <col width="373" /> <col width="78" /> <col width="70" /> <col width="76" /> </colgroup>
-<tbody>
-<tr>
-<td width="100" height="21">Réf</td>
-<td width="373">Type de matériel</td>
-<td width="78">Quantité</td>
-<td width="70">Prix unitaire</td>
-<td width="76">Prix Total</td>
-</tr>
-<tr>
-<td class="xl67" height="22">2325QZ5 </td>
-<td class="xl67">Portable ultra léger LENOVO X230 - 12,5\'\'</td>
-<td class="xl67" align="right">4</td>
-<td class="xl66">    551,18 €</td>
-<td class="xl66">   2 204,72 €</td>
-</tr>
-<tr>
-<td class="xl67" height="21">910-001246</td>
-<td class="xl67">Souris optique filaire 3 boutons (Logitech B110) - Port USB </td>
-<td class="xl67" align="right">6</td>
-<td class="xl66">         4,00 €</td>
-<td class="xl66">        24,00 €</td>
-</tr>
-<tr>
-<td class="xl67" height="21">0A36307</td>
-<td class="xl67">Batterie longue durée pour LENOVO X220 ou X230 </td>
-<td class="xl67" align="right">4</td>
-<td class="xl66">      47,71 €</td>
-<td class="xl66">      190,84 €</td>
-</tr>
-<tr>
-<td class="xl67" height="21">ELS-113</td>
-<td class="xl67">Housse protection pour ordi. portable (Ecran 13\'\') </td>
-<td class="xl67" align="right">4</td>
-<td class="xl66">         4,70 €</td>
-<td class="xl66">        18,80 €</td>
-</tr>
-<tr>
-<td class="xl67" height="21">CMP-SAFE3</td>
-<td class="xl67">Câble antivol avec système de verrouillage par clé </td>
-<td class="xl67" align="right">4</td>
-<td class="xl66">         1,51 €</td>
-<td class="xl66">           6,04 €</td>
-</tr>
-<tr>
-<td class="xl67" height="21">0A33988</td>
-<td class="xl67">Lecteur Graveur DVD externe USB - Portable LENOVO </td>
-<td class="xl67" align="right">4</td>
-<td class="xl66">      38,09 €</td>
-<td class="xl66">      152,36 €</td>
-</tr>
-<tr>
-<td class="xl67" height="21">220S4LCB</td>
-<td class="xl67">Ecran plat bureautique - LED - 22 pouces - Wide 16/10 </td>
-<td class="xl67" align="right">4</td>
-<td class="xl66">    115,30 €</td>
-<td class="xl66">      461,20 €</td>
-</tr>
-<tr>
-<td class="xl68" height="21">100080</td>
-<td class="xl67">Sac à dos pour ordinateur portable (Ecran 15,4\'\'\'\') </td>
-<td class="xl67" align="right">7</td>
-<td class="xl66">         7,97 €</td>
-<td class="xl66">        55,79 €</td>
-</tr>
-<tr>
-<td class="xl68" height="21">0A65683 </td>
-<td class="xl67">Station d accueil pour portable LENOVO </td>
-<td class="xl67" align="right">0</td>
-<td class="xl66">      77,33 €</td>
-<td class="xl66">               -   €</td>
-</tr>
-<tr>
-<td class="xl68" height="21">DD-EXT-25-320</td>
-<td class="xl67">Disque dur ext. 2,5\'\' - 320 Go - USB 2.0 - Auto alimenté </td>
-<td class="xl67" align="right">5</td>
-<td class="xl66">      59,95 €</td>
-<td class="xl66">      299,75 €</td>
-</tr>
-</tbody>
-</table>', '2013-03-27', '2013-03-27') ;
+INSERT INTO `achats` VALUES (2, 40, 'Ordinateur portable - Ecran - Accessoires', '2013-03-21', '3413.50', '<table style="width: 671px; height: 234px;" border="0" cellspacing="0" cellpadding="0"><colgroup><col width="100" /> <col width="373" /> <col width="78" /> <col width="70" /> <col width="76" /> </colgroup><tbody><tr><td width="100" height="21">Réf</td><td width="373">Type de matériel</td><td width="78">Quantité</td><td width="70">Prix unitaire</td><td width="76">Prix Total</td></tr><tr><td class="xl67" height="22">2325QZ5 </td><td class="xl67">Portable ultra léger LENOVO X230 - 12,5\'\'</td><td class="xl67" align="right">4</td><td class="xl66">    551,18 €</td><td class="xl66">   2 204,72 €</td></tr><tr><td class="xl67" height="21">910-001246</td><td class="xl67">Souris optique filaire 3 boutons (Logitech B110) - Port USB </td><td class="xl67" align="right">6</td><td class="xl66">         4,00 €</td><td class="xl66">        24,00 €</td></tr><tr><td class="xl67" height="21">0A36307</td><td class="xl67">Batterie longue durée pour LENOVO X220 ou X230 </td><td class="xl67" align="right">4</td><td class="xl66">      47,71 €</td><td class="xl66">      190,84 €</td></tr><tr><td class="xl67" height="21">ELS-113</td><td class="xl67">Housse protection pour ordi. portable (Ecran 13\'\') </td><td class="xl67" align="right">4</td><td class="xl66">         4,70 €</td><td class="xl66">        18,80 €</td></tr><tr><td class="xl67" height="21">CMP-SAFE3</td><td class="xl67">Câble antivol avec système de verrouillage par clé </td><td class="xl67" align="right">4</td><td class="xl66">         1,51 €</td><td class="xl66">           6,04 €</td></tr><tr><td class="xl67" height="21">0A33988</td><td class="xl67">Lecteur Graveur DVD externe USB - Portable LENOVO </td><td class="xl67" align="right">4</td><td class="xl66">      38,09 €</td><td class="xl66">      152,36 €</td></tr><tr><td class="xl67" height="21">220S4LCB</td><td class="xl67">Ecran plat bureautique - LED - 22 pouces - Wide 16/10 </td><td class="xl67" align="right">4</td><td class="xl66">    115,30 €</td><td class="xl66">      461,20 €</td></tr><tr><td class="xl68" height="21">100080</td><td class="xl67">Sac à dos pour ordinateur portable (Ecran 15,4\'\'\'\') </td><td class="xl67" align="right">7</td><td class="xl66">         7,97 €</td><td class="xl66">        55,79 €</td></tr><tr><td class="xl68" height="21">0A65683 </td><td class="xl67">Station d accueil pour portable LENOVO </td><td class="xl67" align="right">0</td><td class="xl66">      77,33 €</td><td class="xl66">               -   €</td></tr><tr><td class="xl68" height="21">DD-EXT-25-320</td><td class="xl67">Disque dur ext. 2,5\'\' - 320 Go - USB 2.0 - Auto alimenté </td><td class="xl67" align="right">5</td><td class="xl66">      59,95 €</td><td class="xl66">      299,75 €</td></tr></tbody></table>', '2013-03-27', '2013-03-27') ;
 #
 # End of data contents of table achats
 # --------------------------------------------------------
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -171,195 +91,30 @@ CREATE TABLE `actions` (
 # Data contents of table actions (75 records)
 #
  
-INSERT INTO `actions` VALUES (1, 5, 5, 25, 21, 'CRA 1er semestre 2013', 70, 'Janvier :<br />
-<ul>
-<li>Incorporation de l\'activité</li>
-</ul>
-<p>Février :</p>
-<ul>
-<li>Incorporation de l\'activité</li>
-<li>Consolidation consommé et insertion</li>
-<li>Envois pour validation</li>
-</ul>
-<p>Mars :</p>
-<ul>
-<li>Incorporation du budget contratcualisé</li>
-<li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li>
-<li>Incorporation de l\'activité réalisée en mars dans le CRA</li>
-<li>Envoyé pour validation à AAE et JBJ</li>
-<li><span style="color: #ff0000;">Correction sur l\'emplacement des coûts DSIT-X mis en MCO explication sur montant de 2805k€ (2309k€ + 455 k€), changement année pour prestation formation</span></li>
-<li>Attente de la prise de décision concernant le budget - CRA non validé</li>
-</ul>
-<p>Avril :</p>
-<ul>
-<li>Non consolidé pour le CRA en attente du budget</li>
-</ul>
-<p>Mai :</p>
-<ul>
-<li>A faire au retour des vacances.</li>
-<li>Consolider l\'activité d\'avril et mettre en place dans le CRA, idem activités.</li>
-</ul>
-<p> </p>', '2013-06-06', '2013-01-07', 'en cours', 192, 'normale', 1, '2013-03-27', '2013-05-13') ; 
+INSERT INTO `actions` VALUES (1, 5, 5, 25, 21, 'CRA 1er semestre 2013', 70, 'Janvier :<br /><ul><li>Incorporation de l\'activité</li></ul><p>Février :</p><ul><li>Incorporation de l\'activité</li><li>Consolidation consommé et insertion</li><li>Envois pour validation</li></ul><p>Mars :</p><ul><li>Incorporation du budget contratcualisé</li><li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li><li>Incorporation de l\'activité réalisée en mars dans le CRA</li><li>Envoyé pour validation à AAE et JBJ</li><li><span style="color: #ff0000;">Correction sur l\'emplacement des coûts DSIT-X mis en MCO explication sur montant de 2805k€ (2309k€ + 455 k€), changement année pour prestation formation</span></li><li>Attente de la prise de décision concernant le budget - CRA non validé</li></ul><p>Avril :</p><ul><li>Non consolidé pour le CRA en attente du budget</li></ul><p>Mai :</p><ul><li>A faire au retour des vacances.</li><li>Consolider l\'activité d\'avril et mettre en place dans le CRA, idem activités.</li></ul><p> </p>', '2013-06-06', '2013-01-07', 'en cours', 192, 'normale', 1, '2013-03-27', '2013-05-13') ; 
 INSERT INTO `actions` VALUES (2, 5, 5, 25, 21, 'Indicateurs département', 100, 'Envois des indicateurs département au format demandé.<br />Entretien avec Irène BONNASSIEUX, pour expliquer le focntionnement d\'OSMOSE et de la remonté d\'indicateur, vu avec elle pour lui transmettre tous les mois un tableau d\'indicateur du consommé avec un petit argumentaire.<br />27/03/2013 envois du tableau d\'indicateurs du consommé pour OSMOSE', '2013-03-28', '2013-03-25', 'terminée', 8, 'normale', 0, '2013-03-27', '2013-03-27') ; 
-INSERT INTO `actions` VALUES (3, 5, 5, 25, 21, 'Logistique', 100, 'Activité récurrente<br />DSI-T/SO <br />
-<ul>
-<li>arrivé de Sébastien PAGNARD, Stéphane BEYDON</li>
-<li>Préparation de l\'arrivée de Amsata NGOM</li>
-</ul>
-Groupement<br />
-<ul>
-<li>Création de compte</li>
-<li>incident de connexion ...</li>
-</ul>', '2013-03-29', '2013-03-01', 'terminée', 64, 'normale', 1, '2013-03-27', '2013-04-02') ; 
-INSERT INTO `actions` VALUES (4, 5, 5, 25, 21, 'Réalisation d\'un outil de suivi "OSACT"', 100, 'Conception 12 jours<br />Réalisation 40 jours<br /><br />Bascule sur le serveur de production le 28/03/2013, mis à jour le 23/04/2013 avec la build 0041<br /><br />Evolutions en cours :<br />
-<ul>
-<li>Facturations =&gt; fait</li>
-<li>Plan de charge =&gt; fait</li>
-<li>Prise en compte des évolutions prévues =&gt; en cours</li>
-<li>Mise en place d\'une nouvelle navigation</li>
-<li>Rapports (actions, consommation réelles, facturé, plan de charge)</li>
-</ul>', '2013-05-30', '2013-02-04', 'terminée', 416, 'normale', 0, '2013-03-27', '2013-05-13') ; 
+INSERT INTO `actions` VALUES (3, 5, 5, 25, 21, 'Logistique', 100, 'Activité récurrente<br />DSI-T/SO <br /><ul><li>arrivé de Sébastien PAGNARD, Stéphane BEYDON</li><li>Préparation de l\'arrivée de Amsata NGOM</li></ul>Groupement<br /><ul><li>Création de compte</li><li>incident de connexion ...</li></ul>', '2013-03-29', '2013-03-01', 'terminée', 64, 'normale', 1, '2013-03-27', '2013-04-02') ; 
+INSERT INTO `actions` VALUES (4, 5, 5, 25, 21, 'Réalisation d\'un outil de suivi "OSACT"', 100, 'Conception 12 jours<br />Réalisation 40 jours<br /><br />Bascule sur le serveur de production le 28/03/2013, mis à jour le 23/04/2013 avec la build 0041<br /><br />Evolutions en cours :<br /><ul><li>Facturations =&gt; fait</li><li>Plan de charge =&gt; fait</li><li>Prise en compte des évolutions prévues =&gt; en cours</li><li>Mise en place d\'une nouvelle navigation</li><li>Rapports (actions, consommation réelles, facturé, plan de charge)</li></ul>', '2013-05-30', '2013-02-04', 'terminée', 416, 'normale', 0, '2013-03-27', '2013-05-13') ; 
 INSERT INTO `actions` VALUES (5, 5, 5, 25, 21, 'Retour suppression comptes désactivés', 100, 'Retour à Irène BONNASSIEUX des comptes à supprimer pour le compte d\'OMSOSE suite à non utilisation.', '2013-03-27', '2013-03-27', 'terminée', 2, 'normale', 0, '2013-03-27', '2013-03-27') ; 
 INSERT INTO `actions` VALUES (6, 5, 5, 4, 21, 'Demande de création de compte SVN pour Gokhan OZTURK ', 100, 'Compte déjà existant demande pour rien', '2013-03-28', '2013-03-28', 'terminée', 2, 'normale', 0, '2013-03-28', '2013-03-28') ; 
-INSERT INTO `actions` VALUES (7, 5, 5, 25, 21, 'Logistique Avril 2013', 100, 'Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-<li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li>
-</ol>Le 16/04/2013 :<br /><ol>
-<li>Suivi des ouverture de droits</li>
-<li>Mis à jour liste de diffusion</li>
-<li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li>
-</ol>le 17/04/2013 :<br /><ol>
-<li>Demande ouverture d edroits pour C. Bril</li>
-<li>Information réception commande portable. Attente contact samba logistique.</li>
-<li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li>
-</ol>Le 18/04/2013<br /><ol>
-<li>Suivi logistique</li>
-</ol>Le 22/04/2013 :<br /><ol>
-<li>Activation du compte de MANDINA-NZEZA Guy-Serge</li>
-<li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li>
-</ol>le 23/04/2013 :<br /><ol>
-<li>Suivi logistique suite aux retours de SAMBA</li>
-</ol>le 24/04/2013:<br /><ol>
-<li>Incident connexion à QC réponse par mail et redirection vers dsit-exil</li>
-<li>Droits administrateur sur un poste + explications</li>
-</ol>', '2013-04-25', '2013-04-02', 'terminée', 64, 'normale', 1, '2013-04-02', '2013-04-25') ; 
+INSERT INTO `actions` VALUES (7, 5, 5, 25, 21, 'Logistique Avril 2013', 100, 'Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li><li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li></ol>Le 16/04/2013 :<br /><ol><li>Suivi des ouverture de droits</li><li>Mis à jour liste de diffusion</li><li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li></ol>le 17/04/2013 :<br /><ol><li>Demande ouverture d edroits pour C. Bril</li><li>Information réception commande portable. Attente contact samba logistique.</li><li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li></ol>Le 18/04/2013<br /><ol><li>Suivi logistique</li></ol>Le 22/04/2013 :<br /><ol><li>Activation du compte de MANDINA-NZEZA Guy-Serge</li><li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li></ol>le 23/04/2013 :<br /><ol><li>Suivi logistique suite aux retours de SAMBA</li></ol>le 24/04/2013:<br /><ol><li>Incident connexion à QC réponse par mail et redirection vers dsit-exil</li><li>Droits administrateur sur un poste + explications</li></ol>', '2013-04-25', '2013-04-02', 'terminée', 64, 'normale', 1, '2013-04-02', '2013-04-25') ; 
 INSERT INTO `actions` VALUES (8, 5, 5, 25, 21, 'Audit OSMOSE', 100, 'Consolidation des charges consommées sur le lot 303 en 2012 et janvier 2013.<br />Remplir le fichier Excel envoyé par Jean-Pierre NEFF et le renvoyer à AAE, JBJ et JPN avec les explications<br /><br />Transmis les information à AAE, JBJ et JPN suite aux derniers élément de Jean-Baptiste', '2013-04-04', '2013-04-03', 'terminée', 8, 'normale', 0, '2013-04-03', '2013-04-04') ; 
-INSERT INTO `actions` VALUES (9, 5, 5, 25, 21, 'Démonstration OSACT', 100, 'Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br />
-<ul>
-<li>Sabine GEOFFROY</li>
-<li>Magali BURIAND</li>
-<li>Benoit TRENTO</li>
-<li>Jacques LEVAVASSEUR</li>
-<li>Patricia RIFFIOD</li>
-</ul>
-Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai<br />Rendez-vous envoyé<br />Préparation de la base et de l\'outil dans sa dernière version.<br />Présentation faite au format PPT', '2005-06-04', '2013-04-24', 'terminée', 2, 'normale', 0, '2013-04-03', '2013-05-15') ; 
+INSERT INTO `actions` VALUES (9, 5, 5, 25, 21, 'Démonstration OSACT', 100, 'Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br /><ul><li>Sabine GEOFFROY</li><li>Magali BURIAND</li><li>Benoit TRENTO</li><li>Jacques LEVAVASSEUR</li><li>Patricia RIFFIOD</li></ul>Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai<br />Rendez-vous envoyé<br />Préparation de la base et de l\'outil dans sa dernière version.<br />Présentation faite au format PPT', '2005-06-04', '2013-04-24', 'terminée', 2, 'normale', 0, '2013-04-03', '2013-05-15') ; 
 INSERT INTO `actions` VALUES (10, 5, 5, 25, 21, 'Saisie d\'activté de S. PAGNARD', 100, 'Voir avec Sébastien si délégation de saisie faite<br />Saisir activité de Sébastien sur PANAM DEV à parit du 04/03/2013<br />Facturation faite', '2013-04-11', '2013-04-10', 'terminée', 1, 'normale', 0, '2013-04-08', '2013-04-09') ; 
-INSERT INTO `actions` VALUES (11, 5, 5, 25, 21, 'Suivi activité SS2I', 100, 'Consolidation des charges d\'avril<br />Contacts avec Charlotte DUVERGER pour :<br />
-<ul>
-<li>consolidation commune GMAO et PANAM</li>
-<li>Ecart facturation pour Aurélie CARRET et Julien DELEFOSSE</li>
-</ul>
-Envois de la consolidation pour validation SS2I<br /><br />Confrontation des chiffres avec SQLi/STERIA mercredi 16/04/2013<br /><br />Exl group : écart d\'un jour sur le mois de mars rattrappage en avril (-1)<br /><br />Fichier Excel renseigné et sauvegardé.<br />Attente des retours STERIA - EURIWARE et EXLGROUP pour finaliser<br />Vu avec EXLGROUP<br />Vu avec STERIA dans l\'après midi<br />Envois à Euriware de la prévision de facturation pour Avril', '2013-04-22', '2013-04-11', 'terminée', 8, 'moyenne', 0, '2013-04-15', '2013-04-18') ; 
+INSERT INTO `actions` VALUES (11, 5, 5, 25, 21, 'Suivi activité SS2I', 100, 'Consolidation des charges d\'avril<br />Contacts avec Charlotte DUVERGER pour :<br /><ul><li>consolidation commune GMAO et PANAM</li><li>Ecart facturation pour Aurélie CARRET et Julien DELEFOSSE</li></ul>Envois de la consolidation pour validation SS2I<br /><br />Confrontation des chiffres avec SQLi/STERIA mercredi 16/04/2013<br /><br />Exl group : écart d\'un jour sur le mois de mars rattrappage en avril (-1)<br /><br />Fichier Excel renseigné et sauvegardé.<br />Attente des retours STERIA - EURIWARE et EXLGROUP pour finaliser<br />Vu avec EXLGROUP<br />Vu avec STERIA dans l\'après midi<br />Envois à Euriware de la prévision de facturation pour Avril', '2013-04-22', '2013-04-11', 'terminée', 8, 'moyenne', 0, '2013-04-15', '2013-04-18') ; 
 INSERT INTO `actions` VALUES (12, 5, 5, 25, 21, 'DA - CDA prestations STERIA', 100, 'Recherche d\'information sur comment faire<br />Prise de contact avec VALLI Sébastien<br />Fichier Excel rempli , envoyé au chef de section.<br />Retour CV et proposition STERIA pour Stéphane BEYDON.<br />En attente du CV et de la proposition pour Renaud BORG<br /><br />Envoyé le 15/04/2013', '2013-04-18', '2013-04-09', 'terminée', 8, 'normale', 0, '2013-04-15', '2013-04-16') ; 
 INSERT INTO `actions` VALUES (13, 5, 5, 25, 21, 'Saisie GALILEI pour les agents SNCF', 100, 'Reste l\'activité de Benoit TRENTO avec la répartition sur les diférentes activités.<br />Toutes les autres saisies sont faites.<br />Rattrappage de 2 jours mis en Congé pour N. THARSIS en mars non pris, mis travaillé à la place en Avril', '2013-04-23', '2013-04-11', 'terminée', 12, 'moyenne', 0, '2013-04-16', '2013-04-17') ; 
-INSERT INTO `actions` VALUES (14, 5, 5, 25, 21, 'Logistique Mai 2013', 70, 'le 13/05/2013:<br />
-<ul>
-<li>mise à jour de SAILL pour la création du compte de AGUILAR</li>
-<li>Demande ouverture de droits</li>
-<li>Activation du compte de LEBLANC Bastien</li>
-<li>Demande ouverture de droits</li>
-<li>Demande information budget SGRM</li>
-</ul>
-le 14/05/2013<br />
-<ul>
-<li>mise à jour avancement ouverture de droit</li>
-<li>demande droit admin sur poste P71</li>
-<li>changement liste diffusion pour LEBLANC</li>
-</ul>
-le 16/05/2013<br />
-<ul>
-<li>renseignement pour fournir un PC à Vincent BERNIER</li>
-<li>Attente info pour le compte et surtout le mot de passe</li>
-<li>Anticipation de la demande d\'activation du compte de Vincent BERNIER -compte supprimé sera créé par SAMBA formulaire envoyé attente retour.</li>
-</ul>
-Le 21/05/2013<br />
-<ul>
-<li>Dépannage Visio</li>
-<li>Création de compte</li>
-</ul>', '2013-05-30', '2013-04-24', 'en cours', 48, 'normale', 1, '2013-04-24', '2013-05-22') ; 
+INSERT INTO `actions` VALUES (14, 5, 5, 25, 21, 'Logistique Mai 2013', 70, 'le 13/05/2013:<br /><ul><li>mise à jour de SAILL pour la création du compte de AGUILAR</li><li>Demande ouverture de droits</li><li>Activation du compte de LEBLANC Bastien</li><li>Demande ouverture de droits</li><li>Demande information budget SGRM</li></ul>le 14/05/2013<br /><ul><li>mise à jour avancement ouverture de droit</li><li>demande droit admin sur poste P71</li><li>changement liste diffusion pour LEBLANC</li></ul>le 16/05/2013<br /><ul><li>renseignement pour fournir un PC à Vincent BERNIER</li><li>Attente info pour le compte et surtout le mot de passe</li><li>Anticipation de la demande d\'activation du compte de Vincent BERNIER -compte supprimé sera créé par SAMBA formulaire envoyé attente retour.</li></ul>Le 21/05/2013<br /><ul><li>Dépannage Visio</li><li>Création de compte</li></ul>', '2013-05-30', '2013-04-24', 'en cours', 48, 'normale', 1, '2013-04-24', '2013-05-22') ; 
 INSERT INTO `actions` VALUES (15, 5, 5, 4, 21, 'Création d\'un nouvel utilisateur', 100, '<a href="../../utilisateurs/edit/276">Lien vers le nouvel utilisateur<br /></a>Reste les demandes d\'ouverture de droits à faire<a href="../../utilisateurs/edit/276"><br /></a>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
 INSERT INTO `actions` VALUES (16, 5, 5, 25, 21, 'Logistique Juin 2013', -20, '', '2013-06-27', '2013-06-01', 'à faire', 48, 'normale', 1, '2013-05-13', '2013-05-15') ; 
-INSERT INTO `actions` VALUES (17, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/104">Lien vers la nouvelle demande d\'ouverture de droit<br /></a>En attente de précision sur la liste de diffusion<a href="../../utiliseoutils/edit/104"><br /></a>
-<p>Concernant M. Aguilar Gustavo, il faudrait l\'ajouter à la liste de diffusion *OSMOSE Intégrateur GMAO FONC</p>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
+INSERT INTO `actions` VALUES (17, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/104">Lien vers la nouvelle demande d\'ouverture de droit<br /></a>En attente de précision sur la liste de diffusion<a href="../../utiliseoutils/edit/104"><br /></a><p>Concernant M. Aguilar Gustavo, il faudrait l\'ajouter à la liste de diffusion *OSMOSE Intégrateur GMAO FONC</p>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
 INSERT INTO `actions` VALUES (18, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/105">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
 INSERT INTO `actions` VALUES (19, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/106">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
 INSERT INTO `actions` VALUES (20, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/107">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
 INSERT INTO `actions` VALUES (21, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/108">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
 INSERT INTO `actions` VALUES (22, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/109">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
 INSERT INTO `actions` VALUES (23, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/110">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
-INSERT INTO `actions` VALUES (24, 5, 5, 25, 21, 'Evolution SAILL 2.0.1', 40, '<div class="edit-comment-hide">
-<div class="js-comment-body comment-body markdown-body markdown-format">
-<ul>
-<li>Gestions des fichiers des dossiers admin, all avec add, delete</li>
-<li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li>
-<li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li>
-<li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li>
-<li><span style="text-decoration: line-through;">sur la page d\'accueil mes statistiques</span> : <strong>FAIT</strong>
-<ul>
-<li><span style="text-decoration: line-through;">nombre d\'action à faire, en cours, proche échéance</span></li>
-<li><span style="text-decoration: line-through;">Saisie d\'activité</span></li>
-<li><span style="text-decoration: line-through;">Mes livrables à venir</span></li>
-<li><span style="text-decoration: line-through;">etc.</span></li>
-</ul>
-</li>
-<li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li>
-<li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li>
-<li><span style="text-decoration: line-through;">Mise à jour de l\'état des actions en cliquant sur l\'état, avancement à partir de la liste</span> <strong>FAIT</strong></li>
-<li>Importation des fichier ics</li>
-<li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li>
-<li>
-<div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div>
-</li>
-<li><span style="text-decoration: line-through;">Ajout des domaines dans les feuilles de temps</span> <strong>FAIT</strong></li>
-<li><span style="text-decoration: line-through;">Action groupées dans les feuilles de temps</span> <strong>FAIT</strong></li>
-<li><span style="text-decoration: line-through;">Réduction des champs obligatoires dans les actions</span> <strong>FAIT</strong></li>
-<li><span style="text-decoration: line-through;">Mise à jour des rapports</span> <strong>FAIT</strong></li>
-<li><span style="text-decoration: line-through;">Création de compte utilisateur générique</span><strong> <strong>FAIT</strong><em><br /></em></strong></li>
-<li>Revoir la navigation<strong><strong><em> En cours</em></strong></strong></li>
-<li><span style="text-decoration: line-through;">Quelques évolutions faites à la volée sur les feuilles de temps, les rapports et autre</span> <strong>FAIT</strong></li>
-</ul>
-</div>
-</div>', '2013-08-29', '2013-05-13', 'en cours', 192, 'normale', 0, '2013-05-13', '2013-05-22') ; 
+INSERT INTO `actions` VALUES (24, 5, 5, 25, 21, 'Evolution SAILL 2.0.1', 40, '<div class="edit-comment-hide"><div class="js-comment-body comment-body markdown-body markdown-format"><ul><li>Gestions des fichiers des dossiers admin, all avec add, delete</li><li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li><li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li><li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li><li><span style="text-decoration: line-through;">sur la page d\'accueil mes statistiques</span> : <strong>FAIT</strong><ul><li><span style="text-decoration: line-through;">nombre d\'action à faire, en cours, proche échéance</span></li><li><span style="text-decoration: line-through;">Saisie d\'activité</span></li><li><span style="text-decoration: line-through;">Mes livrables à venir</span></li><li><span style="text-decoration: line-through;">etc.</span></li></ul></li><li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li><li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li><li><span style="text-decoration: line-through;">Mise à jour de l\'état des actions en cliquant sur l\'état, avancement à partir de la liste</span> <strong>FAIT</strong></li><li>Importation des fichier ics</li><li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li><li><div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div></li><li><span style="text-decoration: line-through;">Ajout des domaines dans les feuilles de temps</span> <strong>FAIT</strong></li><li><span style="text-decoration: line-through;">Action groupées dans les feuilles de temps</span> <strong>FAIT</strong></li><li><span style="text-decoration: line-through;">Réduction des champs obligatoires dans les actions</span> <strong>FAIT</strong></li><li><span style="text-decoration: line-through;">Mise à jour des rapports</span> <strong>FAIT</strong></li><li><span style="text-decoration: line-through;">Création de compte utilisateur générique</span><strong> <strong>FAIT</strong><em><br /></em></strong></li><li>Revoir la navigation<strong><strong><em> En cours</em></strong></strong></li><li><span style="text-decoration: line-through;">Quelques évolutions faites à la volée sur les feuilles de temps, les rapports et autre</span> <strong>FAIT</strong></li></ul></div></div>', '2013-08-29', '2013-05-13', 'en cours', 192, 'normale', 0, '2013-05-13', '2013-05-22') ; 
 INSERT INTO `actions` VALUES (25, 5, 5, 25, 21, 'Corrections bloquantes SAILL', 0, 'En attente des retours utilisateurs demande traités au fur et à mesure', '2013-06-27', '2013-05-13', 'en cours', 0, 'haute', 0, '2013-05-13', '2013-05-13') ; 
 INSERT INTO `actions` VALUES (26, 5, 5, 4, 21, 'Création d\'un nouvel utilisateur', 100, '<a href="../../utilisateurs/edit/277">Lien vers le nouvel utilisateur</a>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
 INSERT INTO `actions` VALUES (27, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/111">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
@@ -368,9 +123,7 @@ INSERT INTO `actions` VALUES (29, 5, 5, 4, 21, 'Création d\'une nouvelle demande
 INSERT INTO `actions` VALUES (30, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/114">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
 INSERT INTO `actions` VALUES (31, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/115">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
 INSERT INTO `actions` VALUES (32, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/116">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-18', '2013-05-13', 'terminée', 2, 'haute', 0, '2013-05-13', '2013-05-13') ; 
-INSERT INTO `actions` VALUES (33, 5, 5, 25, 21, 'Correction SAILL', 30, '<ul>
-<li>Erreur de paramétrgae pour le profil Responsable équipe, ajouter autoupdate pour valider les feuille de temps</li>
-</ul>', '2013-06-27', '2013-05-13', 'en cours', 2, 'moyenne', 0, '2013-05-13', '2013-05-22') ; 
+INSERT INTO `actions` VALUES (33, 5, 5, 25, 21, 'Correction SAILL', 30, '<ul><li>Erreur de paramétrgae pour le profil Responsable équipe, ajouter autoupdate pour valider les feuille de temps</li></ul>', '2013-06-27', '2013-05-13', 'en cours', 2, 'moyenne', 0, '2013-05-13', '2013-05-22') ; 
 INSERT INTO `actions` VALUES (34, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/117">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-19', '2013-05-14', 'terminée', 2, 'haute', 0, '2013-05-14', '2013-05-14') ; 
 INSERT INTO `actions` VALUES (35, 5, 5, 4, 21, 'Création d\'une nouvelle demande d\'ouverture de droit', 100, '<a href="../../utiliseoutils/edit/118">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-19', '2013-05-14', 'terminée', 2, 'haute', 0, '2013-05-14', '2013-05-14') ; 
 INSERT INTO `actions` VALUES (36, 14, 14, 23, 28, 'DAT SGRM', 50, 'Mise à jour du DAT', '2013-05-31', '2013-05-13', 'en cours', 56, 'haute', 1, '2013-05-14', '2013-05-15') ; 
@@ -419,7 +172,7 @@ INSERT INTO `actions` VALUES (78, 5, 5, 4, 21, 'Création d\'une nouvelle demande
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -464,7 +217,7 @@ CREATE TABLE `actionslivrables` (
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -560,7 +313,7 @@ INSERT INTO `activites` VALUES (40, 24, 'Frais DSI-T/SO', '2011-01-01', NULL, ''
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -1154,7 +907,7 @@ INSERT INTO `activitesreelles` VALUES (540, 22, NULL, 495, 21, 13, '2013-05-06',
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -1480,7 +1233,7 @@ INSERT INTO `affectations` VALUES (276, 272, 21, 10, '2013-04-11', '2013-04-11')
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -1539,7 +1292,7 @@ INSERT INTO `assistances` VALUES (2, 'SAMU', 'Assistance localisée au 15T à PARI
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -1695,7 +1448,7 @@ INSERT INTO `autorisations` VALUES (88, 5, 'facturations', 0, 0, 0, 0, 0, 0, 0, 
 INSERT INTO `autorisations` VALUES (90, 5, 'plancharges', 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, '0', '2013-05-14', '2013-05-14') ; 
 INSERT INTO `autorisations` VALUES (91, 4, 'domaines', 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, '0', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `autorisations` VALUES (92, 5, 'domaines', 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, '0', '2013-05-16', '2013-05-16') ; 
-INSERT INTO `autorisations` VALUES (93, 1, 'params', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '0', '2013-05-21', '2013-05-21') ; 
+INSERT INTO `autorisations` VALUES (93, 1, 'parameters', 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, '0', '2013-05-21', '2013-05-21') ; 
 INSERT INTO `autorisations` VALUES (94, 6, 'dotations', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '1', '2013-05-21', '2013-05-21') ; 
 INSERT INTO `autorisations` VALUES (95, 10, 'dotations', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '1', '2013-05-21', '2013-05-21') ; 
 INSERT INTO `autorisations` VALUES (96, 3, 'dotations', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '1', '2013-05-21', '2013-05-21') ; 
@@ -1707,7 +1460,7 @@ INSERT INTO `autorisations` VALUES (98, 5, 'dotations', 0, 0, 0, 0, 0, 0, 0, 0, 
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -1788,7 +1541,7 @@ INSERT INTO `contrats` VALUES (13, NULL, 'Frais DSI-T/SO', '2012', '0000', NULL,
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -1976,7 +1729,7 @@ INSERT INTO `detailplancharges` VALUES (112, 7, 22, '0.4', 13, 35, 8, 6, 8, 6, 7
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -2075,7 +1828,7 @@ INSERT INTO `domaines` VALUES (30, 'URBANISME', '', '2013-05-21', '2013-05-21') 
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -2155,7 +1908,7 @@ INSERT INTO `dossierpartages` VALUES (7, 'TRAVAIL E-X', 'DSIT_EMM-OA-USR_GG', '\
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -2301,7 +2054,7 @@ INSERT INTO `dotations` VALUES (71, 141, NULL, 14, NULL, NULL, '2013-05-21', '20
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -2895,7 +2648,7 @@ INSERT INTO `facturations` VALUES (518, 261, 1, 280, '2013-04-29', 0, '0.0', '0.
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -2976,1048 +2729,65 @@ CREATE TABLE `historyactions` (
 # Data contents of table historyactions (305 records)
 #
  
-INSERT INTO `historyactions` VALUES (1, 1, 70, '2013-01-07', '2013-03-28', 96, 'normale', 'en cours', 'Le 27/03/2013 par LEVAVASSEUR Jacques<br>Janvier :<br />
-<ul>
-<li>Incorporation de l\'activité</li>
-</ul>
-<p>Février :</p>
-<ul>
-<li>Incorporation de l\'activité</li>
-<li>Consolidation consommé et insertion</li>
-<li>Envois pour validation</li>
-</ul>
-<p>Mars :</p>
-<ul>
-<li>Incorporation du budget contratcualisé</li>
-<li>Consolidation du consommé</li>
-</ul>', '2013-03-27', '2013-03-27') ; 
+INSERT INTO `historyactions` VALUES (1, 1, 70, '2013-01-07', '2013-03-28', 96, 'normale', 'en cours', 'Le 27/03/2013 par LEVAVASSEUR Jacques<br>Janvier :<br /><ul><li>Incorporation de l\'activité</li></ul><p>Février :</p><ul><li>Incorporation de l\'activité</li><li>Consolidation consommé et insertion</li><li>Envois pour validation</li></ul><p>Mars :</p><ul><li>Incorporation du budget contratcualisé</li><li>Consolidation du consommé</li></ul>', '2013-03-27', '2013-03-27') ; 
 INSERT INTO `historyactions` VALUES (2, 2, 100, '2013-03-25', '2013-03-28', 8, 'normale', 'terminée', 'Le 27/03/2013 par LEVAVASSEUR Jacques<br>Envois des indicateurs département au format demandé.<br />Entretien avec Irène BONNASSIEUX, pour expliquer le focntionnement d\'OSMOSE et de la remonté d\'indicateur, vu avec elle pour lui transmettre tous les mois un tableau d\'indicateur du consommé avec un petit argumentaire.<br />27/03/2013 envois du tableau d\'indicateurs du consommé pour OSMOSE', '2013-03-27', '2013-03-27') ; 
-INSERT INTO `historyactions` VALUES (3, 3, 80, '2013-03-01', '2013-03-29', 64, 'normale', 'en cours', 'Le 27/03/2013 par LEVAVASSEUR Jacques<br>Activité récurrente<br />DSI-T/SO <br />
-<ul>
-<li>arrivé de Sébastien PAGNARD, Stéphane BEYDON</li>
-<li>Préparation de l\'arrivée de Amsata NGOM</li>
-</ul>
-Groupement<br />
-<ul>
-<li>Création de compte</li>
-<li>incident de connexion ...</li>
-</ul>', '2013-03-27', '2013-03-27') ; 
+INSERT INTO `historyactions` VALUES (3, 3, 80, '2013-03-01', '2013-03-29', 64, 'normale', 'en cours', 'Le 27/03/2013 par LEVAVASSEUR Jacques<br>Activité récurrente<br />DSI-T/SO <br /><ul><li>arrivé de Sébastien PAGNARD, Stéphane BEYDON</li><li>Préparation de l\'arrivée de Amsata NGOM</li></ul>Groupement<br /><ul><li>Création de compte</li><li>incident de connexion ...</li></ul>', '2013-03-27', '2013-03-27') ; 
 INSERT INTO `historyactions` VALUES (4, 4, 90, '2013-02-04', '2013-04-11', 272, 'normale', 'en cours', 'Le 27/03/2013 par LEVAVASSEUR Jacques<br>Conception 12 jours<br />Réalisation 22 jours', '2013-03-27', '2013-03-27') ; 
 INSERT INTO `historyactions` VALUES (5, 5, 100, '2013-03-27', '2013-03-27', 2, 'normale', 'terminée', 'Le 27/03/2013 par LEVAVASSEUR Jacques<br>Retour à Irène BONNASSIEUX des comptes à supprimer pour le compte d\'OMSOSE suite à non utilisation.', '2013-03-27', '2013-03-27') ; 
 INSERT INTO `historyactions` VALUES (6, 6, 100, '2013-03-28', '2013-03-28', 2, 'normale', 'terminée', 'Le 28/03/2013 par LEVAVASSEUR Jacques<br>Compte déjà existant demande pour rien', '2013-03-28', '2013-03-28') ; 
 INSERT INTO `historyactions` VALUES (7, 4, 90, '2013-02-04', '2013-04-11', 272, 'normale', 'en cours', 'Le 28/03/2013 par LEVAVASSEUR Jacques<br>Conception 12 jours<br />Réalisation 22 jours<br /><br />Bascule sur le serveur de production le 28/03/2013', '2013-03-28', '2013-03-28') ; 
-INSERT INTO `historyactions` VALUES (8, 3, 100, '2013-03-01', '2013-03-29', 64, 'normale', 'terminée', 'Le 02/04/2013 par LEVAVASSEUR Jacques<br>Activité récurrente<br />DSI-T/SO <br />
-<ul>
-<li>arrivé de Sébastien PAGNARD, Stéphane BEYDON</li>
-<li>Préparation de l\'arrivée de Amsata NGOM</li>
-</ul>
-Groupement<br />
-<ul>
-<li>Création de compte</li>
-<li>incident de connexion ...</li>
-</ul>', '2013-04-02', '2013-04-02') ; 
-INSERT INTO `historyactions` VALUES (9, 7, 10, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 02/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li></li>
-</ol>', '2013-04-02', '2013-04-02') ; 
-INSERT INTO `historyactions` VALUES (10, 7, 10, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 02/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-</ol>', '2013-04-02', '2013-04-02') ; 
-INSERT INTO `historyactions` VALUES (11, 7, 10, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 02/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-</ol>', '2013-04-02', '2013-04-02') ; 
-INSERT INTO `historyactions` VALUES (12, 1, 70, '2013-01-07', '2013-03-28', 96, 'normale', 'en cours', 'Le 02/04/2013 par LEVAVASSEUR Jacques<br>Janvier :<br />
-<ul>
-<li>Incorporation de l\'activité</li>
-</ul>
-<p>Février :</p>
-<ul>
-<li>Incorporation de l\'activité</li>
-<li>Consolidation consommé et insertion</li>
-<li>Envois pour validation</li>
-</ul>
-<p>Mars :</p>
-<ul>
-<li>Incorporation du budget contratcualisé</li>
-<li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li>
-<li>Incorporation de l\'activité réalisée en mars dans le CRA</li>
-</ul>', '2013-04-02', '2013-04-02') ; 
-INSERT INTO `historyactions` VALUES (13, 1, 90, '2013-01-07', '2013-03-28', 96, 'normale', 'en cours', 'Le 02/04/2013 par LEVAVASSEUR Jacques<br>Janvier :<br />
-<ul>
-<li>Incorporation de l\'activité</li>
-</ul>
-<p>Février :</p>
-<ul>
-<li>Incorporation de l\'activité</li>
-<li>Consolidation consommé et insertion</li>
-<li>Envois pour validation</li>
-</ul>
-<p>Mars :</p>
-<ul>
-<li>Incorporation du budget contratcualisé</li>
-<li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li>
-<li>Incorporation de l\'activité réalisée en mars dans le CRA</li>
-</ul>', '2013-04-02', '2013-04-02') ; 
-INSERT INTO `historyactions` VALUES (14, 7, 20, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 03/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-</ol>
-<p>Le 03/04/2013 : </p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>', '2013-04-03', '2013-04-03') ; 
+INSERT INTO `historyactions` VALUES (8, 3, 100, '2013-03-01', '2013-03-29', 64, 'normale', 'terminée', 'Le 02/04/2013 par LEVAVASSEUR Jacques<br>Activité récurrente<br />DSI-T/SO <br /><ul><li>arrivé de Sébastien PAGNARD, Stéphane BEYDON</li><li>Préparation de l\'arrivée de Amsata NGOM</li></ul>Groupement<br /><ul><li>Création de compte</li><li>incident de connexion ...</li></ul>', '2013-04-02', '2013-04-02') ; 
+INSERT INTO `historyactions` VALUES (9, 7, 10, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 02/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li></li></ol>', '2013-04-02', '2013-04-02') ; 
+INSERT INTO `historyactions` VALUES (10, 7, 10, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 02/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li></ol>', '2013-04-02', '2013-04-02') ; 
+INSERT INTO `historyactions` VALUES (11, 7, 10, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 02/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li></ol>', '2013-04-02', '2013-04-02') ; 
+INSERT INTO `historyactions` VALUES (12, 1, 70, '2013-01-07', '2013-03-28', 96, 'normale', 'en cours', 'Le 02/04/2013 par LEVAVASSEUR Jacques<br>Janvier :<br /><ul><li>Incorporation de l\'activité</li></ul><p>Février :</p><ul><li>Incorporation de l\'activité</li><li>Consolidation consommé et insertion</li><li>Envois pour validation</li></ul><p>Mars :</p><ul><li>Incorporation du budget contratcualisé</li><li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li><li>Incorporation de l\'activité réalisée en mars dans le CRA</li></ul>', '2013-04-02', '2013-04-02') ; 
+INSERT INTO `historyactions` VALUES (13, 1, 90, '2013-01-07', '2013-03-28', 96, 'normale', 'en cours', 'Le 02/04/2013 par LEVAVASSEUR Jacques<br>Janvier :<br /><ul><li>Incorporation de l\'activité</li></ul><p>Février :</p><ul><li>Incorporation de l\'activité</li><li>Consolidation consommé et insertion</li><li>Envois pour validation</li></ul><p>Mars :</p><ul><li>Incorporation du budget contratcualisé</li><li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li><li>Incorporation de l\'activité réalisée en mars dans le CRA</li></ul>', '2013-04-02', '2013-04-02') ; 
+INSERT INTO `historyactions` VALUES (14, 7, 20, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 03/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li></ol><p>Le 03/04/2013 : </p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>', '2013-04-03', '2013-04-03') ; 
 INSERT INTO `historyactions` VALUES (15, 8, 70, '2013-04-03', '2013-04-04', 8, 'normale', 'en cours', 'Le 03/04/2013 par LEVAVASSEUR Jacques<br>Consolidation des charges consommées sur le lot 303 en 2012 et janvier 2013.<br />Remplir le fichier Excel envoyé par Jean-Pierre NEFF et le renvoyer à AAE, JBJ et JPN avec les explications', '2013-04-03', '2013-04-03') ; 
-INSERT INTO `historyactions` VALUES (16, 1, 90, '2013-01-07', '2013-03-28', 96, 'normale', 'en cours', 'Le 03/04/2013 par LEVAVASSEUR Jacques<br>Janvier :<br />
-<ul>
-<li>Incorporation de l\'activité</li>
-</ul>
-<p>Février :</p>
-<ul>
-<li>Incorporation de l\'activité</li>
-<li>Consolidation consommé et insertion</li>
-<li>Envois pour validation</li>
-</ul>
-<p>Mars :</p>
-<ul>
-<li>Incorporation du budget contratcualisé</li>
-<li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li>
-<li>Incorporation de l\'activité réalisée en mars dans le CRA</li>
-<li>Envoyé pour validation à AAE et JBJ</li>
-</ul>', '2013-04-03', '2013-04-03') ; 
-INSERT INTO `historyactions` VALUES (17, 9, 0, '2013-04-24', '2013-04-24', 2, 'normale', 'à faire', 'Le 03/04/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br />
-<ul>
-<li>Sabine GEOFFROY</li>
-<li>Magali BURIAND</li>
-<li>Benoit TRENTO</li>
-<li>Jacques LEVAVASSEUR</li>
-<li>Patricia RIFFIOD</li>
-</ul>
-<br />Ne faut-il pas qu\'ils assistent à la présentation ?', '2013-04-03', '2013-04-03') ; 
-INSERT INTO `historyactions` VALUES (18, 7, 20, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 03/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol><br />Le 04/04/2013 :', '2013-04-03', '2013-04-03') ; 
-INSERT INTO `historyactions` VALUES (19, 7, 20, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 04/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol><br />Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>', '2013-04-04', '2013-04-04') ; 
+INSERT INTO `historyactions` VALUES (16, 1, 90, '2013-01-07', '2013-03-28', 96, 'normale', 'en cours', 'Le 03/04/2013 par LEVAVASSEUR Jacques<br>Janvier :<br /><ul><li>Incorporation de l\'activité</li></ul><p>Février :</p><ul><li>Incorporation de l\'activité</li><li>Consolidation consommé et insertion</li><li>Envois pour validation</li></ul><p>Mars :</p><ul><li>Incorporation du budget contratcualisé</li><li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li><li>Incorporation de l\'activité réalisée en mars dans le CRA</li><li>Envoyé pour validation à AAE et JBJ</li></ul>', '2013-04-03', '2013-04-03') ; 
+INSERT INTO `historyactions` VALUES (17, 9, 0, '2013-04-24', '2013-04-24', 2, 'normale', 'à faire', 'Le 03/04/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br /><ul><li>Sabine GEOFFROY</li><li>Magali BURIAND</li><li>Benoit TRENTO</li><li>Jacques LEVAVASSEUR</li><li>Patricia RIFFIOD</li></ul><br />Ne faut-il pas qu\'ils assistent à la présentation ?', '2013-04-03', '2013-04-03') ; 
+INSERT INTO `historyactions` VALUES (18, 7, 20, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 03/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol><br />Le 04/04/2013 :', '2013-04-03', '2013-04-03') ; 
+INSERT INTO `historyactions` VALUES (19, 7, 20, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 04/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol><br />Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>', '2013-04-04', '2013-04-04') ; 
 INSERT INTO `historyactions` VALUES (20, 8, 100, '2013-04-03', '2013-04-04', 8, 'normale', 'terminée', 'Le 04/04/2013 par LEVAVASSEUR Jacques<br>Consolidation des charges consommées sur le lot 303 en 2012 et janvier 2013.<br />Remplir le fichier Excel envoyé par Jean-Pierre NEFF et le renvoyer à AAE, JBJ et JPN avec les explications<br /><br />Transmis les information à AAE, JBJ et JPN suite aux derniers élément de Jean-Baptiste', '2013-04-04', '2013-04-04') ; 
-INSERT INTO `historyactions` VALUES (21, 7, 30, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 08/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol><br />Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol><br />Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>', '2013-04-08', '2013-04-08') ; 
+INSERT INTO `historyactions` VALUES (21, 7, 30, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 08/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol><br />Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol><br />Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>', '2013-04-08', '2013-04-08') ; 
 INSERT INTO `historyactions` VALUES (22, 10, 0, '2013-04-10', '2013-04-11', 1, 'normale', 'à faire', 'Le 08/04/2013 par LEVAVASSEUR Jacques<br>Voir avec Sébastien si délégation de saisie faite<br />Saisir activité de Sébastien sur PANAM DEV à parit du 04/03/2013', '2013-04-08', '2013-04-08') ; 
-INSERT INTO `historyactions` VALUES (23, 1, 90, '2013-01-07', '2013-03-28', 96, 'normale', 'en cours', 'Le 09/04/2013 par LEVAVASSEUR Jacques<br>Janvier :<br />
-<ul>
-<li>Incorporation de l\'activité</li>
-</ul>
-<p>Février :</p>
-<ul>
-<li>Incorporation de l\'activité</li>
-<li>Consolidation consommé et insertion</li>
-<li>Envois pour validation</li>
-</ul>
-<p>Mars :</p>
-<ul>
-<li>Incorporation du budget contratcualisé</li>
-<li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li>
-<li>Incorporation de l\'activité réalisée en mars dans le CRA</li>
-<li>Envoyé pour validation à AAE et JBJ</li>
-<li><span style="color: #ff0000;">Correction sur l\'emplacement des coûts DSIT-X mis en MCO explication sur montant de 2805k€ (2309k€ + 455 k€), changement année pour prestation formation</span></li>
-</ul>', '2013-04-09', '2013-04-09') ; 
+INSERT INTO `historyactions` VALUES (23, 1, 90, '2013-01-07', '2013-03-28', 96, 'normale', 'en cours', 'Le 09/04/2013 par LEVAVASSEUR Jacques<br>Janvier :<br /><ul><li>Incorporation de l\'activité</li></ul><p>Février :</p><ul><li>Incorporation de l\'activité</li><li>Consolidation consommé et insertion</li><li>Envois pour validation</li></ul><p>Mars :</p><ul><li>Incorporation du budget contratcualisé</li><li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li><li>Incorporation de l\'activité réalisée en mars dans le CRA</li><li>Envoyé pour validation à AAE et JBJ</li><li><span style="color: #ff0000;">Correction sur l\'emplacement des coûts DSIT-X mis en MCO explication sur montant de 2805k€ (2309k€ + 455 k€), changement année pour prestation formation</span></li></ul>', '2013-04-09', '2013-04-09') ; 
 INSERT INTO `historyactions` VALUES (24, 10, 100, '2013-04-10', '2013-04-11', 1, 'normale', 'terminée', 'Le 09/04/2013 par LEVAVASSEUR Jacques<br>Voir avec Sébastien si délégation de saisie faite<br />Saisir activité de Sébastien sur PANAM DEV à parit du 04/03/2013<br />Facturation faite', '2013-04-09', '2013-04-09') ; 
-INSERT INTO `historyactions` VALUES (25, 7, 30, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 09/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol><br />Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol><br />Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol><br />Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>', '2013-04-09', '2013-04-09') ; 
-INSERT INTO `historyactions` VALUES (26, 7, 40, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 09/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol><br />Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol><br />Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol><br />Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>', '2013-04-09', '2013-04-09') ; 
-INSERT INTO `historyactions` VALUES (27, 9, 0, '2013-04-24', '2013-05-14', 2, 'normale', 'à faire', 'Le 09/04/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br />
-<ul>
-<li>Sabine GEOFFROY</li>
-<li>Magali BURIAND</li>
-<li>Benoit TRENTO</li>
-<li>Jacques LEVAVASSEUR</li>
-<li>Patricia RIFFIOD</li>
-</ul>
-<br />Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai', '2013-04-09', '2013-04-09') ; 
-INSERT INTO `historyactions` VALUES (28, 9, 0, '2013-04-24', '2013-05-14', 2, 'normale', 'à faire', 'Le 09/04/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br />
-<ul>
-<li>Sabine GEOFFROY</li>
-<li>Magali BURIAND</li>
-<li>Benoit TRENTO</li>
-<li>Jacques LEVAVASSEUR</li>
-<li>Patricia RIFFIOD</li>
-</ul>
-Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai', '2013-04-09', '2013-04-09') ; 
-INSERT INTO `historyactions` VALUES (29, 4, 90, '2013-02-04', '2013-05-14', 336, 'normale', 'en cours', 'Le 09/04/2013 par LEVAVASSEUR Jacques<br>Conception 12 jours<br />Réalisation 30 jours<br /><br />Bascule sur le serveur de production le 28/03/2013<br /><br />Evolutions en cours :<br />
-<ul>
-<li>Facturations</li>
-<li>Plan de charge</li>
-<li>Rapports (actions, consommation réelles, facturé)</li>
-</ul>', '2013-04-09', '2013-04-09') ; 
-INSERT INTO `historyactions` VALUES (30, 7, 50, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 10/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol><br />Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol><br />Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol><br />Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol><br />Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>', '2013-04-10', '2013-04-10') ; 
-INSERT INTO `historyactions` VALUES (31, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 15/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-</ol>', '2013-04-15', '2013-04-15') ; 
+INSERT INTO `historyactions` VALUES (25, 7, 30, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 09/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol><br />Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol><br />Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol><br />Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>', '2013-04-09', '2013-04-09') ; 
+INSERT INTO `historyactions` VALUES (26, 7, 40, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 09/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol><br />Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol><br />Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol><br />Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>', '2013-04-09', '2013-04-09') ; 
+INSERT INTO `historyactions` VALUES (27, 9, 0, '2013-04-24', '2013-05-14', 2, 'normale', 'à faire', 'Le 09/04/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br /><ul><li>Sabine GEOFFROY</li><li>Magali BURIAND</li><li>Benoit TRENTO</li><li>Jacques LEVAVASSEUR</li><li>Patricia RIFFIOD</li></ul><br />Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai', '2013-04-09', '2013-04-09') ; 
+INSERT INTO `historyactions` VALUES (28, 9, 0, '2013-04-24', '2013-05-14', 2, 'normale', 'à faire', 'Le 09/04/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br /><ul><li>Sabine GEOFFROY</li><li>Magali BURIAND</li><li>Benoit TRENTO</li><li>Jacques LEVAVASSEUR</li><li>Patricia RIFFIOD</li></ul>Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai', '2013-04-09', '2013-04-09') ; 
+INSERT INTO `historyactions` VALUES (29, 4, 90, '2013-02-04', '2013-05-14', 336, 'normale', 'en cours', 'Le 09/04/2013 par LEVAVASSEUR Jacques<br>Conception 12 jours<br />Réalisation 30 jours<br /><br />Bascule sur le serveur de production le 28/03/2013<br /><br />Evolutions en cours :<br /><ul><li>Facturations</li><li>Plan de charge</li><li>Rapports (actions, consommation réelles, facturé)</li></ul>', '2013-04-09', '2013-04-09') ; 
+INSERT INTO `historyactions` VALUES (30, 7, 50, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 10/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol><br />Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol><br />Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol><br />Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol><br />Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>', '2013-04-10', '2013-04-10') ; 
+INSERT INTO `historyactions` VALUES (31, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 15/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li></ol>', '2013-04-15', '2013-04-15') ; 
 INSERT INTO `historyactions` VALUES (32, 11, 40, '2013-04-11', '2013-04-22', 8, 'moyenne', 'en cours', 'Le 15/04/2013 par LEVAVASSEUR Jacques<br>', '2013-04-15', '2013-04-15') ; 
-INSERT INTO `historyactions` VALUES (33, 11, 40, '2013-04-11', '2013-04-22', 8, 'moyenne', 'en cours', 'Le 15/04/2013 par LEVAVASSEUR Jacques<br>Consolidation des charges d\'avril<br />Contacts avec Charlotte DUVERGER pour :<br />
-<ul>
-<li>consolidation commune GMAO et PANAM</li>
-<li>Ecart facturation pour Aurélie CARRET et Julien DELEFOSSE</li>
-</ul>
-Envois de la consolidation pour validation SS2I', '2013-04-15', '2013-04-15') ; 
+INSERT INTO `historyactions` VALUES (33, 11, 40, '2013-04-11', '2013-04-22', 8, 'moyenne', 'en cours', 'Le 15/04/2013 par LEVAVASSEUR Jacques<br>Consolidation des charges d\'avril<br />Contacts avec Charlotte DUVERGER pour :<br /><ul><li>consolidation commune GMAO et PANAM</li><li>Ecart facturation pour Aurélie CARRET et Julien DELEFOSSE</li></ul>Envois de la consolidation pour validation SS2I', '2013-04-15', '2013-04-15') ; 
 INSERT INTO `historyactions` VALUES (34, 12, 70, '2013-04-09', '2013-04-18', 8, 'normale', 'en cours', 'Le 15/04/2013 par LEVAVASSEUR Jacques<br>Recherche d\'information sur comment faire<br />Prise de contact avec VALLI Sébastien<br />Fichier Excel rempli , envoyé au chef de section.<br />Retour CV et proposition STERIA pour Stéphane BEYDON.<br />En attente du CV et de la proposition pour Renaud BORG', '2013-04-15', '2013-04-15') ; 
-INSERT INTO `historyactions` VALUES (35, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 15/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-</ol>', '2013-04-15', '2013-04-15') ; 
-INSERT INTO `historyactions` VALUES (36, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 15/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-</ol>', '2013-04-15', '2013-04-15') ; 
-INSERT INTO `historyactions` VALUES (37, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 15/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-<li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li>
-</ol>', '2013-04-15', '2013-04-15') ; 
-INSERT INTO `historyactions` VALUES (38, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 16/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-<li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li>
-</ol>Le 16/04/2013 :<br /><ol>
-<li>Suivi des ouverture de droits</li>
-<li>Mis à jour liste de diffusion</li>
-</ol>', '2013-04-16', '2013-04-16') ; 
+INSERT INTO `historyactions` VALUES (35, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 15/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li></ol>', '2013-04-15', '2013-04-15') ; 
+INSERT INTO `historyactions` VALUES (36, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 15/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li></ol>', '2013-04-15', '2013-04-15') ; 
+INSERT INTO `historyactions` VALUES (37, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 15/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li><li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li></ol>', '2013-04-15', '2013-04-15') ; 
+INSERT INTO `historyactions` VALUES (38, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 16/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li><li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li></ol>Le 16/04/2013 :<br /><ol><li>Suivi des ouverture de droits</li><li>Mis à jour liste de diffusion</li></ol>', '2013-04-16', '2013-04-16') ; 
 INSERT INTO `historyactions` VALUES (39, 13, 90, '2013-04-11', '2013-04-23', 12, 'moyenne', 'en cours', 'Le 16/04/2013 par LEVAVASSEUR Jacques<br>Reste l\'activité de Benoit TRENTO avec la répartition sur les diférentes activités.<br />Toutes les autres saisies sont faites.<br />Rattrappage de 2 jours mis en Congé pour N. THARSIS en mars non pris, mis travaillé à la place en Avril', '2013-04-16', '2013-04-16') ; 
 INSERT INTO `historyactions` VALUES (40, 12, 100, '2013-04-09', '2013-04-18', 8, 'normale', 'terminée', 'Le 16/04/2013 par LEVAVASSEUR Jacques<br>Recherche d\'information sur comment faire<br />Prise de contact avec VALLI Sébastien<br />Fichier Excel rempli , envoyé au chef de section.<br />Retour CV et proposition STERIA pour Stéphane BEYDON.<br />En attente du CV et de la proposition pour Renaud BORG<br /><br />Envoyé le 15/04/2013', '2013-04-16', '2013-04-16') ; 
-INSERT INTO `historyactions` VALUES (41, 11, 60, '2013-04-11', '2013-04-22', 8, 'moyenne', 'en cours', 'Le 16/04/2013 par LEVAVASSEUR Jacques<br>Consolidation des charges d\'avril<br />Contacts avec Charlotte DUVERGER pour :<br />
-<ul>
-<li>consolidation commune GMAO et PANAM</li>
-<li>Ecart facturation pour Aurélie CARRET et Julien DELEFOSSE</li>
-</ul>
-Envois de la consolidation pour validation SS2I<br /><br />Confrontation des chiffres avec SQLi/STERIA mercredi 16/04/2013', '2013-04-16', '2013-04-16') ; 
-INSERT INTO `historyactions` VALUES (42, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 16/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-<li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li>
-</ol>Le 16/04/2013 :<br /><ol>
-<li>Suivi des ouverture de droits</li>
-<li>Mis à jour liste de diffusion</li>
-<li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li>
-</ol>', '2013-04-16', '2013-04-16') ; 
-INSERT INTO `historyactions` VALUES (43, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 17/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-<li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li>
-</ol>Le 16/04/2013 :<br /><ol>
-<li>Suivi des ouverture de droits</li>
-<li>Mis à jour liste de diffusion</li>
-<li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li>
-</ol>le 17/04/2013 :<br /><ol>
-<li>Demande ouverture d edroits pour C. Bril</li>
-<li>Information réception commande portable. Attente contact samba logistique.</li>
-</ol>', '2013-04-17', '2013-04-17') ; 
-INSERT INTO `historyactions` VALUES (44, 11, 80, '2013-04-11', '2013-04-22', 8, 'moyenne', 'en cours', 'Le 17/04/2013 par LEVAVASSEUR Jacques<br>Consolidation des charges d\'avril<br />Contacts avec Charlotte DUVERGER pour :<br />
-<ul>
-<li>consolidation commune GMAO et PANAM</li>
-<li>Ecart facturation pour Aurélie CARRET et Julien DELEFOSSE</li>
-</ul>
-Envois de la consolidation pour validation SS2I<br /><br />Confrontation des chiffres avec SQLi/STERIA mercredi 16/04/2013<br /><br />Exl group : écart d\'un jour sur le mois de mars rattrappage en avril (-1)<br /><br />Fichier Excel renseigné et sauvegardé.<br />Attente des retours STERIA - EURIWARE et EXLGROUP pour finaliser<br />Vu avec EXLGROUP<br />Vu avec STERIA dans l\'après midi<br />Envois à Euriware de la prévision de facturation pour Avril', '2013-04-17', '2013-04-17') ; 
+INSERT INTO `historyactions` VALUES (41, 11, 60, '2013-04-11', '2013-04-22', 8, 'moyenne', 'en cours', 'Le 16/04/2013 par LEVAVASSEUR Jacques<br>Consolidation des charges d\'avril<br />Contacts avec Charlotte DUVERGER pour :<br /><ul><li>consolidation commune GMAO et PANAM</li><li>Ecart facturation pour Aurélie CARRET et Julien DELEFOSSE</li></ul>Envois de la consolidation pour validation SS2I<br /><br />Confrontation des chiffres avec SQLi/STERIA mercredi 16/04/2013', '2013-04-16', '2013-04-16') ; 
+INSERT INTO `historyactions` VALUES (42, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 16/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li><li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li></ol>Le 16/04/2013 :<br /><ol><li>Suivi des ouverture de droits</li><li>Mis à jour liste de diffusion</li><li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li></ol>', '2013-04-16', '2013-04-16') ; 
+INSERT INTO `historyactions` VALUES (43, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 17/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li><li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li></ol>Le 16/04/2013 :<br /><ol><li>Suivi des ouverture de droits</li><li>Mis à jour liste de diffusion</li><li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li></ol>le 17/04/2013 :<br /><ol><li>Demande ouverture d edroits pour C. Bril</li><li>Information réception commande portable. Attente contact samba logistique.</li></ol>', '2013-04-17', '2013-04-17') ; 
+INSERT INTO `historyactions` VALUES (44, 11, 80, '2013-04-11', '2013-04-22', 8, 'moyenne', 'en cours', 'Le 17/04/2013 par LEVAVASSEUR Jacques<br>Consolidation des charges d\'avril<br />Contacts avec Charlotte DUVERGER pour :<br /><ul><li>consolidation commune GMAO et PANAM</li><li>Ecart facturation pour Aurélie CARRET et Julien DELEFOSSE</li></ul>Envois de la consolidation pour validation SS2I<br /><br />Confrontation des chiffres avec SQLi/STERIA mercredi 16/04/2013<br /><br />Exl group : écart d\'un jour sur le mois de mars rattrappage en avril (-1)<br /><br />Fichier Excel renseigné et sauvegardé.<br />Attente des retours STERIA - EURIWARE et EXLGROUP pour finaliser<br />Vu avec EXLGROUP<br />Vu avec STERIA dans l\'après midi<br />Envois à Euriware de la prévision de facturation pour Avril', '2013-04-17', '2013-04-17') ; 
 INSERT INTO `historyactions` VALUES (45, 13, 100, '2013-04-11', '2013-04-23', 12, 'moyenne', 'terminée', 'Le 17/04/2013 par LEVAVASSEUR Jacques<br>Reste l\'activité de Benoit TRENTO avec la répartition sur les diférentes activités.<br />Toutes les autres saisies sont faites.<br />Rattrappage de 2 jours mis en Congé pour N. THARSIS en mars non pris, mis travaillé à la place en Avril', '2013-04-17', '2013-04-17') ; 
-INSERT INTO `historyactions` VALUES (46, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 17/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-<li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li>
-</ol>Le 16/04/2013 :<br /><ol>
-<li>Suivi des ouverture de droits</li>
-<li>Mis à jour liste de diffusion</li>
-<li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li>
-</ol>le 17/04/2013 :<br /><ol>
-<li>Demande ouverture d edroits pour C. Bril</li>
-<li>Information réception commande portable. Attente contact samba logistique.</li>
-<li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li>
-</ol>', '2013-04-17', '2013-04-17') ; 
-INSERT INTO `historyactions` VALUES (47, 11, 100, '2013-04-11', '2013-04-22', 8, 'moyenne', 'terminée', 'Le 18/04/2013 par LEVAVASSEUR Jacques<br>Consolidation des charges d\'avril<br />Contacts avec Charlotte DUVERGER pour :<br />
-<ul>
-<li>consolidation commune GMAO et PANAM</li>
-<li>Ecart facturation pour Aurélie CARRET et Julien DELEFOSSE</li>
-</ul>
-Envois de la consolidation pour validation SS2I<br /><br />Confrontation des chiffres avec SQLi/STERIA mercredi 16/04/2013<br /><br />Exl group : écart d\'un jour sur le mois de mars rattrappage en avril (-1)<br /><br />Fichier Excel renseigné et sauvegardé.<br />Attente des retours STERIA - EURIWARE et EXLGROUP pour finaliser<br />Vu avec EXLGROUP<br />Vu avec STERIA dans l\'après midi<br />Envois à Euriware de la prévision de facturation pour Avril', '2013-04-18', '2013-04-18') ; 
-INSERT INTO `historyactions` VALUES (48, 7, 70, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 18/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-<li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li>
-</ol>Le 16/04/2013 :<br /><ol>
-<li>Suivi des ouverture de droits</li>
-<li>Mis à jour liste de diffusion</li>
-<li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li>
-</ol>le 17/04/2013 :<br /><ol>
-<li>Demande ouverture d edroits pour C. Bril</li>
-<li>Information réception commande portable. Attente contact samba logistique.</li>
-<li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li>
-</ol>Le 18/04/2013<br /><ol>
-<li>Suivi logistique</li>
-</ol>', '2013-04-18', '2013-04-18') ; 
-INSERT INTO `historyactions` VALUES (49, 7, 80, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 22/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-<li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li>
-</ol>Le 16/04/2013 :<br /><ol>
-<li>Suivi des ouverture de droits</li>
-<li>Mis à jour liste de diffusion</li>
-<li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li>
-</ol>le 17/04/2013 :<br /><ol>
-<li>Demande ouverture d edroits pour C. Bril</li>
-<li>Information réception commande portable. Attente contact samba logistique.</li>
-<li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li>
-</ol>Le 18/04/2013<br /><ol>
-<li>Suivi logistique</li>
-</ol>Le 22/04/2013 :<br /><ol>
-<li>Activation du compte de MANDINA-NZEZA Guy-Serge</li>
-<li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li>
-</ol>', '2013-04-22', '2013-04-22') ; 
-INSERT INTO `historyactions` VALUES (50, 7, 80, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 23/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-<li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li>
-</ol>Le 16/04/2013 :<br /><ol>
-<li>Suivi des ouverture de droits</li>
-<li>Mis à jour liste de diffusion</li>
-<li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li>
-</ol>le 17/04/2013 :<br /><ol>
-<li>Demande ouverture d edroits pour C. Bril</li>
-<li>Information réception commande portable. Attente contact samba logistique.</li>
-<li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li>
-</ol>Le 18/04/2013<br /><ol>
-<li>Suivi logistique</li>
-</ol>Le 22/04/2013 :<br /><ol>
-<li>Activation du compte de MANDINA-NZEZA Guy-Serge</li>
-<li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li>
-</ol>le 23/04/2013 :<br /><ol>
-<li>Suivi logistique suite aux retours de SAMBA</li>
-</ol>', '2013-04-23', '2013-04-23') ; 
-INSERT INTO `historyactions` VALUES (51, 4, 90, '2013-02-04', '2013-05-30', 416, 'normale', 'en cours', 'Le 23/04/2013 par LEVAVASSEUR Jacques<br>Conception 12 jours<br />Réalisation 40 jours<br /><br />Bascule sur le serveur de production le 28/03/2013, mis à jour le 23/04/2013 avec la build 0041<br /><br />Evolutions en cours :<br />
-<ul>
-<li>Facturations =&gt; fait</li>
-<li>Plan de charge =&gt; fait</li>
-<li>Prise en compte des évolutions prévues =&gt; en cours</li>
-<li>Mise en place d\'une nouvelle navigation</li>
-<li>Rapports (actions, consommation réelles, facturé, plan de charge)</li>
-</ul>', '2013-04-23', '2013-04-23') ; 
-INSERT INTO `historyactions` VALUES (52, 7, 80, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 24/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-<li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li>
-</ol>Le 16/04/2013 :<br /><ol>
-<li>Suivi des ouverture de droits</li>
-<li>Mis à jour liste de diffusion</li>
-<li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li>
-</ol>le 17/04/2013 :<br /><ol>
-<li>Demande ouverture d edroits pour C. Bril</li>
-<li>Information réception commande portable. Attente contact samba logistique.</li>
-<li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li>
-</ol>Le 18/04/2013<br /><ol>
-<li>Suivi logistique</li>
-</ol>Le 22/04/2013 :<br /><ol>
-<li>Activation du compte de MANDINA-NZEZA Guy-Serge</li>
-<li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li>
-</ol>le 23/04/2013 :<br /><ol>
-<li>Suivi logistique suite aux retours de SAMBA</li>
-</ol>le 24/04/2013:<br /><ol>
-<li>Incident connexion à QC réponse par mail et redirection vers dsit-exil</li>
-</ol>', '2013-04-24', '2013-04-24') ; 
+INSERT INTO `historyactions` VALUES (46, 7, 60, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 17/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li><li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li></ol>Le 16/04/2013 :<br /><ol><li>Suivi des ouverture de droits</li><li>Mis à jour liste de diffusion</li><li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li></ol>le 17/04/2013 :<br /><ol><li>Demande ouverture d edroits pour C. Bril</li><li>Information réception commande portable. Attente contact samba logistique.</li><li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li></ol>', '2013-04-17', '2013-04-17') ; 
+INSERT INTO `historyactions` VALUES (47, 11, 100, '2013-04-11', '2013-04-22', 8, 'moyenne', 'terminée', 'Le 18/04/2013 par LEVAVASSEUR Jacques<br>Consolidation des charges d\'avril<br />Contacts avec Charlotte DUVERGER pour :<br /><ul><li>consolidation commune GMAO et PANAM</li><li>Ecart facturation pour Aurélie CARRET et Julien DELEFOSSE</li></ul>Envois de la consolidation pour validation SS2I<br /><br />Confrontation des chiffres avec SQLi/STERIA mercredi 16/04/2013<br /><br />Exl group : écart d\'un jour sur le mois de mars rattrappage en avril (-1)<br /><br />Fichier Excel renseigné et sauvegardé.<br />Attente des retours STERIA - EURIWARE et EXLGROUP pour finaliser<br />Vu avec EXLGROUP<br />Vu avec STERIA dans l\'après midi<br />Envois à Euriware de la prévision de facturation pour Avril', '2013-04-18', '2013-04-18') ; 
+INSERT INTO `historyactions` VALUES (48, 7, 70, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 18/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li><li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li></ol>Le 16/04/2013 :<br /><ol><li>Suivi des ouverture de droits</li><li>Mis à jour liste de diffusion</li><li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li></ol>le 17/04/2013 :<br /><ol><li>Demande ouverture d edroits pour C. Bril</li><li>Information réception commande portable. Attente contact samba logistique.</li><li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li></ol>Le 18/04/2013<br /><ol><li>Suivi logistique</li></ol>', '2013-04-18', '2013-04-18') ; 
+INSERT INTO `historyactions` VALUES (49, 7, 80, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 22/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li><li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li></ol>Le 16/04/2013 :<br /><ol><li>Suivi des ouverture de droits</li><li>Mis à jour liste de diffusion</li><li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li></ol>le 17/04/2013 :<br /><ol><li>Demande ouverture d edroits pour C. Bril</li><li>Information réception commande portable. Attente contact samba logistique.</li><li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li></ol>Le 18/04/2013<br /><ol><li>Suivi logistique</li></ol>Le 22/04/2013 :<br /><ol><li>Activation du compte de MANDINA-NZEZA Guy-Serge</li><li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li></ol>', '2013-04-22', '2013-04-22') ; 
+INSERT INTO `historyactions` VALUES (50, 7, 80, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 23/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li><li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li></ol>Le 16/04/2013 :<br /><ol><li>Suivi des ouverture de droits</li><li>Mis à jour liste de diffusion</li><li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li></ol>le 17/04/2013 :<br /><ol><li>Demande ouverture d edroits pour C. Bril</li><li>Information réception commande portable. Attente contact samba logistique.</li><li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li></ol>Le 18/04/2013<br /><ol><li>Suivi logistique</li></ol>Le 22/04/2013 :<br /><ol><li>Activation du compte de MANDINA-NZEZA Guy-Serge</li><li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li></ol>le 23/04/2013 :<br /><ol><li>Suivi logistique suite aux retours de SAMBA</li></ol>', '2013-04-23', '2013-04-23') ; 
+INSERT INTO `historyactions` VALUES (51, 4, 90, '2013-02-04', '2013-05-30', 416, 'normale', 'en cours', 'Le 23/04/2013 par LEVAVASSEUR Jacques<br>Conception 12 jours<br />Réalisation 40 jours<br /><br />Bascule sur le serveur de production le 28/03/2013, mis à jour le 23/04/2013 avec la build 0041<br /><br />Evolutions en cours :<br /><ul><li>Facturations =&gt; fait</li><li>Plan de charge =&gt; fait</li><li>Prise en compte des évolutions prévues =&gt; en cours</li><li>Mise en place d\'une nouvelle navigation</li><li>Rapports (actions, consommation réelles, facturé, plan de charge)</li></ul>', '2013-04-23', '2013-04-23') ; 
+INSERT INTO `historyactions` VALUES (52, 7, 80, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 24/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li><li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li></ol>Le 16/04/2013 :<br /><ol><li>Suivi des ouverture de droits</li><li>Mis à jour liste de diffusion</li><li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li></ol>le 17/04/2013 :<br /><ol><li>Demande ouverture d edroits pour C. Bril</li><li>Information réception commande portable. Attente contact samba logistique.</li><li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li></ol>Le 18/04/2013<br /><ol><li>Suivi logistique</li></ol>Le 22/04/2013 :<br /><ol><li>Activation du compte de MANDINA-NZEZA Guy-Serge</li><li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li></ol>le 23/04/2013 :<br /><ol><li>Suivi logistique suite aux retours de SAMBA</li></ol>le 24/04/2013:<br /><ol><li>Incident connexion à QC réponse par mail et redirection vers dsit-exil</li></ol>', '2013-04-24', '2013-04-24') ; 
 INSERT INTO `historyactions` VALUES (53, 14, 0, '2013-04-24', '2013-05-30', 48, 'normale', 'à faire', 'Le 24/04/2013 par LEVAVASSEUR Jacques<br>', '2013-04-24', '2013-04-24') ; 
-INSERT INTO `historyactions` VALUES (54, 7, 80, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 24/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-<li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li>
-</ol>Le 16/04/2013 :<br /><ol>
-<li>Suivi des ouverture de droits</li>
-<li>Mis à jour liste de diffusion</li>
-<li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li>
-</ol>le 17/04/2013 :<br /><ol>
-<li>Demande ouverture d edroits pour C. Bril</li>
-<li>Information réception commande portable. Attente contact samba logistique.</li>
-<li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li>
-</ol>Le 18/04/2013<br /><ol>
-<li>Suivi logistique</li>
-</ol>Le 22/04/2013 :<br /><ol>
-<li>Activation du compte de MANDINA-NZEZA Guy-Serge</li>
-<li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li>
-</ol>le 23/04/2013 :<br /><ol>
-<li>Suivi logistique suite aux retours de SAMBA</li>
-</ol>le 24/04/2013:<br /><ol>
-<li>Incident connexion à QC réponse par mail et redirection vers dsit-exil</li>
-<li>Droits administrateur sur un poste</li>
-</ol>', '2013-04-24', '2013-04-24') ; 
-INSERT INTO `historyactions` VALUES (55, 7, 80, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 24/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-<li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li>
-</ol>Le 16/04/2013 :<br /><ol>
-<li>Suivi des ouverture de droits</li>
-<li>Mis à jour liste de diffusion</li>
-<li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li>
-</ol>le 17/04/2013 :<br /><ol>
-<li>Demande ouverture d edroits pour C. Bril</li>
-<li>Information réception commande portable. Attente contact samba logistique.</li>
-<li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li>
-</ol>Le 18/04/2013<br /><ol>
-<li>Suivi logistique</li>
-</ol>Le 22/04/2013 :<br /><ol>
-<li>Activation du compte de MANDINA-NZEZA Guy-Serge</li>
-<li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li>
-</ol>le 23/04/2013 :<br /><ol>
-<li>Suivi logistique suite aux retours de SAMBA</li>
-</ol>le 24/04/2013:<br /><ol>
-<li>Incident connexion à QC réponse par mail et redirection vers dsit-exil</li>
-<li>Droits administrateur sur un poste + explications</li>
-</ol>', '2013-04-24', '2013-04-24') ; 
-INSERT INTO `historyactions` VALUES (56, 7, 100, '2013-04-02', '2013-04-25', 64, 'normale', 'terminée', 'Le 25/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol>
-<li>Arrivée à Lyon de Renaud BORG</li>
-<li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li>
-<li>Traitemement des demandes de fin de semaine précédente</li>
-<li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li>
-<li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li>
-<li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li>
-<li>Demande de création de dossier personnel pour BORG Renaud</li>
-</ol>
-<p>Le 03/04/2013 :</p>
-<ol>
-<li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li>
-<li>Demande ouverture de droits pour LUC et RUIZ</li>
-</ol>Le 04/04/2013 :<br /><ol>
-<li>Mise à jour de listes de diffusion pour le groupement</li>
-<li>Suivi des ouverture de droits</li>
-<li>Demande accès SAMETIME pour S BEYDON</li>
-<li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li>
-</ol>Le 08/04/2013 :<br /><ol>
-<li>Mise à jour de liste de diffusion groupement</li>
-</ol>Le 09/04/2013 :<br /><ol>
-<li>Mise à jour liste de diffusion groupement</li>
-</ol>Le 10/04/2013 :<br /><ol>
-<li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li>
-</ol>Le 11/04/2013<br /><ol>
-<li>Création de compte pour FLORE PELE</li>
-</ol>Le 15/04/2013<br /><ol>
-<li>Suivi d\'avancement logistique</li>
-<li>Ouverture de droits pour FLORE PELE</li>
-<li>Création de deux comptes pour Groupement</li>
-<li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li>
-<li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li>
-<li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li>
-</ol>Le 16/04/2013 :<br /><ol>
-<li>Suivi des ouverture de droits</li>
-<li>Mis à jour liste de diffusion</li>
-<li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li>
-</ol>le 17/04/2013 :<br /><ol>
-<li>Demande ouverture d edroits pour C. Bril</li>
-<li>Information réception commande portable. Attente contact samba logistique.</li>
-<li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li>
-</ol>Le 18/04/2013<br /><ol>
-<li>Suivi logistique</li>
-</ol>Le 22/04/2013 :<br /><ol>
-<li>Activation du compte de MANDINA-NZEZA Guy-Serge</li>
-<li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li>
-</ol>le 23/04/2013 :<br /><ol>
-<li>Suivi logistique suite aux retours de SAMBA</li>
-</ol>le 24/04/2013:<br /><ol>
-<li>Incident connexion à QC réponse par mail et redirection vers dsit-exil</li>
-<li>Droits administrateur sur un poste + explications</li>
-</ol>', '2013-04-25', '2013-04-25') ; 
-INSERT INTO `historyactions` VALUES (57, 1, 90, '2013-01-07', '2013-06-06', 96, 'normale', 'en cours', 'Le 25/04/2013 par LEVAVASSEUR Jacques<br>Janvier :<br />
-<ul>
-<li>Incorporation de l\'activité</li>
-</ul>
-<p>Février :</p>
-<ul>
-<li>Incorporation de l\'activité</li>
-<li>Consolidation consommé et insertion</li>
-<li>Envois pour validation</li>
-</ul>
-<p>Mars :</p>
-<ul>
-<li>Incorporation du budget contratcualisé</li>
-<li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li>
-<li>Incorporation de l\'activité réalisée en mars dans le CRA</li>
-<li>Envoyé pour validation à AAE et JBJ</li>
-<li><span style="color: #ff0000;">Correction sur l\'emplacement des coûts DSIT-X mis en MCO explication sur montant de 2805k€ (2309k€ + 455 k€), changement année pour prestation formation</span></li>
-<li>Attente de la prise de décision concernant le budget - CRA non validé</li>
-</ul>
-<p>Avril :</p>
-<ul>
-<li>Non consolidé pour le CRA en attente du budget</li>
-</ul>
-<p>Mai :</p>
-<ul>
-<li>A faire au retour des vacances.</li>
-</ul>
-<p></p>', '2013-04-25', '2013-04-25') ; 
-INSERT INTO `historyactions` VALUES (58, 1, 70, '2013-01-07', '2013-06-06', 192, 'normale', 'en cours', 'Le 25/04/2013 par LEVAVASSEUR Jacques<br>Janvier :<br />
-<ul>
-<li>Incorporation de l\'activité</li>
-</ul>
-<p>Février :</p>
-<ul>
-<li>Incorporation de l\'activité</li>
-<li>Consolidation consommé et insertion</li>
-<li>Envois pour validation</li>
-</ul>
-<p>Mars :</p>
-<ul>
-<li>Incorporation du budget contratcualisé</li>
-<li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li>
-<li>Incorporation de l\'activité réalisée en mars dans le CRA</li>
-<li>Envoyé pour validation à AAE et JBJ</li>
-<li><span style="color: #ff0000;">Correction sur l\'emplacement des coûts DSIT-X mis en MCO explication sur montant de 2805k€ (2309k€ + 455 k€), changement année pour prestation formation</span></li>
-<li>Attente de la prise de décision concernant le budget - CRA non validé</li>
-</ul>
-<p>Avril :</p>
-<ul>
-<li>Non consolidé pour le CRA en attente du budget</li>
-</ul>
-<p>Mai :</p>
-<ul>
-<li>A faire au retour des vacances.</li>
-</ul>
-<p> </p>', '2013-04-25', '2013-04-25') ; 
-INSERT INTO `historyactions` VALUES (59, 9, 10, '2013-04-24', '2013-05-14', 2, 'normale', 'en cours', 'Le 25/04/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br />
-<ul>
-<li>Sabine GEOFFROY</li>
-<li>Magali BURIAND</li>
-<li>Benoit TRENTO</li>
-<li>Jacques LEVAVASSEUR</li>
-<li>Patricia RIFFIOD</li>
-</ul>
-Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai<br />Rendez-vous envoyé', '2013-04-25', '2013-04-25') ; 
+INSERT INTO `historyactions` VALUES (54, 7, 80, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 24/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li><li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li></ol>Le 16/04/2013 :<br /><ol><li>Suivi des ouverture de droits</li><li>Mis à jour liste de diffusion</li><li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li></ol>le 17/04/2013 :<br /><ol><li>Demande ouverture d edroits pour C. Bril</li><li>Information réception commande portable. Attente contact samba logistique.</li><li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li></ol>Le 18/04/2013<br /><ol><li>Suivi logistique</li></ol>Le 22/04/2013 :<br /><ol><li>Activation du compte de MANDINA-NZEZA Guy-Serge</li><li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li></ol>le 23/04/2013 :<br /><ol><li>Suivi logistique suite aux retours de SAMBA</li></ol>le 24/04/2013:<br /><ol><li>Incident connexion à QC réponse par mail et redirection vers dsit-exil</li><li>Droits administrateur sur un poste</li></ol>', '2013-04-24', '2013-04-24') ; 
+INSERT INTO `historyactions` VALUES (55, 7, 80, '2013-04-02', '2013-04-25', 64, 'normale', 'en cours', 'Le 24/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li><li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li></ol>Le 16/04/2013 :<br /><ol><li>Suivi des ouverture de droits</li><li>Mis à jour liste de diffusion</li><li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li></ol>le 17/04/2013 :<br /><ol><li>Demande ouverture d edroits pour C. Bril</li><li>Information réception commande portable. Attente contact samba logistique.</li><li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li></ol>Le 18/04/2013<br /><ol><li>Suivi logistique</li></ol>Le 22/04/2013 :<br /><ol><li>Activation du compte de MANDINA-NZEZA Guy-Serge</li><li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li></ol>le 23/04/2013 :<br /><ol><li>Suivi logistique suite aux retours de SAMBA</li></ol>le 24/04/2013:<br /><ol><li>Incident connexion à QC réponse par mail et redirection vers dsit-exil</li><li>Droits administrateur sur un poste + explications</li></ol>', '2013-04-24', '2013-04-24') ; 
+INSERT INTO `historyactions` VALUES (56, 7, 100, '2013-04-02', '2013-04-25', 64, 'normale', 'terminée', 'Le 25/04/2013 par LEVAVASSEUR Jacques<br>Le 02/04/2013 :<br /><ol><li>Arrivée à Lyon de Renaud BORG</li><li>Préparation poste de dépannage P64L03BIXXX pour Renaud BORG</li><li>Traitemement des demandes de fin de semaine précédente</li><li>Demande d\'ouverture de droits pour Renaud BORG et BELHOUT Mabrouk</li><li>Deux nouveaux arrivant sur VILLEURBANNE pour ORCHESTRAL.</li><li>demande de créations de compte pour deux nouveaux arrivants à SOGETI</li><li>Demande de création de dossier personnel pour BORG Renaud</li></ol><p>Le 03/04/2013 :</p><ol><li>Demande d\'ajout dans des groupes existant pour LUC et RUIZ</li><li>Demande ouverture de droits pour LUC et RUIZ</li></ol>Le 04/04/2013 :<br /><ol><li>Mise à jour de listes de diffusion pour le groupement</li><li>Suivi des ouverture de droits</li><li>Demande accès SAMETIME pour S BEYDON</li><li>Relance D LECLERC sur mise à jour de la commande de matériel à confirmer en COCOR</li></ol>Le 08/04/2013 :<br /><ol><li>Mise à jour de liste de diffusion groupement</li></ol>Le 09/04/2013 :<br /><ol><li>Mise à jour liste de diffusion groupement</li></ol>Le 10/04/2013 :<br /><ol><li>Activation du compte de LANAILLE Sébastien et demande d\'ouverture de droit</li></ol>Le 11/04/2013<br /><ol><li>Création de compte pour FLORE PELE</li></ol>Le 15/04/2013<br /><ol><li>Suivi d\'avancement logistique</li><li>Ouverture de droits pour FLORE PELE</li><li>Création de deux comptes pour Groupement</li><li>Ouverture des droits à F. RABATEL sur OSMOSECSNROP</li><li>Accés Minidoc pour MONTROIG Thomas (DM/M S&amp;F)</li><li>Accueil de NGOM Amsata, présentation équipe, locaux et utilisation fichier absences</li></ol>Le 16/04/2013 :<br /><ol><li>Suivi des ouverture de droits</li><li>Mis à jour liste de diffusion</li><li>Mise à jour du suivi pour ARIANE et autres ouvertures de droits</li></ol>le 17/04/2013 :<br /><ol><li>Demande ouverture d edroits pour C. Bril</li><li>Information réception commande portable. Attente contact samba logistique.</li><li>Envois des dossier pour installations des 4 portables, demande pour récupérer les accessoires faites</li></ol>Le 18/04/2013<br /><ol><li>Suivi logistique</li></ol>Le 22/04/2013 :<br /><ol><li>Activation du compte de MANDINA-NZEZA Guy-Serge</li><li>Initilaisation du mot de passe de MANDINA-NZEZA Guy-Serge</li></ol>le 23/04/2013 :<br /><ol><li>Suivi logistique suite aux retours de SAMBA</li></ol>le 24/04/2013:<br /><ol><li>Incident connexion à QC réponse par mail et redirection vers dsit-exil</li><li>Droits administrateur sur un poste + explications</li></ol>', '2013-04-25', '2013-04-25') ; 
+INSERT INTO `historyactions` VALUES (57, 1, 90, '2013-01-07', '2013-06-06', 96, 'normale', 'en cours', 'Le 25/04/2013 par LEVAVASSEUR Jacques<br>Janvier :<br /><ul><li>Incorporation de l\'activité</li></ul><p>Février :</p><ul><li>Incorporation de l\'activité</li><li>Consolidation consommé et insertion</li><li>Envois pour validation</li></ul><p>Mars :</p><ul><li>Incorporation du budget contratcualisé</li><li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li><li>Incorporation de l\'activité réalisée en mars dans le CRA</li><li>Envoyé pour validation à AAE et JBJ</li><li><span style="color: #ff0000;">Correction sur l\'emplacement des coûts DSIT-X mis en MCO explication sur montant de 2805k€ (2309k€ + 455 k€), changement année pour prestation formation</span></li><li>Attente de la prise de décision concernant le budget - CRA non validé</li></ul><p>Avril :</p><ul><li>Non consolidé pour le CRA en attente du budget</li></ul><p>Mai :</p><ul><li>A faire au retour des vacances.</li></ul><p></p>', '2013-04-25', '2013-04-25') ; 
+INSERT INTO `historyactions` VALUES (58, 1, 70, '2013-01-07', '2013-06-06', 192, 'normale', 'en cours', 'Le 25/04/2013 par LEVAVASSEUR Jacques<br>Janvier :<br /><ul><li>Incorporation de l\'activité</li></ul><p>Février :</p><ul><li>Incorporation de l\'activité</li><li>Consolidation consommé et insertion</li><li>Envois pour validation</li></ul><p>Mars :</p><ul><li>Incorporation du budget contratcualisé</li><li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li><li>Incorporation de l\'activité réalisée en mars dans le CRA</li><li>Envoyé pour validation à AAE et JBJ</li><li><span style="color: #ff0000;">Correction sur l\'emplacement des coûts DSIT-X mis en MCO explication sur montant de 2805k€ (2309k€ + 455 k€), changement année pour prestation formation</span></li><li>Attente de la prise de décision concernant le budget - CRA non validé</li></ul><p>Avril :</p><ul><li>Non consolidé pour le CRA en attente du budget</li></ul><p>Mai :</p><ul><li>A faire au retour des vacances.</li></ul><p> </p>', '2013-04-25', '2013-04-25') ; 
+INSERT INTO `historyactions` VALUES (59, 9, 10, '2013-04-24', '2013-05-14', 2, 'normale', 'en cours', 'Le 25/04/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br /><ul><li>Sabine GEOFFROY</li><li>Magali BURIAND</li><li>Benoit TRENTO</li><li>Jacques LEVAVASSEUR</li><li>Patricia RIFFIOD</li></ul>Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai<br />Rendez-vous envoyé', '2013-04-25', '2013-04-25') ; 
 INSERT INTO `historyactions` VALUES (60, 16, 0, '2013-05-13', '2013-05-30', 48, 'normale', 'à faire', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>', '2013-05-13', '2013-05-13') ; 
 INSERT INTO `historyactions` VALUES (61, 15, 50, '2013-05-13', '2013-05-18', 2, 'haute', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utilisateurs/edit/276">Lien vers le nouvel utilisateur<br /></a>Reste les demandes d\'ouverture de droits à faire<a href="../../utilisateurs/edit/276"><br /></a>', '2013-05-13', '2013-05-13') ; 
 INSERT INTO `historyactions` VALUES (62, 15, 100, '2013-05-13', '2013-05-18', 2, 'haute', 'terminée', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utilisateurs/edit/276">Lien vers le nouvel utilisateur<br /></a>Reste les demandes d\'ouverture de droits à faire<a href="../../utilisateurs/edit/276"><br /></a>', '2013-05-13', '2013-05-13') ; 
@@ -4028,49 +2798,13 @@ INSERT INTO `historyactions` VALUES (66, 20, 100, '2013-05-13', '2013-05-18', 2,
 INSERT INTO `historyactions` VALUES (67, 19, 100, '2013-05-13', '2013-05-18', 2, 'haute', 'terminée', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/106">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-13', '2013-05-13') ; 
 INSERT INTO `historyactions` VALUES (68, 18, 100, '2013-05-13', '2013-05-18', 2, 'haute', 'terminée', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/105">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-13', '2013-05-13') ; 
 INSERT INTO `historyactions` VALUES (69, 17, 0, '2013-05-13', '2013-05-18', 2, 'haute', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/104">Lien vers la nouvelle demande d\'ouverture de droit<br /></a>En attente de précision sur la liste de diffusion<a href="../../utiliseoutils/edit/104"><br /></a>', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (70, 14, 0, '2013-04-24', '2013-05-30', 48, 'normale', 'à faire', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br />
-<ul>
-<li>mise à jour de SAILL pour la création du compte de AGUILAR</li>
-<li>Demande ouverture de droit</li>
-</ul>', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (71, 14, 10, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br />
-<ul>
-<li>mise à jour de SAILL pour la création du compte de AGUILAR</li>
-<li>Demande ouverture de droit</li>
-</ul>', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (72, 4, 100, '2013-02-04', '2013-05-30', 416, 'normale', 'terminée', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>Conception 12 jours<br />Réalisation 40 jours<br /><br />Bascule sur le serveur de production le 28/03/2013, mis à jour le 23/04/2013 avec la build 0041<br /><br />Evolutions en cours :<br />
-<ul>
-<li>Facturations =&gt; fait</li>
-<li>Plan de charge =&gt; fait</li>
-<li>Prise en compte des évolutions prévues =&gt; en cours</li>
-<li>Mise en place d\'une nouvelle navigation</li>
-<li>Rapports (actions, consommation réelles, facturé, plan de charge)</li>
-</ul>', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (73, 24, 0, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide">
-<div class="js-comment-body comment-body markdown-body markdown-format">
-<ul>
-<li>Gestions des fichiers des dossiers admin, all avec add, delete</li>
-<li>Ajout d\'un lien pour la référence MINIDOC</li>
-<li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...)</li>
-<li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li>
-<li>sur la page d\'accueil mes statistiques : <strong>Fait</strong>
-<ul>
-<li>nombre d\'action à faire, en cours, proche échéance</li>
-<li>Saisie d\'activité</li>
-<li>Mes livrables à venir</li>
-<li>etc.</li>
-</ul>
-</li>
-<li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li>
-<li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li>
-</ul>
-</div>
-</div>', '2013-05-13', '2013-05-13') ; 
+INSERT INTO `historyactions` VALUES (70, 14, 0, '2013-04-24', '2013-05-30', 48, 'normale', 'à faire', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br /><ul><li>mise à jour de SAILL pour la création du compte de AGUILAR</li><li>Demande ouverture de droit</li></ul>', '2013-05-13', '2013-05-13') ; 
+INSERT INTO `historyactions` VALUES (71, 14, 10, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br /><ul><li>mise à jour de SAILL pour la création du compte de AGUILAR</li><li>Demande ouverture de droit</li></ul>', '2013-05-13', '2013-05-13') ; 
+INSERT INTO `historyactions` VALUES (72, 4, 100, '2013-02-04', '2013-05-30', 416, 'normale', 'terminée', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>Conception 12 jours<br />Réalisation 40 jours<br /><br />Bascule sur le serveur de production le 28/03/2013, mis à jour le 23/04/2013 avec la build 0041<br /><br />Evolutions en cours :<br /><ul><li>Facturations =&gt; fait</li><li>Plan de charge =&gt; fait</li><li>Prise en compte des évolutions prévues =&gt; en cours</li><li>Mise en place d\'une nouvelle navigation</li><li>Rapports (actions, consommation réelles, facturé, plan de charge)</li></ul>', '2013-05-13', '2013-05-13') ; 
+INSERT INTO `historyactions` VALUES (73, 24, 0, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide"><div class="js-comment-body comment-body markdown-body markdown-format"><ul><li>Gestions des fichiers des dossiers admin, all avec add, delete</li><li>Ajout d\'un lien pour la référence MINIDOC</li><li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...)</li><li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li><li>sur la page d\'accueil mes statistiques : <strong>Fait</strong><ul><li>nombre d\'action à faire, en cours, proche échéance</li><li>Saisie d\'activité</li><li>Mes livrables à venir</li><li>etc.</li></ul></li><li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li><li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li></ul></div></div>', '2013-05-13', '2013-05-13') ; 
 INSERT INTO `historyactions` VALUES (74, 25, 0, '2013-05-13', '2013-06-27', 0, 'moyenne', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>En attente des retours utilisateurs demande traités au fur et à mesure', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (75, 17, 0, '2013-05-13', '2013-05-18', 2, 'haute', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/104">Lien vers la nouvelle demande d\'ouverture de droit<br /></a>En attente de précision sur la liste de diffusion<a href="../../utiliseoutils/edit/104"><br /></a>
-<p>Concernant M. Aguilar Gustavo, il faudrait l\'ajouter à la liste de diffusion *OSMOSE Intégrateur GMAO FONC</p>', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (76, 17, 100, '2013-05-13', '2013-05-18', 2, 'haute', 'terminée', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/104">Lien vers la nouvelle demande d\'ouverture de droit<br /></a>En attente de précision sur la liste de diffusion<a href="../../utiliseoutils/edit/104"><br /></a>
-<p>Concernant M. Aguilar Gustavo, il faudrait l\'ajouter à la liste de diffusion *OSMOSE Intégrateur GMAO FONC</p>', '2013-05-13', '2013-05-13') ; 
+INSERT INTO `historyactions` VALUES (75, 17, 0, '2013-05-13', '2013-05-18', 2, 'haute', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/104">Lien vers la nouvelle demande d\'ouverture de droit<br /></a>En attente de précision sur la liste de diffusion<a href="../../utiliseoutils/edit/104"><br /></a><p>Concernant M. Aguilar Gustavo, il faudrait l\'ajouter à la liste de diffusion *OSMOSE Intégrateur GMAO FONC</p>', '2013-05-13', '2013-05-13') ; 
+INSERT INTO `historyactions` VALUES (76, 17, 100, '2013-05-13', '2013-05-18', 2, 'haute', 'terminée', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/104">Lien vers la nouvelle demande d\'ouverture de droit<br /></a>En attente de précision sur la liste de diffusion<a href="../../utiliseoutils/edit/104"><br /></a><p>Concernant M. Aguilar Gustavo, il faudrait l\'ajouter à la liste de diffusion *OSMOSE Intégrateur GMAO FONC</p>', '2013-05-13', '2013-05-13') ; 
 INSERT INTO `historyactions` VALUES (77, 26, 100, '2013-05-13', '2013-05-18', 2, 'haute', 'terminée', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utilisateurs/edit/277">Lien vers le nouvel utilisateur</a>', '2013-05-13', '2013-05-13') ; 
 INSERT INTO `historyactions` VALUES (78, 27, 100, '2013-05-13', '2013-05-18', 2, 'haute', 'terminée', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/111">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-13', '2013-05-13') ; 
 INSERT INTO `historyactions` VALUES (79, 28, 100, '2013-05-13', '2013-05-18', 2, 'haute', 'terminée', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/112">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-13', '2013-05-13') ; 
@@ -4078,206 +2812,21 @@ INSERT INTO `historyactions` VALUES (80, 29, 100, '2013-05-13', '2013-05-18', 2,
 INSERT INTO `historyactions` VALUES (81, 30, 100, '2013-05-13', '2013-05-18', 2, 'haute', 'terminée', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/114">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-13', '2013-05-13') ; 
 INSERT INTO `historyactions` VALUES (82, 31, 100, '2013-05-13', '2013-05-18', 2, 'haute', 'terminée', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/115">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-13', '2013-05-13') ; 
 INSERT INTO `historyactions` VALUES (83, 32, 100, '2013-05-13', '2013-05-18', 2, 'haute', 'terminée', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/116">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (84, 14, 20, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br />
-<ul>
-<li>mise à jour de SAILL pour la création du compte de AGUILAR</li>
-<li>Demande ouverture de droits</li>
-<li>Activation du compte de LEBLANC Bastien</li>
-<li>Demande ouverture de droits</li>
-<li>Demande information budget SGRM</li>
-</ul>', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (85, 24, 0, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide">
-<div class="js-comment-body comment-body markdown-body markdown-format">
-<ul>
-<li>Gestions des fichiers des dossiers admin, all avec add, delete</li>
-<li>Ajout d\'un lien pour la référence MINIDOC</li>
-<li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...)</li>
-<li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li>
-<li>sur la page d\'accueil mes statistiques : <strong>Fait</strong>
-<ul>
-<li>nombre d\'action à faire, en cours, proche échéance</li>
-<li>Saisie d\'activité</li>
-<li>Mes livrables à venir</li>
-<li>etc.</li>
-</ul>
-</li>
-<li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li>
-<li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li>
-<li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste</li>
-</ul>
-</div>
-</div>', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (86, 9, 70, '2013-04-24', '2013-05-14', 2, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br />
-<ul>
-<li>Sabine GEOFFROY</li>
-<li>Magali BURIAND</li>
-<li>Benoit TRENTO</li>
-<li>Jacques LEVAVASSEUR</li>
-<li>Patricia RIFFIOD</li>
-</ul>
-Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai<br />Rendez-vous envoyé<br />Préparation de la base et de l\'outil dans sa dernière version.<br />Présentation faite au format PPT', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (87, 24, 0, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide">
-<div class="js-comment-body comment-body markdown-body markdown-format">
-<ul>
-<li>Gestions des fichiers des dossiers admin, all avec add, delete</li>
-<li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li>
-<li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li>
-<li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li>
-<li>sur la page d\'accueil mes statistiques : <strong>Fait</strong>
-<ul>
-<li>nombre d\'action à faire, en cours, proche échéance</li>
-<li>Saisie d\'activité</li>
-<li>Mes livrables à venir</li>
-<li>etc.</li>
-</ul>
-</li>
-<li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li>
-<li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li>
-<li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste</li>
-</ul>
-</div>
-</div>', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (88, 24, 0, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide">
-<div class="js-comment-body comment-body markdown-body markdown-format">
-<ul>
-<li>Gestions des fichiers des dossiers admin, all avec add, delete</li>
-<li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li>
-<li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li>
-<li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li>
-<li>sur la page d\'accueil mes statistiques : <strong>Fait</strong>
-<ul>
-<li>nombre d\'action à faire, en cours, proche échéance</li>
-<li>Saisie d\'activité</li>
-<li>Mes livrables à venir</li>
-<li>etc.</li>
-</ul>
-</li>
-<li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li>
-<li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li>
-<li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste</li>
-<li>Importation des fichier ics</li>
-</ul>
-</div>
-</div>', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (89, 24, 10, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide">
-<div class="js-comment-body comment-body markdown-body markdown-format">
-<ul>
-<li>Gestions des fichiers des dossiers admin, all avec add, delete</li>
-<li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li>
-<li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li>
-<li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li>
-<li>sur la page d\'accueil mes statistiques : <strong>Fait</strong>
-<ul>
-<li>nombre d\'action à faire, en cours, proche échéance</li>
-<li>Saisie d\'activité</li>
-<li>Mes livrables à venir</li>
-<li>etc.</li>
-</ul>
-</li>
-<li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li>
-<li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li>
-<li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste</li>
-<li>Importation des fichier ics</li>
-<li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li>
-</ul>
-</div>
-</div>', '2013-05-13', '2013-05-13') ; 
+INSERT INTO `historyactions` VALUES (84, 14, 20, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br /><ul><li>mise à jour de SAILL pour la création du compte de AGUILAR</li><li>Demande ouverture de droits</li><li>Activation du compte de LEBLANC Bastien</li><li>Demande ouverture de droits</li><li>Demande information budget SGRM</li></ul>', '2013-05-13', '2013-05-13') ; 
+INSERT INTO `historyactions` VALUES (85, 24, 0, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide"><div class="js-comment-body comment-body markdown-body markdown-format"><ul><li>Gestions des fichiers des dossiers admin, all avec add, delete</li><li>Ajout d\'un lien pour la référence MINIDOC</li><li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...)</li><li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li><li>sur la page d\'accueil mes statistiques : <strong>Fait</strong><ul><li>nombre d\'action à faire, en cours, proche échéance</li><li>Saisie d\'activité</li><li>Mes livrables à venir</li><li>etc.</li></ul></li><li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li><li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li><li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste</li></ul></div></div>', '2013-05-13', '2013-05-13') ; 
+INSERT INTO `historyactions` VALUES (86, 9, 70, '2013-04-24', '2013-05-14', 2, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br /><ul><li>Sabine GEOFFROY</li><li>Magali BURIAND</li><li>Benoit TRENTO</li><li>Jacques LEVAVASSEUR</li><li>Patricia RIFFIOD</li></ul>Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai<br />Rendez-vous envoyé<br />Préparation de la base et de l\'outil dans sa dernière version.<br />Présentation faite au format PPT', '2013-05-13', '2013-05-13') ; 
+INSERT INTO `historyactions` VALUES (87, 24, 0, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide"><div class="js-comment-body comment-body markdown-body markdown-format"><ul><li>Gestions des fichiers des dossiers admin, all avec add, delete</li><li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li><li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li><li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li><li>sur la page d\'accueil mes statistiques : <strong>Fait</strong><ul><li>nombre d\'action à faire, en cours, proche échéance</li><li>Saisie d\'activité</li><li>Mes livrables à venir</li><li>etc.</li></ul></li><li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li><li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li><li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste</li></ul></div></div>', '2013-05-13', '2013-05-13') ; 
+INSERT INTO `historyactions` VALUES (88, 24, 0, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide"><div class="js-comment-body comment-body markdown-body markdown-format"><ul><li>Gestions des fichiers des dossiers admin, all avec add, delete</li><li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li><li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li><li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li><li>sur la page d\'accueil mes statistiques : <strong>Fait</strong><ul><li>nombre d\'action à faire, en cours, proche échéance</li><li>Saisie d\'activité</li><li>Mes livrables à venir</li><li>etc.</li></ul></li><li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li><li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li><li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste</li><li>Importation des fichier ics</li></ul></div></div>', '2013-05-13', '2013-05-13') ; 
+INSERT INTO `historyactions` VALUES (89, 24, 10, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide"><div class="js-comment-body comment-body markdown-body markdown-format"><ul><li>Gestions des fichiers des dossiers admin, all avec add, delete</li><li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li><li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li><li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li><li>sur la page d\'accueil mes statistiques : <strong>Fait</strong><ul><li>nombre d\'action à faire, en cours, proche échéance</li><li>Saisie d\'activité</li><li>Mes livrables à venir</li><li>etc.</li></ul></li><li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li><li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li><li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste</li><li>Importation des fichier ics</li><li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li></ul></div></div>', '2013-05-13', '2013-05-13') ; 
 INSERT INTO `historyactions` VALUES (90, 25, 0, '2013-05-13', '2013-06-27', 0, 'haute', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>En attente des retours utilisateurs demande traités au fur et à mesure', '2013-05-13', '2013-05-13') ; 
 INSERT INTO `historyactions` VALUES (91, 33, 0, '2013-05-13', '2013-06-27', 0, 'moyenne', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>', '2013-05-13', '2013-05-13') ; 
 INSERT INTO `historyactions` VALUES (92, 16, 0, '2013-06-01', '2013-06-27', 48, 'normale', 'à faire', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (93, 1, 70, '2013-01-07', '2013-06-06', 192, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>Janvier :<br />
-<ul>
-<li>Incorporation de l\'activité</li>
-</ul>
-<p>Février :</p>
-<ul>
-<li>Incorporation de l\'activité</li>
-<li>Consolidation consommé et insertion</li>
-<li>Envois pour validation</li>
-</ul>
-<p>Mars :</p>
-<ul>
-<li>Incorporation du budget contratcualisé</li>
-<li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li>
-<li>Incorporation de l\'activité réalisée en mars dans le CRA</li>
-<li>Envoyé pour validation à AAE et JBJ</li>
-<li><span style="color: #ff0000;">Correction sur l\'emplacement des coûts DSIT-X mis en MCO explication sur montant de 2805k€ (2309k€ + 455 k€), changement année pour prestation formation</span></li>
-<li>Attente de la prise de décision concernant le budget - CRA non validé</li>
-</ul>
-<p>Avril :</p>
-<ul>
-<li>Non consolidé pour le CRA en attente du budget</li>
-</ul>
-<p>Mai :</p>
-<ul>
-<li>A faire au retour des vacances.</li>
-<li>Consolider l\'activité d\'avril et mettre en place dans le CRA, idem activités.</li>
-</ul>
-<p> </p>', '2013-05-13', '2013-05-13') ; 
-INSERT INTO `historyactions` VALUES (94, 24, 10, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 14/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide">
-<div class="js-comment-body comment-body markdown-body markdown-format">
-<ul>
-<li>Gestions des fichiers des dossiers admin, all avec add, delete</li>
-<li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li>
-<li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li>
-<li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li>
-<li>sur la page d\'accueil mes statistiques : <strong>Fait</strong>
-<ul>
-<li>nombre d\'action à faire, en cours, proche échéance</li>
-<li>Saisie d\'activité</li>
-<li>Mes livrables à venir</li>
-<li>etc.</li>
-</ul>
-</li>
-<li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li>
-<li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li>
-<li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste</li>
-<li>Importation des fichier ics</li>
-<li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li>
-<li>
-<div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div>
-</li>
-</ul>
-</div>
-</div>', '2013-05-14', '2013-05-14') ; 
+INSERT INTO `historyactions` VALUES (93, 1, 70, '2013-01-07', '2013-06-06', 192, 'normale', 'en cours', 'Le 13/05/2013 par LEVAVASSEUR Jacques<br>Janvier :<br /><ul><li>Incorporation de l\'activité</li></ul><p>Février :</p><ul><li>Incorporation de l\'activité</li><li>Consolidation consommé et insertion</li><li>Envois pour validation</li></ul><p>Mars :</p><ul><li>Incorporation du budget contratcualisé</li><li>Consolidation du consommé (02/04/2013 pas de retour pour charge de LMN et E7)</li><li>Incorporation de l\'activité réalisée en mars dans le CRA</li><li>Envoyé pour validation à AAE et JBJ</li><li><span style="color: #ff0000;">Correction sur l\'emplacement des coûts DSIT-X mis en MCO explication sur montant de 2805k€ (2309k€ + 455 k€), changement année pour prestation formation</span></li><li>Attente de la prise de décision concernant le budget - CRA non validé</li></ul><p>Avril :</p><ul><li>Non consolidé pour le CRA en attente du budget</li></ul><p>Mai :</p><ul><li>A faire au retour des vacances.</li><li>Consolider l\'activité d\'avril et mettre en place dans le CRA, idem activités.</li></ul><p> </p>', '2013-05-13', '2013-05-13') ; 
+INSERT INTO `historyactions` VALUES (94, 24, 10, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 14/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide"><div class="js-comment-body comment-body markdown-body markdown-format"><ul><li>Gestions des fichiers des dossiers admin, all avec add, delete</li><li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li><li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li><li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li><li>sur la page d\'accueil mes statistiques : <strong>Fait</strong><ul><li>nombre d\'action à faire, en cours, proche échéance</li><li>Saisie d\'activité</li><li>Mes livrables à venir</li><li>etc.</li></ul></li><li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li><li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li><li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste</li><li>Importation des fichier ics</li><li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li><li><div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div></li></ul></div></div>', '2013-05-14', '2013-05-14') ; 
 INSERT INTO `historyactions` VALUES (95, 34, 100, '2013-05-14', '2013-05-19', 2, 'haute', 'terminée', 'Le 14/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/117">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-14', '2013-05-14') ; 
-INSERT INTO `historyactions` VALUES (96, 14, 30, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 14/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br />
-<ul>
-<li>mise à jour de SAILL pour la création du compte de AGUILAR</li>
-<li>Demande ouverture de droits</li>
-<li>Activation du compte de LEBLANC Bastien</li>
-<li>Demande ouverture de droits</li>
-<li>Demande information budget SGRM</li>
-</ul>
-<br />le 14/05/2013<br />
-<ul>
-<li>mise à jour avancement ouverture de droit</li>
-<li>demande droit admin sur poste P71</li>
-<li>changement liste diffusion pour LEBLANC</li>
-</ul>', '2013-05-14', '2013-05-14') ; 
-INSERT INTO `historyactions` VALUES (97, 14, 30, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 14/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br />
-<ul>
-<li>mise à jour de SAILL pour la création du compte de AGUILAR</li>
-<li>Demande ouverture de droits</li>
-<li>Activation du compte de LEBLANC Bastien</li>
-<li>Demande ouverture de droits</li>
-<li>Demande information budget SGRM</li>
-</ul>
-<br />le 14/05/2013<br />
-<ul>
-<li>mise à jour avancement ouverture de droit</li>
-<li>demande droit admin sur poste P71</li>
-<li>changement liste diffusion pour LEBLANC</li>
-</ul>', '2013-05-14', '2013-05-14') ; 
-INSERT INTO `historyactions` VALUES (98, 9, 70, '2013-04-24', '2013-05-14', 2, 'normale', 'en cours', 'Le 14/05/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br />
-<ul>
-<li>Sabine GEOFFROY</li>
-<li>Magali BURIAND</li>
-<li>Benoit TRENTO</li>
-<li>Jacques LEVAVASSEUR</li>
-<li>Patricia RIFFIOD</li>
-</ul>
-Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai<br />Rendez-vous envoyé<br />Préparation de la base et de l\'outil dans sa dernière version.<br />Présentation faite au format PPT', '2013-05-14', '2013-05-14') ; 
+INSERT INTO `historyactions` VALUES (96, 14, 30, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 14/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br /><ul><li>mise à jour de SAILL pour la création du compte de AGUILAR</li><li>Demande ouverture de droits</li><li>Activation du compte de LEBLANC Bastien</li><li>Demande ouverture de droits</li><li>Demande information budget SGRM</li></ul><br />le 14/05/2013<br /><ul><li>mise à jour avancement ouverture de droit</li><li>demande droit admin sur poste P71</li><li>changement liste diffusion pour LEBLANC</li></ul>', '2013-05-14', '2013-05-14') ; 
+INSERT INTO `historyactions` VALUES (97, 14, 30, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 14/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br /><ul><li>mise à jour de SAILL pour la création du compte de AGUILAR</li><li>Demande ouverture de droits</li><li>Activation du compte de LEBLANC Bastien</li><li>Demande ouverture de droits</li><li>Demande information budget SGRM</li></ul><br />le 14/05/2013<br /><ul><li>mise à jour avancement ouverture de droit</li><li>demande droit admin sur poste P71</li><li>changement liste diffusion pour LEBLANC</li></ul>', '2013-05-14', '2013-05-14') ; 
+INSERT INTO `historyactions` VALUES (98, 9, 70, '2013-04-24', '2013-05-14', 2, 'normale', 'en cours', 'Le 14/05/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br /><ul><li>Sabine GEOFFROY</li><li>Magali BURIAND</li><li>Benoit TRENTO</li><li>Jacques LEVAVASSEUR</li><li>Patricia RIFFIOD</li></ul>Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai<br />Rendez-vous envoyé<br />Préparation de la base et de l\'outil dans sa dernière version.<br />Présentation faite au format PPT', '2013-05-14', '2013-05-14') ; 
 INSERT INTO `historyactions` VALUES (99, 35, 100, '2013-05-14', '2013-05-19', 2, 'haute', 'terminée', 'Le 14/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utiliseoutils/edit/118">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-14', '2013-05-14') ; 
 INSERT INTO `historyactions` VALUES (100, 36, 50, '2013-05-13', '2013-05-31', 64, 'haute', 'en cours', 'Le 14/05/2013 par THIAULT Hugues<br>Mise à jour du DAT', '2013-05-14', '2013-05-14') ; 
 INSERT INTO `historyactions` VALUES (101, 37, 50, '2013-05-13', '2013-05-31', 64, 'haute', 'en cours', 'Le 14/05/2013 par THIAULT Hugues<br>Mise à jour du DAT', '2013-05-14', '2013-05-14') ; 
@@ -4286,15 +2835,7 @@ INSERT INTO `historyactions` VALUES (103, 36, 50, '2013-05-13', '2013-05-31', 8,
 INSERT INTO `historyactions` VALUES (104, 36, 50, '2013-05-13', '2013-05-31', 64, 'haute', 'en cours', 'Le 14/05/2013 par THIAULT Hugues<br>Mise à jour du DAT', '2013-05-14', '2013-05-14') ; 
 INSERT INTO `historyactions` VALUES (105, 39, 0, '2013-05-14', '2013-05-31', 0, 'normale', 'à faire', 'Le 14/05/2013 par THIAULT Hugues<br>Ajouter un rapport : activité réelle par domaine, pour chaque agent (idem facturation)', '2013-05-14', '2013-05-14') ; 
 INSERT INTO `historyactions` VALUES (106, 39, 0, '2013-05-14', '2013-05-31', 0, 'normale', 'à faire', 'Le 14/05/2013 par LEVAVASSEUR Jacques<br>Ajouter un rapport : activité réelle par domaine, pour chaque agent (idem facturation)<br />Actions : mettre la durée en jour', '2013-05-14', '2013-05-14') ; 
-INSERT INTO `historyactions` VALUES (107, 9, 100, '2013-04-24', '2005-06-04', 2, 'normale', 'terminée', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br />
-<ul>
-<li>Sabine GEOFFROY</li>
-<li>Magali BURIAND</li>
-<li>Benoit TRENTO</li>
-<li>Jacques LEVAVASSEUR</li>
-<li>Patricia RIFFIOD</li>
-</ul>
-Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai<br />Rendez-vous envoyé<br />Préparation de la base et de l\'outil dans sa dernière version.<br />Présentation faite au format PPT', '2013-05-15', '2013-05-15') ; 
+INSERT INTO `historyactions` VALUES (107, 9, 100, '2013-04-24', '2005-06-04', 2, 'normale', 'terminée', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br>Présentation de l\'outil à AAE et JBJ pour validation avant mise en service à un périmétre réduit de l\'équipe.<br />Périmétre à définir lors de cette présentation.<br />Je pense à : <br /><ul><li>Sabine GEOFFROY</li><li>Magali BURIAND</li><li>Benoit TRENTO</li><li>Jacques LEVAVASSEUR</li><li>Patricia RIFFIOD</li></ul>Ne faut-il pas qu\'ils assistent à la présentation ? <br />Echéance repoussée à mi mai<br />Rendez-vous envoyé<br />Préparation de la base et de l\'outil dans sa dernière version.<br />Présentation faite au format PPT', '2013-05-15', '2013-05-15') ; 
 INSERT INTO `historyactions` VALUES (108, 39, 10, '2013-05-14', '2013-05-31', 0, 'normale', 'en cours', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br>Ajouter un rapport : activité réelle par domaine, pour chaque agent (idem facturation)<br />Actions : mettre la durée en jour', '2013-05-15', '2013-05-15') ; 
 INSERT INTO `historyactions` VALUES (109, 39, 100, '2013-05-14', '2005-06-04', 0, 'normale', 'terminée', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br>Ajouter un rapport : activité réelle par domaine, pour chaque agent (idem facturation)<br />Actions : mettre la durée en jour', '2013-05-15', '2013-05-15') ; 
 INSERT INTO `historyactions` VALUES (110, 40, 0, '2013-05-15', '2013-05-30', 0, 'moyenne', 'à faire', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br>Ajouter le domaine dans la feuille de temps<br />Dans la rapport faire une répartition de l\'activité par Projet et domaine', '2013-05-15', '2013-05-15') ; 
@@ -4303,12 +2844,8 @@ INSERT INTO `historyactions` VALUES (112, 41, 10, '2013-05-15', '2013-05-30', 0,
 INSERT INTO `historyactions` VALUES (113, 41, 10, '2013-05-15', '2013-05-30', 0, 'moyenne', 'en cours', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br>Ajouter le domaine dans la feuille de temps<br />Dans la rapport faire une répartition de l\'activité par Projet et domaine', '2013-05-15', '2013-05-15') ; 
 INSERT INTO `historyactions` VALUES (114, 41, 100, '2013-05-15', '2005-06-04', 2, 'moyenne', 'terminée', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br>Ajouter le domaine dans la feuille de temps<br />Dans la rapport faire une répartition de l\'activité par Projet et domaine', '2013-05-15', '2013-05-15') ; 
 INSERT INTO `historyactions` VALUES (115, 33, 0, '2013-05-13', '2013-06-27', 0, 'moyenne', 'en cours', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br>', '2013-05-15', '2013-05-15') ; 
-INSERT INTO `historyactions` VALUES (116, 33, 0, '2013-05-13', '2013-06-27', 2, 'moyenne', 'en cours', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br><ul>
-<li>Erreur de paramétrgae pour le profil Responsable équipe, ajouter autoupdate pour valider les feuille de temps</li>
-</ul>', '2013-05-15', '2013-05-15') ; 
-INSERT INTO `historyactions` VALUES (117, 33, 0, '2013-05-13', '2013-06-27', 2, 'moyenne', 'en cours', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br><ul>
-<li>Erreur de paramétrgae pour le profil Responsable équipe, ajouter autoupdate pour valider les feuille de temps</li>
-</ul>', '2013-05-15', '2013-05-15') ; 
+INSERT INTO `historyactions` VALUES (116, 33, 0, '2013-05-13', '2013-06-27', 2, 'moyenne', 'en cours', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br><ul><li>Erreur de paramétrgae pour le profil Responsable équipe, ajouter autoupdate pour valider les feuille de temps</li></ul>', '2013-05-15', '2013-05-15') ; 
+INSERT INTO `historyactions` VALUES (117, 33, 0, '2013-05-13', '2013-06-27', 2, 'moyenne', 'en cours', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br><ul><li>Erreur de paramétrgae pour le profil Responsable équipe, ajouter autoupdate pour valider les feuille de temps</li></ul>', '2013-05-15', '2013-05-15') ; 
 INSERT INTO `historyactions` VALUES (118, 16, 0, '2013-06-01', '2013-06-27', 48, 'normale', 'à faire', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br>', '2013-05-15', '2013-05-15') ; 
 INSERT INTO `historyactions` VALUES (119, 16, -10, '2013-06-01', '2013-06-27', 48, 'normale', 'à faire', 'Le 15/05/2013 par LEVAVASSEUR Jacques<br>', '2013-05-15', '2013-05-15') ; 
 INSERT INTO `historyactions` VALUES (120, 36, 50, '2013-05-13', '2013-05-31', 64, 'haute', 'en cours', 'Le 15/05/2013 par THIAULT Hugues<br>Mise à jour du DAT', '2013-05-15', '2013-05-15') ; 
@@ -4337,100 +2874,9 @@ INSERT INTO `historyactions` VALUES (142, 45, 30, '2013-05-15', '2013-05-15', 64
 INSERT INTO `historyactions` VALUES (143, 46, 0, '2013-05-15', '2013-05-15', 0, 'normale', 'en cours', 'Le 15/05/2013 par THIAULT Hugues<br>', '2013-05-15', '2013-05-15') ; 
 INSERT INTO `historyactions` VALUES (144, 45, 30, '2013-05-15', '2013-05-31', 64, 'normale', 'en cours', 'Le 15/05/2013 par THIAULT Hugues<br>Premières remarques transmises au GRPT le 15/05', '2013-05-15', '2013-05-15') ; 
 INSERT INTO `historyactions` VALUES (145, 46, 0, '2013-05-15', '2013-05-31', 0, 'normale', 'en cours', 'Le 15/05/2013 par THIAULT Hugues<br>', '2013-05-15', '2013-05-15') ; 
-INSERT INTO `historyactions` VALUES (146, 24, 10, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide">
-<div class="js-comment-body comment-body markdown-body markdown-format">
-<ul>
-<li>Gestions des fichiers des dossiers admin, all avec add, delete</li>
-<li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li>
-<li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li>
-<li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li>
-<li>sur la page d\'accueil mes statistiques : <strong>FAIT</strong>
-<ul>
-<li>nombre d\'action à faire, en cours, proche échéance</li>
-<li>Saisie d\'activité</li>
-<li>Mes livrables à venir</li>
-<li>etc.</li>
-</ul>
-</li>
-<li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li>
-<li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li>
-<li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste <strong>FAIT</strong></li>
-<li>Importation des fichier ics</li>
-<li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li>
-<li>
-<div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div>
-</li>
-<li>Ajout des domaines dans les feuilles de temps <strong>FAIT</strong></li>
-<li>Action groupées dans les feuilles de temps <strong>FAIT</strong></li>
-<li>Réduction des champs obligatoires dans les actions <strong>FAIT</strong></li>
-<li>Mise à jour des rapports <strong>FAIT</strong></li>
-<li>Création de compte utilisateur générique <em><strong>En cours</strong></em></li>
-</ul>
-</div>
-</div>', '2013-05-16', '2013-05-16') ; 
-INSERT INTO `historyactions` VALUES (147, 24, 10, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide">
-<div class="js-comment-body comment-body markdown-body markdown-format">
-<ul>
-<li>Gestions des fichiers des dossiers admin, all avec add, delete</li>
-<li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li>
-<li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li>
-<li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li>
-<li>sur la page d\'accueil mes statistiques : <strong>FAIT</strong>
-<ul>
-<li>nombre d\'action à faire, en cours, proche échéance</li>
-<li>Saisie d\'activité</li>
-<li>Mes livrables à venir</li>
-<li>etc.</li>
-</ul>
-</li>
-<li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li>
-<li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li>
-<li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste <strong>FAIT</strong></li>
-<li>Importation des fichier ics</li>
-<li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li>
-<li>
-<div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div>
-</li>
-<li>Ajout des domaines dans les feuilles de temps <strong>FAIT</strong></li>
-<li>Action groupées dans les feuilles de temps <strong>FAIT</strong></li>
-<li>Réduction des champs obligatoires dans les actions <strong>FAIT</strong></li>
-<li>Mise à jour des rapports <strong>FAIT</strong></li>
-<li>Création de compte utilisateur générique <em><strong>En cours</strong></em></li>
-</ul>
-</div>
-</div>', '2013-05-16', '2013-05-16') ; 
-INSERT INTO `historyactions` VALUES (148, 24, 30, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide">
-<div class="js-comment-body comment-body markdown-body markdown-format">
-<ul>
-<li>Gestions des fichiers des dossiers admin, all avec add, delete</li>
-<li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li>
-<li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li>
-<li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li>
-<li>sur la page d\'accueil mes statistiques : <strong>FAIT</strong>
-<ul>
-<li>nombre d\'action à faire, en cours, proche échéance</li>
-<li>Saisie d\'activité</li>
-<li>Mes livrables à venir</li>
-<li>etc.</li>
-</ul>
-</li>
-<li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li>
-<li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li>
-<li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste <strong>FAIT</strong></li>
-<li>Importation des fichier ics</li>
-<li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li>
-<li>
-<div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div>
-</li>
-<li>Ajout des domaines dans les feuilles de temps <strong>FAIT</strong></li>
-<li>Action groupées dans les feuilles de temps <strong>FAIT</strong></li>
-<li>Réduction des champs obligatoires dans les actions <strong>FAIT</strong></li>
-<li>Mise à jour des rapports <strong>FAIT</strong></li>
-<li>Création de compte utilisateur générique<strong> <strong>FAIT</strong><em><br /></em></strong></li>
-<li>Revoir la navigation<strong><strong><em> En cours</em></strong></strong></li>
-</ul>
-</div>
-</div>', '2013-05-16', '2013-05-16') ; 
+INSERT INTO `historyactions` VALUES (146, 24, 10, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide"><div class="js-comment-body comment-body markdown-body markdown-format"><ul><li>Gestions des fichiers des dossiers admin, all avec add, delete</li><li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li><li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li><li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li><li>sur la page d\'accueil mes statistiques : <strong>FAIT</strong><ul><li>nombre d\'action à faire, en cours, proche échéance</li><li>Saisie d\'activité</li><li>Mes livrables à venir</li><li>etc.</li></ul></li><li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li><li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li><li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste <strong>FAIT</strong></li><li>Importation des fichier ics</li><li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li><li><div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div></li><li>Ajout des domaines dans les feuilles de temps <strong>FAIT</strong></li><li>Action groupées dans les feuilles de temps <strong>FAIT</strong></li><li>Réduction des champs obligatoires dans les actions <strong>FAIT</strong></li><li>Mise à jour des rapports <strong>FAIT</strong></li><li>Création de compte utilisateur générique <em><strong>En cours</strong></em></li></ul></div></div>', '2013-05-16', '2013-05-16') ; 
+INSERT INTO `historyactions` VALUES (147, 24, 10, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide"><div class="js-comment-body comment-body markdown-body markdown-format"><ul><li>Gestions des fichiers des dossiers admin, all avec add, delete</li><li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li><li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li><li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li><li>sur la page d\'accueil mes statistiques : <strong>FAIT</strong><ul><li>nombre d\'action à faire, en cours, proche échéance</li><li>Saisie d\'activité</li><li>Mes livrables à venir</li><li>etc.</li></ul></li><li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li><li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li><li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste <strong>FAIT</strong></li><li>Importation des fichier ics</li><li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li><li><div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div></li><li>Ajout des domaines dans les feuilles de temps <strong>FAIT</strong></li><li>Action groupées dans les feuilles de temps <strong>FAIT</strong></li><li>Réduction des champs obligatoires dans les actions <strong>FAIT</strong></li><li>Mise à jour des rapports <strong>FAIT</strong></li><li>Création de compte utilisateur générique <em><strong>En cours</strong></em></li></ul></div></div>', '2013-05-16', '2013-05-16') ; 
+INSERT INTO `historyactions` VALUES (148, 24, 30, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide"><div class="js-comment-body comment-body markdown-body markdown-format"><ul><li>Gestions des fichiers des dossiers admin, all avec add, delete</li><li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li><li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li><li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li><li>sur la page d\'accueil mes statistiques : <strong>FAIT</strong><ul><li>nombre d\'action à faire, en cours, proche échéance</li><li>Saisie d\'activité</li><li>Mes livrables à venir</li><li>etc.</li></ul></li><li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li><li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li><li>Mise à jour de l\'état des action en cliquant sur l\'état, avancement à partir de la liste <strong>FAIT</strong></li><li>Importation des fichier ics</li><li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li><li><div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div></li><li>Ajout des domaines dans les feuilles de temps <strong>FAIT</strong></li><li>Action groupées dans les feuilles de temps <strong>FAIT</strong></li><li>Réduction des champs obligatoires dans les actions <strong>FAIT</strong></li><li>Mise à jour des rapports <strong>FAIT</strong></li><li>Création de compte utilisateur générique<strong> <strong>FAIT</strong><em><br /></em></strong></li><li>Revoir la navigation<strong><strong><em> En cours</em></strong></strong></li></ul></div></div>', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `historyactions` VALUES (149, 47, 0, '2013-05-20', '2013-05-23', 0, 'moyenne', 'à faire', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br>Prendre en compte le fichier Excel des absences,SAILL, et le fichier du plan de charge', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `historyactions` VALUES (150, 47, 0, '2013-05-20', '2013-05-23', 0, 'moyenne', 'à faire', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br>Prendre en compte le fichier Excel des absences et le fichier du plan de charge', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `historyactions` VALUES (151, 48, 0, '2013-05-16', '2013-05-23', 8, 'moyenne', 'à faire', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br>', '2013-05-16', '2013-05-16') ; 
@@ -4442,85 +2888,14 @@ INSERT INTO `historyactions` VALUES (156, 49, 100, '2013-05-16', '2013-05-16', 0
 INSERT INTO `historyactions` VALUES (157, 49, 90, '2013-05-16', '2013-05-16', 0, 'haute', 'en cours', 'Le 16/05/2013 par THIAULT Hugues<br>', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `historyactions` VALUES (158, 50, 90, '2013-05-16', '2013-05-16', 0, 'haute', 'en cours', 'Le 16/05/2013 par THIAULT Hugues<br>', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `historyactions` VALUES (159, 49, 80, '2013-05-16', '2013-05-16', 0, 'haute', 'en cours', 'Le 16/05/2013 par THIAULT Hugues<br>', '2013-05-16', '2013-05-16') ; 
-INSERT INTO `historyactions` VALUES (160, 14, 30, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br />
-<ul>
-<li>mise à jour de SAILL pour la création du compte de AGUILAR</li>
-<li>Demande ouverture de droits</li>
-<li>Activation du compte de LEBLANC Bastien</li>
-<li>Demande ouverture de droits</li>
-<li>Demande information budget SGRM</li>
-</ul>
-<br />le 14/05/2013<br />
-<ul>
-<li>mise à jour avancement ouverture de droit</li>
-<li>demande droit admin sur poste P71</li>
-<li>changement liste diffusion pour LEBLANC</li>
-</ul>
-<br />le 16/05/2013<br />
-<ul>
-<li>renseignement pour fournir un PC à Vincent BERNIER</li>
-<li>Attente info pour le compte et surtout le mot de passe</li>
-<li>Anticipation de la demande d\'activation du compte de Vincent BERNIER</li>
-</ul>', '2013-05-16', '2013-05-16') ; 
+INSERT INTO `historyactions` VALUES (160, 14, 30, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br /><ul><li>mise à jour de SAILL pour la création du compte de AGUILAR</li><li>Demande ouverture de droits</li><li>Activation du compte de LEBLANC Bastien</li><li>Demande ouverture de droits</li><li>Demande information budget SGRM</li></ul><br />le 14/05/2013<br /><ul><li>mise à jour avancement ouverture de droit</li><li>demande droit admin sur poste P71</li><li>changement liste diffusion pour LEBLANC</li></ul><br />le 16/05/2013<br /><ul><li>renseignement pour fournir un PC à Vincent BERNIER</li><li>Attente info pour le compte et surtout le mot de passe</li><li>Anticipation de la demande d\'activation du compte de Vincent BERNIER</li></ul>', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `historyactions` VALUES (161, 47, 10, '2013-05-20', '2013-05-23', 8, 'moyenne', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br>Prendre en compte le fichier Excel des absences et le fichier du plan de charge', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `historyactions` VALUES (162, 47, 10, '2013-05-20', '2013-05-23', 8, 'moyenne', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br>Prendre en compte le fichier Excel des absences et le fichier du plan de charge', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `historyactions` VALUES (163, 47, 20, '2013-05-20', '2013-05-23', 8, 'moyenne', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br>Prendre en compte le fichier Excel des absences et le fichier du plan de charge', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `historyactions` VALUES (164, 47, 30, '2013-05-20', '2013-05-23', 8, 'moyenne', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br>Prendre en compte le fichier Excel des absences et le fichier du plan de charge', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `historyactions` VALUES (165, 47, 40, '2013-05-20', '2013-05-23', 8, 'moyenne', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br>Prendre en compte le fichier Excel des absences et le fichier du plan de charge<br />Consolidation envoyée à STERIA pour validation en attente du retour pour mercredi', '2013-05-16', '2013-05-16') ; 
-INSERT INTO `historyactions` VALUES (166, 24, 30, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide">
-<div class="js-comment-body comment-body markdown-body markdown-format">
-<ul>
-<li>Gestions des fichiers des dossiers admin, all avec add, delete</li>
-<li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li>
-<li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li>
-<li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li>
-<li><span style="text-decoration: line-through;">sur la page d\'accueil mes statistiques</span> : <strong>FAIT</strong>
-<ul>
-<li><span style="text-decoration: line-through;">nombre d\'action à faire, en cours, proche échéance</span></li>
-<li><span style="text-decoration: line-through;">Saisie d\'activité</span></li>
-<li><span style="text-decoration: line-through;">Mes livrables à venir</span></li>
-<li><span style="text-decoration: line-through;">etc.</span></li>
-</ul>
-</li>
-<li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li>
-<li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li>
-<li><span style="text-decoration: line-through;">Mise à jour de l\'état des actions en cliquant sur l\'état, avancement à partir de la liste</span> <strong>FAIT</strong></li>
-<li>Importation des fichier ics</li>
-<li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li>
-<li>
-<div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div>
-</li>
-<li><span style="text-decoration: line-through;">Ajout des domaines dans les feuilles de temps</span> <strong>FAIT</strong></li>
-<li><span style="text-decoration: line-through;">Action groupées dans les feuilles de temps</span> <strong>FAIT</strong></li>
-<li><span style="text-decoration: line-through;">Réduction des champs obligatoires dans les actions</span> <strong>FAIT</strong></li>
-<li><span style="text-decoration: line-through;">Mise à jour des rapports</span> <strong>FAIT</strong></li>
-<li><span style="text-decoration: line-through;">Création de compte utilisateur générique</span><strong> <strong>FAIT</strong><em><br /></em></strong></li>
-<li>Revoir la navigation<strong><strong><em> En cours</em></strong></strong></li>
-<li><span style="text-decoration: line-through;">Quelques évolutions faites à la volée sur les feuilles de temps, les rapports et autre</span> <strong>FAIT</strong></li>
-</ul>
-</div>
-</div>', '2013-05-16', '2013-05-16') ; 
-INSERT INTO `historyactions` VALUES (167, 14, 30, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br />
-<ul>
-<li>mise à jour de SAILL pour la création du compte de AGUILAR</li>
-<li>Demande ouverture de droits</li>
-<li>Activation du compte de LEBLANC Bastien</li>
-<li>Demande ouverture de droits</li>
-<li>Demande information budget SGRM</li>
-</ul>
-le 14/05/2013<br />
-<ul>
-<li>mise à jour avancement ouverture de droit</li>
-<li>demande droit admin sur poste P71</li>
-<li>changement liste diffusion pour LEBLANC</li>
-</ul>
-le 16/05/2013<br />
-<ul>
-<li>renseignement pour fournir un PC à Vincent BERNIER</li>
-<li>Attente info pour le compte et surtout le mot de passe</li>
-<li>Anticipation de la demande d\'activation du compte de Vincent BERNIER -compte supprimé sera créé par SAMBA formulaire envoyé attente retour.</li>
-</ul>
-Le 21/05/2013', '2013-05-16', '2013-05-16') ; 
+INSERT INTO `historyactions` VALUES (166, 24, 30, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide"><div class="js-comment-body comment-body markdown-body markdown-format"><ul><li>Gestions des fichiers des dossiers admin, all avec add, delete</li><li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li><li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li><li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li><li><span style="text-decoration: line-through;">sur la page d\'accueil mes statistiques</span> : <strong>FAIT</strong><ul><li><span style="text-decoration: line-through;">nombre d\'action à faire, en cours, proche échéance</span></li><li><span style="text-decoration: line-through;">Saisie d\'activité</span></li><li><span style="text-decoration: line-through;">Mes livrables à venir</span></li><li><span style="text-decoration: line-through;">etc.</span></li></ul></li><li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li><li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li><li><span style="text-decoration: line-through;">Mise à jour de l\'état des actions en cliquant sur l\'état, avancement à partir de la liste</span> <strong>FAIT</strong></li><li>Importation des fichier ics</li><li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li><li><div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div></li><li><span style="text-decoration: line-through;">Ajout des domaines dans les feuilles de temps</span> <strong>FAIT</strong></li><li><span style="text-decoration: line-through;">Action groupées dans les feuilles de temps</span> <strong>FAIT</strong></li><li><span style="text-decoration: line-through;">Réduction des champs obligatoires dans les actions</span> <strong>FAIT</strong></li><li><span style="text-decoration: line-through;">Mise à jour des rapports</span> <strong>FAIT</strong></li><li><span style="text-decoration: line-through;">Création de compte utilisateur générique</span><strong> <strong>FAIT</strong><em><br /></em></strong></li><li>Revoir la navigation<strong><strong><em> En cours</em></strong></strong></li><li><span style="text-decoration: line-through;">Quelques évolutions faites à la volée sur les feuilles de temps, les rapports et autre</span> <strong>FAIT</strong></li></ul></div></div>', '2013-05-16', '2013-05-16') ; 
+INSERT INTO `historyactions` VALUES (167, 14, 30, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 16/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br /><ul><li>mise à jour de SAILL pour la création du compte de AGUILAR</li><li>Demande ouverture de droits</li><li>Activation du compte de LEBLANC Bastien</li><li>Demande ouverture de droits</li><li>Demande information budget SGRM</li></ul>le 14/05/2013<br /><ul><li>mise à jour avancement ouverture de droit</li><li>demande droit admin sur poste P71</li><li>changement liste diffusion pour LEBLANC</li></ul>le 16/05/2013<br /><ul><li>renseignement pour fournir un PC à Vincent BERNIER</li><li>Attente info pour le compte et surtout le mot de passe</li><li>Anticipation de la demande d\'activation du compte de Vincent BERNIER -compte supprimé sera créé par SAMBA formulaire envoyé attente retour.</li></ul>Le 21/05/2013', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `historyactions` VALUES (168, 49, 90, '2013-05-16', '2013-05-16', 0, 'haute', 'en cours', 'Le 16/05/2013 par THIAULT Hugues<br>', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `historyactions` VALUES (169, 49, 90, '2013-05-16', '2013-05-16', 2, 'haute', 'en cours', 'Le 16/05/2013 par THIAULT Hugues<br>', '2013-05-16', '2013-05-16') ; 
 INSERT INTO `historyactions` VALUES (170, 49, 90, '2013-05-16', '2013-05-16', 4, 'haute', 'en cours', 'Le 16/05/2013 par THIAULT Hugues<br>', '2013-05-16', '2013-05-16') ; 
@@ -4551,34 +2926,8 @@ INSERT INTO `historyactions` VALUES (194, 61, 40, '2013-05-21', '2013-05-31', 16
 INSERT INTO `historyactions` VALUES (195, 62, 50, '2013-05-21', '2013-05-26', 2, 'haute', 'en cours', 'Le 21/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utilisateurs/edit/278">Lien vers le nouvel utilisateur<br />D</a>emande envoyée  le 21/05/2013', '2013-05-21', '2013-05-21') ; 
 INSERT INTO `historyactions` VALUES (196, 48, 80, '2013-05-20', '2013-05-23', 8, 'moyenne', 'à faire', 'Le 21/05/2013 par LEVAVASSEUR Jacques<br>Reste Julien BRANCATA', '2013-05-21', '2013-05-21') ; 
 INSERT INTO `historyactions` VALUES (197, 47, 80, '2013-05-20', '2013-05-23', 8, 'moyenne', 'en cours', 'Le 21/05/2013 par LEVAVASSEUR Jacques<br>Prendre en compte le fichier Excel des absences et le fichier du plan de charge<br />Consolidation envoyée à STERIA pour validation en attente du retour pour mercredi<br />Retour presque complet en attente complément information de la part de STERIA', '2013-05-21', '2013-05-21') ; 
-INSERT INTO `historyactions` VALUES (198, 14, 50, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 21/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br />
-<ul>
-<li>mise à jour de SAILL pour la création du compte de AGUILAR</li>
-<li>Demande ouverture de droits</li>
-<li>Activation du compte de LEBLANC Bastien</li>
-<li>Demande ouverture de droits</li>
-<li>Demande information budget SGRM</li>
-</ul>
-le 14/05/2013<br />
-<ul>
-<li>mise à jour avancement ouverture de droit</li>
-<li>demande droit admin sur poste P71</li>
-<li>changement liste diffusion pour LEBLANC</li>
-</ul>
-le 16/05/2013<br />
-<ul>
-<li>renseignement pour fournir un PC à Vincent BERNIER</li>
-<li>Attente info pour le compte et surtout le mot de passe</li>
-<li>Anticipation de la demande d\'activation du compte de Vincent BERNIER -compte supprimé sera créé par SAMBA formulaire envoyé attente retour.</li>
-</ul>
-Le 21/05/2013<br />
-<ul>
-<li>Dépannage Visio</li>
-<li>Création de compte</li>
-</ul>', '2013-05-21', '2013-05-21') ; 
-INSERT INTO `historyactions` VALUES (199, 33, 10, '2013-05-13', '2013-06-27', 2, 'moyenne', 'en cours', 'Le 21/05/2013 par LEVAVASSEUR Jacques<br><ul>
-<li>Erreur de paramétrgae pour le profil Responsable équipe, ajouter autoupdate pour valider les feuille de temps</li>
-</ul>', '2013-05-21', '2013-05-21') ; 
+INSERT INTO `historyactions` VALUES (198, 14, 50, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 21/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br /><ul><li>mise à jour de SAILL pour la création du compte de AGUILAR</li><li>Demande ouverture de droits</li><li>Activation du compte de LEBLANC Bastien</li><li>Demande ouverture de droits</li><li>Demande information budget SGRM</li></ul>le 14/05/2013<br /><ul><li>mise à jour avancement ouverture de droit</li><li>demande droit admin sur poste P71</li><li>changement liste diffusion pour LEBLANC</li></ul>le 16/05/2013<br /><ul><li>renseignement pour fournir un PC à Vincent BERNIER</li><li>Attente info pour le compte et surtout le mot de passe</li><li>Anticipation de la demande d\'activation du compte de Vincent BERNIER -compte supprimé sera créé par SAMBA formulaire envoyé attente retour.</li></ul>Le 21/05/2013<br /><ul><li>Dépannage Visio</li><li>Création de compte</li></ul>', '2013-05-21', '2013-05-21') ; 
+INSERT INTO `historyactions` VALUES (199, 33, 10, '2013-05-13', '2013-06-27', 2, 'moyenne', 'en cours', 'Le 21/05/2013 par LEVAVASSEUR Jacques<br><ul><li>Erreur de paramétrgae pour le profil Responsable équipe, ajouter autoupdate pour valider les feuille de temps</li></ul>', '2013-05-21', '2013-05-21') ; 
 INSERT INTO `historyactions` VALUES (221, 48, 80, '2013-05-20', '2005-06-04', 8, 'moyenne', 'en cours', 'Le 21/05/2013 par LEVAVASSEUR Jacques<br>Reste Julien BRANCATA', '2013-05-21', '2013-05-21') ; 
 INSERT INTO `historyactions` VALUES (222, 48, 80, '2013-05-20', '2013-05-24', 8, 'moyenne', 'en cours', 'Le 21/05/2013 par LEVAVASSEUR Jacques<br>Reste Julien BRANCATA', '2013-05-21', '2013-05-21') ; 
 INSERT INTO `historyactions` VALUES (223, 62, 100, '2013-05-21', '2005-06-04', 2, 'haute', 'terminée', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utilisateurs/edit/278">Lien vers le nouvel utilisateur<br />D</a>emande envoyée  le 21/05/2013', '2013-05-22', '2013-05-22') ; 
@@ -4673,92 +3022,10 @@ INSERT INTO `historyactions` VALUES (311, 78, 10, '2013-05-21', '2013-05-26', 2,
 INSERT INTO `historyactions` VALUES (312, 78, 100, '2013-05-21', '2013-05-22', 2, 'haute', 'terminée', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br><a href="http://p64l03bib6q/SAILL/200/utiliseoutils/edit/133">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-22', '2013-05-22') ; 
 INSERT INTO `historyactions` VALUES (313, 47, 100, '2013-05-20', '2013-05-22', 8, 'moyenne', 'terminée', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br>Prendre en compte le fichier Excel des absences et le fichier du plan de charge<br />Consolidation envoyée à STERIA pour validation en attente du retour pour mercredi<br />Retour presque complet en attente complément information de la part de STERIA', '2013-05-22', '2013-05-22') ; 
 INSERT INTO `historyactions` VALUES (314, 48, 100, '2013-05-20', '2013-05-22', 8, 'moyenne', 'terminée', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br>Reste Julien BRANCATA', '2013-05-22', '2013-05-22') ; 
-INSERT INTO `historyactions` VALUES (315, 14, 50, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br />
-<ul>
-<li>mise à jour de SAILL pour la création du compte de AGUILAR</li>
-<li>Demande ouverture de droits</li>
-<li>Activation du compte de LEBLANC Bastien</li>
-<li>Demande ouverture de droits</li>
-<li>Demande information budget SGRM</li>
-</ul>
-le 14/05/2013<br />
-<ul>
-<li>mise à jour avancement ouverture de droit</li>
-<li>demande droit admin sur poste P71</li>
-<li>changement liste diffusion pour LEBLANC</li>
-</ul>
-le 16/05/2013<br />
-<ul>
-<li>renseignement pour fournir un PC à Vincent BERNIER</li>
-<li>Attente info pour le compte et surtout le mot de passe</li>
-<li>Anticipation de la demande d\'activation du compte de Vincent BERNIER -compte supprimé sera créé par SAMBA formulaire envoyé attente retour.</li>
-</ul>
-Le 21/05/2013<br />
-<ul>
-<li>Dépannage Visio</li>
-<li>Création de compte</li>
-</ul>', '2013-05-22', '2013-05-22') ; 
-INSERT INTO `historyactions` VALUES (316, 14, 60, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br />
-<ul>
-<li>mise à jour de SAILL pour la création du compte de AGUILAR</li>
-<li>Demande ouverture de droits</li>
-<li>Activation du compte de LEBLANC Bastien</li>
-<li>Demande ouverture de droits</li>
-<li>Demande information budget SGRM</li>
-</ul>
-le 14/05/2013<br />
-<ul>
-<li>mise à jour avancement ouverture de droit</li>
-<li>demande droit admin sur poste P71</li>
-<li>changement liste diffusion pour LEBLANC</li>
-</ul>
-le 16/05/2013<br />
-<ul>
-<li>renseignement pour fournir un PC à Vincent BERNIER</li>
-<li>Attente info pour le compte et surtout le mot de passe</li>
-<li>Anticipation de la demande d\'activation du compte de Vincent BERNIER -compte supprimé sera créé par SAMBA formulaire envoyé attente retour.</li>
-</ul>
-Le 21/05/2013<br />
-<ul>
-<li>Dépannage Visio</li>
-<li>Création de compte</li>
-</ul>', '2013-05-22', '2013-05-22') ; 
-INSERT INTO `historyactions` VALUES (317, 24, 30, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide">
-<div class="js-comment-body comment-body markdown-body markdown-format">
-<ul>
-<li>Gestions des fichiers des dossiers admin, all avec add, delete</li>
-<li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li>
-<li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li>
-<li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li>
-<li><span style="text-decoration: line-through;">sur la page d\'accueil mes statistiques</span> : <strong>FAIT</strong>
-<ul>
-<li><span style="text-decoration: line-through;">nombre d\'action à faire, en cours, proche échéance</span></li>
-<li><span style="text-decoration: line-through;">Saisie d\'activité</span></li>
-<li><span style="text-decoration: line-through;">Mes livrables à venir</span></li>
-<li><span style="text-decoration: line-through;">etc.</span></li>
-</ul>
-</li>
-<li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li>
-<li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li>
-<li><span style="text-decoration: line-through;">Mise à jour de l\'état des actions en cliquant sur l\'état, avancement à partir de la liste</span> <strong>FAIT</strong></li>
-<li>Importation des fichier ics</li>
-<li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li>
-<li>
-<div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div>
-</li>
-<li><span style="text-decoration: line-through;">Ajout des domaines dans les feuilles de temps</span> <strong>FAIT</strong></li>
-<li><span style="text-decoration: line-through;">Action groupées dans les feuilles de temps</span> <strong>FAIT</strong></li>
-<li><span style="text-decoration: line-through;">Réduction des champs obligatoires dans les actions</span> <strong>FAIT</strong></li>
-<li><span style="text-decoration: line-through;">Mise à jour des rapports</span> <strong>FAIT</strong></li>
-<li><span style="text-decoration: line-through;">Création de compte utilisateur générique</span><strong> <strong>FAIT</strong><em><br /></em></strong></li>
-<li>Revoir la navigation<strong><strong><em> En cours</em></strong></strong></li>
-<li><span style="text-decoration: line-through;">Quelques évolutions faites à la volée sur les feuilles de temps, les rapports et autre</span> <strong>FAIT</strong></li>
-</ul>
-</div>
-</div>', '2013-05-22', '2013-05-22') ; 
-INSERT INTO `historyactions` VALUES (318, 33, 20, '2013-05-13', '2013-06-27', 2, 'moyenne', 'en cours', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br><ul>
-<li>Erreur de paramétrgae pour le profil Responsable équipe, ajouter autoupdate pour valider les feuille de temps</li>
-</ul>', '2013-05-22', '2013-05-22') ; 
+INSERT INTO `historyactions` VALUES (315, 14, 50, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br /><ul><li>mise à jour de SAILL pour la création du compte de AGUILAR</li><li>Demande ouverture de droits</li><li>Activation du compte de LEBLANC Bastien</li><li>Demande ouverture de droits</li><li>Demande information budget SGRM</li></ul>le 14/05/2013<br /><ul><li>mise à jour avancement ouverture de droit</li><li>demande droit admin sur poste P71</li><li>changement liste diffusion pour LEBLANC</li></ul>le 16/05/2013<br /><ul><li>renseignement pour fournir un PC à Vincent BERNIER</li><li>Attente info pour le compte et surtout le mot de passe</li><li>Anticipation de la demande d\'activation du compte de Vincent BERNIER -compte supprimé sera créé par SAMBA formulaire envoyé attente retour.</li></ul>Le 21/05/2013<br /><ul><li>Dépannage Visio</li><li>Création de compte</li></ul>', '2013-05-22', '2013-05-22') ; 
+INSERT INTO `historyactions` VALUES (316, 14, 60, '2013-04-24', '2013-05-30', 48, 'normale', 'en cours', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br>le 13/05/2013:<br /><ul><li>mise à jour de SAILL pour la création du compte de AGUILAR</li><li>Demande ouverture de droits</li><li>Activation du compte de LEBLANC Bastien</li><li>Demande ouverture de droits</li><li>Demande information budget SGRM</li></ul>le 14/05/2013<br /><ul><li>mise à jour avancement ouverture de droit</li><li>demande droit admin sur poste P71</li><li>changement liste diffusion pour LEBLANC</li></ul>le 16/05/2013<br /><ul><li>renseignement pour fournir un PC à Vincent BERNIER</li><li>Attente info pour le compte et surtout le mot de passe</li><li>Anticipation de la demande d\'activation du compte de Vincent BERNIER -compte supprimé sera créé par SAMBA formulaire envoyé attente retour.</li></ul>Le 21/05/2013<br /><ul><li>Dépannage Visio</li><li>Création de compte</li></ul>', '2013-05-22', '2013-05-22') ; 
+INSERT INTO `historyactions` VALUES (317, 24, 30, '2013-05-13', '2013-08-29', 192, 'normale', 'en cours', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br><div class="edit-comment-hide"><div class="js-comment-body comment-body markdown-body markdown-format"><ul><li>Gestions des fichiers des dossiers admin, all avec add, delete</li><li>Ajout d\'un lien pour la référence MINIDOC <em><strong>En cours</strong></em></li><li>Paramètrage du site (mot de passe admin, Url outil MINDOC, Email contact admin du site, sauvegarde et restauration BDD, ...) <em><strong>En cours</strong></em></li><li>Template d\'email avec envois si demandé (choix laissé à l\'utilisateur ou action de notification, envois automatique sur certaines actions)</li><li><span style="text-decoration: line-through;">sur la page d\'accueil mes statistiques</span> : <strong>FAIT</strong><ul><li><span style="text-decoration: line-through;">nombre d\'action à faire, en cours, proche échéance</span></li><li><span style="text-decoration: line-through;">Saisie d\'activité</span></li><li><span style="text-decoration: line-through;">Mes livrables à venir</span></li><li><span style="text-decoration: line-through;">etc.</span></li></ul></li><li>Créer une action automatiquement lors de la création d\'un livrable avec le livrable associé rediriger vers cette action pour la compléter</li><li>Sur la création d\'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l\'objet</li><li><span style="text-decoration: line-through;">Mise à jour de l\'état des actions en cliquant sur l\'état, avancement à partir de la liste</span> <strong>FAIT</strong></li><li>Importation des fichier ics</li><li>validation ou avertissement d\'un valideur d\'indisponibilité (spécifique aux prestataires, concerne un petite population)</li><li><div>Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.</div></li><li><span style="text-decoration: line-through;">Ajout des domaines dans les feuilles de temps</span> <strong>FAIT</strong></li><li><span style="text-decoration: line-through;">Action groupées dans les feuilles de temps</span> <strong>FAIT</strong></li><li><span style="text-decoration: line-through;">Réduction des champs obligatoires dans les actions</span> <strong>FAIT</strong></li><li><span style="text-decoration: line-through;">Mise à jour des rapports</span> <strong>FAIT</strong></li><li><span style="text-decoration: line-through;">Création de compte utilisateur générique</span><strong> <strong>FAIT</strong><em><br /></em></strong></li><li>Revoir la navigation<strong><strong><em> En cours</em></strong></strong></li><li><span style="text-decoration: line-through;">Quelques évolutions faites à la volée sur les feuilles de temps, les rapports et autre</span> <strong>FAIT</strong></li></ul></div></div>', '2013-05-22', '2013-05-22') ; 
+INSERT INTO `historyactions` VALUES (318, 33, 20, '2013-05-13', '2013-06-27', 2, 'moyenne', 'en cours', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br><ul><li>Erreur de paramétrgae pour le profil Responsable équipe, ajouter autoupdate pour valider les feuille de temps</li></ul>', '2013-05-22', '2013-05-22') ; 
 INSERT INTO `historyactions` VALUES (319, 62, 0, '2013-05-21', '2013-05-22', 2, 'haute', 'annulée', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utilisateurs/edit/278">Lien vers le nouvel utilisateur<br />D</a>emande envoyée  le 21/05/2013', '2013-05-22', '2013-05-22') ; 
 INSERT INTO `historyactions` VALUES (320, 69, 0, '2013-05-21', '2013-05-22', 2, 'haute', 'annulée', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br><a href="http://p64l03bib6q/SAILL/200/utiliseoutils/edit/125">Lien vers la nouvelle demande d\'ouverture de droit</a>', '2013-05-22', '2013-05-22') ; 
 INSERT INTO `historyactions` VALUES (321, 62, 0, '2013-05-21', '2013-05-22', 2, 'haute', 'à faire', 'Le 22/05/2013 par LEVAVASSEUR Jacques<br><a href="../../utilisateurs/edit/278">Lien vers le nouvel utilisateur<br />D</a>emande envoyée  le 21/05/2013', '2013-05-22', '2013-05-22') ; 
@@ -4773,7 +3040,7 @@ INSERT INTO `historyactions` VALUES (326, 69, 100, '2013-05-21', '2013-05-22', 2
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -4875,7 +3142,7 @@ INSERT INTO `historybudgets` VALUES (15, 30, '2013', '35.00', '35.00', 1, '2013-
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -5630,7 +3897,7 @@ INSERT INTO `historyutilisateurs` VALUES (668, 279, '15:23:39 - ajout d\'une ouv
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -5735,7 +4002,7 @@ INSERT INTO `linkshareds` VALUES (15, 5, 'Portail des environnements', 'http://e
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -5864,7 +4131,7 @@ INSERT INTO `listediffusions` VALUES (35, NULL, '*DSI-T/SO OSMOSE Intégrateur GM
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -5962,18 +4229,14 @@ CREATE TABLE `livrables` (
 #
  
 INSERT INTO `livrables` VALUES (1, 5, 'Outil OSACT V2', '', '2013-05-13', '2013-05-15', '2013-05-15', 'validé', 'Application opérationnelle le 27/03/2013<br />Attente de faire la démonstration aux chefs de sections pour validation<br />Mise en service sur un périmètre réduit avant une mise en service à tout le projet<br />Réunion de présentation et de lancement le 14/05/2013 à l\'issue de la réunion quelques personnes pourront utiliser l\'outil en test avant un déploiement à tout le projet.', '', '2013-03-27', '2013-05-21') ; 
-INSERT INTO `livrables` VALUES (2, 5, 'Outil OSACT V2.1', '', '2013-09-05', '2013-09-05', '2013-08-29', 'en cours', 'Dans cette version ajouter un module pour :<br />
-<ul>
-<li>Génération de rapports au format PDF</li>
-<li>Apporter quelques améliorations remontées par les utilisateurs (<span style="background-color: #ffff00;">sur cette version ou une autre version pour un peu plus tard</span>) pour la rentrée par exemple</li>
-</ul>', '', '2013-03-27', '2013-05-22') ;
+INSERT INTO `livrables` VALUES (2, 5, 'Outil OSACT V2.1', '', '2013-09-05', '2013-09-05', '2013-08-29', 'en cours', 'Dans cette version ajouter un module pour :<br /><ul><li>Génération de rapports au format PDF</li><li>Apporter quelques améliorations remontées par les utilisateurs (<span style="background-color: #ffff00;">sur cette version ou une autre version pour un peu plus tard</span>) pour la rentrée par exemple</li></ul>', '', '2013-03-27', '2013-05-22') ;
 #
 # End of data contents of table livrables
 # --------------------------------------------------------
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -6076,7 +4339,7 @@ CREATE TABLE `mailtemplates` (
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -6349,7 +4612,7 @@ INSERT INTO `materielinformatiques` VALUES (166, 2, 1, 1, 'P64L03BID5J', 'En dot
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -6456,7 +4719,7 @@ INSERT INTO `messages` VALUES (2, 'Clôture de la saisie d\'activité pour le vend
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -6576,7 +4839,7 @@ INSERT INTO `outils` VALUES (10, 5, 'WIFI', 'Demande d\'accès au WIFI soumis à  
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -6653,22 +4916,22 @@ INSERT INTO `outils` VALUES (10, 5, 'WIFI', 'Demande d\'accès au WIFI soumis à  
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 
 
 #
-# Delete any existing table `params`
+# Delete any existing table `parameters`
 #
 
-DROP TABLE IF EXISTS `params`;
+DROP TABLE IF EXISTS `parameters`;
 
 
 #
-# Table structure of table `params`
+# Table structure of table `parameters`
 #
 
-CREATE TABLE `params` (
+CREATE TABLE `parameters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) NOT NULL,
   `param` text,
@@ -6678,19 +4941,19 @@ CREATE TABLE `params` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ;
 
 #
-# Data contents of table params (3 records)
+# Data contents of table parameters (3 records)
 #
  
-INSERT INTO `params` VALUES (1, 'urlminidoc', NULL, '2013-05-15 00:00:00', '2013-05-15 00:00:00') ; 
-INSERT INTO `params` VALUES (2, 'contact', NULL, '2013-05-15 00:00:00', '2013-05-15 00:00:00') ; 
-INSERT INTO `params` VALUES (3, 'version', '2.0.1b002', '2013-05-15 00:00:00', '2013-05-15 00:00:00') ;
+INSERT INTO `parameters` VALUES (1, 'urlminidoc', NULL, '2013-05-15 00:00:00', '2013-05-15 00:00:00') ; 
+INSERT INTO `parameters` VALUES (2, 'contact', NULL, '2013-05-15 00:00:00', '2013-05-15 00:00:00') ; 
+INSERT INTO `parameters` VALUES (3, 'version', '2.0.1b058', '2013-05-15 00:00:00', '2013-05-23 19:50:52') ;
 #
-# End of data contents of table params
+# End of data contents of table parameters
 # --------------------------------------------------------
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -6767,7 +5030,7 @@ INSERT INTO `params` VALUES (3, 'version', '2.0.1b002', '2013-05-15 00:00:00', '
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 # --------------------------------------------------------
 # Table: `plancharges`
@@ -6816,7 +5079,7 @@ INSERT INTO `plancharges` VALUES (7, 10, '2013-URBANISME', '2013', '0.4', 84, 63
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -6893,7 +5156,7 @@ INSERT INTO `plancharges` VALUES (7, 10, '2013-URBANISME', '2013', '0.4', 84, 63
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 # --------------------------------------------------------
 # Table: `plancharges`
@@ -6944,7 +5207,7 @@ INSERT INTO `profils` VALUES (10, 'Agent DSI-T SO gest. Outils', 'Autorisations 
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -7021,7 +5284,7 @@ INSERT INTO `profils` VALUES (10, 'Agent DSI-T SO gest. Outils', 'Autorisations 
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 # --------------------------------------------------------
 # Table: `plancharges`
@@ -7095,7 +5358,7 @@ INSERT INTO `projets` VALUES (24, 13, 'Frais DSI-T/SO', '', '2011-01-01', NULL, 
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -7172,7 +5435,7 @@ INSERT INTO `projets` VALUES (24, 13, 'Frais DSI-T/SO', '', '2011-01-01', NULL, 
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 # --------------------------------------------------------
 # Table: `plancharges`
@@ -7219,7 +5482,7 @@ CREATE TABLE `replacestrings` (
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -7296,7 +5559,7 @@ CREATE TABLE `replacestrings` (
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 # --------------------------------------------------------
 # Table: `plancharges`
@@ -7354,7 +5617,7 @@ INSERT INTO `sections` VALUES (8, NULL, 'DSI-T/SO DECISION MATERIEL', 'Section d
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -7431,7 +5694,7 @@ INSERT INTO `sections` VALUES (8, NULL, 'DSI-T/SO DECISION MATERIEL', 'Section d
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 # --------------------------------------------------------
 # Table: `plancharges`
@@ -7488,7 +5751,7 @@ INSERT INTO `sites` VALUES (5, 'SOGETI VILLEURBANNE', 'Site de SOGETI à VILLEURB
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -7565,7 +5828,7 @@ INSERT INTO `sites` VALUES (5, 'SOGETI VILLEURBANNE', 'Site de SOGETI à VILLEURB
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 # --------------------------------------------------------
 # Table: `plancharges`
@@ -7641,7 +5904,7 @@ INSERT INTO `societes` VALUES (19, 'QUATERNAIRE', NULL, NULL, NULL, '2013-02-01'
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -7718,7 +5981,7 @@ INSERT INTO `societes` VALUES (19, 'QUATERNAIRE', NULL, NULL, NULL, '2013-02-01'
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 # --------------------------------------------------------
 # Table: `plancharges`
@@ -7786,7 +6049,7 @@ INSERT INTO `suivilivrables` VALUES (7, 2, '2013-09-05', '2013-09-05', '2013-08-
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -7863,7 +6126,7 @@ INSERT INTO `suivilivrables` VALUES (7, 2, '2013-09-05', '2013-09-05', '2013-08-
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 # --------------------------------------------------------
 # Table: `plancharges`
@@ -7945,7 +6208,7 @@ INSERT INTO `tjmagents` VALUES (19, '2013 - STERIA 302', '399.00', NULL, '2013',
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -8022,7 +6285,7 @@ INSERT INTO `tjmagents` VALUES (19, '2013 - STERIA 302', '399.00', NULL, '2013',
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 # --------------------------------------------------------
 # Table: `plancharges`
@@ -8087,7 +6350,7 @@ INSERT INTO `tjmcontrats` VALUES (1, '640.00', '2013', '2013-02-01', '2013-02-01
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -8164,7 +6427,7 @@ INSERT INTO `tjmcontrats` VALUES (1, '640.00', '2013', '2013-02-01', '2013-02-01
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 # --------------------------------------------------------
 # Table: `plancharges`
@@ -8262,7 +6525,7 @@ INSERT INTO `typemateriels` VALUES (31, 'ALIMENTATION PORTABLE', NULL, '2013-02-
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -8339,7 +6602,7 @@ INSERT INTO `typemateriels` VALUES (31, 'ALIMENTATION PORTABLE', NULL, '2013-02-
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 # --------------------------------------------------------
 # Table: `plancharges`
@@ -8714,7 +6977,7 @@ INSERT INTO `utilisateurs` VALUES (279, 7, 7, 1, 4, NULL, NULL, NULL, 3, NULL, N
 
 # WordPress : buffernow.com MySQL database backup
 #
-# Generated: Thursday 23. May 2013 19:47 CEST
+# Generated: Friday 24. May 2013 15:14 CEST
 # Hostname: localhost
 # Database: `saill_200`
 # --------------------------------------------------------
@@ -8791,7 +7054,7 @@ INSERT INTO `utilisateurs` VALUES (279, 7, 7, 1, 4, NULL, NULL, NULL, 3, NULL, N
 # Table: `outils`
 # --------------------------------------------------------
 # --------------------------------------------------------
-# Table: `params`
+# Table: `parameters`
 # --------------------------------------------------------
 # --------------------------------------------------------
 # Table: `plancharges`

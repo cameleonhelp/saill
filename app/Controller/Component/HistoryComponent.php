@@ -22,13 +22,13 @@ class HistoryComponent extends Component {
      * Ajouter toutes les méthode dont on fait $this->History->goBack()
      * @var type 
      */
-    var $exception = array('delete','dupliquer','search','export_doc','export_xls','incra','progressduree','progressavancement','progressstatut','progressstate','autoduplicate','errorfacturation','deverouiller','soumettre','deleteall','autoprogressState','addIndisponibilite');
+    var $exception = array('delete','dupliquer','search','export_doc','export_xls','incra','parseICS','progressduree','progressavancement','progressstatut','progressstate','autoduplicate','errorfacturation','deverouiller','soumettre','deleteall','autoprogressState','addIndisponibilite');
 
     /**
      * action initialisant l'historique
      * @var type 
      */
-    var $initpage = array('index','display','home','profil', 'rapport','absences','login');
+    var $initpage = array('index','display','home','profil', 'rapport','absences','login','listebackup');
 
     function initialize(){
     }

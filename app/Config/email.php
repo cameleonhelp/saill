@@ -39,8 +39,8 @@ class EmailConfig {
         public $gmail = array(
             'host' => 'ssl://smtp.gmail.com',
             'port' => 465,
-            'username' => 'votreemail@host.fr',
-            'password' => 'secret',
+            'username' => 'nepasrepondresaill@gmail.com',
+            'password' => 'azerty64',
             'transport' => 'Smtp',
             'charset' => 'utf-8',
             'headerCharset' => 'utf-8'

@@ -1,12 +1,13 @@
 <?php
 App::uses('AppController', 'Controller');
 App::import('Vendor', 'dump', array('file'=>'backup_restore.class.php'));
+App::import('Vendor', 'filesfolder', array('file'=>'files_folders.class.php'));
 /**
- * Params Controller
+ * Parameters Controller
  *
- * @property Param $Param
+ * @property Parameters $Parameter
  */
-class ParamsController extends AppController {
+class ParametersController extends AppController {
         public $components = array('History');
                
 /**
@@ -16,17 +17,17 @@ class ParamsController extends AppController {
  */
 	public function index() {
                 $this->set('title_for_layout','Paramètres du site');
-                $urlMinidoc = $this->Param->find('first',array('conditions'=>array('nom'=>'urlminidoc'),'recursive'=>-1));
+                $urlMinidoc = $this->Parameter->find('first',array('conditions'=>array('nom'=>'urlminidoc'),'recursive'=>-1));
                 $this->set('urlminidoc',$urlMinidoc);
-                $contact = $this->Param->find('first',array('conditions'=>array('nom'=>'contact'),'recursive'=>-1));
+                $contact = $this->Parameter->find('first',array('conditions'=>array('nom'=>'contact'),'recursive'=>-1));
                 $this->set('contact',$contact);
-                $version = $this->Param->find('first',array('conditions'=>array('nom'=>'version'),'recursive'=>-1));
+                $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'version'),'recursive'=>-1));
                 $this->set('version',$version);                
 	}
         
 	public function savebdd() {
                 $this->set('title_for_layout','Sauvegarde du site');
-                $database = $this->Param->getDataSource();
+                $database = $this->Parameter->getDataSource();
                 $path = WWW_ROOT.DS.'files'.DS.'sql_backup';
                 $obj = new backup_restore($database->config['host'], $database->config['database'], $database->config['login'], $database->config['password'], $path);
                 $backup = $obj->backup();
@@ -42,49 +43,45 @@ class ParamsController extends AppController {
 
 	public function listebackup() {
                 $this->set('title_for_layout','Sauvegardes du site');
+                $files = new files_folder($this->params->base);
+                $sqlfiles = $files->getSqlFiles();
+                $this->set('files',$sqlfiles);
                 //$this->History->goBack();
 	}  
         
-	public function restorebdd() {
+	public function restorebdd($file=null) {
                 $this->set('title_for_layout','Restauration du site');
-                $database = $this->Param->getDataSource();
+                $database = $this->Parameter->getDataSource();
+                $sqlfile = str_replace('-', '/', $file);
                 $path = WWW_ROOT.DS.'files'.DS.'sql_backup';
-                $file = $this->data->file;
-                $obj = new backup_restore($database->config['host'], $database->config['database'], $database->config['login'], $database->config['password'], $path);
-                $backup = $obj->restore($file);
+                $obj = new backup_restore($database->config['host'], $database->config['database'], $database->config['login'], $database->config['password'],$path);
+                $backup = $obj->restore($sqlfile);
                 if($backup) :
                     $this->Session->setFlash(__('Base de données restaurée'),'default',array('class'=>'alert alert-success'));
-                    $this->redirect(array('action' => 'listebackup'));
                 else:
-                    $this->Session->setFlash(__('Base de données <b>NON</b> restaurée '.$backup),'default',array('class'=>'alert alert-error'));
-                    $this->History->goBack();
+                    $this->Session->setFlash(__('Base de données <b>NON</b> restaurée - '.$backup),'default',array('class'=>'alert alert-error'));
                 endif;
-                exit();
+                $this->History->goBack(); 
 	}          
         
-        public function deletebackup($sqlfile=null){
-        if($sqlfile!=null):
-            $path = WWW_ROOT.DS.'files'.DS.'sql_backup';
-            $fileurl = realpath($path).DS.$sqlfile;
-            if(file_exists($fileurl)):
-               unlink($fileurl);
+        public function deletebackup($file=null){
+            $nfile = new files_folder();
+            $sqlfile = str_replace('-', '/', $file);
+            if($nfile->deletefile($sqlfile)):
                $this->Session->setFlash(__('Sauvegarde du site supprimée'),'default',array('class'=>'alert alert-success'));
             else  :
-               $this->Session->setFlash(__('Sauvegarde <b>INCONNUE NON</b> supprimée'),'default',array('class'=>'alert alert-error')); 
+               $this->Session->setFlash(__('Sauvegarde <b>NON</b> supprimée '),'default',array('class'=>'alert alert-error')); 
             endif;
-        else :
-            $this->Session->setFlash(__('Sauvegarde <b>INEXISTANTE</b>'),'default',array('class'=>'alert alert-error'));
-        endif;
-        $this->History->goBack();   
+            $this->History->goBack();
         }
 
         /**
          * 
          */
         public function saveParam() {
-              $id = $this->data['Param']['id'];
-              $this->Param->id = $id;
-              if ($this->Param->saveField('param', $this->data['Param']['param'])):
+              $id = $this->data['Parameter']['id'];
+              $this->Parameter->id = $id;
+              if ($this->Parameter->saveField('param', $this->data['Parameter']['param'])):
                   $this->Session->setFlash(__('Paramètre mis à jour'),'default',array('class'=>'alert alert-success'));
               else:
                   $this->Session->setFlash(__('Paramètre <b>NON</b> mis à jour'),'default',array('class'=>'alert alert-error')); 
@@ -94,17 +91,17 @@ class ParamsController extends AppController {
         
         
         public function get_version(){
-            $version = $this->Param->find('first',array('conditions'=>array('nom'=>'version'),'recursive'=>-1));
+            $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'version'),'recursive'=>-1));
             return $version;
         }
         
         public function get_minidocurl(){
-            $version = $this->Param->find('first',array('conditions'=>array('nom'=>'urlminidoc'),'recursive'=>-1));
+            $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'urlminidoc'),'recursive'=>-1));
             return $version;
         } 
         
         public function get_contact(){
-            $version = $this->Param->find('first',array('conditions'=>array('nom'=>'contact'),'recursive'=>-1));
+            $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'contact'),'recursive'=>-1));
             return $version;
         }         
 /**
@@ -115,11 +112,11 @@ class ParamsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
-		if (!$this->Param->exists($id)) {
+		if (!$this->Parameter->exists($id)) {
 			throw new NotFoundException(__('Invalid param'));
 		}
-		$options = array('conditions' => array('Param.' . $this->Param->primaryKey => $id));
-		$this->set('param', $this->Param->find('first', $options));
+		$options = array('conditions' => array('Param.' . $this->Parameter->primaryKey => $id));
+		$this->set('param', $this->Parameter->find('first', $options));
 	}
 
 /**
@@ -129,8 +126,8 @@ class ParamsController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			$this->Param->create();
-			if ($this->Param->save($this->request->data)) {
+			$this->Parameter->create();
+			if ($this->Parameter->save($this->request->data)) {
 				$this->Session->setFlash(__('The param has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
@@ -147,19 +144,19 @@ class ParamsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-		if (!$this->Param->exists($id)) {
+		if (!$this->Parameter->exists($id)) {
 			throw new NotFoundException(__('Invalid param'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Param->save($this->request->data)) {
+			if ($this->Parameter->save($this->request->data)) {
 				$this->Session->setFlash(__('The param has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The param could not be saved. Please, try again.'));
 			}
 		} else {
-			$options = array('conditions' => array('Param.' . $this->Param->primaryKey => $id));
-			$this->request->data = $this->Param->find('first', $options);
+			$options = array('conditions' => array('Param.' . $this->Parameter->primaryKey => $id));
+			$this->request->data = $this->Parameter->find('first', $options);
 		}
 	}
 
@@ -171,12 +168,12 @@ class ParamsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-		$this->Param->id = $id;
-		if (!$this->Param->exists()) {
+		$this->Parameter->id = $id;
+		if (!$this->Parameter->exists()) {
 			throw new NotFoundException(__('Invalid param'));
 		}
 		$this->request->onlyAllow('post', 'delete');
-		if ($this->Param->delete()) {
+		if ($this->Parameter->delete()) {
 			$this->Session->setFlash(__('Param deleted'));
 			$this->redirect(array('action' => 'index'));
 		}

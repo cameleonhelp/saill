@@ -20,7 +20,7 @@
   <?php $classProfils = in_array($controller,array('profils_index','profils_add','profils_edit','profils_delete','profils_search')) ? 'active' : ''; ?>  
   <?php $classParameters = in_array($controller,array('params_index')) ? 'active' : ''; ?>    
   <?php $classParametersSave = in_array($controller,array('params_savebdd')) ? 'active' : ''; ?>    
-  <?php $classParametersRestore = in_array($controller,array('params_restorebdd')) ? 'active' : ''; ?>    
+  <?php $classParametersRestore = in_array($controller,array('parameters_restorebdd','parameters_listebackup')) ? 'active' : ''; ?>    
   <?php $classAutorisations = in_array($controller,array('autorisations_index','autorisations_add','autorisations_edit','autorisations_delete','autorisations_search')) ? 'active' : ''; ?>                
   <?php $classTypeMateriels = in_array($controller,array('typemateriels_index','typemateriels_add','typemateriels_edit','typemateriels_delete','typemateriels_search')) ? 'active' : ''; ?> 
   <?php $classMessages = in_array($controller,array('messages_index','messages_add','messages_edit','messages_delete','messages_search')) ? 'active' : ''; ?>
@@ -80,14 +80,14 @@
             <?php if (userAuth('profil_id')!='2' && isAuthorized('messages', 'index')) : ?>
             <li class="<?php echo $classMessages; ?>"><?php echo $this->Html->link('Messages',array('controller'=>'messages','action'=>'index'),array('escape' => false)); ?></li>
             <?php endif; ?>
-            <?php if (userAuth('profil_id')!='2' && isAuthorized('params', 'index')) : ?> 
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('parameters', 'index')) : ?> 
             <li class="divider"></li>
             <?php endif; ?>
-            <?php if (userAuth('profil_id')!='2' && isAuthorized('params', 'index')) : ?>
-            <li class="<?php echo $classParameters; ?>"><?php echo $this->Html->link('Paramètres du site',array('controller'=>'params','action'=>'index'),array('escape' => false)); ?></li>
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('parameters', 'index')) : ?>
+            <li class="<?php echo $classParameters; ?>"><?php echo $this->Html->link('Paramètres du site',array('controller'=>'parameters','action'=>'index'),array('escape' => false)); ?></li>
             <li class="divider"></li>
-            <li class="<?php echo $classParametersSave; ?>"><?php echo $this->Html->link('Sauvegarder',array('controller'=>'params','action'=>'savebdd'),array('escape' => false)); ?></li>
-            <li class="<?php echo $classParametersRestore; ?>"><?php echo $this->Html->link('Restaurer',array('controller'=>'params','action'=>'restorebdd'),array('escape' => false)); ?></li>            
+            <li class="<?php echo $classParametersSave; ?>"><?php echo $this->Html->link('Sauvegarder',array('controller'=>'parameters','action'=>'savebdd'),array('escape' => false)); ?></li>
+            <li class="<?php echo $classParametersRestore; ?>"><?php echo $this->Html->link('Restaurer',array('controller'=>'parameters','action'=>'listebackup'),array('escape' => false)); ?></li>            
             <?php endif; ?>            
             <?php if (userAuth('profil_id')!='2' && (isAuthorized('profils', 'index') || isAuthorized('assistances', 'index') || isAuthorized('autorisations', 'index'))) : ?> 
             <li class="divider"></li>
@@ -217,11 +217,11 @@
     </li>
     <?php endif; ?>
     <li class="divider"></li>
-    <?php if (isAuthorized('plancharges', 'rapport')) : ?>
+    <?php //if (isAuthorized('plancharges', 'rapport')) : ?>
     <li class="<?php echo $classContactUs; ?>"><?php echo $this->Html->link('<i class="glyphicon_envelope"></i> Nous contacter',array('controller'=>'contacts','action'=>'add'),array('escape' => false)); ?></li>
-    <?php endif; ?>
+    <?php //endif; ?>
     <li class="<?php echo $classAddFavorites; ?> jQueryBookmark"><?php echo $this->Html->link('<i class="glyphicon_star"></i> Ajouter aux favoris',array('action'=>"#"),array('escape' => false)); ?></li>
-    <li  class="dropdown-menu-nolink sstitre text-center">Version : <?php $version = $this->requestAction('params/get_version'); echo $version['Param']['param']; ?></li>
+    <li  class="dropdown-menu-nolink sstitre text-center">Version : <?php $version = $this->requestAction('parameters/get_version'); echo $version['Parameter']['param']; ?></li>
   </ul>
 </div>
 <script language="javascript" type="text/javascript">

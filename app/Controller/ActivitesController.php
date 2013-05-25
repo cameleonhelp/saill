@@ -214,4 +214,10 @@ class ActivitesController extends AppController {
             $this->Session->write('test',$this->request->data['HistoryBudget'][0]['ANNEE']);
             exit();
         }
+        
+        function getId($nom){
+            $result = $this->Activite->find('first',array('fields'=>array('id'),'conditions'=>array('NOM'=>$nom),'recursive'=>-1));
+            return $result;
+            exit();
+        }
 }

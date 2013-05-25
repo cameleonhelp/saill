@@ -245,7 +245,7 @@ class backup_restore {
 			$this->Connect();
                         $file = $file==null ? $this->get_database_dump_filepath() : $file;
 			if (file_exists($file))
- 			$lines = file($this->get_database_dump_filepath(), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+ 			$lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 			else {
 			return 'Fichier inconnu';
 			exit;

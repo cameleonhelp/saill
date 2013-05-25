@@ -1,10 +1,11 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * Param Model
+ * Parameter Model
  *
  */
-class Param extends AppModel {
+class Parameter extends AppModel {
+    //public $useTable = 'params';
 
 /**
  * Validation rules

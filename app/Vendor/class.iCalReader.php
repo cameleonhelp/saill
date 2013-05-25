@@ -176,6 +176,65 @@ class ICal
         return $matches;
     }
 
+    public function iCalDelais($iCalStart,$iCalEnd){
+        $iCalStart = str_replace('T', '', $iCalStart); 
+        $iCalStart = str_replace('Z', '', $iCalStart); 
+        $iCalEnd = str_replace('T', '', $iCalEnd); 
+        $iCalEnd = str_replace('Z', '', $iCalEnd);
+        
+        $pattern  = '/([0-9]{4})';   // 1: YYYY
+        $pattern .= '([0-9]{2})';    // 2: MM
+        $pattern .= '([0-9]{2})';    // 3: DD
+        $pattern .= '([0-9]{0,2})';  // 4: HH
+        $pattern .= '([0-9]{0,2})';  // 5: MM
+        $pattern .= '([0-9]{0,2})/'; // 6: SS
+        preg_match($pattern, $iCalStart, $start); 
+        preg_match($pattern, $iCalEnd, $end);
+        
+        $daystart = $start[1].$start[2].$start[3];
+        $dayend = $end[1].$end[2].$end[3];
+        
+        switch ($dayend-$daystart){
+            case 0:
+                return (int)1;
+                break;
+            default:
+                $dstart = new DateTime($this->iCalDateUSOnly($iCalStart).' 00:00:00'); 
+                $dend = new DateTime($this->iCalDateUSOnly($iCalEnd).' 24:00:00'); 
+                $diff = $dstart->diff($dend); 
+                return $diff->d;                    
+        }
+    }
+    
+    public function iCalType($iCalStart,$iCalEnd,$iCalSummary){
+        $iCalSummary = substr($iCalSummary, 0, 2);
+        if ($iCalSummary!='Co'):
+            return array('start'=>1,'dureestart'=>1,'end'=>1,'dureeend'=>1);
+        else:
+            $iCalStart = str_replace('T', '', $iCalStart); 
+            $iCalStart = str_replace('Z', '', $iCalStart); 
+            $iCalEnd = str_replace('T', '', $iCalEnd); 
+            $iCalEnd = str_replace('Z', '', $iCalEnd);
+
+            $pattern  = '/([0-9]{4})';   // 1: YYYY
+            $pattern .= '([0-9]{2})';    // 2: MM
+            $pattern .= '([0-9]{2})';    // 3: DD
+            $pattern .= '([0-9]{0,2})';  // 4: HH
+            $pattern .= '([0-9]{0,2})';  // 5: MM
+            $pattern .= '([0-9]{0,2})/'; // 6: SS
+            preg_match($pattern, $iCalStart, $start); 
+            preg_match($pattern, $iCalEnd, $end);   
+            
+            $typeStart = $start[4]<13 ? 1 : 0;
+            $typeEnd = $end[4]<13 ? 1 : 0;
+            $dureestart = ($end[4]-$start[4])<8 ? 0.5 : 1;
+            $dureeend = ($end[4]-$start[4])<8 ? 0.5 : 1;
+
+            
+            return array('start'=>$typeStart,'dureestart'=>$dureestart,'end'=>$typeEnd,'dureeend'=>$dureeend);
+        endif;
+    }
+    
     /** 
      * Return Unix timestamp from ical date time format 
      * 
@@ -198,7 +257,7 @@ class ICal
         preg_match($pattern, $icalDate, $date); 
 
         // Unix timestamp can't represent dates before 1970
-        if ($date[1] <= 1970) {
+        if ($date[1] <= 1970 || $date[1] >=2038) {
             return false;
         } 
         // Unix timestamps after 03:14:07 UTC 2038-01-19 might cause an overflow
@@ -231,8 +290,30 @@ class ICal
         $hour = $date[4] != '' ? $date[4] : 0;
         $minute = $date[5] != '' ? $date[5] : 0;
         $seconde = $date[6] != '' ? $date[6] : 0;
-        return date('Y-m-d H:m:s',  mktime($hour, $minute, $seconde, $date[2], $date[3], $date[1]));
+        return date('Y-m-d H:i:s',  mktime($hour, $minute, $seconde, $date[2], $date[3], $date[1]));
     }
+    
+    public function iCalDateUSOnly($icalDate){
+        $icalDate = str_replace('T', '', $icalDate); 
+        $icalDate = str_replace('Z', '', $icalDate); 
+
+        $pattern  = '/([0-9]{4})';   // 1: YYYY
+        $pattern .= '([0-9]{2})';    // 2: MM
+        $pattern .= '([0-9]{2})';    // 3: DD
+        $pattern .= '([0-9]{0,2})';  // 4: HH
+        $pattern .= '([0-9]{0,2})';  // 5: MM
+        $pattern .= '([0-9]{0,2})/'; // 6: SS
+        preg_match($pattern, $icalDate, $date); 
+
+        // Unix timestamp can't represent dates before 1970 and after 2038
+        if ($date[1] <= 1970 || $date[1] >=2038) {
+            return false;
+        } 
+        $hour = $date[4] != '' ? $date[4] : 0;
+        $minute = $date[5] != '' ? $date[5] : 0;
+        $seconde = $date[6] != '' ? $date[6] : 0;
+        return date('Y-m-d',  mktime($hour, $minute, $seconde, $date[2], $date[3], $date[1]));
+    }    
 
     /**
      * Returns an array of arrays with all events. Every event is an associative

@@ -25,8 +25,7 @@
 </table>        
 <div class="navbar">
     <div class="navbar-inner">
-        <div class="container" style="margin-top:2px;text-align:center;">
-            <?php $url = $this->Session->read('history'); $index = count($url) > 1 ? 1 : 0; ?>                   
+        <div class="container" style="margin-top:2px;text-align:center;">                
             <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
         </div>
     </div>

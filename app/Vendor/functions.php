@@ -50,7 +50,7 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
  * @return date au format Y-m-d
  */
     function CIntDateDeb($frdate=null){
-    if($frdate!=null && $frdate!='0000/00/00'):
+    if($frdate!=null && $frdate!='00/00/0000'):
         $day = explode('/',$frdate);
         $result = (int)($day[2].$day[1].$day[0]);
     else :
@@ -65,7 +65,7 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
  * @return date au format Y-m-d
  */
     function CIntDateFin($frdate=null){
-    if($frdate!=null && $frdate!='0000/00/00'):
+    if($frdate!=null && $frdate!='00/00/0000'):
         $day = explode('/',$frdate);
         $result = (int)($day[2].$day[1].$day[0]);
     else :
@@ -80,11 +80,20 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
  * @return date au format Y-m-d
  */
     function CIntDate($frdate=null){
-    if($frdate!=null && $frdate!='0000/00/00'):
-        $day = explode('/',$frdate);
-        $result = (int)($day[2].$day[1].$day[0]);
-    else :
-        $result = (int)'00000000';
+    if(strstr($frdate, '/')==!false):
+        if($frdate!=null && $frdate!='00/00/0000'):
+            $day = explode('/',$frdate);
+            $result = (int)($day[2].$day[1].$day[0]);
+        else :
+            $result = (int)'00000000';
+        endif;
+    elseif(strstr($frdate, '-')==!false):
+        if($frdate!=null && $frdate!='0000-00-00'):
+            $day = explode('-',$frdate);
+            $result = (int)($day[0].$day[1].$day[2]);
+        else :
+            $result = (int)'00000000';
+        endif;        
     endif;
     return $result;
 }
@@ -768,4 +777,54 @@ function styleBarre($avancement){
         $pos = count($history)-2 < 0 ? 0 : count($history)-2;
         return $history[$pos];
     }
+    
+    function sort_arr_of_obj($array, $sortby, $direction='asc') {
+
+        $sortedArr = array();
+        $tmp_Array = array();
+
+        foreach($array as $k => $v) {
+            $tmp_Array[] = @strtolower($v->$sortby);
+        }
+
+        if($direction=='asc'){
+            asort($tmp_Array);
+        }else{
+            arsort($tmp_Array);
+        }
+
+        foreach($tmp_Array as $k=>$tmp){
+            $sortedArr[] = $array[$k];
+        }
+
+        return $sortedArr;
+    }  
+    
+    function aasort (&$array, $key) {
+        $sorter=array();
+        $ret=array();
+        reset($array);
+        foreach ($array as $ii => $va) {
+            $sorter[$ii]=$va[$key];
+        }
+        asort($sorter);
+        foreach ($sorter as $ii => $va) {
+            $ret[$ii]=$array[$ii];
+        }
+        $array=$ret;
+    }  
+    
+    function aarsort (&$array, $key) {
+        $sorter=array();
+        $ret=array();
+        reset($array);
+        foreach ($array as $ii => $va) {
+            $sorter[$ii]=$va[$key];
+        }
+        arsort($sorter);
+        foreach ($sorter as $ii => $va) {
+            $ret[$ii]=$array[$ii];
+        }
+        $array=$ret;
+    }     
 ?>

@@ -248,6 +248,10 @@ table th a.desc:after,
     background-image: url("../img/xls.png");
     background-position: 0 0;    
 }
+.ico-file{
+    background-image: url("../img/file.png");
+    background-position: 0 0;    
+}
 .ico-ics{
     background-image: url("../img/ics.png");
     background-position: 0 0;    

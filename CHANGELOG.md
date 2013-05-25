@@ -1,19 +1,22 @@
+## b059
+ **Reste à faire**
+ 
+ * Importation des fichier ics >>Parser mis en place. Insertion ou mise à jour à faire dans la base<<
+ * validation ou avertissement d'un valideur d'indisponibilité (spécifique aux prestataires, concerne un petite population)
+ * Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.
+ * Template d'email avec envois si demandé (choix laissé à l'utilisateur ou action de notification, envois automatique sur certaines actions)
+
 ## b058 
  * Gestions des fichiers des dossiers admin, all avec add, delete >>FAIT<<
  * Sur la création d'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l'objet >>FAIT<<
  * Créer une action automatiquement lors de la création d'un livrable avec le livrable associé rediriger vers cette action pour la compléter >>FAIT<<
- * Importation des fichier ics >>Parser mis en place. Prendre en compte un fichier généré à partir de l'outil RH<<
  * ne pas afficher la possibilité d'intégrer un ics si action = afacturer >>FAIT<<
  * Problème sur la facturation création d'une ligne vide >>FAIT<<
  * Revoir la navigation >>FAIT<<
+ * Vue des paramétrage >>FAIT<<
  * Méthode de sauvegarde de la base de données (data uniquement) >>FAIT<<
-  
- **Reste à faire**
-
- * vue de restauration >>En cours<< + méthode >>FAIT<<
- * Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.
- * Template d'email avec envois si demandé (choix laissé à l'utilisateur ou action de notification, envois automatique sur certaines actions)
- * validation ou avertissement d'un valideur d'indisponibilité (spécifique aux prestataires, concerne un petite population)
+ * vue de restauration >>FAIT<< + méthode >>FAIT<<
+ * rétablissement de contact avec envois à partir d'une adresse mail gmail >>FAIT<<
 
 ## b057 
  * Livrables dates rendues facultatives sauf échéance (idem pour suivilivrable)

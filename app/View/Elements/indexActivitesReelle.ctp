@@ -108,13 +108,19 @@
         <?php if(userAuth('societe_id')==1): ?>
         <div class="well well-small" id="icsparser">
         <?php echo $this->Form->create('Fileshared',array('action'=>'parseICS','id'=>'formValidate','class'=>'form-horizontal', 'style'=>'margin-bottom:-7px !important;','type' => 'file','inputDefaults' => array('label'=>false,'div' => false))); ?>
-        <div class="control-group">   
-            <label class="control-label sstitre" for="FilesharedFile">Fichiers ICS à intégrer : </label>
-            <div class="controls">
+        <table width="450px" align="center"> 
+            <tr>
+            <td width="50px"><label class="control-label sstitre" for="FilesharedFile">Fichiers ICS à intégrer : </label></td>
+            <td width="150px" style="text-align:left;">
                 <?php echo $this->Form->input('file', array('type' => 'file','size'=>"40")); ?>  
-                <?php echo $this->Form->button('Intégrer', array('class' => 'btn btn-primary pull-right','type'=>'submit')); ?>
-            </div>
-        </div>
+            </td>
+            <td width="50px"><label class="sstitre" for="FilesharedUtilisateurId" style="width:50px;">Pour : </label></td>
+            <td width="150px" style="text-align:left;">
+                    <?php echo $this->Form->select('utilisateur_id',$icsutilisateurs,array('data-rule-required'=>'true','default'=>  userAuth('id'),'data-msg-required'=>"Le nom de l'utilisateur est obligatoire dans l'onglet Destinataire", 'empty' => 'Choisir un utilisateur')); ?>
+            </td>
+            <td width="50px"><?php echo $this->Form->button('Intégrer', array('class' => 'btn btn-primary pull-right','type'=>'submit')); ?></td>
+            </tr>
+        </table>
         <?php echo $this->Form->end(); ?>
         </div>
         <?php endif; ?>        
