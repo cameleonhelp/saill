@@ -217,9 +217,9 @@
     </li>
     <?php endif; ?>
     <li class="divider"></li>
-    <?php //if (isAuthorized('plancharges', 'rapport')) : ?>
+    <?php // if (isAuthorized('plancharges', 'rapport')) : ?>
     <li class="<?php echo $classContactUs; ?>"><?php echo $this->Html->link('<i class="glyphicon_envelope"></i> Nous contacter',array('controller'=>'contacts','action'=>'add'),array('escape' => false)); ?></li>
-    <?php //endif; ?>
+    <?php // endif; ?>
     <li class="<?php echo $classAddFavorites; ?> jQueryBookmark"><?php echo $this->Html->link('<i class="glyphicon_star"></i> Ajouter aux favoris',array('action'=>"#"),array('escape' => false)); ?></li>
     <li  class="dropdown-menu-nolink sstitre text-center">Version : <?php $version = $this->requestAction('parameters/get_version'); echo $version['Parameter']['param']; ?></li>
   </ul>

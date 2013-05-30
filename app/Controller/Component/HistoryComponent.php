@@ -84,8 +84,8 @@ class HistoryComponent extends Component {
                  */
                 if($this->lastIndex()>1 && !in_array($controller->params['action'],$this->exception)):
                     if ($this->data[$this->lastIndex()]==$this->data[$this->lastIndex()-2]):
-                        array_pop(&$this->data);
-                        array_pop(&$this->data);
+                        array_pop($this->data);
+                        array_pop($this->data);
                     endif;
                 endif;    
             } 

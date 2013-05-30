@@ -1,0 +1,1 @@
+UPDATE `parameters` SET `param`='PROD' WHERE `nom` = 'instance';

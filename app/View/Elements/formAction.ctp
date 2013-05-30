@@ -7,7 +7,7 @@
             </td>
         </tr>
         <tr>
-            <td><label class="control-label sstitre  required" for="ActionDestinataire">Responsable: </label></td>
+            <td><label class="control-label sstitre  required" for="ActionDestinataire">Destinataire: </label></td>
             <td>
                 <?php if ($this->params->action == 'edit') { ?>
                     <?php if (userAuth('WIDEAREA')==1): ?>

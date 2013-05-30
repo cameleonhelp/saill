@@ -36,6 +36,7 @@
             <th>Rapports</th>
             <th>Mise à jour</th>
             <th>Mon profil</th>
+            <th>Saisie en masse</th>
             <th>Tout</th>
         </tr>
         </thead>
@@ -53,6 +54,7 @@
                 echo "<td style='text-align:center;'>".$this->Form->input('RAPPORTS',array('type'=>'checkbox'))."</td>";
                 echo "<td style='text-align:center;'>".$this->Form->input('UPDATE',array('type'=>'checkbox'))."</td>";
                 echo "<td style='text-align:center;'>".$this->Form->input('MYPROFIL',array('type'=>'checkbox'))."</td>";
+                echo "<td style='text-align:center;'>".$this->Form->input('MASSE',array('type'=>'checkbox'))."</td>";
                 echo "<td style='text-align:center;'>".$this->Form->input('ALL',array('type'=>'checkbox','id'=>"autorizeAll",'name'=>'autorizeAll','class'=>'checkall'))."</td>";
 	?>
         </tr>

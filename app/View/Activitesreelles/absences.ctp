@@ -1,5 +1,5 @@
 <?php $this->set('title_for_layout','Calendrier des absences'); ?>
-<table class="table table-bordered table-striped table-hover">
+<table class="table table-bordered table-striped table-hover" id="capture">
         <thead>
             <?php
             $maxday = isset($this->data['Activitesreelle']['month']) ? date('t',strtotime($this->data['Activitesreelle']['month']))+1 : date('t')+1;
@@ -14,6 +14,7 @@
                             <?php echo $strMonth[$month]." ".$year; ?>
                         <?php echo $this->Form->button('<i class="icon-arrow-right"></i>', array('id'=>"nextMonth",'type'=>'button','class' => 'btn','style'=>'margin-left:75px;')); ?>
                         <?php echo $this->Form->button('<i class="icon-time"></i>', array('id'=>"today",'type'=>'button','class' => 'btn pull-right')); ?>
+                        <?php echo $this->Form->button('<i class="icon-camera"></i>', array('id'=>"canvas",'type'=>'button','class' => 'btn pull-right')); ?>
                     </th>
                 </tr>
             <?php $day = new DateTime(); $date = isset($this->data['Activitesreelle']['month']) ? $this->data['Activitesreelle']['month'] : $day->format('Y-m-d'); ?>
@@ -112,6 +113,15 @@
              var date = moment();
              $('#ActivitesreelleMonth').val(date.format('YYYY-MM-DD'));
              $('#ActivitesreelleAbsencesForm').submit();
-         });          
+         });    
+         $("#canvas").on('click',function(e){
+            html2canvas($("#capture"),{
+                useCORS:true,
+                onrendered: function (canvas) {
+                    var oCanvas = canvas.toDataURL('image/png');
+                    Canvas2Image.saveAsPNG(canvas);
+                }
+            });
+         });
      });
 </script>

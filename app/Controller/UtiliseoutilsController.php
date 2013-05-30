@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('CakeEmail', 'Network/Email');
 /**
  * Utiliseoutils Controller
  *
@@ -137,7 +138,9 @@ class UtiliseoutilsController extends AppController {
                                 if ($dossierpartage_id!='') :
                                     $outils = $this->Utiliseoutil->Dossierpartage->find('first',array('fields'=>array('NOM'),'conditions'=>array('Dossierpartage.id'=>$dossierpartage_id),'recursive'=>-1));
                                     $nomoutil = $outils['Dossierpartage']['NOM'];
-                                endif;                                
+                                endif;      
+                                $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$this->Utiliseoutil->getLastInsertID())));
+                                $this->sendmailutiliseoutil($utiliseoutil);
                                 $this->addnewaction($this->Utiliseoutil->getLastInsertID(),$nomoutil);
                                 $history['Historyutilisateur']['utilisateur_id']=$this->request->data['Utiliseoutil']['utilisateur_id'];
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit".' par '.userAuth('NOMLONG');
@@ -183,6 +186,8 @@ class UtiliseoutilsController extends AppController {
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Utiliseoutil->save($this->request->data)) {
+                                $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$id)));
+                                $this->sendmailutiliseoutil($utiliseoutil);
                                 $history['Historyutilisateur']['utilisateur_id']=$this->request->data['Utiliseoutil']['utilisateur_id'];
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour d'une ouverture de droit".' par '.userAuth('NOMLONG');
                                 $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                               
@@ -286,6 +291,8 @@ class UtiliseoutilsController extends AppController {
 			throw new NotFoundException(__('Ouvertures des droits incorrecte'));
 		}
                 if ($this->Utiliseoutil->save($record)) { 
+                    $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$id)));
+                    $this->sendmailutiliseoutil($utiliseoutil);                       
                     $history['Historyutilisateur']['utilisateur_id']=$record['Utiliseoutil']['utilisateur_id'];
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - changement d'état d'une ouverture de droit".' par '.userAuth('NOMLONG');
                     $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                     
@@ -338,6 +345,8 @@ class UtiliseoutilsController extends AppController {
                 $record['Utiliseoutil']['created'] = $this->Utiliseoutil->read('created');
                 $record['Utiliseoutil']['modified'] = date('Y-m-d');
                 if ($this->Utiliseoutil->save($record)) { 
+                    $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$id)));
+                    $this->sendmailutiliseoutil($utiliseoutil);                    
                     $history['Historyutilisateur']['utilisateur_id']=$record['Utiliseoutil']['utilisateur_id'];
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - changement d'état d'une ouverture de droit".' par '.userAuth('NOMLONG');
                     $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                     
@@ -400,4 +409,52 @@ class UtiliseoutilsController extends AppController {
             exit();
         }
         
+        public function sendmailutiliseoutil($utiliseoutil){
+            if(!empty($utiliseoutil['Utiliseoutil']['outil_id'])):
+                $outil = $this->Utiliseoutil->Outil->find('first',array('conditions'=>array('Outil.id'=>$utiliseoutil['Utiliseoutil']['outil_id']),'recursive'=>0));
+                $nom = $outil['Outil']['NOM'];
+                if($utiliseoutil['Utiliseoutil']['STATUT']=='Demande transférée'):
+                    $to = $outil['Utilisateur']['MAIL'];
+                elseif($utiliseoutil['Utiliseoutil']['STATUT']=='Demandé'):
+                    $mailto = $this->requestAction('parameters/get_contact');
+                    $to = explode(';',$mailto['Parameter']['param']);          
+                endif;
+            endif;
+            if(!empty($utiliseoutil['Utiliseoutil']['listediffusion_id'])):
+                $listediffusion = $this->Utiliseoutil->Listediffusion->find('first',array('conditions'=>array('Outil.id'=>$utiliseoutil['Utiliseoutil']['listediffusion_id'])));
+                $nom = $listediffusion['Listediffusion']['NOM'];
+                $mailto = $this->requestAction('parameters/get_contact');
+                $to = explode(';',$mailto['Parameter']['param']);      
+            endif;
+            if(!empty($utiliseoutil['Utiliseoutil']['dossierpartage_id'])):
+                $dossierpartage = $this->Utiliseoutil->Dossierpartage->find('first',array('conditions'=>array('Outil.id'=>$utiliseoutil['Utiliseoutil']['dossierpartage_id'])));
+                $nom = $dossierpartage['Dossierpartage']['NOM'];
+                $mailto = $this->requestAction('parameters/get_contact');
+                $to = explode(';',$mailto['Parameter']['param']);               
+            endif;          
+            $domaine = $this->Utiliseoutil->Utilisateur->Domaine->find('first',array('conditions'=>array('Domaine.id'=>$utiliseoutil['Utilisateur']['domaine_id']),'recursive'=>-1));
+            $section = $this->Utiliseoutil->Utilisateur->Section->find('first',array('conditions'=>array('Section.id'=>$utiliseoutil['Utilisateur']['section_id']),'recursive'=>-1));
+            $site = $this->Utiliseoutil->Utilisateur->Site->find('first',array('conditions'=>array('Site.id'=>$utiliseoutil['Utilisateur']['site_id']),'recursive'=>-1));
+            $from = userAuth('MAIL');
+            $objet = 'SAILL : Demande d\'ouverture de droit ['.$nom.']';
+            $message = "Demande d'ouverture de droit pour : ".
+                    '<ul>
+                    <li>Outil :'.$nom.'</li>
+                    <li>Agent :'.$utiliseoutil['Utilisateur']['NOMLONG'].'</li>
+                    <li>Identifiant :'.$utiliseoutil['Utilisateur']['username'].'</li>
+                    <li>Email :'.$utiliseoutil['Utilisateur']['MAIL'].'</li>
+                    <li>Projet :'.$domaine['Domaine']['NOM'].'</li>
+                    <li>Section :'.$section['Section']['NOM'].'</li>
+                    <li>Localisation :'.$site['Site']['NOM'].'</li>                        
+                    </ul>';
+            if($to!=''):
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+            endif;
+        }        
 }

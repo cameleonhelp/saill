@@ -45,4 +45,17 @@
         </div>
     <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>$version['Parameter']['id'])); ?>
     <?php echo $this->Form->end(); ?>
+    <?php /* Gérer l'instance du site */ ?>
+    <?php echo $this->Form->create('Parameter',array('action'=>'saveParam','id'=>'formValidate4','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+        <div class="control-group">
+            <label class="control-label sstitre" for="ParameterParam">Instance : </label>
+            <div class="controls">
+                <?php $instances = array('DEV'=>'DEVELOPPEMENT','INT'=>'INTEGRATION','DEMO'=>'DEMONSTRATION','FORM'=>'FORMATION','BAC'=>'BAC A SABLE','PROD'=>'PRODUCTION'); ?>
+                <?php echo $this->Form->select('param', $instances,array('empty' => 'Choisir une instance...','default'=>$instance['Parameter']['param'])); ?>
+                <?php //echo $this->Form->input('param',array('class'=>'span7','type'=>'text','placeholder'=>'Instance','value'=>$instance['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>
+            </div> 
+        </div>
+    <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>$instance['Parameter']['id'])); ?>
+    <?php echo $this->Form->end(); ?>     
 </div>

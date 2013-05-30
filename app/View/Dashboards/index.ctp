@@ -7,9 +7,9 @@
                     <?php echo $this->Form->select('projet_id',$listprojets,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le nom du projet est obligatoire")); ?>               
                 <br><?php echo $this->Form->input('SelectAllProjetId',array('type'=>'checkbox')); ?><label class="labelAfter" for="DashboardSelectAllProjetId">&nbsp;Tout sélectionner</label>            
             </td>
-            <td><label class="control-label sstitre  required" for="DashboardPlanchargeId">Plan de charge : </label></td>
+            <td><label class="control-label sstitre" for="DashboardPlanchargeId">Plan de charge : </label></td>
             <td>
-                    <?php echo $this->Form->select('plancharge_id',$listplancharges,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le plan de charge est obligatoire")); ?>               
+                    <?php echo $this->Form->select('plancharge_id',$listplancharges,array('multiple'=>'true','size'=>"10")); ?>               
                 <br><?php echo $this->Form->input('SelectAllPlanchargeId',array('type'=>'checkbox')); ?><label class="labelAfter" for="DashboardSelectAllPlanchargeId">&nbsp;Tout sélectionner</label>            
             </td>            
         </tr>        
@@ -54,7 +54,7 @@
             <th rowspan="2" style="vertical-align: middle;">Projet</th>
             <th rowspan="2" width="60px" style="vertical-align: middle;">TJM</th>
             <th colspan="2">Contrat</th>
-            <th colspan="2">Facturation</th>
+            <th colspan="2">Facturation estimée</th>
             <th colspan="2">% Avancement</th>
             <th rowspan="2" style="vertical-align: middle;" width="70px">Reste à faire</th>
             </tr>
@@ -166,6 +166,53 @@
 	</tr> 
         </tfooter>
     </table>
+    <br />
+    <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Indicateurs département</div><br>    
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+            <th rowspan="2" style="vertical-align: middle;">Projet</th>
+            <th colspan="2">Contrat</th>
+            <th colspan="2">Consommation estimée</th>
+            <th colspan="2">% Avancement</th>
+            <th rowspan="2" style="vertical-align: middle;">Reste à faire</th>
+            </tr>
+            <tr>
+            <th width="70px">Budget (k€)</th>
+            <th width="70px">Charge (j)</th>
+            <th width="70px">Budget (k€)</th>
+            <th width="70px">Charge (j)</th>           
+            <th width="70px">Budget</th>
+            <th width="70px">Charge</th>          
+            </tr>            
+        </thead>
+        <tbody>
+            <?php foreach($results as $result): ?>
+            <tr>
+                <td><?php echo $result['CONTRAT']['NOM']; ?></td>
+                <td style="text-align: right;" class="contratbudgetID"><?php echo $result['CONTRAT']['BUDGET']; ?></td>
+                <td style="text-align: right;" class="contratchargeID"><?php echo $result['CONTRAT']['CHARGE']; ?></td>               
+                <td style="text-align: right;" class="facturebudgetID"><?php echo $result[0]['BUDGETFACTURE']; ?></td>
+                <td style="text-align: right;" class="facturechargeID"><?php echo $result['FACTURATION']['CHARGEFACTUREE']; ?></td> 
+                <td style="text-align: right;" class="avancebudgetID"><?php echo $result[0]['AVANCEMENTBUDGET']; ?></td>
+                <td style="text-align: right;" class="avancechargeID"><?php echo $result[0]['AVANCEMENTCHARGE']; ?></td>      
+                <td style="text-align: right;" class="rafID"><?php echo $result[0]['RAF']; ?></td>   
+            </tr>           
+            <?php endforeach; ?>
+        </tbody>
+        <tfooter>
+	<tr>
+            <td class="footer" style="text-align:right;">Total :</td>
+            <td class="footer" id="totalcontratbudgetID" style="text-align:right;"></td>
+            <td class="footer" id="totalcontratchargeID" style="text-align:right;"></td>
+            <td class="footer" id="totalfacturebudgetID" style="text-align:right;"></td>
+            <td class="footer" id="totalfacturechargeID" style="text-align:right;"></td>
+            <td class="footer" id="moyenneavancebudgetID" style="text-align:right;"></td>
+            <td class="footer" id="moyenneavancechargeID" style="text-align:right;"></td>
+            <td class="footer" id="totalrafID" style="text-align:right;"></td>            
+	</tr> 
+        </tfooter>
+    </table>    
 </div>
 <?php if(isset($results) && $israpport==0) : ?>
 <div class="alert alert-block"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
@@ -219,8 +266,11 @@ $(document).ready(function (){
         var tot = 0;
         $i = 0;
         $("."+id).each(function() {
-          tot += parseFloat($(this).html());
-          $i++;
+          value = $(this).html()=='€/j' ? 0: $(this).html().replace("€/j", "");;
+          if(value > 0){
+            tot += parseFloat(value);
+            $i++;
+          }
         });
         return parseFloat(tot/$i).toFixed(2)+" "+symbole;
      } 
@@ -260,6 +310,14 @@ $(document).ready(function (){
     $("#totalraf1").html(sumOfColumns('raf1','j'));
     $("#moyenneavancebudget1").html(avancementBudget('1'));
     $("#moyenneavancecharge1").html(avancementCharge('1'));
+    
+    $("#totalcontratbudgetID").html(sumOfColumns('contratbudgetID','k€'));
+    $("#totalfacturebudgetID").html(sumOfColumns('facturebudgetID','k€'));
+    $("#totalcontratchargeID").html(sumOfColumns('contratchargeID','j'));
+    $("#totalfacturechargeID").html(sumOfColumns('facturechargeID','j'));
+    $("#totalrafID").html(sumOfColumns('rafID','j'));
+    $("#moyenneavancebudgetID").html(avancementBudget('1'));
+    $("#moyenneavancechargeID").html(avancementCharge('1'));
     
     $('#chartcontainer').highcharts({
         data: {

@@ -42,6 +42,7 @@
                         <th><?php echo $this->Paginator->sort('RAPPORTS','Rapports'); ?></th>
                         <th><?php echo $this->Paginator->sort('UPDATE','Mise à jour'); ?></th>
                         <th><?php echo $this->Paginator->sort('MYPROFIL','Mon profil'); ?></th>
+                        <th><?php echo $this->Paginator->sort('MASSE','Saisie en masse'); ?></th>
 			<th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
@@ -61,6 +62,7 @@
                 <td style='text-align:center;'><?php echo h($autorisation['Autorisation']['RAPPORTS'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
                 <td style='text-align:center;'><?php echo h($autorisation['Autorisation']['UPDATE'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
                 <td style='text-align:center;'><?php echo h($autorisation['Autorisation']['MYPROFIL'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
+                <td style='text-align:center;'><?php echo h($autorisation['Autorisation']['MASSE'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('autorisations', 'view')) : ?>
                     <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Autorisation :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($autorisation['Autorisation']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($autorisation['Autorisation']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;

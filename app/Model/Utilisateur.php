@@ -405,7 +405,20 @@ class Utilisateur extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		)
+		),
+		'Equipe' => array(
+			'className' => 'Equipe',
+			'foreignKey' => 'utilisateur_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),              
 	);
 
         public $virtualFields = array(

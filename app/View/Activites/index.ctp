@@ -60,8 +60,8 @@
 		<td style="text-align: center;"><?php echo h($activite['Activite']['DATEDEBUT']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($activite['Activite']['DATEFIN']); ?>&nbsp;</td>
 		<td style="text-align: right;"><?php echo h($activite['Activite']['NUMEROGALLILIE']); ?>&nbsp;</td>
-		<td style="text-align: right;"><?php echo h(isset($activite['Activite']['BUDJETRA']) ? $activite['Activite']['BUDJETRA'] : '0'); ?> k€&nbsp;</td>
-		<td style="text-align: right;"><?php echo h(isset($activite['Activite']['BUDGETREVU']) ? $activite['Activite']['BUDGETREVU'] : '0'); ?> k€&nbsp;</td>
+		<td style="text-align: right;" class="budgetprevu"><?php echo h(isset($activite['Activite']['BUDJETRA']) ? $activite['Activite']['BUDJETRA'] : '0'); ?> k€&nbsp;</td>
+		<td style="text-align: right;" class="budgetrevu"><?php echo h(isset($activite['Activite']['BUDGETREVU']) ? $activite['Activite']['BUDGETREVU'] : '0'); ?> k€&nbsp;</td>
 		<td style="text-align: center;"><?php echo $activite['Activite']['ACTIVE']==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
 		<td class="actions">
                         <?php if (userAuth('profil_id')!='2' && isAuthorized('achats', 'view')) : ?>
@@ -77,6 +77,14 @@
 	</tr>
 <?php endforeach; ?>
         </tbody>
+        <tfooter>
+	<tr>
+            <td colspan="5" class="footer" style="text-align:right;">Total :</td>
+            <td class="footer" id="totalprevu" style="text-align:right;"></td>
+            <td class="footer" id="totalrevu" style="text-align:right;"></td>
+            <td class="footer" colspan="2" style="text-align:left;"></td>
+	</tr>            
+        </tfooter>
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
 	<div class="pull-right"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>     
@@ -92,3 +100,17 @@
         </ul>
 	</div>
 </div>
+<script>
+    function sumOfColumns(attr,suffixe) {
+        var tot = 0;
+        $("."+attr).each(function() {
+          tot += parseFloat($(this).html());
+        });
+        return tot+" "+suffixe;
+     }
+     
+     $(document).ready(function () {
+        $("#totalprevu").html(sumOfColumns('budgetprevu','k€'));
+        $("#totalrevu").html(sumOfColumns('budgetrevu','k€'));
+     });
+</script>

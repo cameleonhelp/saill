@@ -1,9 +1,6 @@
 <?php
 class backup_restore { 
-
-
-
-/**
+        /**
 	 * The path where the backup file should be saved
 	 *
 	 * @string
@@ -83,8 +80,7 @@ class backup_restore {
  	}
 	
     /************************** SET GET METHOD FOR FILE AND PATH ******************/	
-	
-	/**
+    /**
      * Get the directory backups are saved to
      *
      * @access public
@@ -216,7 +212,7 @@ class backup_restore {
 	    // Begin new backup of MySql
 	    $tables = mysql_query( 'SHOW TABLES' );
 
-	    $sql_file  = "# WordPress : buffernow.com MySQL database backup\n";
+	    $sql_file  = "# SAILL : MySQL database backup\n";
 	    $sql_file .= "#\n";
 	    $sql_file .= "# Generated: " . date( 'l j. F Y H:i T' ) . "\n";
 	    $sql_file .= "# Hostname: " . $this->host . "\n";

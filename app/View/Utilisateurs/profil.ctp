@@ -225,6 +225,23 @@
                 </div>
             </div>
         </div> 
+        <?php if(userAuth('profil_id')>-1 && userAuth('profil_id')<6): ?>
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse6">
+                Gérer mon équipe
+                <span class="pull-right">Nb agents : <?php echo h($nbagents); ?></span>
+                </a>
+            </div>
+            <div id="collapse6" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <button type="button" class='btn btn-inverse pull-right' onclick="location.href='<?php echo $this->Html->url('/equipes/add'); ?>';">Ajouter un agent</button>                    
+                    <label class="sstitre">Liste des agents dont je veux valider les indisponibilités</label> 
+                    <?php echo $this->element('tableEquipe'); ?>
+                </div>
+            </div>
+        </div>   
+        <?php endif; ?>
         <div class="accordion-group">
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse5">

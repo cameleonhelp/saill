@@ -5,9 +5,12 @@ App::import('Vendor', 'ical', array('file'=>'class.iCalReader.php'));
  * Description of FilesharedsController
  *
  * @author JLR
+ * 
+ * /!\ extension php_mysql obligatoire
  */
 class FilesharedsController extends AppController {
-        public $components = array('History');
+    public $components = array('History');
+    
     public function shared(){
         $file = isset($this->data['Fileshared']['file']['name']) ? $this->data['Fileshared']['file']['name'] : '';
         $file_type = strrchr($file,'.');
@@ -76,7 +79,7 @@ class FilesharedsController extends AppController {
             $file = $completpath.DS.userAuth('id').'_'.$this->data['Fileshared']['file']['name'];
             $this->inserticstodb($file,$this->data['Fileshared']['utilisateur_id']);    
             $this->deleteicsfile($file);
-            $this->Session->setFlash(__('Fichier pris en compte mais non intégré pour le moment fonctionnalité en cours de développement.'),'default',array('class'=>'alert alert-error'));
+            $this->Session->setFlash(__('Fichier pris en compte et intégré dans l\'outil.'),'default',array('class'=>'alert alert-success'));
         else :
             $this->Session->setFlash(__('Fichier <b>NON</b> reconnu'),'default',array('class'=>'alert alert-error'));
         endif;
@@ -109,10 +112,8 @@ class FilesharedsController extends AppController {
         // pour chaque ligne on insert en base à partir de la méthode icsImport de Activitesreelles
         aasort($allindispos, 'id');
         foreach($allindispos as $indispo):
-            //$this->requestAction('Activitesreelles/icsImport/'.$indispo['utilisateur_id'].'/'.$indispo['ACTIVITE'].'/'.$indispo['DATE'].'/'.$indispo['DAY'].'/'.$indispo['TYPE'].'/'.$indispo['DUREE']);
+            $this->requestAction('Activitesreelles/icsImport/'.$indispo['utilisateur_id'].'/'.$indispo['ACTIVITE'].'/'.$indispo['DATE'].'/'.$indispo['DAY'].'/'.$indispo['TYPE'].'/'.$indispo['DUREE']);
         endforeach;
-        debug($allindispos);
-        exit();
     }
 }
 

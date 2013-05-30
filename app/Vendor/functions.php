@@ -442,7 +442,10 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
                             break;    
                         case 'myprofil':
                             $result = $autorisation['Autorisation']['MYPROFIL'];
-                            break;                         
+                            break;  
+                        case 'masse':
+                            $result = $autorisation['Autorisation']['MASSE'];
+                            break;                          
                         default:
                             $result = false;
                             break;                    

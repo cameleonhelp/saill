@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('CakeEmail', 'Network/Email');
 /**
  * Activitesreelles Controller
  *
@@ -230,6 +231,10 @@ class ActivitesreellesController extends AppController {
                         $this->Activitesreelle->create();
                         if ($this->Activitesreelle->save($activitesreelle)):
                             $this->Session->setFlash(__('La feuille de temps est sauvegardée'),'default',array('class'=>'alert alert-success'));
+                            $projet = $this->Activitesreelle->Activite->find('first',array('fields'=>array('projet_id'),'conditions'=>array('id'=>$activitesreelle['activite_id']),'recursive'=>-1));
+                            if ($projet['Activite']['projet_id']==1):
+                                    $this->sendmailabsences($activitesreelle);
+                            endif;
                         else :
                             $this->Session->setFlash(__('La feuille de temps est incorrecte, veuillez corriger la feuille de temps'),'default',array('class'=>'alert alert-error'));
                         endif;   
@@ -237,6 +242,8 @@ class ActivitesreellesController extends AppController {
                 endforeach; 
                 $this->History->goBack(1); 
                 }
+                $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('conditions'=>array('id'=>$utilisateur_id),'recursive'=>-1));
+                $this->set('utilisateur',$utilisateur);
                 $this->Activitesreelle->Activite->recursive = 0;
                 $activites = $this->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc')));
 		$this->set('activites', $activites);  
@@ -296,7 +303,10 @@ class ActivitesreellesController extends AppController {
                             //$this->Activitesreelle->create();
                             if ($this->Activitesreelle->save($activitesreelle)):
                                 $this->Session->setFlash(__('La feuille de temps est sauvegardée'),'default',array('class'=>'alert alert-success'));
-                                
+                                $projet = $this->Activitesreelle->Activite->find('first',array('fields'=>array('projet_id'),'conditions'=>array('id'=>$activitesreelle['activite_id']),'recursive'=>-1));
+                                if ($projet['Activite']['projet_id']==1):
+                                    $this->sendmailabsences($activitesreelle);
+                                endif;
                             else :
                                 $this->Session->setFlash(__('La feuille de temps est incorrecte, veuillez corriger la feuille de temps'),'default',array('class'=>'alert alert-error'));
                             endif; 
@@ -316,7 +326,9 @@ class ActivitesreellesController extends AppController {
                     $activitesreelles = $this->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$date['Activitesreelle']['utilisateur_id'],'Activitesreelle.DATE'=>CUSDate($date['Activitesreelle']['DATE'])),'recursive'=>-1));
                     $this->set('activitesreelles', $activitesreelles);
                     $domaines = $this->Activitesreelle->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM')));
-                    $this->set('domaines',$domaines);                     
+                    $this->set('domaines',$domaines);  
+                    $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('conditions'=>array('id'=>$date['Activitesreelle']['utilisateur_id']),'recursive'=>-1));
+                    $this->set('utilisateur',$utilisateur);                    
                     $activites = $this->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc')));
                     $this->set('activites', $activites);
 		}
@@ -700,6 +712,11 @@ class ActivitesreellesController extends AppController {
             $result = $this->Activitesreelle->find('count',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$utilisateur_id,'Activitesreelle.activite_id'=>$activite_id,'Activitesreelle.domaine_id'=>$domaine_id,'Activitesreelle.DATE'=>$date)));
             return $result > 0 ? false : true;
         }
+
+        public function isExist($utilisateur_id,$activite_id,$date){
+            $result = $this->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$utilisateur_id,'Activitesreelle.activite_id'=>$activite_id,'Activitesreelle.DATE'=>$date),'recursive'=>-1));
+            return count($result)>0 ? $result : false;
+        }
         
         public function soumettre(){
             $ids = explode('-', $this->request->data('all_ids'));
@@ -723,5 +740,91 @@ class ActivitesreellesController extends AppController {
             exit();
         }     
         
+        public function icsImport($utilisateur_id,$activite_id,$date,$day,$type=null,$duree=null){
+            $type = $type==null ? 1 : $type;
+            $duree = $duree==null ? 0 : $duree;
+            $activitesreelle = $this->isExist($utilisateur_id, $activite_id, $date);
+            $record['Activitesreelle']['TOTAL']=0;
+            $record['Activitesreelle']['utilisateur_id'] = $utilisateur_id;
+            $record['Activitesreelle']['activite_id'] = $activite_id;
+            $record['Activitesreelle']['DATE'] = CFRDate($date);
+            $record['Activitesreelle']['created'] = date('Y-m-d'); 
+            $record['Activitesreelle']['modified'] = date('Y-m-d'); 
+            if ($activitesreelle!=false):
+                $this->Activitesreelle->id=$activitesreelle[0]['Activitesreelle']['id'];
+                $record['Activitesreelle']['TOTAL']=$activitesreelle[0]['Activitesreelle']['TOTAL'];
+                $record['Activitesreelle']['created'] = $activitesreelle[0]['Activitesreelle']['created'];
+            else:
+                $this->Activitesreelle->create();
+            endif;
+            switch($day):
+                case 'LU':
+                    $record['Activitesreelle']['LU']=$duree;
+                    $record['Activitesreelle']['LU_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;
+                case 'MA':
+                    $record['Activitesreelle']['MA']=$duree;
+                    $record['Activitesreelle']['MA_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;
+                case 'ME':
+                    $record['Activitesreelle']['ME']=$duree;
+                    $record['Activitesreelle']['ME_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;
+                case 'JE':
+                    $record['Activitesreelle']['JE']=$duree;
+                    $record['Activitesreelle']['JE_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;
+                case 'VE':
+                    $record['Activitesreelle']['VE']=$duree;
+                    $record['Activitesreelle']['VE_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;
+                case 'SA':
+                    $record['Activitesreelle']['SA']=$duree;
+                    $record['Activitesreelle']['SA_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;
+                case 'DI':
+                    $record['Activitesreelle']['DI']=$duree;
+                    $record['Activitesreelle']['DI_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;                
+            endswitch;
+            $total = $this->Activitesreelle->find('first',array('fields'=>array('(LU+MA+ME+JE+VE+SA+DI) AS TOTAL','DATE','VEROUILLE'),'conditions'=>array('Activitesreelle.utilisateur_id'=>$utilisateur_id,'Activitesreelle.activite_id'=>$activite_id,'Activitesreelle.DATE'=>$date),'recursive'=>-1));
+            $record['Activitesreelle']['TOTAL'] = $total[0]['TOTAL'];
+            $this->Activitesreelle->save($record);
+        }
         
+        public function sendmailabsences($activitesreelle){
+            $activite = $this->Activitesreelle->Activite->find('first',array('conditions'=>array('Activite.id'=>$activitesreelle['activite_id'])));
+            $valideurs = $this->Activitesreelle->Utilisateur->Equipe->find('all',array('conditions'=>array('Equipe.agent'=>userAuth('id'))));
+            $mailto = array();
+            foreach($valideurs as $valideur):
+                $mailto[]=$valideur['Utilisateur']['MAIL'];
+            endforeach;
+            $to=$mailto;
+            $from = userAuth('MAIL');
+            $objet = 'SAILL : Demande d\'absences ['.$activite['Activite']['NOM'].']';
+            $message = "Demande d'absences pour la semaine débutant le ".CFRDate($activitesreelle['DATE']).
+                    '<ul>
+                    <li>LU :'.$activitesreelle['LU'].'</li>
+                    <li>MA :'.$activitesreelle['MA'].'</li>
+                    <li>ME :'.$activitesreelle['ME'].'</li>
+                    <li>JE :'.$activitesreelle['JE'].'</li>
+                    <li>VE :'.$activitesreelle['VE'].'</li>
+                    <li>SA :'.$activitesreelle['SA'].'</li>
+                    <li>DI :'.$activitesreelle['DI'].'</li>                        
+                    </ul>';
+            $email = new CakeEmail();
+            $email->config('smtp')
+                    ->emailFormat('html')
+                    ->from($from)
+                    ->to($to)
+                    ->subject($objet)
+                    ->send($message);
+        }
 }

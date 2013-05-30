@@ -84,8 +84,19 @@ class files_folder {
             $base = $this->urlbase;
             $url = FULL_BASE_URL.$base.DS.$absolutepath.DS.$thisfile->name;
             $this->data[]=array('name'=>$thisfile->name(),'url'=>$url,'file'=>$thisfile->pwd(),'size'=>number_format(($thisfile->size()/1024),2).' ko','created'=>date('d/m/Y H:i:s',$thisfile->lastChange()));
-        endforeach;
+        endforeach;       
         return $this->data;
+    }
+    
+    public function iswindows(){
+        $folder = new Folder();
+        $path = APP;
+        return $folder->isWindowsPath($path);
+    }
+    
+    public function getdroits($file){
+        $nfile = new File($file);
+        return $nfile->perms();
     }
 }
 

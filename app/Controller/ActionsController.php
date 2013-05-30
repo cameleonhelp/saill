@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('CakeEmail', 'Network/Email');
 /**
  * Actions Controller
  *
@@ -149,6 +150,7 @@ class ActionsController extends AppController {
 			if ($this->Action->save($this->request->data)) {
                                 $this->saveHistory($this->Action->getInsertID()); 
 				$this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
+                                $this->sendmailactions($this->Action->find('first',array('conditions'=>array('Action.id'=>$this->Action->getInsertID()))));
 				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Action incorrecte, veuillez corriger l\'action'),'default',array('class'=>'alert alert-error'));
@@ -552,5 +554,29 @@ class ActionsController extends AppController {
         public function homeNBRETARDActions(){
             $nbactions = $this->Action->find('all',array('fields'=>array('COUNT(id) AS NB','STATUT','ECHEANCE'),'conditions'=>array('destinataire'=>userAuth('id'),'STATUT <>'=>"terminée","ECHEANCE <"=>date('Y-m-d')),'group'=>'STATUT','recursive'=>-1));
             return $nbactions;
-        }         
+        }     
+        
+        public function sendmailactions($action){
+            $valideurs = $this->Action->Utilisateur->find('all',array('conditions'=>array('Utilisateur.id'=>$action['Action']['destinataire'])));
+            $mailto = array();
+            foreach($valideurs as $valideur):
+                $mailto[]=$valideur['Utilisateur']['MAIL'];
+            endforeach;
+            $to=$mailto;
+            $from = userAuth('MAIL');
+            $objet = 'SAILL : Demande d\'action ['.$action['Action']['OBJET'].']';
+            $message = "Merci de traiter l'action ".$action['Action']['OBJET'].
+                    '<ul>
+                    <li>Echéance :'.$action['Action']['ECHEANCE'].'</li>
+                    <li>Priorité :'.$action['Action']['PRIORITE'].'</li>
+                    <li>Commentaire :'.$action['Action']['COMMENTAIRE'].'</li>                      
+                    </ul>';
+            $email = new CakeEmail();
+            $email->config('smtp')
+                    ->emailFormat('html')
+                    ->from($from)
+                    ->to($to)
+                    ->subject($objet)
+                    ->send($message);
+        }        
 }

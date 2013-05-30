@@ -16,9 +16,13 @@ class DashboardsController extends AppController {
                         @$projetslist .= $value.',';
                     }  
                     $projets = 'activites.projet_id IN ('.substr_replace(@$projetslist ,"",-1).') ';
+                    if(!empty($this->request->data['Dashboard']['plancharge_id'])):
                     foreach ($this->request->data['Dashboard']['plancharge_id'] as &$value) {
                         @$planchargeslist .= $value.',';
-                    }          
+                    }      
+                    else:
+                        @$planchargeslist = '0,';
+                    endif;
                     $plancharges = 'plancharges.id IN ('.substr_replace(@$planchargeslist ,"",-1).') ';
                     $viewcontrat = "CREATE VIEW CONTRAT AS
                                     SELECT projets.id AS id,projets.NOM,tjmcontrats.TJM,SUM(activites.BUDGETREVU) AS BUDGET,TRUNCATE(SUM(activites.BUDGETREVU)/(TJM/1000),2) AS CHARGE

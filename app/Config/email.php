@@ -41,6 +41,7 @@ class EmailConfig {
             'port' => 465,
             'username' => 'nepasrepondresaill@gmail.com',
             'password' => 'azerty64',
+            'from'=>'nepasrepondresaill@gmail.com',
             'transport' => 'Smtp',
             'charset' => 'utf-8',
             'headerCharset' => 'utf-8'
@@ -59,21 +60,21 @@ class EmailConfig {
             'delivery' => 'smtp',
             'tls' => true
         );
+        
 	public $default = array(
 		'transport' => 'Mail',
-		'from' => 'you@localhost',
+		'from' => array('administrateur@saill.sncf.fr'=>'Admin SAILL'),
 		'charset' => 'utf-8',
 		'headerCharset' => 'utf-8',
 	);
 
 	public $smtp = array(
 		'transport' => 'Smtp',
-		'from' => array('site@localhost' => 'My Site'),
-		'host' => 'localhost',
-		'port' => 25,
+		'from' => array('administrateur@saill.sncf.fr' => 'Administrateur SAILL(ne pas repondre)'),
+                'username'=>'administrateur@saill.sncf.fr',
+                'password'=>'password',
+		'port' => 27,
 		'timeout' => 30,
-		'username' => 'user',
-		'password' => 'secret',
 		'client' => null,
 		'log' => false,
 		'charset' => 'utf-8',
@@ -81,7 +82,7 @@ class EmailConfig {
 	);
 
 	public $fast = array(
-		'from' => 'you@localhost',
+		'from' => 'jacques.levavasseur@sncf.fr',
 		'sender' => null,
 		'to' => null,
 		'cc' => null,
@@ -98,7 +99,7 @@ class EmailConfig {
 		'layout' => false,
 		'viewVars' => null,
 		'attachments' => null,
-		'emailFormat' => null,
+		'emailFormat' => 'html',
 		'transport' => 'Smtp',
 		'host' => 'localhost',
 		'port' => 25,

@@ -1,12 +1,18 @@
 ## b059
+ * lors de la suppresion d'une ligne dans activité réelle enlever la ligne de la base en ajax >>FAIT<<
+ * Mise à jour des paramétrage du site >>FAIT<<
+ * Prise en compte des environnements sous Windows pour la gestion des sauvegardes et restaurations >>FAIT<<
+ * Importation des fichier ics >>FAIT<<
+ * saisie en masse pour autrui si administrateur ou si ressources génériques >>FAIT<<
+ * Création de l'équipe pour validation des indisponibilités >>FAIT<<
+
  **Reste à faire**
- 
- * Importation des fichier ics >>Parser mis en place. Insertion ou mise à jour à faire dans la base<<
- * validation ou avertissement d'un valideur d'indisponibilité (spécifique aux prestataires, concerne un petite population)
+
  * Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.
+ * validation ou avertissement d'un valideur d'indisponibilité (spécifique aux prestataires, concerne un petite population)
  * Template d'email avec envois si demandé (choix laissé à l'utilisateur ou action de notification, envois automatique sur certaines actions)
 
-## b058 
+## b058 /!\ extension php_mysql obligatoire pour backup_retsore.class.php
  * Gestions des fichiers des dossiers admin, all avec add, delete >>FAIT<<
  * Sur la création d'action en automatique des ouvertures de droits ajouter le sujet de la demande dans l'objet >>FAIT<<
  * Créer une action automatiquement lors de la création d'un livrable avec le livrable associé rediriger vers cette action pour la compléter >>FAIT<<

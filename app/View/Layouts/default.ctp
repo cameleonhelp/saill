@@ -53,6 +53,10 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->script('highcharts');
                 echo $this->Html->script('modules/exporting');   
                 echo $this->Html->script('modules/data');
+                //pour enregistrer image
+                echo $this->Html->script('html2canvas');     
+                echo $this->Html->script('canvas2image');   
+                echo $this->Html->script('base64'); 
                 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
@@ -89,7 +93,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
         <div class="row" >
             <div class="span7">
             <span class="logo"></span>
-            <?php echo $this->element('server'); ?>
+            <?php if (userAuth('id')>0) echo $this->element('server'); ?>
             <?php if (userAuth('id')>0) echo $this->element('menu'); ?>
             <code class="span5 box-info"  style="margin-top: 10px;">
                 <div class="text-normal">Navigateurs compatibles :</div>
