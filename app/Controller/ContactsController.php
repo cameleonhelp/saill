@@ -23,6 +23,7 @@ class ContactsController extends AppController {
             $mailto = $this->requestAction('parameters/get_contact');
             $mailto = explode(';',$mailto['Parameter']['param']);
             //send email using the Email component
+            try{
             $email = new CakeEmail();
             $email->config('smtp')
                     ->emailFormat('html')
@@ -34,9 +35,13 @@ class ContactsController extends AppController {
             } else {
                 $this->Session->setFlash(__('Message <b>NON</b> envoyé'),'default',array('class'=>'alert alert-error'));
             }
+            } catch(Exception $e){
+                $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+            }
            $this->redirect(array('action'=>'add'));
         }
     }    
+
 }
 
 ?>

@@ -48,6 +48,20 @@ class Dossierpartage extends AppModel {
 		)
 	);
 
+/**
+ * belongsTo associations
+ *
+ * @var array
+ */
+	public $belongsTo = array(
+		'Utilisateur' => array(
+			'className' => 'Utilisateur',
+			'foreignKey' => 'utilisateur_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
+	);        
  /**
  * beforeSave method
  *

@@ -31,7 +31,7 @@
   <?php $classTJMProjets = in_array($controller,array('tjmcontrats_index','tjmcontrats_add','tjmcontrats_edit','tjmcontrats_delete','tjmcontrats_search')) ? 'active' : ''; ?> 
   <?php $classTJMAgents = in_array($controller,array('tjmagents_index','tjmagents_add','tjmagents_edit','tjmagents_delete','tjmagents_search')) ? 'active' : ''; ?>               
   <?php $classAchats = in_array($controller,array('achats_index','achats_add','achats_edit','achats_delete','achats_search')) ? 'active' : ''; ?>    
-  <?php $classPlanDeCharge = in_array($controller,array('plancharges_index','plancharges_add','plancharges_edit','plancharges_delete','plancharges_search')) ? 'active' : ''; ?>      
+  <?php $classPlanDeCharge = in_array($controller,array('plancharges_index','plancharges_add','plancharges_edit','plancharges_delete','plancharges_search','detailplancharges_add','detailplancharges_edit')) ? 'active' : ''; ?>      
   <?php $classFacturationTodo = in_array($controller,array('activitesreelles_afacturer','facturations_add')) ? 'active' : ''; ?>        
   <?php $classFacturationDo = in_array($controller,array('facturations_index','facturations_add','facturations_delete','facturations_search')) ? 'active' : ''; ?> 
   <?php $classFacturation = in_array('active',array($classFacturationTodo,$classFacturationDo)) ? 'active' : ''; ?>        
@@ -41,12 +41,15 @@
   <?php $classPetitMateriels = in_array($controller,array('materielautres_index','materielautres_add','materielautres_edit','materielautres_delete','materielautres_search')) ? 'active' : ''; ?>               
   <?php $classUtiliseOutils = in_array($controller,array('utiliseoutils_index','utiliseoutils_add','utiliseoutils_edit','utiliseoutils_delete','utiliseoutils_search')) ? 'active' : ''; ?>    
   <?php $classLogistique = in_array('active',array($classPetitMateriels,$classUtilisateurs,$classMateriels,$classUtiliseOutils)) ? 'active' : ''; ?> 
-  <?php $classCRAActions = in_array($controller,array('actions_rapport','actions_export_doc')) ? 'active' : ''; ?>               
+  <?php $classCRAActions = in_array($controller,array('actions_rapport','actions_export_doc')) ? 'active' : ''; ?>   
+  <?php $classCRAActions7 = in_array($controller,array('actions_last7days')) ? 'active' : ''; ?>
+  <?php $classCRALogistique = in_array($controller,array('rapports_logistique')) ? 'active' : ''; ?>
+  <?php $classCRASaisie = in_array($controller,array('rapports_etatsaisie')) ? 'active' : ''; ?>  
   <?php $classCRAActivites = in_array($controller,array('activitesreelles_rapport','activitesreelles_export_doc')) ? 'active' : ''; ?>    
   <?php $classCRAFacturations = in_array($controller,array('facturations_rapport','facturations_export_doc')) ? 'active' : ''; ?>   
   <?php $classCRAPlancharges = in_array($controller,array('plancharges_rapport','plancharges_export_doc')) ? 'active' : ''; ?>  
   <?php $classCRADashboard = in_array($controller,array('dashboardqs_index','dashboardqs_export_doc')) ? 'active' : ''; ?> 
-  <?php $classRapports = in_array('active',array($classCRAActions,$classCRAActivites,$classCRAFacturations,$classCRAPlancharges,$classCRADashboard)) ? 'active' : ''; ?> 
+  <?php $classRapports = in_array('active',array($classCRAActions,$classCRAActivites,$classCRASaisie,$classCRAFacturations,$classCRAPlancharges,$classCRADashboard,$classCRAActions7,$classCRALogistique)) ? 'active' : ''; ?> 
   <?php $classContactUs = in_array($controller,array('contacts_add')) ? 'active' : ''; ?>               
   <?php $classAddFavorites = 'notactive'; ?>  
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: static; margin-bottom: 15px; margin-left: -20px; margin-top: 15px;">
@@ -199,9 +202,15 @@
         <ul class="dropdown-menu">
             <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'rapports')) : ?>
             <li class="<?php echo $classCRAActions; ?>"><?php echo $this->Html->link('Actions',array('controller'=>'actions','action'=>'rapport'),array('escape' => false)); ?></li>
+            <li class="<?php echo $classCRAActions7; ?>"><?php echo $this->Html->link('7 derniers jours',array('controller'=>'actions','action'=>'last7days'),array('escape' => false)); ?></li>
+            <li class="divider"></li>
+            <li class="<?php echo $classCRALogistique; ?>"><?php echo $this->Html->link('Logistique',array('controller'=>'rapports','action'=>'logistique'),array('escape' => false)); ?></li>
+            <li class="divider"></li>
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'rapports')) : ?>
             <li class="<?php echo $classCRAActivites; ?>"><?php echo $this->Html->link('Activités réelles',array('controller'=>'activitesreelles','action'=>'rapport'),array('escape' => false)); ?></li>
+            <li class="<?php echo $classCRASaisie; ?>"><?php echo $this->Html->link('Etat saisie',array('controller'=>'rapports','action'=>'etatsaisie'),array('escape' => false)); ?></li>
+            <li class="divider"></li>
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'rapports')) : ?>
             <li class="<?php echo $classCRAFacturations; ?>"><?php echo $this->Html->link('Facturations estimées',array('controller'=>'facturations','action'=>'rapport'),array('escape' => false)); ?></li>            

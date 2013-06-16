@@ -4,7 +4,7 @@
                 <div class="container">
                 <ul class="nav">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'add')) : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<i class="icon-plus" rel="tooltip" data-title="Ajoutez une action"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <li class="dropdown">
@@ -36,6 +36,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Destinataire <b class="caret"></b></a>
                      <ul class="dropdown-menu">
                          <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous')); ?></li>
+                         <li><?php echo $this->Html->link('Moi', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',  userAuth('id'))); ?></li>
                          <li class="divider"></li>
                          <?php foreach ($responsables as $responsable): ?>
                             <li><?php echo $this->Html->link($responsable['Utilisateur']['NOMLONG'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$responsable['Utilisateur']['id'])); ; ?></li>
@@ -86,7 +87,7 @@
 		<td style="text-align:center;"><?php $image = isset($action['Action']['STATUT']) ? etatAction(h($action['Action']['STATUT'])) : 'icon-blank' ; ?>
                     <a href="#" class="changeetat cursor" idaction="<?php echo $action['Action']['id']; ?>" ><i class="<?php echo $image; ?>" rel="tooltip" data-title="<?php echo etatTooltip(h($action['Action']['STATUT'])); ?>"></i></a></td>
 		<td style="text-align:center;"><?php $image = (isset($action['Action']['CRA']) && $action['Action']['CRA']==true) ? 'icon-ok' : 'icon-ok icon-grey' ; ?>
-                    <a href="#" class="incra cursor" idaction="<?php echo $action['Action']['id']; ?>" ><i class="<?php echo $image; ?>"></i></a></td>               
+                    <a href="#" class="incra cursor" idaction="<?php echo $action['Action']['id']; ?>" ><i class="<?php echo $image; ?>" rel="tooltip" data-title="Visible dans le CRA ou non"></i></a></td>               
                 <td style="text-align:center;">
                     <a href="#" class="moins cursor" style="float:left;margin-left: -3px;margin-right:2px;" idaction="<?php echo $action['Action']['id']; ?>" duree="<?php echo $action['Action']['DUREEPREVUE']; ?>"><i class="icon-minus-sign"></i></a>
                     <span rel="tooltip" data-title="<?php echo CHours2Days($action['Action']['DUREEPREVUE']); ?> jour(s)" style="float: left;width: 55%;"><?php echo h($action['Action']['DUREEPREVUE']); ?> h</span>
@@ -95,16 +96,16 @@
 		<td style="text-align:center;" class="<?php echo $action['Action']['PRIORITE']; ?>"><?php echo h($action['Action']['PRIORITE']); ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'view')) : ?>
-                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Commentaire : </contenttitle>'.h($action['Action']['COMMENTAIRE']).'<br/><contenttitle>Crée le: </contenttitle>'.h($action['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($action['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php echo '<span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Commentaire : </contenttitle>'.h($action['Action']['COMMENTAIRE']).'<br/><contenttitle>Crée le: </contenttitle>'.h($action['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($action['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i></span>'; ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $action['Action']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<i class="icon-pencil" rel="tooltip" data-title="Modification"></i>', array('action' => 'edit', $action['Action']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'delete')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette action ?')); ?>                    
+                    <?php echo $this->Form->postLink('<i class="icon-trash" rel="tooltip" data-title="Suppression"></i>', array('action' => 'delete', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette action ?')); ?>                    
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'duplicate')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-retweet"></i>', array('action' => 'dupliquer', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cette action ?\r\nCette action vous sera attribuée.')); ?>
+                    <?php echo $this->Form->postLink('<i class="icon-retweet" rel="tooltip" data-title="Duplication"></i>', array('action' => 'dupliquer', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cette action ?\r\nCette action vous sera attribuée.')); ?>
                     <?php endif; ?>                        
                 </td>
 	</tr>
@@ -127,9 +128,7 @@
 </div>
 <script>
 $(document).ready(function () {
-    setTimeout(function() {
-        $('#ActionsRefresh').load('<?php echo $this->params->here; ?>');
-    }, 60000); 
+    //setTimeout(function() {$('#ActionsRefresh').load('<?php echo $this->params->here; ?>}, 60000); 
     /** PopOver **/ 
         $("[rel=popover]").popover({placement:'bottom',trigger:'manual',html:true});
         $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});

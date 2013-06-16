@@ -73,10 +73,11 @@ class EmailConfig {
 		'from' => array('administrateur@saill.sncf.fr' => 'Administrateur SAILL(ne pas repondre)'),
                 'username'=>'administrateur@saill.sncf.fr',
                 'password'=>'password',
+                'host' => 'localhost',
 		'port' => 27,
 		'timeout' => 30,
 		'client' => null,
-		'log' => false,
+		'log' => true,
 		'charset' => 'utf-8',
 		'headerCharset' => 'utf-8',
 	);

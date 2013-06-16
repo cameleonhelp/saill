@@ -17,14 +17,18 @@ class ParametersController extends AppController {
  */
 	public function index() {
                 $this->set('title_for_layout','Paramètres du site');
-                $urlMinidoc = $this->Parameter->find('first',array('conditions'=>array('nom'=>'urlminidoc'),'recursive'=>-1));
+                $urlMinidoc = $this->get_minidocurl();
                 $this->set('urlminidoc',$urlMinidoc);
-                $contact = $this->Parameter->find('first',array('conditions'=>array('nom'=>'contact'),'recursive'=>-1));
+                $contact = $this->get_contact();
                 $this->set('contact',$contact);
-                $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'version'),'recursive'=>-1));
+                $version = $this->get_version();
                 $this->set('version',$version);       
-                $instance = $this->Parameter->find('first',array('conditions'=>array('nom'=>'instance'),'recursive'=>-1));
-                $this->set('instance',$instance);                  
+                $instance = $this->get_instance();
+                $this->set('instance',$instance);  
+                $annuaire = $this->get_gestionnaireannuaire();
+                $this->set('annuaire',$annuaire);   
+                $valoutil = $this->get_valideuroutil();
+                $this->set('valoutil',$valoutil);                  
 	}
         
 	public function savebdd() {
@@ -122,7 +126,17 @@ class ParametersController extends AppController {
         public function get_instance(){
             $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'instance'),'recursive'=>-1));
             return $version;
-        }         
+        }      
+        
+        public function get_gestionnaireannuaire(){
+            $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'gestionnaireannuaire'),'recursive'=>-1));
+            return $version;
+        }       
+        
+        public function get_valideuroutil(){
+            $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'valideuroutil'),'recursive'=>-1));
+            return $version;
+        }      
 /**
  * view method
  *

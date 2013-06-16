@@ -184,8 +184,6 @@ CakeLog::config('error', array(
 	'file' => 'error',
 ));
 
-CakePlugin::load('DebugKit');
-
 /**
  * Déclaration des variables globales
  */

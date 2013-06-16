@@ -20,6 +20,7 @@
                          <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',$pass1,$pass2)); ?></li>
                          <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',$pass1,$pass2)); ?></li>
                          <li class="divider"></li>
+                         <li><?php echo $this->Html->link('Nouveaux', array('action' => 'index','nouveau',$pass1,$pass2)); ?></li>
                          <li><?php echo $this->Html->link('Incomplet', array('action' => 'index','incomplet',$pass1,$pass2)); ?></li>
                          <li class="divider"></li>
                          <li><?php echo $this->Html->link('A prolonger', array('action' => 'index','aprolonger',$pass1,$pass2)); ?></li>

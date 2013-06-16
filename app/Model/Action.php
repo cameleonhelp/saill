@@ -204,8 +204,17 @@ class Action extends AppModel {
                 }   
                 if (isset($val['Action']['DEBUT'])) {
                     $results[$key]['Action']['DEBUT'] = $this->dateFormatAfterFind($val['Action']['DEBUT']);
-                }                 
+                }  
+                if (isset($val['Action']['destinataire'])) {
+                    $results[$key]['Action']['destinataire_nom'] = $this->getDestinataire($val['Action']['destinataire']);
+                }                  
             }
             return $results;
         } 
+        
+        public function getDestinataire($id){
+            $sql = 'SELECT CONCAT(NOM," ",PRENOM) AS NOMLONG FROM utilisateurs WHERE id="'.$id.'"';
+            $result = $this->query($sql);
+            return $result[0][0]['NOMLONG'];
+        }
 }

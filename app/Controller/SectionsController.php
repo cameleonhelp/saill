@@ -150,5 +150,10 @@ class SectionsController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
             endif;                
-        }            
+        }      
+        
+        public function getList(){
+            $sections = $this->Section->find('list', array('fields'=>array('id','NOM'),'order'=>array('NOM'=>'asc'),'recursive'=>-1));
+            return $sections;
+        }
 }

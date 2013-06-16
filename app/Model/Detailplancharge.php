@@ -130,7 +130,7 @@ class Detailplancharge extends AppModel {
                 } 
                 if (isset($val['Detailplancharge']['activite_id'])) {
                     $results[$key]['Detailplancharge']['projet_NOM'] = $this->getProjetForActivite($val['Detailplancharge']['activite_id']);
-                }                
+                }                  
             }
             return $results;
         }   
@@ -146,6 +146,6 @@ class Detailplancharge extends AppModel {
             $sql = "SELECT projets.NOM FROM projets LEFT JOIN activites ON projets.id = activites.projet_id WHERE activites.id='".$id."'";
             $result = $this->query($sql);
             return $result[0]['projets']['NOM'];
-        }           
+        }               
 
 }

@@ -5,10 +5,20 @@
             <?php echo $this->Form->input('NOM',array('type'=>'text','placeholder'=>'Nom du partage','data-rule-required'=>'true','data-msg-required'=>"Le nom du partage est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
         </div>
-    <div class="control-group">
+        <div class="control-group">
         <label class="control-label sstitre  required" for="DossierpartageGROUPEAD">Nom du groupe: </label>
         <div class="controls">
             <?php echo $this->Form->input('GROUPEAD',array('type'=>'text','placeholder'=>'Nom du groupe dans l\'AD','data-rule-required'=>'true','data-msg-required'=>"Le nom du groupe AD est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+        </div>
+        </div>
+        <div class="control-group">
+        <label class="control-label sstitre" for="DossierpartageUtilisateurId">Gestionnaire: </label>
+        <div class="controls">
+            <?php if ($this->params->action == 'edit') { ?>
+                <?php echo $this->Form->select('utilisateur_id',$gestionnaire,array('selected' => $this->data['Dossierpartage']['utilisateur_id'],'empty' => 'Choisir un gestionnaire')); ?>
+            <?php } else { ?>
+                <?php echo $this->Form->select('utilisateur_id',$gestionnaire,array('empty' => 'Choisir un gestionnaire')); ?>
+            <?php } ?>            
         </div>
         </div>
         <div class="control-group">

@@ -10,9 +10,10 @@
                 $filtre_mois = isset($this->params->pass[1]) ? $this->params->pass[1] : $mois;
                 $filtre_visible = isset($this->params->pass[2]) ? $this->params->pass[2] : 1;
                 $filtre_indisponible = isset($this->params->pass[3]) ? $this->params->pass[3] : 0;
+                $filtre_annee = isset($this->params->pass[4]) ? $this->params->pass[4] : date('Y');
                 ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'add')) : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<i class="icon-plus" rel="tooltip" data-title="Ajoutez une nouvelle facturation"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                  <li><?php echo $this->Html->link('A facturer', array('controller'=>'activitesreelles','action' => 'afacturer'),array('escape' => false)); ?></li>
@@ -20,33 +21,43 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Utilisateurs <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,'tous',$filtre_mois,$filtre_visible,$filtre_indisponible)); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,'tous',$filtre_mois,$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($utilisateurs as $utilisateur): ?>
-                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => $defaultAction,$utilisateur['Utilisateur']['id'],$filtre_mois,$filtre_visible,$filtre_indisponible)); ?></li>
+                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => $defaultAction,$utilisateur['Utilisateur']['id'],$filtre_mois,$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
                          <?php endforeach; ?>
                       </ul>
                 </li>   
-                <?php endif; ?> 
+                <?php endif; ?>                  
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Mois <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,$filtre_utilisateur,'tous',$filtre_visible,$filtre_indisponible)); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,$filtre_utilisateur,'tous',$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
                      <li class="divider"></li>
-                     <li><?php echo $this->Html->link('Janvier', array('action' => $defaultAction,$filtre_utilisateur,'01',$filtre_visible,$filtre_indisponible)); ?></li>
-                     <li><?php echo $this->Html->link('Février', array('action' => $defaultAction,$filtre_utilisateur,'02',$filtre_visible,$filtre_indisponible)); ?></li>
-                     <li><?php echo $this->Html->link('Mars', array('action' => $defaultAction,$filtre_utilisateur,'03',$filtre_visible,$filtre_indisponible)); ?></li>
-                     <li><?php echo $this->Html->link('Avril', array('action' => $defaultAction,$filtre_utilisateur,'04',$filtre_visible,$filtre_indisponible)); ?></li>
-                     <li><?php echo $this->Html->link('Mai', array('action' => $defaultAction,$filtre_utilisateur,'05',$filtre_visible,$filtre_indisponible)); ?></li>
-                     <li><?php echo $this->Html->link('Juin', array('action' => $defaultAction,$filtre_utilisateur,'06',$filtre_visible,$filtre_indisponible)); ?></li>
-                     <li><?php echo $this->Html->link('Juillet', array('action' => $defaultAction,$filtre_utilisateur,'07',$filtre_visible,$filtre_indisponible)); ?></li>
-                     <li><?php echo $this->Html->link('Août', array('action' => $defaultAction,$filtre_utilisateur,'08',$filtre_visible,$filtre_indisponible)); ?></li>
-                     <li><?php echo $this->Html->link('Septembre', array('action' => $defaultAction,$filtre_utilisateur,'09',$filtre_visible,$filtre_indisponible)); ?></li>
-                     <li><?php echo $this->Html->link('Octobre', array('action' => $defaultAction,$filtre_utilisateur,'10',$filtre_visible,$filtre_indisponible)); ?></li>
-                     <li><?php echo $this->Html->link('Novembre', array('action' => $defaultAction,$filtre_utilisateur,'11',$filtre_visible,$filtre_indisponible)); ?></li>
-                     <li><?php echo $this->Html->link('Décembre', array('action' => $defaultAction,$filtre_utilisateur,'12',$filtre_visible,$filtre_indisponible)); ?></li>                     
+                     <li><?php echo $this->Html->link('Janvier', array('action' => $defaultAction,$filtre_utilisateur,'01',$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Février', array('action' => $defaultAction,$filtre_utilisateur,'02',$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Mars', array('action' => $defaultAction,$filtre_utilisateur,'03',$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Avril', array('action' => $defaultAction,$filtre_utilisateur,'04',$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Mai', array('action' => $defaultAction,$filtre_utilisateur,'05',$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Juin', array('action' => $defaultAction,$filtre_utilisateur,'06',$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Juillet', array('action' => $defaultAction,$filtre_utilisateur,'07',$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Août', array('action' => $defaultAction,$filtre_utilisateur,'08',$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Septembre', array('action' => $defaultAction,$filtre_utilisateur,'09',$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Octobre', array('action' => $defaultAction,$filtre_utilisateur,'10',$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Novembre', array('action' => $defaultAction,$filtre_utilisateur,'11',$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Décembre', array('action' => $defaultAction,$filtre_utilisateur,'12',$filtre_visible,$filtre_indisponible,$filtre_annee)); ?></li>                     
                       </ul>
                 </li>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Année <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('En cours', array('action' => $defaultAction,$filtre_utilisateur,$filtre_mois,$filtre_visible,$filtre_indisponible,date('Y'))); ?></li>
+                     <li class="divider"></li>
+                         <?php foreach ($annees as $annee): ?>
+                            <li><?php echo $this->Html->link($annee[0]['ANNEE'], array('action' => $defaultAction,$filtre_utilisateur,$filtre_mois,$filtre_visible,$filtre_indisponible,$annee[0]['ANNEE'])); ?></li>
+                         <?php endforeach; ?>
+                      </ul>
+                </li>                 
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtres ... <b class="caret"></b></a>
                      <ul class="dropdown-menu">
@@ -56,12 +67,12 @@
                      $inverse_indisponible = $filtre_indisponible == 0 ? 1 : 0;
                      $img_indisponible = $filtre_indisponible == 1 ?  "icon-blank" : "icon-ok";
                      ?>
-                     <li><?php echo $this->Html->link('<i class='.$img_visible.'></i> Non visible inclus ', array('action' => $defaultAction,$filtre_utilisateur,$filtre_mois,$inserse_visible,$filtre_indisponible),array('escape' => false)); ?></li>
-                     <li><?php echo $this->Html->link('<i class='.$img_indisponible.'></i> Indisponibilité', array('action' => $defaultAction,$filtre_utilisateur,$filtre_mois,$filtre_visible,$inverse_indisponible),array('escape' => false)); ?></li>                    
+                     <li><?php echo $this->Html->link('<i class='.$img_visible.'></i> Non visible inclus ', array('action' => $defaultAction,$filtre_utilisateur,$filtre_mois,$inserse_visible,$filtre_indisponible,$filtre_annee),array('escape' => false)); ?></li>
+                     <li><?php echo $this->Html->link('<i class='.$img_indisponible.'></i> Indisponibilité', array('action' => $defaultAction,$filtre_utilisateur,$filtre_mois,$filtre_visible,$inverse_indisponible,$filtre_annee),array('escape' => false)); ?></li>                    
                       </ul>
                 </li>                
                 <li class="divider-vertical-only"></li>
-                <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>                 
+                <li><?php echo $this->Html->link('<i class="ico-xls" rel="tooltip" data-title="Export Excel"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>                 
                 </ul> 
                 <!--    
                 <?php echo $this->Form->create("Facturation",array('controller'=>'facturations','action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -139,12 +150,12 @@
                 <td style="text-align: center;" class="sstotal"><?php echo $facturation['Facturation']['TOTAL']; ?></td> 
                 <td style="text-align: center;">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'view')) : ?>
-                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Facturation :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($facturation['Facturation']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($facturation['Facturation']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>
+                    <?php echo '<span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><i class="icon-eye-open" rel="popover" data-title="<h3>Facturation :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($facturation['Facturation']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($facturation['Facturation']['modified']).'" data-trigger="click" style="cursor: pointer;"></i></span>'; ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $facturation['Facturation']['id'], $facturation['Facturation']['utilisateur_id']),array('escape' => false)); ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil" rel="tooltip" data-title="Modification de la facturation"></i>', array('action' => 'edit', $facturation['Facturation']['id'], $facturation['Facturation']['utilisateur_id']),array('escape' => false)); ?>
                     <?php if(isset($facturation['Facturation']['activitesreelle_id']) && $facturation['Facturation']['activitesreelle_id']!=''): ?>
-                        <?php echo $this->Html->link('<i class="icon-edit"></i>', array('controller'=>'activitesreelles','action' => 'deverouiller', $facturation['Facturation']['activitesreelle_id']),array('escape' => false)); ?>                    
+                        <?php echo $this->Html->link('<i class="icon-edit" rel="tooltip" data-title="Déverouillez pour nouvelle saisie"></i>', array('controller'=>'activitesreelles','action' => 'deverouiller', $facturation['Facturation']['activitesreelle_id']),array('escape' => false)); ?>                    
                     <?php endif; ?>
                     <?php endif; ?>
                 </td>                 
@@ -176,7 +187,7 @@
      $(document).ready(function () {
         $("#totalactivites").html(sumOfColumns());
 
-        setTimeout(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 60000); 
+        //setTimeout(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 60000); 
         $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
     });
 </script>

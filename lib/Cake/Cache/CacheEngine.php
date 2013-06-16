@@ -11,7 +11,7 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Cache
  * @since         CakePHP(tm) v 1.2.0.4933
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -57,7 +57,8 @@ abstract class CacheEngine {
 			$this->_groupPrefix = str_repeat('%s_', count($this->settings['groups']));
 		}
 		if (!is_numeric($this->settings['duration'])) {
-			date_default_timezone_set('Europe/Paris');
+                        //JLR add for netbeans plugin    
+                        date_default_timezone_set('Europe/Paris');
 			$this->settings['duration'] = strtotime($this->settings['duration']) - time();
 		}
 		return true;

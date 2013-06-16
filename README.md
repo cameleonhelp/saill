@@ -9,9 +9,9 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
 
 ## Cette version s'appuie sur :
 
-* [CakePhp 2.3.5] (http://cakephp.org) - Framework
+* [CakePhp 2.3.4] (http://cakephp.org) - Framework
 
-* [BootStrap 2.3.2] (http://twitter.github.com/bootstrap/) - Style et javascript
+* [BootStrap 2.3.1] (http://twitter.github.com/bootstrap/) - Style et javascript
 
 * [JQuery 1.9.1] (http://jquery.com) - La dernière version de JQuery
 
@@ -30,15 +30,3 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
 * Prise en compte des retours utilisateurs.
 
 * Corrections des bugs au fur et à mesure de leur découverte.
-
-* Page de paramètrage du site 
-
-    * Changer le mot de passe administrateur
-    
-    * Changer le contact qui reçoit les mails du formulaire Nous contacter
-
-    * Changer d'autres informations pouvant être paramètrées
-
-    * Sauvegarder et restaurer la base de données
-    
-    * Statistiques de l'utilisateur sur la page d'accueil **Fait**

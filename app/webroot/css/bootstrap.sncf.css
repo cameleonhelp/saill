@@ -520,6 +520,14 @@ div.controls{
     color:#b94a48 !important;
     font-weight: bold !important;
 }
+
+.td-success {
+    background-color: #dff0d8 !important;
+    border-color: #d6e9c6 !important;
+    color: #468847 !important;
+    font-weight: bold !important;
+}
+
 .clearboth {
     clear: both !important;
 }
@@ -776,4 +784,36 @@ input.invalid {
 
 .well-small{
     padding-bottom: 0px;
+}
+
+.white-bold-font{
+    color: #FFFFFF !important;
+    font-weight: bold;
+}
+
+.icon-bar {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background-color: #FFFFFF;
+  -webkit-border-radius: 1px;
+     -moz-border-radius: 1px;
+          border-radius: 1px;
+  -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+     -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+          box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.icon-bar + .icon-bar {
+  margin-top: 3px;
+}
+
+.spanmax {
+    width: 99%;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+body *{
+    /*border-radius: 0px !important;*/
 }

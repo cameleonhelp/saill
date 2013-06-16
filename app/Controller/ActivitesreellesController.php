@@ -9,10 +9,7 @@ App::uses('CakeEmail', 'Network/Email');
 class ActivitesreellesController extends AppController {
         public $components = array('History');    
         public $paginate = array(
-        //'limit' => 9999,
-        //'threaded',
         'order' => array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc'),
-        //'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),
         );
         
 /**
@@ -20,7 +17,7 @@ class ActivitesreellesController extends AppController {
  *
  * @return void
  */
-	public function index($etat=null,$utilisateur=null,$mois=null) {
+	public function index($etat=null,$utilisateur=null,$mois=null,$annee=null) {
             //$this->Session->delete('history');
             if (isAuthorized('activitesreelles', 'index')) :
                 switch ($etat){
@@ -66,6 +63,7 @@ class ActivitesreellesController extends AppController {
                     $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];                 
                 endif;                
                 $this->set('futilisateur',$futilisateur);
+                $annee = $annee==null ? date('Y') : $annee;
                 switch ($mois){
                     case 'tous':
                     case null:
@@ -73,14 +71,13 @@ class ActivitesreellesController extends AppController {
                         $fperiode = "";
                         break;
                     default:
-                        $annee = date('Y');
                         $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
                         $debut = $annee."-".$mois."-01";
                         $datedebut = startWeek($debut);
                         $datefin = $annee."-".$mois."-".$dernierjour;
                         $newconditions[]="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
                         $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
-                        $fperiode = "pour le mois de ".$moiscal[$mois];
+                        $fperiode = "pour le mois de ".$moiscal[$mois]." ".$annee;
                         break;                      
                 }  
                 $this->set('fperiode',$fperiode);                
@@ -89,7 +86,9 @@ class ActivitesreellesController extends AppController {
                 $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
                 $this->set('utilisateurs',$utilisateurs);
                 $icsutilisateurs = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
-                $this->set('icsutilisateurs',$icsutilisateurs);                
+                $this->set('icsutilisateurs',$icsutilisateurs); 
+                $annee = $this->Activitesreelle->find('all',array('fields'=>array('YEAR(Activitesreelle.DATE) AS ANNEE'),'group'=>array('YEAR(Activitesreelle.DATE)'),'order'=>array('YEAR(Activitesreelle.DATE)' => 'asc')));
+                $this->set('annees',$annee);                  
                 $this->Activitesreelle->recursive = 1;
                 $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc' ),'conditions'=>$newconditions));
                 $this->set('groups',$group);
@@ -111,7 +110,7 @@ class ActivitesreellesController extends AppController {
  * @param string $id
  * @return void
  */
-	public function afacturer($etat=null,$utilisateur=null,$mois=null) {
+	public function afacturer($etat=null,$utilisateur=null,$mois=null,$annee=null) {
             if (isAuthorized('activitesreelles', 'index')) :
                 $newconditions[]="Activitesreelle.facturation_id IS NULL";                
                 switch ($etat){                  
@@ -149,6 +148,7 @@ class ActivitesreellesController extends AppController {
                     $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];                 
                 endif;                
                 $this->set('futilisateur',$futilisateur);
+                $annee = $annee==null ? date('Y') : $annee;
                 switch ($mois){
                     case 'tous':
                         $newconditions[]="1=1";
@@ -156,22 +156,20 @@ class ActivitesreellesController extends AppController {
                         break;
                     case null:
                         $mois=date('m');
-                        $annee = date('Y');
                         $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
                         $datedebut = $annee."-".$mois."-01";
                         $datefin = $annee."-".$mois."-".$dernierjour;
                         $newconditions[]="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
                         $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
-                        $fperiode = "pour le mois de ".$moiscal[$mois];
+                        $fperiode = "pour le mois de ".$moiscal[$mois]." ".$annee;
                         break;                        
                     default:
-                        $annee = date('Y');
                         $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
                         $datedebut = $annee."-".$mois."-01";
                         $datefin = $annee."-".$mois."-".$dernierjour;
                         $newconditions[]="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
                         $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
-                        $fperiode = "pour le mois de ".$moiscal[$mois];
+                        $fperiode = "pour le mois de ".$moiscal[$mois]." ".$annee;
                         break;                      
                 }  
                 $this->set('fperiode',$fperiode);                
@@ -181,7 +179,9 @@ class ActivitesreellesController extends AppController {
                 $this->set('utilisateurs',$utilisateurs);
                 $this->Activitesreelle->recursive = 1;
                 $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc' ),'conditions'=>$newconditions));
-                $this->set('groups',$group);                
+                $this->set('groups',$group); 
+                $annee = $this->Activitesreelle->find('all',array('fields'=>array('YEAR(Activitesreelle.DATE) AS ANNEE'),'group'=>array('YEAR(Activitesreelle.DATE)'),'order'=>array('YEAR(Activitesreelle.DATE)' => 'asc')));
+                $this->set('annees',$annee);                 
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
 		$this->Activitesreelle->recursive = 0;
                 $activitesreeelles = $this->Activitesreelle->find('all',$this->paginate);
@@ -400,7 +400,12 @@ class ActivitesreellesController extends AppController {
                 }                
                 $this->Activitesreelle->create();
                 if ($this->Activitesreelle->save($record)) {
-                        $this->Session->setFlash(__('Feuille de temps dupliquée'),'default',array('class'=>'alert alert-success'));
+                    $this->Session->setFlash(__('Feuille de temps dupliquée'),'default',array('class'=>'alert alert-success'));
+                    $lastid = $this->Activitesreelle->getLastInsertID();
+                    $projet = $this->Activitesreelle->Activite->find('first',array('fields'=>array('projet_id'),'conditions'=>array('id'=>$lastid),'recursive'=>-1));
+                    if ($projet['Activite']['projet_id']==1):
+                            $this->sendmailabsences($record);
+                    endif;                        
                         $this->redirect(array('action' => 'edit',$this->Activitesreelle->getLastInsertID()));
                 } 
 		$this->Session->setFlash(__('Feuille de temps <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));    
@@ -460,22 +465,25 @@ class ActivitesreellesController extends AppController {
                 $this->set('title_for_layout','Feuilles de temps');  
                 $this->Activitesreelle->id = $id;
                 $record = $this->Activitesreelle->read();
-                unset($record['Activitesreelle']['created']);                
-                unset($record['Activitesreelle']['modified']);
-                $record['Activitesreelle']['created'] = $this->Activitesreelle->read('created');
-                $record['Activitesreelle']['modified'] = date('Y-m-d');                 
-                $record['Activitesreelle']['VEROUILLE'] = 0;
-                $record['Activitesreelle']['facturation_id'] = null;                
-                $this->Activitesreelle->create();
-                if ($this->Activitesreelle->save($record)) {
+                //TODO : [JLR] à voir s'il faut ajouter un test sur facturation_id != null
+                if ($record['Activitesreelle']['VEROUILLE']==1):
+                    unset($record['Activitesreelle']['created']);                
+                    unset($record['Activitesreelle']['modified']);
+                    $record['Activitesreelle']['created'] = $this->Activitesreelle->read('created');
+                    $record['Activitesreelle']['modified'] = date('Y-m-d');                 
+                    $record['Activitesreelle']['VEROUILLE'] = 0;
+                    $record['Activitesreelle']['facturation_id'] = null;                
+                    $this->Activitesreelle->create();
+                    if ($this->Activitesreelle->save($record)) {
+                        if(!$loop):
+                        $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation'),'default',array('class'=>'alert alert-success'));
+                        endif;
+                    } 
                     if(!$loop):
-                    $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation'),'default',array('class'=>'alert alert-success'));
-                    $this->History->goBack();
-                    endif;
-                } 
-                if(!$loop):
-		$this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation'),'default',array('class'=>'alert alert-error')); 
+                    $this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation'),'default',array('class'=>'alert alert-error')); 
+                    endif;            
                 endif;
+                $this->History->goBack();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();           
@@ -686,7 +694,10 @@ class ActivitesreellesController extends AppController {
         public function deverouiller($id){
             $this->Activitesreelle->id = $id;
             $this->Activitesreelle->saveField('VEROUILLE', 1);        
-            $this->Activitesreelle->saveField('facturation_id', null);            
+            $this->Activitesreelle->saveField('facturation_id', null);   
+            $facturation = $this->Activitesreelle->Facturation->find('first',array('conditions'=>array('Facturation.activitesreelle_id'=>$id,'Facturation.VISIBLE'=>0),'recursive'=>-1));
+            $this->Activitesreelle->Facturation->id = $facturation['Facturation']['id'];
+            $this->Activitesreelle->Facturation->saveField('VISIBLE', 1);
             echo $this->Session->setFlash(__('Feuille de temps déverouillée'),'default',array('class'=>'alert alert-success'));
             $this->History->goBack();
         } 
@@ -819,12 +830,38 @@ class ActivitesreellesController extends AppController {
                     <li>SA :'.$activitesreelle['SA'].'</li>
                     <li>DI :'.$activitesreelle['DI'].'</li>                        
                     </ul>';
-            $email = new CakeEmail();
-            $email->config('smtp')
-                    ->emailFormat('html')
-                    ->from($from)
-                    ->to($to)
-                    ->subject($objet)
-                    ->send($message);
+            if($to!=''):
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+                }
+                catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                }  
+            endif;
         }
+        
+        public function getActivitesReelles($mois,$annee){
+            $lastMonthDay = $annee.'-'.$mois.'-'.date('t');
+            $firstMonthDay = startWeek($annee.'-'.$mois.'-01');
+            $sql = "CREATE VIEW SAISIE AS
+                    SELECT SUM(activitesreelles.TOTAL) AS TOTAL,CONCAT(utilisateurs.NOM,' ',utilisateurs.PRENOM) AS NOMLONG,utilisateurs.id AS USERID, SUM(activitesreelles.VEROUILLE) AS VEROUILLE
+                    FROM activitesreelles
+                    LEFT JOIN utilisateurs ON activitesreelles.utilisateur_id = utilisateurs.id
+                    WHERE activitesreelles.DATE BETWEEN '".$firstMonthDay."' AND '".$lastMonthDay."'
+                        AND utilisateurs.profil_id > 0
+                    GROUP BY activitesreelles.utilisateur_id
+                    ORDER BY CONCAT(utilisateurs.NOM,' ',utilisateurs.PRENOM) ASC";
+            $select = "SELECT * FROM SAISIE"; 
+            $this->Activitesreelle->query("DROP VIEW IF EXISTS SAISIE;");
+            $this->Activitesreelle->query($sql);
+            $nbsaisie = $this->Activitesreelle->query($select);
+            $this->Activitesreelle->query("DROP VIEW IF EXISTS SAISIE;");
+            return $nbsaisie;
+        }         
 }

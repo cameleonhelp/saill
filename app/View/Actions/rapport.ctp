@@ -35,7 +35,11 @@
             <td><label class="control-label sstitre  required"  for="ActionRepartitionUtilisateur">Afficher répartition par utilisateur : </label></td>
             <td>
                 <?php echo $this->Form->input('RepartitionUtilisateur',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class="labelAfter" for="ActionRepartitionUtilisateur"></label>            
-            </td>          
+            </td>    
+            <td><label class="control-label sstitre  required"  for="ActionDetail">Rapport Détaillé : </label></td>
+            <td>
+                <?php echo $this->Form->input('Rapportdetail',array('type'=>'checkbox','class'=>'yesno','value'=>1)); ?>&nbsp;<label class="labelAfter" for="ActionRapportdetail"></label>            
+            </td>               
         </tr>        
     </table>
     <div class="navbar">
@@ -89,7 +93,7 @@
             <?php foreach($rapportresults as $result): ?>
             <tr>
                 <td><?php echo strMonth($result[0]['MONTH']).' '.$result[0]['YEAR']; ?></td>
-                <td><?php echo $result['Utilisateur']['NOM'].' '.$result['Utilisateur']['PRENOM']; ?></td>
+                <td><?php echo $result['Action']['destinataire_nom']; ?></td>
                 <td style="text-align:center" class="nbaction"><?php echo $result[0]['NB']; ?></td>
                 <td style="text-align:center"><?php echo ucfirst_utf8($result['Action']['STATUT']); ?></td> 
             </tr>           
@@ -120,10 +124,10 @@
             <?php foreach($repartitions as $result): ?>
             <tr>
                 <td><?php echo strMonth($result[0]['MONTH']).' '.$result[0]['YEAR']; ?></td>
-                <td><?php echo $result['Utilisateur']['NOM'].' '.$result['Utilisateur']['PRENOM']; ?></td>
+                <td><?php echo $result['Action']['destinataire_nom']; ?></td>
                 <td><?php echo $result['Domaine']['NOM']; ?></td>
                 <td style="text-align:center" class="nbrepartition"><?php echo $result[0]['NB']; ?></td> 
-                <td style="text-align:center"><?php echo $result['Action']['STATUT']; ?></td> 
+                <td style="text-align:center"><?php echo ucfirst_utf8($result['Action']['STATUT']); ?></td> 
             </tr>           
             <?php endforeach; ?>
         </tbody>  
@@ -135,7 +139,34 @@
 	</tr> 
         </tfooter>          
     </table>
-    <?php endif; ?>    
+    <?php endif; ?>   
+    <?php if (isset($details)): ?>
+    <br />
+        <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Rapport détaillé des actions par utilisateur</div><br>
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+            <th>Période</th>
+            <th>Utilisateur</th>
+            <th>Domaine</th>
+            <th>Action</th>
+            <th>Etat</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($details as $result): ?>
+            <tr>
+                <td><?php echo strMonth($result[0]['MONTH']).' '.$result[0]['YEAR']; ?></td>
+                <td><?php echo $result['Action']['destinataire_nom']; ?></td>
+                <td><?php echo $result['Domaine']['NOM']; ?></td>
+                <td><?php echo $result['Action']['OBJET'].'<br>'.$result['Action']['COMMENTAIRE']; ?></td> 
+                <td style="text-align:center"><?php echo ucfirst_utf8($result['Action']['STATUT']); ?></td> 
+            </tr>           
+            <?php endforeach; ?>
+        </tbody>          
+    </table>
+
+    <?php endif; ?>         
 </div>
 <?php if(isset($rapportresults) && $israpport==0) : ?>
 <div class="alert alert-block"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>

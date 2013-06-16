@@ -4,7 +4,7 @@
                 <div class="container">
                 <ul class="nav">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('linkshareds', 'add')) : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<i class="icon-plus" rel="tooltip" data-title="Ajoutez un lien"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <?php endif; ?>
                 </ul> 
                 <?php echo $this->Form->create("Linkshared",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -28,16 +28,16 @@
 	<tr>
 		<td><?php echo h($linkshared['Linkshared']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($linkshared['Linkshared']['LINK']); ?>&nbsp;</td>
-		<td style="text-align: center;"><?php echo $this->Html->link('<i class="glyphicon_global"></i>',$linkshared['Linkshared']['LINK'],array('escape' => false,'target'=>'_blank')); ?>&nbsp;</td>
+		<td style="text-align: center;"><?php echo $this->Html->link('<i class="glyphicon_global" rel="tooltip" data-title="Cliquez pour ouvrir dans un nouvel onglet"></i>',$linkshared['Linkshared']['LINK'],array('escape' => false,'target'=>'_blank')); ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('linkshareds', 'view')) : ?>
-                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Lien :</h3>" data-content="<contenttitle>Crée par: </contenttitle>'.h($linkshared['Utilisateur']['NOMLONG']).'<br/><contenttitle>Crée le: </contenttitle>'.h($linkshared['Linkshared']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($linkshared['Linkshared']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php echo '<span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><i class="icon-eye-open" rel="popover" data-title="<h3>Lien :</h3>" data-content="<contenttitle>Crée par: </contenttitle>'.h($linkshared['Utilisateur']['NOMLONG']).'<br/><contenttitle>Crée le: </contenttitle>'.h($linkshared['Linkshared']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($linkshared['Linkshared']['modified']).'" data-trigger="click" style="cursor: pointer;"></i></span>'; ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('linkshareds', 'edit') && userAuth('id')==$linkshared['Linkshared']['utilisateur_id']) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $linkshared['Linkshared']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<i class="icon-pencil" rel="tooltip" data-title="Modification"></i>', array('action' => 'edit', $linkshared['Linkshared']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (isAuthorized('linkshareds', 'delete') && userAuth('id')==$linkshared['Linkshared']['utilisateur_id']) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $linkshared['Linkshared']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce lien ?')); ?>
+                    <?php echo $this->Form->postLink('<i class="icon-trash" rel="tooltip" data-title="Suppression"></i>', array('action' => 'delete', $linkshared['Linkshared']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce lien ?')); ?>
                     <?php endif; ?>
 		</td>
 	</tr>

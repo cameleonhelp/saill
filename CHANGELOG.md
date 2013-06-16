@@ -1,3 +1,25 @@
+## b060
+ * **version 2.0.1 finale**
+ * Mise en place d'envois de mail sur :
+  * la création d'utilisateur
+  * saisie d'une indisponibilité
+  * création d'une action
+  * création ou mise à jour d'une demande de droit
+ * Gestion d'erreur dans l'envois de mail
+ * conversion des messages en français sur retour erreur d'envois de mail
+ * validation ou avertissement d'un valideur d'indisponibilité (spécifique aux prestataires, concerne un petite population)
+ * mise à jour de jquery en 1.10.1
+ * retrait des model, controller et view MailTemplate et replaceString
+ * Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.
+ * Template d'email avec envois si demandé (choix laissé à l'utilisateur ou action de notification, envois automatique sur certaines actions)
+ * Ajout d'un rapport détaillé sur les actions
+ * Ajout d'un rapport sur les action pour avoir le détail de celle-ci
+ * Ajout des mails du gestionnaire d'annuaire et du service manager
+ * sur création utilisateur ou activation, anvois mail au gestionnaire d'annuaire
+ * Dans les filtre ajout d'un filtre rapide pour Moi sur les gestionnaires
+ * Sur demande validation ouverture de droit envois mail au service manager
+ * Ajout d'un lien pour mettre à jour l'avancement de la demande de droit dans le mail
+
 ## b059
  * lors de la suppresion d'une ligne dans activité réelle enlever la ligne de la base en ajax >>FAIT<<
  * Mise à jour des paramétrage du site >>FAIT<<
@@ -5,12 +27,11 @@
  * Importation des fichier ics >>FAIT<<
  * saisie en masse pour autrui si administrateur ou si ressources génériques >>FAIT<<
  * Création de l'équipe pour validation des indisponibilités >>FAIT<<
-
- **Reste à faire**
-
- * Rapport plan de charge calculer le cout à partir du TJM agent attribué à chaque agent, calculer le TJM moyen.
- * validation ou avertissement d'un valideur d'indisponibilité (spécifique aux prestataires, concerne un petite population)
- * Template d'email avec envois si demandé (choix laissé à l'utilisateur ou action de notification, envois automatique sur certaines actions)
+ * correction sur la page activités réelles >>FAIT<<
+ * Screenshot de la page absences équipe >>FAIT<<
+ * Indicateurs département sans les dates uniquement sur le budget >>FAIT<<
+ * Tableau de bord : Mis le plan de charge facultatif >>FAIT<<
+ * Ajout d'une autorisation pour la saisie en masse >>FAIT<<
 
 ## b058 /!\ extension php_mysql obligatoire pour backup_retsore.class.php
  * Gestions des fichiers des dossiers admin, all avec add, delete >>FAIT<<

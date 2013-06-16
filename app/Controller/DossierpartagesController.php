@@ -59,6 +59,8 @@ class DossierpartagesController extends AppController {
  */
 	public function add() {
             if (isAuthorized('dossierpartages', 'add')) :
+                $gestionnaire = $this->Dossierpartage->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0')));              
+                $this->set('gestionnaire',$gestionnaire);                
 		$this->set('title_for_layout','Partages réseaux');
                 if ($this->request->is('post')) :
 			$this->Dossierpartage->create();
@@ -84,6 +86,8 @@ class DossierpartagesController extends AppController {
  */
 	public function edit($id = null) {
             if (isAuthorized('dossierpartages', 'edit')) :
+                $gestionnaire = $this->Dossierpartage->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0')));              
+                $this->set('gestionnaire',$gestionnaire);                
 		$this->set('title_for_layout','Partages réseaux');
                 if (!$this->Dossierpartage->exists($id)) {
 			throw new NotFoundException(__('Dossier partagé incorrecte'));

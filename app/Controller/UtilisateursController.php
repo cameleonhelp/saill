@@ -1,12 +1,13 @@
 <?php
 App::uses('AppController', 'Controller','Authentification');
+App::uses('CakeEmail', 'Network/Email');
 /**
  * Utilisateurs Controller
  *
  * @property Utilisateur $Utilisateur
  */
 class UtilisateursController extends AppController {
-        public $components = array('History'); 
+    public $components = array('History'); 
     var $name = 'Utilisateurs';
     public $paginate = array(
         'limit' => 15,
@@ -57,7 +58,11 @@ class UtilisateursController extends AppController {
                     case 'aprolonger':
                         $newconditions[]="Utilisateur.ACTIF=1 AND Utilisateur.profil_id >0 AND Utilisateur.FINMISSION IS NOT NULL AND Utilisateur.FINMISSION < DATE_ADD(CURDATE(), INTERVAL 1 MONTH)";
                         $futilisateur = "tous les utilisateurs actifs, dont la date de fin de mission est proche de son terme";
-                        break;                      
+                        break;  
+                    case 'nouveau':
+                        $newconditions[]="Utilisateur.profil_id = 0 AND Utilisateur.FINMISSION IS NULL AND Utilisateur.username IS NULL";
+                        $futilisateur = "tous les nouveaux utilisateurs dont le compte est en cours de création";
+                        break;                     
                 }
                 switch ($filtreSection){
                     case 'allsections':
@@ -137,7 +142,9 @@ class UtilisateursController extends AppController {
                 if ($this->request->is('post')) :                  
 			$this->Utilisateur->create();
 			if ($this->Utilisateur->save($this->request->data)) {
-                                $lastid = $this->Utilisateur->id;
+                                $lastid = $this->Utilisateur->getLastInsertID();
+                                $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$lastid),'recursive'=>0));
+                                $this->sendmailnewutilisateur($utilisateur);
                                 $this->addnewaction($lastid);
                                 $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur créé".' par '.userAuth('NOMLONG');
@@ -269,15 +276,25 @@ class UtilisateursController extends AppController {
 		$this->Utilisateur->id = $id;
 		if (!$this->Utilisateur->exists()) {
 			throw new NotFoundException(__('Utilisateur incorrect'));
-		}               
-                if ($this->Utilisateur->saveField('ACTIF',0)) {
-                        $this->Utilisateur->saveField('modified',date('Y-m-d'));
-                        $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
-                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - utilisateur supprimé".' par '.userAuth('NOMLONG');
-                        $this->Utilisateur->Historyutilisateur->save($history);
-			$this->Session->setFlash(__('Utilisateur supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
-		}
+		}  
+                $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$id),'recursive'=>-1));
+                if(h($utilisateur['Utilisateur']['ACTIF'])==1):
+                    if ($this->Utilisateur->saveField('ACTIF',0)) :
+                            $this->Utilisateur->saveField('modified',date('Y-m-d'));
+                            $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
+                            $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - utilisateur supprimé".' par '.userAuth('NOMLONG');
+                            $this->Utilisateur->Historyutilisateur->save($history);
+                            $this->Session->setFlash(__('Utilisateur désactivé'),'default',array('class'=>'alert alert-success'));
+                            $this->History->goBack();
+                    endif;
+                    $this->Utilisateur->delete($id);
+                    $this->Session->setFlash(__('Utilisateur <b>NON</b> désactivé'),'default',array('class'=>'alert alert-error'));
+                    $this->History->goBack();                    
+                 else:
+                    $this->Utilisateur->delete($id);
+                    $this->Session->setFlash(__('Utilisateur supprimé'),'default',array('class'=>'alert alert-success'));
+                    $this->History->goBack();
+                 endif;
 		$this->Session->setFlash(__('Utilisateur <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->History->goBack();
             else :
@@ -354,8 +371,7 @@ class UtilisateursController extends AppController {
                         $this->Utilisateur->Dotation->recursive = 0;
                         $dotations = $this->Utilisateur->Dotation->find('all',array('conditions'=>array('Dotation.utilisateur_id'=>$id)));
                         $this->set('dotations',$dotations);
-                        $this->Utilisateur->Utiliseoutil->recursive = 0;
-                        $utiliseoutils = $this->Utilisateur->Utiliseoutil->find('all',array('fields'=>array('id','outil_id','Outil.NOM','listediffusion_id','Listediffusion.NOM','dossierpartage_id','Dossierpartage.NOM','Utiliseoutil.STATUT'),'conditions'=>array('Utiliseoutil.utilisateur_id'=>$id)));
+                        $utiliseoutils = $this->Utilisateur->Utiliseoutil->find('all',array('fields'=>array('id','outil_id','Outil.NOM','listediffusion_id','Listediffusion.NOM','dossierpartage_id','Dossierpartage.NOM','Utiliseoutil.STATUT'),'conditions'=>array('Utiliseoutil.utilisateur_id'=>$id),'recursive'=>0));
                         $this->set('utiliseoutils',$utiliseoutils);
                         $this->Utilisateur->recursive = 1;
                         $options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));
@@ -367,10 +383,6 @@ class UtilisateursController extends AppController {
                         $options = array('conditions' => array('Historyutilisateur.utilisateur_id' => $id),'order'=>array('Historyutilisateur.created'=> 'desc','Historyutilisateur.HISTORIQUE'=>'desc'));
                         $historyutilisateurs = $this->Utilisateur->Historyutilisateur->find('all',$options);
                         $this->set('historyutilisateurs',$historyutilisateurs);
-                        $this->Utilisateur->Utiliseoutil->recursive = -1;
-                        $options = array('conditions' => array('Utiliseoutil.utilisateur_id' => $id));
-                        $utiliseoutils = $this->Utilisateur->Utiliseoutil->find('all',$options);
-                        $this->set('utiliseoutils',$utiliseoutils);
                         $compteurs = $this->Utilisateur->Utiliseoutil->query("SELECT count(outil_id) AS nboutil, count(listediffusion_id) AS nbliste, count(dossierpartage_id) AS nbpartage FROM utiliseoutils WHERE utilisateur_id =".$id);
                         $this->set('compteurs',$compteurs);
                         $nbDotation = $this->Utilisateur->Dotation->query("SELECT count(id) AS nbDotation FROM dotations WHERE utilisateur_id =".$id);
@@ -730,6 +742,8 @@ class UtilisateursController extends AppController {
                     $this->Utilisateur->id = $id;
                     $date = "05/01/".(date('Y')+2);
                     $this->Utilisateur->saveField('FINMISSION', $date);
+                    $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$id),'recursive'=>0));
+                    $this->sendmailprolongation($utilisateur);
                     $history['Historyutilisateur']['utilisateur_id']=$id;
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - compte prolongé jusqu'au ".$date.' par '.userAuth('NOMLONG');
                     $this->Utilisateur->Historyutilisateur->save($history);
@@ -786,4 +800,80 @@ class UtilisateursController extends AppController {
               endif;
               $this->History->goBack();
         }
+        
+        public function sendmailnewutilisateur($utilisateur){
+            $mailto = $this->requestAction('parameters/get_contact');
+            $mailto = explode(';',$mailto['Parameter']['param']);
+            $mailtoGestannuaire = $this->requestAction('parameters/get_gestionnaireannuaire');
+            $mailto[] = $mailtoGestannuaire['Parameter']['param'];
+            $to=$mailto;
+            $from = userAuth('MAIL');
+            $objet = "SAILL : Ajout d'un nouvel utilisateur [".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].']';
+            $message = "Merci de traiter cette demande concernant l'arrivée de ".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].
+                    '<ul>
+                    <li>Date de naissance :'.$utilisateur['Utilisateur']['NAISSANCE'].'</li>
+                    <li>Société :'.$utilisateur['Societe']['NOM'].'</li>
+                    <li>Fin de mission :'.$utilisateur['Utilisateur']['FINMISSION'].'</li>
+                    <li>Commentaire :'.$utilisateur['Utilisateur']['COMMENTAIRE'].'</li>                      
+                    </ul>';
+            if($to!=''):
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+                }
+                catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                }  
+            endif;
+        }       
+
+        public function sendmailprolongation($utilisateur){
+            $mailtoGestannuaire = $this->requestAction('parameters/get_gestionnaireannuaire');
+            $mailto[] = $mailtoGestannuaire['Parameter']['param'];
+            $to=$mailto;
+            $from = userAuth('MAIL');
+            $objet = "SAILL : Prolongation d'un utilisateur [".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].']';
+            $message = "Merci de traiter cette demande concernant la prolongation de ".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].
+                    '<ul>
+                    <li>Date de naissance :'.$utilisateur['Utilisateur']['NAISSANCE'].'</li>
+                    <li>Société :'.$utilisateur['Societe']['NOM'].'</li>
+                    <li>Fin de mission :'.$utilisateur['Utilisateur']['FINMISSION'].'</li>
+                    <li>Commentaire :'.$utilisateur['Utilisateur']['COMMENTAIRE'].'</li>                      
+                    </ul>';
+            if($to!=''):
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+                }
+                catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                }  
+            endif;
+        }  
+        
+        public function infoutilisateur($id){
+            $this->autoRender = false;
+            $id = isset($id) ? $id : $this->request->data('id');
+            $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$id),'recursive'=>0));
+            $user["ETP"] = $utilisateur['Utilisateur']['WORKCAPACITY']/100;
+            $user["TJM"] = $utilisateur['Tjmagent']['TARIFTTC']==null ? '' : $utilisateur['Tjmagent']['TARIFTTC'];
+            $result = json_encode($user);
+            return $result;
+        }
+        
+        public function getutilisateurbyid($id){
+            $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$id),'recursive'=>0));
+            return $utilisateur;
+        }
+              
 }

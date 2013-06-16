@@ -57,16 +57,16 @@
 		<td style='text-align:right;'><?php echo h($plancharge['Plancharge']['VERSION']); ?>&nbsp;</td>
 		<td>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'view')) : ?>
-                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Plan de charge :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($plancharge['Plancharge']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($plancharge['Plancharge']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php echo '<span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><i class="icon-eye-open" rel="popover" data-title="<h3>Plan de charge :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($plancharge['Plancharge']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($plancharge['Plancharge']['modified']).'" data-trigger="click" style="cursor: pointer;"></i></span>'; ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $plancharge['Plancharge']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<i class="icon-pencil" rel="tooltip" data-title="Créer une nouvelle version"></i>', array('action' => 'edit', $plancharge['Plancharge']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'add')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-th-list"></i>', array('controller'=>'detailplancharges','action' => 'edit', $plancharge['Plancharge']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<i class="icon-th-list" rel="tooltip" data-title="Modification"></i>', array('controller'=>'detailplancharges','action' => 'edit', $plancharge['Plancharge']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?> 
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'view')) : ?>
-                    <?php echo $this->Html->link('<i class="ico-xls" style="height:14px;width:14px;"></i>', array('action' => 'export_xls', $plancharge['Plancharge']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<i class="ico-xls" style="height:14px;width:14px;" rel="tooltip" data-title="Export Excel"></i>', array('action' => 'export_xls', $plancharge['Plancharge']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>                    
 		</td>
 	</tr>

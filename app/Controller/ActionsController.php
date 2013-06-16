@@ -379,22 +379,28 @@ class ActionsController extends AppController {
                     }  
                     $domaine = 'Action.domaine_id IN ('.substr_replace($projetlist ,"",-1).')';
                     $periode = 'Action.ECHEANCE BETWEEN "'.  startWeek(CUSDate($this->request->data['Action']['START'])).'" AND "'.  endWeek(CUSDate($this->request->data['Action']['END'])).'"';
-                    $rapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('Action.destinataire','MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)','Action.STATUT'),'recursive'=>0));
+                    $rapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Action.destinataire','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('Action.destinataire','MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)','Action.STATUT'),'recursive'=>0));
                     $this->set('rapportresults',$rapportresult);
-                    $chartresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode,'Action.CRA'=>1),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)'),'recursive'=>0));
+                    $chartresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Action.destinataire','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode,'Action.CRA'=>1),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)'),'recursive'=>0));
                     $this->set('chartresults',$chartresult);                    
-                    $detailrapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Action.STATUT','Action.OBJET','Domaine.NOM'),'conditions'=>array($destinataire,$domaine,$periode,'Action.CRA'=>1),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'recursive'=>0));
+                    $detailrapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Action.destinataire','Action.STATUT','Action.OBJET','Domaine.NOM'),'conditions'=>array($destinataire,$domaine,$periode,'Action.CRA'=>1),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'recursive'=>0));
                     $this->set('detailrapportresults',$detailrapportresult);
                     $this->Session->delete('rapportresults');  
                     $this->Session->delete('detailrapportresults');                      
                     $this->Session->write('rapportresults',$rapportresult);
                     $this->Session->write('detailrapportresults',$detailrapportresult);
                     if ($this->request->data['Action']['RepartitionUtilisateur']==1):
-                        $repartitions = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','Domaine.NOM', 'COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc','Action.destinataire'=>'asc'),'group'=>array('Action.destinataire','MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)','Action.STATUT','Action.domaine_id'),'recursive'=>0));
+                        $repartitions = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Action.destinataire','Utilisateur.NOM','Utilisateur.PRENOM','Domaine.NOM', 'COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc','Action.destinataire'=>'asc'),'group'=>array('Action.destinataire','MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)','Action.STATUT','Action.domaine_id'),'recursive'=>0));
                         $this->set('repartitions',$repartitions);
                         $this->Session->delete('repartitionresults');
                         $this->Session->write('repartitionresults',$repartitions);
-                    endif;                    
+                    endif;    
+                    if ($this->request->data['Action']['Rapportdetail']==1):
+                        $details = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','Domaine.NOM','Action.destinataire','Action.OBJET','Action.COMMENTAIRE','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc','Action.destinataire'=>'asc'),'recursive'=>0));
+                        $this->set('details',$details);
+                        $this->Session->delete('details');
+                        $this->Session->write('details',$details);
+                    endif;                      
                 endif;
                 $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
                 $this->set('destinataires',$destinataires);  
@@ -406,6 +412,36 @@ class ActionsController extends AppController {
             endif; 
 	}     
            
+        public function last7days() {
+            $this->set('title_for_layout','Rapport des actions modifiées sur les 7 derniers jours');
+            if (isAuthorized('actions', 'rapports')) :
+                if ($this->request->is('post')):
+                    foreach ($this->request->data['Action']['destinataire'] as &$value) {
+                        @$destinatairelist .= $value.',';
+                    }  
+                    $destinataire = 'Action.destinataire IN ('.substr_replace($destinatairelist ,"",-1).')';
+                    foreach ($this->request->data['Action']['domaine_id'] as &$value) {
+                        @$projetlist .= $value.',';
+                    }  
+                    $domaine = 'Action.domaine_id IN ('.substr_replace($projetlist ,"",-1).')';
+                    $today = new DateTime();
+                    $daylastweek = $today->sub(new DateInterval('P7D'));
+                    $periode = 'Action.modified BETWEEN "'.  startWeek($daylastweek->format('Y-m-d')).'" AND "'.  endWeek($daylastweek->format('Y-m-d')).'"';
+                    $details = $this->Action->find('all',array('fields'=>array('Utilisateur.NOM','Utilisateur.PRENOM','Domaine.NOM','Action.destinataire','Action.OBJET','Action.COMMENTAIRE','Action.STATUT','Action.modified'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('Action.modified'=>'asc','Action.destinataire'=>'asc'),'recursive'=>0));
+                    $this->set('details',$details);
+                    $this->Session->delete('details');
+                    $this->Session->write('details',$details);                
+                endif;
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $this->set('destinataires',$destinataires);  
+                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
+                $this->set('domaines',$domaines);                
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;             
+	}
+        
 /**
  * dupliquer method
  *
@@ -571,12 +607,19 @@ class ActionsController extends AppController {
                     <li>Priorité :'.$action['Action']['PRIORITE'].'</li>
                     <li>Commentaire :'.$action['Action']['COMMENTAIRE'].'</li>                      
                     </ul>';
-            $email = new CakeEmail();
-            $email->config('smtp')
-                    ->emailFormat('html')
-                    ->from($from)
-                    ->to($to)
-                    ->subject($objet)
-                    ->send($message);
+            if($to!=''):
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+                }
+                catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                }  
+            endif;
         }        
 }

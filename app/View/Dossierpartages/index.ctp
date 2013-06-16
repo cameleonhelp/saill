@@ -19,6 +19,7 @@
 	<tr>
 			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
 			<th><?php echo $this->Paginator->sort('GROUPEAD','Nom du groupe'); ?></th>
+                        <th><?php echo $this->Paginator->sort('Utilisateur.NOM','Gestionnaire'); ?></th>
 			<th><?php echo $this->Paginator->sort('DESCRIPTION','Description'); ?></th>
 			<th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
 	</tr>
@@ -28,6 +29,7 @@
 	<tr>
 		<td><?php echo h($dossierpartage['Dossierpartage']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($dossierpartage['Dossierpartage']['GROUPEAD']); ?>&nbsp;</td>
+                <td><?php echo h($dossierpartage['Utilisateur']['NOMLONG']); ?>&nbsp;</td>
 		<td><?php echo $dossierpartage['Dossierpartage']['DESCRIPTION']; ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('dossierpartages', 'view')) : ?>

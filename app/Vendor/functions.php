@@ -674,6 +674,20 @@ function styleBarre($avancement){
         return $nbopendays;
     }
     
+    function nbopendays($debutmois,$finmois){
+	$nbopendays = 0;
+	$debutmois = new DateTime($debutmois);
+	$finmois = new DateTime($finmois);
+        $diff = $debutmois->diff($finmois); 
+        $nbdays = $diff->days ; 
+	for ($i=0; $i<=$nbdays;$i++){
+		$currentdate = $i > 0 ? $debutmois->add(new DateInterval('P1D')) : $debutmois;
+		if (isFerie($currentdate)===false && ($currentdate->format('N'))<6) {
+                    $nbopendays++;
+		}
+	}
+        return $nbopendays;
+    }    
 /**
  * enretard method
  * 
@@ -829,5 +843,23 @@ function styleBarre($avancement){
             $ret[$ii]=$array[$ii];
         }
         $array=$ret;
-    }     
+    }   
+    
+    function translateMailException($message){
+     $msg = explode(":",$message);
+     switch ($msg[0]) {
+         case "Connection refused":
+             return 'Connexion refusée au serveur SMTP, contacter l\'administrateur';
+             break;
+         case 'Invalid email':
+             return 'Email incorrect, vérifiez votre émail ou l\'email du destinataire : '.$msg[1];
+             break;
+         case 'Connection timed out':
+             return "Délai de connexion dépassé, contacter l'administrateur";
+             break;         
+         default:
+             return "Erreur inconnue lors de l'envois du mail, contacter l'administrateur en indiquant l'erreur : ".$message;
+             break;
+     }
+    }
 ?>

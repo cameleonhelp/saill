@@ -4,19 +4,20 @@
                 <div class="container">
                 <ul class="nav">
                 <?php $defaultEtat = $this->params->action == "afacturer" ? 'facture' : 'tous'; ?>
-                <?php $defaultAction = $this->params->action == "search" ? 'index' : $this->params->action; ?>
+                <?php $defaultAction = $this->params->action == "search" ? 'index' : $this->params->action; 
+                      $filtre_annee = isset($this->params->pass[3]) ? $this->params->pass[3] : date('Y'); ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'add') && strtolower($this->params->controller)=='activitesreelles') : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'newactivite'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<i class="icon-plus" rel="tooltip" data-title="Ajoutez une nouvelle feuille de temps"></i>', array('action' => 'newactivite'),array('escape' => false)); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <?php if ($defaultEtat == "tous") : ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee)); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Non facturé', array('action' => $defaultAction,'actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
-                         <li><?php echo $this->Html->link('Facturé', array('action' => $defaultAction,'facture',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Non facturé', array('action' => $defaultAction,'actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee)); ?></li>
+                         <li><?php echo $this->Html->link('Facturé', array('action' => $defaultAction,'facture',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee)); ?></li>
                      </ul>
                 </li> 
                 <?php else : ?>
@@ -26,10 +27,11 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Utilisateurs <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Moi', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,  userAuth('id'),isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee)); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($utilisateurs as $utilisateur): ?>
-                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,$utilisateur['Utilisateur']['id'],isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,$utilisateur['Utilisateur']['id'],isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee)); ?></li>
                          <?php endforeach; ?>
                       </ul>
                 </li>   
@@ -37,22 +39,34 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Mois <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous')); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous',$filtre_annee)); ?></li>
                      <li class="divider"></li>
-                     <li><?php echo $this->Html->link('Janvier', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','01')); ?></li>
-                     <li><?php echo $this->Html->link('Février', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','02')); ?></li>
-                     <li><?php echo $this->Html->link('Mars', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','03')); ?></li>
-                     <li><?php echo $this->Html->link('Avril', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','04')); ?></li>
-                     <li><?php echo $this->Html->link('Mai', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','05')); ?></li>
-                     <li><?php echo $this->Html->link('Juin', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','06')); ?></li>
-                     <li><?php echo $this->Html->link('Juillet', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','07')); ?></li>
-                     <li><?php echo $this->Html->link('Août', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','08')); ?></li>
-                     <li><?php echo $this->Html->link('Septembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','09')); ?></li>
-                     <li><?php echo $this->Html->link('Octobre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','10')); ?></li>
-                     <li><?php echo $this->Html->link('Novembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','11')); ?></li>
-                     <li><?php echo $this->Html->link('Décembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','12')); ?></li>                     
+                     <li><?php echo $this->Html->link('Janvier', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','01',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Février', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','02',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Mars', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','03',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Avril', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','04',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Mai', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','05',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Juin', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','06',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Juillet', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','07',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Août', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','08',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Septembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','09',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Octobre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','10',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Novembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','11',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Décembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','12',$filtre_annee)); ?></li>                     
                       </ul>
                 </li> 
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Année <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('En cours', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',date('Y'))); ?></li>
+                     <li class="divider"></li>
+                         <?php foreach ($annees as $annee): ?>
+                            <?php if ($annee[0]['ANNEE']!=0): ?>
+                            <li><?php echo $this->Html->link($annee[0]['ANNEE'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$annee[0]['ANNEE'])); ?></li>
+                            <?php endif; ?>
+                         <?php endforeach; ?>
+                      </ul>
+                </li>                  
                 <?php if ($this->params->action == "afacturer") : ?>
                 <li class="divider-vertical-only"></li>
                 <li class="dropdown">
@@ -63,11 +77,11 @@
                      </ul>
                 </li>
                 <li class="divider-vertical-only"></li>
-                <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>  
+                <li><?php echo $this->Html->link('<i class="ico-xls" rel="tooltip" data-title="Export Excel"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>  
                 <?php else: ?>
                 <?php if(userAuth('societe_id')==1 && $this->params->action != "afacturer"): ?>
                 <li class="divider-vertical-only"></li>
-                <li><?php echo $this->Html->link('<i class="ico-ics"></i>', '#',array('escape' => false,'id'=>'importics')); ?></li>                 
+                <li><?php echo $this->Html->link('<i class="ico-ics" rel="tooltip" data-title="Importez le fichier ICS issu de l\'outil RH"></i>', '#',array('escape' => false,'id'=>'importics')); ?></li>                 
                 <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($this->params->action != "afacturer") : ?>
@@ -198,28 +212,28 @@
                 <td style="text-align: center;">
                 <?php if ($this->params->action != "afacturer") : ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'view')) : ?>
-                    <?php echo isset($activitesreelle['Activitesreelle']['action_id']) ? '<i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Objet: </contenttitle>'.h($activitesreelle['Action']['OBJET']).'<br/><contenttitle>Avancement: </contenttitle>'.h($activitesreelle['Action']['AVANCEMENT']).'%<br/><contenttitle>Crée le: </contenttitle>'.h($activitesreelle['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($activitesreelle['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>' : "<i class='icon-blank'></i>"; ?>
+                    <?php echo isset($activitesreelle['Activitesreelle']['action_id']) ? '<span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Objet: </contenttitle>'.h($activitesreelle['Action']['OBJET']).'<br/><contenttitle>Avancement: </contenttitle>'.h($activitesreelle['Action']['AVANCEMENT']).'%<br/><contenttitle>Crée le: </contenttitle>'.h($activitesreelle['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($activitesreelle['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>' : "<i class='icon-blank'></i></span>"; ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'edit') && $activitesreelle['Activitesreelle']['VEROUILLE'] == 1 ) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>
+                    <?php echo $this->Html->link('<i class="icon-pencil" rel="tooltip" data-title="Modification"></i>', array('action' => 'edit', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'delete') && $activitesreelle['Activitesreelle']['VEROUILLE'] == 1) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette feuille de temps ?')); ?>                    
+                    <?php echo $this->Form->postLink('<i class="icon-trash" rel="tooltip" data-title="Suppression"></i>', array('action' => 'delete', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette feuille de temps ?')); ?>                    
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'update')) : ?>
                     <?php $img = $activitesreelle['Activitesreelle']['VEROUILLE']==0 ? 'icon-thumbs-up' : 'icon-thumbs-down'; ?>
-                    <?php echo $this->Form->postLink('<i class="'.$img.'"></i>', array('action' => 'updatefacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour facturation ?')); ?>                    
+                    <?php echo $this->Form->postLink('<i class="'.$img.'" rel="tooltip" data-title="A soumettre pour factution<br>si pouce en bas<br>Soumis pour facturation<br>si pouce en haut"></i>', array('action' => 'updatefacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour facturation ?')); ?>                    
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'duplicate') && $activitesreelle['Activitesreelle']['VEROUILLE'] == 1) : ?>
-                    <?php echo $this->Html->link('<i class=" icon-retweet"></i>', array('action' => 'autoduplicate', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>                    
+                    <?php echo $this->Html->link('<i class=" icon-retweet" rel="tooltip" data-title="Duplication"></i>', array('action' => 'autoduplicate', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>                    
                     <?php endif; ?>
                 <?php else : ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-ok-sign"></i>', array('controller' => 'facturations','action' => 'add', $activitesreelle['Activitesreelle']['utilisateur_id'], $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>
+                    <?php echo $this->Html->link('<i class="icon-ok-sign" rel="tooltip" data-title="Facturation"></i>', array('controller' => 'facturations','action' => 'add', $activitesreelle['Activitesreelle']['utilisateur_id'], $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'update')) : ?>
                     <?php $img = 'icon-remove-sign'; ?>
-                    <?php echo $this->Form->postLink('<i class="'.$img.'"></i>', array('action' => 'errorfacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour correction ?')); ?>                    
+                    <?php echo $this->Form->postLink('<i class="'.$img.'" rel="tooltip" data-title="Annulation (rejet)"></i>', array('action' => 'errorfacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour correction ?')); ?>                    
                     <?php endif; ?>
                 <?php endif; ?>
                 </td>                 

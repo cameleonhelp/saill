@@ -149,5 +149,6 @@ class TjmagentsController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
             endif;                
-        }         
+        }  
+              
 }

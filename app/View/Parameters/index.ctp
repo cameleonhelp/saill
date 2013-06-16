@@ -57,5 +57,27 @@
             </div> 
         </div>
     <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>$instance['Parameter']['id'])); ?>
-    <?php echo $this->Form->end(); ?>     
+    <?php echo $this->Form->end(); ?>   
+    <?php /* Gérer le gestionnaire d'annuaire */ ?>
+    <?php echo $this->Form->create('Parameter',array('action'=>'saveParam','id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+        <div class="control-group">
+            <label class="control-label sstitre" for="ParameterParam">Email du gestionnaire d'annuaire : </label>
+            <div class="controls">
+                <?php echo $this->Form->input('param',array('class'=>'span10','type'=>'text','placeholder'=>'Gestionnaire d\'annuaire','value'=>$annuaire['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>
+            </div> 
+        </div>
+    <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>$annuaire['Parameter']['id'])); ?>
+    <?php echo $this->Form->end(); ?>  
+    <?php /* Gérer le valideur d'outil */ ?>
+    <?php echo $this->Form->create('Parameter',array('action'=>'saveParam','id'=>'formValidate4','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+        <div class="control-group">
+            <label class="control-label sstitre" for="ParameterParam">Email du valideur d'outil : </label>
+            <div class="controls">
+                <?php echo $this->Form->input('param',array('class'=>'span10','type'=>'text','placeholder'=>'Service manager','value'=>$valoutil['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>
+            </div> 
+        </div>
+    <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>$valoutil['Parameter']['id'])); ?>
+    <?php echo $this->Form->end(); ?>      
 </div>

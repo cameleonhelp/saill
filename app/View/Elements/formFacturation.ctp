@@ -105,8 +105,8 @@
         <?php if ($this->params->action == 'add') $userid = $activitesreelle['Activitesreelle']['utilisateur_id']; ?>
         <?php if ($this->params->action == 'edit') $userid = $activitesreelle['Facturation']['utilisateur_id']; ?>    
         <?php echo $this->Form->input('Facturation.'.$i.'.utilisateur_id',array('type'=>'hidden','value'=>$userid)); ?> 
-        <?php $valVersion = $this->params->action == 'add' ? !isset($activitesreelles[0]['Activitesreelle']['VERSION']) ? 1 : $activitesreelles[0]['Activitesreelle']['VERSION'] + 1 : '0'; ?>                                    
-        <?php $valVersion = $this->params->action == 'edit' ? !isset($activitesreelle['Facturation']['VERSION']) ? 1 : $activitesreelle['Facturation']['VERSION'] + 1 : $valVersion; ?>                        
+        <?php $valVersion = $this->params->action == 'add' ? !isset($activitesreelles[0]['Activitesreelle']['VERSION']) ? 0 :$activitesreelles[0]['Activitesreelle']['VERSION'] + 1 : '0'; ?>                                    
+        <?php $valVersion = $this->params->action == 'edit' ? !isset($activitesreelle['Facturation']['VERSION']) ? 0 : $activitesreelle['Facturation']['VERSION'] + 1 : $valVersion; ?>                        
         <?php echo $this->Form->input('Facturation.'.$i.'.VERSION',array('type'=>'hidden','class'=>'version','value'=>$valVersion)); ?> 
         <?php $valFTGAL = $this->params->action == 'add' ? !isset($activitesreelles[0]['Activitesreelle']['NUMEROFTGALILEI']) ? '' : $activitesreelles[0]['Activitesreelle']['NUMEROFTGALILEI']: ''; ?> 
         <?php $valFTGAL = $this->params->action == 'edit' ? !isset($activitesreelle['Facturation']['NUMEROFTGALILEI']) ? '' : $activitesreelle['Facturation']['NUMEROFTGALILEI']: $valFTGAL; ?>                                
@@ -144,8 +144,8 @@
         <?php if ($this->params->action == 'add') echo $this->Form->input('Facturation.¤.DATE',array('type'=>'hidden','value'=>isset($activitesreelle['Activitesreelle']['DATE']) ? $activitesreelle['Activitesreelle']['DATE'] : date('d/m/Y'))); ?>
         <?php if ($this->params->action == 'edit') echo $this->Form->input('Facturation.¤.DATE',array('type'=>'hidden','value'=>isset($activitesreelle['Facturation']['DATE']) ? $activitesreelle['Facturation']['DATE'] : date('d/m/Y'))); ?>           
         <?php echo $this->Form->input('Facturation.¤.utilisateur_id',array('type'=>'hidden','value'=>$userid)); ?> 
-        <?php $valVersion = $this->params->action == 'add' ? !isset($activitesreelles[0]['Activitesreelle']['VERSION']) ? 1 : $activitesreelles[0]['Activitesreelle']['VERSION'] + 1 : '0'; ?>              
-        <?php $valVersion = $this->params->action == 'edit' ? !isset($activitesreelle['Facturation']['VERSION']) ? 1 : $activitesreelle['Facturation']['VERSION'] + 1 : $valVersion; ?>            
+        <?php $valVersion = $this->params->action == 'add' ? !isset($activitesreelles[0]['Activitesreelle']['VERSION']) ? 0 : $activitesreelles[0]['Activitesreelle']['VERSION'] + 1 : '0'; ?>              
+        <?php $valVersion = $this->params->action == 'edit' ? !isset($activitesreelle['Facturation']['VERSION']) ? 0 : $activitesreelle['Facturation']['VERSION'] + 1 : $valVersion; ?>            
         <?php echo $this->Form->input('Facturation.¤.VERSION',array('type'=>'hidden','class'=>'version','value'=>$valVersion)); ?>
         <?php $valFTGAL = $this->params->action == 'add' ? !isset($activitesreelles[0]['Activitesreelle']['NUMEROFTGALILEI']) ? '' : $activitesreelles[0]['Activitesreelle']['NUMEROFTGALILEI']: ''; ?>             
         <?php $valFTGAL = $this->params->action == 'edit' ? !isset($activitesreelle['Facturation']['NUMEROFTGALILEI']) ? '' : $activitesreelle['Facturation']['NUMEROFTGALILEI']: $valFTGAL; ?>                    
@@ -160,8 +160,8 @@
 <table>
     <tr>
         <td><label class="control-label sstitre" for="FacturationVersion">Version : </label></td>
-        <?php $valVersion = $this->params->action == 'add' ? !isset($activitesreelles[0]['Activitesreelle']['VERSION']) ? 1 : $activitesreelles[0]['Activitesreelle']['VERSION'] + 1 : '0'; ?>         
-        <?php $valVersion = $this->params->action == 'edit' ? !isset($activitesreelles[0]['Facturation']['VERSION']) ? 1 : $activitesreelles[0]['Facturation']['VERSION'] + 1 : $valVersion; ?>
+        <?php $valVersion = $this->params->action == 'add' ? !isset($activitesreelles[0]['Activitesreelle']['VERSION']) ? 0 : $activitesreelles[0]['Activitesreelle']['VERSION'] + 1 : '0'; ?>         
+        <?php $valVersion = $this->params->action == 'edit' ? !isset($activitesreelles[0]['Facturation']['VERSION']) ? 0 : $activitesreelles[0]['Facturation']['VERSION'] + 1 : $valVersion; ?>
         <td><?php echo $this->Form->input('VERSION',array('placeholder'=>'Version','class'=>'span2','value'=>$valVersion)); ?></td>
         <td><label class="control-label sstitre inline" for="FacturationNUMEROFTGALILEI">N° feuille de temps GALILEI : </label></td>
         <?php $valFTGAL = $this->params->action == 'add' ? !isset($activitesreelles[0]['Activitesreelle']['NUMEROFTGALILEI']) ? '' : $activitesreelles[0]['Activitesreelle']['NUMEROFTGALILEI']: ''; ?>         

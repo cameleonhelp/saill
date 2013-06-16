@@ -15,12 +15,13 @@ class FacturationsController extends AppController {
  *
  * @return void
  */
-	public function index($utilisateur=null,$mois=null,$visible=null,$indisponibilite=null) {
+	public function index($utilisateur=null,$mois=null,$visible=null,$indisponibilite=null,$annee=null) {
             //$this->Session->delete('history');
             $utilisateur = $utilisateur==null ? userAuth('id'):$utilisateur;
             $mois = $mois==null ? date('m') : $mois;
             $visible = $visible==null ? 1 :$visible;
             $indisponibilite = $indisponibilite==null ? 0 : $indisponibilite;
+            $annee = $annee==null ? date('Y') : $annee;
             if (isAuthorized('facturations', 'index')) :            
                 if (areaIsVisible() || $utilisateur==userAuth('id')):
                 switch ($utilisateur){
@@ -51,14 +52,13 @@ class FacturationsController extends AppController {
                         $fperiode = "";
                         break;
                     default:
-                        $annee = date('Y');
                         $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
                         $debut = $annee."-".$mois."-01";
                         $datedebut = startWeek($debut);
                         $datefin = $annee."-".$mois."-".$dernierjour;
                         $newconditions[]="Facturation.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
                         $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
-                        $fperiode = "pour le mois de ".$moiscal[$mois];
+                        $fperiode = "pour le mois de ".$moiscal[$mois]." ".$annee;
                         break;                      
                 } 
                 $this->set('fperiode',$fperiode);                
@@ -85,6 +85,8 @@ class FacturationsController extends AppController {
                 $this->Facturation->recursive = 1;
                 $group = $this->Facturation->find('all',array('fields'=>array('Facturation.VERSION','Facturation.DATE','Facturation.utilisateur_id','Facturation.NUMEROFTGALILEI','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Facturation.DATE) AS NBACTIVITE'),'group'=>array('Facturation.DATE','Facturation.utilisateur_id','Facturation.VERSION'),'order'=>array('Facturation.utilisateur_id' => 'asc','Facturation.DATE' => 'desc' ),'conditions'=>$newconditions));
                 $this->set('groups',$group);
+                $annee = $this->Facturation->find('all',array('fields'=>array('YEAR(Facturation.DATE) AS ANNEE'),'group'=>array('YEAR(Facturation.DATE)'),'order'=>array('YEAR(Facturation.DATE)' => 'asc')));
+                $this->set('annees',$annee);                
                 $this->paginate = array('limit'=>$this->Facturation->find('count'));                
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
 		$this->Facturation->recursive = 0;
@@ -210,9 +212,9 @@ class FacturationsController extends AppController {
         
         public function save(){
             if ($this->request->is('post')) {
-                $facturations = $this->request->data['Facturation'];
+                $facturations = $this->request->data['Facturation'];               
                 foreach($facturations as $facturation):
-                    if (is_array($facturation) && $facturation['activite_id']!=''):
+                    if (is_array($facturation) && ($facturation['activite_id']!='' || $facturation['activite_id']!=0) && $facturation['utilisateur_id'] !=0 && $facturation['activitesreelle_id'] != null):
                         $this->Facturation->create();
                         if ($this->Facturation->save($facturation)) {
                             if (!isset($facturation['new'])):

@@ -37,7 +37,6 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->css('glyphicons');
                 echo $this->Html->css('jscroller2');   
                 
-                
                 echo $this->Html->script('jquery');
                 echo $this->Html->script('bootstrap');              
                 echo $this->Html->script('editable'); 
@@ -45,7 +44,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->script('additional-methods');                  
                 echo $this->Html->script('messages_fr'); 
                 echo $this->Html->script('datepicker');  
-                echo $this->Html->script('tiny_mce/tiny_mce');
+                echo $this->Html->script('tinymce/tinymce');
                 echo $this->Html->script('jscroller2'); 
                 echo $this->Html->script('datetime');
                 echo $this->Html->script('navigation');
@@ -65,33 +64,24 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
 </head>
 <body>
 <script type="text/javascript"> 
-    tinyMCE.init({ 
+    tinymce.init({ 
    // General options
-   language : "fr",
-   mode : "textareas",
+   language : "fr_FR",
+   mode: "textareas",
    forced_root_block : false,
    force_br_newlines : true,
    force_p_newlines : false,
-   theme : "advanced",
-   skin : "bootstrap",
-   entity_encoding : "raw",
-   plugins : "autolink,lists,spellchecker,pagebreak,style,layer,table,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
-   // Theme options
-   theme_advanced_buttons1 : "undo,redo,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,bullist,numlist,|,outdent,indent,|,justifyleft,justifycenter,justifyright,justifyfull",
-   theme_advanced_buttons2 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,|,link,unlink,cleanup,code,|,forecolor,backcolor,|,print",
-   theme_advanced_buttons3 : "",
-   theme_advanced_buttons4 : "",
-   theme_advanced_toolbar_location : "top",
-   theme_advanced_toolbar_align : "left",
-   theme_advanced_statusbar_location : "none",
-   theme_advanced_resizing : true,
+   statusbar : false,
+   plugins: "hr link textcolor table code",
+   menubar: "file edit insert format code table",
+   toolbar: "undo redo | bold italic | hr link | forecolor backcolor | numlist bullist alignleft aligncenter alignright alignjustify",
    height : "300",
    width : "100%"
     }); 
 </script> 
-    <div class="container" style="margin-top: 15px;">
+   <div id="allcontainer" class="container" style="margin-top: 15px;">    
         <div class="row" >
-            <div class="span7">
+            <div id="telecommand" class="span7">
             <span class="logo"></span>
             <?php if (userAuth('id')>0) echo $this->element('server'); ?>
             <?php if (userAuth('id')>0) echo $this->element('menu'); ?>
@@ -115,16 +105,27 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 </div>
             </code>            
             </div>
-            <div class="span29">
-                <div class="navbar navbar-inverse">
-                    <div class="navbar-inner">
+            <div id="maxcontent" class="span29"> 
+                <div class="row">
+                <div class="span2">
+                <?php if (userAuth('id')>0): ?>
+                <button id="togglemenu" type="button" class="btn btn-inverse" style="padding: 8px 10px;margin-right: 5px;" rel="tooltip" data-title="Caher ou afficher le menu">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>  
+                <?php endif; ?>
+                </div>
+                <div class="navbar navbar-inverse" style="max-width: 97%;width: 93%;float:right;margin-left: 0px;">               
+                    <div class="navbar-inner">    
                     <div class="navbar-text text-white">
-                        <div id="scroller_container" style="color:#EFEFEF">
+                        <div id="scroller_container" style="color:#EFEFEF;">
                             <?php echo $this->element('messages_defilant'); ?>
                         </div>
                     </div>
                     </div>
                 </div>  
+                </div>
                 <div class="navbar navbar-purple">
                     <div class="navbar-inner">
                     <div class="brand" ><?php echo $title_for_layout; ?></div>
@@ -175,6 +176,16 @@ $(document).ready(function () {
             isVisible = true
         });  
     }  
+    $(document).on('click','#togglemenu',function(e){
+        $("#telecommand").toggle();
+        if($("#maxcontent").hasClass('span29')) {
+            $("#maxcontent").removeClass('span29').addClass('spanmax');
+            $("#allcontainer").addClass('spanmax');
+        } else {
+            $("#maxcontent").removeClass('spanmax').addClass('span29');
+            $("#allcontainer").removeClass('spanmax');
+        }
+    });
     $(document).on('click',"html",function(e) {
         if(isVisible & clickedAway)
         {

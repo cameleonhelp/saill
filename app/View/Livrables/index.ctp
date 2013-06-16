@@ -4,7 +4,7 @@
                 <div class="container">
                 <ul class="nav">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('livrables', 'add')) : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<i class="icon-plus" rel="tooltip" data-title="Ajoutez un livrable"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <li class="dropdown">
@@ -39,6 +39,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Gestionnaire<b class="caret"></b></a>
                      <ul class="dropdown-menu">
                      <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes',isset($this->params->pass[1]) ? $this->params->pass[1] : 'toutes','tous')); ?></li>
+                     <li><?php echo $this->Html->link('Moi', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'toutes',isset($this->params->pass[1]) ? $this->params->pass[1] : 'toutes',  userAuth('id'))); ?></li>
                      <li class="divider"></li>
                      <?php //debug($gestionnaires); ?>
                          <?php foreach ($gestionnaires as $gestionnaire): ?>
@@ -48,7 +49,7 @@
                 </li>   
                 <?php endif; ?>
                 <li class="divider-vertical-only"></li>
-                <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<i class="ico-xls" rel="tooltip" data-title="Export Excel"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>
                 </ul> 
                 <?php echo $this->Form->create("Livrable",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
@@ -86,16 +87,16 @@
 		<td style="text-align: center;"><?php echo h(isset($livrable['Livrable']['DATELIVRAISON']) ? $livrable['Livrable']['DATELIVRAISON'] : ''); ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('livrables', 'view')) : ?>
-                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Livrable :</h3>" data-content="<contenttitle>Commentaire: </contenttitle>'.h($livrable['Livrable']['COMMENTAIRE']).'<br/><contenttitle>Validé le: </contenttitle>'.h(isset($livrable['Livrable']['DATEVALIDATION']) ? $livrable['Livrable']['DATEVALIDATION'] : '').'<br/><contenttitle>Crée le: </contenttitle>'.h($livrable['Livrable']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($livrable['Livrable']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php echo '<span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><i class="icon-eye-open" rel="popover" data-title="<h3>Livrable :</h3>" data-content="<contenttitle>Commentaire: </contenttitle>'.h($livrable['Livrable']['COMMENTAIRE']).'<br/><contenttitle>Validé le: </contenttitle>'.h(isset($livrable['Livrable']['DATEVALIDATION']) ? $livrable['Livrable']['DATEVALIDATION'] : '').'<br/><contenttitle>Crée le: </contenttitle>'.h($livrable['Livrable']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($livrable['Livrable']['modified']).'" data-trigger="click" style="cursor: pointer;"></i></span>'; ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('livrables', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $livrable['Livrable']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<i class="icon-pencil" rel="tooltip" data-title="Modification"></i>', array('action' => 'edit', $livrable['Livrable']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('livrables', 'delete')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $livrable['Livrable']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce livrables ?')); ?>
+                    <?php echo $this->Form->postLink('<i class="icon-trash" rel="tooltip" data-title="Suppression"></i>', array('action' => 'delete', $livrable['Livrable']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce livrables ?')); ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('livrables', 'duplicate')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-retweet"></i>', array('action' => 'dupliquer', $livrable['Livrable']['id']),array('escape' => false), __('Etes-vous certain de vouloir créer une nouvelle version de ce livrable ?')); ?>
+                    <?php echo $this->Form->postLink('<i class="icon-retweet" rel="tooltip" data-title="Duplication"></i>', array('action' => 'dupliquer', $livrable['Livrable']['id']),array('escape' => false), __('Etes-vous certain de vouloir créer une nouvelle version de ce livrable ?')); ?>
                     <?php endif; ?>                    
 		</td>
 	</tr>

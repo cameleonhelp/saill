@@ -10,11 +10,11 @@
             <?php echo $this->Form->create('Activitesreelle',array('action' => 'absences','style'=>'display:none;','inputDefaults' => array('label'=>false,'div' => false))); ?>
                 <tr>
                     <th colspan="<?php echo ($maxday*2)+1; ?>" class="text-center">
-                        <?php echo $this->Form->button('<i class="icon-arrow-left""></i>', array('id'=>"previousMonth",'type'=>'button','class' => 'btn','style'=>'margin-right:75px;')); ?>
+                        <?php echo $this->Form->button('<i class="icon-arrow-left" rel="tooltip" data-title="Mois précédent"></i>', array('id'=>"previousMonth",'type'=>'button','class' => 'btn','style'=>'margin-right:75px;')); ?>
                             <?php echo $strMonth[$month]." ".$year; ?>
-                        <?php echo $this->Form->button('<i class="icon-arrow-right"></i>', array('id'=>"nextMonth",'type'=>'button','class' => 'btn','style'=>'margin-left:75px;')); ?>
-                        <?php echo $this->Form->button('<i class="icon-time"></i>', array('id'=>"today",'type'=>'button','class' => 'btn pull-right')); ?>
-                        <?php echo $this->Form->button('<i class="icon-camera"></i>', array('id'=>"canvas",'type'=>'button','class' => 'btn pull-right')); ?>
+                        <?php echo $this->Form->button('<i class="icon-arrow-right" rel="tooltip" data-title="Mois suivant"></i>', array('id'=>"nextMonth",'type'=>'button','class' => 'btn','style'=>'margin-left:75px;')); ?>
+                        <?php echo $this->Form->button('<i class="icon-time" rel="tooltip" data-title="Mois courant"></i>', array('id'=>"today",'type'=>'button','class' => 'btn pull-right')); ?>
+                        <?php echo $this->Form->button('<i class="icon-camera" rel="tooltip" data-title="Enregistrez au format PNG"></i>', array('id'=>"canvas",'type'=>'button','class' => 'btn pull-right')); ?>
                     </th>
                 </tr>
             <?php $day = new DateTime(); $date = isset($this->data['Activitesreelle']['month']) ? $this->data['Activitesreelle']['month'] : $day->format('Y-m-d'); ?>

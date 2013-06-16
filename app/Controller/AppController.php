@@ -37,7 +37,7 @@ class AppController extends Controller {
     //public $navigation=array('controller'=>'','action'=>'','page'=>'','sort'=>'','direction'=>'','here'=>'');
 
     public $components = array(
-        'Session','History','DebugKit.Toolbar','Cookie','RequestHandler',
+        'Session','History','Cookie','RequestHandler',
         'Auth' => array(
             'logoutRedirect' => array('controller' => 'Utilisateurs','action' => 'login'),
             'loginRedirect' => array('controller' => 'pages','action' => 'display','home'),
