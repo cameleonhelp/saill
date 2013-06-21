@@ -23,6 +23,7 @@
 	</tr>
         </thead>
         <tbody>  
+	<?php if (isset($messages)): ?>
 	<?php foreach ($messages as $message): ?>
 	<tr>
 		<td><?php echo $message['Message']['LIBELLE']; ?>&nbsp;</td>
@@ -39,7 +40,8 @@
                     <?php endif; ?>
                 </td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
         <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>

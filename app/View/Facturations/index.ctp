@@ -109,7 +109,8 @@
         <?php foreach ($groups as $group) : ?>
         <?php $row = $groups[$r][0]['NBACTIVITE']; ?>
         <?php $newline = true; ?>
-        <?php foreach ($facturations as $facturation): ?>
+        <?php if (isset($facturations)): ?>
+	<?php foreach ($facturations as $facturation): ?>
             <?php if($facturation['Facturation']['utilisateur_id']==$group['Facturation']['utilisateur_id'] && $facturation['Facturation']['VERSION']==$group['Facturation']['VERSION'] && dateIsEqual($group['Facturation']['DATE'], $facturation['Facturation']['DATE'])): ?>
                  <tr>  
                  <?php if($row > 1 && $newline): ?>
@@ -162,6 +163,7 @@
                 </tr>
             <?php endif; ?>
         <?php endforeach; ?>
+        <?php endif; ?>
         <?php $r++; ?>
         <?php endforeach; ?> 
         <?php endif; ?>             

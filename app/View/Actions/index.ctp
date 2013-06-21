@@ -70,11 +70,16 @@
 	</tr>
         </thead>
         <tbody>
+        <?php if (isset($actions)): ?>
 	<?php foreach ($actions as $action): ?>
 	<tr>
 		<td><?php echo h($action['Domaine']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($action['Utilisateur']['NOM']." ".$action['Utilisateur']['PRENOM']); ?>&nbsp;</td>
-		<td><?php echo h($action['Action']['OBJET']); ?>&nbsp;</td>
+                <td><?php echo h($action['Action']['OBJET']); ?>
+                    <?php if($action['Action']['NEW']==1): ?>
+                    <span class="pull-right"><i class="icon-asterisk" rel="tooltip" data-title="Nouvelle action en date du <?php echo h($action['Action']['created']); ?>"></i></span>&nbsp;
+                    <?php endif; ?>
+                </td>
                 <?php $style = styleBarre(h($action['Action']['AVANCEMENT'])); ?>
 		<td>
                 <a href="#" class="reculer cursor" style="float:left;margin-left: -8px;margin-right:2px;" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo $action['Action']['AVANCEMENT']; ?>"><i class="icon-circle-arrow-left"></i></a>
@@ -109,7 +114,8 @@
                     <?php endif; ?>                        
                 </td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>

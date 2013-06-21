@@ -52,6 +52,7 @@
 	</tr>
 	</thead>
         <tbody>
+	<?php if (isset($projets)): ?>
 	<?php foreach ($projets as $projet): ?>
 	<tr>
 		<td><?php echo h($projet['Contrat']['NOM']); ?>&nbsp;</td>
@@ -74,7 +75,8 @@
                     <?php endif; ?>
 		</td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>

@@ -150,6 +150,16 @@ class MessagesController extends AppController {
            
         }
         
+        public function listMessages(){
+            $today = date('Y-m-d');
+            $messages="";
+            $activeMessages = $this->Message->find('all',array('fields'=>array('Message.LIBELLE'),'conditions' => array("OR" => array('Message.DATELIMITE' => NULL,'Message.DATELIMITE >=' => $today)),'order'=>array('Message.id asc'),'recursive'=>-1));
+            foreach ($activeMessages as $activeMessage) {
+                    $messages .=  '"'.str_replace('"', "'", $activeMessage['Message']['LIBELLE']).'",';            
+            }   
+            $messages= substr($messages,0,strlen($messages)-1);
+            return $messages;
+        }
 /**
  * search method
  *

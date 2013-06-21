@@ -24,6 +24,7 @@
 	</tr>
 	</thead>
         <tbody>
+	<?php if (isset($outils)): ?>
 	<?php foreach ($outils as $outil): ?>
 	<tr>
 		<td><?php echo h($outil['Outil']['NOM']); ?>&nbsp;</td>
@@ -41,7 +42,8 @@
                     <?php endif; ?>
 		</td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
         <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>

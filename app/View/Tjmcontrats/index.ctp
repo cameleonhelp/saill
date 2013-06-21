@@ -23,6 +23,7 @@
 	</tr>
 	</thead>
         <tbody>
+	<?php if (isset($tjmcontrats)): ?>
 	<?php foreach ($tjmcontrats as $tjmcontrat): ?>
 	<tr>
 		<td><?php echo h($tjmcontrat['Tjmcontrat']['TJM']); ?>&nbsp;</td>
@@ -39,7 +40,8 @@
                     <?php endif; ?>
 		</td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>

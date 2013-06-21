@@ -817,3 +817,9 @@ input.invalid {
 body *{
     /*border-radius: 0px !important;*/
 }
+
+.newsticker {
+	list-style-type: none;
+	padding-top: 6px;
+	margin: 0;
+}

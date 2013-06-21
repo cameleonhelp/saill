@@ -24,6 +24,7 @@
 	</tr>
 	</thead>
         <tbody>
+	<?php if (isset($sections)): ?>
 	<?php foreach ($sections as $section): ?>
 	<tr>
 		<td><?php echo h($section['Section']['NOM']); ?>&nbsp;</td>
@@ -41,7 +42,8 @@
                     <?php endif; ?>
 		</td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
         <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>

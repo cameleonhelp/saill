@@ -73,6 +73,7 @@
 	</tr>
         </thead>
         <tbody>        
+	<?php if (isset($livrables)): ?>
 	<?php foreach ($livrables as $livrable): ?>
 	<tr>
 		<td><?php echo h($livrable['Livrable']['NOM']); ?>&nbsp;</td>
@@ -100,7 +101,8 @@
                     <?php endif; ?>                    
 		</td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>

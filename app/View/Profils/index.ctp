@@ -23,6 +23,7 @@
 	</tr>
 	</thead>
         <tbody>
+	<?php if (isset($profils)): ?>
 	<?php foreach ($profils as $profil): ?>
 	<tr>
 		<td><?php echo h($profil['Profil']['NOM']); ?>&nbsp;</td>
@@ -44,7 +45,8 @@
                     <?php endif; ?>                    
 		</td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>

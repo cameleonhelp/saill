@@ -1,3 +1,21 @@
+## b063
+ * amélioration de la sauvegarde de l'historique des actions pour éviter un trop grand nombre d'historique
+ * Activité réelle controle du total avant insertion en base
+ * Import ICS enlève les jours fériés en week end
+ * Optimisation de la function pour rechercher les jours fériés en fonction de l'OS d'installation
+
+## b062
+ * rapport logistique par section à choisir
+ * rapport sur l'état de la saisie du mois
+ * en cas de duplication d'une activité réelle envoyer mail s'il s'agit d'une indisponibilité
+ * ajout de tooltip sur les icones d'action
+ * ajouter un bouton pour cacher le menu et le faire apparaitre en changeant la taille du contenu
+
+## b061
+ * Correction sur facturation avec insertion d'une ligne vide
+ * Correction sur proposition d'un feuille de temps déjà soumise à facturation
+ * Evolution ajout année en filtre sur facturation/index, activitesreelle/afacturer, activitésreelle/index
+
 ## b060
  * **version 2.0.1 finale**
  * Mise en place d'envois de mail sur :

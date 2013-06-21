@@ -171,7 +171,8 @@
                 <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;"><?php echo $group['Utilisateur']['username']; ?></td>
                 <td class="header" rowspan="<?php echo $row; ?>" style="vertical-align: middle;text-align: center;"><?php echo $group['Activitesreelle']['DATE']; ?></td>   
         <?php endif; ?>
-        <?php foreach ($activitesreelles as $activitesreelle): ?>
+        <?php if (isset($activitesreelles)): ?>
+	<?php foreach ($activitesreelles as $activitesreelle): ?>
             <?php if($activitesreelle['Activitesreelle']['utilisateur_id']==$group['Activitesreelle']['utilisateur_id'] && dateIsEqual($group['Activitesreelle']['DATE'], $activitesreelle['Activitesreelle']['DATE'])): ?>
                 <?php if ($row==1): ?>
                 <tr>
@@ -240,6 +241,7 @@
             </tr>
         <?php endif; ?>
         <?php endforeach; ?>
+        <?php endif; ?>
         <?php $r++; ?>
         <?php endforeach; ?> 
         <?php endif; ?> 

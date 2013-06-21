@@ -24,6 +24,7 @@
 	</tr>
         </thead>
         <tbody>
+	<?php if (isset($linkshareds)): ?>
 	<?php foreach ($linkshareds as $linkshared): ?>
 	<tr>
 		<td><?php echo h($linkshared['Linkshared']['NOM']); ?>&nbsp;</td>
@@ -41,7 +42,8 @@
                     <?php endif; ?>
 		</td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>

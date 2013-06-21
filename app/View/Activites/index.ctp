@@ -53,6 +53,7 @@
 	</tr>
 	</thead>
         <tbody>
+        <?php if (isset($activites)): ?>            
 	<?php foreach ($activites as $activite): ?>
 	<tr>
 		<td><?php echo h($activite['Projet']['NOM']); ?>&nbsp;</td>
@@ -75,7 +76,8 @@
                         <?php endif; ?>
                 </td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
         <tfooter>
 	<tr>

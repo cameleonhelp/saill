@@ -39,6 +39,7 @@
 	</tr>
         </thead>
         <tbody>
+        <?php if (isset($achats)): ?>            
 	<?php foreach ($achats as $achat): ?>
 	<tr>
                 <td><?php echo h($achat['Activite']['NOM']); ?>&nbsp;</td>
@@ -57,7 +58,8 @@
                         <?php endif; ?>
                 </td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>

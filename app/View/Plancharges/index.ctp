@@ -46,6 +46,7 @@
 	</tr>
 	</thead>
         <tbody>        
+	<?php if (isset($plancharges)): ?>
 	<?php foreach ($plancharges as $plancharge): ?>
 	<tr>
 		<td style='text-align:center;'><?php echo h($plancharge['Plancharge']['ANNEE']); ?>&nbsp;</td>
@@ -70,7 +71,8 @@
                     <?php endif; ?>                    
 		</td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
         <tfooter>
             <tr>

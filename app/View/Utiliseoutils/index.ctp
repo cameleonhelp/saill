@@ -3,6 +3,11 @@
             <div class="navbar-inner">
                 <div class="container">
                 <ul class="nav">
+                <?php 
+                    $pass0 = isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous';
+                    $pass1 = isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous';
+                    $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous';
+                ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'add')) : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical-only"></li>
@@ -10,23 +15,41 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous sans retour utilisateur', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                     <li><?php echo $this->Html->link('Tous sans retour utilisateur', array('action' => 'index','tous',$pass1,$pass2)); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($etats as $etat): ?>
-                            <li><?php echo $this->Html->link($etat['Utiliseoutil']['STATUT'], array('action' => 'index',$etat['Utiliseoutil']['STATUT'],isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous')); ?></li>
+                            <li><?php echo $this->Html->link($etat['Utiliseoutil']['STATUT'], array('action' => 'index',$etat['Utiliseoutil']['STATUT'],$pass1,$pass2)); ?></li>
                          <?php endforeach; ?>
                       </ul>
                  </li>   
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Utilisateur <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous')); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,'tous',$pass2)); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($utilisateurs as $utilisateur): ?>
-                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$utilisateur['Utilisateur']['id'])); ?></li>
+                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => 'index',$pass0,$utilisateur['Utilisateur']['id'],$pass2)); ?></li>
                          <?php endforeach; ?>
                       </ul>
                 </li> 
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Outils <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,$pass1,'tous')); ?></li>
+                     <li class="divider"></li>
+                         <?php foreach ($outils as $outil): ?>
+                            <li><?php echo $this->Html->link($outil['Outil']['NOM'], array('action' => 'index',$pass0,$pass1,'O_'.$outil['Outil']['id'])); ?></li>
+                         <?php endforeach; ?>
+                      <li class="divider"></li>
+                         <?php foreach ($listes as $liste): ?>
+                            <li><?php echo $this->Html->link($liste['Listediffusion']['NOM'], array('action' => 'index',$pass0,$pass1,'L_'.$liste['Listediffusion']['id'])); ?></li>
+                         <?php endforeach; ?>
+                      <li class="divider"></li>
+                         <?php foreach ($partages as $partage): ?>
+                            <li><?php echo $this->Html->link($partage['Dossierpartage']['NOM'], array('action' => 'index',$pass0,$pass1,'P_'.$partage['Dossierpartage']['id'])); ?></li>
+                         <?php endforeach; ?>                            
+                      </ul>
+                 </li>                 
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'update')) : ?>
                 <li class="divider-vertical-only"></li>
                 <li class="dropdown">
@@ -44,7 +67,7 @@
                 </div>
             </div>
         </div>
-        <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste des droits <?php echo $fetat; ?> <?php echo $futilisateur; ?></em></code><?php }?>   
+        <?php if ($this->params['action']=='index') { ?><code class="text-normal"  style="margin-bottom: 10px;display: block;"><em>Liste des droits <?php echo $fetat; ?> <?php echo $futilisateur; ?> <?php echo $foutil; ?></em></code><?php }?>   
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
@@ -63,6 +86,7 @@
 	</tr>
 	</thead>
         <tbody>
+	<?php if (isset($utiliseoutils)): ?>
 	<?php foreach ($utiliseoutils as $utiliseoutil): ?>
 	<tr>
 		<td><?php echo h($utiliseoutil['Utilisateur']['NOM'].' '.$utiliseoutil['Utilisateur']['PRENOM']); ?>&nbsp;</td>
@@ -88,7 +112,8 @@
                     <?php endif; ?>
 		</td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>

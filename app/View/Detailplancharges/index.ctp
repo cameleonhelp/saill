@@ -24,6 +24,7 @@
 	</tr>
 	</thead>
         <tbody>        
+	<?php if (isset($detailplancharges)): ?>
 	<?php foreach ($detailplancharges as $detailplancharge): ?>
 	<tr>
 		<td><?php echo h($detailplancharge['Utilisateur']['NOMLONG']); ?>&nbsp;</td>
@@ -38,7 +39,8 @@
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $detailplancharge['Detailplancharge']['id'])); ?>
 		</td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
         <tfooter>
         <tr>

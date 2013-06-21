@@ -11,31 +11,41 @@
                 <?php 
                 $pass0 = isset($this->params->pass[0]) ? $this->params->pass[0] : 'actif';
                 $pass1 = isset($this->params->pass[1]) ? $this->params->pass[1] : 'allsections';
-                $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : null;
+                $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous';
+                $pass3 = isset($this->params->pass[3]) ? $this->params->pass[3] : null;
                 ?>                
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',$pass1,$pass2)); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',$pass1,$pass2,$pass3)); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',$pass1,$pass2)); ?></li>
-                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',$pass1,$pass2)); ?></li>
+                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',$pass1,$pass2,$pass3)); ?></li>
+                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',$pass1,$pass2,$pass3)); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Nouveaux', array('action' => 'index','nouveau',$pass1,$pass2)); ?></li>
-                         <li><?php echo $this->Html->link('Incomplet', array('action' => 'index','incomplet',$pass1,$pass2)); ?></li>
+                         <li><?php echo $this->Html->link('Nouveaux', array('action' => 'index','nouveau',$pass1,$pass2,$pass3)); ?></li>
+                         <li><?php echo $this->Html->link('Incomplet', array('action' => 'index','incomplet',$pass1,$pass2,$pass3)); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('A prolonger', array('action' => 'index','aprolonger',$pass1,$pass2)); ?></li>
+                         <li><?php echo $this->Html->link('A prolonger', array('action' => 'index','aprolonger',$pass1,$pass2,$pass3)); ?></li>
                       </ul>
                  </li> 
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Sections <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index',$pass0,'allsections',$pass2)); ?></li>
+                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index',$pass0,'allsections',$pass2,$pass3)); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($sections as $section): ?>
-                            <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',$pass0,$section['Section']['id'],$pass2)); ?></li>
+                            <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',$pass0,$section['Section']['id'],$pass2,$pass3)); ?></li>
                          <?php endforeach; ?>
                       </ul>
                  </li>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Sociétés <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index',$pass0,$pass1,'tous',$pass3)); ?></li>
+                     <li class="divider"></li>
+                     <li><?php echo $this->Html->link('SNCF', array('action' => 'index',$pass0,$pass1,'1',$pass3)); ?></li>
+                     <li><?php echo $this->Html->link('Autres', array('action' => 'index',$pass0,$pass1,'0',$pass3)); ?></li>
+                     </ul>
+                 </li>                 
                 <li class="divider-vertical-only"></li>
                 <li><?php echo $this->Html->link('Filtre alphabétique','#',array('escape' => false,'id'=>'tooglealphafilter')); ?></li>
                 <li class="divider-vertical-only"></li>                
@@ -61,38 +71,38 @@
             <div class="navbar-inner">
                 <div class="container">
                     <ul class="nav">
-                        <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,$pass1)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('A', array('action' => 'index',$pass0,$pass1,0)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('B', array('action' => 'index',$pass0,$pass1,1)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('C', array('action' => 'index',$pass0,$pass1,2)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('D', array('action' => 'index',$pass0,$pass1,3)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('E', array('action' => 'index',$pass0,$pass1,4)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('F', array('action' => 'index',$pass0,$pass1,5)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('G', array('action' => 'index',$pass0,$pass1,6)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('H', array('action' => 'index',$pass0,$pass1,7)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('I', array('action' => 'index',$pass0,$pass1,8)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('J', array('action' => 'index',$pass0,$pass1,9)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('K', array('action' => 'index',$pass0,$pass1,10)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('L', array('action' => 'index',$pass0,$pass1,11)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('M', array('action' => 'index',$pass0,$pass1,12)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('N', array('action' => 'index',$pass0,$pass1,13)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('O', array('action' => 'index',$pass0,$pass1,14)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('P', array('action' => 'index',$pass0,$pass1,15)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('Q', array('action' => 'index',$pass0,$pass1,16)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('R', array('action' => 'index',$pass0,$pass1,17)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('S', array('action' => 'index',$pass0,$pass1,18)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('T', array('action' => 'index',$pass0,$pass1,19)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('U', array('action' => 'index',$pass0,$pass1,20)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('V', array('action' => 'index',$pass0,$pass1,21)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('W', array('action' => 'index',$pass0,$pass1,22)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('X', array('action' => 'index',$pass0,$pass1,23)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('Y', array('action' => 'index',$pass0,$pass1,24)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('Z', array('action' => 'index',$pass0,$pass1,25)); ?></li>
+                        <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,$pass1,$pass2)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('A', array('action' => 'index',$pass0,$pass1,$pass2,0)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('B', array('action' => 'index',$pass0,$pass1,$pass2,1)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('C', array('action' => 'index',$pass0,$pass1,$pass2,2)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('D', array('action' => 'index',$pass0,$pass1,$pass2,3)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('E', array('action' => 'index',$pass0,$pass1,$pass2,4)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('F', array('action' => 'index',$pass0,$pass1,$pass2,5)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('G', array('action' => 'index',$pass0,$pass1,$pass2,6)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('H', array('action' => 'index',$pass0,$pass1,$pass2,7)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('I', array('action' => 'index',$pass0,$pass1,$pass2,8)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('J', array('action' => 'index',$pass0,$pass1,$pass2,9)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('K', array('action' => 'index',$pass0,$pass1,$pass2,10)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('L', array('action' => 'index',$pass0,$pass1,$pass2,11)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('M', array('action' => 'index',$pass0,$pass1,$pass2,12)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('N', array('action' => 'index',$pass0,$pass1,$pass2,13)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('O', array('action' => 'index',$pass0,$pass1,$pass2,14)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('P', array('action' => 'index',$pass0,$pass1,$pass2,15)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('Q', array('action' => 'index',$pass0,$pass1,$pass2,16)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('R', array('action' => 'index',$pass0,$pass1,$pass2,17)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('S', array('action' => 'index',$pass0,$pass1,$pass2,18)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('T', array('action' => 'index',$pass0,$pass1,$pass2,19)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('U', array('action' => 'index',$pass0,$pass1,$pass2,20)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('V', array('action' => 'index',$pass0,$pass1,$pass2,21)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('W', array('action' => 'index',$pass0,$pass1,$pass2,22)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('X', array('action' => 'index',$pass0,$pass1,$pass2,23)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('Y', array('action' => 'index',$pass0,$pass1,$pass2,24)); ?></li><li class="divider-vertical-only"></li>
+                        <li><?php echo $this->Html->link('Z', array('action' => 'index',$pass0,$pass1,$pass2,25)); ?></li>
                     </ul>
                 </div>
             </div>
         </div>
-        <?php if ($this->params['action']=='index') { ?><code class="text-normal undersubnavbar"  style="z-index:-5;margin-bottom: 10px;display: block;"><em>Liste de <?php echo $futilisateur; ?> de <?php echo $fsection; ?> <?php echo $falpha; ?></em></code><?php } ?>
+        <?php if ($this->params['action']=='index') { ?><code class="text-normal undersubnavbar"  style="z-index:-5;margin-bottom: 10px;display: block;"><em>Liste de <?php echo $futilisateur; ?> de <?php echo $fsection; ?> <?php echo $fsociete; ?> <?php echo $falpha; ?></em></code><?php } ?>
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
@@ -109,6 +119,7 @@
 	</tr>
 	</thead>
         <tbody>
+	<?php if (isset($utilisateurs)): ?>
 	<?php foreach ($utilisateurs as $utilisateur): ?>
 	<tr>
 		<td><?php echo h($utilisateur['Utilisateur']['NOM']); ?>&nbsp;</td>
@@ -155,7 +166,8 @@
                     <?php endif; ?>                    
                 </td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>

@@ -22,7 +22,8 @@
 			<th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
-        <tbody>        
+        <tbody>   
+        <?php if (isset($assistances)): ?>      
 	<?php foreach ($assistances as $assistance): ?>
 	<tr>
 		<td><?php echo h($assistance['Assistance']['NOM']); ?>&nbsp;</td>
@@ -39,7 +40,8 @@
                         <?php endif; ?>
                 </td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
         <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>

@@ -9,21 +9,17 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
 
 ## Cette version s'appuie sur :
 
-* [CakePhp 2.3.4] (http://cakephp.org) - Framework
+* [CakePhp 2.3.6] (http://cakephp.org) - Framework
 
-* [BootStrap 2.3.1] (http://twitter.github.com/bootstrap/) - Style et javascript
+* [BootStrap 2.3.2] (http://twitter.github.com/bootstrap/) - Style et javascript
 
-* [JQuery 1.9.1] (http://jquery.com) - La dernière version de JQuery
+* [JQuery 1.10.1] (http://jquery.com) - La dernière version de JQuery
 
 * [Datepicker pour BootStrap] (https://github.com/eternicode/bootstrap-datepicker) - Pour changer du datepicker de JQuery-UI
 
-* [Highcharts 3.0.1](http://www.highcharts.com) - bonne documentation (http://docs.highcharts.com)
+* [Highcharts 3.0.2](http://www.highcharts.com) - bonne documentation (http://docs.highcharts.com)
 
-## A venir en mai :
-
-* Démonstration avant validation à venir courant MAI 
-
-* Utilisation par d'autres utilisateurs
+* [TinyMCE 4.0.0](http://www.tinymce.com) - Editeur WYSWYG
 
 ## A venir en version 2.0.1 :
 

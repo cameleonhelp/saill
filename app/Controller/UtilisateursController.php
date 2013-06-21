@@ -32,7 +32,7 @@ class UtilisateursController extends AppController {
  *
  * @return void
  */
-	public function index($filtreUtilisateur=null,$filtreSection=null,$filtreAlpha=null) {
+	public function index($filtreUtilisateur=null,$filtreSection=null,$filtresociete=null,$filtreAlpha=null) {
             //$this->Session->delete('history');
             if (isAuthorized('utilisateurs', 'index')) :
                 $falpha='';
@@ -75,12 +75,28 @@ class UtilisateursController extends AppController {
                         $this->Utilisateur->Section->recursive = -1;
                         $section = $this->Utilisateur->Section->find('first',array('conditions'=>array('Section.id'=>$filtreSection)));
                         $fsection = "la section ".$section['Section']['NOM'];                        
-                }    
+                }  
+                switch ($filtresociete){
+                    case 'tous':
+                    case null:    
+                        $newconditions[]="1=1";
+                        $fsociete = "pour toutes les sociétés";
+                        break;
+                    case '1' :
+                        $newconditions[]="Societe.id = 1";
+                        $fsociete = " dont la societe est SNCF";  
+                        break;
+                    case '0' :
+                        $newconditions[]="Societe.id > 1";
+                        $fsociete = " dont la societe est autre que SNCF";  
+                        break;            
+                }                  
                 if (isset($filtreAlpha)){
                     $alphabet=array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
                     $newconditions[]="Utilisateur.NOM LIKE '".$alphabet[$filtreAlpha]."%'";
                     $falpha = ", dont le nom commence par ".$alphabet[$filtreAlpha];
                 }
+                $this->set('fsociete',$fsociete);
                 $this->set('fsection',$fsection);
                 $this->set('futilisateur',$futilisateur);
                 $this->set('falpha',$falpha);

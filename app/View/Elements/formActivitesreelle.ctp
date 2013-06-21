@@ -108,7 +108,7 @@
             <?php $dichecked = $activitesreelle['Activitesreelle']['DI_TYPE'] ==1 ? 'checked' :''; ?>
             <?php echo $this->Form->input('Activitesreelle.'.$i.'.DI_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>$dichecked)); ?>&nbsp;<label class='labelAfter' for='Activitesreelle<?php echo $i; ?>DITYPE'></label>
         </td>
-        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.'.$i.'.TOTAL',array('type'=>'hidden','value'=>$activitesreelle['Activitesreelle']['TOTAL'])); ?><?php echo $this->Form->input('Activitesreelle.'.$i.'.TotalDisabled',array('class'=>'span2 text-right total','for'=>'Activitesreelle'.$i.'TOTAL','disabled'=>'disabled','value'=>$activitesreelle['Activitesreelle']['TOTAL'])); ?> j</td>        
+        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.'.$i.'.TOTAL',array('type'=>'hidden','data-rule-isZero'=>true,'data-msg-isZero'=>"Le total est incorrect changez une valeur de votre saisie.",'value'=>$activitesreelle['Activitesreelle']['TOTAL'])); ?><?php echo $this->Form->input('Activitesreelle.'.$i.'.TotalDisabled',array('class'=>'span2 text-right total','for'=>'Activitesreelle'.$i.'TOTAL','disabled'=>'disabled','value'=>$activitesreelle['Activitesreelle']['TOTAL'])); ?> j</td>        
         <td> 
             <?php if ($i==0) : ?>
             <i class="icon-blank"></i>
@@ -169,7 +169,7 @@
         <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.0.DI',array('class'=>'span2 text-right day di','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>'0.0')); ?> j<br />
         <?php echo $this->Form->input('Activitesreelle.0.DI_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle0DITYPE'></label>
         </td>
-        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.0.TOTAL',array('type'=>'hidden','value'=>'0.0')); ?><?php echo $this->Form->input('Activitesreelle.0.TotalDisabled',array('class'=>'span2 text-right total','for'=>'Activitesreelle0TOTAL','disabled'=>'disabled','value'=>isset($this->data['Activitesreelle']['TOTAL']) ? $this->data['Activitesreelle']['TOTAL'] : "0.0")); ?> j</td>        
+        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.0.TOTAL',array('type'=>'hidden','data-rule-isZero'=>true,'data-msg-isZero'=>"Le total est incorrect changez une valeur de votre saisie.",'value'=>'0.0')); ?><?php echo $this->Form->input('Activitesreelle.0.TotalDisabled',array('class'=>'span2 text-right total','for'=>'Activitesreelle0TOTAL','disabled'=>'disabled','value'=>isset($this->data['Activitesreelle']['TOTAL']) ? $this->data['Activitesreelle']['TOTAL'] : "0.0")); ?> j</td>        
         <td>    
             <i class="icon-blank"></i>
             <i class="icon-plus cursor" id="addRow"></i>            
@@ -216,7 +216,7 @@
         <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.¤.DI',array('class'=>'span2 text-right day di','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>'0.0')); ?> j<br />
         <?php echo $this->Form->input('Activitesreelle.¤.DI_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle¤DITYPE'></label>
         </td>
-        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.¤.TOTAL',array('type'=>'hidden','value'=>'0.0')); ?><?php echo $this->Form->input('Activitesreelle.¤.TotalDisabled',array('class'=>'span2 text-right total','for'=>'Activitesreelle¤TOTAL','disabled'=>'disabled','value'=>"0.0")); ?> j</td>        
+        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.¤.TOTAL',array('type'=>'hidden','class'=>'totalhidden','value'=>'0.0')); ?><?php echo $this->Form->input('Activitesreelle.¤.TotalDisabled',array('class'=>'span2 text-right total','for'=>'Activitesreelle¤TOTAL','disabled'=>'disabled','value'=>"0.0")); ?> j</td>        
         <td>    
             <i class="icon-minus cursor" id="deleteRow"></i>
             <i class="icon-plus cursor" id="addRow"></i>            
@@ -356,6 +356,7 @@ $(document).ready(function () {
         e.preventDefault;
         $("#templateRow").clone().removeAttr("id").appendTo( $("#templateRow").parent());
         $("tr:last-child .selectActivite").attr('data-rule-required',"true").attr('data-msg-required',"Le nom de l'activité est obligatoire");
+        $("tr:last-child .totalhidden").attr('data-rule-isZero',"true").attr('data-msg-isZero',"Le total est incorrect changez une valeur de votre saisie.");
         $("tr:last-child :input").each(function() {
             var nameAttr = typeof $(this).attr('name') === "undefined" ? "" : $(this).attr('name');
             var idAttr = typeof $(this).attr('id') === "undefined" ? "" : $(this).attr('id');

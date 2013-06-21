@@ -35,7 +35,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->css('bootsncf');                    
                 echo $this->Html->css('bootstrap.sncf');
                 echo $this->Html->css('glyphicons');
-                echo $this->Html->css('jscroller2');   
+                echo $this->Html->css('jscroller2');                 
                 
                 echo $this->Html->script('jquery');
                 echo $this->Html->script('bootstrap');              
@@ -52,6 +52,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->script('highcharts');
                 echo $this->Html->script('modules/exporting');   
                 echo $this->Html->script('modules/data');
+                echo $this->Html->script('newsticker');                
                 //pour enregistrer image
                 echo $this->Html->script('html2canvas');     
                 echo $this->Html->script('canvas2image');   
@@ -63,7 +64,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
 	?>
 </head>
 <body>
-<script type="text/javascript"> 
+<script type="text/javascript">      
     tinymce.init({ 
    // General options
    language : "fr_FR",
@@ -71,16 +72,19 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
    forced_root_block : false,
    force_br_newlines : true,
    force_p_newlines : false,
-   statusbar : false,
-   plugins: "hr link textcolor table code",
-   menubar: "file edit insert format code table",
-   toolbar: "undo redo | bold italic | hr link | forecolor backcolor | numlist bullist alignleft aligncenter alignright alignjustify",
+   resize : false,
+   statusbar:false,
+   plugins: "hr link textcolor table code searchreplace <?php echo $this->params['controller']=='messages' ? 'charcount' : ''; ?>",
+   menubar: "file edit insert format table tools",
+   toolbar: "undo redo | bold italic | hr link | forecolor backcolor | numlist bullist alignleft aligncenter alignright alignjustify | searchreplace",
    height : "300",
    width : "100%"
     }); 
 </script> 
+   <?php //debug(PHP_OS); ?>
    <div id="allcontainer" class="container" style="margin-top: 15px;">    
         <div class="row" >
+            <div class='notifications top-right'></div>
             <div id="telecommand" class="span7">
             <span class="logo"></span>
             <?php if (userAuth('id')>0) echo $this->element('server'); ?>
@@ -99,7 +103,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 <div class="text-normal">Réalisé à partir de :</div>
                 <div class='text-center'><?php echo $this->Html->link($this->Html->image("cakephp.png",array("height" => "24px","width" => "24px")),"http://cakephp.org/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"CakePHP")) ?>
                 <?php echo $this->Html->link($this->Html->image("bootstrap.png",array("height" => "24px","width" => "24px")),"http://twitter.github.com/bootstrap/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"BootStrap")) ?>                
-                <?php echo $this->Html->link($this->Html->image("mySQL.png",array("height" => "24px","width" => "24px")),"http://www.mysql.fr/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"MYSQL")) ?>                                    
+                <?php echo $this->Html->link($this->Html->image("mySQL.png",array("height" => "24px","width" => "24px")),"http://dev.mysql.com/downloads/tools/workbench/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"MYSQL")) ?>                                    
                 <?php echo $this->Html->link($this->Html->image("jquery.png",array("height" => "24px","width" => "24px")),"http://www.jquery.com/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"JQuery")) ?>                                    
                 <?php echo $this->Html->link($this->Html->image("tinymce.png",array("height" => "24px","width" => "24px")),"http://www.tinymce.com/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"TinyMCE")) ?>                                        
                 </div>
@@ -119,9 +123,11 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 <div class="navbar navbar-inverse" style="max-width: 97%;width: 93%;float:right;margin-left: 0px;">               
                     <div class="navbar-inner">    
                     <div class="navbar-text text-white">
-                        <div id="scroller_container" style="color:#EFEFEF;">
+                        <ul id="scroller_container" class='newsticker' style="color:#EFEFEF;">
+                           
                             <?php echo $this->element('messages_defilant'); ?>
-                        </div>
+                           
+                        </ul>
                     </div>
                     </div>
                 </div>  
@@ -205,6 +211,9 @@ $(document).ready(function () {
 		 autoclose:true,
 		 todayHighlight:true		 
     })
+    
+   $('#scroller_container').newsticker(8000);
+   
    $(".dateremove").click(function(){
            d = new Date;
            $(this).parent().datepicker('update', d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear());
@@ -363,7 +372,7 @@ $(document).ready(function () {
        $(this).addClass('disabled')
        $(this).parents().find('#expand').removeClass('disabled');   
        }
-   });*/
+   });*/ 
 });
 </script>
 

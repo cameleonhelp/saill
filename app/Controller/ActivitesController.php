@@ -33,7 +33,7 @@ class ActivitesController extends AppController {
                         break;                    
                     default :
                         $newconditions[]="Projet.id='".$filtre."'";
-                        $projet = $this->Activite->find('first',array('fields'=>array('Projet.NOM'),'recusrsive'=>0,'conditions'=>array('projet_id'=>$filtre)));
+                        $projet = $this->Activite->Projet->find('first',array('fields'=>array('Projet.NOM'),'recusrsive'=>0,'conditions'=>array('Projet.id'=>$filtre)));
                         $fprojet = "le projet ".$projet['Projet']['NOM'];
                         break;                      
                 }  

@@ -25,6 +25,7 @@
 	</tr>
 	</thead>
         <tbody>
+	<?php if (isset($dossierpartages)): ?>
 	<?php foreach ($dossierpartages as $dossierpartage): ?>
 	<tr>
 		<td><?php echo h($dossierpartage['Dossierpartage']['NOM']); ?>&nbsp;</td>
@@ -43,7 +44,8 @@
                     <?php endif; ?>
                 </td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
        </tbody>
 	</table>
         <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>

@@ -47,6 +47,7 @@
 	</tr>
 	</thead>
         <tbody>
+	<?php if (isset($autorisations)): ?>
 	<?php foreach ($autorisations as $autorisation): ?>
 	<tr>
 		<td><?php echo h($autorisation['Profil']['NOM']); ?>&nbsp;</td>
@@ -75,7 +76,8 @@
                     <?php endif; ?>
                 </td>
 	</tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>

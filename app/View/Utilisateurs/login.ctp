@@ -17,6 +17,9 @@
         <div class="controls">
         <?php echo $this->Form->input('remember_me',array('type'=>'checkbox')); ?>&nbsp;<label class='labelAfter' for="UtilisateurRememberMe">Se souvenir de moi</label>
         </div>
+        <!--<div class="controls">
+        <?php // echo $this->Html->link('Demande d\initialisation du mot de passe',array("controller"=>'utilisateur','action'=>"sendmailinit")); ?>
+        </div>//-->
         </div>
         <div class="control-group">
         <div class="controls">

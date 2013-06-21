@@ -25,7 +25,7 @@ class UtiliseoutilsController extends AppController {
  *
  * @return void
  */
-	public function index($filtreetat=null,$utilisateur_id=null) {
+	public function index($filtreetat=null,$utilisateur_id=null,$filtreoutil=null) {
             //$this->Session->delete('history');
             if (isAuthorized('utiliseoutils', 'index')) :
 		$this->set('title_for_layout','Ouvertures des droits');
@@ -54,6 +54,31 @@ class UtiliseoutilsController extends AppController {
                         $futilisateur = "de ".$nomlong['Utilisateur']['NOMLONG'];                     
                     }                     
                 $this->set('futilisateur',$futilisateur);  
+                switch ($filtreoutil){
+                    case 'tous':
+                    case null:    
+                        $newconditions[]="1=1";
+                        $foutil = " pour tous les outils";
+                        break;                      
+                    default :
+                        $outil = explode('_',$filtreoutil);
+                        if ($outil[0]=='O'):
+                            $newconditions[]="Utiliseoutil.outil_id = '".$outil[1]."'";
+                            $nomlong = $this->Utiliseoutil->Outil->find('first',array('fields'=>array('NOM'),'conditions'=>array('id'=> $outil[1]),'recursive'=>-1));
+                            $foutil = " pour ".$nomlong['Outil']['NOM']; 
+                        endif;
+                        if ($outil[0]=='L'):
+                            $newconditions[]="Utiliseoutil.listediffusion_id = '".$outil[1]."'";
+                            $nomlong = $this->Utiliseoutil->Listediffusion->find('first',array('fields'=>array('NOM'),'conditions'=>array('id'=> $outil[1]),'recursive'=>-1));
+                            $foutil = " pour ".$nomlong['Listediffusion']['NOM']; 
+                        endif;
+                        if ($outil[0]=='P'):
+                            $newconditions[]="Utiliseoutil.dossierpartage_id = '".$outil[1]."'";
+                            $nomlong = $this->Utiliseoutil->Dossierpartage->find('first',array('fields'=>array('NOM'),'conditions'=>array('id'=> $outil[1]),'recursive'=>-1));
+                            $foutil = " pour ".$nomlong['Dossierpartage']['NOM']; 
+                        endif;                        
+                }                     
+                $this->set('foutil',$foutil);                  
                 if (userAuth('WIDEAREA')==0) {$newconditions[]="Utilisateur.section_id=".userAuth('section_id');}
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->Utiliseoutil->recursive = 0;
@@ -66,6 +91,12 @@ class UtiliseoutilsController extends AppController {
                 $this->Utiliseoutil->recursive = -1;
                 $etats = $this->Utiliseoutil->find('all',array('fields' => array('Utiliseoutil.STATUT'),'group'=>'Utiliseoutil.STATUT','order'=>array('Utiliseoutil.STATUT'=>'asc')));
                 $this->set('etats',$etats); 
+                $outils = $this->Utiliseoutil->Outil->find('all',array('fields' => array('Outil.id','Outil.NOM'),'order'=>array('Outil.NOM'=>'asc')));
+                $liste = $this->Utiliseoutil->Listediffusion->find('all',array('fields' => array('Listediffusion.id','Listediffusion.NOM'),'order'=>array('Listediffusion.NOM'=>'asc')));
+                $partage = $this->Utiliseoutil->Dossierpartage->find('all',array('fields' => array('Dossierpartage.id','Dossierpartage.NOM'),'order'=>array('Dossierpartage.NOM'=>'asc')));
+                $this->set('outils',$outils);    
+                $this->set('listes',$liste);  
+                $this->set('partages',$partage);  
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();

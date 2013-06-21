@@ -32,7 +32,7 @@
         <thead>
             <tr>
                 <th></th>
-                <th>Contrat</th>
+                <th>Reste à faire</th>
                 <th>Consommé</th>
             </tr>
         </thead>
@@ -40,7 +40,7 @@
             <?php foreach($results as $result): ?>
             <tr>
                 <th><?php echo $result['CONTRAT']['NOM']; ?></th>
-                <td><?php echo $result['CONTRAT']['CHARGE']; ?></td>                
+                <td><?php echo $result[0]['RAF']; ?></td>                
                 <td><?php echo $result['FACTURATION']['CHARGEFACTUREE']; ?></td> 
             </tr>           
             <?php endforeach; ?>
@@ -344,7 +344,7 @@ $(document).ready(function (){
         tooltip: {
             formatter: function() {
                 return '<b>'+ this.series.name +'</b><br/>'+
-                    this.y +' jours sur '+ this.x;
+                    this.y +' jours sur '+ this.x +'<br/>Contrat: '+ this.point.stackTotal;;
             }
         },
         plotOptions: {

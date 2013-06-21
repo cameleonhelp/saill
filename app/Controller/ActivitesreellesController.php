@@ -483,7 +483,9 @@ class ActivitesreellesController extends AppController {
                     $this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation'),'default',array('class'=>'alert alert-error')); 
                     endif;            
                 endif;
+                if(!$loop):
                 $this->History->goBack();
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();           
@@ -794,7 +796,8 @@ class ActivitesreellesController extends AppController {
                     $record['Activitesreelle']['VE_TYPE']=$type;
                     $this->Activitesreelle->save($record);
                     break;
-                case 'SA':
+                //JLR :: pas necessaire d'importer les samedi et dimanche
+                /*case 'SA':
                     $record['Activitesreelle']['SA']=$duree;
                     $record['Activitesreelle']['SA_TYPE']=$type;
                     $this->Activitesreelle->save($record);
@@ -803,9 +806,10 @@ class ActivitesreellesController extends AppController {
                     $record['Activitesreelle']['DI']=$duree;
                     $record['Activitesreelle']['DI_TYPE']=$type;
                     $this->Activitesreelle->save($record);
-                    break;                
+                    break;   */             
             endswitch;
-            $total = $this->Activitesreelle->find('first',array('fields'=>array('(LU+MA+ME+JE+VE+SA+DI) AS TOTAL','DATE','VEROUILLE'),'conditions'=>array('Activitesreelle.utilisateur_id'=>$utilisateur_id,'Activitesreelle.activite_id'=>$activite_id,'Activitesreelle.DATE'=>$date),'recursive'=>-1));
+            //JLR :: retirer les samedi et dimanche du total
+            $total = $this->Activitesreelle->find('first',array('fields'=>array('(LU+MA+ME+JE+VE) AS TOTAL','DATE','VEROUILLE'),'conditions'=>array('Activitesreelle.utilisateur_id'=>$utilisateur_id,'Activitesreelle.activite_id'=>$activite_id,'Activitesreelle.DATE'=>$date),'recursive'=>-1));
             $record['Activitesreelle']['TOTAL'] = $total[0]['TOTAL'];
             $this->Activitesreelle->save($record);
         }

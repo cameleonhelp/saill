@@ -192,6 +192,7 @@ class ActionsController extends AppController {
 			throw new NotFoundException(__('Action incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                        $this->request->data['Action']['NEW']=0;
 			if ($this->Action->save($this->request->data)) {
                                 $this->saveHistory($id);                                
 				$this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
@@ -318,6 +319,15 @@ class ActionsController extends AppController {
             }
             return $list;
         }           
+        
+        public function getLastHistory($id){
+            $history = $this->Action->Historyaction->find('first',array('conditions'=>array('Historyaction.action_id'=>$id),'order'=>array('Historyaction.id'=>'desc'),'recursive'=>-1));
+            return $history;
+        }
+        
+        public function deleteHistory($history){
+            $this->Action->Historyaction->delete($history['Historyaction']['id']);             
+        }
         
         public function saveHistory($id){
             $thisAction = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id)));
@@ -459,6 +469,7 @@ class ActionsController extends AppController {
                 $record['Action']['destinataire']=  userAuth('id');
                 $record['Action']['DEBUT']=date('d/m/Y');
                 $record['Action']['STATUT']='à faire';
+                $record['Action']['NEW']=1;
                 unset($record['Action']['COMMENTAIRE']);
                 unset($record['Action']['created']);                
                 unset($record['Action']['modified']);
@@ -532,6 +543,7 @@ class ActionsController extends AppController {
                 $record['Action']['ECHEANCE'] = $echeance;
                 $record['Action']['created'] = $this->Action->read('created');
                 $record['Action']['modified'] = date('Y-m-d');
+                $record['Action']['NEW'] = 0;
                 $this->Action->save($record);
                 $this->saveHistory($id); 
                 exit();
@@ -545,9 +557,14 @@ class ActionsController extends AppController {
             $record = $this->Action->read();
             $record['Action']['STATUT'] = $avancement==100 ? 'terminée' : $avancement==0 ? 'à faire' : $record['Action']['STATUT'];
             $record['Action']['AVANCEMENT'] = $avancement;
+            $record['Action']['NEW'] = 0;
             $record['Action']['ECHEANCE'] = $avancement==100 ? date('Y-m-d') : $record['Action']['ECHEANCE'];
             $record['Action']['created'] = $this->Action->read('created');
             $record['Action']['modified'] = date('Y-m-d');
+            $history = $this->getLastHistory($id);
+            if ($avancement > $history['Historyaction']['AVANCEMENT']):
+                $this->deleteHistory($history);
+            endif;
             $this->saveHistory($id); 
             $this->Action->save($record);
             exit();
@@ -557,8 +574,13 @@ class ActionsController extends AppController {
             $id = $this->request->data('id');
             $duree = $this->request->data('duree');
             $this->Action->id = $id;
+            $history = $this->getLastHistory($id);
+            if ($duree > $history['Historyaction']['CHARGEPREVUE']):
+                $this->deleteHistory($history);
+            endif;
             $this->saveHistory($id); 
             $this->Action->saveField('DUREEPREVUE',$duree);
+            $this->Action->saveField('NEW',0);
             exit();
         }        
         
