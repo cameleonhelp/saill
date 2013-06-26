@@ -3,13 +3,13 @@
         <label class="control-label sstitre  required" for="ContactEMAIL">Votre email : </label>
         <div class="controls">
             <?php $value = userAuth('MAIL')!='' ? userAuth('MAIL'): ""; ?>
-            <?php echo $this->Form->input('EMAIL',array('data-rule-required'=>'true','data-rule-email'=>'true','data-msg-email'=>'Le format de votre email n\'est pas correct','placeholder'=>'Votre adresse email','class'=>'span12','data-msg-required'=>"Votre email est obligatoire",'value'=>$value,'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('EMAIL',array('data-rule-required'=>'true','data-rule-email'=>'true','data-msg-email'=>'Le format de votre email n\'est pas correct','placeholder'=>'Votre adresse email','data-msg-required'=>"Votre email est obligatoire",'value'=>$value,'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label sstitre  required" for="ContactOBJET">Objet du message : </label>
         <div class="controls">
-            <?php echo $this->Form->input('OBJET',array('data-rule-required'=>'true','placeholder'=>'Objet du message','class'=>'span25','data-msg-required'=>"l'objet du message est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('OBJET',array('data-rule-required'=>'true','style'=>'width:99%;','placeholder'=>'Objet du message','data-msg-required'=>"l'objet du message est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
     </div>
     <div class="control-group">

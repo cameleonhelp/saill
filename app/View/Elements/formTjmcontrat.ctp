@@ -2,13 +2,13 @@
     <div class="control-group">
         <label class="control-label sstitre  required" for="TjmcontratTJM">Montant du TJM contrat : </label>
         <div class="controls">
-            <?php echo $this->Form->input('TJM',array('data-rule-required'=>'true','placeholder'=>'Montant du TJM contrat','class'=>'span8','data-msg-required'=>"Le montant du TJM contrat est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?> €/j
+            <?php echo $this->Form->input('TJM',array('data-rule-required'=>'true','placeholder'=>'Montant du TJM contrat','data-msg-required'=>"Le montant du TJM contrat est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?> €/j
         </div>
     </div>
     <div class="control-group">
         <label class="control-label sstitre  required" for="TjmcontratANNEE">Année d'application : </label>
         <div class="controls">
-            <?php echo $this->Form->input('ANNEE',array('type'=>'text','data-rule-required'=>'true','placeholder'=>'Année d\'application','class'=>'span4','data-msg-required'=>"Le nom de l'achat'année d'application est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('ANNEE',array('type'=>'text','data-rule-required'=>'true','placeholder'=>'Année d\'application','data-msg-required'=>"Le nom de l'achat'année d'application est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
     </div>
     <div class="navbar">

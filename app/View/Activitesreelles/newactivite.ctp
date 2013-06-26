@@ -13,7 +13,7 @@
         <td>
             <div class="input-append date" data-date="<?php echo empty($this->data['Activitesreelle']['DATE']) ? date('d/m/Y') : $this->data['Activitesreelle']['DATE']; ?>" data-date-format="dd/mm/yyyy">
                 <?php $today = date('d/m/Y'); ?>
-                <?php echo $this->Form->input('DATE',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>"La date de début de l'activité est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->input('DATE',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>"La date de début de l'activité est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
                 <span class="add-on"><i class="glyphicon_calendar"></i></span>
             </div>             

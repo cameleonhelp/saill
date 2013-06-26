@@ -17,7 +17,7 @@
         <div class="control-group">
             <label class="control-label sstitre" for="ParameterParam">URL Minidoc : </label>
             <div class="controls">
-                <?php echo $this->Form->input('param',array('class'=>'span20','type'=>'text','placeholder'=>'url de Minidoc','value'=>$urlminidoc['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->input('param',array('style'=>'width:50%;','type'=>'text','placeholder'=>'url de Minidoc','value'=>$urlminidoc['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>
             </div> 
         </div>
@@ -28,7 +28,7 @@
         <div class="control-group">
             <label class="control-label sstitre" for="ParameterParam">Email contact : </label>
             <div class="controls">
-                <?php echo $this->Form->input('param',array('class'=>'span10','type'=>'text','placeholder'=>'Email du contact','value'=>$contact['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->input('param',array('type'=>'text','placeholder'=>'Email du contact','value'=>$contact['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>
             </div> 
         </div>
@@ -39,7 +39,7 @@
         <div class="control-group">
             <label class="control-label sstitre" for="ParameterParam">Version : </label>
             <div class="controls">
-                <?php echo $this->Form->input('param',array('class'=>'span7','type'=>'text','placeholder'=>'N° de version','value'=>$version['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->input('param',array('type'=>'text','placeholder'=>'N° de version','value'=>$version['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>
             </div> 
         </div>
@@ -52,7 +52,7 @@
             <div class="controls">
                 <?php $instances = array('DEV'=>'DEVELOPPEMENT','INT'=>'INTEGRATION','DEMO'=>'DEMONSTRATION','FORM'=>'FORMATION','BAC'=>'BAC A SABLE','PROD'=>'PRODUCTION'); ?>
                 <?php echo $this->Form->select('param', $instances,array('empty' => 'Choisir une instance...','default'=>$instance['Parameter']['param'])); ?>
-                <?php //echo $this->Form->input('param',array('class'=>'span7','type'=>'text','placeholder'=>'Instance','value'=>$instance['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php //echo $this->Form->input('param',array('type'=>'text','placeholder'=>'Instance','value'=>$instance['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>
             </div> 
         </div>
@@ -63,7 +63,7 @@
         <div class="control-group">
             <label class="control-label sstitre" for="ParameterParam">Email du gestionnaire d'annuaire : </label>
             <div class="controls">
-                <?php echo $this->Form->input('param',array('class'=>'span10','type'=>'text','placeholder'=>'Gestionnaire d\'annuaire','value'=>$annuaire['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->input('param',array('type'=>'text','placeholder'=>'Gestionnaire d\'annuaire','value'=>$annuaire['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>
             </div> 
         </div>
@@ -74,7 +74,7 @@
         <div class="control-group">
             <label class="control-label sstitre" for="ParameterParam">Email du valideur d'outil : </label>
             <div class="controls">
-                <?php echo $this->Form->input('param',array('class'=>'span10','type'=>'text','placeholder'=>'Service manager','value'=>$valoutil['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->input('param',array('type'=>'text','placeholder'=>'Service manager','value'=>$valoutil['Parameter']['param'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>
             </div> 
         </div>

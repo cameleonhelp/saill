@@ -3,7 +3,7 @@
         <tr>
             <td><label class="control-label sstitre required" for="ActionOBJET">Objet : </label></td>
             <td colspan='3'  style='margin-bottom: 10px;padding-bottom: 10px;'>
-                <?php echo $this->Form->input('OBJET',array('type'=>'text','data-rule-required'=>'true','data-msg-required'=>"L'objet de l'action est obligatoire",'class' => 'span23')); ?>
+                <?php echo $this->Form->input('OBJET',array('type'=>'text','data-rule-required'=>'true','style'=>'width:100%','data-msg-required'=>"L'objet de l'action est obligatoire")); ?>
             </td>
         </tr>
         <tr>
@@ -64,7 +64,7 @@
                 <?php $today = date('d/m/Y'); ?>
                 <span class="add-on"><i class="glyphicon_calendar"></i></span>
                 <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>                
-                <?php echo $this->Form->input('ECHEANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->input('ECHEANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 </div>                
             </td>            
         </tr>
@@ -79,13 +79,13 @@
             </td>
             <td><label class="control-label sstitre" for="ActionAVANCEMENT">Avancement : </label></td>
             <td>
-                <div class="progress progress-striped progress-danger span4 clearfix" style="margin-top:5px;margin-left: 0 !important;">
+                <div class="progress progress-striped progress-danger clearfix" style="margin-top:5px;margin-left: 0px !important;margin-right: 10px !important;width:150px;float: left;">
                     <div id="progressbar" class="bar "></div>
-                </div>&nbsp;     
+                </div>     
                 <?php if ($this->params->action == 'add') { ?> 
-                    <?php echo $this->Form->input('AVANCEMENT',array('maxlength'=>'3','class' => 'span2 text-right','value'=>0)); ?> %  
+                    <?php echo $this->Form->input('AVANCEMENT',array('maxlength'=>'3','class' => 'text-right','style'=>'width:45px;','value'=>0,'min'=>"0", 'step'=>"10",'max'=>'100')); ?> %  
                 <?php } else { ?>
-                    <?php echo $this->Form->input('AVANCEMENT',array('maxlength'=>'3','class' => 'span2 text-right')); ?> %
+                    <?php echo $this->Form->input('AVANCEMENT',array('maxlength'=>'3','style'=>'width:45px;','class' => 'text-right','min'=>"0", 'step'=>"10",'max'=>'100')); ?> %
                 <?php } ?>                
             </td>            
         </tr> 
@@ -94,7 +94,7 @@
             <td>
             <div class="input-append date" data-date="<?php echo empty($this->data['Action']['DEBUT']) ? date('d/m/Y') : $this->data['Action']['DEBUT']; ?>" data-date-format="dd/mm/yyyy">
                 <?php $today = date('d/m/Y'); ?>
-                <?php echo $this->Form->input('DEBUT',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->input('DEBUT',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
                 <span class="add-on"><i class="glyphicon_calendar"></i></span>
                 </div>                
@@ -102,7 +102,7 @@
             <td><label class="control-label sstitre" for="ActionDUREEPREVUE">Durée prévue : </label></td>
             <td class="form-inline">
                 <?php $value = isset($this->data['Action']['DUREEPREVUE']) ? $this->data['Action']['DUREEPREVUE'] : 0; ?>
-                <?php echo $this->Form->input('DUREEPREVUE',array('type'=>"number", 'min'=>"0", 'step'=>"2",'maxlength'=>'3','class' => 'span2 text-right', 'value'=>$value)); ?> heures soit : <label id="ActionLblDUREEPREVUE"></label>              
+                <?php echo $this->Form->input('DUREEPREVUE',array('type'=>"number",'style'=>'width:55px;', 'min'=>"0", 'step'=>"2",'maxlength'=>'3','class' => 'text-right', 'value'=>$value)); ?> heures soit : <label id="ActionLblDUREEPREVUE"></label>              
             </td>            
         </tr>      
     </table> 

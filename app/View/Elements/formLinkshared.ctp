@@ -8,7 +8,7 @@
         <div class="control-group">
         <label class="control-label sstitre required" for="LinksharedLINK">Lien : </label>
         <div class="controls">
-            <?php echo $this->Form->input('LINK',array('type'=>'text','class'=>'span20','placeholder'=>'Url du site','data-rule-required'=>'true','data-msg-required'=>"Le nom du domaine'url du site est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('LINK',array('style'=>'width:98%;','type'=>'text','placeholder'=>'Url du site','data-rule-required'=>'true','data-msg-required'=>"Le nom du domaine'url du site est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
         </div>
         <div class="navbar">

@@ -109,6 +109,9 @@
         <thead>
          <tr><th style='text-align:center;' colspan='2'><?php echo $monday; ?></th></tr>
         </thead>
+        <?php $activitesreelle[0]['TOTAL']=0;
+        $activitesreelle['Activitesreelle']['VEROUILLE']=false;
+        ?>
         <?php $activitesreelles = $this->requestAction('activitesreelles/homeNBActivitesReelles'); ?>
         <?php foreach($activitesreelles as $activitesreelle) : ?>
         <?php if ($monday == $activitesreelle['Activitesreelle']['DATE']): ?>
@@ -124,7 +127,7 @@
             if (!isset($activitesreelle[0]['TOTAL'])) : $etatsaisie = ucfirst_utf8('à faire'); $badge = 'badge-important'; endif;
 			if ($activitesreelle['Activitesreelle']['VEROUILLE']==false): $etatsaisie = ucfirst_utf8('facturé'); $badge = 'badge-success'; endif;
         ?>
-        <tr><td align='center' width='10px'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($activitesreelle[0]['TOTAL']) ? $activitesreelle[0]['TOTAL']: 0; ?></div></div></span></td><td style='text-align:left;padding-left: 20px;font-size: 14px;'><span class="badgeround <?php echo $badge; ?>">&nbsp;</span> <?php echo $etatsaisie; ?></td></tr>
+        <tr><td align='center' width='10px'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($activitesreelle[0]['TOTAL']) ? $activitesreelle[0]['TOTAL']: '0.0'; ?></div></div></span></td><td style='text-align:left;padding-left: 20px;font-size: 14px;'><span class="badgeround <?php echo $badge; ?>">&nbsp;</span> <?php echo $etatsaisie; ?></td></tr>
         <?php endif; ?>
         <?php endforeach; ?>
         <?php endforeach; ?>

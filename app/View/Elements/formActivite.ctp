@@ -12,13 +12,13 @@
     <div class="control-group">
         <label class="control-label sstitre  required" for="ActiviteNOM">Nom : </label>
         <div class="controls">
-            <?php echo $this->Form->input('NOM',array('data-rule-required'=>'true','placeholder'=>'Nom de l\'activite','class'=>'span8','data-msg-required'=>"Le nom de l'activité est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('NOM',array('data-rule-required'=>'true','placeholder'=>'Nom de l\'activite','data-msg-required'=>"Le nom de l'activité est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label sstitre" for="ActiviteNUMEROGALLILIE">Réf. GALILEI : </label>
         <div class="controls">
-            <?php echo $this->Form->input('NUMEROGALLILIE',array('placeholder'=>'Numéro du projet sous GALILEI','class'=>'span8','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('NUMEROGALLILIE',array('placeholder'=>'Numéro du projet sous GALILEI','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
     </div>
 <div class="control-group">
@@ -26,7 +26,7 @@
         <div class="controls">
             <div class="input-append date" data-date="<?php echo empty($this->data['Activite']['DATEDEBUT']) ? date('d/m/Y') : $this->data['Activite']['DATEDEBUT']; ?>" data-date-format="dd/mm/yyyy">
             <?php $today = date('d/m/Y'); ?>
-            <?php echo $this->Form->input('DATEDEBUT',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('DATEDEBUT',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
             <span class="add-on"><i class="glyphicon_calendar"></i></span>
             </div>
@@ -37,7 +37,7 @@
         <div class="controls">
             <div class="input-append date" data-date="<?php echo empty($this->data['Activite']['DATEFIN']) ? date('d/m/Y') : $this->data['Activite']['DATEFIN']; ?>" data-date-format="dd/mm/yyyy">
             <?php $today = date('d/m/Y'); ?>
-            <?php echo $this->Form->input('DATEFIN',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('DATEFIN',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
             <span class="add-on"><i class="glyphicon_calendar"></i></span>
             </div>
@@ -61,13 +61,13 @@
     <div class="control-group">
         <label class="control-label sstitre" for="ActiviteBUDJETRA">Budget initial : </label>
         <div class="controls">
-            <?php echo $this->Form->input('BUDJETRA',array('placeholder'=>'Budget initial de la RA',"readonly"=>'true','class'=>'span8','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?> k€
+            <?php echo $this->Form->input('BUDJETRA',array('placeholder'=>'Budget initial de la RA',"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?> k€
         </div>
     </div>
     <div class="control-group">
         <label class="control-label sstitre" for="ActiviteBUDGETREVU">Dernier budget : </label>
         <div class="controls">
-            <?php echo $this->Form->input('BUDGETREVU',array('placeholder'=>'Budget revue = Budget RA à l\'initialisation','class'=>'span8',"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?> k€
+            <?php echo $this->Form->input('BUDGETREVU',array('placeholder'=>'Budget revue = Budget RA à l\'initialisation',"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?> k€
         </div>
     </div>
     <div class="control-group">

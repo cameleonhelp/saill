@@ -50,10 +50,14 @@ class RapportsController extends AppController {
                 $request = $this->request->data;
                 $results = $this->requestAction('activitesreelles/getActivitesReelles/'.$request['Rapport']['mois'].'/'.$request['Rapport']['annee']);  
                 $this->set('results',$results);
-                $lastMonthDay = date('Y-m-t', mktime(0, 0, 0, $request['Rapport']['mois'], '05', $request['Rapport']['annee']));
+                $lastMonthDay = endWeek(date('Y-m-t', mktime(0, 0, 0, $request['Rapport']['mois'], '05', $request['Rapport']['annee'])));
                 $firstMonthDay = startWeek($request['Rapport']['annee'].'-'.$request['Rapport']['mois'].'-01'); 
+                $lastday = date('Y-m-t', mktime(0, 0, 0, $request['Rapport']['mois'], '05', $request['Rapport']['annee']));
+                $firstday = date('Y-m-d', mktime(0, 0, 0, $request['Rapport']['mois'], '01', $request['Rapport']['annee']));
                 $nbmax = nbopendays($firstMonthDay,$lastMonthDay);
+                $nbdayopenforthismonth = nbopendays($firstday,$lastday);
                 $this->set('nbmaxopen',$nbmax);
+                $this->set('nbopenday',$nbdayopenforthismonth);
             endif;
             $mois = array('01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre');
             $this->set('mois',$mois);

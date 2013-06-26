@@ -35,11 +35,11 @@
     <tr>
         <td><label class="control-label sstitre required" for="PlanchargeNOM">Nom : </label></td>
         <td>
-                <?php echo $this->Form->input('NOM',array('type'=>'text','class'=>'span10','placeholder'=>'Nom du plan de charge','data-rule-required'=>'true','data-msg-required'=>"Le nom du projet est obligatoire")); ?>          
+                <?php echo $this->Form->input('NOM',array('type'=>'text','placeholder'=>'Nom du plan de charge','data-rule-required'=>'true','data-msg-required'=>"Le nom du projet est obligatoire")); ?>          
         </td>
         <td><label class="control-label sstitre required" for="PlanchargeTJM">TJM : </label></td>
         <td>
-                <?php echo $this->Form->input('TJM',array('type'=>'text','class'=>'text-right span3','placeholder'=>'TJM','data-rule-required'=>'true','data-msg-required'=>"Le TJM est obligatoire")); ?> €/j               
+                <?php echo $this->Form->input('TJM',array('type'=>'text','style'=>"width:45px;",'class'=>'text-right','placeholder'=>'TJM','data-rule-required'=>'true','data-msg-required'=>"Le TJM est obligatoire")); ?> €/j               
         </td>        
     </tr>
     <?php $valVersion = $this->params->action == 'edit' ? $this->request->data['Plancharge']['VERSION']+ 1 : '0'; ?>

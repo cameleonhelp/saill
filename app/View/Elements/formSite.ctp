@@ -2,7 +2,7 @@
     <div class="control-group">
         <label class="control-label sstitre  required" for="SiteNOM">Nom : </label>
         <div class="controls">
-            <?php echo $this->Form->input('NOM',array('data-rule-required'=>'true','placeholder'=>'Nom du site','class'=>'span8','data-msg-required'=>"Le nom du site est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('NOM',array('data-rule-required'=>'true','placeholder'=>'Nom du site','data-msg-required'=>"Le nom du site est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
         </div>
         <div class="control-group">

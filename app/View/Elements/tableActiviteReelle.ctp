@@ -56,13 +56,13 @@ function joursemaine($usdate){
 <?php echo $this->Form->create('Actionreelle',array('id'=>'formActionreelle','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
     <tr>
         <td><?php echo $this->data['Activite']['NOM']; ?></td>
-        <td width='15px'><?php echo $this->Form->input('LU',array('class'=>'span2 text-right')); ?> j</td>
-        <td width='15px'><?php echo $this->Form->input('MA',array('class'=>'span2 text-right')); ?> j</td>
-        <td width='15px'><?php echo $this->Form->input('ME',array('class'=>'span2 text-right')); ?> j</td>
-        <td width='15px'><?php echo $this->Form->input('JE',array('class'=>'span2 text-right')); ?> j</td>
-        <td width='15px'><?php echo $this->Form->input('VE',array('class'=>'span2 text-right')); ?> j</td>
-        <td class='week' width='15px'><?php echo $this->Form->input('SA',array('class'=>'span2 text-right')); ?> j</td>
-        <td class='week' width='15px'><?php echo $this->Form->input('DI',array('class'=>'span2 text-right')); ?> j</td>
+        <td width='15px'><?php echo $this->Form->input('LU',array('style'=>"width:35px",'class'=>'text-right')); ?> j</td>
+        <td width='15px'><?php echo $this->Form->input('MA',array('style'=>"width:35px",'class'=>'text-right')); ?> j</td>
+        <td width='15px'><?php echo $this->Form->input('ME',array('style'=>"width:35px",'class'=>'text-right')); ?> j</td>
+        <td width='15px'><?php echo $this->Form->input('JE',array('style'=>"width:35px",'class'=>'text-right')); ?> j</td>
+        <td width='15px'><?php echo $this->Form->input('VE',array('style'=>"width:35px",'class'=>'text-right')); ?> j</td>
+        <td class='week' width='15px'><?php echo $this->Form->input('SA',array('style'=>"width:35px",'class'=>'text-right')); ?> j</td>
+        <td class='week' width='15px'><?php echo $this->Form->input('DI',array('style'=>"width:35px",'class'=>'text-right')); ?> j</td>
         <td style='text-align: center !important;'><?php echo $this->Form->button('Enregistrer l\'activité', array('class' => 'btn btn-inverse','type'=>'submit')); ?></td>
     </tr>
     <?php echo $this->Form->input('DATE',array('type'=>'hidden','value'=>isset($this->data['Activitereeelle']['DATE']) ? $this->data['Activitereeelle']['DATE'] : date('Y-m-d'))); ?>

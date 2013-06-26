@@ -7,6 +7,7 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
  * @return boolean
  */
     function isFerie($date){
+        date_default_timezone_set('GMT');
         $an = $date->format('Y');
         $tab_feries[] = $an.'-01-01'; // Jour de l'an
         $tab_feries[] = $an.'-05-01'; // Fête du travail
@@ -20,9 +21,9 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
         $paques = easter_date($an);
         // le coefficient n'est aps identique s'il s'agit d'un serveur sous Windows ou sous Unix
         
-        $i = strpos(PHP_OS, 'WIN') === 0 ? 2 : 1;
-        $j = strpos(PHP_OS, 'WIN') === 0 ? 40 : 39;
-        $k = strpos(PHP_OS, 'WIN') === 0 ? 51 : 50;       
+        $i = 2;
+        $j = 40;
+        $k = 51;       
         $tab_feries[] = date($an.'-m-d', $paques + (86400*$i)); // Paques
         $tab_feries[] = date($an.'-m-d', $paques + (86400*$j)); // Ascension
         $tab_feries[] = date($an.'-m-d', $paques + (86400*$k)); // Pentecote        
@@ -584,7 +585,30 @@ function styleBarre($avancement){
             break;
         case '100':
             $result = 'success';
-            break;        
+            break; 
+        default:
+            $result = 'danger progress-striped';
+    }
+    return $result;
+}
+
+function styleBarreInd($avancement){
+    $result = '';
+    switch (1){
+        case $avancement >= 0 && $avancement < 31:           
+            $result = 'info';
+            break;
+        case $avancement >= 31 && $avancement < 61:
+            $result = 'warning';
+            break;
+        case $avancement >= 61 && $avancement < 100:
+            $result = 'danger';
+            break;
+        case $avancement == 100:
+            $result = 'success';
+            break; 
+        default:
+            $result = 'danger progress-striped';
     }
     return $result;
 }
@@ -705,6 +729,25 @@ function styleBarre($avancement){
             $d = intval($date[2].$date[1].$date[0]);
             $result = ($d - $today) < 0 ? true: false;         
         endif;
+        return $result;
+    }
+    
+/**
+ * enretard method
+ * 
+ * @param type $date
+ * @return boolean
+ */    
+    function utiliseoutilEnretard($date){
+        $result = false;
+        $today = intval(date('Ymd'));
+        $d = explode('/',$date);
+        $ndate = new DateTime($d[2].'-'.$d[1].'-'.$d[0]);
+        $ndate->add(new DateInterval('P7D'));
+        $datelimite = $ndate->format('Ymd');         
+        $datelimite = intval($datelimite);
+
+        $result = ($datelimite - $today) < 0 ? true: false;         
         return $result;
     }
     
@@ -864,5 +907,13 @@ function styleBarre($avancement){
              return "Erreur inconnue lors de l'envois du mail, contacter l'administrateur en indiquant l'erreur : ".$message;
              break;
      }
+     
+     function addDay($date,$nbday){
+         $d = explode('/',$date);
+         $ndate = new DateTime($d[2].'-'.$d[1].'-'.$d[0]);
+         $ndate->add(new DateInterval('P'.$nbday.'D'));
+         return $ndate->format('d/m/Y');
+     }
+     
     }
 ?>

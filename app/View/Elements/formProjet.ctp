@@ -12,13 +12,13 @@
     <div class="control-group">
         <label class="control-label sstitre  required" for="ProjetNOM">Nom : </label>
         <div class="controls">
-            <?php echo $this->Form->input('NOM',array('data-rule-required'=>'true','placeholder'=>'Nom du projet','class'=>'span8','data-msg-required'=>"Le nom du projet est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('NOM',array('data-rule-required'=>'true','placeholder'=>'Nom du projet','data-msg-required'=>"Le nom du projet est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label sstitre" for="ProjetNUMEROGALLILIE">Réf. GALILEI : </label>
         <div class="controls">
-            <?php echo $this->Form->input('NUMEROGALLILIE',array('placeholder'=>'Numéro du projet sous GALILEI','class'=>'span8','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('NUMEROGALLILIE',array('placeholder'=>'Numéro du projet sous GALILEI','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
     </div>
 <div class="control-group">
@@ -26,7 +26,7 @@
         <div class="controls">
             <div class="input-append date" data-date="<?php echo empty($this->data['Projet']['DEBUT']) ? date('d/m/Y') : $this->data['Projet']['DEBUT']; ?>" data-date-format="dd/mm/yyyy">
             <?php $today = date('d/m/Y'); ?>
-            <?php echo $this->Form->input('DEBUT',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('DEBUT',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
             <span class="add-on"><i class="glyphicon_calendar"></i></span>
             </div>
@@ -37,7 +37,7 @@
         <div class="controls">
             <div class="input-append date" data-date="<?php echo empty($this->data['Projet']['FIN']) ? date('d/m/Y') : $this->data['Projet']['FIN']; ?>" data-date-format="dd/mm/yyyy">
             <?php $today = date('d/m/Y'); ?>
-            <?php echo $this->Form->input('FIN',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('FIN',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
             <span class="add-on"><i class="glyphicon_calendar"></i></span>
             </div>

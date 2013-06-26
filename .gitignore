@@ -11,3 +11,7 @@ manuel SAILL.2/*
 
 
 *.sql
+
+app/View/Elements/menu_bak.ctp
+
+app/View/Elements/menu_old.ctp

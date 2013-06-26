@@ -35,7 +35,8 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->css('bootsncf');                    
                 echo $this->Html->css('bootstrap.sncf');
                 echo $this->Html->css('glyphicons');
-                echo $this->Html->css('jscroller2');                 
+                echo $this->Html->css('jscroller2');  
+                echo $this->Html->css('accordionMod'); 
                 
                 echo $this->Html->script('jquery');
                 echo $this->Html->script('bootstrap');              
@@ -52,7 +53,8 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->script('highcharts');
                 echo $this->Html->script('modules/exporting');   
                 echo $this->Html->script('modules/data');
-                echo $this->Html->script('newsticker');                
+                echo $this->Html->script('newsticker'); 
+                echo $this->Html->script('accordionMod');
                 //pour enregistrer image
                 echo $this->Html->script('html2canvas');     
                 echo $this->Html->script('canvas2image');   
@@ -82,61 +84,66 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
     }); 
 </script> 
    <?php //debug(PHP_OS); ?>
-   <div id="allcontainer" class="container" style="margin-top: 15px;">    
-        <div class="row" >
-            <div class='notifications top-right'></div>
-            <div id="telecommand" class="span7">
-            <span class="logo"></span>
+   <div id="allcontainer" class="container" style="margin-top: 50px;margin-bottom: 50px;">  
+          <div class="navbar navbar-fixed-top navbar-inverse">
+            <div class="navbar-inner">
+                <?php if (userAuth('id') > 0): ?>
+                <div class="pull-left">
+                <button type="button" id="togglemenu" class="btn btn-navbar" rel="tooltip" data-title="Caher ou afficher le menu">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+                </div>
+                <?php endif; ?>	
+                <div class="pull-left"><?php echo $this->Html->link($this->Html->image('logo-sncf-galactic.png',array('style'=>'margin-left:10px;margin-right:10px;')),"https://www.int.sncf.fr/",array('escape' => false)); ?>&nbsp;&nbsp;</div>
+                <div>
+                    <?php echo $this->Html->link('<i class="icon-home icon-white" style="margin-top:4px;margin-bottom:0px;"></i>&nbsp;S.A.I.L.L. -',array('controller'=>'pages','action'=>'home'),array('class'=>"brand",'escape' => false)); ?>
+                    <?php echo $this->Html->link($title_for_layout,"#",array('class'=>"brand","style"=>"margin-left:-35px;margin-top:4px;margin-bottom:0px;",'escape' => false)); ?></div>
+		<?php if (userAuth('id') > 0): ?>
+                <div class="pull-right">
+                    <ul class="nav pull-right">
+                      <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                              <i class="icon-user icon-white"></i>&nbsp;&nbsp;<?php echo userAuth('PRENOM'); ?>. <?php echo userAuth('NOM'); ?>
+                              <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                              <li><?php echo $this->Html->link('Mon profil',array('controller'=>'utilisateurs','action'=>'profil',userAuth('id')),array('escape' => false)); ?></li>
+                              <li><?php echo $this->Html->link('Se déconnecter',array('controller'=>'utilisateurs','action'=>'logout'),array('escape' => false)); ?></li>
+                            </ul>
+                      </li>
+                    </ul>
+                </div>
+                <?php endif; ?>
+            </div>
+          </div>       
+        <div class="row-fluid" >
+            <div id="telecommand" class="span4">
             <?php if (userAuth('id')>0) echo $this->element('server'); ?>
             <?php if (userAuth('id')>0) echo $this->element('menu'); ?>
-            <code class="span5 box-info"  style="margin-top: 10px;">
+            <code class="box-info"  style="margin-top: 10px;">
                 <div class="text-normal">Navigateurs compatibles :</div>
                 <div class='text-center'>
                     <?php echo $this->Html->link($this->Html->image("firefox.png",array("height" => "24px","width" => "24px")),"http://www.mozilla.org/fr/firefox/new/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"Firefox<br/>Recommandé")) ?>
                     <?php echo $this->Html->link($this->Html->image("chrome.png",array("height" => "24px","width" => "24px")),"http://www.google.fr/intl/fr/chrome/business/browser/admin//",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"Chrome<br/>Recommandé")) ?>
-                    <?php echo $this->Html->link($this->Html->image("ie.png",array("height" => "24px","width" => "24px")),"http://www.internetexplorer.fr",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"Internet Explorer<br/> compatible en partie")) ?>                
+                    <?php echo $this->Html->link($this->Html->image("noie.png",array("height" => "24px","width" => "24px")),"http://www.internetexplorer.fr",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"Internet Explorer<br/> NON compatible HTML5")) ?>                
                 </div>
                 <div class="text-normal">Résolution recommandée :</div>
                 <div class='text-center'><?php echo $this->Html->image("1280.png",array('rel'=>"tooltip",'data-title'=>"Résolution minimum<br />recommandée")); ?></div>
             </code>
-            <code class="span5 box-info">
+            <code class="box-info">
                 <div class="text-normal">Réalisé à partir de :</div>
-                <div class='text-center'><?php echo $this->Html->link($this->Html->image("cakephp.png",array("height" => "24px","width" => "24px")),"http://cakephp.org/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"CakePHP")) ?>
-                <?php echo $this->Html->link($this->Html->image("bootstrap.png",array("height" => "24px","width" => "24px")),"http://twitter.github.com/bootstrap/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"BootStrap")) ?>                
-                <?php echo $this->Html->link($this->Html->image("mySQL.png",array("height" => "24px","width" => "24px")),"http://dev.mysql.com/downloads/tools/workbench/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"MYSQL")) ?>                                    
-                <?php echo $this->Html->link($this->Html->image("jquery.png",array("height" => "24px","width" => "24px")),"http://www.jquery.com/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"JQuery")) ?>                                    
-                <?php echo $this->Html->link($this->Html->image("tinymce.png",array("height" => "24px","width" => "24px")),"http://www.tinymce.com/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"TinyMCE")) ?>                                        
+                <div class='text-left' style="color:#000;margin-left:10px;margin-top:5px;"><?php echo $this->Html->link($this->Html->image("cakephp.png",array("height" => "24px","width" => "24px")),"http://cakephp.org/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"CakePHP")) ?> CakePHP<br/>
+                <?php echo $this->Html->link($this->Html->image("bootstrap.png",array("height" => "24px","width" => "24px")),"http://twitter.github.com/bootstrap/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"BootStrap")) ?> Bootstrap<br/>
+                <?php echo $this->Html->link($this->Html->image("mySQL.png",array("height" => "24px","width" => "24px")),"http://dev.mysql.com/downloads/tools/workbench/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"MYSQL")) ?> MySQL<br/>                      
+                <?php echo $this->Html->link($this->Html->image("jquery.png",array("height" => "24px","width" => "24px")),"http://www.jquery.com/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"JQuery")) ?> JQuery<br/>           
+                <?php echo $this->Html->link($this->Html->image("tinymce.png",array("height" => "24px","width" => "24px")),"http://www.tinymce.com/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"TinyMCE")) ?> TinyMCE<br/>                                      
+                <?php echo $this->Html->link($this->Html->image("html5.png",array("height" => "24px")),"http://www.w3.org/html/wg/drafts/html/master/",array('escape' => false,'target'=>'_blank','rel'=>"tooltip",'data-title'=>"HTML 5")) ?> HTML 5  
                 </div>
             </code>            
             </div>
-            <div id="maxcontent" class="span29"> 
-                <div class="row">
-                <div class="span2">
-                <?php if (userAuth('id')>0): ?>
-                <button id="togglemenu" type="button" class="btn btn-inverse" style="padding: 8px 10px;margin-right: 5px;" rel="tooltip" data-title="Caher ou afficher le menu">
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                </button>  
-                <?php endif; ?>
-                </div>
-                <div class="navbar navbar-inverse" style="max-width: 97%;width: 93%;float:right;margin-left: 0px;">               
-                    <div class="navbar-inner">    
-                    <div class="navbar-text text-white">
-                        <ul id="scroller_container" class='newsticker' style="color:#EFEFEF;">
-                           
-                            <?php echo $this->element('messages_defilant'); ?>
-                           
-                        </ul>
-                    </div>
-                    </div>
-                </div>  
-                </div>
-                <div class="navbar navbar-purple">
-                    <div class="navbar-inner">
-                    <div class="brand" ><?php echo $title_for_layout; ?></div>
-                    </div>
-                </div>  
+            <div id="maxcontent" class="span32"> 
 		<div id="content">
                         <div style="cursor:pointer;"><?php echo $this->Session->flash(); ?></div>
                         <div id="container_message" name="container_message" class="alert alert-error"><ol><li></li></ol></div>
@@ -144,6 +151,15 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
 			<?php echo $this->fetch('content'); ?>
 		</div>
             </div> 
+        </div>
+        <div class="navbar navbar-fixed-bottom navbar-inverse">
+            <div class="navbar-inner">    
+                <div class="navbar-text text-white">
+                    <ul id="scroller_container" class='newsticker' style="color:#EFEFEF;margin-left:10px;">
+                        <?php echo $this->element('messages_defilant'); ?>
+                    </ul>
+                </div>
+            </div>           
         </div>
     </div> 
 </body>
@@ -184,11 +200,11 @@ $(document).ready(function () {
     }  
     $(document).on('click','#togglemenu',function(e){
         $("#telecommand").toggle();
-        if($("#maxcontent").hasClass('span29')) {
-            $("#maxcontent").removeClass('span29').addClass('spanmax');
+        if($("#maxcontent").hasClass('span32')) {
+            $("#maxcontent").removeClass('span32').addClass('spanmax');
             $("#allcontainer").addClass('spanmax');
         } else {
-            $("#maxcontent").removeClass('spanmax').addClass('span29');
+            $("#maxcontent").removeClass('spanmax').addClass('span32');
             $("#allcontainer").removeClass('spanmax');
         }
     });

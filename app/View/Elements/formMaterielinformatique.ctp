@@ -2,7 +2,7 @@
     <div class="control-group">
         <label class="control-label sstitre  required" for="MaterielinformatiqueNOM">Nom : </label>
         <div class="controls">
-            <?php echo $this->Form->input('NOM',array('data-rule-required'=>'true','placeholder'=>'Nom du poste informatique','class'=>'span8','data-msg-required'=>"Le nom du poste informatique est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('NOM',array('data-rule-required'=>'true','placeholder'=>'Nom du poste informatique','data-msg-required'=>"Le nom du poste informatique est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
         </div>
     <div class="control-group">
@@ -12,7 +12,7 @@
                 <?php echo $this->Form->input('typemateriel_id',array('type'=>'hidden','value'=>$this->data['Materielinformatique']['typemateriel_id'])); ?>
                 <?php echo h($materielinformatique['Typemateriel']['NOM']); ?> 
             <?php } else { ?>
-                <?php echo $this->Form->select('typemateriel_id',$peripherique, array('data-rule-required'=>'true','empty'=>'Choisir un périphérique','class'=>'span8','data-msg-required'=>"Le nom du périphérique est obligatoire")); ?>
+                <?php echo $this->Form->select('typemateriel_id',$peripherique, array('data-rule-required'=>'true','empty'=>'Choisir un périphérique','data-msg-required'=>"Le nom du périphérique est obligatoire")); ?>
             <?php } ?>            
          </div>
         </div>
@@ -20,9 +20,9 @@
         <label class="control-label sstitre  required" for="MaterielinformatiqueSectionId">Section : </label>
         <div class="controls">
             <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->Form->select('section_id',$section, array('data-rule-required'=>'true','selected' => $this->data['Materielinformatique']['section_id'],'empty'=>'Choisir une section','class'=>'span8','data-msg-required'=>"La section est obligatoire")); ?>
+                <?php echo $this->Form->select('section_id',$section, array('data-rule-required'=>'true','selected' => $this->data['Materielinformatique']['section_id'],'empty'=>'Choisir une section','data-msg-required'=>"La section est obligatoire")); ?>
             <?php } else { ?>
-                <?php echo $this->Form->select('section_id',$section, array('data-rule-required'=>'true','empty'=>'Choisir une section','class'=>'span8','data-msg-required'=>"La section est obligatoire")); ?>
+                <?php echo $this->Form->select('section_id',$section, array('data-rule-required'=>'true','empty'=>'Choisir une section','data-msg-required'=>"La section est obligatoire")); ?>
             <?php } ?>            
          </div>
         </div>
@@ -30,9 +30,9 @@
         <label class="control-label sstitre  required" for="MaterielinformatiqueAssistanceId">Assistance : </label>
         <div class="controls">
             <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->Form->select('assistance_id',$assistance, array('data-rule-required'=>'true','selected' => $this->data['Materielinformatique']['assistance_id'],'empty'=>'Choisir une asssistance','class'=>'span8','data-msg-required'=>"L'assistance est obligatoire")); ?>
+                <?php echo $this->Form->select('assistance_id',$assistance, array('data-rule-required'=>'true','selected' => $this->data['Materielinformatique']['assistance_id'],'empty'=>'Choisir une asssistance','data-msg-required'=>"L'assistance est obligatoire")); ?>
             <?php } else { ?>
-                <?php echo $this->Form->select('assistance_id',$assistance, array('data-rule-required'=>'true','empty'=>'Choisir une assistance','class'=>'span8','data-msg-required'=>"L'assistance est obligatoire")); ?>
+                <?php echo $this->Form->select('assistance_id',$assistance, array('data-rule-required'=>'true','empty'=>'Choisir une assistance','data-msg-required'=>"L'assistance est obligatoire")); ?>
             <?php } ?>            
          </div>
         </div>

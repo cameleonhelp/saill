@@ -2,19 +2,19 @@
     <div class="control-group">
         <label class="control-label sstitre  required" for="HistorybudgetANNE">Année : </label>
         <div class="controls">
-            <?php echo $this->Form->input('ANNEE',array('type'=>'text','data-rule-required'=>'true','placeholder'=>'Année du budget','class'=>'span3','data-msg-required'=>"L'année du budget est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('ANNEE',array('type'=>'text','data-rule-required'=>'true','placeholder'=>'Année du budget','data-msg-required'=>"L'année du budget est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label sstitre  required" for="HistorybudgetPREVU">Budget initial : </label>
         <div class="controls">
-            <?php echo $this->Form->input('PREVU',array('data-rule-required'=>'true','placeholder'=>'Budget initial','class'=>'span5 budgetinit','data-msg-required'=>"Le budget initial est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>&nbsp;k€
+            <?php echo $this->Form->input('PREVU',array('data-rule-required'=>'true','placeholder'=>'Budget initial','class'=>'budgetinit','data-msg-required'=>"Le budget initial est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>&nbsp;k€
         </div>
     </div>
     <div class="control-group">
         <label class="control-label sstitre" for="HistorybudgetREVU">Budget revu : </label>
         <div class="controls">
-            <?php echo $this->Form->input('REVU',array('placeholder'=>'Budget revu = budget initial avant révision','class'=>'span5 budgetrevu','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>&nbsp;k€
+            <?php echo $this->Form->input('REVU',array('placeholder'=>'Budget revu = budget initial avant révision','class'=>'budgetrevu','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>&nbsp;k€
         </div>
     </div>
     <div class="control-group">

@@ -2,7 +2,7 @@
 <?php
 $this->set('title_for_layout','Accueil');
 ?>
-<div class="alert alert-info">
+<div class="well well-small orange_bar">
     Ce site à pour objectif de suivre les activités, livrables réalisés sur le projet.<br/><br/>
     Ce site est accessible à toutes personnes travaillant sur le projet.<br/><br/>
     Un accès à votre profil vous permettra de suivre certaines informations vous concernant.<br/>
@@ -22,6 +22,6 @@ $this->set('title_for_layout','Accueil');
 <?php echo $this->element('elementsfields'); ?>
 </div>
 </div>
-<div class='offset22 block'>
+<div class='offset22 block blue_bar'>
 <?php echo $this->element('mystats'); ?>
 </div>

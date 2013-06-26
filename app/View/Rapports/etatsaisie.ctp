@@ -25,7 +25,7 @@
     <thead>
         <tr>
         <th>Agent</th>
-        <th>Etat et jours saisis sur <?php echo $nbmaxopen; ?></th>
+        <th>Etat et jours saisis sur <?php echo $nbmaxopen; ?> (jours ouvrés du mois : <?php echo $nbopenday; ?>)</th>
         </tr>
     </thead>
     <tbody>

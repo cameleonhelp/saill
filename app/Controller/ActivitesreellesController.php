@@ -478,10 +478,11 @@ class ActivitesreellesController extends AppController {
                         if(!$loop):
                         $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation'),'default',array('class'=>'alert alert-success'));
                         endif;
-                    } 
+                    } else {
                     if(!$loop):
                     $this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation'),'default',array('class'=>'alert alert-error')); 
-                    endif;            
+                    endif;  
+                    }
                 endif;
                 if(!$loop):
                 $this->History->goBack();

@@ -1,0 +1,97 @@
+.accordionMod .accordion-group{
+    margin: 0px;
+}
+.accordionMod .accordion-heading {
+    background-color:#FFFFFF; 
+    border-radius:0; 
+    padding:0; 
+    margin:0px;
+}
+.accordionMod .accordion-heading .accordion-toggle {
+    margin:0px 0px; 
+    font-size:12px; 
+    line-height:normal; 
+    padding:5px 0px 5px 5px; 
+    position:relative; 
+    background-color: #FFF; 
+    color: #3E3D40;    
+}
+.accordionMod .accordion-heading .accordion-toggle .icon {
+    background:url("../img/glyphicons_chevron-right.png"); 
+    background-repeat: no-repeat; 
+    width:14px !important; 
+    height:14px !important;
+    border: none; 
+    box-shadow: none; 
+    -webkit-box-shadow: none;
+    margin-top: 2px;
+}
+.accordionMod .accordion-heading .accordion-toggle .iconActive {
+    background: url("../img/glyphicons_chevron-down.png"); 
+    background-repeat: no-repeat; 
+    width:14px !important; 
+    height:14px !important;     
+}
+.accordionMod .accordion-heading .current {
+    background-color:#FFF !important; 
+}
+.accordionMod .accordion-heading .current:after {
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: 5px;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-top: 8px solid #FFF;
+    z-index:750;
+}
+.accordionMod .accordio>-heading .current:before {
+    content: '';
+    position: absolute;
+    top: 26px;
+    left: 5px;
+    width: 0;
+    height: 0;
+    border: 10px solid #343434;
+    border-top: 8px solid #343434;
+-moz-box-shadow: 0px 3px 4px 0px #343434;
+-webkit-box-shadow: 0px 3px 4px 0px #343434;
+-o-box-shadow: 0px 3px 4px 0px #343434;
+box-shadow: 0px 3px 4px 0px #343434;
+filter:progid:DXImageTransform.Microsoft.Shadow(color=#343434, Direction=180, Strength=4);      
+}
+.accordionMod .accordion-inner {
+    background-color:#4D4F53; 
+    padding-left:10px; 
+    border-top:0; 
+    margin:0px;
+-moz-box-shadow: inset 0px 3px 4px 0px #343434;
+-webkit-box-shadow: inset 0px 3px 4px 0px #343434;
+-o-box-shadow: inset 0px 3px 4px 0px #343434;
+box-shadow: inset 0px 3px 4px 0px #343434;
+filter:progid:DXImageTransform.Microsoft.Shadow(color=#343434, Direction=180, Strength=4);    
+}
+.menu1{display: block; position: static; margin-bottom: 15px;width:167px; }
+.accordionMod .accordion-inner ul {margin:0px; padding:0px; list-style: none;}
+.accordionMod .accordion-inner > ul > li {margin-top:5px;margin-bottom:5px;}
+.accordionMod .accordion-inner > ul > li.divider {border:#747678     inset 1px;}
+.accordionMod .accordion-inner > ul > li > a {text-decoration: none; color: #B2B4B3;}
+.accordionMod .accordion-inner > ul > li > a:hover:after {color: #E0E1DD; content:"   \25BA";}
+.accordionMod .accordion-inner > ul > li > a:hover {color: #E0E1DD;}
+.accordionMod .accordion-inner > ul > li.active > a,.accordionMod .accordion-inner > ul > li.active > a:after {
+	color:#FFF; 
+	text-decoration: underline;
+	content:"   \25BA";}
+.left_active_bar{
+    border-left: #00BBCE solid 5px;
+    margin-left:-10px;
+    padding-left:5px;
+}
+
+.left_active_head{
+    border-top: #00BBCE solid 2px;
+    margin-top:0px;
+    margin-left:-10px;
+    padding-left:1px;
+}

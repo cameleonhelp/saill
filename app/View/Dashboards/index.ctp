@@ -76,9 +76,16 @@
                 <td style="text-align: right;" class="contratcharge1"><?php echo $result['CONTRAT']['CHARGE']; ?></td>  
                 <td style="text-align: right;" class="facturebudget1"><?php echo $result[0]['BUDGETFACTURE']; ?></td>
                 <td style="text-align: right;" class="facturecharge1"><?php echo $result['FACTURATION']['CHARGEFACTUREE']; ?></td> 
-                <td style="text-align: right;" class="avancebudget1"><?php echo $result[0]['AVANCEMENTBUDGET']; ?></td>
-                <td style="text-align: right;" class="avancecharge1"><?php echo $result[0]['AVANCEMENTCHARGE']; ?></td>       
-                <td style="text-align: right;" class="raf1"><?php echo $result[0]['RAF']; ?></td>   
+                <td style="text-align: right;" class="avancebudget1">
+                    <?php $styleB = styleBarreInd(h($result[0]['AVANCEMENTBUDGET'])); ?>
+                    <div class="progress progress-<?php echo $styleB; ?>" style="margin-bottom:-10px;width:100%;float: left;">
+                    <div class="bar" style="width:<?php echo h($result[0]['AVANCEMENTBUDGET']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%"><?php echo $result[0]['AVANCEMENTCHARGE'] > 0 ? $result[0]['AVANCEMENTCHARGE']."%" : ''; ?></div></div>
+                </td>
+                <td style="text-align: right;" class="avancecharge1">
+                    <?php $styleC = styleBarreInd(h($result[0]['AVANCEMENTCHARGE'])); ?>
+                    <div class="progress progress-<?php echo $styleC; ?>" style="margin-bottom:-10px;width:100%;float: left;">
+                    <div class="bar" style="width:<?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%"><?php echo $result[0]['AVANCEMENTCHARGE'] > 0 ? $result[0]['AVANCEMENTCHARGE']."%" : ''; ?></div></div>       
+                <td style="text-align: right;" class="raf"><?php echo $result[0]['RAF']<0 ? 0 : $result[0]['RAF']; ?></td>    
             </tr>           
             <?php endforeach; ?>
         </tbody>
@@ -139,7 +146,7 @@
                 <td style="text-align: right;" class="facturebudget"><?php echo $result[0]['BUDGETFACTURE']; ?></td>
                 <td style="text-align: right;" class="facturecharge"><?php echo $result['FACTURATION']['CHARGEFACTUREE']; ?></td> 
                 <td style="text-align: right;" class="avancebudget"><?php echo $result[0]['AVANCEMENTBUDGET']; ?></td>
-                <td style="text-align: right;" class="avancecharge"><?php echo $result[0]['AVANCEMENTCHARGE']; ?></td>     
+                <td style="text-align: right;" class="avancecharge"><?php echo $result[0]['AVANCEMENTCHARGE']; ?></td>    
                 <td style="text-align: center;" class="ecart"><?php echo $result[0]['ECART']; ?></td>   
                 <td style="text-align: right;" class="rac"><?php echo $result[0]['RAC']; ?></td>   
                 <td style="text-align: right;" class="raf"><?php echo $result[0]['RAF']; ?></td>   
@@ -194,9 +201,16 @@
                 <td style="text-align: right;" class="contratchargeID"><?php echo $result['CONTRAT']['CHARGE']; ?></td>               
                 <td style="text-align: right;" class="facturebudgetID"><?php echo $result[0]['BUDGETFACTURE']; ?></td>
                 <td style="text-align: right;" class="facturechargeID"><?php echo $result['FACTURATION']['CHARGEFACTUREE']; ?></td> 
-                <td style="text-align: right;" class="avancebudgetID"><?php echo $result[0]['AVANCEMENTBUDGET']; ?></td>
-                <td style="text-align: right;" class="avancechargeID"><?php echo $result[0]['AVANCEMENTCHARGE']; ?></td>      
-                <td style="text-align: right;" class="rafID"><?php echo $result[0]['RAF']; ?></td>   
+                                <td style="text-align: right;" class="avancebudgetID">
+                    <?php $styleB = styleBarreInd(h($result[0]['AVANCEMENTBUDGET'])); ?>
+                    <div class="progress progress-<?php echo $styleB; ?>" style="margin-bottom:-10px;width:100%;float: left;">
+                    <div class="bar" style="width:<?php echo h($result[0]['AVANCEMENTBUDGET']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%"><?php echo $result[0]['AVANCEMENTCHARGE'] > 0 ? $result[0]['AVANCEMENTCHARGE']."%" : ''; ?></div></div>
+                </td>
+                <td style="text-align: right;" class="avancechargeID">
+                    <?php $styleC = styleBarreInd(h($result[0]['AVANCEMENTCHARGE'])); ?>
+                    <div class="progress progress-<?php echo $styleC; ?>" style="margin-bottom:-10px;width:100%;float: left;">
+                    <div class="bar" style="width:<?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%"><?php echo $result[0]['AVANCEMENTCHARGE'] > 0 ? $result[0]['AVANCEMENTCHARGE']."%" : ''; ?></div></div>       
+                <td style="text-align: right;" class="rafID"><?php echo $result[0]['RAF']<0 ? 0 : $result[0]['RAF']; ?></td>   
             </tr>           
             <?php endforeach; ?>
         </tbody>

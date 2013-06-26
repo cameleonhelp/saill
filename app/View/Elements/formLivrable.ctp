@@ -22,19 +22,19 @@
     <div class="control-group">
         <label class="control-label sstitre  required" for="LivrableNOM">Nom du livrable: </label>
         <div class="controls">
-            <?php echo $this->Form->input('NOM',array('data-rule-required'=>'true','placeholder'=>'Nom de livrable','class'=>'span10','data-msg-required'=>'Le nom de livrable est obligatoire','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('NOM',array('data-rule-required'=>'true','placeholder'=>'Nom de livrable','data-msg-required'=>'Le nom de livrable est obligatoire','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label sstitre" for="LivrableREFERENCE">Référence MINIDOC  : </label>
         <div class="controls">
-            <?php echo $this->Form->input('REFERENCE',array('placeholder'=>'Référence MINIDOC','class'=>'span6','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('REFERENCE',array('placeholder'=>'Référence MINIDOC','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label sstitre" for="LivrableVERSION">Version  : </label>
         <div class="controls">
-            <?php echo $this->Form->input('VERSION',array('placeholder'=>'Version','class'=>'span6','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('VERSION',array('placeholder'=>'Version','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
     </div>
     <div class="control-group">
@@ -42,7 +42,7 @@
         <div class="controls">
             <div class="input-append date" data-date="<?php echo empty($this->data['Livrable']['ECHEANCE']) ? date('d/m/Y') : $this->data['Livrable']['ECHEANCE']; ?>" data-date-format="dd/mm/yyyy">
             <?php $today = date('d/m/Y'); ?>
-            <?php echo $this->Form->input('ECHEANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>'La date d\'échéance est obligatoire','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('ECHEANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>'La date d\'échéance est obligatoire','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
             <span class="add-on"><i class="glyphicon_calendar"></i></span>
             </div>
@@ -53,7 +53,7 @@
         <div class="controls">
             <div class="input-append date" data-date="<?php echo empty($this->data['Livrable']['DATELIVRAISON']) ? date('d/m/Y') : $this->data['Livrable']['DATELIVRAISON']; ?>" data-date-format="dd/mm/yyyy">
             <?php $today = date('d/m/Y'); ?>
-            <?php echo $this->Form->input('DATELIVRAISON',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('DATELIVRAISON',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
             <span class="add-on"><i class="glyphicon_calendar"></i></span>
             </div>
@@ -64,7 +64,7 @@
         <div class="controls">
             <div class="input-append date" data-date="<?php echo empty($this->data['Livrable']['DATEVALIDATION']) ? date('d/m/Y') : $this->data['Livrable']['DATEVALIDATION']; ?>" data-date-format="dd/mm/yyyy">
             <?php $today = date('d/m/Y'); ?>
-            <?php echo $this->Form->input('DATEVALIDATION',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('DATEVALIDATION',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
             <span class="add-on"><i class="glyphicon_calendar"></i></span>
             </div>

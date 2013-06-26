@@ -17,13 +17,13 @@
                     <div class="control-group">
                         <label class="control-label sstitre  required" for="UtilisateurlNOM">Nom : </label>
                         <div class="controls">
-                            <?php echo $this->Form->input('NOM',array('data-rule-required'=>'true','placeholder'=>'Nom de l\'utilisateur','class'=>'span8','data-msg-required'=>'Le nom de l\'utilisateur est obligatoire dans l\'onglet identité','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                            <?php echo $this->Form->input('NOM',array('data-rule-required'=>'true','placeholder'=>'Nom de l\'utilisateur','data-msg-required'=>'Le nom de l\'utilisateur est obligatoire dans l\'onglet identité','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label sstitre  required" for="UtilisateurlPRENOM">Prénom : </label>
                         <div class="controls">
-                            <?php echo $this->Form->input('PRENOM',array('data-rule-required'=>'true','placeholder'=>'Prénom de l\'utilisateur','class'=>'span8','data-msg-required'=>'Le prénom de l\'utilisateur est obligatoire dans l\'onglet identité','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                            <?php echo $this->Form->input('PRENOM',array('data-rule-required'=>'true','placeholder'=>'Prénom de l\'utilisateur','data-msg-required'=>'Le prénom de l\'utilisateur est obligatoire dans l\'onglet identité','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                         </div>
                     </div>
                     <div class="control-group">
@@ -31,7 +31,7 @@
                         <div class="controls">
                             <div class="input-append date" data-date="<?php echo empty($this->data['Utilisateur']['NAISSANCE']) ? date('d/m/Y') : $this->data['Utilisateur']['NAISSANCE']; ?>" data-date-format="dd/mm/yyyy">
                             <?php $today = date('d/m/Y'); ?>
-                            <?php echo $this->Form->input('NAISSANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>'La date de naissance de l\'utilisateur est obligatoire dans l\'onglet identité','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                            <?php echo $this->Form->input('NAISSANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>'La date de naissance de l\'utilisateur est obligatoire dans l\'onglet identité','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
                             <span class="add-on"><i class="glyphicon_calendar"></i></span>
                             </div>
@@ -116,7 +116,7 @@
                         <div class="controls">
                             <div class="input-append date" data-date="<?php echo empty($this->data['Utilisateur']['FINMISSION']) ? date('d/m/Y') : $this->data['Utilisateur']['FINMISSION']; ?>" data-date-format="dd/mm/yyyy">
                             <?php $today = date('d/m/Y'); ?>
-                            <?php echo $this->Form->input('FINMISSION',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                            <?php echo $this->Form->input('FINMISSION',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
                             <button class="btninput datedefault" type="button" id="default" name="default" rel="tooltip" title="Date par défaut :<br/><?php echo "05/01/".(date('Y')+1); ?>"><i class="icon-flag"></i></button>
                             <span class="add-on"><i class="glyphicon_calendar"></i></span>
@@ -234,7 +234,7 @@
                         <div class="controls">
                             <div class="input-append date" data-date="<?php echo empty($this->data['Utilisateur']['DATEDEBUTACTIF']) ? date('d/m/Y') : $this->data['Utilisateur']['DATEDEBUTACTIF']; ?>" data-date-format="dd/mm/yyyy">
                             <?php $today = date('d/m/Y'); ?>
-                            <?php echo $this->Form->input('DATEDEBUTACTIF',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                            <?php echo $this->Form->input('DATEDEBUTACTIF',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
                             <span class="add-on"><i class="glyphicon_calendar"></i></span>
                             </div>

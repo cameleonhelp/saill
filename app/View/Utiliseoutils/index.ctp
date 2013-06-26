@@ -15,6 +15,7 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','complet',$pass1,$pass2)); ?></li>
                      <li><?php echo $this->Html->link('Tous sans retour utilisateur', array('action' => 'index','tous',$pass1,$pass2)); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($etats as $etat): ?>
@@ -28,7 +29,7 @@
                      <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,'tous',$pass2)); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($utilisateurs as $utilisateur): ?>
-                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => 'index',$pass0,$utilisateur['Utilisateur']['id'],$pass2)); ?></li>
+                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'], array('action' => 'index',$pass0,$utilisateur['Utilisateur']['id'],$pass2)); ?></li>
                          <?php endforeach; ?>
                       </ul>
                 </li> 
@@ -36,19 +37,25 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Outils <b class="caret"></b></a>
                      <ul class="dropdown-menu">
                      <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,$pass1,'tous')); ?></li>
+                     <?php if(count($outils) > 0) : ?>
                      <li class="divider"></li>
                          <?php foreach ($outils as $outil): ?>
                             <li><?php echo $this->Html->link($outil['Outil']['NOM'], array('action' => 'index',$pass0,$pass1,'O_'.$outil['Outil']['id'])); ?></li>
                          <?php endforeach; ?>
-                      <li class="divider"></li>
+                     <?php endif; ?>
+                     <?php if(count($listes) > 0) : ?>
+                     <li class="divider"></li>
                          <?php foreach ($listes as $liste): ?>
                             <li><?php echo $this->Html->link($liste['Listediffusion']['NOM'], array('action' => 'index',$pass0,$pass1,'L_'.$liste['Listediffusion']['id'])); ?></li>
                          <?php endforeach; ?>
-                      <li class="divider"></li>
+                     <?php endif; ?>
+                     <?php if(count($partages) > 0) : ?>                            
+                     <li class="divider"></li>
                          <?php foreach ($partages as $partage): ?>
                             <li><?php echo $this->Html->link($partage['Dossierpartage']['NOM'], array('action' => 'index',$pass0,$pass1,'P_'.$partage['Dossierpartage']['id'])); ?></li>
-                         <?php endforeach; ?>                            
-                      </ul>
+                         <?php endforeach; ?> 
+                     <?php endif; ?>
+                     </ul>
                  </li>                 
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'update')) : ?>
                 <li class="divider-vertical-only"></li>
@@ -61,7 +68,7 @@
                 <?php endif; ?>
                 </ul> 
                 <?php echo $this->Form->create("Utiliseoutil",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
-                    <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
+                    <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche dans tous les champs')); ?>
                     <button type="submit" class="btn">Rechercher</button>
                 <?php echo $this->Form->end(); ?>                     
                 </div>
@@ -95,7 +102,18 @@
                 <td><?php echo h($utiliseoutil['Dossierpartage']['NOM']); ?>&nbsp;</td>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'update')) : ?>
                 <td style="text-align:center;padding-left:5px;padding-right:5px;vertical-align: middle;"><?php echo $this->Form->input('id',array('type'=>'checkbox','label'=>false,'class'=>'idselect','value'=>$utiliseoutil['Utiliseoutil']['id'])) ; ?></td>                
-                <td style='text-align:center;'><?php echo $this->Html->link('<i class="changeetat '.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'" idaction="'.$utiliseoutil['Utiliseoutil']['id'].'"></i>', '#', array('escape' => false,'idaction'=>$utiliseoutil['Utiliseoutil']['id'])); ?></td>
+                <td style='text-align:center;'><?php echo $this->Html->link('<i class="changeetat '.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'" idaction="'.$utiliseoutil['Utiliseoutil']['id'].'"></i>', '#', array('escape' => false,'idaction'=>$utiliseoutil['Utiliseoutil']['id'])); ?>
+                <?php 
+                $d = explode('/',$utiliseoutil['Utiliseoutil']['modified']);
+                $ndate = new DateTime($d[2].'-'.$d[1].'-'.$d[0]);
+                $ndate->add(new DateInterval('P7D'));
+                $datelimite = $ndate->format('d/m/Y'); 
+                ?>
+                <?php $etatValid = array('Demande traitée','Retour utilisateur',"A supprimer",'Supprimée'); ?>
+                <?php if (!in_array($utiliseoutil['Utiliseoutil']['STATUT'],$etatValid) && utiliseoutilEnretard($utiliseoutil['Utiliseoutil']['modified'])) : ?>
+                    <a href="<?php echo $this->Html->url(array('controller'=>'utiliseoutils','action'=>'sendmailrelance',$utiliseoutil['Utiliseoutil']['id'])); ?>"><span class="pull-right" style="margin-left:-14px;" rel="tooltip" data-title="Envoyer un mail de relance<br>Limite atteinte le <?php echo $datelimite; ?>"><i class="icon-envelope"></i></span></a>
+                <?php endif; ?>
+                </td>
                 <td style="text-align: center;"><?php echo h($utiliseoutil['Utiliseoutil']['modified']); ?>&nbsp;</td>
                 <?php else : ?>
                 <td style='text-align:center;'><?php echo '<i class="'.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'"></i>'; ?></td>                

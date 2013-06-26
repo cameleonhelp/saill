@@ -75,30 +75,30 @@
         </td>
         <?php if ($this->params->action == 'add') $lu_value = $activitesreelle['Activitesreelle']['LU']; ?>
         <?php if ($this->params->action == 'edit') $lu_value = $activitesreelle['Facturation']['LU']; ?>
-        <td <?php echo $classLU; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.LU',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du lundi",'value'=>$lu_value)); ?> j</td>
+        <td <?php echo $classLU; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.LU',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du lundi",'value'=>$lu_value)); ?> j</td>
         <?php if ($this->params->action == 'add') $ma_value = $activitesreelle['Activitesreelle']['MA']; ?>
         <?php if ($this->params->action == 'edit') $ma_value = $activitesreelle['Facturation']['MA']; ?>
-        <td <?php echo $classMA; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.MA',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mardi",'value'=>$ma_value)); ?> j</td>
+        <td <?php echo $classMA; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.MA',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mardi",'value'=>$ma_value)); ?> j</td>
         <?php if ($this->params->action == 'add') $me_value = $activitesreelle['Activitesreelle']['ME']; ?>
         <?php if ($this->params->action == 'edit') $me_value = $activitesreelle['Facturation']['ME']; ?>
-        <td <?php echo $classME; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.ME',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mercredi",'value'=>$me_value)); ?> j</td>
+        <td <?php echo $classME; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.ME',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mercredi",'value'=>$me_value)); ?> j</td>
         <?php if ($this->params->action == 'add') $je_value = $activitesreelle['Activitesreelle']['JE']; ?>
         <?php if ($this->params->action == 'edit') $je_value = $activitesreelle['Facturation']['JE']; ?>
-        <td <?php echo $classJE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.JE',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du du jeudi",'value'=>$je_value)); ?> j</td>
+        <td <?php echo $classJE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.JE',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du du jeudi",'value'=>$je_value)); ?> j</td>
         <?php if ($this->params->action == 'add') $ve_value = $activitesreelle['Activitesreelle']['VE']; ?>
         <?php if ($this->params->action == 'edit') $ve_value = $activitesreelle['Facturation']['VE']; ?>
-        <td <?php echo $classVE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.VE',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du vendredi",'value'=>$ve_value)); ?> j</td>
+        <td <?php echo $classVE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.VE',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du vendredi",'value'=>$ve_value)); ?> j</td>
         <?php if ($this->params->action == 'add') $sa_value = $activitesreelle['Activitesreelle']['SA']; ?>
         <?php if ($this->params->action == 'edit') $sa_value = $activitesreelle['Facturation']['SA']; ?>
-        <td class='week <?php echo $classSA; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.SA',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du samedi",'value'=>$sa_value)); ?> j</td>
+        <td class='week <?php echo $classSA; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.SA',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du samedi",'value'=>$sa_value)); ?> j</td>
         <?php if ($this->params->action == 'add') $di_value = $activitesreelle['Activitesreelle']['DI']; ?>
         <?php if ($this->params->action == 'edit') $di_value = $activitesreelle['Facturation']['DI']; ?>
-        <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.DI',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>$di_value)); ?> j</td>
+        <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.'.$i.'.DI',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>$di_value)); ?> j</td>
         <?php if ($this->params->action == 'add') $total_value = $activitesreelle['Activitesreelle']['TOTAL']; ?>
         <?php if ($this->params->action == 'edit') $total_value = $activitesreelle['Facturation']['TOTAL']; ?>
         <td width='15px' style="text-align: center;">
         <?php echo $this->Form->input('Facturation.'.$i.'.TOTAL',array('type'=>'hidden','value'=>$total_value)); ?>
-        <?php echo $this->Form->input('Facturation.'.$i.'.TotalDisabled',array('class'=>'span2 text-right','value'=>$total_value,'disabled'=>'disabled')); ?> j</td> 
+        <?php echo $this->Form->input('Facturation.'.$i.'.TotalDisabled',array('style'=>"width:35px",'class'=>'text-right','value'=>$total_value,'disabled'=>'disabled')); ?> j</td> 
         <td style="display:none;">
         <?php if ($this->params->action == 'add') echo $this->Form->input('Facturation.'.$i.'.DATE',array('type'=>'hidden','value'=>isset($activitesreelle['Activitesreelle']['DATE']) ? $activitesreelle['Activitesreelle']['DATE'] : date('d/m/Y'))); ?>
         <?php if ($this->params->action == 'edit') echo $this->Form->input('Facturation.'.$i.'.DATE',array('type'=>'hidden','value'=>isset($activitesreelle['Facturation']['DATE']) ? $activitesreelle['Facturation']['DATE'] : date('d/m/Y'))); ?>    
@@ -130,16 +130,16 @@
                 <?php endforeach; ?>
             </select> <i class="icon-trash cursor" id="deleteRow"></i>
         </td>
-        <td <?php echo $classLU; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.LU',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du lundi",'value'=>"0.0")); ?> j</td>
-        <td <?php echo $classMA; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.MA',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mardi",'value'=>"0.0")); ?> j</td>
-        <td <?php echo $classME; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.ME',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mercredi",'value'=>"0.0")); ?> j</td>
-        <td <?php echo $classJE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.JE',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du du jeudi",'value'=>"0.0")); ?> j</td>
-        <td <?php echo $classVE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.VE',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du vendredi",'value'=>"0.0")); ?> j</td>
-        <td class='week <?php echo $classSA; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.SA',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du samedi",'value'=>"0.0")); ?> j</td>
-        <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.DI',array('class'=>'span2 text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>"0.0")); ?> j</td>
+        <td <?php echo $classLU; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.LU',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du lundi",'value'=>"0.0")); ?> j</td>
+        <td <?php echo $classMA; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.MA',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mardi",'value'=>"0.0")); ?> j</td>
+        <td <?php echo $classME; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.ME',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mercredi",'value'=>"0.0")); ?> j</td>
+        <td <?php echo $classJE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.JE',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du du jeudi",'value'=>"0.0")); ?> j</td>
+        <td <?php echo $classVE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.VE',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du vendredi",'value'=>"0.0")); ?> j</td>
+        <td class='week <?php echo $classSA; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.SA',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du samedi",'value'=>"0.0")); ?> j</td>
+        <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.DI',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>"0.0")); ?> j</td>
         <td width='15px' style="text-align: center;">
         <?php echo $this->Form->input('Facturation.¤.TOTAL',array('type'=>'hidden','value'=>"0.0")); ?>
-        <?php echo $this->Form->input('Facturation.¤.TotalDisabled',array('class'=>'span2 text-right','value'=>"0.0",'disabled'=>'disabled')); ?> j</td> 
+        <?php echo $this->Form->input('Facturation.¤.TotalDisabled',array('style'=>"width:35px",'class'=>'text-right','value'=>"0.0",'disabled'=>'disabled')); ?> j</td> 
         <td style="display:none;">
         <?php if ($this->params->action == 'add') echo $this->Form->input('Facturation.¤.DATE',array('type'=>'hidden','value'=>isset($activitesreelle['Activitesreelle']['DATE']) ? $activitesreelle['Activitesreelle']['DATE'] : date('d/m/Y'))); ?>
         <?php if ($this->params->action == 'edit') echo $this->Form->input('Facturation.¤.DATE',array('type'=>'hidden','value'=>isset($activitesreelle['Facturation']['DATE']) ? $activitesreelle['Facturation']['DATE'] : date('d/m/Y'))); ?>           
@@ -162,7 +162,7 @@
         <td><label class="control-label sstitre" for="FacturationVersion">Version : </label></td>
         <?php $valVersion = $this->params->action == 'add' ? !isset($activitesreelles[0]['Activitesreelle']['VERSION']) ? 0 : $activitesreelles[0]['Activitesreelle']['VERSION'] + 1 : '0'; ?>         
         <?php $valVersion = $this->params->action == 'edit' ? !isset($activitesreelles[0]['Facturation']['VERSION']) ? 0 : $activitesreelles[0]['Facturation']['VERSION'] + 1 : $valVersion; ?>
-        <td><?php echo $this->Form->input('VERSION',array('placeholder'=>'Version','class'=>'span2','value'=>$valVersion)); ?></td>
+        <td><?php echo $this->Form->input('VERSION',array('placeholder'=>'Version','style'=>'width:45px;','value'=>$valVersion)); ?></td>
         <td><label class="control-label sstitre inline" for="FacturationNUMEROFTGALILEI">N° feuille de temps GALILEI : </label></td>
         <?php $valFTGAL = $this->params->action == 'add' ? !isset($activitesreelles[0]['Activitesreelle']['NUMEROFTGALILEI']) ? '' : $activitesreelles[0]['Activitesreelle']['NUMEROFTGALILEI']: ''; ?>         
         <?php $valFTGAL = $this->params->action == 'edit' ? !isset($activitesreelles[0]['Facturation']['NUMEROFTGALILEI']) ? '' : $activitesreelles[0]['Facturation']['NUMEROFTGALILEI']: $valFTGAL; ?>        

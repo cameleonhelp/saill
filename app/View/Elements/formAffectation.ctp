@@ -19,7 +19,7 @@
         <label class="control-label sstitre" for="AffectationREPARTITION">Clé de répartition : </label>
     </td>
     <td>
-                <?php echo $this->Form->input('REPARTITION', array('class'=>'span2')); ?> %        
+                <?php echo $this->Form->input('REPARTITION'); ?> %        
     </td>
     </tr>
 </table>        

@@ -12,7 +12,7 @@
                 $filtre_indisponible = isset($this->params->pass[3]) ? $this->params->pass[3] : 0;
                 $filtre_annee = isset($this->params->pass[4]) ? $this->params->pass[4] : date('Y');
                 ?>
-                <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'add')) : ?>
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'add') && $this->params->action=='afacturer') : ?>
                 <li><?php echo $this->Html->link('<i class="icon-plus" rel="tooltip" data-title="Ajoutez une nouvelle facturation"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
@@ -76,7 +76,7 @@
                 </ul> 
                 <!--    
                 <?php echo $this->Form->create("Facturation",array('controller'=>'facturations','action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
-                    <?php echo $this->Form->input('SEARCH',array('class'=>'span8','placeholder'=>'Recherche dans tous les champs')); ?>
+                    <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche dans tous les champs')); ?>
                     <button type="submit" class="btn">Rechercher</button>
                 <?php echo $this->Form->end(); ?>     
                 //-->

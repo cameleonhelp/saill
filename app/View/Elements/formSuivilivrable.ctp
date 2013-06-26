@@ -4,7 +4,7 @@
         <div class="controls">
             <div class="input-append date" data-date="<?php echo empty($this->data['Suivilivrable']['ECHEANCE']) ? date('d/m/Y') : $this->data['Suivilivrable']['ECHEANCE']; ?>" data-date-format="dd/mm/yyyy">
             <?php $today = date('d/m/Y'); ?>
-            <?php echo $this->Form->input('ECHEANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('ECHEANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
             <span class="add-on"><i class="glyphicon_calendar"></i></span>
             </div>
@@ -15,7 +15,7 @@
         <div class="controls">
             <div class="input-append date" data-date="<?php echo empty($this->data['Suivilivrable']['DATELIVRAISON']) ? date('d/m/Y') : $this->data['Suivilivrable']['DATELIVRAISON']; ?>" data-date-format="dd/mm/yyyy">
             <?php $today = date('d/m/Y'); ?>
-            <?php echo $this->Form->input('DATELIVRAISON',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('DATELIVRAISON',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
             <span class="add-on"><i class="glyphicon_calendar"></i></span>
             </div>
@@ -26,7 +26,7 @@
         <div class="controls">
             <div class="input-append date" data-date="<?php echo empty($this->data['Suivilivrable']['DATEVALIDATION']) ? date('d/m/Y') : $this->data['Suivilivrable']['DATEVALIDATION']; ?>" data-date-format="dd/mm/yyyy">
             <?php $today = date('d/m/Y'); ?>
-            <?php echo $this->Form->input('DATEVALIDATION',array('type'=>'text','placeholder'=>'ex.: '.$today,'class'=>"span5","readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+            <?php echo $this->Form->input('DATEVALIDATION',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true',"required"=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
             <span class="add-on"><i class="glyphicon_calendar"></i></span>
             </div>
