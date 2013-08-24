@@ -307,11 +307,11 @@ class AuthComponent extends Component {
 		if ($loginAction != $url && in_array($action, array_map('strtolower', $this->allowedActions))) {
 			return true;
 		}
-
 		if ($loginAction == $url) {
 			if (empty($request->data)) {
 				if (!$this->Session->check('Auth.redirect') && env('HTTP_REFERER')) {
-					$this->Session->write('Auth.redirect', $controller->referer(null, true));
+					$referer = $request->referer(true);
+					$this->Session->write('Auth.redirect', $referer);
 				}
 			}
 			return true;
@@ -320,7 +320,7 @@ class AuthComponent extends Component {
 		if (!$this->_getUser()) {
 			if (!$request->is('ajax')) {
 				$this->flash($this->authError);
-				$this->Session->write('Auth.redirect', $request->here());
+				$this->Session->write('Auth.redirect', $request->here(false));
 				$controller->redirect($loginAction);
 				return false;
 			}
@@ -643,7 +643,7 @@ class AuthComponent extends Component {
 	}
 
 /**
- * Get the URL a use should be redirected to upon login.
+ * Get the URL a user should be redirected to upon login.
  *
  * Pass an URL in to set the destination a user should be redirected to upon
  * logging in.
@@ -651,8 +651,8 @@ class AuthComponent extends Component {
  * If no parameter is passed, gets the authentication redirect URL. The URL
  * returned is as per following rules:
  *
- *  - Returns the session Auth.redirect value if it is present and for the same
- *    domain the current app is running on.
+ *  - Returns the normalized URL from session Auth.redirect value if it is
+ *    present and for the same domain the current app is running on.
  *  - If there is no session value and there is a $loginRedirect, the $loginRedirect
  *    value is returned.
  *  - If there is no session and no $loginRedirect, / is returned.
@@ -676,7 +676,10 @@ class AuthComponent extends Component {
 		} else {
 			$redir = '/';
 		}
-		return Router::normalize($redir);
+		if (is_array($redir)) {
+			return Router::url($redir);
+		}
+		return $redir;
 	}
 
 /**

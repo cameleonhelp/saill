@@ -11,9 +11,16 @@
 /*jshint scripturl:true */
 
 /**
+ * Include the base event class documentation.
+ *
+ * @include ../../../tools/docs/tinymce.Event.js
+ */
+
+/**
  * This class contains the core logic for a TinyMCE editor.
  *
  * @class tinymce.Editor
+ * @mixes tinymce.util.Observable
  * @example
  * // Add a class to all paragraphs in the editor.
  * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select('p'), 'someclass');
@@ -70,7 +77,7 @@ define("tinymce/Editor", [
 	var isGecko = Env.gecko, isIE = Env.ie, isOpera = Env.opera;
 
 	function getEventTarget(editor, eventName) {
-		if (eventName == 'selectionchange') {
+		if (eventName == 'selectionchange' || eventName == 'drop') {
 			return editor.getDoc();
 		}
 
@@ -379,7 +386,7 @@ define("tinymce/Editor", [
 			function loadScripts() {
 				var scriptLoader = ScriptLoader.ScriptLoader;
 
-				if (settings.language) {
+				if (settings.language && settings.language != 'en') {
 					settings.language_url = self.editorManager.baseURL + '/langs/' + settings.language + '.js';
 				}
 
@@ -873,7 +880,8 @@ define("tinymce/Editor", [
 			self.fire('PreInit');
 
 			if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
-				doc.body.spellcheck = false;
+				doc.body.spellcheck = false; // Gecko
+				DOM.setAttrib(body, "spellcheck", "false");
 			}
 
 			self.fire('PostRender');
@@ -992,7 +1000,12 @@ define("tinymce/Editor", [
 
 				// Focus the window iframe
 				if (!contentEditable) {
-					self.getBody().focus(); // WebKit needs this call to fire focusin event properly see #5948
+					// WebKit needs this call to fire focusin event properly see #5948
+					// But Opera pre Blink engine will produce an empty selection so skip Opera
+					if (!Env.opera) {
+						self.getBody().focus();
+					}
+
 					self.getWin().focus();
 				}
 
@@ -1184,20 +1197,18 @@ define("tinymce/Editor", [
 		 * @param {String} name Button name to add.
 		 * @param {Object} settings Settings object with title, cmd etc.
 		 * @example
-		 * // Adds a custom button to the editor and when a user clicks the button it will open
-		 * // an alert box with the selected contents as plain text.
+		 * // Adds a custom button to the editor that inserts contents when clicked
 		 * tinymce.init({
 		 *    ...
 		 *
-		 *    theme_advanced_buttons1: 'example,..'
+		 *    toolbar: 'example'
 		 *
 		 *    setup: function(ed) {
-		 *       // Register example button
 		 *       ed.addButton('example', {
-		 *          title: 'example.desc',
+		 *          title: 'My title',
 		 *          image: '../js/tinymce/plugins/example/img/example.gif',
 		 *          onclick: function() {
-		 *             ed.windowManager.alert('Hello world!! Selection: ' + ed.selection.getContent({format: 'text'}));
+		 *             ed.insertContent('Hello world!!');
 		 *          }
 		 *       });
 		 *    }
@@ -1212,12 +1223,38 @@ define("tinymce/Editor", [
 				};
 			}
 
+			if (!settings.text && !settings.icon) {
+				settings.icon = name;
+			}
+
 			self.buttons = self.buttons || {};
 			settings.tooltip = settings.tooltip || settings.title;
-			settings.icon = settings.icon || (settings.icon !== false ? name : false);
 			self.buttons[name] = settings;
 		},
 
+		/**
+		 * Adds a menu item to be used in the menus of the modern theme.
+		 *
+		 * @method addMenuItem
+		 * @param {String} name Menu item name to add.
+		 * @param {Object} settings Settings object with title, cmd etc.
+		 * @example
+		 * // Adds a custom menu item to the editor that inserts contents when clicked
+		 * // The context option allows you to add the menu item to an existing default menu
+		 * tinymce.init({
+		 *    ...
+		 *
+		 *    setup: function(ed) {
+		 *       ed.addMenuItem('example', {
+		 *          title: 'My menu item',
+		 *          context: 'tools',
+		 *          onclick: function() {
+		 *             ed.insertContent('Hello world!!');
+		 *          }
+		 *       });
+		 *    }
+		 * });
+		 */
 		addMenuItem: function(name, settings) {
 			var self = this;
 

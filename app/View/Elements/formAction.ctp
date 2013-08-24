@@ -62,8 +62,8 @@
             <td>
                 <div class="input-prepend date" data-date="<?php echo empty($this->data['Action']['ECHEANCE']) ? date('d/m/Y') : $this->data['Action']['ECHEANCE']; ?>" data-date-format="dd/mm/yyyy">
                 <?php $today = date('d/m/Y'); ?>
-                <span class="add-on"><i class="glyphicon_calendar"></i></span>
-                <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>                
+                <span class="add-on"><span class="glyphicons calendar"></span></span>
+                <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><span class="glyphicons circle_remove grey"></span></button>                
                 <?php echo $this->Form->input('ECHEANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 </div>                
             </td>            
@@ -95,8 +95,8 @@
             <div class="input-append date" data-date="<?php echo empty($this->data['Action']['DEBUT']) ? date('d/m/Y') : $this->data['Action']['DEBUT']; ?>" data-date-format="dd/mm/yyyy">
                 <?php $today = date('d/m/Y'); ?>
                 <?php echo $this->Form->input('DEBUT',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
-                <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
-                <span class="add-on"><i class="glyphicon_calendar"></i></span>
+                <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><span class="glyphicons circle_remove grey"></span></button>
+                <span class="add-on"><span class="glyphicons calendar"></span></span>
                 </div>                
             </td>
             <td><label class="control-label sstitre" for="ActionDUREEPREVUE">Durée prévue : </label></td>
@@ -115,17 +115,17 @@
     </div>  
     <!-- ajout de la liste des livrables pouvant être associés //-->
     <?php if ($this->params->action == 'edit') : ?>
-    <button type="button" class='btn btn-inverse pull-right' onclick="location.href='<?php echo $this->Html->url('/actionslivrables/add/'.$this->data['Action']['id']); ?>';">Ajouter un livrable</button>                    
+    <button type="button" class='btn btn-inverse pull-right showoverlay' onclick="location.href='<?php echo $this->Html->url('/actionslivrables/add/'.$this->data['Action']['id']); ?>';">Ajouter un livrable</button>                    
     <label class="sstitre">Liste des livrables associés</label>
     <?php echo $this->element('tableLivrables'); ?>
     <?php endif; ?>
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container" style="margin-top:2px;text-align:center;">
-                <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>   
-                <?php if ($this->params->action == 'edit' && $nbActivite == 0) echo $this->Form->button('Enregistrer la charge consommée', array('class' => 'btn btn-inverse pull-right','type'=>'button','onclick'=>"location.href='".$this->Html->url('/activitesreelles/add/'.$utilisateurId['Action']['utilisateur_id'].'/'.$actionId)."'")); ?>
-                <?php if ($this->params->action == 'edit' && $nbActivite == 1) echo $this->Form->button('Modifier la charge consommée', array('class' => 'btn btn-inverse pull-right','type'=>'button','onclick'=>"location.href='".$this->Html->url('/activitesreelles/edit/'.$activiteId['Activitesreelle']['id'])."'")); ?>
-                <?php if ($this->params->action == 'edit' && $nbActivite > 1) echo $this->Form->button('Consulter les charges consommées', array('class' => 'btn btn-inverse pull-right','type'=>'button','onclick'=>"location.href='".$this->Html->url('/activitesreelles/index/tous/tous/tous/'.$actionId)."'")); ?>                
+                <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn showoverlay','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary showoverlay','type'=>'submit')); ?>   
+                <?php if ($this->params->action == 'edit' && $nbActivite == 0) echo $this->Form->button('Enregistrer la charge consommée', array('class' => 'btn btn-inverse pull-right showoverlay','type'=>'button','onclick'=>"location.href='".$this->Html->url('/activitesreelles/add/'.$utilisateurId['Action']['utilisateur_id'].'/'.$actionId)."'")); ?>
+                <?php if ($this->params->action == 'edit' && $nbActivite == 1) echo $this->Form->button('Modifier la charge consommée', array('class' => 'btn btn-inverse pull-right showoverlay','type'=>'button','onclick'=>"location.href='".$this->Html->url('/activitesreelles/edit/'.$activiteId['Activitesreelle']['id'])."'")); ?>
+                <?php if ($this->params->action == 'edit' && $nbActivite > 1) echo $this->Form->button('Consulter les charges consommées', array('class' => 'btn btn-inverse pull-right showoverlay','type'=>'button','onclick'=>"location.href='".$this->Html->url('/activitesreelles/index/tous/tous/tous/'.$actionId)."'")); ?>                
             </div>
         </div>
     </div>

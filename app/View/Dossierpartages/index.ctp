@@ -4,12 +4,12 @@
                 <div class="container">
                 <ul class="nav">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('dossierpartages', 'add')) : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<span class="glyphicons plus size14"></span>', array('action' => 'add'),array('escape' => false,'class'=>'showoverlay')); ?></li>
                 <?php endif; ?>
                 </ul> 
                 <?php echo $this->Form->create("Dossierpartage",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche dans tous les champs')); ?>
-                    <button type="submit" class="btn">Rechercher</button>
+                    <button type="submit" class="btn showoverlay">Rechercher</button>
                 <?php echo $this->Form->end(); ?> 
                 </div>
             </div>
@@ -34,13 +34,13 @@
 		<td><?php echo $dossierpartage['Dossierpartage']['DESCRIPTION']; ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('dossierpartages', 'view')) : ?>
-                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Partage réseau :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($dossierpartage['Dossierpartage']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($dossierpartage['Dossierpartage']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php echo '<span class="glyphicons eye_open" rel="popover" data-title="<h3>Partage réseau :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($dossierpartage['Dossierpartage']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($dossierpartage['Dossierpartage']['modified']).'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('dossierpartages', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $dossierpartage['Dossierpartage']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil"></span>', array('action' => 'edit', $dossierpartage['Dossierpartage']['id']),array('escape' => false,'class'=>'showoverlay')); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('dossierpartages', 'delete')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $dossierpartage['Dossierpartage']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce dossier partagé ?')); ?>
+                    <?php echo $this->Form->postLink('<span class="glyphicons bin"></span>', array('action' => 'delete', $dossierpartage['Dossierpartage']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce dossier partagé ?')); ?>
                     <?php endif; ?>
                 </td>
 	</tr>
@@ -50,7 +50,7 @@
 	</table>
         <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>
         <div class="pull-right"><?php	echo $this->Paginator->counter('Nombre total d\'éléments : {:count}');	?></div>
-        <div class="pagination  pagination-centered">
+        <div class="pagination  pagination-centered showoverlay">
         <ul>
 	<?php
                 echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";

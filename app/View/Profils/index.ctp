@@ -4,7 +4,7 @@
                 <div class="container">
                 <ul class="nav">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('profils', 'add')) : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<span class="glyphicons plus size14"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <?php endif; ?>
                 </ul> 
                 <?php echo $this->Form->create("Profil",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -30,18 +30,18 @@
 		<td><?php echo $profil['Profil']['COMMENTAIRE']; ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('profils', 'view')) : ?>
-                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Profil :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($profil['Profil']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($profil['Profil']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php echo '<span class="glyphicons eye_open" rel="popover" data-title="<h3>Profil :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($profil['Profil']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($profil['Profil']['modified']).'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('profils', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $profil['Profil']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil"></span>', array('action' => 'edit', $profil['Profil']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('profils', 'delete')) : ?>
-                    <?php echo $profil['Profil']['id'] > 10 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $profil['Profil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce profil ?') ): '<i class="icon-blank"></i>'; ?>
+                    <?php echo $profil['Profil']['id'] > 10 ? $this->Form->postLink('<span class="glyphicons bin"></span>', array('action' => 'delete', $profil['Profil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce profil ?') ): '<span class="glyphicons blank"></span>'; ?>
                     <?php else : ?>
-                    <i class="icon-blank"></i>
+                    <span class="glyphicons blank"></span>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('profils', 'duplicate')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-retweet"></i>', array('action' => 'dupliquer', $profil['Profil']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer ce profil et ses autorisations ?')); ?>
+                    <?php echo $this->Form->postLink('<span class="glyphicons retweet"></span>', array('action' => 'dupliquer', $profil['Profil']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer ce profil et ses autorisations ?')); ?>
                     <?php endif; ?>                    
 		</td>
 	</tr>
@@ -51,7 +51,7 @@
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
 	<div class="pull-right"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>    
-	<div class="pagination  pagination-centered">
+	<div class="pagination  pagination-centered showoverlay">
         <ul>
 	<?php
                 echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";

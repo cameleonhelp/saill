@@ -19,9 +19,9 @@
 		<td style="text-align:center;"><?php echo h($history['Historyaction']['DEBUT']); ?>&nbsp;</td>
 		<td style="text-align:center;"><?php echo h($history['Historyaction']['CHARGEPREVUE']); ?> h</td>
                 <td style="text-align:center;"><?php echo h($history['Historyaction']['ECHEANCE']); ?>&nbsp;</td>
-		<td style="text-align:center;"><?php echo isset($history['Historyaction']['STATUT']) ? '<i class="'.etatAction(h($history['Historyaction']['STATUT'])).'" rel="tooltip" data-title="'.etatTooltip(h($history['Historyaction']['STATUT'])).'"></i>' : '' ; ?>&nbsp;</td>                
+		<td style="text-align:center;"><?php echo isset($history['Historyaction']['STATUT']) ? '<span class="glyphicons '.etatAction(h($history['Historyaction']['STATUT'])).'" rel="tooltip" data-title="'.etatTooltip(h($history['Historyaction']['STATUT'])).'"></span>' : '' ; ?>&nbsp;</td>                
 		<td style="text-align:center;"><?php echo h($history['Historyaction']['PRIORITE']); ?>&nbsp;</td>
-                <td><?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Historique de l\'action :</h3>" data-content="<contenttitle>Commentaire: </contenttitle>'.h($history['Historyaction']['COMMENTAIRE']).'<br/><contenttitle>Crée le: </contenttitle>'.h($history['Historyaction']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($history['Historyaction']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;</td>
+                <td><?php echo '<span class="glyphicons eye_open" rel="popover" data-title="<h3>Historique de l\'action :</h3>" data-content="<contenttitle>Commentaire: </contenttitle>'.h($history['Historyaction']['COMMENTAIRE']).'<br/><contenttitle>Crée le: </contenttitle>'.h($history['Historyaction']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($history['Historyaction']['modified']).'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;</td>
 	</tr>
 <?php endforeach; ?>
         </tbody>

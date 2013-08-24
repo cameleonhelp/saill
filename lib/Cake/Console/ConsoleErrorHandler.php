@@ -60,7 +60,7 @@ class ConsoleErrorHandler {
 			$exception->getMessage(),
 			$exception->getTraceAsString()
 		));
-		$this->_stop($exception->getCode() ? $exception->getCode() : 1);
+		return $this->_stop($exception->getCode() ? $exception->getCode() : 1);
 	}
 
 /**
@@ -88,7 +88,7 @@ class ConsoleErrorHandler {
 		}
 
 		if ($log === LOG_ERR) {
-			$this->_stop(1);
+			return $this->_stop(1);
 		}
 	}
 
@@ -96,6 +96,7 @@ class ConsoleErrorHandler {
  * Wrapper for exit(), used for testing.
  *
  * @param int $code The exit code.
+ * @return void
  */
 	protected function _stop($code = 0) {
 		exit($code);

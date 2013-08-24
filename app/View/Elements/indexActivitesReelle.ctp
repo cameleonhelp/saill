@@ -7,17 +7,17 @@
                 <?php $defaultAction = $this->params->action == "search" ? 'index' : $this->params->action; 
                       $filtre_annee = isset($this->params->pass[3]) ? $this->params->pass[3] : date('Y'); ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'add') && strtolower($this->params->controller)=='activitesreelles') : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus" rel="tooltip" data-title="Ajoutez une nouvelle feuille de temps"></i>', array('action' => 'newactivite'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<span class="glyphicons plus size14" rel="tooltip" data-title="Ajoutez une nouvelle feuille de temps"></span>', array('action' => 'newactivite'),array('escape' => false,'class'=>'showoverlay')); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <?php if ($defaultEtat == "tous") : ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee)); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Non facturé', array('action' => $defaultAction,'actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee)); ?></li>
-                         <li><?php echo $this->Html->link('Facturé', array('action' => $defaultAction,'facture',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee)); ?></li>
+                         <li><?php echo $this->Html->link('Non facturé', array('action' => $defaultAction,'actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                         <li><?php echo $this->Html->link('Facturé', array('action' => $defaultAction,'facture',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
                      </ul>
                 </li> 
                 <?php else : ?>
@@ -27,11 +27,11 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Utilisateurs <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee)); ?></li>
-                     <li><?php echo $this->Html->link('Moi', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,  userAuth('id'),isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Moi', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,  userAuth('id'),isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($utilisateurs as $utilisateur): ?>
-                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,$utilisateur['Utilisateur']['id'],isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee)); ?></li>
+                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,$utilisateur['Utilisateur']['id'],isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
                          <?php endforeach; ?>
                       </ul>
                 </li>   
@@ -39,30 +39,30 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Mois <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous',$filtre_annee)); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
                      <li class="divider"></li>
-                     <li><?php echo $this->Html->link('Janvier', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','01',$filtre_annee)); ?></li>
-                     <li><?php echo $this->Html->link('Février', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','02',$filtre_annee)); ?></li>
-                     <li><?php echo $this->Html->link('Mars', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','03',$filtre_annee)); ?></li>
-                     <li><?php echo $this->Html->link('Avril', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','04',$filtre_annee)); ?></li>
-                     <li><?php echo $this->Html->link('Mai', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','05',$filtre_annee)); ?></li>
-                     <li><?php echo $this->Html->link('Juin', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','06',$filtre_annee)); ?></li>
-                     <li><?php echo $this->Html->link('Juillet', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','07',$filtre_annee)); ?></li>
-                     <li><?php echo $this->Html->link('Août', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','08',$filtre_annee)); ?></li>
-                     <li><?php echo $this->Html->link('Septembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','09',$filtre_annee)); ?></li>
-                     <li><?php echo $this->Html->link('Octobre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','10',$filtre_annee)); ?></li>
-                     <li><?php echo $this->Html->link('Novembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','11',$filtre_annee)); ?></li>
-                     <li><?php echo $this->Html->link('Décembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','12',$filtre_annee)); ?></li>                     
+                     <li><?php echo $this->Html->link('Janvier', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','01',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Février', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','02',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Mars', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','03',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Avril', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','04',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Mai', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','05',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Juin', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','06',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Juillet', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','07',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Août', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','08',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Septembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','09',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Octobre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','10',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Novembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','11',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Décembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','12',$filtre_annee),array('class'=>'showoverlay')); ?></li>                     
                       </ul>
                 </li> 
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Année <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('En cours', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',date('Y'))); ?></li>
+                     <li><?php echo $this->Html->link('En cours', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',date('Y')),array('class'=>'showoverlay')); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($annees as $annee): ?>
                             <?php if ($annee[0]['ANNEE']!=0): ?>
-                            <li><?php echo $this->Html->link($annee[0]['ANNEE'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$annee[0]['ANNEE'])); ?></li>
+                            <li><?php echo $this->Html->link($annee[0]['ANNEE'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$annee[0]['ANNEE']),array('class'=>'showoverlay')); ?></li>
                             <?php endif; ?>
                          <?php endforeach; ?>
                       </ul>
@@ -70,27 +70,27 @@
                 <?php if ($this->params->action == "afacturer") : ?>
                 <li class="divider-vertical-only"></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-check"></i> Actions groupées <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicons check"></span> Actions groupées <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Facturer', "#",array('id'=>'facturerlink')); ?></li>
-                     <li><?php echo $this->Html->link('Rejeter', "#",array('id'=>'rejeterlink')); ?></li>
+                     <li><?php echo $this->Html->link('Facturer', "#",array('id'=>'facturerlink','class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Rejeter', "#",array('id'=>'rejeterlink','class'=>'showoverlay')); ?></li>
                      </ul>
                 </li>
                 <li class="divider-vertical-only"></li>
-                <li><?php echo $this->Html->link('<i class="ico-xls" rel="tooltip" data-title="Export Excel"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>  
+                <li><?php echo $this->Html->link('<span class="ico-xls icon-top2" rel="tooltip" data-title="Export Excel"></span>', array('action' => 'export_xls'),array('escape' => false)); ?></li>  
                 <?php else: ?>
                 <?php if(userAuth('societe_id')==1 && $this->params->action != "afacturer"): ?>
                 <li class="divider-vertical-only"></li>
-                <li><?php echo $this->Html->link('<i class="ico-ics" rel="tooltip" data-title="Importez le fichier ICS issu de l\'outil RH"></i>', '#',array('escape' => false,'id'=>'importics')); ?></li>                 
+                <li><?php echo $this->Html->link('<span class="ico-ics icon-top2" rel="tooltip" data-title="Importez le fichier ICS issu de l\'outil RH"></span>', '#',array('escape' => false,'id'=>'importics')); ?></li>                 
                 <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($this->params->action != "afacturer") : ?>
                 <li class="divider-vertical-only"></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-check"></i> Actions groupées <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicons check"></span> Actions groupées <b class="caret"></b></a>
                      <ul class="dropdown-menu">
                      <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'update')) : ?>
-                     <li><?php echo $this->Html->link('Soumettre', "#",array('id'=>'soumettrelink')); ?></li>
+                     <li><?php echo $this->Html->link('Soumettre', "#",array('id'=>'soumettrelink','class'=>'showoverlay')); ?></li>
                      <?php endif; ?>
                      <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'deleteall')) : ?>
                      <li><?php echo $this->Html->link('Supprimer', "#",array('id'=>'deletelink'), __('Etes-vous certain de vouloir supprimer ces feuilles de temps ?')); ?></li>
@@ -102,14 +102,17 @@
                 <?php if ($this->params->controller == "activitesreelles" && $this->params->action == "index") : ?>
                 <?php echo $this->Form->create("Activitesreelle",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche dans tous les champs')); ?>
-                    <button type="submit" class="btn">Rechercher</button>
+                    <button type="submit" class="btn showoverlay">Rechercher</button>
                 <?php echo $this->Form->end(); ?>                    
                 <?php elseif ($this->params->controller == "facturations") : ?>
                 <?php echo $this->Form->create("Facturation",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche dans tous les champs')); ?>
-                    <button type="submit" class="btn">Rechercher</button>
+                    <button type="submit" class="btn showoverlay">Rechercher</button>
                 <?php echo $this->Form->end(); ?>                     
                 <?php endif; ?>
+                <ul class="nav pull-right">
+                    <li><a href="#" rel="popover" data-title="Aide" data-placement="bottom" data-content="<?php echo $this->element('hlp/hlp-activites'); ?>"><span><span class="glyphicons blue circle_question_mark size14"></span></span></a></li>
+                </ul>                    
                 </div>
             </div>
         </div> 
@@ -132,7 +135,7 @@
             <td width="150px" style="text-align:left;">
                     <?php echo $this->Form->select('utilisateur_id',$icsutilisateurs,array('data-rule-required'=>'true','default'=>  userAuth('id'),'data-msg-required'=>"Le nom de l'utilisateur est obligatoire dans l'onglet Destinataire", 'empty' => 'Choisir un utilisateur')); ?>
             </td>
-            <td width="50px"><?php echo $this->Form->button('Intégrer', array('class' => 'btn btn-primary pull-right','type'=>'submit')); ?></td>
+            <td width="50px"><?php echo $this->Form->button('Intégrer', array('class' => 'btn btn-primary pull-right showoverlay','type'=>'submit')); ?></td>
             </tr>
         </table>
         <?php echo $this->Form->end(); ?>
@@ -213,28 +216,28 @@
                 <td style="text-align: center;">
                 <?php if ($this->params->action != "afacturer") : ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'view')) : ?>
-                    <?php echo isset($activitesreelle['Activitesreelle']['action_id']) ? '<span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Objet: </contenttitle>'.h($activitesreelle['Action']['OBJET']).'<br/><contenttitle>Avancement: </contenttitle>'.h($activitesreelle['Action']['AVANCEMENT']).'%<br/><contenttitle>Crée le: </contenttitle>'.h($activitesreelle['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($activitesreelle['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>' : "<i class='icon-blank'></i></span>"; ?>
+                    <?php echo isset($activitesreelle['Activitesreelle']['action_id']) ? '<span><span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><span class="glyphicons eye_open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Objet: </contenttitle>'.h($activitesreelle['Action']['OBJET']).'<br/><contenttitle>Avancement: </contenttitle>'.h($activitesreelle['Action']['AVANCEMENT']).'%<br/><contenttitle>Crée le: </contenttitle>'.h($activitesreelle['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($activitesreelle['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></span></span></span>' : "<span class='glyphicons blank'></span></span></span>"; ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'edit') && $activitesreelle['Activitesreelle']['VEROUILLE'] == 1 ) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil" rel="tooltip" data-title="Modification"></i>', array('action' => 'edit', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>
+                    <?php echo $this->Html->link('<span class="glyphicons pencil" rel="tooltip" data-title="Modification"></span>', array('action' => 'edit', $activitesreelle['Activitesreelle']['id']),array('escape' => false,'class'=>'showoverlay')); ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'delete') && $activitesreelle['Activitesreelle']['VEROUILLE'] == 1) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-trash" rel="tooltip" data-title="Suppression"></i>', array('action' => 'delete', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette feuille de temps ?')); ?>                    
+                    <?php echo $this->Form->postLink('<span class="glyphicons bin" rel="tooltip" data-title="Suppression"></span>', array('action' => 'delete', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette feuille de temps ?')); ?>                    
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'update')) : ?>
-                    <?php $img = $activitesreelle['Activitesreelle']['VEROUILLE']==0 ? 'icon-thumbs-up' : 'icon-thumbs-down'; ?>
-                    <?php echo $this->Form->postLink('<i class="'.$img.'" rel="tooltip" data-title="A soumettre pour factution<br>si pouce en bas<br>Soumis pour facturation<br>si pouce en haut"></i>', array('action' => 'updatefacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour facturation ?')); ?>                    
+                    <?php $img = $activitesreelle['Activitesreelle']['VEROUILLE']==0 ? 'thumbs_up' : 'thumbs_down'; ?>
+                    <?php echo $this->Form->postLink('<span class="glyphicons  '.$img.'" rel="tooltip" data-title="A soumettre pour factution<br>si pouce en bas<br>Soumis pour facturation<br>si pouce en haut"></span>', array('action' => 'updatefacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour facturation ?')); ?>                    
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'duplicate') && $activitesreelle['Activitesreelle']['VEROUILLE'] == 1) : ?>
-                    <?php echo $this->Html->link('<i class=" icon-retweet" rel="tooltip" data-title="Duplication"></i>', array('action' => 'autoduplicate', $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>                    
+                    <?php echo $this->Html->link('<span class="glyphicons retweet" rel="tooltip" data-title="Duplication"></span>', array('action' => 'autoduplicate', $activitesreelle['Activitesreelle']['id']),array('escape' => false,'class'=>'showoverlay')); ?>                    
                     <?php endif; ?>
                 <?php else : ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-ok-sign" rel="tooltip" data-title="Facturation"></i>', array('controller' => 'facturations','action' => 'add', $activitesreelle['Activitesreelle']['utilisateur_id'], $activitesreelle['Activitesreelle']['id']),array('escape' => false)); ?>
+                    <?php echo $this->Html->link('<span class="glyphicons ok" rel="tooltip" data-title="Facturation"></span>', array('controller' => 'facturations','action' => 'add', $activitesreelle['Activitesreelle']['utilisateur_id'], $activitesreelle['Activitesreelle']['id']),array('escape' => false,'class'=>'showoverlay')); ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'update')) : ?>
-                    <?php $img = 'icon-remove-sign'; ?>
-                    <?php echo $this->Form->postLink('<i class="'.$img.'" rel="tooltip" data-title="Annulation (rejet)"></i>', array('action' => 'errorfacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour correction ?')); ?>                    
+                    <?php $img = 'ban'; ?>
+                    <?php echo $this->Form->postLink('<span class="glyphicons '.$img.'" rel="tooltip" data-title="Annulation (rejet)"></span>', array('action' => 'errorfacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour correction ?')); ?>                    
                     <?php endif; ?>
                 <?php endif; ?>
                 </td>                 
@@ -249,12 +252,40 @@
         <tfooter>
 	<tr>
             <?php $nbrows = $this->params->action == "afacturer" ? 12 : 12; ?>
-            <td colspan="<?php echo $nbrows; ?>" class="footer" style="text-align:right;">Total :</td>
+            <td colspan="<?php echo $nbrows; ?>" class="footer admonition" style="text-align:right;">
+                <?php if($this->params->action == "afacturer"): ?>
+                <?php $memo = $this->requestAction('parameters/get_memofacturation') ?>
+                <?php $icon = $memo['Parameter']['param']!="" ? 'bell' : 'pencil';?>
+                    <a href="#myModal1" role="button" class="" data-toggle="modal"><div class="admonition-title cursor"  rel="tooltip" data-title="Ajout ou modification d'un memo"><span class='glyphicons <?php echo $icon; ?> white'></span></div></a>
+               <?php  endif; ?>
+                Total :</td>
             <td class="footer" id="totalactivites" style="text-align:right;"></td>
             <td class="footer" width="90px" style="text-align:left;">jours</td>
 	</tr>            
         </tfooter>
-	</table>        
+	</table>  
+        <div id="myModal1" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">Enregistrement du mémo</h3>
+            </div>
+            <div class="modal-body">
+                <form id="Parameter" method="POST" data-async data-target="#myModal1">
+                <input type="hidden" name="InfroText" value="1">
+                <table>
+                    <tbody>
+                        <tr><td><span class="clearable">
+                                    <input type='text' style='width:580px;' class="data_field" id="memo" value="<?php echo $memo['Parameter']['param']; ?>" />
+                                <span class="icon_clear"><span class="glyphicons circle_remove grey top2"</span></span></td></tr>
+                    </tbody>
+                </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Annuler</button>
+                <button class="btn btn-primary" data-dismiss="modal" id="InfroTextSubmit">Sauvegarder</button>
+            </div>
+        </div>
 </div>
 <script>
     function sumOfColumns() {
@@ -266,11 +297,38 @@
      }
      
      $(document).ready(function () {
-        $("#totalactivites").html(sumOfColumns());
-        $('#icsparser').hide();
+         $("#totalactivites").html(sumOfColumns());
+         $('#icsparser').hide();
+         
+         $(document).on('propertychange keyup input paste focus', 'input.data_field', function(){
+            var io = $(this).val().length ? 1 : 0 ;
+            $(this).next('.icon_clear').stop().fadeTo(300,io);
+         }).on('click', '.icon_clear', function() {
+            $(this).delay(300).fadeTo(300,0).prev('input').val('');
+         });
 
-        //setTimeout(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 120000); 
-        //$("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});
+         $(document).on('click','#InfroTextSubmit',function(e){
+            //e.preventDefault();
+            var memo = $(this).parents().find('#memo').val();
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'Parameters','action'=>'ajaxSaveParam')); ?>/",
+                data: ({id:7,memo:memo})
+            }).done(function ( data ) {
+            location.reload();
+            });
+            return true;
+        });
+        
+        $(document).on('show','#myModal1', function () {
+            $(this).find('.modal-body').css({width:'600px',
+                                       height:'auto', 
+                                      'max-height':'100%'}); 
+            $(this).css({'width': '630px','margin-left': function () {return -($(this).width() / 2);}})
+            $(this).find("#memo").focus();
+            //$('input:text:visible:first', this).focus();
+        });
         
         $(document).on('click','#importics',function(e){
             $('#icsparser').fadeToggle('slow');
@@ -278,8 +336,8 @@
         
         $(document).on('click','#facturerlink',function(e){
             var ids = $("#all_ids").val();
-            var overlay = jQuery('<div id="overlay"><?php echo $this->Html->image("loading.gif"); ?> Travail en cours, veuillez patienter ...</div>');
-            overlay.appendTo(document.body)
+            var overlay = $('#overlay');
+            overlay.show(); 
             $.ajax({
                 dataType: "html",
                 type: "POST",
@@ -287,7 +345,7 @@
                 data: ({all_ids:ids})
             }).done(function ( data ) {
                 location.reload();
-                overlay.remove();
+                overlay.hide();
             });
             $(this).parents().find(':checkbox').prop('checked', false); 
             $("#all_ids").val('');
@@ -295,8 +353,8 @@
         
         $(document).on('click','#rejeterlink',function(e){
             var ids = $("#all_ids").val();
-            var overlay = jQuery('<div id="overlay"><?php echo $this->Html->image("loading.gif"); ?> Travail en cours, veuillez patienter ...</div>');
-            overlay.appendTo(document.body)            
+            var overlay = $('#overlay');
+            overlay.show();             
             $.ajax({
                 dataType: "html",
                 type: "POST",
@@ -304,7 +362,7 @@
                 data: ({all_ids:ids})     
             }).done(function ( data ) {
                 location.reload();
-                overlay.remove();                
+                overlay.hide();                
             });
             $(this).parents().find(':checkbox').prop('checked', false); 
             $("#all_ids").val('');
@@ -312,8 +370,8 @@
         
         $(document).on('click','#soumettrelink',function(e){
             var ids = $("#all_ids").val();
-            var overlay = jQuery('<div id="overlay"><?php echo $this->Html->image("loading.gif"); ?> Travail en cours, veuillez patienter ...</div>');
-            overlay.appendTo(document.body)            
+            var overlay = $('#overlay');
+            overlay.show();             
             $.ajax({
                 dataType: "html",
                 type: "POST",
@@ -321,7 +379,7 @@
                 data: ({all_ids:ids})     
             }).done(function ( data ) {
                 location.reload();
-                overlay.remove();                
+                overlay.hide();                
             });
             $(this).parents().find(':checkbox').prop('checked', false); 
             $("#all_ids").val('');
@@ -329,8 +387,8 @@
         
         $(document).on('click','#deletelink',function(e){
                 var ids = $("#all_ids").val();
-                var overlay = jQuery('<div id="overlay"><?php echo $this->Html->image("loading.gif"); ?> Travail en cours, veuillez patienter ...</div>');
-                overlay.appendTo(document.body)            
+                var overlay = $('#overlay');
+                overlay.show();            
                 $.ajax({
                     dataType: "html",
                     type: "POST",
@@ -338,9 +396,9 @@
                     data: ({all_ids:ids})     
                 }).done(function ( data ) {
                     location.reload();
-                    overlay.remove();                
+                    overlay.hide();                
                 }).succes(function(e){
-                    overlay.remove();
+                    overlay.hide();
                 });
             $(this).parents().find(':checkbox').prop('checked', false); 
             $("#all_ids").val('');

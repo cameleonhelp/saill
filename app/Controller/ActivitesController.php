@@ -56,7 +56,12 @@ class ActivitesController extends AppController {
                 }    
                 $this->set('fetat',$fetat); 
                 $this->Activite->Projet->recursive = -1;
-                $projets = $this->Activite->Projet->find('all',array('fields' => array('id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
+                $listeprojets = $this->Activite->find('all',array('fileds'=>'Activite.projet_id','group'=>'Activite.projet_id','recursive'=>-1));
+                $listein = '';
+                foreach($listeprojets as $liste):
+                    $listein .= $liste['Activite']['projet_id'].',';
+                endforeach;
+                $projets = $this->Activite->Projet->find('all',array('fields' => array('id','NOM'),'conditions'=>array('Projet.id IN ('.substr_replace($listein ,"",-1).')'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
                 $this->set('projets',$projets);  
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->Activite->recursive = 0;
@@ -181,7 +186,7 @@ class ActivitesController extends AppController {
  * @return void
  */
 	public function search() {
-            if (isAuthorized('activites', 'index')) :
+            if (isAuthorized('activites', 'index1')) :
                 $keyword=isset($this->params->data['Activite']['SEARCH']) ? $this->params->data['Activite']['SEARCH'] : '';
                 $newconditions = array('OR'=>array("Activite.NOM LIKE '%".$keyword."%'","Projet.NOM LIKE '%".$keyword."%'","Activite.NUMEROGALLILIE LIKE '%".$keyword."%'","Activite.DESCRIPTION LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
@@ -191,8 +196,13 @@ class ActivitesController extends AppController {
                 $this->Session->delete('xls_export');
                 $export = $this->Activite->find('all',array('conditions'=>$newconditions,'recursive'=>0));
                 $this->Session->write('xls_export',$export);               
-                $projets = $this->Activite->Projet->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Projet.id>1','recursive'=>-1));
-                $this->set('projets',$projets);  
+                $listeprojets = $this->Activite->find('all',array('fileds'=>'Activite.projet_id','group'=>'Activite.projet_id','recursive'=>-1));
+                $listein = '';
+                foreach($listeprojets as $liste):
+                    $listein .= $liste['Activite']['projet_id'].',';
+                endforeach;
+                $projets = $this->Activite->Projet->find('all',array('fields' => array('id','NOM'),'conditions'=>array('Projet.id IN ('.substr_replace($listein ,"",-1).')'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
+                $this->set('projets',$projets);   
                 $this->render('index');
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));

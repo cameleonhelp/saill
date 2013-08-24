@@ -18,7 +18,7 @@
             <td>
                 <div class="input-prepend date" data-date="<?php echo date('d/m/Y'); ?>" data-date-format="dd/mm/yyyy">
                 <?php $today = new dateTime(); ?>
-                <span class="add-on"><i class="glyphicon_calendar"></i></span>             
+                <span class="add-on"><span class="glyphicons calendar"></span></span>             
                 <?php echo $this->Form->input('START',array('type'=>'text','placeholder'=>'ex.: '.$today->format('d/m/Y'),"readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>"La date de début de période est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 </div>  
             </td>           
@@ -26,7 +26,7 @@
             <td>
                 <div class="input-prepend date" data-date="<?php echo date('d/m/Y'); ?>" data-date-format="dd/mm/yyyy">
                 <?php $today->add(new DateInterval('P1M')); ?>
-                <span class="add-on"><i class="glyphicon_calendar"></i></span>             
+                <span class="add-on"><span class="glyphicons calendar"></span></span>             
                 <?php echo $this->Form->input('END',array('type'=>'text','placeholder'=>'ex.: '.$today->format('d/m/Y'),"readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>"La date de fin de période est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
                 </div> 
             </td>            
@@ -43,10 +43,13 @@
 </div>
 <?php $israpport = isset($rapportresults) ? count($rapportresults) : 0; ?>
 <?php $style = $israpport==0 ? 'style="display:none;"' : ''; ?>
+<?php 
+?>
+
 <div id="rapport" <?php echo $style; ?>>
-    <div class="pull-right"><?php echo $this->Html->link('<i class="ico-doc"></i> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn','escape' => false)); ?></div>
+    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc icon-top2"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn','escape' => false)); ?></div>
     <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
-<br>
+<br><br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jour réels consommés par projet</div><br>
     <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
         <thead>
@@ -61,7 +64,15 @@
             <tr>
                 <td><?php echo strMonth($result[0]['MONTH']).' '.$result[0]['YEAR']; ?></td>
                 <td><?php echo $result['Activitesreelle']['projet_NOM']; ?></td>
-                <td style="text-align:center" class="nbaction"><?php echo $result[0]['NB']; ?></td>
+                <?php 
+                    $nbaction = $result[0]['NB'];
+                    foreach($byprojet as $item):
+                        if($result['Activite']['projet_id']==$item['projet_id']):
+                            $nbaction -= $item['sum'];
+                        endif;
+                    endforeach;
+                ?>
+                <td style="text-align:center" class="nbaction"><?php echo $nbaction; ?></td>
             </tr>           
             <?php endforeach; ?>
         </tbody>
@@ -89,7 +100,15 @@
                 <td><?php echo strMonth($result[0]['MONTH']).' '.$result[0]['YEAR']; ?></td>
                 <td><?php echo $result['Activitesreelle']['projet_NOM']; ?></td>
                 <td><?php echo $result['Domaine']['NOM']; ?></td>
-                <td style="text-align:center" class="nbactionbydomaine"><?php echo $result[0]['NB']; ?></td>
+                <?php 
+                    $nbaction = $result[0]['NB'];
+                    foreach($byprojetdomaine as $item):
+                        if($result['Activite']['projet_id']==$item['projet_id'] && $result['Activitesreelle']['domaine_id']==$item['domaine_id']):
+                            $nbaction -= $item['sum'];
+                        endif;
+                    endforeach;
+                ?>
+                <td style="text-align:center" class="nbactionbydomaine"><?php echo $nbaction; ?></td>
             </tr>           
             <?php endforeach; ?>
         </tbody>
@@ -117,7 +136,15 @@
                 <td><?php echo strMonth($result[0]['MONTH']).' '.$result[0]['YEAR']; ?></td>
                 <td><?php echo $result['Activitesreelle']['projet_NOM']; ?></td>
                 <td><?php echo $result['Activite']['NOM']; ?></td>
-                <td style="text-align:center" class="nbactiondetail"><?php echo $result[0]['NB']; ?></td> 
+                <?php 
+                    $nbaction = $result[0]['NB'];
+                    foreach($byprojetactivite as $item):
+                        if($result['Activite']['projet_id']==$item['projet_id'] && $result['Activite']['id']==$item['activite_id']):
+                            $nbaction -= $item['sum'];
+                        endif;
+                    endforeach;
+                ?>
+                <td style="text-align:center" class="nbactiondetail"><?php echo $nbaction; ?></td>
             </tr>           
             <?php endforeach; ?>
         </tbody>
@@ -187,7 +214,13 @@ $(document).ready(function (){
     })    
 <?php if(isset($chartresults)): ?>
     <?php foreach($chartresults as $result): 
-       $data[] = $result[0]['NB'];
+        $nbaction = $result[0]['NB'];
+        foreach($byprojet as $item):
+            if($result['Activite']['projet_id']==$item['projet_id']):
+                $nbaction -= $item['sum'];
+            endif;
+        endforeach;
+       $data[] = $nbaction;
        $categories[] = "'".$result['Activitesreelle']['projet_NOM']."'";
     endforeach; ?>
     

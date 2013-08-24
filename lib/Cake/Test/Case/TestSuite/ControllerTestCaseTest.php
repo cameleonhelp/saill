@@ -39,7 +39,6 @@ if (!class_exists('AppController', false)) {
 	 * helpers property
 	 *
 	 * @var array
-	 * @access public
 	 */
 		public $helpers = array('Html');
 
@@ -47,7 +46,6 @@ if (!class_exists('AppController', false)) {
 	 * uses property
 	 *
 	 * @var array
-	 * @access public
 	 */
 		public $uses = array('ControllerPost');
 
@@ -55,7 +53,6 @@ if (!class_exists('AppController', false)) {
 	 * components property
 	 *
 	 * @var array
-	 * @access public
 	 */
 		public $components = array('Cookie');
 
@@ -536,7 +533,7 @@ class ControllerTestCaseTest extends CakeTestCase {
  * will always have a fresh reference to those object available
  *
  * @return void
- * @see http://cakephp.lighthouseapp.com/projects/42648-cakephp/tickets/2705-requesthandler-weird-behavior
+ * @see https://cakephp.lighthouseapp.com/projects/42648-cakephp/tickets/2705-requesthandler-weird-behavior
  */
 	public function testComponentsSameRequestAndResponse() {
 		$this->Case->generate('TestsApps');

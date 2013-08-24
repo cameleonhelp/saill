@@ -130,7 +130,10 @@ class Detailplancharge extends AppModel {
                 } 
                 if (isset($val['Detailplancharge']['activite_id'])) {
                     $results[$key]['Detailplancharge']['projet_NOM'] = $this->getProjetForActivite($val['Detailplancharge']['activite_id']);
-                }                  
+                }           
+                if (isset($val['Detailplancharge']['utilisateur_id'])) {
+                    $results[$key]['Detailplancharge']['userIsActif'] = $this->getUserActif($val['Detailplancharge']['utilisateur_id']);
+                }                   
             }
             return $results;
         }   
@@ -146,6 +149,12 @@ class Detailplancharge extends AppModel {
             $sql = "SELECT projets.NOM FROM projets LEFT JOIN activites ON projets.id = activites.projet_id WHERE activites.id='".$id."'";
             $result = $this->query($sql);
             return $result[0]['projets']['NOM'];
-        }               
+        }            
+        
+        public function getUserActif($id){
+            $sql = "SELECT utilisateurs.ACTIF FROM utilisateurs WHERE utilisateurs.id='".$id."'";
+            $result = $this->query($sql);
+            return isset($result[0]['utilisateurs']['ACTIF']) ? $result[0]['utilisateurs']['ACTIF'] :  false;
+        }           
 
 }

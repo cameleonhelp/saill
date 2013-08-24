@@ -10,11 +10,11 @@
             <?php echo $this->Form->create('Activitesreelle',array('action' => 'absences','style'=>'display:none;','inputDefaults' => array('label'=>false,'div' => false))); ?>
                 <tr>
                     <th colspan="<?php echo ($maxday*2)+1; ?>" class="text-center">
-                        <?php echo $this->Form->button('<i class="icon-arrow-left" rel="tooltip" data-title="Mois précédent"></i>', array('id'=>"previousMonth",'type'=>'button','class' => 'btn','style'=>'margin-right:75px;')); ?>
+                        <?php echo $this->Form->button('<span class="glyphicons left_arrow" rel="tooltip" data-title="Mois précédent"></span>', array('id'=>"previousMonth",'type'=>'button','class' => 'btn','style'=>'margin-right:75px;')); ?>
                             <?php echo $strMonth[$month]." ".$year; ?>
-                        <?php echo $this->Form->button('<i class="icon-arrow-right" rel="tooltip" data-title="Mois suivant"></i>', array('id'=>"nextMonth",'type'=>'button','class' => 'btn','style'=>'margin-left:75px;')); ?>
-                        <?php echo $this->Form->button('<i class="icon-time" rel="tooltip" data-title="Mois courant"></i>', array('id'=>"today",'type'=>'button','class' => 'btn pull-right')); ?>
-                        <?php echo $this->Form->button('<i class="icon-camera" rel="tooltip" data-title="Enregistrez au format PNG"></i>', array('id'=>"canvas",'type'=>'button','class' => 'btn pull-right')); ?>
+                        <?php echo $this->Form->button('<span class="glyphicons right_arrow" rel="tooltip" data-title="Mois suivant"></span>', array('id'=>"nextMonth",'type'=>'button','class' => 'btn','style'=>'margin-left:75px;')); ?>
+                        <?php echo $this->Form->button('<span class="glyphicons clock" rel="tooltip" data-title="Mois courant"></span>', array('id'=>"today",'type'=>'button','class' => 'btn pull-right')); ?>
+                        <?php echo $this->Form->button('<span class="glyphicons camera" rel="tooltip" data-title="Enregistrez au format PNG"></span>', array('id'=>"canvas",'type'=>'button','class' => 'btn pull-right')); ?>
                     </th>
                 </tr>
             <?php $day = new DateTime(); $date = isset($this->data['Activitesreelle']['month']) ? $this->data['Activitesreelle']['month'] : $day->format('Y-m-d'); ?>
@@ -52,7 +52,7 @@
         <tbody>
             <?php foreach($utilisateurs as $utilisateur) : ?>
             <tr>
-                <td class="nopadding nomargin nowrap"><div rel="tooltip" data-title="<?php echo $utilisateur['Utilisateur']['NOMLONG']." (".$utilisateur['Utilisateur']['username'].")"; ?>"><?php echo substr($utilisateur['Utilisateur']['PRENOM'],0,1).". ".$utilisateur['Utilisateur']['NOM']; ?></div></td>
+                <td class="nopadding nomargin nowrap" style="line-height: 4px;min-width:120px;"><div rel="tooltip" data-title="<?php echo $utilisateur['Utilisateur']['NOMLONG']." (".$utilisateur['Utilisateur']['username'].")"; ?>"><?php echo substr($utilisateur['Utilisateur']['PRENOM'],0,1).". ".$utilisateur['Utilisateur']['NOM']; ?></div></td>
             <?php
             $debutactif = CIntDateDeb($utilisateur['Utilisateur']['DATEDEBUTACTIF']); 
             $debutinactif = CIntDateFin($utilisateur['Utilisateur']['FINMISSION']);
@@ -66,7 +66,7 @@
                 $classferie = isFerie($date) ? ' ferie' : '';
                 if($debutactif > CIntDate($date->format('d/m/Y')) || $debutinactif < CIntDate($date->format('d/m/Y'))):
                     $classIndispo = ' indispo';
-                    echo "<td ".$class.$classIndispo.$classweek.$classferie."'></td><td ".$class.$classIndispo.$classweek.$classferie."'></td>";
+                    echo "<td ".$class.$classIndispo.$classweek.$classferie."' style='line-height: 4px;'></td><td ".$class.$classIndispo.$classweek.$classferie."'></td>";
                 else :
                     if(is_date_utilisateur_in_array($date->format('Y-m-d'),$utilisateur['Utilisateur']['id'],$absences)):
                         $result = nb_periode($date->format('Y-m-d'),$utilisateur['Utilisateur']['id'],$absences);
@@ -82,9 +82,9 @@
                             $classIndispo1 = '';
                             $classIndispo2 = ' indispo';
                         }            
-                        echo "<td ".$class.$classweek.$classferie.$classIndispo1."'></td><td ".$class.$classweek.$classferie.$classIndispo2."'></td>";
+                        echo "<td ".$class.$classweek.$classferie.$classIndispo1."' style='line-height: 4px;'></td><td ".$class.$classweek.$classferie.$classIndispo2."'></td>";
                     else:
-                        echo "<td ".$class.$classweek.$classferie."'></td><td ".$class.$classweek.$classferie."'></td>";               
+                        echo "<td ".$class.$classweek.$classferie."' style='line-height: 4px;'></td><td ".$class.$classweek.$classferie."'></td>";               
                     endif; 
                 endif;
             endfor;
@@ -98,18 +98,24 @@
      $(document).ready(function () {
          $("#previousMonth").on('click', function(e){
              e.preventDefault();
+             var overlay = $('#overlay');
+             overlay.show();               
              var date = moment($('#ActivitesreelleMonth').val()).subtract('M', 1);
              $('#ActivitesreelleMonth').val(date.format('YYYY-MM-DD'));
              $('#ActivitesreelleAbsencesForm').submit();
          });
          $("#nextMonth").on('click', function(e){
              e.preventDefault();
+             var overlay = $('#overlay');
+             overlay.show();                 
              var date = moment($('#ActivitesreelleMonth').val()).add('M', 1);
              $('#ActivitesreelleMonth').val(date.format('YYYY-MM-DD'));
              $('#ActivitesreelleAbsencesForm').submit();
          }); 
          $("#today").on('click', function(e){
              e.preventDefault();
+             var overlay = $('#overlay');
+             overlay.show();                
              var date = moment();
              $('#ActivitesreelleMonth').val(date.format('YYYY-MM-DD'));
              $('#ActivitesreelleAbsencesForm').submit();

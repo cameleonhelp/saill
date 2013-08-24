@@ -608,12 +608,21 @@ class ActivitesreellesController extends AppController {
                     $domaine = 'Activite.projet_id IN ('.substr_replace($projetlist ,"",-1).')';
                     $periode = 'Activitesreelle.DATE BETWEEN "'. startWeek(CUSDate($this->request->data['Activitesreelle']['START'])).'" AND "'.  endWeek(CUSDate($this->request->data['Activitesreelle']['END'])).'"';
                     $rapportresult = $this->Activitesreelle->find('all',array('fields'=>array('MONTH(Activitesreelle.DATE) AS MONTH', 'YEAR(Activitesreelle.DATE) AS YEAR','Activite.projet_id','SUM(Activitesreelle.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Activitesreelle.DATE)'=>'asc','YEAR(Activitesreelle.DATE)'=>'asc'),'group'=>array('Activite.projet_id','MONTH(Activitesreelle.DATE)','YEAR(Activitesreelle.DATE)'),'recursive'=>0));
-                    $this->set('rapportresults',$rapportresult);
+                    $this->set('rapportresults',$rapportresult); //'Activite.projet_id>1',
+                    $activitefirstweek = $this->Activitesreelle->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Activitesreelle.domaine_id', 'SUM(Activitesreelle.LU) AS LU', 'SUM(Activitesreelle.MA) AS MA', 'SUM(Activitesreelle.ME) AS ME', 'SUM(Activitesreelle.JE) AS JE', 'SUM(Activitesreelle.VE) AS VE', 'SUM(Activitesreelle.SA) AS SA', 'SUM(Activitesreelle.DI) AS DI','Activitesreelle.DATE AS DATE'),'conditions'=>array($destinataire,$domaine,'Activitesreelle.DATE'=>startWeek(CUSDate($this->request->data['Activitesreelle']['START']))),'group'=>array('Activite.projet_id','Activite.id','Activitesreelle.domaine_id'),'recursive'=>0));  
+                    $activitelastweek = $this->Activitesreelle->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Activitesreelle.domaine_id', 'SUM(Activitesreelle.LU) AS LU', 'SUM(Activitesreelle.MA) AS MA', 'SUM(Activitesreelle.ME) AS ME', 'SUM(Activitesreelle.JE) AS JE', 'SUM(Activitesreelle.VE) AS VE', 'SUM(Activitesreelle.SA) AS SA', 'SUM(Activitesreelle.DI) AS DI','Activitesreelle.DATE AS DATE'),'conditions'=>array($destinataire,$domaine,'Activitesreelle.DATE'=>startWeek(CUSDate($this->request->data['Activitesreelle']['END']))),'group'=>array('Activite.projet_id','Activite.id','Activitesreelle.domaine_id'),'recursive'=>0));  
+                    $entrop = array_merge($this->getEntropFirst($activitefirstweek),$this->getEntropLast($activitelastweek));
+                    $byprojet = $this->array_sum_merge_by_projet($entrop);
+                    $byprojetdomaine = $this->array_sum_merge_by_projet_domaine($entrop);
+                    $byprojetactivite = $this->array_sum_merge_by_projet_activite($entrop);
+                    $this->set('byprojet',$byprojet); 
+                    $this->set('byprojetdomaine',$byprojetdomaine);
+                    $this->set('byprojetactivite',$byprojetactivite);
                     $chartresult = $this->Activitesreelle->find('all',array('fields'=>array('Activite.projet_id','SUM(Activitesreelle.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('Activite.projet_id'=>'asc'),'group'=>array('Activite.projet_id'),'recursive'=>0));
                     $this->set('chartresults',$chartresult);                    
-                    $detailrapportresult = $this->Activitesreelle->find('all',array('fields'=>array('MONTH(Activitesreelle.DATE) AS MONTH', 'YEAR(Activitesreelle.DATE) AS YEAR','Activite.NOM','Activite.projet_id','SUM(Activitesreelle.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Activitesreelle.DATE)'=>'asc','YEAR(Activitesreelle.DATE)'=>'asc'),'group'=>array('Activite.projet_id','Activite.NOM','MONTH(Activitesreelle.DATE)','YEAR(Activitesreelle.DATE)'),'recursive'=>0));
+                    $detailrapportresult = $this->Activitesreelle->find('all',array('fields'=>array('MONTH(Activitesreelle.DATE) AS MONTH', 'YEAR(Activitesreelle.DATE) AS YEAR','Activite.NOM','Activite.id','Activite.projet_id','SUM(Activitesreelle.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Activitesreelle.DATE)'=>'asc','YEAR(Activitesreelle.DATE)'=>'asc'),'group'=>array('Activite.projet_id','Activite.NOM','MONTH(Activitesreelle.DATE)','YEAR(Activitesreelle.DATE)'),'recursive'=>0));
                     $this->set('detailrapportresults',$detailrapportresult);
-                    $rapportdomainesresult = $this->Activitesreelle->find('all',array('fields'=>array('MONTH(Activitesreelle.DATE) AS MONTH', 'YEAR(Activitesreelle.DATE) AS YEAR','Activite.projet_id','SUM(Activitesreelle.TOTAL) AS NB','Domaine.NOM'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Activitesreelle.DATE)'=>'asc','YEAR(Activitesreelle.DATE)'=>'asc'),'group'=>array('Activite.projet_id','Activitesreelle.domaine_id','MONTH(Activitesreelle.DATE)','YEAR(Activitesreelle.DATE)'),'recursive'=>0));
+                    $rapportdomainesresult = $this->Activitesreelle->find('all',array('fields'=>array('MONTH(Activitesreelle.DATE) AS MONTH', 'YEAR(Activitesreelle.DATE) AS YEAR','Activite.projet_id','Activitesreelle.domaine_id','SUM(Activitesreelle.TOTAL) AS NB','Domaine.NOM'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Activitesreelle.DATE)'=>'asc','YEAR(Activitesreelle.DATE)'=>'asc'),'group'=>array('Activite.projet_id','Activitesreelle.domaine_id','MONTH(Activitesreelle.DATE)','YEAR(Activitesreelle.DATE)'),'recursive'=>0));
                     $this->set('rapportdomainesresults',$rapportdomainesresult);                    
                     $this->Session->delete('rapportresults');  
                     $this->Session->delete('detailrapportresults');     
@@ -623,7 +632,12 @@ class ActivitesreellesController extends AppController {
                     $this->Session->write('detailrapportresults',$detailrapportresult);
                 endif;
                 $alldestinataire = array('tous'=>'Tous les responsables');
-                $destinataires = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $listeagentsavecsaisie = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.utilisateur_id'),'group'=>'Activitesreelle.utilisateur_id','order'=>array('Activitesreelle.utilisateur_id'=>'asc'),'recursive'=>0));
+                $listein = '';
+                foreach($listeagentsavecsaisie as $agent):
+                    $listein .= $agent['Activitesreelle']['utilisateur_id'].',';
+                endforeach;
+                $destinataires = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id in ('.substr_replace($listein ,"",-1).')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
                 $this->set('destinataires',$destinataires);  
                 $domaines = $this->Activitesreelle->Activite->Projet->find('list',array('fields'=>array('id','NOM'),'order'=>array('Projet.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
@@ -633,7 +647,241 @@ class ActivitesreellesController extends AppController {
             endif;                
 	} 
         
-	function export_doc() {
+        public function getEntropFirst($activitefirstweek=null){
+            $enmoins1 = array();
+            $i=0;
+            foreach($activitefirstweek as $firstweek):
+                $datetime1 = new DateTime(CUSDate($firstweek['Activitesreelle']['DATE']));
+                $datetime2 = new DateTime(CUSDate($this->request->data['Activitesreelle']['START']));
+                $interval = $datetime2->diff($datetime1); 
+                $entropfirst = $interval->format('%a');
+                switch ($entropfirst):
+                    case 1:
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];
+                        $enmoins1[$i]['domaine_id']=$firstweek['Activitesreelle']['domaine_id'];
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU'];  
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Activitesreelle']['domaine_id'];                       
+                        break;
+                    case 2:
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];
+                        $enmoins1[$i]['domaine_id']=$firstweek['Activitesreelle']['domaine_id'];
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Activitesreelle']['domaine_id'];                        
+                        break;
+                    case 3:
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];
+                        $enmoins1[$i]['domaine_id']=$firstweek['Activitesreelle']['domaine_id'];                        
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA']+$firstweek[0]['ME'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Activitesreelle']['domaine_id'];                        
+                        break;
+                    case 4:
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];                        
+                        $enmoins1[$i]['domaine_id']=$firstweek['Activitesreelle']['domaine_id'];                       
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA']+$firstweek[0]['ME']+$firstweek[0]['JE'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Activitesreelle']['domaine_id'];                         
+                        break;
+                    case 5:
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];                        
+                        $enmoins1[$i]['domaine_id']=$firstweek['Activitesreelle']['domaine_id'];                        
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA']+$firstweek[0]['ME']+$firstweek[0]['JE']+$firstweek[0]['VE'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Activitesreelle']['domaine_id'];                         
+                        break;
+                    case 6:
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];                        
+                        $enmoins1[$i]['domaine_id']=$firstweek['Activitesreelle']['domaine_id'];                        
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA']+$firstweek[0]['ME']+$firstweek[0]['JE']+$firstweek[0]['VE']+$firstweek[0]['SA'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Activitesreelle']['domaine_id'];                       
+                        break;
+                endswitch;
+                $i++;
+            endforeach;                           
+            return $enmoins1;
+        }
+        
+        public function getEntropLast($activitelastweek=null){
+            $enmoins2 = array();
+            $i=0;            
+            foreach($activitelastweek as $lastweek):
+                $datetime1 = new DateTime(CUSDate($lastweek['Activitesreelle']['DATE']));
+                $datetime2 = new DateTime(CUSDate($this->request->data['Activitesreelle']['END']));
+                $interval = $datetime1->diff($datetime2); 
+                $entropfirst = $interval->format('%a');
+                switch ($entropfirst):
+                    case 1:
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['domaine_id']=$lastweek['Activitesreelle']['domaine_id'];                        
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA']+$lastweek[0]['VE']+$lastweek[0]['JE']+$lastweek[0]['ME'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Activitesreelle']['domaine_id'];                      
+                        break;
+                    case 2:
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['domaine_id']=$lastweek['Activitesreelle']['domaine_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA']+$lastweek[0]['VE']+$lastweek[0]['JE'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Activitesreelle']['domaine_id'];                         
+                        break;
+                    case 3:
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['domaine_id']=$lastweek['Activitesreelle']['domaine_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA']+$lastweek[0]['VE'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Activitesreelle']['domaine_id'];                          
+                        break;
+                    case 0:
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['domaine_id']=$lastweek['Activitesreelle']['domaine_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA']+$lastweek[0]['VE']+$lastweek[0]['JE']+$lastweek[0]['ME']+$lastweek[0]['MA'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Activitesreelle']['domaine_id'];                         
+                        break;
+                    case 5:
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['domaine_id']=$lastweek['Activitesreelle']['domaine_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Activitesreelle']['domaine_id'];                         
+                        break;
+                    case 4:
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['domaine_id']=$lastweek['Activitesreelle']['domaine_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Activitesreelle']['domaine_id'];                        
+                        break;
+                endswitch;
+                $i++;
+            endforeach;                         
+            return $enmoins2;
+        }
+
+        public function array_sum_merge($array){
+            $sortedArray = array();
+            $assignedValues = array();
+            foreach ($array as $arrayItem)
+            {
+                $ukey = $arrayItem['projet_id'].$arrayItem['activite_id'].$arrayItem['domaine_id'];
+                if (!isset($sortedArray[$ukey])){
+                    $sortedArray[$ukey] = array();
+                }
+                $sortedArray[$ukey][] = $arrayItem['aretirer'];
+                if (!isset($assignedValues[$ukey])){
+                    $assignedValues[$ukey] = array(
+                        'projet_id' => $arrayItem['projet_id'],
+                        'activite_id' => $arrayItem['activite_id'],
+                        'domaine_id' => $arrayItem['domaine_id']
+                    );
+                }
+            }
+            $result = array();
+            $i=0;
+            foreach ($sortedArray as $ukey => $arrayItem)
+            {
+               $sum = array_sum($arrayItem);
+
+               $result[$i] = $assignedValues[$ukey];
+               $result[$i]['sum'] =$sum;
+               $i++;
+            }    
+            return $result;
+        }
+        
+        public function array_sum_merge_by_projet($array){
+            $sortedArray = array();
+            $assignedValues = array();
+            foreach ($array as $arrayItem)
+            {
+                $ukey = $arrayItem['projet_id'];
+                if (!isset($sortedArray[$ukey])){
+                    $sortedArray[$ukey] = array();
+                }
+                $sortedArray[$ukey][] = $arrayItem['aretirer'];
+                if (!isset($assignedValues[$ukey])){
+                    $assignedValues[$ukey] = array(
+                        'projet_id' => $arrayItem['projet_id']
+                    );
+                }
+            }
+            $result = array();
+            $i=0;
+            foreach ($sortedArray as $ukey => $arrayItem)
+            {
+               $sum = array_sum($arrayItem);
+
+               $result[$i] = $assignedValues[$ukey];
+               $result[$i]['sum'] =$sum;
+               $i++;
+            }    
+            return $result;
+        }        
+
+        public function array_sum_merge_by_projet_domaine($array){
+            $sortedArray = array();
+            $assignedValues = array();
+            foreach ($array as $arrayItem)
+            {
+                $ukey = $arrayItem['projet_id'].$arrayItem['domaine_id'];
+                if (!isset($sortedArray[$ukey])){
+                    $sortedArray[$ukey] = array();
+                }
+                $sortedArray[$ukey][] = $arrayItem['aretirer'];
+                if (!isset($assignedValues[$ukey])){
+                    $assignedValues[$ukey] = array(
+                        'projet_id' => $arrayItem['projet_id'],
+                        'domaine_id' => $arrayItem['domaine_id']
+                    );
+                }
+            }
+            $result = array();
+            $i=0;
+            foreach ($sortedArray as $ukey => $arrayItem)
+            {
+               $sum = array_sum($arrayItem);
+
+               $result[$i] = $assignedValues[$ukey];
+               $result[$i]['sum'] =$sum;
+               $i++;
+            }    
+            return $result;
+        } 
+        
+        public function array_sum_merge_by_projet_activite($array){
+            $sortedArray = array();
+            $assignedValues = array();
+            foreach ($array as $arrayItem)
+            {
+                $ukey = $arrayItem['projet_id'].$arrayItem['activite_id'];
+                if (!isset($sortedArray[$ukey])){
+                    $sortedArray[$ukey] = array();
+                }
+                $sortedArray[$ukey][] = $arrayItem['aretirer'];
+                if (!isset($assignedValues[$ukey])){
+                    $assignedValues[$ukey] = array(
+                        'projet_id' => $arrayItem['projet_id'],
+                        'activite_id' => $arrayItem['activite_id']
+                    );
+                }
+            }
+            $result = array();
+            $i=0;
+            foreach ($sortedArray as $ukey => $arrayItem)
+            {
+               $sum = array_sum($arrayItem);
+
+               $result[$i] = $assignedValues[$ukey];
+               $result[$i]['sum'] =$sum;
+               $i++;
+            }    
+            return $result;
+        } 
+        
+        function export_doc() {
             if($this->Session->check('rapportresults') && $this->Session->check('detailrapportresults')):
                 $data = $this->Session->read('rapportresults');
                 $this->set('rowsrapport',$data);
@@ -755,8 +1003,11 @@ class ActivitesreellesController extends AppController {
         }     
         
         public function icsImport($utilisateur_id,$activite_id,$date,$day,$type=null,$duree=null){
-            $type = $type==null ? 1 : $type;
-            $duree = $duree==null ? 0 : $duree;
+            $datetime = new DateTime($date);
+            $type = $type==null ? 1 : isFerie($datetime) ? 1 :$type;
+            $duree = $duree==null ? 0 : isFerie($datetime) ? 0 : $duree;
+            //$type = $type==null ? 1 : $type;
+            //$duree = $duree==null ? 0 : $duree;            
             $activitesreelle = $this->isExist($utilisateur_id, $activite_id, $date);
             $record['Activitesreelle']['TOTAL']=0;
             $record['Activitesreelle']['utilisateur_id'] = $utilisateur_id;
@@ -782,7 +1033,6 @@ class ActivitesreellesController extends AppController {
                     $record['Activitesreelle']['MA_TYPE']=$type;
                     $this->Activitesreelle->save($record);
                     break;
-                case 'ME':
                     $record['Activitesreelle']['ME']=$duree;
                     $record['Activitesreelle']['ME_TYPE']=$type;
                     $this->Activitesreelle->save($record);
@@ -868,5 +1118,48 @@ class ActivitesreellesController extends AppController {
             $nbsaisie = $this->Activitesreelle->query($select);
             $this->Activitesreelle->query("DROP VIEW IF EXISTS SAISIE;");
             return $nbsaisie;
+        }       
+        
+        public function saisieVide($mois,$annee){
+            $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('conditions'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.ACTIF'=>1),'recursive'=>-1));
+            $allIdUsers = array();
+            foreach($utilisateurs as $utilisateur):
+                $allIdUsers[] = $utilisateur['Utilisateur']['id'];
+            endforeach;
+            $utilisateurAvecSaisie = $this->getActivitesReelles($mois, $annee);
+            $userWithWork = array();
+            foreach($utilisateurAvecSaisie as $utilisateur):
+                $userWithWork[] = $utilisateur['SAISIE']['USERID'];
+            endforeach;            
+            $result = implode(",",array_diff($allIdUsers, $userWithWork));
+            return $this->Activitesreelle->Utilisateur->find('all',array('conditions'=>array('Utilisateur.id in ('.$result.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+        }
+        
+        public function sendmailrelance($utilisateur_id){
+            $utilisateur = $this->Activitesreelle->Utilisateur->find('first', array('conditions'=>array('Utilisateur.id'=>$utilisateur_id),'recursive'=>0));  
+            $from = userAuth('MAIL');
+            $to=$utilisateur['Utilisateur']['MAIL'];
+            $email = $utilisateur['Utilisateur']['MAIL'];
+            $objet = 'SAILL : //!\ URGENT RELANCE : Saisie d\'activité';
+            $message = "URGENT RELANCE : Bonjour ".$utilisateur['Utilisateur']['NOMLONG'].',';
+            $message .= $message.'<br>
+                    Votre saisie ne semble pas avoir été faites dans l\'outil.<br>
+                    Merci de prendre quelques minutes de votre temps pour faire cette saisie sur le mois.<br><br>
+                    N\'oubliez pas que vous pouvez saisir par anticipation votre activité et la valider juste avant la date limite.<br>
+                    Merci de votre compréhension.';
+            if($to!=''):
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+                }
+                catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                }  
+            endif;
         }         
 }

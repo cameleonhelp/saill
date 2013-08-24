@@ -95,7 +95,6 @@ class Model extends Object implements CakeEventListener {
  * Holds physical schema/database name for this model. Automatically set during Model creation.
  *
  * @var string
- * @access public
  */
 	public $schemaName = null;
 
@@ -948,7 +947,7 @@ class Model extends Object implements CakeEventListener {
  * unbound models that are not made permanent will reset with the next call to Model::find()
  *
  * @param array $params Set of bindings to unbind (indexed by binding type)
- * @param boolean $reset  Set to false to make the unbinding permanent
+ * @param boolean $reset Set to false to make the unbinding permanent
  * @return boolean Success
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#creating-and-destroying-associations-on-the-fly
  */
@@ -1058,34 +1057,34 @@ class Model extends Object implements CakeEventListener {
 				switch ($key) {
 					case 'fields':
 						$data = '';
-					break;
+						break;
 
 					case 'foreignKey':
 						$data = (($type === 'belongsTo') ? Inflector::underscore($assocKey) : Inflector::singularize($this->table)) . '_id';
-					break;
+						break;
 
 					case 'associationForeignKey':
 						$data = Inflector::singularize($this->{$class}->table) . '_id';
-					break;
+						break;
 
 					case 'with':
 						$data = Inflector::camelize(Inflector::singularize($this->{$type}[$assocKey]['joinTable']));
 						$dynamicWith = true;
-					break;
+						break;
 
 					case 'joinTable':
 						$tables = array($this->table, $this->{$class}->table);
 						sort($tables);
 						$data = $tables[0] . '_' . $tables[1];
-					break;
+						break;
 
 					case 'className':
 						$data = $class;
-					break;
+						break;
 
 					case 'unique':
 						$data = true;
-					break;
+						break;
 				}
 				$this->{$type}[$assocKey][$key] = $data;
 			}
@@ -1255,11 +1254,11 @@ class Model extends Object implements CakeEventListener {
 			isset($data['meridian']) &&
 			!empty($data['hour']) &&
 			$data['hour'] != 12 &&
-			'pm' == $data['meridian']
+			$data['meridian'] === 'pm'
 		) {
 			$data['hour'] = $data['hour'] + 12;
 		}
-		if (isset($data['hour']) && isset($data['meridian']) && $data['hour'] == 12 && 'am' == $data['meridian']) {
+		if (isset($data['hour']) && isset($data['meridian']) && $data['hour'] == 12 && $data['meridian'] === 'am') {
 			$data['hour'] = '00';
 		}
 		if ($type === 'time') {
@@ -1662,13 +1661,14 @@ class Model extends Object implements CakeEventListener {
 		}
 
 		$db = $this->getDataSource();
+		$now = time();
 
 		foreach ($dateFields as $updateCol) {
 			if ($this->hasField($updateCol) && !in_array($updateCol, $fields)) {
 				$default = array('formatter' => 'date');
 				$colType = array_merge($default, $db->columns[$this->getColumnType($updateCol)]);
 				if (!array_key_exists('format', $colType)) {
-					$time = strtotime('now');
+					$time = $now;
 				} else {
 					$time = call_user_func($colType['formatter'], $colType['format']);
 				}
@@ -2280,7 +2280,7 @@ class Model extends Object implements CakeEventListener {
 							$validationErrors[$association] = $this->{$association}->validationErrors;
 						}
 						$return[$association] = $validates;
-					break;
+						break;
 					case 'hasMany':
 						foreach ($values as $i => $value) {
 							if (isset($values[$i][$association])) {
@@ -2296,7 +2296,7 @@ class Model extends Object implements CakeEventListener {
 							$validates = false;
 						}
 						$return[$association] = $_return;
-					break;
+						break;
 				}
 			}
 		}

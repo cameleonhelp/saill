@@ -61,7 +61,7 @@ class AppController extends Controller {
     }
 
     public function beforeFilter() {
-        $this->Auth->allow(array('login','logout')); 
+        $this->Auth->allow(array('login','logout','mailprogressstate')); 
         if ($this->isajax()) $this->layout=null;
     }    
     
@@ -70,5 +70,16 @@ class AppController extends Controller {
         $autorisation = $this->Autorisations->find('first',array('conditions'=>array('Autorisation.profil_id'=>$profil,'Autorisation.MODEL'=>$model),'fields'=>array('Autorisation.'.$action)));
         $this->set('autorisation',$autorisation);
     }
+    
+    /*public function appError($error) {
+        if (Configure::read('debug') == 0):
+            $errormsg = 'Suite à une erreur, vous êtes redirigé vers cette page.<br>Veuillez essayer de nouveau, si cette erreur persiste, merci de contacter l\'administrateur en expliquant votre erreur.';
+            $this->Session->setFlash(__($errormsg),'default',array('class'=>'alert alert-error'));
+            $this->redirect(array('controller'=>'pages','action'=>'home'));        
+        else:
+            $this->redirect(array('controller'=>'errors','action'=>$error));
+        endif;
+    }  */  
+    
     
 }

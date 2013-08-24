@@ -1,3 +1,62 @@
+## b069
+ * Intégrer la mise à jour de bootstrap 3.0.0RC1 => travail énorme remis à plus tard car prévoir une refonte des pages
+ * Intégrer les icones glyphicons sous forme de police avec différentes tailles et couleurs travail sur le css à part pour déjà avoir une bonne base puis intégration au code ensuite. - OK
+ * appliquer overlay sur les actions le demandant en même temps - ajouter la classe showoverlay - OK
+ * [#FIX] Achats filtre activités revoir requete ne pas remonter toutes les activités mais uniquement celles ayant des achats - OK
+ * [#FIX] Activites filtre projets revoir requete ne pas remonter tous les projets mais uniquement cceux avec des activités - OK
+ * ActionLivrables/Add voir si possible de mettre sous forme de tableau avec selection multiple - OK
+ * mettre en place une meilleure gestion des erreurs que dans le appcontroller - ajout dans /lib/Cake/Error/exceptions.php de l'exception NotAuthorizedException - OK
+ * [#FIX] Ajout de la date de création et de modification sur la duplication de matériel - OK
+ * traduction de l'application à l'aide du fichier default.po
+ * utilisateur ajout possibilité de modifier l'état sans avoir à éditer l'utilisateur
+
+## b068
+ * Livrable ajouter un filtre mon équipe comme pour action pour le gestionnaire - OK
+ * Rapports Dashbord manque un choix sur l'année. - OK
+ * Feuille de temps refuser et alerter si total lignes inférieure au nombre de jours ouvrés de la semaine - OK
+ * facturation ajouter un memo avec zone de saisie si on clique dessus change en éditeur de texte apparition d'un symbole alert /!\ - OK
+ * Sur détail plan de charges si agent désactivé cacher le select et mettre le nom de l'agent dans la cellule - OK
+ * Initialiser le mot de passe admin dans paramétrage - OK
+ * Rapports Activités réelles essayer de faire le calcul en enlevant les jours qui ne sont pas entre le 1er et le dernier jour du mois, - OK
+ * Rapports facturation estimée essayer de faire le calcul en enlevant les jours qui ne sont pas entre le 1er et le dernier jour du mois, - OK
+ * Ajout d'un bouton dans la zone de texte du mémo pour effacer en un clique le mémo - OK
+ * [#FIX] Mes statistiques afficher un message si aucune information sur action et livrables - OK
+ * ajouter une timeline dans la liste des actions - mis en place reste à remonter les actions dans la timeline - OK
+ * ajout overlays sur le changement dans absences équipe - OK
+ * [#FIX] passe le statut à en cours si avancement = 10 - OK
+ * [#FIX] listes des utilisateur dans les rapports activités réelles et facturation en fonction des utilisateurs ayant fait une saisie - OK
+ * [#FIX] chargement des fonctions javascript pour la timeline si besoin - OK
+ * [#FIX] prise en compte des caractères accentué pour les exports - OK
+ * [#FIX] Liste des agents destinataires des action (index,add et edit) - OK
+ * ajout envois de mail du plan de charge agent - OK
+ * Imputer en charge le montant des achats effectués sur un projet, faire apparaître un message indiquant l'équivalence jour et le montant facturé. Dans le tableau de bord.
+
+## b067
+ * Import ICS controler que le jour n'est pas férié  - OK
+ * Ajouter une alerte modal rouge pour inviter les personnes utilisant IE à utiliser un autre navigateur - OK
+ * Fermeture du message flash au bout de 10 secondes - OK
+ * Ajouter un filtre pour les actions nouvellement créées et pour filtrer sur mon équipe - OK
+ * Action : ajouter une colonne destinataire - OK
+ * Plan de charge indication des prise en compte des vacances - OK
+ * Etat saisie calculer le nombre d'agent qui n'ont pas fait leur saisie, si possible en trouver la liste, avoir la possibilité d'envoyer un mail de relance - OK
+ * Budget/Plan de charge ajouter un parametrage de visibilité ainsi qu'un filtre visible comme pour Facturations/Facturé - OK
+
+## b066
+ * Mise à jour TinyMCE en 4.0.2
+ * Mise à jour CakePHP en 2.3.8
+ * Corrections mineures sur Dashboard (calcul premier tableau incorrect)
+ * Corrections mineures sur les actions et la progression de l'avancement
+ 
+## b065
+ * Gestion des erreur et redirection vers la page d'accueil ou de connexion
+ * Création du plan de charge par agent
+
+## b064
+ * Nouveau theme en relation avec le nouvel intranet et le site SNCF.com
+ * Intégration de la version 2.3.7 de cakephp
+ * Intégration de la version 1.10.2 de jQuery
+ * Mise en place d'aide dans les pages (les plus utilisées) à côté de la zone de recherche
+
 ## b063
  * amélioration de la sauvegarde de l'historique des actions pour éviter un trop grand nombre d'historique
  * Activité réelle controle du total avant insertion en base

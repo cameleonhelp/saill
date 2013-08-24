@@ -17,7 +17,7 @@
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container" style="margin-top:2px;text-align:center;">
-                <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-primary','type'=>'submit')); ?>   
+                <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-primary showoverlay','type'=>'submit')); ?>   
             </div>
         </div>
     </div>  

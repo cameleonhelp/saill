@@ -15,7 +15,7 @@
 		<td><?php echo h($Suivilivrable['Suivilivrable']['ECHEANCE']); ?>&nbsp;</td>
                 <td><?php echo h($Suivilivrable['Suivilivrable']['DATELIVRAISON']); ?>&nbsp;</td>
                 <td><?php echo h($Suivilivrable['Suivilivrable']['DATEVALIDATION']); ?>&nbsp;</td>
-                <td style='text-align:center;'><i class="<?php echo etatLivrable(h($Suivilivrable['Suivilivrable']['ETAT'])); ?>" rel="tooltip" data-title="<?php echo h($Suivilivrable['Suivilivrable']['ETAT']); ?>"></i>&nbsp;</td>
+                <td style='text-align:center;'><span class="glyphicons <?php echo etatLivrable(h($Suivilivrable['Suivilivrable']['ETAT'])); ?>" rel="tooltip" data-title="<?php echo h($Suivilivrable['Suivilivrable']['ETAT']); ?>"></span>&nbsp;</td>
             </tr>
         <?php endforeach; ?>
         </tbody>

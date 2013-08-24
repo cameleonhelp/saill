@@ -9,7 +9,7 @@
                     $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous';
                 ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'add')) : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<span class="glyphicons plus size14"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <li class="dropdown">
@@ -60,7 +60,7 @@
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'update')) : ?>
                 <li class="divider-vertical-only"></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-check"></i> Actions groupées <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicons check"></span> Actions groupées <b class="caret"></b></a>
                      <ul class="dropdown-menu">
                      <li><?php echo $this->Html->link('Mettre à jour l\'état', "#",array('id'=>'updatelink')); ?></li>
                      </ul>
@@ -70,7 +70,10 @@
                 <?php echo $this->Form->create("Utiliseoutil",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche dans tous les champs')); ?>
                     <button type="submit" class="btn">Rechercher</button>
-                <?php echo $this->Form->end(); ?>                     
+                <?php echo $this->Form->end(); ?>   
+                <ul class="nav pull-right">
+                    <li><a href="#" rel="popover" data-title="Aide" data-placement="bottom" data-content="<?php echo $this->element('hlp/hlp-utiliseoutil'); ?>"><span><span class="glyphicons blue circle_question_mark size14"></span></span></a></li>
+                </ul>                     
                 </div>
             </div>
         </div>
@@ -102,7 +105,7 @@
                 <td><?php echo h($utiliseoutil['Dossierpartage']['NOM']); ?>&nbsp;</td>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'update')) : ?>
                 <td style="text-align:center;padding-left:5px;padding-right:5px;vertical-align: middle;"><?php echo $this->Form->input('id',array('type'=>'checkbox','label'=>false,'class'=>'idselect','value'=>$utiliseoutil['Utiliseoutil']['id'])) ; ?></td>                
-                <td style='text-align:center;'><?php echo $this->Html->link('<i class="changeetat '.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'" idaction="'.$utiliseoutil['Utiliseoutil']['id'].'"></i>', '#', array('escape' => false,'idaction'=>$utiliseoutil['Utiliseoutil']['id'])); ?>
+                <td style='text-align:center;'><?php echo $this->Html->link('<span class="glyphicons changeetat '.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'" idaction="'.$utiliseoutil['Utiliseoutil']['id'].'"></span>', '#', array('escape' => false,'idaction'=>$utiliseoutil['Utiliseoutil']['id'])); ?>
                 <?php 
                 $d = explode('/',$utiliseoutil['Utiliseoutil']['modified']);
                 $ndate = new DateTime($d[2].'-'.$d[1].'-'.$d[0]);
@@ -111,22 +114,22 @@
                 ?>
                 <?php $etatValid = array('Demande traitée','Retour utilisateur',"A supprimer",'Supprimée'); ?>
                 <?php if (!in_array($utiliseoutil['Utiliseoutil']['STATUT'],$etatValid) && utiliseoutilEnretard($utiliseoutil['Utiliseoutil']['modified'])) : ?>
-                    <a href="<?php echo $this->Html->url(array('controller'=>'utiliseoutils','action'=>'sendmailrelance',$utiliseoutil['Utiliseoutil']['id'])); ?>"><span class="pull-right" style="margin-left:-14px;" rel="tooltip" data-title="Envoyer un mail de relance<br>Limite atteinte le <?php echo $datelimite; ?>"><i class="icon-envelope"></i></span></a>
+                    <a href="<?php echo $this->Html->url(array('controller'=>'utiliseoutils','action'=>'sendmailrelance',$utiliseoutil['Utiliseoutil']['id'])); ?>"><span class="pull-right" style="margin-left:-14px;" rel="tooltip" data-title="Envoyer un mail de relance<br>Limite atteinte le <?php echo $datelimite; ?>"><span class="glyphicons envelope"></span></span></a>
                 <?php endif; ?>
                 </td>
                 <td style="text-align: center;"><?php echo h($utiliseoutil['Utiliseoutil']['modified']); ?>&nbsp;</td>
                 <?php else : ?>
-                <td style='text-align:center;'><?php echo '<i class="'.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'"></i>'; ?></td>                
+                <td style='text-align:center;'><?php echo '<span class="glyphicons '.etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])).'" rel="tooltip" data-title="'.h($utiliseoutil['Utiliseoutil']['STATUT']).'"></span>'; ?></td>                
                 <?php endif; ?>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'view')) : ?>
-                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Demande de droit :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($utiliseoutil['Utiliseoutil']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($utiliseoutil['Utiliseoutil']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php echo '<span class="glyphicons eye_open" rel="popover" data-title="<h3>Demande de droit :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($utiliseoutil['Utiliseoutil']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($utiliseoutil['Utiliseoutil']['modified']).'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $utiliseoutil['Utiliseoutil']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil"></span>', array('action' => 'edit', $utiliseoutil['Utiliseoutil']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utiliseoutils', 'delete')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $utiliseoutil['Utiliseoutil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette demande de droit ?')); ?>                    
+                    <?php echo $this->Form->postLink('<span class="glyphicons bin"></span>', array('action' => 'delete', $utiliseoutil['Utiliseoutil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette demande de droit ?')); ?>                    
                     <?php endif; ?>
 		</td>
 	</tr>
@@ -136,7 +139,7 @@
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
 	<div class="pull-right"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>     
-	<div class="pagination  pagination-centered">
+	<div class="pagination  pagination-centered showoverlay">
         <ul>
 	<?php
                 echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";
@@ -154,8 +157,8 @@
        
         $(document).on('click','#updatelink',function(e){
             var ids = $("#all_ids").val();
-            var overlay = jQuery('<div id="overlay"><?php echo $this->Html->image("loading.gif"); ?> Travail en cours, veuillez patienter ...</div>');
-            overlay.appendTo(document.body)
+            var overlay = $('#overlay');
+            overlay.show(); 
             $.ajax({
                 dataType: "html",
                 type: "POST",
@@ -163,7 +166,7 @@
                 data: ({all_ids:ids})
             }).done(function ( data ) {
                 location.reload();
-                overlay.remove();
+                overlay.hide();
             });
             $(this).parents().find(':checkbox').prop('checked', false);
             $("#all_ids").val('');

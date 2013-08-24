@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('CakeEmail', 'Network/Email');
 /**
  * Plancharges Controller
  *
@@ -19,7 +20,7 @@ class PlanchargesController extends AppController {
  *
  * @return void
  */
-	public function index($annee=null,$contrat_id=null) {
+	public function index($annee=null,$contrat_id=null,$isvisble=null) {
             //$this->Session->delete('history');
             if (isAuthorized('plancharges', 'index')) :
                 $this->set('title_for_layout','Plans de charge'); 
@@ -50,6 +51,15 @@ class PlanchargesController extends AppController {
                         $newconditions[]="Plancharge.contrat_id = ".$contrat_id;
                         $contrat = $this->Plancharge->Contrat->find('first',array('fields'=>array('Contrat.NOM'),'conditions'=>array('Contrat.id'=>$contrat_id),'recursive'=>-1));
                         $fprojet = "du contrat :".$contrat['Contrat']['NOM'];
+                        break;                                         
+                }  
+                switch ($isvisble){
+                    case '1':
+                    case null:
+                        $newconditions[]="Plancharge.VISIBLE=1";
+                        break;
+                    default:
+                        $newconditions[]="1=1";
                         break;                                         
                 }  
                 $this->set('fprojet',$fprojet);                  
@@ -196,7 +206,7 @@ class PlanchargesController extends AppController {
                     $this->Session->write('rapportresults',$rapportresult);
                     $this->Session->write('detailrapportresults',$detailrapportresult);
                 endif;
-                $plancharge = $this->Plancharge->find('list',array('fields'=>array('id','NOM'),'order'=>array('Plancharge.NOM'=>'asc'),'recursive'=>-1));
+                $plancharge = $this->Plancharge->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Plancharge.VISIBLE'=>1),'order'=>array('Plancharge.NOM'=>'asc'),'recursive'=>-1));
                 $this->set('plancharges',$plancharge);
                 $domaines = $this->Plancharge->Detailplancharge->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
@@ -205,6 +215,38 @@ class PlanchargesController extends AppController {
                 throw new NotAuthorizedException();
             endif;               
 	}    
+
+        public function rapportagent() {
+            $this->set('title_for_layout','Rapport du plan de charges pour un agent');
+            if (isAuthorized('plancharges', 'rapports')) :
+                if ($this->request->is('post')):
+                    $id = $this->request->data['Plancharge']['utilisateur_id'];
+                    $annee = $this->request->data['Plancharge']['ANNEE'];
+                    $sql = "SELECT detailplancharges.ETP,detailplancharges.TOTAL,detailplancharges.TJM,detailplancharges.COUT,domaines.NOM,activites.NOM,projets.NOM,detailplancharges.utilisateur_id FROM detailplancharges
+                            left join plancharges on plancharges.id = plancharge_id
+                            left join domaines on domaines.id = domaine_id
+                            left join activites on activites.id = activite_id
+                            left join projets on projets.id = activites.projet_id
+                            WHERE plancharges.ANNEE = ".$annee
+                            ." AND plancharges.VISIBLE = 1 AND utilisateur_id = ".$id;
+                    $rapportresult = $this->Plancharge->query($sql);
+                    $this->set('rapportresults',$rapportresult);
+                    $this->Session->delete('mail');
+                    $this->Session->write('mail',$rapportresult);
+                endif;
+                $utilisateurs = $this->Plancharge->Detailplancharge->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $this->set('utilisateurs',$utilisateurs);  
+                $annees = $this->Plancharge->find('all',array('fields'=>array('Plancharge.ANNEE'),'conditions'=>array('Plancharge.VISIBLE'=>1),'group'=>'Plancharge.ANNEE','recursive'=>-1));
+                foreach($annees as $annee):
+                    $val = $annee['Plancharge']['ANNEE'];
+                    $years[$val]=$val;
+                endforeach;
+                $this->set('annees',$years);
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;               
+	}         
         
 	function export_doc() {
             if($this->Session->check('rapportresults') && $this->Session->check('detailrapportresults')):
@@ -219,4 +261,48 @@ class PlanchargesController extends AppController {
             endif;
         }         
         
+        public function isvisible($id){
+            $this->Plancharge->id = $id;
+            $plancharge = $this->Plancharge->find('first',array('fields'=>array('VISIBLE'),'conditions'=>array('Plancharge.id'=>$id),'recursive'=>-1));
+            $newvalue = $plancharge['Plancharge']['VISIBLE']==0 ? 1 : 0;
+            if($this->Plancharge->saveField('VISIBLE', $newvalue)):
+                $this->Session->setFlash(__('Plan de charge mis à jour'),'default',array('class'=>'alert alert-success'));
+                exit();
+            endif;
+            $this->Session->setFlash(__('Echec de la mise à jour du plan de charge'),'default',array('class'=>'alert alert-error'));
+            exit();
+        }
+        
+        public function sendmail(){
+            $plancharges = $this->Session->read('mail');
+            $valideurs = $this->Plancharge->Detailplancharge->Utilisateur->find('all',array('conditions'=>array('Utilisateur.id'=>$plancharges[0]['detailplancharges']['utilisateur_id'])));
+            $mailto = array();
+            foreach($valideurs as $valideur):
+                $mailto[]=$valideur['Utilisateur']['MAIL'];
+            endforeach;
+            $liste = '';
+            foreach($plancharges as $plancharge):
+                $liste .= '<li>'.$plancharge['projets']['NOM'].' - '.$plancharge['activites']['NOM'].' - '.$plancharge['domaines']['NOM'].' : '.$plancharge['detailplancharges']['TOTAL'].' jours</li>';                     
+            endforeach;
+            $to=$mailto;
+            $from = userAuth('MAIL');
+            $objet = 'SAILL : Votre plan de répartition des charges';
+            $message = "Bonjour,<br>Voici comment doit se répartir votre saisie sur l'année : ".
+                    '<ul>'.$liste.'</ul>';
+            if($to!=''):
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+                }
+                catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                }  
+            endif;
+            $this->History->goBack();
+        } 
 }

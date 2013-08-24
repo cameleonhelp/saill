@@ -223,3 +223,9 @@ Configure::write(
 Configure::write(
     'typeAction',array('action'=>'Action','indisponibilité'=>'Absences','standard'=>'Automatique')
 );
+
+Configure::write('Config.language', 'fra');
+/**
+ * Gestion d'exception personnalisée
+ */
+//App::uses('AppExceptionHandler', 'Lib');

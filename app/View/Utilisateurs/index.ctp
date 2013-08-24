@@ -4,7 +4,7 @@
                 <div class="container">
                 <ul class="nav">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'add')) : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<span class="glyphicons plus size14"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <li class="dropdown">
@@ -50,14 +50,14 @@
                 <li><?php echo $this->Html->link('Filtre alphabétique','#',array('escape' => false,'id'=>'tooglealphafilter')); ?></li>
                 <li class="divider-vertical-only"></li>                
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-check"></i> Actions groupées <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicons check"></span> Actions groupées <b class="caret"></b></a>
                      <ul class="dropdown-menu">
                      <li><?php echo $this->Html->link('Prolonger', "#",array('id'=>'prolongerlink')); ?></li>
                      <li><?php echo $this->Html->link('Désactiver', "#",array('id'=>'desactiverlink')); ?></li>
                      </ul>
                 </li>                 
                  <li class="divider-vertical-only"></li>
-                <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<span class="ico-xls icon-top2" rel="tooltip" data-title="Export Excel"></span>', array('action' => 'export_xls'),array('escape' => false)); ?></li>
                 <li class="divider-vertical-only"></li>
                 </ul> 
                 <?php echo $this->Form->create("Utilisateur",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -127,11 +127,11 @@
                 <td style="text-align:center;padding-left:5px;padding-right:5px;vertical-align: middle;"><?php echo $this->Form->input('id',array('type'=>'checkbox','label'=>false,'class'=>'idselect','value'=>$utilisateur['Utilisateur']['id'])) ; ?></td>
 		<td><?php echo h($utilisateur['Section']['NOM']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($utilisateur['Utilisateur']['FINMISSION']); ?>&nbsp;</td>
-                <td  width="80px" style="text-align: center;"><?php echo h($utilisateur['Utilisateur']['ACTIF']) == 1 ? '<i class="icon-ok"></i>' : '<i class="icon-ok icon-grey"></i>'; ?>&nbsp;</td>
+                <td  width="80px" style="text-align: center;"><?php echo h($utilisateur['Utilisateur']['ACTIF']) == 1 ? '<span etat="0" iduser="'.$utilisateur['Utilisateur']['id'].'" class="glyphicons ok_2 cursor changeetat"></span>' : '<span etat="1" iduser="'.$utilisateur['Utilisateur']['id'].'" class="glyphicons ok_2 disabled cursor changeetat"></span>'; ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'view')) : ?>
                     <?php $mail = (isset($utilisateur['Utilisateur']['MAIL']) && !empty($utilisateur['Utilisateur']['MAIL'])) ? '<a href=\'mailto:'.h($utilisateur['Utilisateur']['MAIL']).'\'>'.h($utilisateur['Utilisateur']['MAIL']).'</a>': 'Non attribué'; ?>
-                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Utilisateur :</h3>" data-content="<contenttitle>Nom Prénom: </contenttitle>'.h($utilisateur['Utilisateur']['NOMLONG'])
+                    <?php echo '<span class="glyphicons eye_open" rel="popover" data-title="<h3>Utilisateur :</h3>" data-content="<contenttitle>Nom Prénom: </contenttitle>'.h($utilisateur['Utilisateur']['NOMLONG'])
                                 .'<br/><contenttitle>Date naissance: </contenttitle>'.h($utilisateur['Utilisateur']['NAISSANCE'])
                                 .'<br/><contenttitle>Email: </contenttitle>'.$mail
                                 .'<br/><contenttitle>Login: </contenttitle>'.h($utilisateur['Utilisateur']['username'])
@@ -139,30 +139,30 @@
                                 .'<br/><contenttitle>Site: </contenttitle>'.h($utilisateur['Site']['NOM'])
                                 .'<br/><contenttitle>Assistance: </contenttitle>'.h($utilisateur['Assistance']['NOM'])
                                 .'<br/><contenttitle>Créé le: </contenttitle>'.h($utilisateur['Utilisateur']['created'])
-                                .'<br/><contenttitle>Modifié le: </contenttitle>'.h($utilisateur['Utilisateur']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                                .'<br/><contenttitle>Modifié le: </contenttitle>'.h($utilisateur['Utilisateur']['modified']).'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil"></span>', array('action' => 'edit', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
                     <?php else: ?>
-                    <i class="icon-blank"></i>
+                    <span class="glyphicons blank"></span>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'delete')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet utilisateur ?')); ?>                    
+                    <?php echo $this->Form->postLink('<span class="glyphicons bin"></span>', array('action' => 'delete', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet utilisateur ?')); ?>                    
                     <?php else: ?>
-                    <i class="icon-blank"></i>
+                    <span class="glyphicons blank"></span>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'initpassword')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-asterisk"></i>', array('action' => 'initpassword', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir initialiser le mot de passe de cet utilisateur ?')); ?>                                            
+                    <?php echo $this->Form->postLink('<span class="glyphicons rotation_lock"></span>', array('action' => 'initpassword', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir initialiser le mot de passe de cet utilisateur ?')); ?>                                            
                     <?php else: ?>
-                    <i class="icon-blank"></i>
+                    <span class="glyphicons blank"></span>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'duplicate')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-retweet"></i>', array('action' => 'dupliquer', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cet utilisateur ?')); ?>
+                    <?php echo $this->Form->postLink('<span class="glyphicons retweet"></span>', array('action' => 'dupliquer', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cet utilisateur ?')); ?>
                     <?php else: ?>
-                    <i class="icon-blank"></i>
+                    <span class="glyphicons blank"></span>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('dotations', 'add')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-shopping-cart"></i>', array('controller'=>'dotations','action' => 'add', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons cargo"></span>', array('controller'=>'dotations','action' => 'add', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>                    
                 </td>
 	</tr>
@@ -172,7 +172,7 @@
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
 	<div class="pull-right"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>     
-	<div class="pagination  pagination-centered">
+	<div class="pagination  pagination-centered showoverlay">
         <ul>
 	<?php
                 echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";
@@ -195,8 +195,8 @@
     
         $(document).on('click','#prolongerlink',function(e){
             var ids = $("#all_ids").val();
-            var overlay = jQuery('<div id="overlay"><?php echo $this->Html->image("loading.gif"); ?> Travail en cours, veuillez patienter ...</div>');
-            overlay.appendTo(document.body)
+            var overlay = $('#overlay');
+            overlay.show(); 
             $.ajax({
                 dataType: "html",
                 type: "POST",
@@ -204,7 +204,7 @@
                 data: ({all_ids:ids})
             }).done(function ( data ) {
                 location.reload();
-                overlay.remove();
+                overlay.hide();
             });
             $(this).parents().find(':checkbox').prop('checked', false);  
             $("#all_ids").val('');
@@ -212,8 +212,8 @@
         
         $(document).on('click','#desactiverlink',function(e){
             var ids = $("#all_ids").val();
-            var overlay = jQuery('<div id="overlay"><?php echo $this->Html->image("loading.gif"); ?> Travail en cours, veuillez patienter ...</div>');
-            overlay.appendTo(document.body)
+            var overlay = $('#overlay');
+            overlay.show(); 
             $.ajax({
                 dataType: "html",
                 type: "POST",
@@ -221,7 +221,7 @@
                 data: ({all_ids:ids})
             }).done(function ( data ) {
                 location.reload();
-                overlay.remove();
+                overlay.hide();
             });
             $(this).parents().find(':checkbox').prop('checked', false);
             $("#all_ids").val('');
@@ -256,6 +256,21 @@
                 tmp = list.replace($(this).val()+"-", "");
                 if (tmp == list) tmp = list.replace("-"+$(this).val(), ""); 
                 $("#all_ids").val(tmp);
+            }
+        });
+               
+        $(document).on('click','.changeetat',function(e){
+            if (confirm("Merci de confirmer le change d'état de cette personne.")){
+                var id = $(this).attr('iduser');
+                var etat = $(this).attr('etat');
+                $.ajax({
+                    dataType: "html",
+                    type: "POST",
+                    url: "<?php echo $this->Html->url(array('controller'=>'utilisateurs','action'=>'changeetat')); ?>/",
+                    data: ({id:id,etat:etat})
+                }).done(function ( data ) {
+                    location.reload();
+                });
             }
         });
     });

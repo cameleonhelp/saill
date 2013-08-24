@@ -107,10 +107,25 @@ class ParametersController extends AppController {
             $this->History->goBack();
 	}
         
+        public function ajaxSaveParam() {
+            $id = $this->request->data('id');
+            $this->Parameter->id = $id;
+            if ($this->Parameter->saveField('param', $this->request->data('memo'))):
+                $this->Session->setFlash(__('Paramètre mis à jour'),'default',array('class'=>'alert alert-success'));
+            else:
+                $this->Session->setFlash(__('Paramètre <b>NON</b> mis à jour'),'default',array('class'=>'alert alert-error')); 
+            endif;
+            $this->History->goBack();
+	}        
         
         public function get_version(){
             $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'version'),'recursive'=>-1));
             return $version;
+        }
+
+        public function get_memofacturation(){
+            $memo = $this->Parameter->find('first',array('conditions'=>array('nom'=>'memofacturation'),'recursive'=>-1));
+            return $memo;
         }
         
         public function get_minidocurl(){

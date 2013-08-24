@@ -23,10 +23,10 @@
 		<td style="text-align:center;"><?php echo $this->Form->input('REVU',array('type'=>'hidden','class'=>'idhistory','value'=>$budget['Historybudget']['id']));?><?php echo $this->Form->input('ACTIF',array('type'=>'checkbox','class'=>'isactive savebudget','value'=>1,'checked'=>$budget['Historybudget']['ACTIF'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>&nbsp;</td>
                 <td>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activites', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('controller'=>'historybudgets','action' => 'edit', $budget['Historybudget']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil"></span>', array('controller'=>'historybudgets','action' => 'edit', $budget['Historybudget']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activites', 'delete')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-trash"></i>', array('controller'=>'historybudgets','action' => 'delete', $budget['Historybudget']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce budget ?')); ?>
+                    <?php echo $this->Html->link('<span class="glyphicons bin"></span>', array('controller'=>'historybudgets','action' => 'delete', $budget['Historybudget']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce budget ?')); ?>
                     <?php endif; ?>                    
                 </td>
 	</tr>
@@ -46,15 +46,15 @@ $(document).ready(function () {
     $(document).on('click','.savebudget',function(e){
         e.preventDefault; 
         var id = $(this).parents('tr').find('.idhistory').val();
-        var overlay = jQuery('<div id="overlay"><?php echo $this->Html->image("loading.gif"); ?> Travail en cours, veuillez patienter ...</div>');
-        overlay.appendTo(document.body)
+        var overlay = $('#overlay');
+        overlay.show(); 
         $.ajax({
             dataType: "html",
             type: "POST",
             url: "<?php echo $this->Html->url(array('controller'=>'historybudgets','action'=>'budgetisactif')); ?>/",
             data: ({id:id,activite_id:<?php echo $this->params->pass[0]; ?>})
         }).done(function (data) {
-            overlay.remove();
+            overlay.hide();
         });
      
     });    

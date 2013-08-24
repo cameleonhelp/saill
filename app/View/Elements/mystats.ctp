@@ -5,132 +5,172 @@
     <div style='text-align:center;'><h4>Mes 5 prochaines échéances:</h4></div>
     <div style='display: table;width: 95%;margin-left: auto;margin-right:auto;'>
     <table cellpadding="0" cellspacing="0">
-        <thead>
-         <tr><th colspan='2' style='text-align:center;'>Actions</th></tr>
-        </thead>
         <?php $listeactions = $this->requestAction('actions/homeListeActions'); ?> 
         <?php foreach ($listeactions as $action) :  ?>
-        <?php $class = CUSDate($action['Action']['ECHEANCE']) < date('Y-m-d') ? 'alert-danger' : ''; ?>
+        <?php $class = CUSDate($action['Action']['ECHEANCE']) < date('Y-m-d') ? 'to-late' : ''; ?>
+        <?php $chronos = CUSDate($action['Action']['ECHEANCE']) < date('Y-m-d') ? 'En retard' : ''; ?>
         <?php 
         $priority = $action['Action']['PRIORITE']; 
         switch ($priority){
             case 'haute':
-                $priority = 'icon-arrow-up icon-red';
+                $priority = 'up_arrow red size10';
                 break;
             case 'moyenne':
-                $priority = 'icon-minus';
+                $priority = 'minus size10';
                 break;
             case 'normale':
-                $priority = 'icon-arrow-down';
+                $priority = 'down_arrow size10';
                 break;          
         }
         ?>
-         <tr class='<?php echo $class; ?>'>
-             <td><i class='<?php echo $priority; ?>'></i></td><td><?php echo $action['Action']['OBJET']; ?></td>
+         <tr>
+             <td>
+                <div class="font-default">
+                    <div class="title">Action</div>
+                    <div><span class='glyphicons <?php echo $priority; ?>'></span>&nbsp;<span class='<?php echo $class; ?>'><?php echo $action['Action']['ECHEANCE']; ?>&nbsp;<?php echo $chronos != '' ? "[".$chronos."] " : ''; ?></span><br><span class="font-higth"><?php echo $action['Action']['OBJET']; ?></span></div>
+                </div>  
+             </td>
          </tr>
         <?php endforeach; ?>
+        <?php if(empty($listeactions)): ?>
+         <tr>
+             <td>
+                <div class="font-default">
+                    <div class="title">Aucune action</div>
+                </div>  
+             </td>
+         </tr>
+        <?php endif;?>
     </table>
+    <hr class="hrstat">        
     <table cellpadding="0" cellspacing="0">    
-        <thead>
-         <tr><th style='text-align:center;'>Livrables</th></tr>
-        </thead>
         <?php $listelivrables = $this->requestAction('livrables/homeListeLivrables'); ?> 
         <?php foreach ($listelivrables as $livrable) :  ?>
-        <?php $class = CUSDate($livrable['Livrable']['ECHEANCE']) < date('Y-m-d') ? 'alert-danger' : ''; ?>
-         <tr class='<?php echo $class; ?>'>
-             <td><?php echo $livrable['Livrable']['NOM']; ?></td>
+        <?php $class = CUSDate($livrable['Livrable']['ECHEANCE']) < date('Y-m-d') ? 'to-late' : ''; ?>
+        <?php $chronos = CUSDate($livrable['Livrable']['ECHEANCE']) < date('Y-m-d') ? 'En retard' : ''; ?>
+         <tr>
+             <td>
+                <div class="font-default">
+                    <div class="title">Livrable</div>
+                    <div><span class='<?php echo $class; ?>'><?php echo $livrable['Livrable']['ECHEANCE']; ?>&nbsp;<?php echo $chronos != '' ? "[".$chronos."] " : ''; ?></span><br><span class="font-higth"><?php echo $livrable['Livrable']['NOM']; ?></span></div>
+                </div>                   
+             </td>
          </tr>
-        <?php endforeach; ?>        
+        <?php endforeach; ?> 
+        <?php if(empty($listelivrables)): ?>
+         <tr>
+             <td>
+                <div class="font-default">
+                    <div class="title">Aucun livrable</div>
+                </div>  
+             </td>
+         </tr>
+        <?php endif;?>         
      </table>
     </div>
     <hr class="hrstat">
-    <h4>Mes actions et livrables:</h4>
-    <div style='display: table;width: 95%;margin-left: auto;margin-right:auto;'>
+    <div style='text-align:center;'><h4>Mes actions et livrables:</h4></div>
+    <div style='display: table;margin-left: auto;margin-right:auto;'>
         <table  cellpadding="0" cellspacing="0">
-            <thead>
-                <tr><th>Actions</th><th>Livrables</th></tr>
                 <tr>
-                    <td>
+                    <td  style="border-right:solid 1px #DDD;">
                         <table  cellpadding="0" cellspacing="0" style="margin:0px;">
-                        <thead>
-                         <tr><th style='text-align:center;' class='info-danger'>En retard</th></tr>
-                        </thead>
-                        <?php $nbactions = $this->requestAction('actions/homeNBRETARDActions'); ?>
-                        <tr><td align='center'><div class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($nbactions[0][0]['NB']) ? $nbactions[0][0]['NB'] : 0; ?></div></div></div></td></tr>
+                            <tr><td>
+                            <div class="font-default">
+                                <div class="title">Actions</div>
+                                <?php $nbactions = $this->requestAction('actions/homeNBRETARDActions'); ?>
+                                <div class="information">En retard</div>
+                                <div class="saisie to-late pull-right"><?php echo isset($nbactions[0][0]['NB']) ? $nbactions[0][0]['NB'] : 0; ?></div>
+                            </div>        
+                            </td></tr>
                         </table>
                         <table  cellpadding="0" cellspacing="0" style="margin:0px;">
-                        <thead>
-                         <tr><th style='text-align:center;' class='info-warning'>En cours</th></tr>
-                        </thead>
-                        <?php $nbactions = $this->requestAction('actions/homeNBENCOURSActions'); ?>
-                        <tr><td align='center'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($nbactions[0][0]['NB']) ? $nbactions[0][0]['NB'] : 0; ?></div></div></span></td></tr>
+                            <tr><td>
+                            <div class="font-default">
+                                <div class="title">Actions</div>
+                                <?php $nbactions = $this->requestAction('actions/homeNBENCOURSActions'); ?>
+                                <div class="information">En cours</div>
+                                <div class="saisie in-line pull-right"><?php echo isset($nbactions[0][0]['NB']) ? $nbactions[0][0]['NB'] : 0; ?></div>
+                            </div>        
+                            </td></tr>                            
                         </table>
                         <table  cellpadding="0" cellspacing="0" style="margin:0px;">
-                        <thead>
-                        <?php $nbactions = $this->requestAction('actions/homeNBAFAIREActions'); ?>
-                        <tr><th style='text-align:center;' class='info-success'>A faire</th></tr>
-                        </thead>
-                        <tr><td align='center'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($nbactions[0][0]['NB']) ? $nbactions[0][0]['NB'] : 0; ?></div></div></span></td></tr>
+                            <tr><td>
+                            <div class="font-default">
+                                <div class="title">Actions</div>
+                                <?php $nbactions = $this->requestAction('actions/homeNBAFAIREActions'); ?>
+                                <div class="information">A faire</div>
+                                <div class="saisie to-do pull-right"><?php echo isset($nbactions[0][0]['NB']) ? $nbactions[0][0]['NB'] : 0; ?></div>
+                            </div>        
+                            </td></tr>                              
                         </table>                        
                     </td>
                     <td>
                         <table  cellpadding="0" cellspacing="0" style="margin:0px;">
-                        <thead>
-                         <tr><th style='text-align:center;' class='info-danger'>En retard</th></tr>
-                        </thead>
-                        <?php $nblivrables = $this->requestAction('livrables/homeNBRETARDLivrables'); ?>
-                        <tr><td align='center'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($nblivrables[0][0]['NB']) ? $nblivrables[0][0]['NB'] : 0; ?></div></div></span></td></tr>
+                            <tr><td>                            
+                            <div class="font-default">
+                                <div class="title">Livrables</div>
+                                <?php $nblivrables = $this->requestAction('livrables/homeNBRETARDLivrables'); ?>
+                                <div class="information">En retard</div>
+                                <div class="saisie to-late pull-right"><?php echo isset($nblivrables[0][0]['NB']) ? $nblivrables[0][0]['NB'] : 0; ?></div>
+                            </div>        
+                            </td></tr>                              
                         </table>
                         <table  cellpadding="0" cellspacing="0" style="margin:0px;">
-                        <thead>
-                         <tr><th style='text-align:center;' class='info-warning'>En cours</th></tr>
-                        </thead>
-                        <?php $nblivrables = $this->requestAction('livrables/homeNBENCOURSLivrables'); ?>
-                        <tr><td align='center'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($nblivrables[0][0]['NB']) ? $nblivrables[0][0]['NB'] : 0; ?></div></div></span></td></tr>
+                            <tr><td>                            
+                            <div class="font-default">
+                                <div class="title">Livrables</div>
+                                <?php $nblivrables = $this->requestAction('livrables/homeNBENCOURSLivrables'); ?>
+                                <div class="information">En cours</div>
+                                <div class="saisie in-line pull-right"><?php echo isset($nblivrables[0][0]['NB']) ? $nblivrables[0][0]['NB'] : 0; ?></div>
+                            </div>        
+                            </td></tr>                              
                         </table>
                         <table  cellpadding="0" cellspacing="0" style="margin:0px;">
-                        <thead>
-                        <?php $nblivrables = $this->requestAction('livrables/homeNBAFAIRELivrables'); ?>
-                        <tr><th style='text-align:center;' class='info-success'>A faire</th></tr>
-                        </thead>
-                        <tr><td align='center'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($nblivrables[0][0]['NB']) ? $nblivrables[0][0]['NB'] : 0; ?></div></div></span></td></tr>
+                            <tr><td>                            
+                            <div class="font-default">
+                                <div class="title">Livrables</div>
+                                <?php $nblivrables = $this->requestAction('livrables/homeNBAFAIRELivrables'); ?>
+                                <div class="information">A faire</div>
+                                <div class="saisie to-do pull-right"><?php echo isset($nblivrables[0][0]['NB']) ? $nblivrables[0][0]['NB'] : 0; ?></div>
+                            </div>        
+                            </td></tr>                              
                         </table>                        
                     </td>
                 </tr>
-            </thead>
         </table>
     </div> 
     <hr class="hrstat">
-    <h4>Ma saisie d'activité :</h4>
-    <div style='display: table;width: 95%;margin-left: auto;margin-right:auto;'>
-        <table  cellpadding="0" cellspacing="0">
+    <div style='text-align:center;'><h4>Ma saisie d'activité :</h4></div>
+    <div style='display: table;margin-left: auto;margin-right:auto;'>
         <?php $mondays = getallmonday(); ?>
         <?php foreach($mondays as $monday) : ?>
-        <thead>
-         <tr><th style='text-align:center;' colspan='2'><?php echo $monday; ?></th></tr>
-        </thead>
         <?php $activitesreelle[0]['TOTAL']=0;
         $activitesreelle['Activitesreelle']['VEROUILLE']=false;
+        ?>
+        <?php 
+            $etat = "not-active";
         ?>
         <?php $activitesreelles = $this->requestAction('activitesreelles/homeNBActivitesReelles'); ?>
         <?php foreach($activitesreelles as $activitesreelle) : ?>
         <?php if ($monday == $activitesreelle['Activitesreelle']['DATE']): ?>
         <?php 
             if ((isset($activitesreelle[0]['TOTAL']) && $activitesreelle[0]['TOTAL']==5) && $activitesreelle['Activitesreelle']['VEROUILLE']==false) : 
-                $etatsaisie = ucfirst_utf8('facturé');
-                $badge = 'badge-success';
+                $etatsaisie = ucfirst_utf8('facturé');$etat = "facture";
             else:
-                $etatsaisie = ucfirst_utf8('à facturer'); 
-                $badge = 'badge-warning';
+                $etatsaisie = ucfirst_utf8('à facturer'); $etat = "to-facture";
             endif;
-            if (isset($activitesreelle[0]['TOTAL']) && $activitesreelle[0]['TOTAL']<5 && $activitesreelle['Activitesreelle']['VEROUILLE']==true) : $etatsaisie = ucfirst_utf8('à compléter'); $badge = 'badge-important'; endif;
-            if (!isset($activitesreelle[0]['TOTAL'])) : $etatsaisie = ucfirst_utf8('à faire'); $badge = 'badge-important'; endif;
-			if ($activitesreelle['Activitesreelle']['VEROUILLE']==false): $etatsaisie = ucfirst_utf8('facturé'); $badge = 'badge-success'; endif;
+            if (isset($activitesreelle[0]['TOTAL']) && $activitesreelle[0]['TOTAL']<5 && $activitesreelle['Activitesreelle']['VEROUILLE']==true) : $etatsaisie = ucfirst_utf8('à compléter');$etat = "to-complete"; endif;
+            if (!isset($activitesreelle[0]['TOTAL'])) : $etatsaisie = ucfirst_utf8('à saisir'); endif;
+			if ($activitesreelle['Activitesreelle']['VEROUILLE']==false): $etatsaisie = ucfirst_utf8('facturé'); $etat = "facture"; endif;
         ?>
-        <tr><td align='center' width='10px'><span class='sleek'><div class='line-vertical'><div class='sleek-label'><?php echo isset($activitesreelle[0]['TOTAL']) ? $activitesreelle[0]['TOTAL']: '0.0'; ?></div></div></span></td><td style='text-align:left;padding-left: 20px;font-size: 14px;'><span class="badgeround <?php echo $badge; ?>">&nbsp;</span> <?php echo $etatsaisie; ?></td></tr>
+        <div class="font-default">
+            <div class="title">Saisie d'activité hebdomadaire</div>
+            <div class="information"><?php echo $monday; ?><br><span class='font-ligth <?php echo $etat; ?>'><?php echo $etatsaisie; ?></span></div>
+            <div class="saisie <?php echo $etat; ?>  pull-right"><?php echo isset($activitesreelle[0]['TOTAL']) ? $activitesreelle[0]['TOTAL']: '0.0'; ?></div>
+        </div>
         <?php endif; ?>
         <?php endforeach; ?>
-        <?php endforeach; ?>
-        </table>        
+        <?php endforeach; ?>       
     </div>  
 </div>

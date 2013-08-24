@@ -58,59 +58,6 @@
  * For MySQL to connect via socket specify the `unix_socket` parameter instead of `host` and `port`
  */
 class DATABASE_CONFIG {
- 
-   /* var $developmenthome = array( 
-        'datasource' => 'Database/Mysql',
-        'driver' => 'mysql',
-        'connect' => 'mysql_connect',
-        'persistent' => false,
-        'host' => '10.0.0.8',
-        'login' => 'root',
-        'password' => '',
-        'database' => 'saill_200',
-        'prefix' => '',        
-        'encoding' => 'utf8'
-    );
-    
-    var $production = array(
-        'datasource' => 'Database/Mysql',
-        'driver' => 'mysql',
-        'connect' => 'mysql_connect',
-        'persistent' => false,
-        'host' => 'localhost',
-        'login' => 'root',
-        'password' => '',
-        'database' => 'saill_200',
-        'prefix' => '', 
-        'encoding' => 'utf8'
-    );
- 
-    var $development = array(
-        'datasource' => 'Database/Mysql',
-        'driver' => 'mysql',
-        'connect' => 'mysql_connect',
-        'persistent' => false,
-        'host' => 'localhost',
-        'login' => 'root',
-        'password' => '',
-        'database' => 'saill_200',
-        'prefix' => '', 
-        'encoding' => 'utf8'
-    );
-    
-    var $default = array();
- 
-    function __construct()
-    {
-        $this->default = (env('SERVER_ADDR') == '10.0.0.8' || !env('SERVER_ADDR')) ? $this->developmenthome : (env('SERVER_ADDR') == '127.0.0.1' || !env('SERVER_ADDR')) ? $this->development : $this->production;
-    }
-    
-    function DATABASE_CONFIG()
-    {
-        $this->__construct();
-    }*/
-    
-    /** a décommenter pour faire un bake all **/
     public $default = array( 
         'datasource' => 'Database/Mysql',
         'driver' => 'mysql',

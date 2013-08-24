@@ -50,6 +50,26 @@
         <?php endforeach; ?>
     </tbody>    
 </table>
+<br/>
+<div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Agents avec aucune saisie</div><br>
+<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+        <th>Agent</th>
+        <th>Relance</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($resultvides as $result): ?>
+        <tr>
+            <td><?php echo $result['Utilisateur']['NOMLONG']; ?></td>
+            <td style="text-align: center">
+                <a href="#"><span rel="tooltip" data-title="Envoyer un mail de relance" class="sendmailrelance"  userid="<?php echo $result['Utilisateur']['id']; ?>"><span class="glyphicons envelope"></span></span></a>
+            </td>
+        </tr>           
+        <?php endforeach; ?>
+    </tbody>    
+</table>
 <?php endif; ?>
 <script>
 $(document).ready(function () {    
@@ -64,5 +84,16 @@ $(document).ready(function () {
             location.reload();
         });
     });  
+    $(document).on('click','.sendmailrelance',function(e){
+        var id = $(this).attr('userid');
+        $.ajax({
+            dataType: "html",
+            type: "POST",
+            url: "<?php echo $this->Html->url(array('controller'=>'activitesreelles','action'=>'sendmailrelance')); ?>/"+id,
+            data: ({})
+        }).error(function ( data ) {
+            location.reload();
+        });
+    });
 });    
 </script>

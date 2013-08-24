@@ -38,10 +38,12 @@ define("tinymce/ui/PanelButton", [
 					self.active(false);
 				}).parent(self).renderTo(self.getContainerElm());
 				self.panel.fire('show');
-				self.panel.reflow().moveRel(self.getEl(), settings.popoverAlign || 'bc-tc');
+				self.panel.reflow();
 			} else {
 				self.panel.show();
 			}
+
+			self.panel.moveRel(self.getEl(), settings.popoverAlign || 'bc-tc');
 		},
 
 		/**
@@ -67,7 +69,11 @@ define("tinymce/ui/PanelButton", [
 
 			self.on('click', function(e) {
 				if (e.control === self) {
-					self.showPanel();
+					if (self.panel && self.panel.visible()) {
+						self.hidePanel();
+					} else {
+						self.showPanel();
+					}
 				}
 			});
 

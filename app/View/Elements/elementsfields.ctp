@@ -16,7 +16,7 @@
         $attributes = array('legend' => false,'value'=>'all');
         ?>
         <?php echo $this->Form->radio('with', $options, $attributes); ?>
-            <?php echo $this->Form->button('Partager', array('class' => 'btn btn-primary pull-right','type'=>'submit')); ?>
+            <?php echo $this->Form->button('Partager', array('class' => 'btn btn-primary pull-right showoverlay','type'=>'submit')); ?>
     </div>
 </div>
 <?php echo $this->Form->end(); ?>
@@ -41,12 +41,12 @@
 <?php asort($files); ?>      
 <?php foreach ($files as $file): ?>
 <tr>
-        <td style="text-align:center;"><i class="<?php echo $file['ext'] != '' ?'ico-'.$file['ext']  : 'icon-blank' ;?>">&nbsp;</i></td>
+        <td style="text-align:center;line-height: 4px;"><span class="<?php echo $file['ext'] != '' ?'ico-'.$file['ext']  : 'icon-blank' ;?>"></span></td>
         <td><?php echo $file['nom']; ?></td>
         <?php if (userAuth('profil_id')==1): ?>
-        <td style="text-align:center;"><?php echo $this->Html->link('<i class="icon-trash"></i>',array('controller'=>'fileshareds','action'=>'deletefile',  str_replace('/', '+', $file['url'])),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce fichier du partage.')); ?>&nbsp;</td>
+        <td style="text-align:center;line-height: 4px;"><?php echo $this->Html->link('<span class="glyphicons bin"></span>',array('controller'=>'fileshareds','action'=>'deletefile',  str_replace('/', '+', $file['url'])),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce fichier du partage.')); ?>&nbsp;</td>
         <?php endif; ?>
-        <td style="text-align:center;"><?php echo $this->Html->link('<i class="icon-download-alt"></i>',$file['url'],array('target'=>'blank','escape' => false)); ?>&nbsp;</td>
+        <td style="text-align:center;line-height: 4px;"><?php echo $this->Html->link('<span class="glyphicons download_alt"></span>',$file['url'],array('target'=>'blank','escape' => false)); ?>&nbsp;</td>
 </tr>
 <?php endforeach; ?>
 </tbody>

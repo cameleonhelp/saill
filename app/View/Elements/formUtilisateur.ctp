@@ -1,8 +1,4 @@
 <?php echo $this->Form->create('Utilisateur',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
-<!--<div class="btn-group pull-right" data-toggle="buttons-radio">
-    <button class="btn" id="expand" onclick="$('.collapse').collapse('show');return false;"><i class="icon-resize-full"></i></button>
-    <button class="btn btn-inverse disabled" id="collapse" onclick="$('.collapse').collapse('hide');return false;"><i class="icon-resize-small icon-white"></i></button>
-    </div>//-->
 <div class="accordion" style="clear:both;" id="accordion2" name="accordion2">
         <div class="accordion-group">
             <?php $classin = $this->params->action == 'add' ? 'in' : ''; ?>
@@ -32,8 +28,8 @@
                             <div class="input-append date" data-date="<?php echo empty($this->data['Utilisateur']['NAISSANCE']) ? date('d/m/Y') : $this->data['Utilisateur']['NAISSANCE']; ?>" data-date-format="dd/mm/yyyy">
                             <?php $today = date('d/m/Y'); ?>
                             <?php echo $this->Form->input('NAISSANCE',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>'La date de naissance de l\'utilisateur est obligatoire dans l\'onglet identité','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
-                            <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
-                            <span class="add-on"><i class="glyphicon_calendar"></i></span>
+                            <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><span class="glyphicons circle_remove grey"></span></i></button>
+                            <span class="add-on"><span class="glyphicons calendar"></span></span>
                             </div>
                         </div>
                     </div>
@@ -117,9 +113,9 @@
                             <div class="input-append date" data-date="<?php echo empty($this->data['Utilisateur']['FINMISSION']) ? date('d/m/Y') : $this->data['Utilisateur']['FINMISSION']; ?>" data-date-format="dd/mm/yyyy">
                             <?php $today = date('d/m/Y'); ?>
                             <?php echo $this->Form->input('FINMISSION',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
-                            <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
-                            <button class="btninput datedefault" type="button" id="default" name="default" rel="tooltip" title="Date par défaut :<br/><?php echo "05/01/".(date('Y')+1); ?>"><i class="icon-flag"></i></button>
-                            <span class="add-on"><i class="glyphicon_calendar"></i></span>
+                            <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><span class="glyphicons circle_remove grey"></span></button>
+                            <button class="btninput datedefault" type="button" id="default" name="default" rel="tooltip" title="Date par défaut :<br/><?php echo "05/01/".(date('Y')+1); ?>"><span class="glyphicons history"></span></i></button>
+                            <span class="add-on"><span class="glyphicons calendar"></span></span>
                             </div>
                         </div>
                     </div>                        
@@ -235,8 +231,8 @@
                             <div class="input-append date" data-date="<?php echo empty($this->data['Utilisateur']['DATEDEBUTACTIF']) ? date('d/m/Y') : $this->data['Utilisateur']['DATEDEBUTACTIF']; ?>" data-date-format="dd/mm/yyyy">
                             <?php $today = date('d/m/Y'); ?>
                             <?php echo $this->Form->input('DATEDEBUTACTIF',array('type'=>'text','placeholder'=>'ex.: '.$today,"readonly"=>'true','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
-                            <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="glyphicon_remove_only"></i></button>
-                            <span class="add-on"><i class="glyphicon_calendar"></i></span>
+                            <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><span class="glyphicons circle_remove grey"></span></button>
+                            <span class="add-on"><span class="glyphicons calendar"></span></span>
                             </div>
                         </div>
                     </div> 
@@ -309,7 +305,7 @@
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container" style="margin-top:2px;text-align:center;">
-                <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
+                <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn showoverlay','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
             </div>
         </div>
     </div> 

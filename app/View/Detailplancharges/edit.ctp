@@ -1,4 +1,7 @@
 <div class="detailplancharges form">
+    <div class="alert alert-info">
+        Les vancances de février (5 jours), pâques (5 jours), été (5 jours en juillet et 10 jours en août) et noël (5 jours en décembre) sont prises en comptes
+    </div>      
     <?php echo $this->Form->create('Detailplancharge',array('id'=>'formValidate','class'=>'form-horizontal','action'=>'save','inputDefaults' => array('label'=>false,'div' => false))); ?> 
     <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" id='detailplanchargeTable'>
         <thead>
@@ -30,7 +33,11 @@
 	<?php foreach ($detailplancharges as $detailplancharge): ?>
 	<tr rowindex="<?php echo $i; ?>">
 		<td class="tdmonth">
+                    <?php if($detailplancharge['Detailplancharge']['userIsActif'] ||$detailplancharge['Detailplancharge']['utilisateur_id']<0 ) :?>
                     <?php echo $this->Form->select('Detailplancharge.'.$i.'.utilisateur_id',$utilisateurs,array('data-rule-required'=>'true','class'=>'utilisateur','default'=>$detailplancharge['Detailplancharge']['utilisateur_id'],'data-msg-required'=>'Le nom de l\'utilisateur est obligatoire','empty' => 'Choisir un utilisateur')); ?>                    
+                    <?php else : ?>
+                    <?php echo $detailplancharge['Utilisateur']['NOMLONG']; ?>                    
+                    <?php endif; ?>
                 </td>
 		<td class="tdmonth">
                     <?php echo $this->Form->select('Detailplancharge.'.$i.'.domaine_id',$domaines,array('data-rule-required'=>'true','default'=>$detailplancharge['Detailplancharge']['domaine_id'],'data-msg-required'=>'Le nom du domaine est obligatoire','empty' => 'Choisir un domaine')); ?>                                        
@@ -63,11 +70,11 @@
                 <td id="Detailplancharge<?php echo $i; ?>CoutHtml" style='text-align: right;' class="rowcout"><?php echo $detailplancharge['Detailplancharge']['COUT']; ?></td>		
                 <td>
                     <?php if ($i==0) : ?>
-                    <i class="icon-blank"></i>
+                    <span class="glyphicons blank"></span>
                     <?php else : ?>
-                    <i class="icon-minus cursor" id="deleteExistRow"></i>
+                    <span class="glyphicons minus cursor" id="deleteExistRow"></span>
                     <?php endif; ?>
-                    <i class="icon-plus cursor" id="addRow"></i>
+                    <span class="glyphicons plus cursor" id="addRow"></span>
                     <?php echo $this->Form->input('Detailplancharge.'.$i.'.plancharge_id',array('type'=>'hidden','value'=>$detailplancharge['Detailplancharge']['plancharge_id'])); ?>
                     <?php echo $this->Form->input('Detailplancharge.'.$i.'.id',array('type'=>'hidden','value'=>$detailplancharge['Detailplancharge']['id'])); ?>
                     <?php echo $this->Form->input('Detailplancharge.'.$i.'.COUT',array('class'=>'text-right monthpc','type'=>'hidden','value'=>$detailplancharge['Detailplancharge']['COUT'])); ?>
@@ -111,8 +118,8 @@
 		<td style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.TJM',array('class'=>'text-right','style'=>'width:35px;','type'=>'text','value'=>'')); ?></td>
                 <td id="Detailplancharge¤CoutHtml" style='text-align: right;' class="rowcout"></td>		
                 <td>
-                    <i class="icon-minus cursor" id="deleteRow"></i>
-                    <i class="icon-plus cursor" id="addRow"></i>
+                    <span class="glyphicons minus cursor" id="deleteRow"></span>
+                    <span class="glyphicons plus cursor" id="addRow"></span>
                     <?php echo $this->Form->input('Detailplancharge.¤.plancharge_id',array('type'=>'hidden','value'=>isset($this->params->pass[0]) ? $this->params->pass[0] : '')); ?>    
                     <?php echo $this->Form->input('Detailplancharge.¤.COUT',array('class'=>'text-right monthpc','type'=>'hidden')); ?>
 		</td>
@@ -138,7 +145,7 @@
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container" style="margin-top:2px;text-align:center;">
-                <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
+                <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn showoverlay','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
             </div>
         </div>
     </div>  

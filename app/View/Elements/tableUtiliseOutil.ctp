@@ -15,7 +15,7 @@
 		<td><?php echo h($utiliseoutil['Outil']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($utiliseoutil['Listediffusion']['NOM']); ?>&nbsp;</td>
                 <td><?php echo h($utiliseoutil['Dossierpartage']['NOM']); ?>&nbsp;</td>
-		<td style='text-align:center;'><i class="<?php echo etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])); ?>" rel="tooltip" data-title="<?php echo h(h($utiliseoutil['Utiliseoutil']['STATUT'])); ?>"></i>&nbsp;</td>
+		<td style='text-align:center;'><span class="glyphicons <?php echo etatUtiliseOutilImage(h($utiliseoutil['Utiliseoutil']['STATUT'])); ?>" rel="tooltip" data-title="<?php echo h(h($utiliseoutil['Utiliseoutil']['STATUT'])); ?>"></span>&nbsp;</td>
 	</tr>
 <?php endforeach; ?>
         </tbody>

@@ -3042,7 +3042,7 @@ class ModelReadTest extends BaseModelTest {
 		$Apple = new Apple();
 		$result = $Apple->find('threaded');
 		$result = Hash::extract($result, '{n}.children');
-		$expected = array(array(), array(), array(), array(), array(), array(),	array());
+		$expected = array(array(), array(), array(), array(), array(), array(), array());
 		$this->assertEquals($expected, $result);
 	}
 
@@ -3057,7 +3057,7 @@ class ModelReadTest extends BaseModelTest {
 		$Model->recursive = -1;
 		$result = $Model->find('threaded');
 		$result = Hash::extract($result, '{n}.children');
-		$expected = array(array(), array(), array(), array(), array(), array(),	array());
+		$expected = array(array(), array(), array(), array(), array(), array(), array());
 		$this->assertEquals($expected, $result);
 
 		$result = $Model->find('threaded', array('parent' => 'mother_id'));
@@ -3765,7 +3765,7 @@ class ModelReadTest extends BaseModelTest {
 /**
  * Test find(neighbors) with missing fields so no neighbors are found.
  *
- * @return
+ * @return void
  */
 	public function testFindNeighborsNoPrev() {
 		$this->loadFixtures('User', 'Article', 'Comment', 'Tag', 'ArticlesTag', 'Attachment');
@@ -3786,6 +3786,7 @@ class ModelReadTest extends BaseModelTest {
 		);
 		$this->assertEquals($expected, $result);
 	}
+
 /**
  * testFindCombinedRelations method
  *

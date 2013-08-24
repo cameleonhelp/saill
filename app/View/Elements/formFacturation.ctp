@@ -71,7 +71,7 @@
                 <?php if ($this->params->action == 'add') $selected = $activite['Activite']['id']==$activitesreelle['Activitesreelle']['activite_id'] ? 'selected="selected"' :''; ?>
                     <option value="<?php echo $activite['Activite']['id']; ?>" <?php echo $selected; ?>><?php echo $activite['Projet']['NOM']; ?> - <?php echo $activite['Activite']['NOM']; ?></option>
                 <?php endforeach; ?>
-            </select>  <i class="icon-trash cursor" id="deleteRow"></i>   
+            </select>  <span class="glyphicons bin cursor" id="deleteRow"></span>   
         </td>
         <?php if ($this->params->action == 'add') $lu_value = $activitesreelle['Activitesreelle']['LU']; ?>
         <?php if ($this->params->action == 'edit') $lu_value = $activitesreelle['Facturation']['LU']; ?>
@@ -128,7 +128,7 @@
                 <?php foreach ($activites as $activite) : ?>
                     <option value="<?php echo $activite['Activite']['id']; ?>"><?php echo $activite['Projet']['NOM']; ?> - <?php echo $activite['Activite']['NOM']; ?></option>
                 <?php endforeach; ?>
-            </select> <i class="icon-trash cursor" id="deleteRow"></i>
+            </select> <span class="glyphicons bin cursor" id="deleteRow"></span>
         </td>
         <td <?php echo $classLU; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.LU',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du lundi",'value'=>"0.0")); ?> j</td>
         <td <?php echo $classMA; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Facturation.¤.MA',array('style'=>"width:35px",'class'=>'text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mardi",'value'=>"0.0")); ?> j</td>
@@ -170,10 +170,18 @@
         <td><?php echo $this->Form->button('Ajouter une ligne', array('type'=>'button','class' => 'btn btn-inverse','id'=>'FacturationAddRow')); ?></td>
     </tr>
 </table>
+    <?php $memo = $this->requestAction('parameters/get_memofacturation') ?>
+    <?php if($memo['Parameter']['param']!=""): ?>
+    <div id="container_message_erreur_total" name="container_message_erreur_total" class="alert" style="display: block;">
+        <ol style="display: block;">
+            <li><label for="Activitesreelle0ActiviteId" style="display: block;"><?php echo $memo['Parameter']['param']; ?></label></li>
+        </ol>
+    </div>
+    <?php endif; ?>
 <div class="navbar">
     <div class="navbar-inner">
         <div class="container" style="margin-top:2px;text-align:center;">
-            <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                  
+            <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn showoverlay','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                  
         </div>
     </div>
 </div>  

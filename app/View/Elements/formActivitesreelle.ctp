@@ -12,6 +12,7 @@
     $finsemaine = finsem($annee, $mois, $day);
 ?>
 <?php echo $this->Form->create('Activitesreelle',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+<?php $nbjourouvresmax = 5; ?>
 <table cellpadding="0" cellspacing="0" class="table table-bordered" id="ActivitesreelleTable">
     <thead>
     <tr>
@@ -21,19 +22,24 @@
         <th rowspan="2" style="width:200px !important;"><label class="control-label sstitre required">Activité</label></th>
         <th rowspan="2" style="width:200px !important;"><label class="control-label sstitre">Domaine</label></th>
         <?php $date = new DateTime(CUSDate($debutsemaine)); $LU = $date->format('d'); ?> 
-        <?php $classLU = isFerie($date) ? 'class="ferie"' : ''; ?>
+        <?php $classLU = isFerie($date) ? 'class="ferie"' : ''; 
+              $nbjourouvresmax = isFerie($date) ? $nbjourouvresmax-1 : $nbjourouvresmax; ?>
         <th <?php echo $classLU; ?> width='70px'>Lu.</th>
         <?php $date->add(new DateInterval('P1D')); $MA = $date->format('d'); ?> 
-        <?php $classMA = isFerie($date) ? 'class="ferie"' : ''; ?>
+        <?php $classMA = isFerie($date) ? 'class="ferie"' : '';  
+              $nbjourouvresmax = isFerie($date) ? $nbjourouvresmax-1 : $nbjourouvresmax; ?>
         <th <?php echo $classMA; ?> width='70px'>Ma.</th>
         <?php $date->add(new DateInterval('P1D')); $ME = $date->format('d'); ?>
-        <?php $classME = isFerie($date) ? 'class="ferie"' : ''; ?>
+        <?php $classME = isFerie($date) ? 'class="ferie"' : '';  
+              $nbjourouvresmax = isFerie($date) ? $nbjourouvresmax-1 : $nbjourouvresmax; ?>
         <th <?php echo $classME; ?> width='70px'>Me.</th>
         <?php $date->add(new DateInterval('P1D')); $JE = $date->format('d'); ?> 
-        <?php $classJE = isFerie($date) ? 'class="ferie"' : ''; ?>
+        <?php $classJE = isFerie($date) ? 'class="ferie"' : '';  
+              $nbjourouvresmax = isFerie($date) ? $nbjourouvresmax-1 : $nbjourouvresmax; ?>
         <th <?php echo $classJE; ?> width='70px'>Je.</th>
         <?php $date->add(new DateInterval('P1D')); $VE = $date->format('d'); ?> 
-        <?php $classVE = isFerie($date) ? 'class="ferie"' : ''; ?>        
+        <?php $classVE = isFerie($date) ? 'class="ferie"' : '';  
+              $nbjourouvresmax = isFerie($date) ? $nbjourouvresmax-1 : $nbjourouvresmax; ?>       
         <th <?php echo $classVE; ?> width='70px'>Ve.</th>
         <?php $date->add(new DateInterval('P1D')); $SA = $date->format('d'); ?> 
         <?php $classSA = isFerie($date) ? ' ferie' : ''; ?>        
@@ -111,11 +117,11 @@
         <td width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.'.$i.'.TOTAL',array('type'=>'hidden','data-rule-isZero'=>true,'data-msg-isZero'=>"Le total est incorrect changez une valeur de votre saisie.",'value'=>$activitesreelle['Activitesreelle']['TOTAL'])); ?><?php echo $this->Form->input('Activitesreelle.'.$i.'.TotalDisabled',array('style'=>"width:35px",'class'=>' text-right total','for'=>'Activitesreelle'.$i.'TOTAL','disabled'=>'disabled','value'=>$activitesreelle['Activitesreelle']['TOTAL'])); ?> j</td>        
         <td> 
             <?php if ($i==0) : ?>
-            <i class="icon-blank"></i>
+            <span class="glyphicons blank"></span>
             <?php else : ?>
-            <i class="icon-minus cursor" id="deleteRow" action_id="<?php echo $activitesreelle['Activitesreelle']['id']; ?>"></i>
+            <span class="glyphicons minus cursor" id="deleteRow" action_id="<?php echo $activitesreelle['Activitesreelle']['id']; ?>"></span>
             <?php endif; ?>
-            <i class="icon-plus cursor" id="addRow"></i>
+            <span class="glyphicons plus cursor" id="addRow"></span>  
             <?php echo $this->Form->input('Activitesreelle.'.$i.'.DATE',array('type'=>'hidden','value'=>$activitesreelle['Activitesreelle']['DATE'])); ?>
             <?php echo $this->Form->input('Activitesreelle.'.$i.'.utilisateur_id',array('type'=>'hidden','value'=>$activitesreelle['Activitesreelle']['utilisateur_id'])); ?> 
             <?php echo $this->Form->input('Activitesreelle.'.$i.'.action_id',array('type'=>'hidden','value'=>$activitesreelle['Activitesreelle']['action_id'])); ?>
@@ -171,8 +177,8 @@
         </td>
         <td width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.0.TOTAL',array('type'=>'hidden','data-rule-isZero'=>true,'data-msg-isZero'=>"Le total est incorrect changez une valeur de votre saisie.",'value'=>'0.0')); ?><?php echo $this->Form->input('Activitesreelle.0.TotalDisabled',array('style'=>"width:35px",'class'=>' text-right total','for'=>'Activitesreelle0TOTAL','disabled'=>'disabled','value'=>isset($this->data['Activitesreelle']['TOTAL']) ? $this->data['Activitesreelle']['TOTAL'] : "0.0")); ?> j</td>        
         <td>    
-            <i class="icon-blank"></i>
-            <i class="icon-plus cursor" id="addRow"></i>            
+            <span class="glyphicons blank"></span>
+            <span class="glyphicons plus cursor" id="addRow"></span>             
             <?php echo $this->Form->input('Activitesreelle.0.DATE',array('type'=>'hidden','value'=>$datedebut)); ?>
             <?php echo $this->Form->input('Activitesreelle.0.utilisateur_id',array('type'=>'hidden','value'=>$userid)); ?> 
             <?php echo $this->Form->input('Activitesreelle.0.action_id',array('type'=>'hidden','value'=>isset($this->data['Activitesreelle']['action_id']) ? $this->data['Activitesreelle']['action_id'] : '')); ?>
@@ -218,8 +224,8 @@
         </td>
         <td width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.¤.TOTAL',array('type'=>'hidden','class'=>'totalhidden','value'=>'0.0')); ?><?php echo $this->Form->input('Activitesreelle.¤.TotalDisabled',array('style'=>"width:35px",'class'=>' text-right total','for'=>'Activitesreelle¤TOTAL','disabled'=>'disabled','value'=>"0.0")); ?> j</td>        
         <td>    
-            <i class="icon-minus cursor" id="deleteRow"></i>
-            <i class="icon-plus cursor" id="addRow"></i>            
+            <span class="glyphicons minus cursor" id="deleteRow"></span>
+            <span class="glyphicons plus cursor" id="addRow"></span>            
             <?php echo $this->Form->input('Activitesreelle.¤.DATE',array('type'=>'hidden','value'=>$datedebut)); ?>
             <?php echo $this->Form->input('Activitesreelle.¤.utilisateur_id',array('type'=>'hidden','value'=>$userid)); ?> 
             <?php echo $this->Form->input('Activitesreelle.¤.action_id',array('type'=>'hidden','value'=>'')); ?>
@@ -244,6 +250,11 @@
     </tr>            
     </tfooter>
 </table>
+    <div id="container_message_erreur_total" name="container_message_erreur_total" class="alert alert-error" style="display: block;">
+        <ol style="display: block;">
+            <li><label for="Activitesreelle0ActiviteId" class="error" style="display: block;">Le total devrait être de <?php echo $nbjourouvresmax; ?> ce qui n'est pas le cas, votre saisie est incomplète ou il y a une erreur de saisie.</label></li>
+        </ol>
+    </div>
     <?php if ($utilisateur['Utilisateur']['profil_id']==-1 || isAuthorized('activitesreelles', 'masse')) : ?>
     <div class="control-group">
     <?php echo $this->Form->input('saisietotal',array('type'=>'checkbox')); ?>&nbsp;<label class='labelAfter' for="ActivitesreelleSaisietotal"><em>Saisie pour ressources génériques ou saisie en masse dans la colonne total</em></label>
@@ -252,14 +263,17 @@
 <div class="navbar">
     <div class="navbar-inner">
         <div class="container" style="margin-top:2px;text-align:center;">
-            <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                 
+            <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn showoverlay','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                 
         </div>
     </div>
 </div>  
 <?php echo $this->Form->end(); ?>   
 
 <script>
-$(document).ready(function () {    
+$(document).ready(function () { 
+    
+    $("#container_message_erreur_total").hide();
+    
     $(document).on('change','.day',function(e){
         e.preventDefault;
         var id = $(this).attr('id').substring(0,($(this).attr('id').length)-2); 
@@ -285,6 +299,8 @@ $(document).ready(function () {
         $("#totallu").html(sumOfColumns('lu'));
         $("#totalactivites").html(sumOfColumns('total'));
         if ($("#totallu").html()>1 || $("#totallu").html()<0) {$("#totallu").addClass('td-error')} else {$("#totallu").removeClass('td-error')}
+        var totalmax = <?php echo $nbjourouvresmax; ?>;
+        if ($("#totalactivites").html() != totalmax ) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}
     });
     
     $(document).on('change','.total',function(e){
@@ -299,6 +315,8 @@ $(document).ready(function () {
         $("#totalma").html(sumOfColumns('ma'));
         $("#totalactivites").html(sumOfColumns('total'));
         if ($("#totalma").html()>1 || $("#totalma").html()<0) {$("#totalma").addClass('td-error')} else {$("#totalma").removeClass('td-error')}
+        var totalmax = <?php echo $nbjourouvresmax; ?>;
+        if ($("#totalactivites").html() != totalmax ) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}        
     });    
     
     $(document).on('change','.me',function(e){
@@ -306,6 +324,8 @@ $(document).ready(function () {
         $("#totalme").html(sumOfColumns('me'));
         $("#totalactivites").html(sumOfColumns('total'));
         if ($("#totalme").html()>1 || $("#totalme").html()<0) {$("#totalme").addClass('td-error')} else {$("#totalme").removeClass('td-error')}
+        var totalmax = <?php echo $nbjourouvresmax; ?>;
+        if ($("#totalactivites").html() != totalmax ) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}        
     });
     
     $(document).on('change','.je',function(e){
@@ -313,6 +333,8 @@ $(document).ready(function () {
         $("#totalje").html(sumOfColumns('je'));
         $("#totalactivites").html(sumOfColumns('total'));
         if ($("#totalje").html()>1 || $("#totalje").html()<0) {$("#totalje").addClass('td-error')} else {$("#totalje").removeClass('td-error')}
+        var totalmax = <?php echo $nbjourouvresmax; ?>;
+        if ($("#totalactivites").html() != totalmax ) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}
     });
     
     $(document).on('change','.ve',function(e){
@@ -320,6 +342,8 @@ $(document).ready(function () {
         $("#totalve").html(sumOfColumns('ve'));
         $("#totalactivites").html(sumOfColumns('total'));
         if ($("#totalve").html()>1 || $("#totalve").html()<0) {$("#totalve").addClass('td-error')} else {$("#totalve").removeClass('td-error')}
+        var totalmax = <?php echo $nbjourouvresmax; ?>;
+        if ($("#totalactivites").html() != totalmax ) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}
     });
     
     $(document).on('change','.sa',function(e){

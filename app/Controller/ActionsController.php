@@ -52,6 +52,10 @@ class ActionsController extends AppController {
                         $newconditions[]="1=1";
                         $fetat = "tous les états";
                         break;                 
+                    case 'news':    
+                        $newconditions[]="Action.NEW=1";
+                        $fetat = "nouvellement créées";
+                        break; 
                     case '1':
                         $newconditions[]="Action.STATUT='à faire'";
                         $fetat = "l'état à faire";
@@ -84,7 +88,12 @@ class ActionsController extends AppController {
                     case 'tous':   
                         $newconditions[]="1=1";
                         $fresponsable = "de tous les agents";
-                        break;     
+                        break; 
+                    case 'equipe':   
+                        $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
+                        $newconditions[]="Action.destinataire in (".$monequipe.") AND Utilisateur.GESTIONABSENCES=1";
+                        $fresponsable = "de mon équipe";
+                        break;                     
                     case null :
                         $newconditions[]="Action.destinataire='".userAuth('id')."'AND Utilisateur.GESTIONABSENCES=1";
                         $nomlong = $this->Action->Utilisateur->recursive = -1;
@@ -106,16 +115,23 @@ class ActionsController extends AppController {
                     $fresponsable = "dont le responsable est ".$nomlong['Utilisateur']['NOMLONG'];
                 endif;
                 $this->set('fresponsable',$fresponsable); 
-                $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $listeprofilsautorises = $this->Action->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.MODEL'=>'actions','OR'=>array('Autorisation.ADD'=>1,'Autorisation.EDIT'=>1,'Autorisation.DELETE'=>1))));
+                $profilin = '';
+                foreach($listeprofilsautorises as $liste):
+                    $profilin .= $liste['Autorisation']['profil_id'].',';
+                endforeach;                
+                $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.substr_replace($profilin ,"",-1).')'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('responsables',$responsables);                 
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Action->recursive = 0;
+                $listeactions = $this->Action->find('all',array('conditions'=>$newconditions,'recursive'=>0));
+                $this->Session->delete('actions_index');
+                $this->Session->write('actions_index',$listeactions);
                 $this->set('actions', $this->paginate());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
             endif; 
-
 	}
 
 /**
@@ -163,7 +179,12 @@ class ActionsController extends AppController {
                 $types = Configure::read('typeAction');
                 $this->set('types',$types); 
                 $nomlong = $this->Action->Utilisateur->recursive = -1;
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $listeprofilsautorises = $this->Action->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.MODEL'=>'actions','OR'=>array('Autorisation.ADD'=>1,'Autorisation.EDIT'=>1,'Autorisation.DELETE'=>1))));
+                $profilin = '';
+                foreach($listeprofilsautorises as $liste):
+                    $profilin .= $liste['Autorisation']['profil_id'].',';
+                endforeach;
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.substr_replace($profilin ,"",-1).')'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('destinataires',$destinataires); 
                 $activitesagent = $this->findActiviteForUtilisateur(userAuth('id'));
                 $this->set('activitesagent',$activitesagent);    
@@ -222,7 +243,12 @@ class ActionsController extends AppController {
                 $types = Configure::read('typeAction');
                 $this->set('types',$types);    
                 $this->Action->Utilisateur->recursive = -1;
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $listeprofilsautorises = $this->Action->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.MODEL'=>'actions','OR'=>array('Autorisation.ADD'=>1,'Autorisation.EDIT'=>1,'Autorisation.DELETE'=>1))));
+                $profilin = '';
+                foreach($listeprofilsautorises as $liste):
+                    $profilin .= $liste['Autorisation']['profil_id'].',';
+                endforeach;
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.substr_replace($profilin ,"",-1).')'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
                 $this->set('destinataires',$destinataires); 
                 $activitesagent = $this->findActiviteForUtilisateur(userAuth('id'));
                 $this->set('activitesagent',$activitesagent);  
@@ -412,7 +438,12 @@ class ActionsController extends AppController {
                         $this->Session->write('details',$details);
                     endif;                      
                 endif;
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $profils = $this->Action->Utilisateur->Profil->Autorisation->find('all',array('fields'=>array('Autorisation.profil_id'),'conditions'=>array('Autorisation.MODEL'=>'actions','Autorisation.RAPPORTS'=>1),'recursive'=>0));
+                $profilin = '';
+                foreach($profils as $profil):
+                    $profilin .= $profil['Autorisation']['profil_id'].',';
+                endforeach;
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.substr_replace($profilin ,"",-1).')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
                 $this->set('destinataires',$destinataires);  
                 $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
@@ -515,7 +546,6 @@ class ActionsController extends AppController {
                     case 'à faire':
                        $newetat = 'en cours';
                        $avancement = '10';
-                       $echeance = $record['Action']['ECHEANCE'];
                        break;
                     case 'en cours':
                        $newetat = 'terminée';
@@ -525,22 +555,20 @@ class ActionsController extends AppController {
                     case 'terminée':
                        $newetat = 'livré';
                        $avancement = '100';
-                       $echeance = date('Y-m-d');
+                       $record['Action']['ECHEANCE'] =  date('Y-m-d');
                        break;          
                     case 'livré':
                        $newetat = 'annulée';
                        $avancement = '0';
-                       $echeance = date('Y-m-d');
+                       $record['Action']['ECHEANCE'] = date('Y-m-d');
                        break;
                     case 'annulée':
                        $newetat = 'à faire';
                        $avancement = '0';
-                       $echeance = $record['Action']['ECHEANCE'];
                        break;                
                 }
                 $record['Action']['STATUT'] = $newetat;
                 $record['Action']['AVANCEMENT'] = $avancement;
-                $record['Action']['ECHEANCE'] = $echeance;
                 $record['Action']['created'] = $this->Action->read('created');
                 $record['Action']['modified'] = date('Y-m-d');
                 $record['Action']['NEW'] = 0;
@@ -555,14 +583,14 @@ class ActionsController extends AppController {
             $avancement = $this->request->data('avancement');
             $this->Action->id = $id;
             $record = $this->Action->read();
-            $record['Action']['STATUT'] = $avancement==100 ? 'terminée' : $avancement==0 ? 'à faire' : $record['Action']['STATUT'];
+            $record['Action']['STATUT'] = $avancement==100 ? 'terminée' : $avancement==0 ? 'à faire' : $avancement==10 ? 'en cours' : $record['Action']['STATUT'];
             $record['Action']['AVANCEMENT'] = $avancement;
             $record['Action']['NEW'] = 0;
             $record['Action']['ECHEANCE'] = $avancement==100 ? date('Y-m-d') : $record['Action']['ECHEANCE'];
             $record['Action']['created'] = $this->Action->read('created');
             $record['Action']['modified'] = date('Y-m-d');
             $history = $this->getLastHistory($id);
-            if ($avancement > $history['Historyaction']['AVANCEMENT']):
+            if ($avancement > $history['Historyaction']['AVANCEMENT'] && $avancement > 0):
                 $this->deleteHistory($history);
             endif;
             $this->saveHistory($id); 
@@ -643,5 +671,32 @@ class ActionsController extends AppController {
                     $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
                 }  
             endif;
-        }        
+        }    
+        
+        public function timelineData(){
+            $datas = $this->Session->read('actions_index');
+            $eventAtts = array();
+            foreach($datas as $data):
+                $date =  CDateTimeline($data['Action']['DEBUT']);
+                $phpmakedate = $date;
+                $description = '['.$data['Utilisateur']['NOMLONG'].'] - '.$data['Action']['OBJET'];
+                if($data['Action']['DUREEPREVUE'] > 0){
+                    $phpenddate = CDateTimeline($data['Action']['ECHEANCE']);
+                    $durationEvent = false;
+                } else {
+                    $phpmakeenddate = CDateTimeline($data['Action']['ECHEANCE']);
+                    $phpenddate = $phpmakeenddate;
+                    $durationEvent = true;
+                }
+                $eventAtts[] = array (
+                    'start' => $phpmakedate,
+                    'end' => $phpenddate,
+                    'durationEvent' => $durationEvent,
+                    'title' => $description,
+                    'description'=>"Echéance le : ".$data['Action']['ECHEANCE']."<br>Charge : ".($data['Action']['DUREEPREVUE']/8)." jour(s)<br>Etat : ".$data['Action']['STATUT']."<br>Avancement : ".$data['Action']['AVANCEMENT']." %"
+                );
+            endforeach;
+            
+            return $eventAtts;
+        }
 }

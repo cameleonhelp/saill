@@ -256,7 +256,7 @@ App::uses('Debugger', 'Utility');
         <div class="navbar-inner">
             <div class="container">
             <ul class="nav">
-            <li><a href="#"><i class="icon-plus"></i></a></li>
+            <li><a href="#"><span class="glyphicons plus size14"></span></a></li>
             <li class="divider-vertical-only"></li>
             <li><a href="#">Prolonger</a></li>
             <li><a href="#">Supprimer</a></li>

@@ -14,9 +14,14 @@
         </div>
         <div class="control-group">
         <div class="controls">
-        <label class="checkbox">
-        <input type="checkbox"> Se souvenir de moi
-        </label>
+        <div class="onoffswitch">
+            <input type="checkbox" name="rememberme" class="onoffswitch-checkbox" id="rememberme" checked>
+            <label class="onoffswitch-label" for="rememberme">
+                <div class="onoffswitch-inner"></div>
+                <div class="onoffswitch-switch"></div>
+            </label>
+        </div>
+        <label class="onoffswitch-label" for="rememberme"> Se souvenir de moi 1</label>
         <button type="submit" class="btn btn-primary">Connexion</button>
         </div>
         </div>

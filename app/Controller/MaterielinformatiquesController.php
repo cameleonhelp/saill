@@ -266,6 +266,8 @@ class MaterielinformatiquesController extends AppController {
                 $record['Materielinformatique']['ETAT']='En stock';
                 unset($record['Materielinformatique']['created']);                
                 unset($record['Materielinformatique']['modified']);
+                $record['Materielinformatique']['created'] = date('Y-m-d');
+                $record['Materielinformatique']['modified'] = date('Y-m-d');
                 $this->Materielinformatique->create();
                 if ($this->Materielinformatique->save($record)) {
                         $this->Session->setFlash(__('Poste informatique dupliqué'),'default',array('class'=>'alert alert-success'));

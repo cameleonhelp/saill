@@ -33,6 +33,16 @@ require_once dirname(__FILE__) . DS . 'ModelTestBase.php';
 class ModelWriteTest extends BaseModelTest {
 
 /**
+ * override locale to the default (eng).
+ *
+ * @return void
+ */
+	public function setUp() {
+		parent::setUp();
+		Configure::write('Config.language', 'eng');
+	}
+
+/**
  * Test save() failing when there is no data.
  *
  * @return void
@@ -53,7 +63,6 @@ class ModelWriteTest extends BaseModelTest {
 /**
  * testInsertAnotherHabtmRecordWithSameForeignKey method
  *
- * @access public
  * @return void
  */
 	public function testInsertAnotherHabtmRecordWithSameForeignKey() {
@@ -501,7 +510,6 @@ class ModelWriteTest extends BaseModelTest {
 /**
  * Tests having multiple counter caches for an associated model
  *
- * @access public
  * @return void
  */
 	public function testCounterCacheMultipleCaches() {
@@ -4563,7 +4571,7 @@ class ModelWriteTest extends BaseModelTest {
 		$result = $model->saveAll(array(
 			'Article' => array(
 				'title' => 'Post with Author',
-				'body' => 'This post will be saved  author'
+				'body' => 'This post will be saved author'
 			),
 			'Comment' => array(
 				array('comment' => 'First new comment'),
@@ -4792,7 +4800,7 @@ class ModelWriteTest extends BaseModelTest {
 /**
  * test that saveAll behaves like plain save() when supplied empty data
  *
- * @link http://cakephp.lighthouseapp.com/projects/42648/tickets/277-test-saveall-with-validation-returns-incorrect-boolean-when-saving-empty-data
+ * @link https://cakephp.lighthouseapp.com/projects/42648/tickets/277-test-saveall-with-validation-returns-incorrect-boolean-when-saving-empty-data
  * @return void
  */
 	public function testSaveAllEmptyData() {
@@ -5967,7 +5975,7 @@ class ModelWriteTest extends BaseModelTest {
 		$result = $model->saveAssociated(array(
 			'Article' => array(
 				'title' => 'Post with Author',
-				'body' => 'This post will be saved  author'
+				'body' => 'This post will be saved author'
 			),
 			'Comment' => array(
 				array('comment' => 'First new comment'),
@@ -6180,7 +6188,7 @@ class ModelWriteTest extends BaseModelTest {
 /**
  * test that saveMany behaves like plain save() when suplied empty data
  *
- * @link http://cakephp.lighthouseapp.com/projects/42648/tickets/277-test-saveall-with-validation-returns-incorrect-boolean-when-saving-empty-data
+ * @link https://cakephp.lighthouseapp.com/projects/42648/tickets/277-test-saveall-with-validation-returns-incorrect-boolean-when-saving-empty-data
  * @return void
  */
 	public function testSaveManyEmptyData() {
@@ -6199,7 +6207,7 @@ class ModelWriteTest extends BaseModelTest {
 /**
  * test that saveAssociated behaves like plain save() when supplied empty data
  *
- * @link http://cakephp.lighthouseapp.com/projects/42648/tickets/277-test-saveall-with-validation-returns-incorrect-boolean-when-saving-empty-data
+ * @link https://cakephp.lighthouseapp.com/projects/42648/tickets/277-test-saveall-with-validation-returns-incorrect-boolean-when-saving-empty-data
  * @return void
  */
 	public function testSaveAssociatedEmptyData() {
@@ -6523,7 +6531,9 @@ class ModelWriteTest extends BaseModelTest {
 		));
 		$TestModel->saveAll($data, array('fieldList' => $fieldList));
 
-		$result = $TestModel->find('all');
+		$result = $TestModel->find('all', array(
+			'order' => 'Post.id ASC',
+		));
 		$expected = array(
 			'Post' => array (
 				'id' => '4',

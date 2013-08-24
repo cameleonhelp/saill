@@ -259,24 +259,42 @@ class FacturationsController extends AppController {
                     }  
                     $domaine = 'Activite.projet_id IN ('.substr_replace($projetlist ,"",-1).')';
                     $periode = 'Facturation.DATE BETWEEN "'. startWeek(CUSDate($this->request->data['Facturation']['START'])).'" AND "'.endWeek(CUSDate($this->request->data['Facturation']['END'])).'"';
+
+                    /*pour supprimer les jours en trop*/
+                    $activitefirstweek = $this->Facturation->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Facturation.utilisateur_id', 'SUM(Facturation.LU) AS LU', 'SUM(Facturation.MA) AS MA', 'SUM(Facturation.ME) AS ME', 'SUM(Facturation.JE) AS JE', 'SUM(Facturation.VE) AS VE', 'SUM(Facturation.SA) AS SA', 'SUM(Facturation.DI) AS DI','Facturation.DATE AS DATE'),'conditions'=>array($destinataire,$domaine,'Facturation.DATE'=>startWeek(CUSDate($this->request->data['Facturation']['START']))),'group'=>array('Activite.projet_id','Activite.id','Facturation.utilisateur_id'),'recursive'=>0));  
+                    $activitelastweek = $this->Facturation->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Facturation.utilisateur_id', 'SUM(Facturation.LU) AS LU', 'SUM(Facturation.MA) AS MA', 'SUM(Facturation.ME) AS ME', 'SUM(Facturation.JE) AS JE', 'SUM(Facturation.VE) AS VE', 'SUM(Facturation.SA) AS SA', 'SUM(Facturation.DI) AS DI','Facturation.DATE AS DATE'),'conditions'=>array($destinataire,$domaine,'Facturation.DATE'=>startWeek(CUSDate($this->request->data['Facturation']['END']))),'group'=>array('Activite.projet_id','Activite.id','Facturation.utilisateur_id'),'recursive'=>0));  
+                    $entrop = array_merge($this->getEntropFirst($activitefirstweek),$this->getEntropLast($activitelastweek));
+                    $byprojet = $this->array_sum_merge_by_projet($entrop);
+                    $byprojetactiviteutilisateur = $this->array_sum_merge($entrop);
+                    $byprojetactivite = $this->array_sum_merge_by_projet_activite($entrop);
+                    $this->set('byprojet',$byprojet); 
+                    $this->set('byprojetactiviteutilisateur',$byprojetactiviteutilisateur);
+                    $this->set('byprojetactivite',$byprojetactivite);
+                    /*fin de la suppression des jours en trop*/
+                    
                     $rapportresult = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','Activite.projet_id','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode,'Facturation.VISIBLE'=>0),'order'=>array('MONTH(Facturation.DATE)'=>'asc','YEAR(Facturation.DATE)'=>'asc'),'group'=>array('Activite.projet_id','MONTH(Facturation.DATE)','YEAR(Facturation.DATE)'),'recursive'=>0));
                     $this->set('rapportresults',$rapportresult);
                     $chartresult = $this->Facturation->find('all',array('fields'=>array('Activite.projet_id','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode,'Facturation.VISIBLE'=>0),'order'=>array('Activite.projet_id'=>'asc'),'group'=>array('Activite.projet_id'),'recursive'=>0));
                     $this->set('chartresults',$chartresult);                    
-                    $detailrapportresult = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','Activite.NOM','Activite.projet_id','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode,'Facturation.VISIBLE'=>0),'order'=>array('MONTH(Facturation.DATE)'=>'asc','YEAR(Facturation.DATE)'=>'asc'),'group'=>array('Activite.projet_id','Activite.NOM','MONTH(Facturation.DATE)','YEAR(Facturation.DATE)'),'recursive'=>0));
+                    $detailrapportresult = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','Activite.id','Activite.NOM','Activite.projet_id','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode,'Facturation.VISIBLE'=>0),'order'=>array('MONTH(Facturation.DATE)'=>'asc','YEAR(Facturation.DATE)'=>'asc'),'group'=>array('Activite.projet_id','Activite.NOM','MONTH(Facturation.DATE)','YEAR(Facturation.DATE)'),'recursive'=>0));
                     $this->set('detailrapportresults',$detailrapportresult);
                     $this->Session->delete('rapportresults');  
                     $this->Session->delete('detailrapportresults');                      
                     $this->Session->write('rapportresults',$rapportresult);
                     $this->Session->write('detailrapportresults',$detailrapportresult);
                     if ($this->request->data['Facturation']['RepartitionUtilisateur']==1):
-                        $repartitions = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','Activite.projet_id','Activite.NOM','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode,'Facturation.VISIBLE'=>0),'order'=>array('MONTH(Facturation.DATE)'=>'asc','YEAR(Facturation.DATE)'=>'asc','Facturation.utilisateur_id'=>'asc'),'group'=>array('Facturation.utilisateur_id','Activite.NOM','MONTH(Facturation.DATE)','YEAR(Facturation.DATE)'),'recursive'=>0));
+                        $repartitions = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','Utilisateur.id','Utilisateur.NOM','Utilisateur.PRENOM','Activite.projet_id','Activite.id','Activite.NOM','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode,'Facturation.VISIBLE'=>0),'order'=>array('MONTH(Facturation.DATE)'=>'asc','YEAR(Facturation.DATE)'=>'asc','Facturation.utilisateur_id'=>'asc'),'group'=>array('Facturation.utilisateur_id','Activite.NOM','MONTH(Facturation.DATE)','YEAR(Facturation.DATE)'),'recursive'=>0));
                         $this->set('repartitions',$repartitions);
                         $this->Session->delete('repartitionresults');
                         $this->Session->write('repartitionresults',$repartitions);
                     endif;
                 endif;
-                $destinataires = $this->Facturation->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $listeagentsavecsaisie = $this->Facturation->find('all',array('fields'=>array('Facturation.utilisateur_id'),'group'=>'Facturation.utilisateur_id','order'=>array('Facturation.utilisateur_id'=>'asc'),'recursive'=>0));
+                $listein = '';
+                foreach($listeagentsavecsaisie as $agent):
+                    $listein .= $agent['Facturation']['utilisateur_id'].',';
+                endforeach;
+                $destinataires = $this->Facturation->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id IN ('.substr_replace($listein ,"",-1).')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
                 $this->set('destinataires',$destinataires);  
                 $domaines = $this->Facturation->Activite->Projet->find('list',array('fields'=>array('id','NOM'),'order'=>array('Projet.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
@@ -285,6 +303,211 @@ class FacturationsController extends AppController {
                 throw new NotAuthorizedException();
             endif;             
 	}   
+
+        
+        public function getEntropFirst($activitefirstweek=null){
+            $enmoins1 = array();
+            $i=0;
+            foreach($activitefirstweek as $firstweek):
+                $datetime1 = new DateTime(CUSDate($firstweek['Facturation']['DATE']));
+                $datetime2 = new DateTime(CUSDate($this->request->data['Facturation']['START']));
+                $interval = $datetime2->diff($datetime1); 
+                $entropfirst = $interval->format('%a');
+                switch ($entropfirst):
+                    case 1:
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];
+                        $enmoins1[$i]['utilisateur_id']=$firstweek['Facturation']['utilisateur_id'];
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU'];  
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Facturation']['utilisateur_id'];                       
+                        break;
+                    case 2:
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];
+                        $enmoins1[$i]['utilisateur_id']=$firstweek['Facturation']['utilisateur_id'];
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Facturation']['utilisateur_id'];                        
+                        break;
+                    case 3:
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];
+                        $enmoins1[$i]['utilisateur_id']=$firstweek['Facturation']['utilisateur_id'];                        
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA']+$firstweek[0]['ME'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Facturation']['utilisateur_id'];                        
+                        break;
+                    case 4:
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];                        
+                        $enmoins1[$i]['utilisateur_id']=$firstweek['Facturation']['utilisateur_id'];                       
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA']+$firstweek[0]['ME']+$firstweek[0]['JE'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Facturation']['utilisateur_id'];                         
+                        break;
+                    case 5:
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];                        
+                        $enmoins1[$i]['utilisateur_id']=$firstweek['Facturation']['utilisateur_id'];                        
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA']+$firstweek[0]['ME']+$firstweek[0]['JE']+$firstweek[0]['VE'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Facturation']['utilisateur_id'];                         
+                        break;
+                    case 6:
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];                        
+                        $enmoins1[$i]['utilisateur_id']=$firstweek['Facturation']['utilisateur_id'];                        
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA']+$firstweek[0]['ME']+$firstweek[0]['JE']+$firstweek[0]['VE']+$firstweek[0]['SA'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Facturation']['utilisateur_id'];                       
+                        break;
+                endswitch;
+                $i++;
+            endforeach;                           
+            return $enmoins1;
+        }
+        
+        public function getEntropLast($activitelastweek=null){
+            $enmoins2 = array();
+            $i=0;            
+            foreach($activitelastweek as $lastweek):
+                $datetime1 = new DateTime(CUSDate($lastweek['Facturation']['DATE']));
+                $datetime2 = new DateTime(CUSDate($this->request->data['Facturation']['END']));
+                $interval = $datetime1->diff($datetime2); 
+                $entropfirst = $interval->format('%a');
+                switch ($entropfirst):
+                    case 1:
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['utilisateur_id']=$lastweek['Facturation']['utilisateur_id'];                        
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA']+$lastweek[0]['VE']+$lastweek[0]['JE']+$lastweek[0]['ME'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Facturation']['utilisateur_id'];                      
+                        break;
+                    case 2:
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['utilisateur_id']=$lastweek['Facturation']['utilisateur_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA']+$lastweek[0]['VE']+$lastweek[0]['JE'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Facturation']['utilisateur_id'];                         
+                        break;
+                    case 3:
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['utilisateur_id']=$lastweek['Facturation']['utilisateur_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA']+$lastweek[0]['VE'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Facturation']['utilisateur_id'];                          
+                        break;
+                    case 0:
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['utilisateur_id']=$lastweek['Facturation']['utilisateur_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA']+$lastweek[0]['VE']+$lastweek[0]['JE']+$lastweek[0]['ME']+$lastweek[0]['MA'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Facturation']['utilisateur_id'];                         
+                        break;
+                    case 5:
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['utilisateur_id']=$lastweek['Facturation']['utilisateur_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Facturation']['utilisateur_id'];                         
+                        break;
+                    case 4:
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['utilisateur_id']=$lastweek['Facturation']['utilisateur_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Facturation']['utilisateur_id'];                        
+                        break;
+                endswitch;
+                $i++;
+            endforeach;                         
+            return $enmoins2;
+        }
+
+        public function array_sum_merge($array){
+            $sortedArray = array();
+            $assignedValues = array();
+            foreach ($array as $arrayItem)
+            {
+                $ukey = $arrayItem['projet_id'].$arrayItem['activite_id'].$arrayItem['utilisateur_id'];
+                if (!isset($sortedArray[$ukey])){
+                    $sortedArray[$ukey] = array();
+                }
+                $sortedArray[$ukey][] = $arrayItem['aretirer'];
+                if (!isset($assignedValues[$ukey])){
+                    $assignedValues[$ukey] = array(
+                        'projet_id' => $arrayItem['projet_id'],
+                        'activite_id' => $arrayItem['activite_id'],
+                        'utilisateur_id' => $arrayItem['utilisateur_id']
+                    );
+                }
+            }
+            $result = array();
+            $i=0;
+            foreach ($sortedArray as $ukey => $arrayItem)
+            {
+               $sum = array_sum($arrayItem);
+
+               $result[$i] = $assignedValues[$ukey];
+               $result[$i]['sum'] =$sum;
+               $i++;
+            }    
+            return $result;
+        }
+        
+        public function array_sum_merge_by_projet($array){
+            $sortedArray = array();
+            $assignedValues = array();
+            foreach ($array as $arrayItem)
+            {
+                $ukey = $arrayItem['projet_id'];
+                if (!isset($sortedArray[$ukey])){
+                    $sortedArray[$ukey] = array();
+                }
+                $sortedArray[$ukey][] = $arrayItem['aretirer'];
+                if (!isset($assignedValues[$ukey])){
+                    $assignedValues[$ukey] = array(
+                        'projet_id' => $arrayItem['projet_id']
+                    );
+                }
+            }
+            $result = array();
+            $i=0;
+            foreach ($sortedArray as $ukey => $arrayItem)
+            {
+               $sum = array_sum($arrayItem);
+
+               $result[$i] = $assignedValues[$ukey];
+               $result[$i]['sum'] =$sum;
+               $i++;
+            }    
+            return $result;
+        }        
+        
+        public function array_sum_merge_by_projet_activite($array){
+            $sortedArray = array();
+            $assignedValues = array();
+            foreach ($array as $arrayItem)
+            {
+                $ukey = $arrayItem['projet_id'].$arrayItem['activite_id'];
+                if (!isset($sortedArray[$ukey])){
+                    $sortedArray[$ukey] = array();
+                }
+                $sortedArray[$ukey][] = $arrayItem['aretirer'];
+                if (!isset($assignedValues[$ukey])){
+                    $assignedValues[$ukey] = array(
+                        'projet_id' => $arrayItem['projet_id'],
+                        'activite_id' => $arrayItem['activite_id']
+                    );
+                }
+            }
+            $result = array();
+            $i=0;
+            foreach ($sortedArray as $ukey => $arrayItem)
+            {
+               $sum = array_sum($arrayItem);
+
+               $result[$i] = $assignedValues[$ukey];
+               $result[$i]['sum'] =$sum;
+               $i++;
+            }    
+            return $result;
+        } 
         
 	function export_doc() {
             if($this->Session->check('rapportresults') && $this->Session->check('detailrapportresults')):

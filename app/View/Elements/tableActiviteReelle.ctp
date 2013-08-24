@@ -29,7 +29,7 @@ function joursemaine($usdate){
 <table cellpadding="0" cellspacing="0" class="table table-bordered">
     <thead>
     <tr>
-        <th class="text-center" colspan="9"><div class="pull-left cursor" id="previous"><i class="icon-arrow-left"></i></div>Répartition de l'activité pour la semaine du <span id="ActionreelleDebut" class="clearboth"><?php echo $debutsemaine; ?></span> au <span id="ActionreelleFin" class="clearboth"><?php echo $finsemaine; ?></span><div class="pull-right"><i class="icon-arrow-right cursor" id="next"></i></div></th>
+        <th class="text-center" colspan="9"><div class="pull-left cursor" id="previous"><span class="glyphicons left_arrow"></span></div>Répartition de l'activité pour la semaine du <span id="ActionreelleDebut" class="clearboth"><?php echo $debutsemaine; ?></span> au <span id="ActionreelleFin" class="clearboth"><?php echo $finsemaine; ?></span><div class="pull-right"><span class="glyphicons cursor right_arrow"  id="next"></span></div></th>
     </tr>
     <tr>
         <th rowspan="2">Activité</th>

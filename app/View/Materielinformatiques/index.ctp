@@ -4,7 +4,7 @@
                 <div class="container">
                 <ul class="nav">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'add')) : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<span class="glyphicons plus size14"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <li class="dropdown">
@@ -38,7 +38,7 @@
                       </ul>
                  </li>                   
                 <li class="divider-vertical-only"></li>
-                <li><?php echo $this->Html->link('<i class="ico-xls"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>               
+                <li><?php echo $this->Html->link('<span class="ico-xls icon-top2"></span>', array('action' => 'export_xls'),array('escape' => false)); ?></li>               
                 </ul> 
                 <?php echo $this->Form->create("Materielinformatique",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche dans tous les champs')); ?>
@@ -69,22 +69,22 @@
 		<td><?php echo h($materielinformatique['Typemateriel']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($materielinformatique['Section']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($materielinformatique['Assistance']['NOM']); ?>&nbsp;</td>
-		<td style='text-align:center;'><?php echo h($materielinformatique['Materielinformatique']['WIFI'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
-		<td style='text-align:center;'><?php echo h($materielinformatique['Materielinformatique']['VPN'])==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
-                <td style='text-align:center;'><i class="<?php echo etatMaterielInformatiqueImage(h($materielinformatique['Materielinformatique']['ETAT'])); ?>" rel="tooltip" data-title="<?php echo h($materielinformatique['Materielinformatique']['ETAT']); ?>"></i>&nbsp;</td>
+		<td style='text-align:center;'><?php echo h($materielinformatique['Materielinformatique']['WIFI'])==1 ? '<span class="glyphicons ok_2"></span>' : ''; ?>&nbsp;</td>
+		<td style='text-align:center;'><?php echo h($materielinformatique['Materielinformatique']['VPN'])==1 ? '<span class="glyphicons ok_2"></span>' : ''; ?>&nbsp;</td>
+                <td style='text-align:center;'><span class="glyphicons <?php echo etatMaterielInformatiqueImage(h($materielinformatique['Materielinformatique']['ETAT'])); ?>" rel="tooltip" data-title="<?php echo h($materielinformatique['Materielinformatique']['ETAT']); ?>"></span>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'view')) : ?>
                     <?php $utilisateur = isset($materielinformatique['Materielinformatique']['utilisateur_NOMLONG']) ? $materielinformatique['Materielinformatique']['utilisateur_NOMLONG'] : ""; ?>
-                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Poste informatique :</h3>" data-content="<contenttitle>Affecté à : </contenttitle>'.$utilisateur.'<br/><contenttitle>Commentaire: </contenttitle>'.h($materielinformatique['Materielinformatique']['COMMENTAIRE']).'<br/><contenttitle>Crée le: </contenttitle>'.h($materielinformatique['Materielinformatique']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($materielinformatique['Materielinformatique']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php echo '<span class="glyphicons eye_open" rel="popover" data-title="<h3>Poste informatique :</h3>" data-content="<contenttitle>Affecté à : </contenttitle>'.$utilisateur.'<br/><contenttitle>Commentaire: </contenttitle>'.h($materielinformatique['Materielinformatique']['COMMENTAIRE']).'<br/><contenttitle>Crée le: </contenttitle>'.h($materielinformatique['Materielinformatique']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($materielinformatique['Materielinformatique']['modified']).'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $materielinformatique['Materielinformatique']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil"></span>', array('action' => 'edit', $materielinformatique['Materielinformatique']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'delete')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $materielinformatique['Materielinformatique']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce poste informatique ?')); ?>
+                    <?php echo $this->Form->postLink('<span class="glyphicons bin"></span>', array('action' => 'delete', $materielinformatique['Materielinformatique']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce poste informatique ?')); ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'duplicate')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-retweet"></i>', array('action' => 'dupliquer', $materielinformatique['Materielinformatique']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer ce poste informatique ?')); ?>
+                    <?php echo $this->Form->postLink('<span class="glyphicons retweet"></span>', array('action' => 'dupliquer', $materielinformatique['Materielinformatique']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer ce poste informatique ?')); ?>
                     <?php endif; ?>                    
 		</td>
 	</tr>
@@ -94,7 +94,7 @@
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
 	<div class="pull-right"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>    
-	<div class="pagination  pagination-centered">
+	<div class="pagination  pagination-centered showoverlay">
         <ul>
 	<?php
                 echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";

@@ -247,8 +247,9 @@ define("tinymce/ui/FormatControls", [
 
 				each(formats, function(format) {
 					var menuItem = {
-						text: {raw: format.title},
-						icon: format.icon
+						text: format.title,
+						icon: format.icon,
+						preview: true
 					};
 
 					if (format.items) {
@@ -267,6 +268,15 @@ define("tinymce/ui/FormatControls", [
 
 						menuItem.onclick = function() {
 							toggleFormat(formatName);
+						};
+
+						menuItem.onPostRender = function() {
+							var self = this;
+
+							self.parent().on('show', function() {
+								self.disabled(!editor.formatter.canApply(formatName));
+								self.active(editor.formatter.match(formatName));
+							});
 						};
 					}
 

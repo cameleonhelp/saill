@@ -50,6 +50,8 @@ class RapportsController extends AppController {
                 $request = $this->request->data;
                 $results = $this->requestAction('activitesreelles/getActivitesReelles/'.$request['Rapport']['mois'].'/'.$request['Rapport']['annee']);  
                 $this->set('results',$results);
+                $resultvides = $this->requestAction('activitesreelles/saisieVide/'.$request['Rapport']['mois'].'/'.$request['Rapport']['annee']);  
+                $this->set('resultvides',$resultvides);                
                 $lastMonthDay = endWeek(date('Y-m-t', mktime(0, 0, 0, $request['Rapport']['mois'], '05', $request['Rapport']['annee'])));
                 $firstMonthDay = startWeek($request['Rapport']['annee'].'-'.$request['Rapport']['mois'].'-01'); 
                 $lastday = date('Y-m-t', mktime(0, 0, 0, $request['Rapport']['mois'], '05', $request['Rapport']['annee']));
@@ -72,29 +74,29 @@ class RapportsController extends AppController {
             throw new NotAuthorizedException();
         endif; 
     }
-    
-        public function sendmailsaisie($id){
-            $mailto = $this->Rapport->requestAction('utilisateurs/getutilisateurbyid/'.$id);
-            $to=$mailto['Utilisateur']['MAIL'];
-            $from = userAuth('MAIL');
-            $objet = 'SAILL : Saisie d\'activité incomplète ou non validée.';
-            $message = "Bonjour<br><br>merci de compléter ou de valider votre saisie d'activité du mois dans SAILL.";
-            if($to!=''):
-                try{
-                $email = new CakeEmail();
-                $email->config('smtp')
-                        ->emailFormat('html')
-                        ->from($from)
-                        ->to($to)
-                        ->subject($objet)
-                        ->send($message);
-                }
+      
+    public function sendmailsaisie($id){
+        $mailto = $this->Rapport->requestAction('utilisateurs/getutilisateurbyid/'.$id);
+        $to=$mailto['Utilisateur']['MAIL'];
+        $from = userAuth('MAIL');
+        $objet = 'SAILL : Saisie d\'activité incomplète ou non validée.';
+        $message = "Bonjour<br><br>merci de compléter ou de valider votre saisie d'activité du mois dans SAILL.";
+        if($to!=''):
+            try{
+            $email = new CakeEmail();
+            $email->config('smtp')
+                    ->emailFormat('html')
+                    ->from($from)
+                    ->to($to)
+                    ->subject($objet)
+                    ->send($message);
+            }
 
-                catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
-                }  
-            endif;
-        }     
+            catch(Exception $e){
+                $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+            }  
+        endif;
+    }     
 }
 
 ?>

@@ -31,6 +31,21 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
         return in_array($date->format('Y-m-d'),$tab_feries);
     }
 
+ /**
+ * CDateTimeline
+ * 
+ * @param type $frdate
+ * @return date au format Y-m-d
+ */
+    function CDateTimeline($frdate){
+    $result = $frdate;
+    if(strstr($frdate, '/')==!false):
+    $day = explode('/',$frdate);
+    $result = $day[2].",".($day[1]-1).",".$day[0];
+    endif;
+    return $result;
+    }
+    
 /**
  * CUSDate
  * 
@@ -470,22 +485,22 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
             $class = '';
             switch ($etat){
                  case 'à faire':
-                    $class = 'icon-edit icon-red';
+                    $class = 'edit red';
                     break;
                  case 'en cours':
-                    $class = 'icon-edit';
+                    $class = 'edit';
                     break;                
                  case 'livré':
-                    $class = 'icon-share';
+                    $class = 'truck green'; //'share';
                     break;          
                  case 'validé':
-                    $class = 'icon-check icon-green';
+                    $class = 'check green';
                     break;  
                  case 'refusé':
-                    $class = 'icon-share icon-red';
+                    $class = 'unshare red';
                     break;          
                  case 'annulé':
-                    $class = 'icon-remove icon-red';
+                    $class = 'remove_2 red';
                     break;                 
             }
             return $class;
@@ -503,22 +518,22 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
            $class = '';
            switch ($etat){
                 case 'En stock':
-                   $class = 'icon-inbox';
+                   $class = 'inbox';
                    break;
                 case 'En dotation':
-                   $class = 'icon-lock';
+                   $class = 'lock';
                    break;                
                 case 'En réparation':
-                   $class = 'icon-wrench';
+                   $class = 'wrench';
                    break;          
                 case 'Au rebut':
-                   $class = 'icon-trash icon-grey';
+                   $class = 'bin grey';
                    break;
                 case 'Non localisé':
-                   $class = 'icon-map-marker icon-red';
+                   $class = 'google_maps red';
                    break; 
                 case 'En prêt':
-                   $class = 'icon-bell icon-green';                    
+                   $class = 'bell green';                    
            }
            return $class;
        }
@@ -535,31 +550,31 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
            $class = '';
            switch ($etat){
                 case 'Demandé':
-                   $class = 'icon-envelope';
+                   $class = 'envelope';
                    break;
                 case 'Pris en compte':
-                   $class = 'icon-flag';
+                   $class = 'flag';
                    break;                
                 case 'En validation':
-                   $class = 'icon-bookmark icon-grey';
+                   $class = 'bookmark grey';
                    break;          
                 case 'Validé':
-                   $class = 'icon-bookmark icon-green';
+                   $class = 'bookmark green';
                    break;
                 case 'Demande transférée':
-                   $class = 'icon-share-alt';
+                   $class = 'share';
                    break;                
                 case 'Demande traitée':
-                   $class = 'icon-ok';
+                   $class = 'ok_2';
                    break;
                 case 'Retour utilisateur':
-                   $class = 'icon-ok icon-green';
+                   $class = 'ok_2 green';
                    break;                
                 case 'A supprimer':
-                   $class = 'icon-remove';
+                   $class = 'remove';
                    break;          
                 case 'Supprimée':
-                   $class = 'icon-remove icon-red';
+                   $class = 'remove red';
                    break; 
            }
            return $class;
@@ -617,20 +632,20 @@ function styleBarreInd($avancement){
         $class = '';
         switch ($etat){
              case 'à faire':
-                $class = 'icon-tag icon-red';
+                $class = 'tag red';
                 break;
              case 'en cours':
-                $class = 'icon-tag';
+                $class = 'tag';
                 break;                
              case 'livrée':
              case 'livré':
-                $class = 'icon-inbox icon-green';
+                $class = 'inbox green';
                 break;          
              case 'terminée':
-                $class = 'icon-tag icon-green';
+                $class = 'tag green';
                 break;         
              case 'annulée':
-                $class = 'icon-remove icon-red';
+                $class = 'remove_2 red';
                 break;                 
         }
         return $class;
@@ -722,6 +737,7 @@ function styleBarreInd($avancement){
  * @return boolean
  */    
     function enretard($date,$etat=null){
+        $date = $date== null ? date('d/m/Y') : $date;
         $result = false;
         if ($etat == null || $etat == 'à faire' || $etat == 'en cours'):
             $today = intval(date('Ymd'));

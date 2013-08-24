@@ -40,7 +40,12 @@ class AchatsController extends AppController {
                 $this->Session->delete('xls_export');
                 $export = $this->Achat->find('all',array('conditions'=>$newconditions,'order'=>array('Achat.DATE'=>'desc')));
                 $this->Session->write('xls_export',$export); 
-                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>"asc",'Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1')));
+                $listeActivites = $this->Achat->find('all',array('fileds'=>array('Achat.activite_id'),'group'=>'Achat.activite_id','recursive'=>-1));
+                $listein = '';
+                foreach($listeActivites as $liste):
+                    $listein .= $liste['Achat']['activite_id'].',';
+                endforeach;
+                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>"asc",'Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1','Activite.id IN ('.substr_replace($listein ,"",-1).')')));
                 $this->set('activites',$activites); 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
@@ -146,9 +151,14 @@ class AchatsController extends AppController {
                 $this->set('achats', $this->paginate());
                 $this->Session->delete('xls_export');
                 $export = $this->Achat->find('all',array('conditions'=>$newconditions));
-                $this->Session->write('xls_export',$export);                
-                $activites = $this->Achat->Activite->find('all',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
-                $this->set('activites',$activites);  
+                $this->Session->write('xls_export',$export);     
+                $listeActivites = $this->Achat->find('all',array('fileds'=>array('Achat.activite_id'),'group'=>'Achat.activite_id','recursive'=>-1));
+                $listein = '';
+                foreach($listeActivites as $liste):
+                    $listein .= $liste['Achat']['activite_id'].',';
+                endforeach;
+                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>"asc",'Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1','Activite.id IN ('.substr_replace($listein ,"",-1).')')));
+                $this->set('activites',$activites);   
                 $this->render('index');
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));

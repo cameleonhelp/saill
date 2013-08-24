@@ -99,4 +99,13 @@ class EquipesController extends AppController {
 		$this->Session->setFlash(__('Agent <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
 		$this->History->goBack();
 	}
+        
+        public function myTeam($id = null){
+            $result = '';
+            $agents = $this->Equipe->find('all',array('conditions'=>array('Equipe.utilisateur_id'=>$id)));
+            foreach($agents as $agent):
+                $result .= $agent['Equipe']['agent'].",";
+            endforeach;
+            return $result;
+        }
 }

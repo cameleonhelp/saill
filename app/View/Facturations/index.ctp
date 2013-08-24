@@ -13,7 +13,7 @@
                 $filtre_annee = isset($this->params->pass[4]) ? $this->params->pass[4] : date('Y');
                 ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'add') && $this->params->action=='afacturer') : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus" rel="tooltip" data-title="Ajoutez une nouvelle facturation"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<span class="glyphicons plus size14" rel="tooltip" data-title="Ajoutez une nouvelle facturation"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                  <li><?php echo $this->Html->link('A facturer', array('controller'=>'activitesreelles','action' => 'afacturer'),array('escape' => false)); ?></li>
@@ -63,16 +63,16 @@
                      <ul class="dropdown-menu">
                      <?php
                      $inserse_visible = $filtre_visible == 0 ? 1 : 0;
-                     $img_visible = $filtre_visible == 1 ? "icon-blank" : "icon-ok";
+                     $img_visible = $filtre_visible == 1 ? "unchecked bottom2" : "check bottom2";
                      $inverse_indisponible = $filtre_indisponible == 0 ? 1 : 0;
-                     $img_indisponible = $filtre_indisponible == 1 ?  "icon-blank" : "icon-ok";
+                     $img_indisponible = $filtre_indisponible == 1 ?  "unchecked bottom2" : "check bottom2";
                      ?>
-                     <li><?php echo $this->Html->link('<i class='.$img_visible.'></i> Non visible inclus ', array('action' => $defaultAction,$filtre_utilisateur,$filtre_mois,$inserse_visible,$filtre_indisponible,$filtre_annee),array('escape' => false)); ?></li>
-                     <li><?php echo $this->Html->link('<i class='.$img_indisponible.'></i> Indisponibilité', array('action' => $defaultAction,$filtre_utilisateur,$filtre_mois,$filtre_visible,$inverse_indisponible,$filtre_annee),array('escape' => false)); ?></li>                    
+                     <li><?php echo $this->Html->link('<span class="glyphicons '.$img_visible.'"></span> Non visible inclus ', array('action' => $defaultAction,$filtre_utilisateur,$filtre_mois,$inserse_visible,$filtre_indisponible,$filtre_annee),array('escape' => false)); ?></li>
+                     <li><?php echo $this->Html->link('<span class="glyphicons '.$img_indisponible.'"></span> Indisponibilité', array('action' => $defaultAction,$filtre_utilisateur,$filtre_mois,$filtre_visible,$inverse_indisponible,$filtre_annee),array('escape' => false)); ?></li>                    
                       </ul>
                 </li>                
                 <li class="divider-vertical-only"></li>
-                <li><?php echo $this->Html->link('<i class="ico-xls" rel="tooltip" data-title="Export Excel"></i>', array('action' => 'export_xls'),array('escape' => false)); ?></li>                 
+                <li><?php echo $this->Html->link('<span class="ico-xls icon-top2" rel="tooltip" data-title="Export Excel"></span>', array('action' => 'export_xls'),array('escape' => false)); ?></li>                 
                 </ul> 
                 <!--    
                 <?php echo $this->Form->create("Facturation",array('controller'=>'facturations','action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
@@ -151,12 +151,12 @@
                 <td style="text-align: center;" class="sstotal"><?php echo $facturation['Facturation']['TOTAL']; ?></td> 
                 <td style="text-align: center;">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'view')) : ?>
-                    <?php echo '<span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><i class="icon-eye-open" rel="popover" data-title="<h3>Facturation :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($facturation['Facturation']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($facturation['Facturation']['modified']).'" data-trigger="click" style="cursor: pointer;"></i></span>'; ?>
+                    <?php echo '<span><span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><span class="glyphicons eye_open" rel="popover" data-title="<h3>Facturation :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($facturation['Facturation']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($facturation['Facturation']['modified']).'" data-trigger="click" style="cursor: pointer;"></span></span></span>'; ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil" rel="tooltip" data-title="Modification de la facturation"></i>', array('action' => 'edit', $facturation['Facturation']['id'], $facturation['Facturation']['utilisateur_id']),array('escape' => false)); ?>
+                    <?php echo $this->Html->link('<span class="glyphicons pencil" rel="tooltip" data-title="Modification de la facturation"></span>', array('action' => 'edit', $facturation['Facturation']['id'], $facturation['Facturation']['utilisateur_id']),array('escape' => false)); ?>
                     <?php if(isset($facturation['Facturation']['activitesreelle_id']) && $facturation['Facturation']['activitesreelle_id']!=''): ?>
-                        <?php echo $this->Html->link('<i class="icon-edit" rel="tooltip" data-title="Déverouillez pour nouvelle saisie"></i>', array('controller'=>'activitesreelles','action' => 'deverouiller', $facturation['Facturation']['activitesreelle_id']),array('escape' => false)); ?>                    
+                        <?php echo $this->Html->link('<span class="glyphicons unlock" rel="tooltip" data-title="Déverouillez pour nouvelle saisie"></span>', array('controller'=>'activitesreelles','action' => 'deverouiller', $facturation['Facturation']['activitesreelle_id']),array('escape' => false)); ?>                    
                     <?php endif; ?>
                     <?php endif; ?>
                 </td>                 

@@ -11,7 +11,17 @@
             </div>
         </div> 
     <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>1)); ?>
-    <?php echo $this->Form->end(); ?>  
+    <?php echo $this->Form->end(); ?> 
+    <?php /* Initialiser le mot de passe administrateur */ ?>
+    <?php echo $this->Form->create('Utilisateur',array('action'=>'initadminpassword','id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+        <div class="control-group">
+            <label class="control-label sstitre" for="UtilisateurPasswordNew">Initialiser le mot de passe administrateur : </label>
+            <div class="controls">
+            <?php echo $this->Form->button('Initialiser', array('class' => 'btn btn-primary','type'=>'submit')); ?>
+            </div>
+        </div> 
+    <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>1)); ?>
+    <?php echo $this->Form->end(); ?>     
     <?php /* Gérer url MINIDOC */ ?>
     <?php echo $this->Form->create('Parameter',array('action'=>'saveParam','id'=>'formValidate2','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
         <div class="control-group">

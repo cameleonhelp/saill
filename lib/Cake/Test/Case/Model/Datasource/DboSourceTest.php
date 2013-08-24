@@ -569,7 +569,7 @@ class DboSourceTest extends CakeTestCase {
 	}
 
 /**
- * testReconnect method
+ * Tests if the connection can be re-established and that the new (optional) config is set.
  *
  * @return void
  */
@@ -861,7 +861,7 @@ class DboSourceTest extends CakeTestCase {
 		$Comment->find('all', array('recursive' => 2)); // ensure Model descriptions are saved
 		$this->db->getLog();
 
-		// case: Comment  belongsTo User and Article
+		// case: Comment belongsTo User and Article
 		$Comment->unbindModel(array(
 			'hasOne' => array('Attachment')
 		));

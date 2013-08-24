@@ -39,7 +39,7 @@ define("tinymce/FocusManager", [
 		}
 
 		function registerEvents(e) {
-			var editor = e.editor, restoreRng, lastRng, selectionChangeHandler;
+			var editor = e.editor, lastRng, selectionChangeHandler;
 
 			function isUIElement(elm) {
 				return !!DOMUtils.DOM.getParent(elm, FocusManager.isEditorUIElement);
@@ -99,9 +99,9 @@ define("tinymce/FocusManager", [
 			editor.on('focusin', function() {
 				var focusedEditor = editorManager.focusedEditor;
 
-				if (restoreRng) {
-					editor.selection.setRng(restoreRng);
-					restoreRng = null;
+				if (editor.selection.restoreRng) {
+					editor.selection.setRng(editor.selection.restoreRng);
+					editor.selection.restoreRng = null;
 				}
 
 				if (focusedEditor != editor) {
@@ -116,21 +116,21 @@ define("tinymce/FocusManager", [
 			});
 
 			editor.on('focusout', function() {
-				restoreRng = lastRng;
+				editor.selection.restoreRng = lastRng;
 
 				window.setTimeout(function() {
 					var focusedEditor = editorManager.focusedEditor;
 
 					// Focus from editorA into editorB then don't restore selection
 					if (focusedEditor != editor) {
-						restoreRng = null;
+						editor.selection.restoreRng = null;
 					}
 
 					// Still the same editor the the blur was outside any editor
 					if (!isUIElement(getActiveElement()) && focusedEditor == editor) {
 						editor.fire('blur', {focusedEditor: null});
 						editorManager.focusedEditor = null;
-						restoreRng = null;
+						editor.selection.restoreRng = null;
 					}
 				}, 0);
 			});

@@ -36,81 +36,14 @@
  *
  */
 class EmailConfig {
-        public $gmail = array(
-            'host' => 'ssl://smtp.gmail.com',
-            'port' => 465,
-            'username' => 'nepasrepondresaill@gmail.com',
-            'password' => 'azerty64',
-            'from'=>'nepasrepondresaill@gmail.com',
-            'transport' => 'Smtp',
-            'charset' => 'utf-8',
-            'headerCharset' => 'utf-8'
-        );
-
-        public $exchange = array(
-            'transport' => 'Smtp',
-            'from' => array('email@example.com' => 'Admin SAILL'),
-            'host' => 'smtp.ex3.secureserver.net',
-            'port' => 587,
-            'timeout' => 30,
-            'username' => 'verifiedUserName',
-            'password' => 'verifiedPassword',
-            'client' => null,
-            'log' => true,
-            'delivery' => 'smtp',
-            'tls' => true
-        );
-        
-	public $default = array(
-		'transport' => 'Mail',
-		'from' => array('administrateur@saill.sncf.fr'=>'Admin SAILL'),
-		'charset' => 'utf-8',
-		'headerCharset' => 'utf-8',
-	);
-
 	public $smtp = array(
 		'transport' => 'Smtp',
-		'from' => array('administrateur@saill.sncf.fr' => 'Administrateur SAILL(ne pas repondre)'),
-                'username'=>'administrateur@saill.sncf.fr',
-                'password'=>'password',
                 'host' => 'localhost',
-		'port' => 27,
-		'timeout' => 30,
-		'client' => null,
-		'log' => true,
-		'charset' => 'utf-8',
-		'headerCharset' => 'utf-8',
-	);
-
-	public $fast = array(
-		'from' => 'jacques.levavasseur@sncf.fr',
-		'sender' => null,
-		'to' => null,
-		'cc' => null,
-		'bcc' => null,
-		'replyTo' => null,
-		'readReceipt' => null,
-		'returnPath' => null,
-		'messageId' => true,
-		'subject' => null,
-		'message' => null,
-		'headers' => null,
-		'viewRender' => null,
-		'template' => false,
-		'layout' => false,
-		'viewVars' => null,
-		'attachments' => null,
-		'emailFormat' => 'html',
-		'transport' => 'Smtp',
-		'host' => 'localhost',
 		'port' => 25,
 		'timeout' => 30,
-		'username' => 'user',
-		'password' => 'secret',
 		'client' => null,
 		'log' => true,
 		'charset' => 'utf-8',
 		'headerCharset' => 'utf-8',
 	);
-
 }

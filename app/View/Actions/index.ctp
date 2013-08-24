@@ -4,42 +4,46 @@
                 <div class="container">
                 <ul class="nav">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'add')) : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus" rel="tooltip" data-title="Ajoutez une action"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<span class="glyphicons plus size14" rel="tooltip" data-title="Ajoutez une action"></span>', array('action' => 'add'),array('escape' => false,'class'=>'showoverlay')); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Priorité <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay')); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Normale', array('action' => 'index','1',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
-                         <li><?php echo $this->Html->link('Moyenne', array('action' => 'index','2',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
-                         <li><?php echo $this->Html->link('Haute', array('action' => 'index','3',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Normale', array('action' => 'index','1',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay')); ?></li>
+                         <li><?php echo $this->Html->link('Moyenne', array('action' => 'index','2',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay')); ?></li>
+                         <li><?php echo $this->Html->link('Haute', array('action' => 'index','3',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay')); ?></li>
                      </ul>
                 </li>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay')); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('A faire', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','1',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
-                         <li><?php echo $this->Html->link('En cours', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','2',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
-                         <li><?php echo $this->Html->link('Terminée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','3',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
-                         <li><?php echo $this->Html->link('Livrée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','4',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
-                         <li><?php echo $this->Html->link('Annulée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','5',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Nouvelles', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','news',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay')); ?></li>
+                         <li class="divider"></li>                         
+                         <li><?php echo $this->Html->link('A faire', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','1',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay')); ?></li>
+                         <li><?php echo $this->Html->link('En cours', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','2',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay')); ?></li>
+                         <li><?php echo $this->Html->link('Terminée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','3',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay')); ?></li>
+                         <li><?php echo $this->Html->link('Livrée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','4',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay')); ?></li>
+                         <li><?php echo $this->Html->link('Annulée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','5',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay')); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Todolist', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','6',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous')); ?></li>
+                         <li><?php echo $this->Html->link('Todolist', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','6',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay')); ?></li>
                      </ul>
                 </li> 
                 <?php if (areaIsVisible()) :?>
                  <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Destinataire <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous')); ?></li>
-                         <li><?php echo $this->Html->link('Moi', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',  userAuth('id'))); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous'),array('class'=>'showoverlay')); ?></li>
+                         <li><?php echo $this->Html->link('Moi', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',  userAuth('id')),array('class'=>'showoverlay')); ?></li>
+                         <li class="divider"></li>
+                         <li><?php echo $this->Html->link('Mon équipe', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',  'equipe'),array('class'=>'showoverlay')); ?></li>
                          <li class="divider"></li>
                          <?php foreach ($responsables as $responsable): ?>
-                            <li><?php echo $this->Html->link($responsable['Utilisateur']['NOMLONG'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$responsable['Utilisateur']['id'])); ; ?></li>
+                            <li><?php echo $this->Html->link($responsable['Utilisateur']['NOMLONG'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$responsable['Utilisateur']['id']),array('class'=>'showoverlay')); ; ?></li>
                          <?php endforeach; ?>
                      </ul>
                  </li> 
@@ -47,8 +51,11 @@
                 </ul> 
                 <?php echo $this->Form->create("Action",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche dans tous les champs')); ?>
-                    <button type="submit" class="btn">Rechercher</button>
-                <?php echo $this->Form->end(); ?>               
+                    <button type="submit" class="btn showoverlay">Rechercher</button>
+                <?php echo $this->Form->end(); ?> 
+                <ul class="nav pull-right">
+                    <li><a href="#" rel="popover" data-title="Aide" data-placement="bottom" data-content="<?php echo $this->element('hlp/hlp-action'); ?>"><span><span class="glyphicons blue circle_question_mark size14"></span></span></a></li>
+                </ul>
                 </div>
             </div>
         </div>
@@ -57,16 +64,17 @@
         <thead>
 	<tr>
 			<th><?php echo $this->Paginator->sort('Domaine.NOM','Domaine'); ?></th>
-			<th><?php echo $this->Paginator->sort('Destinataire.NOMLGDEST','Emetteur de l\'action'); ?></th>
+			<th><?php echo $this->Paginator->sort('Utilisateur.NOMLONG','Emetteur'); ?></th>
+                        <th><?php echo $this->Paginator->sort('Action.destinataire_nom','Destinataire'); ?></th>
 			<th><?php echo $this->Paginator->sort('OBJET','Objet'); ?></th>
 			<th width='90px'><?php echo $this->Paginator->sort('AVANCEMENT','% avancement'); ?></th>
-			<th width='90px'><?php echo $this->Paginator->sort('DEBUT','Date de début'); ?></th>
-			<th width='90px'><?php echo $this->Paginator->sort('ECHEANCE','Echéance'); ?></th>
+			<th width='60px'><?php echo $this->Paginator->sort('DEBUT','Date de début'); ?></th>
+			<th width='60px'><?php echo $this->Paginator->sort('ECHEANCE','Echéance'); ?></th>
 			<th width='60px'><?php echo $this->Paginator->sort('STATUT','Statut'); ?></th>
                         <th width='60px'><?php echo $this->Paginator->sort('CRA','CRA'); ?></th>
-			<th width='65px'><?php echo $this->Paginator->sort('DUREEPREVUE','Durée prévue'); ?></th>
-			<th width="70px"><?php echo $this->Paginator->sort('PRIORITE','Priorité'); ?></th>
-			<th class="actions" width='75px'><?php echo __('Actions'); ?></th>
+			<th width='70px'><?php echo $this->Paginator->sort('DUREEPREVUE','Charge prévue'); ?></th>
+			<th width="50px"><?php echo $this->Paginator->sort('PRIORITE','Priorité'); ?></th>
+			<th class="actions" width='80px'><?php echo __('Actions'); ?></th>
 	</tr>
         </thead>
         <tbody>
@@ -75,42 +83,43 @@
 	<tr>
 		<td><?php echo h($action['Domaine']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($action['Utilisateur']['NOM']." ".$action['Utilisateur']['PRENOM']); ?>&nbsp;</td>
+                <td><?php echo h($action['Action']['destinataire_nom']); ?>&nbsp;</td>
                 <td><?php echo h($action['Action']['OBJET']); ?>
                     <?php if($action['Action']['NEW']==1): ?>
-                    <span class="pull-right"><i class="icon-asterisk" rel="tooltip" data-title="Nouvelle action en date du <?php echo h($action['Action']['created']); ?>"></i></span>&nbsp;
+                    <span class="pull-right"><span class="glyphicons asterisk size8 orange" rel="tooltip" data-title="Nouvelle action en date du <?php echo h($action['Action']['created']); ?>"></span></span>&nbsp;
                     <?php endif; ?>
                 </td>
                 <?php $style = styleBarre(h($action['Action']['AVANCEMENT'])); ?>
 		<td>
-                <a href="#" class="reculer cursor" style="float:left;margin-left: -8px;margin-right:2px;" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo $action['Action']['AVANCEMENT']; ?>"><i class="icon-circle-arrow-left"></i></a>
+                <a href="#" class="reculer cursor showoverlay" style="float:left;margin-left: -8px;margin-right:2px;" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo isset($action['Action']['AVANCEMENT']) ? $action['Action']['AVANCEMENT'] : '0'; ?>"><span class="glyphicons circle_arrow_left top3"></span></a>
                 <div class="progress progress-<?php echo $style; ?>" style="margin-bottom:-10px;width: 80%;float: left;">
-                <div class="bar" style="width:<?php echo h($action['Action']['AVANCEMENT']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($action['Action']['AVANCEMENT']); ?>%" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo $action['Action']['AVANCEMENT']; ?>"><?php echo $action['Action']['AVANCEMENT'] > 0 ? $action['Action']['AVANCEMENT']."%" : ''; ?></div></div>
-                <a href="#" class="avancer cursor" style="float:right;margin-right: -8px;" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo $action['Action']['AVANCEMENT']; ?>"><i class="icon-circle-arrow-right"></i></a></td>
+                <div class="bar" style="width:<?php echo h($action['Action']['AVANCEMENT']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($action['Action']['AVANCEMENT']); ?>%" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo isset($action['Action']['AVANCEMENT']) ? $action['Action']['AVANCEMENT'] : '0'; ?>"><?php echo $action['Action']['AVANCEMENT'] > 0 ? $action['Action']['AVANCEMENT']."%" : ''; ?></div></div>
+                <a href="#" class="avancer cursor showoverlay" style="float:right;margin-right: -8px;" idaction="<?php echo $action['Action']['id']; ?>" avancement="<?php echo isset($action['Action']['AVANCEMENT']) ? $action['Action']['AVANCEMENT'] : '0'; ?>"><span class="glyphicons circle_arrow_right top3"></span></a></td>
 		<td style="text-align:center;"><?php echo h($action['Action']['DEBUT']); ?>&nbsp;</td>
                 <?php $classtd = enretard($action['Action']['ECHEANCE'],$action['Action']['STATUT']) ? "class='td-error'" : ""; ?>
 		<td <?php echo $classtd; ?> style="text-align:center;"><?php echo h($action['Action']['ECHEANCE']); ?>&nbsp;</td>
-		<td style="text-align:center;"><?php $image = isset($action['Action']['STATUT']) ? etatAction(h($action['Action']['STATUT'])) : 'icon-blank' ; ?>
-                    <a href="#" class="changeetat cursor" idaction="<?php echo $action['Action']['id']; ?>" ><i class="<?php echo $image; ?>" rel="tooltip" data-title="<?php echo etatTooltip(h($action['Action']['STATUT'])); ?>"></i></a></td>
-		<td style="text-align:center;"><?php $image = (isset($action['Action']['CRA']) && $action['Action']['CRA']==true) ? 'icon-ok' : 'icon-ok icon-grey' ; ?>
-                    <a href="#" class="incra cursor" idaction="<?php echo $action['Action']['id']; ?>" ><i class="<?php echo $image; ?>" rel="tooltip" data-title="Visible dans le CRA ou non"></i></a></td>               
+		<td style="text-align:center;"><?php $image = isset($action['Action']['STATUT']) ? etatAction(h($action['Action']['STATUT'])) : 'blank' ; ?>
+                    <a href="#" class="changeetat cursor showoverlay" idaction="<?php echo $action['Action']['id']; ?>" ><span class="glyphicons <?php echo $image; ?>" rel="tooltip" data-title="<?php echo etatTooltip(h($action['Action']['STATUT'])); ?>"></span></a></td>
+		<td style="text-align:center;"><?php $image = (isset($action['Action']['CRA']) && $action['Action']['CRA']==true) ? 'ok_2' : 'ok_2 disabled' ; ?>
+                    <a href="#" class="incra cursor showoverlay" idaction="<?php echo $action['Action']['id']; ?>" ><span class="glyphicons <?php echo $image; ?>" rel="tooltip" data-title="Visible dans le CRA ou non"></span></a></td>               
                 <td style="text-align:center;">
-                    <a href="#" class="moins cursor" style="float:left;margin-left: -3px;margin-right:2px;" idaction="<?php echo $action['Action']['id']; ?>" duree="<?php echo $action['Action']['DUREEPREVUE']; ?>"><i class="icon-minus-sign"></i></a>
+                    <a href="#" class="moins cursor showoverlay" style="float:left;margin-left: -3px;margin-right:2px;" idaction="<?php echo $action['Action']['id']; ?>" duree="<?php echo $action['Action']['DUREEPREVUE']; ?>"><span class="glyphicons circle_minus top3"></sapn></a>
                     <span rel="tooltip" data-title="<?php echo CHours2Days($action['Action']['DUREEPREVUE']); ?> jour(s)" style="float: left;width: 55%;"><?php echo h($action['Action']['DUREEPREVUE']); ?> h</span>
-                    <a href="#" class="plus cursor" style="float:left;" idaction="<?php echo $action['Action']['id']; ?>" duree="<?php echo $action['Action']['DUREEPREVUE']; ?>"><i class="icon-plus-sign"></i></a>
+                    <a href="#" class="plus cursor showoverlay" style="float:left;" idaction="<?php echo $action['Action']['id']; ?>" duree="<?php echo $action['Action']['DUREEPREVUE']; ?>"><span class="glyphicons circle_plus top3"></a>
                 </td>
 		<td style="text-align:center;" class="<?php echo $action['Action']['PRIORITE']; ?>"><?php echo h($action['Action']['PRIORITE']); ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'view')) : ?>
-                    <?php echo '<span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><i class="icon-eye-open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Commentaire : </contenttitle>'.h($action['Action']['COMMENTAIRE']).'<br/><contenttitle>Crée le: </contenttitle>'.h($action['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($action['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></i></span>'; ?>&nbsp;
+                    <?php echo '<span><span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><span class="glyphicons eye_open" rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Commentaire : </contenttitle>'.h($action['Action']['COMMENTAIRE']).'<br/><contenttitle>Crée le: </contenttitle>'.h($action['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($action['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></span></span></span>'; ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil" rel="tooltip" data-title="Modification"></i>', array('action' => 'edit', $action['Action']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil" rel="tooltip" data-title="Modification"></span>', array('action' => 'edit', $action['Action']['id']),array('escape' => false,'class'=>'showoverlay')); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'delete')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-trash" rel="tooltip" data-title="Suppression"></i>', array('action' => 'delete', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette action ?')); ?>                    
+                    <?php echo $this->Form->postLink('<span class="glyphicons bin" rel="tooltip" data-title="Suppression"></span>', array('action' => 'delete', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette action ?')); ?>                    
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'duplicate')) : ?>
-                    <?php echo $this->Form->postLink('<i class="icon-retweet" rel="tooltip" data-title="Duplication"></i>', array('action' => 'dupliquer', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cette action ?\r\nCette action vous sera attribuée.')); ?>
+                    <?php echo $this->Form->postLink('<span class="glyphicons retweet" rel="tooltip" data-title="Duplication"></span>', array('action' => 'dupliquer', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cette action ?\r\nCette action vous sera attribuée.')); ?>
                     <?php endif; ?>                        
                 </td>
 	</tr>
@@ -120,7 +129,7 @@
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
 	<div class="pull-right"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>     
-	<div class="pagination  pagination-centered">
+	<div class="pagination  pagination-centered showoverlay">
         <ul>
 	<?php
                 echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";
@@ -131,6 +140,11 @@
 	?>
         </ul>
 	</div>
+        <div id="content-timeline">
+        <div style="width:100%;text-align:center;"><?php echo $this->Html->link('Aujourd\'hui ⇣',"#",array('class'=>'btn btn-default',"onclick"=>"javascript:centerTimeline();")); ?></div>
+        <br>
+        <div id="timeline" style="width:100%;min-height:80px;"></div>
+        </div>
 </div>
 <script>
 $(document).ready(function () {

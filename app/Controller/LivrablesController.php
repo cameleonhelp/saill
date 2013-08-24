@@ -98,6 +98,11 @@ class LivrablesController extends AppController {
                         $newconditions[]="1=1";
                         $fgestionnaire = "de tous les gestionnaires";
                         break;  
+                    case 'equipe':   
+                        $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
+                        $newconditions[]="Livrable.utilisateur_id in (".$monequipe.")";
+                        $fgestionnaire = "de mon équipe";
+                        break;                      
                     case null:   
                         $newconditions[]="Livrable.utilisateur_id = '".userAuth('id')."'";
                         $this->Livrable->Utilisateur->recursive = -1;

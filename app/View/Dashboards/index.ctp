@@ -1,5 +1,10 @@
 <div class="dashboards form">
 <?php echo $this->Form->create('Dashboard',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+    <div class="alert alert-info">
+        Ce rapport est calculé pour l'année en cours, vous pouvez remonté la consommation pour une autre année en saisissant l'année ci-contre.
+        <?php echo $this->Form->input('ANNEE',array('type'=>'text','class'=>'span3')); ?><br>
+        Le budget contratuel et les prévisions resteront ceux de l'année courante. Pour plus d'information, consultez les activités des projets et les plan de charges de l'année concernée.
+    </div>      
     <table>
         <tr>
             <td><label class="control-label sstitre  required" for="DashboardProjetId">Projets: </label></td>
@@ -26,7 +31,7 @@
 <?php $israpport = isset($results) ? count($results) : 0; ?>
 <?php $style = $israpport==0 ? 'style="display:none;"' : ''; ?>
 <div id="rapport" <?php echo $style; ?>>
-    <div class="pull-right"><?php echo $this->Html->link('<i class="ico-doc"></i> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn','escape' => false)); ?></div>
+    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc icon-top2"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn','escape' => false)); ?></div>
 <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
     <table id="datatable" style="display:none;">
         <thead>
@@ -41,13 +46,13 @@
             <tr>
                 <th><?php echo $result['CONTRAT']['NOM']; ?></th>
                 <td><?php echo $result[0]['RAF']; ?></td>                
-                <td><?php echo $result['FACTURATION']['CHARGEFACTUREE']; ?></td> 
+                <td><?php echo $result[0]['TOTALCHARGEFACTUREE']; ?></td> 
             </tr>           
             <?php endforeach; ?>
         </tbody>        
     </table>
-<br>
-    <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Indicateurs</div><br>
+<br><br>
+    <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Tableau CRA</div><br>
     <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="datatable">
         <thead>
             <tr>
@@ -70,12 +75,12 @@
         <tbody>
             <?php foreach($results as $result): ?>
             <tr>
-                <td><?php echo $result['CONTRAT']['NOM']; ?></td>
+                <td><?php echo $result['CONTRAT']['NOM']; ?> <?php echo ($result['ACHAT']['COUTACHAT']>0) ? '¹':''; ?></td>
                 <td style="text-align: right;" class="tjm1"><?php echo $result['CONTRAT']['TJM']; ?> €/j</td>
                 <td style="text-align: right;" class="contratbudget1"><?php echo $result['CONTRAT']['BUDGET']; ?></td>
                 <td style="text-align: right;" class="contratcharge1"><?php echo $result['CONTRAT']['CHARGE']; ?></td>  
                 <td style="text-align: right;" class="facturebudget1"><?php echo $result[0]['BUDGETFACTURE']; ?></td>
-                <td style="text-align: right;" class="facturecharge1"><?php echo $result['FACTURATION']['CHARGEFACTUREE']; ?></td> 
+                <td style="text-align: right;" class="facturecharge1"><?php echo $result[0]['TOTALCHARGEFACTUREE']; ?></td> 
                 <td style="text-align: right;" class="avancebudget1">
                     <?php $styleB = styleBarreInd(h($result[0]['AVANCEMENTBUDGET'])); ?>
                     <div class="progress progress-<?php echo $styleB; ?>" style="margin-bottom:-10px;width:100%;float: left;">
@@ -85,7 +90,7 @@
                     <?php $styleC = styleBarreInd(h($result[0]['AVANCEMENTCHARGE'])); ?>
                     <div class="progress progress-<?php echo $styleC; ?>" style="margin-bottom:-10px;width:100%;float: left;">
                     <div class="bar" style="width:<?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%"><?php echo $result[0]['AVANCEMENTCHARGE'] > 0 ? $result[0]['AVANCEMENTCHARGE']."%" : ''; ?></div></div>       
-                <td style="text-align: right;" class="raf"><?php echo $result[0]['RAF']<0 ? 0 : $result[0]['RAF']; ?></td>    
+                <td style="text-align: right;" class="raf1"><?php echo $result[0]['RAF']<0 ? 0 : $result[0]['RAF']; ?></td>    
             </tr>           
             <?php endforeach; ?>
         </tbody>
@@ -103,7 +108,21 @@
 	</tr> 
         </tfooter>
     </table>
+    <?php $listeachats = ""; ?>
+    <?php foreach($results as $result): ?>
+        <?php if($result['ACHAT']['COUTACHAT']>0): ?>
+            <?php $listeachats .= "<li>".$result['CONTRAT']['NOM']." achats d'un montant de ".$result['ACHAT']['COUTACHAT']." € soit une charge de ".$result['ACHAT']['CHARGEACHAT']." jours</li>"; ?>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    <?php if($listeachats != ""): ?>
+    <div class="alert alert-info">
+        Des couts liés à des achats sont imputés sur les projets repérés par ¹ et dont voici le détail :
+        <ul><?php echo $listeachats; ?>
+        </ul>
+    </div>  
+    <?php endif; ?>
     <br />
+    <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Tableau général</div><br>    
     <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="datatable">
         <thead>
             <tr>
@@ -114,7 +133,7 @@
             <th colspan="2">Consommation</th>
             <th colspan="2">Facturation estimée</th>
             <th colspan="2">% Avancement</th>
-            <th rowspan="2" style="vertical-align: middle;">Ecart<br><span rel="tooltip" title="Charges réelles - charges facturées"><i class="icon-question-sign"></i></span></th>
+            <th rowspan="2" style="vertical-align: middle;">Ecart<br><span rel="tooltip" title="Charges réelles - charges facturées"><span class="glyphicons circle_question_mark size10 blue"></span></span></th>
             <th colspan="2">Reste à</th>
             </tr>
             <tr>
@@ -142,9 +161,9 @@
                 <td style="text-align: right;" class="previsionbudget"><?php echo $result[0]['BUDGETPREVU']; ?></td>
                 <td style="text-align: right;" class="previsioncharge"><?php echo $result['PREVISION']['CHARGEPREVUE']; ?></td>                
                 <td style="text-align: right;" class="reelbudget"><?php echo $result[0]['BUDGETREEL']; ?></td>
-                <td style="text-align: right;" class="reelcharge"><?php echo $result['CONSOMMATION']['CHARGEREELLE']; ?></td>   
+                <td style="text-align: right;" class="reelcharge"><?php echo $result[0]['TOTALCHARGEREELLE']; ?></td>   
                 <td style="text-align: right;" class="facturebudget"><?php echo $result[0]['BUDGETFACTURE']; ?></td>
-                <td style="text-align: right;" class="facturecharge"><?php echo $result['FACTURATION']['CHARGEFACTUREE']; ?></td> 
+                <td style="text-align: right;" class="facturecharge"><?php echo $result[0]['TOTALCHARGEFACTUREE']; ?></td> 
                 <td style="text-align: right;" class="avancebudget"><?php echo $result[0]['AVANCEMENTBUDGET']; ?></td>
                 <td style="text-align: right;" class="avancecharge"><?php echo $result[0]['AVANCEMENTCHARGE']; ?></td>    
                 <td style="text-align: center;" class="ecart"><?php echo $result[0]['ECART']; ?></td>   
@@ -200,7 +219,7 @@
                 <td style="text-align: right;" class="contratbudgetID"><?php echo $result['CONTRAT']['BUDGET']; ?></td>
                 <td style="text-align: right;" class="contratchargeID"><?php echo $result['CONTRAT']['CHARGE']; ?></td>               
                 <td style="text-align: right;" class="facturebudgetID"><?php echo $result[0]['BUDGETFACTURE']; ?></td>
-                <td style="text-align: right;" class="facturechargeID"><?php echo $result['FACTURATION']['CHARGEFACTUREE']; ?></td> 
+                <td style="text-align: right;" class="facturechargeID"><?php echo $result[0]['TOTALCHARGEFACTUREE']; ?></td> 
                                 <td style="text-align: right;" class="avancebudgetID">
                     <?php $styleB = styleBarreInd(h($result[0]['AVANCEMENTBUDGET'])); ?>
                     <div class="progress progress-<?php echo $styleB; ?>" style="margin-bottom:-10px;width:100%;float: left;">

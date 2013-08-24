@@ -40,12 +40,20 @@ class ActionslivrablesController extends AppController {
 	public function add($id=null) {
                 $this->set('title_for_layout','Association d\'un livrable à une action');
 		if ($this->request->is('post')) {
-			$this->Actionslivrable->create();
-			if ($this->Actionslivrable->save($this->request->data)) {
-				$this->Session->setFlash(__('Livrable ajouté à l\'action'),'default',array('class'=>'alert alert-success'));
+                    foreach ($this->request->data['Actionslivrable']['livrable_id'] as $value) {
+                            $record['Actionslivrable']['livrable_id'] = $value;
+                            $record['Actionslivrable']['action_id'] = $this->request->data['Actionslivrable']['action_id'];
+                            $record['Actionslivrable']['created'] = date('Y-m-d');
+                            $record['Actionslivrable']['modified'] = date('Y-m-d');
+                            $this->Actionslivrable->create();
+                            $return=false;
+                            if ($this->Actionslivrable->save($record)): $return=true; endif;
+                    }  
+			if ($return) {
+				$this->Session->setFlash(__('Livrables ajoutés à l\'action'),'default',array('class'=>'alert alert-success'));
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Le livrable n\'a pas été ajouté à l\'action'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Livrables <b>NON</b> ajoutés à l\'action'),'default',array('class'=>'alert alert-error'));
 			}
 		}
 		$livrables = $this->Actionslivrable->Livrable->find('list',array('fields'=>array('Livrable.id','Livrable.NOM'),'order'=>array('Livrable.NOM'=>'asc'))); //,'conditions'=>array('Actionslivrable.action_id'=>$id)

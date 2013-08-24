@@ -160,7 +160,9 @@ class UtilisateursController extends AppController {
 			if ($this->Utilisateur->save($this->request->data)) {
                                 $lastid = $this->Utilisateur->getLastInsertID();
                                 $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$lastid),'recursive'=>0));
-                                $this->sendmailnewutilisateur($utilisateur);
+                                if($utilisateur['Utilisateur']['profil_id']>0):
+                                    $this->sendmailnewutilisateur($utilisateur);
+                                endif;
                                 $this->addnewaction($lastid);
                                 $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur créé".' par '.userAuth('NOMLONG');
@@ -629,6 +631,31 @@ class UtilisateursController extends AppController {
             endif;                
 	} 
         
+	public function initadminpassword() {
+            if (isAuthorized('utilisateurs', 'initpassword')) :
+		$this->Utilisateur->id = 1;
+                $record = $this->Utilisateur->read();
+                unset($record['Utilisateur']['password']); 
+                unset($record['Utilisateur']['created']);
+                unset($record['Utilisateur']['modified']);
+                $record['Utilisateur']['password']='@DMIN'; 
+                $record['Utilisateur']['created'] = $this->Utilisateur->read('created');
+                $record['Utilisateur']['modified'] = date('Y-m-d');                
+                if ($this->Utilisateur->save($record)) {
+                        $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mot de passe initialisé".' par '.userAuth('NOMLONG');
+                        $this->Utilisateur->Historyutilisateur->save($history);
+                        $this->Session->setFlash(__('Mot de passe de l\'administrateur initialisé'),'default',array('class'=>'alert alert-success'));
+                        $this->History->goBack();
+                } 
+		$this->Session->setFlash(__('Mot de passe de l\'administrateur <b>NON</b> initialisé'),'default',array('class'=>'alert alert-error'));
+		$this->History->goBack();
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;                
+	}         
+        
 /**
  * search method
  *
@@ -777,9 +804,10 @@ class UtilisateursController extends AppController {
                 foreach($ids as $id):
                     $this->Utilisateur->create();
                     $this->Utilisateur->id = $id;
-                    $this->Utilisateur->saveField('ACTIF', 0);
+                    $etat = $this->Utilisateur->ACTIF == 0 ? 1 : 0;
+                    $this->Utilisateur->saveField('ACTIF', $etat);
                     $history['Historyutilisateur']['utilisateur_id']=$id;
-                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - compte désactivé par ".userAuth('NOMLONG');
+                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - état changé par ".userAuth('NOMLONG');
                     $this->Utilisateur->Historyutilisateur->save($history);
                 endforeach;
                 echo $this->Session->setFlash(__('Comptes désactivés'),'default',array('class'=>'alert alert-success'));
@@ -818,10 +846,9 @@ class UtilisateursController extends AppController {
         }
         
         public function sendmailnewutilisateur($utilisateur){
-            $mailto = $this->requestAction('parameters/get_contact');
-            $mailto = explode(';',$mailto['Parameter']['param']);
             $mailtoGestannuaire = $this->requestAction('parameters/get_gestionnaireannuaire');
             $mailto[] = $mailtoGestannuaire['Parameter']['param'];
+            $finmission = $utilisateur['Utilisateur']['FINMISSION'] = '' ? "05/01".(date('Y')+1) : $utilisateur['Utilisateur']['FINMISSION'];
             $to=$mailto;
             $from = userAuth('MAIL');
             $objet = "SAILL : Ajout d'un nouvel utilisateur [".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].']';
@@ -829,7 +856,7 @@ class UtilisateursController extends AppController {
                     '<ul>
                     <li>Date de naissance :'.$utilisateur['Utilisateur']['NAISSANCE'].'</li>
                     <li>Société :'.$utilisateur['Societe']['NOM'].'</li>
-                    <li>Fin de mission :'.$utilisateur['Utilisateur']['FINMISSION'].'</li>
+                    <li>Fin de mission :'.$finmission.'</li>
                     <li>Commentaire :'.$utilisateur['Utilisateur']['COMMENTAIRE'].'</li>                      
                     </ul>';
             if($to!=''):
@@ -891,5 +918,22 @@ class UtilisateursController extends AppController {
             $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$id),'recursive'=>0));
             return $utilisateur;
         }
-              
+            
+        public function changeetat(){
+            $id = $this->request->data('id');
+            $etat = $this->request->data('etat');
+            $this->Utilisateur->id = $id;
+            $this->Utilisateur->saveField("ACTIF",$etat);
+            if($etat==0):
+                $this->Utilisateur->saveField("GESTIONABSENCES",0);
+                $this->Utilisateur->saveField("FINMISSION",date('Y-m-d'));
+            else :
+                $annee = date('Y')+1;
+                $this->Utilisateur->saveField("FINMISSION",$annee.'-1-5');
+            endif;
+            $history['Historyutilisateur']['utilisateur_id']=$id;
+            $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - état changé par ".userAuth('NOMLONG');
+            $this->Utilisateur->Historyutilisateur->save($history);
+            exit();
+        }        
 }

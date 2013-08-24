@@ -1,461 +1,1999 @@
-/** pour les images glyphicons récupérées depuis le site **/
-[class^="glyphicon_"],
-[class*=" glyphicon_"] {
+/*!
+ *
+ *  Project:  GLYPHICONS FOR SNCF WEB SITE
+ *  Author:   Jan Kovarik - www.glyphicons.com
+ *  Twitter:  @glyphicons
+ *
+ */
+@font-face {
+  font-family: 'Glyphicons Regular';
+  src: url('../fonts/glyphicons-regular.eot');
+  src: url('../fonts/glyphicons-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-regular.woff') format('woff'), url('../fonts/glyphicons-regular.ttf') format('truetype'), url('../fonts/glyphicons-regular.svg#glyphiconsregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.glyphicons {
   display: inline-block;
-  width: 14px;
-  height: 14px;
-  *margin-right: .3em;
-  line-height: 14px;
-  vertical-align: text-top;
-  background-image: url("../img/glyphicons_1.7_black.png");
-  background-position: 14px 14px;
-  background-repeat: no-repeat;
-  margin-top: 1px;
+  position: relative;
+  color: #3E3D40;
+  text-decoration: none;
+  *display: inline;
+  *zoom: 1;
+  vertical-align: middle;
 }
-/* White icons with optional class, or on hover/focus/active states of certain elements */
-.glyphicon_white,
-.nav-pills > .active > a > [class^="glyphicon_"],
-.nav-pills > .active > a > [class*=" glyphicon_"],
-.nav-list > .active > a > [class^="glyphicon_"],
-.nav-list > .active > a > [class*=" glyphicon_"],
-.navbar-inverse .nav > .active > a > [class^="glyphicon_"],
-.navbar-inverse .nav > .active > a > [class*=" glyphicon_"],
-.dropdown-menu > li > a:hover > [class^="glyphicon_"],
-.dropdown-menu > li > a:focus > [class^="glyphicon_"],
-.dropdown-menu > li > a:hover > [class*=" glyphicon_"],
-.dropdown-menu > li > a:focus > [class*=" glyphicon_"],
-.dropdown-menu > .active > a > [class^="glyphicon_"],
-.dropdown-menu > .active > a > [class*=" glyphicon_"],
-.dropdown-submenu:hover > a > [class^="glyphicon_"],
-.dropdown-submenu:focus > a > [class^="glyphicon_"],
-.dropdown-submenu:hover > a > [class*=" glyphicon_"],
-.dropdown-submenu:focus > a > [class*=" glyphicon_"] {
-  background-image: url("../img/glyphicons_1.7_white.png");
+.glyphicons:before {
+  left: 0;
+  top: 0;
+  display: inline-block;
+  margin: 0 0px 1px 0px;
+  font: 12px 'Glyphicons Regular';
+  font-style: normal;
+  font-weight: normal;
+  color: #3E3D40;
+  *display: inline;
+  *zoom: 1;
+  vertical-align: middle;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
 }
-
-.glyphicon_4square{ background-position: 0 0; width: 14px; height: 14px; } 
-.glyphicon_adjust{ background-position: -30px 0; width: 14px; height: 14px; } 
-.glyphicon_adjust_alt{ background-position: -60px 0; width: 13px; height: 14px; } 
-.glyphicon_adress_book{ background-position: -89px 0; width: 13px; height: 14px; } 
-.glyphicon_airplane{ background-position: -118px 0; width: 13px; height: 14px; } 
-.glyphicon_alarm{ background-position: -147px 0; width: 14px; height: 13px; } 
-.glyphicon_albums{ background-position: -177px 0; width: 14px; height: 9px; } 
-.glyphicon_align_center{ background-position: -207px 0; width: 14px; height: 12px; } 
-.glyphicon_align_left{ background-position: -237px 0; width: 14px; height: 12px; } 
-.glyphicon_align_right{ background-position: -267px 0; width: 14px; height: 12px; } 
-.glyphicon_amazon{ background-position: -297px 0; width: 14px; height: 14px; } 
-.glyphicon_anchor{ background-position: -327px 0; width: 13px; height: 14px; } 
-.glyphicon_asterisk{ background-position: -356px 0; width: 14px; height: 14px; } 
-.glyphicon_ax{ background-position: -386px 0; width: 14px; height: 12px; } 
-.glyphicon_badoo{ background-position: -416px 0; width: 14px; height: 14px; } 
-.glyphicon_ban{ background-position: -446px 0; width: 14px; height: 14px; } 
-.glyphicon_bank{ background-position: -476px 0; width: 14px; height: 14px; } 
-.glyphicon_barcode{ background-position: -506px 0; width: 14px; height: 14px; } 
-.glyphicon_baseball{ background-position: -536px 0; width: 13px; height: 14px; } 
-.glyphicon_beach_umbrella{ background-position: -565px 0; width: 14px; height: 14px; } 
-.glyphicon_beer{ background-position: -595px 0; width: 13px; height: 14px; } 
-.glyphicon_behance{ background-position: -624px 0; width: 14px; height: 14px; } 
-.glyphicon_bell{ background-position: -654px 0; width: 14px; height: 14px; } 
-.glyphicon_bicycle{ background-position: -684px 0; width: 14px; height: 9px; } 
-.glyphicon_bin{ background-position: -714px 0; width: 10px; height: 14px; } 
-.glyphicon_binoculars{ background-position: -740px 0; width: 14px; height: 14px; } 
-.glyphicon_birthday_cake{ background-position: -770px 0; width: 13px; height: 14px; } 
-.glyphicon_blog{ background-position: -799px 0; width: 13px; height: 14px; } 
-.glyphicon_blogger{ background-position: -828px 0; width: 14px; height: 14px; } 
-.glyphicon_bluetooth{ background-position: -858px 0; width: 8px; height: 14px; } 
-.glyphicon_boat{ background-position: -882px 0; width: 14px; height: 14px; } 
-.glyphicon_bold{ background-position: -912px 0; width: 11px; height: 14px; } 
-.glyphicon_bomb{ background-position: -939px 0; width: 14px; height: 13px; } 
-.glyphicon_book{ background-position: -969px 0; width: 13px; height: 14px; } 
-.glyphicon_book_open{ background-position: -998px 0; width: 14px; height: 13px; } 
-.glyphicon_bookmark{ background-position: -1028px 0; width: 9px; height: 14px; } 
-.glyphicon_bowling{ background-position: -1053px 0; width: 14px; height: 14px; } 
-.glyphicon_briefcase{ background-position: -1083px 0; width: 14px; height: 12px; } 
-.glyphicon_brightness_increase{ background-position: -1113px 0; width: 14px; height: 14px; } 
-.glyphicon_brightness_reduce{ background-position: -1143px 0; width: 14px; height: 14px; } 
-.glyphicon_brush{ background-position: -1173px 0; width: 14px; height: 12px; } 
-.glyphicon_bug{ background-position: -1203px 0; width: 13px; height: 14px; } 
-.glyphicon_building{ background-position: -1232px 0; width: 13px; height: 14px; } 
-.glyphicon_bullets{ background-position: -1261px 0; width: 14px; height: 12px; } 
-.glyphicon_bullhorn{ background-position: -1291px 0; width: 14px; height: 11px; } 
-.glyphicon_buoy{ background-position: -1321px 0; width: 14px; height: 14px; } 
-.glyphicon_bus{ background-position: -1351px 0; width: 14px; height: 11px; } 
-.glyphicon_cake{ background-position: -1381px 0; width: 13px; height: 14px; } 
-.glyphicon_calculator{ background-position: -1410px 0; width: 12px; height: 14px; } 
-.glyphicon_calendar{ background-position: -1438px 0; width: 13px; height: 14px; } 
-.glyphicon_camera{ background-position: -1467px 0; width: 14px; height: 11px; } 
-.glyphicon_camera_small{ background-position: -1497px 0; width: 13px; height: 14px; } 
-.glyphicon_candle{ background-position: -1526px 0; width: 11px; height: 14px; } 
-.glyphicon_car{ background-position: -1553px 0; width: 14px; height: 12px; } 
-.glyphicon_cardio{ background-position: -1583px 0; width: 13px; height: 14px; } 
-.glyphicon_cargo{ background-position: -1612px 0; width: 13px; height: 14px; } 
-.glyphicon_cars{ background-position: -1641px 0; width: 14px; height: 10px; } 
-.glyphicon_cart_in{ background-position: -1671px 0; width: 14px; height: 13px; } 
-.glyphicon_cart_out{ background-position: -1701px 0; width: 14px; height: 13px; } 
-.glyphicon_celebration{ background-position: -1731px 0; width: 13px; height: 14px; } 
-.glyphicon_cercle_gris{ background-position: -1760px 0; width: 14px; height: 14px; } 
-.glyphicon_cercle_orange{ background-position: -1790px 0; width: 14px; height: 14px; } 
-.glyphicon_cercle_plein{ background-position: -1820px 0; width: 14px; height: 14px; } 
-.glyphicon_cercle_rouge{ background-position: -1850px 0; width: 14px; height: 14px; } 
-.glyphicon_cercle_vert{ background-position: -1880px 0; width: 14px; height: 14px; } 
-.glyphicon_cercle_vide{ background-position: -1910px 0; width: 14px; height: 14px; } 
-.glyphicon_certificate{ background-position: -1940px 0; width: 10px; height: 14px; } 
-.glyphicon_charts{ background-position: -1966px 0; width: 14px; height: 12px; } 
-.glyphicon_chat{ background-position: 0 -30px; width: 14px; height: 11px; } 
-.glyphicon_check{ background-position: -30px -30px; width: 14px; height: 11px; } 
-.glyphicon_chevron-left{ background-position: -60px -30px; width: 10px; height: 14px; } 
-.glyphicon_chevron-right{ background-position: -86px -30px; width: 10px; height: 14px; } 
-.glyphicon_circle_arrow_down{ background-position: -112px -30px; width: 14px; height: 14px; } 
-.glyphicon_circle_arrow_left{ background-position: -142px -30px; width: 14px; height: 14px; } 
-.glyphicon_circle_arrow_right{ background-position: -172px -30px; width: 14px; height: 14px; } 
-.glyphicon_circle_arrow_top{ background-position: -202px -30px; width: 14px; height: 14px; } 
-.glyphicon_circle_exclamation_mark{ background-position: -232px -30px; width: 14px; height: 14px; } 
-.glyphicon_circle_info{ background-position: -262px -30px; width: 14px; height: 14px; } 
-.glyphicon_circle_minus{ background-position: -292px -30px; width: 14px; height: 14px; } 
-.glyphicon_circle_ok{ background-position: -322px -30px; width: 14px; height: 14px; } 
-.glyphicon_circle_plus{ background-position: -352px -30px; width: 14px; height: 14px; } 
-.glyphicon_circle_question_mark{ background-position: -382px -30px; width: 14px; height: 14px; } 
-.glyphicon_circle_remove{ background-position: -412px -30px; width: 14px; height: 14px; } 
-.glyphicon_classic_hammer{ background-position: -442px -30px; width: 13px; height: 14px; } 
-.glyphicon_claw_hammer{ background-position: -471px -30px; width: 14px; height: 13px; } 
-.glyphicon_cleaning{ background-position: -501px -30px; width: 13px; height: 14px; } 
-.glyphicon_clipboard{ background-position: -530px -30px; width: 10px; height: 14px; } 
-.glyphicon_clock{ background-position: -556px -30px; width: 14px; height: 14px; } 
-.glyphicon_cloud{ background-position: -586px -30px; width: 14px; height: 9px; } 
-.glyphicon_cloud_download{ background-position: -616px -30px; width: 14px; height: 11px; } 
-.glyphicon_cloud_upload{ background-position: -646px -30px; width: 14px; height: 10px; } 
-.glyphicon_coffe_cup{ background-position: -676px -30px; width: 14px; height: 11px; } 
-.glyphicon_cogwheel{ background-position: -706px -30px; width: 14px; height: 14px; } 
-.glyphicon_cogwheels{ background-position: -736px -30px; width: 14px; height: 11px; } 
-.glyphicon_coins{ background-position: -766px -30px; width: 14px; height: 13px; } 
-.glyphicon_collapse{ background-position: -796px -30px; width: 14px; height: 14px; } 
-.glyphicon_collapse_top{ background-position: -826px -30px; width: 14px; height: 14px; } 
-.glyphicon_comments{ background-position: -856px -30px; width: 14px; height: 13px; } 
-.glyphicon_compass{ background-position: -886px -30px; width: 14px; height: 14px; } 
-.glyphicon_conversation{ background-position: -916px -30px; width: 14px; height: 10px; } 
-.glyphicon_credit_card{ background-position: -946px -30px; width: 14px; height: 10px; } 
-.glyphicon_crop{ background-position: -976px -30px; width: 14px; height: 14px; } 
-.glyphicon_crown{ background-position: -1006px -30px; width: 14px; height: 13px; } 
-.glyphicon_cup{ background-position: -1036px -30px; width: 13px; height: 14px; } 
-.glyphicon_cutlery{ background-position: -1065px -30px; width: 8px; height: 14px; } 
-.glyphicon_dashboard{ background-position: -1089px -30px; width: 14px; height: 14px; } 
-.glyphicon_database_ban{ background-position: -1119px -30px; width: 13px; height: 14px; } 
-.glyphicon_database_lock{ background-position: -1148px -30px; width: 13px; height: 14px; } 
-.glyphicon_database_minus{ background-position: -1177px -30px; width: 14px; height: 14px; } 
-.glyphicon_database_plus{ background-position: -1207px -30px; width: 14px; height: 14px; } 
-.glyphicon_delete{ background-position: -1237px -30px; width: 14px; height: 9px; } 
-.glyphicon_deviantart{ background-position: -1267px -30px; width: 14px; height: 14px; } 
-.glyphicon_direction{ background-position: -1297px -30px; width: 13px; height: 14px; } 
-.glyphicon_dislikes{ background-position: -1326px -30px; width: 14px; height: 13px; } 
-.glyphicon_display{ background-position: -1356px -30px; width: 14px; height: 12px; } 
-.glyphicon_divide{ background-position: -1386px -30px; width: 14px; height: 12px; } 
-.glyphicon_dog{ background-position: -1416px -30px; width: 14px; height: 13px; } 
-.glyphicon_down_arrow{ background-position: -1446px -30px; width: 13px; height: 14px; } 
-.glyphicon_download{ background-position: -1475px -30px; width: 14px; height: 14px; } 
-.glyphicon_download_alt{ background-position: -1505px -30px; width: 14px; height: 14px; } 
-.glyphicon_dribbble{ background-position: -1535px -30px; width: 14px; height: 14px; } 
-.glyphicon_drink{ background-position: -1565px -30px; width: 13px; height: 14px; } 
-.glyphicon_dropbox{ background-position: -1594px -30px; width: 14px; height: 14px; } 
-.glyphicon_dumbbell{ background-position: -1624px -30px; width: 14px; height: 9px; } 
-.glyphicon_e-mail{ background-position: -1654px -30px; width: 14px; height: 14px; } 
-.glyphicon_ear_plugs{ background-position: -1684px -30px; width: 12px; height: 14px; } 
-.glyphicon_edit{ background-position: -1712px -30px; width: 14px; height: 12px; } 
-.glyphicon_eject{ background-position: -1742px -30px; width: 14px; height: 13px; } 
-.glyphicon_electrical_plug{ background-position: -1772px -30px; width: 10px; height: 14px; } 
-.glyphicon_electrical_socket_eu{ background-position: -1798px -30px; width: 14px; height: 14px; } 
-.glyphicon_electrical_socket_us{ background-position: -1828px -30px; width: 14px; height: 14px; } 
-.glyphicon_electricity{ background-position: -1858px -30px; width: 6px; height: 14px; } 
-.glyphicon_embed{ background-position: -1880px -30px; width: 14px; height: 7px; } 
-.glyphicon_embed_close{ background-position: -1910px -30px; width: 14px; height: 11px; } 
-.glyphicon_envelope{ background-position: -1940px -30px; width: 14px; height: 9px; } 
-.glyphicon_euro{ background-position: -1970px -30px; width: 13px; height: 14px; } 
-.glyphicon_evernote{ background-position: 0 -60px; width: 14px; height: 14px; } 
-.glyphicon_expand{ background-position: -30px -60px; width: 14px; height: 14px; } 
-.glyphicon_eye_close{ background-position: -60px -60px; width: 14px; height: 11px; } 
-.glyphicon_eye_open{ background-position: -90px -60px; width: 14px; height: 8px; } 
-.glyphicon_eyedropper{ background-position: -120px -60px; width: 14px; height: 14px; } 
-.glyphicon_fabric{ background-position: -150px -60px; width: 14px; height: 11px; } 
-.glyphicon_facebook{ background-position: -180px -60px; width: 14px; height: 14px; } 
-.glyphicon_facetime_video{ background-position: -210px -60px; width: 14px; height: 9px; } 
-.glyphicon_fast_backward{ background-position: -240px -60px; width: 14px; height: 10px; } 
-.glyphicon_fast_food{ background-position: -270px -60px; width: 14px; height: 12px; } 
-.glyphicon_fast_forward{ background-position: -300px -60px; width: 14px; height: 10px; } 
-.glyphicon_female{ background-position: -330px -60px; width: 8px; height: 14px; } 
-.glyphicon_file{ background-position: -354px -60px; width: 11px; height: 14px; } 
-.glyphicon_file_export{ background-position: -381px -60px; width: 13px; height: 14px; } 
-.glyphicon_file_import{ background-position: -410px -60px; width: 13px; height: 14px; } 
-.glyphicon_film{ background-position: -439px -60px; width: 12px; height: 14px; } 
-.glyphicon_filter{ background-position: -467px -60px; width: 12px; height: 14px; } 
-.glyphicon_fins{ background-position: -495px -60px; width: 14px; height: 12px; } 
-.glyphicon_fire{ background-position: -525px -60px; width: 11px; height: 14px; } 
-.glyphicon_fishes{ background-position: -552px -60px; width: 13px; height: 14px; } 
-.glyphicon_flag{ background-position: -581px -60px; width: 11px; height: 14px; } 
-.glyphicon_flash{ background-position: -608px -60px; width: 8px; height: 14px; } 
-.glyphicon_flickr{ background-position: -632px -60px; width: 14px; height: 14px; } 
-.glyphicon_flower{ background-position: -662px -60px; width: 11px; height: 14px; } 
-.glyphicon_folder_flag{ background-position: -689px -60px; width: 14px; height: 13px; } 
-.glyphicon_folder_lock{ background-position: -719px -60px; width: 14px; height: 13px; } 
-.glyphicon_folder_minus{ background-position: -749px -60px; width: 14px; height: 12px; } 
-.glyphicon_folder_new{ background-position: -779px -60px; width: 14px; height: 12px; } 
-.glyphicon_folder_open{ background-position: -809px -60px; width: 14px; height: 10px; } 
-.glyphicon_folder_plus{ background-position: -839px -60px; width: 14px; height: 12px; } 
-.glyphicon_font{ background-position: -869px -60px; width: 14px; height: 12px; } 
-.glyphicon_forrst{ background-position: -899px -60px; width: 14px; height: 14px; } 
-.glyphicon_forward{ background-position: -929px -60px; width: 14px; height: 11px; } 
-.glyphicon_french_press{ background-position: -959px -60px; width: 13px; height: 14px; } 
-.glyphicon_fullscreen{ background-position: -988px -60px; width: 14px; height: 14px; } 
-.glyphicon_gamepad{ background-position: -1018px -60px; width: 14px; height: 10px; } 
-.glyphicon_gbp{ background-position: -1048px -60px; width: 10px; height: 14px; } 
-.glyphicon_gift{ background-position: -1074px -60px; width: 13px; height: 14px; } 
-.glyphicon_girl{ background-position: -1103px -60px; width: 14px; height: 14px; } 
-.glyphicon_github{ background-position: -1133px -60px; width: 14px; height: 14px; } 
-.glyphicon_glass{ background-position: -1163px -60px; width: 14px; height: 14px; } 
-.glyphicon_global{ background-position: -1193px -60px; width: 14px; height: 14px; } 
-.glyphicon_globe{ background-position: -1223px -60px; width: 14px; height: 14px; } 
-.glyphicon_globe_af{ background-position: -1253px -60px; width: 14px; height: 14px; } 
-.glyphicon_google_maps{ background-position: -1283px -60px; width: 9px; height: 14px; } 
-.glyphicon_google_plus{ background-position: -1308px -60px; width: 14px; height: 14px; } 
-.glyphicon_grater{ background-position: -1338px -60px; width: 11px; height: 14px; } 
-.glyphicon_group{ background-position: -1365px -60px; width: 14px; height: 9px; } 
-.glyphicon_hand_down{ background-position: -1395px -60px; width: 10px; height: 14px; } 
-.glyphicon_hand_left{ background-position: -1421px -60px; width: 14px; height: 10px; } 
-.glyphicon_hand_right{ background-position: -1451px -60px; width: 14px; height: 10px; } 
-.glyphicon_hand_saw{ background-position: -1481px -60px; width: 14px; height: 14px; } 
-.glyphicon_hand_up{ background-position: -1511px -60px; width: 10px; height: 14px; } 
-.glyphicon_hdd{ background-position: -1537px -60px; width: 14px; height: 12px; } 
-.glyphicon_headphones{ background-position: -1567px -60px; width: 14px; height: 14px; } 
-.glyphicon_headset{ background-position: -1597px -60px; width: 12px; height: 14px; } 
-.glyphicon_heart{ background-position: -1625px -60px; width: 14px; height: 13px; } 
-.glyphicon_heart_empty{ background-position: -1655px -60px; width: 14px; height: 13px; } 
-.glyphicon_heat{ background-position: -1685px -60px; width: 14px; height: 12px; } 
-.glyphicon_history{ background-position: -1715px -60px; width: 13px; height: 14px; } 
-.glyphicon_home{ background-position: -1744px -60px; width: 14px; height: 13px; } 
-.glyphicon_hospital{ background-position: -1774px -60px; width: 14px; height: 14px; } 
-.glyphicon_hospital_h{ background-position: -1804px -60px; width: 14px; height: 14px; } 
-.glyphicon_imac{ background-position: -1834px -60px; width: 14px; height: 12px; } 
-.glyphicon_inbox{ background-position: -1864px -60px; width: 14px; height: 13px; } 
-.glyphicon_inbox_in{ background-position: -1894px -60px; width: 13px; height: 14px; } 
-.glyphicon_inbox_lock{ background-position: -1923px -60px; width: 13px; height: 14px; } 
-.glyphicon_inbox_minus{ background-position: -1952px -60px; width: 14px; height: 14px; } 
-.glyphicon_inbox_out{ background-position: -1982px -60px; width: 13px; height: 14px; } 
-.glyphicon_inbox_plus{ background-position: 0 -90px; width: 14px; height: 14px; } 
-.glyphicon_instagram{ background-position: -30px -90px; width: 14px; height: 14px; } 
-.glyphicon_instapaper{ background-position: -60px -90px; width: 14px; height: 14px; } 
-.glyphicon_ipad{ background-position: -90px -90px; width: 11px; height: 14px; } 
-.glyphicon_iphone{ background-position: -117px -90px; width: 8px; height: 14px; } 
-.glyphicon_iphone_exchange{ background-position: -141px -90px; width: 14px; height: 12px; } 
-.glyphicon_iphone_shake{ background-position: -171px -90px; width: 14px; height: 14px; } 
-.glyphicon_iphone_transfer{ background-position: -201px -90px; width: 14px; height: 12px; } 
-.glyphicon_ipod{ background-position: -231px -90px; width: 9px; height: 14px; } 
-.glyphicon_ipod_shuffle{ background-position: -256px -90px; width: 14px; height: 12px; } 
-.glyphicon_italic{ background-position: -286px -90px; width: 8px; height: 14px; } 
-.glyphicon_jolicloud{ background-position: -310px -90px; width: 14px; height: 14px; } 
-.glyphicon_justify{ background-position: -340px -90px; width: 14px; height: 12px; } 
-.glyphicon_kettle{ background-position: -370px -90px; width: 13px; height: 14px; } 
-.glyphicon_keyboard_wired{ background-position: -399px -90px; width: 14px; height: 13px; } 
-.glyphicon_keyboard_wireless{ background-position: -429px -90px; width: 14px; height: 10px; } 
-.glyphicon_keynote{ background-position: -459px -90px; width: 9px; height: 14px; } 
-.glyphicon_keys{ background-position: -484px -90px; width: 13px; height: 14px; } 
-.glyphicon_last_fm{ background-position: -513px -90px; width: 14px; height: 14px; } 
-.glyphicon_leaf{ background-position: -543px -90px; width: 13px; height: 14px; } 
-.glyphicon_leather{ background-position: -572px -90px; width: 13px; height: 14px; } 
-.glyphicon_left_arrow{ background-position: -601px -90px; width: 14px; height: 13px; } 
-.glyphicon_left_indent{ background-position: -631px -90px; width: 14px; height: 13px; } 
-.glyphicon_life_preserver{ background-position: -661px -90px; width: 14px; height: 14px; } 
-.glyphicon_lightbulb{ background-position: -691px -90px; width: 11px; height: 14px; } 
-.glyphicon_link{ background-position: -718px -90px; width: 13px; height: 14px; } 
-.glyphicon_linked_in{ background-position: -747px -90px; width: 14px; height: 14px; } 
-.glyphicon_list{ background-position: -777px -90px; width: 14px; height: 12px; } 
-.glyphicon_lock{ background-position: -807px -90px; width: 11px; height: 14px; } 
-.glyphicon_log_book{ background-position: -834px -90px; width: 13px; height: 14px; } 
-.glyphicon_luggage{ background-position: -863px -90px; width: 10px; height: 14px; } 
-.glyphicon_macbook{ background-position: -889px -90px; width: 14px; height: 8px; } 
-.glyphicon_magic{ background-position: -919px -90px; width: 14px; height: 14px; } 
-.glyphicon_magnet{ background-position: -949px -90px; width: 13px; height: 14px; } 
-.glyphicon_male{ background-position: -978px -90px; width: 14px; height: 14px; } 
-.glyphicon_message_ban{ background-position: -1008px -90px; width: 14px; height: 11px; } 
-.glyphicon_message_empty{ background-position: -1038px -90px; width: 12px; height: 14px; } 
-.glyphicon_message_flag{ background-position: -1066px -90px; width: 14px; height: 12px; } 
-.glyphicon_message_full{ background-position: -1096px -90px; width: 12px; height: 14px; } 
-.glyphicon_message_in{ background-position: -1124px -90px; width: 12px; height: 14px; } 
-.glyphicon_message_lock{ background-position: -1152px -90px; width: 14px; height: 12px; } 
-.glyphicon_message_minus{ background-position: -1182px -90px; width: 14px; height: 11px; } 
-.glyphicon_message_new{ background-position: -1212px -90px; width: 14px; height: 11px; } 
-.glyphicon_message_out{ background-position: -1242px -90px; width: 12px; height: 14px; } 
-.glyphicon_message_plus{ background-position: -1270px -90px; width: 14px; height: 11px; } 
-.glyphicon_microphone{ background-position: -1300px -90px; width: 10px; height: 14px; } 
-.glyphicon_moon{ background-position: -1326px -90px; width: 12px; height: 14px; } 
-.glyphicon_more{ background-position: -1354px -90px; width: 14px; height: 4px; } 
-.glyphicon_more_items{ background-position: -1384px -90px; width: 12px; height: 14px; } 
-.glyphicon_more_windows{ background-position: -1412px -90px; width: 14px; height: 14px; } 
-.glyphicon_move{ background-position: -1442px -90px; width: 14px; height: 14px; } 
-.glyphicon_music{ background-position: -1472px -90px; width: 12px; height: 14px; } 
-.glyphicon_mute{ background-position: -1500px -90px; width: 14px; height: 10px; } 
-.glyphicon_nails{ background-position: -1530px -90px; width: 12px; height: 14px; } 
-.glyphicon_nameplate{ background-position: -1558px -90px; width: 14px; height: 12px; } 
-.glyphicon_nameplate_alt{ background-position: -1588px -90px; width: 14px; height: 13px; } 
-.glyphicon_new_window{ background-position: -1618px -90px; width: 14px; height: 12px; } 
-.glyphicon_note{ background-position: -1648px -90px; width: 10px; height: 14px; } 
-.glyphicon_notes{ background-position: -1674px -90px; width: 11px; height: 14px; } 
-.glyphicon_ok{ background-position: -1701px -90px; width: 14px; height: 14px; } 
-.glyphicon_ok_only{ background-position: -1731px -90px; width: 14px; height: 11px; } 
-.glyphicon_old_man{ background-position: -1761px -90px; width: 13px; height: 14px; } 
-.glyphicon_oxygen_bottle{ background-position: -1790px -90px; width: 11px; height: 14px; } 
-.glyphicon_pants{ background-position: -1817px -90px; width: 11px; height: 14px; } 
-.glyphicon_paperclip{ background-position: -1844px -90px; width: 14px; height: 13px; } 
-.glyphicon_parents{ background-position: -1874px -90px; width: 14px; height: 10px; } 
-.glyphicon_pause{ background-position: -1904px -90px; width: 9px; height: 14px; } 
-.glyphicon_pen{ background-position: -1929px -90px; width: 14px; height: 14px; } 
-.glyphicon_pencil{ background-position: -1959px -90px; width: 14px; height: 14px; } 
-.glyphicon_phone{ background-position: 0 -120px; width: 8px; height: 14px; } 
-.glyphicon_piano{ background-position: -24px -120px; width: 13px; height: 14px; } 
-.glyphicon_picasa{ background-position: -53px -120px; width: 14px; height: 14px; } 
-.glyphicon_picture{ background-position: -83px -120px; width: 14px; height: 12px; } 
-.glyphicon_pie_chart{ background-position: -113px -120px; width: 14px; height: 13px; } 
-.glyphicon_pin{ background-position: -143px -120px; width: 6px; height: 14px; } 
-.glyphicon_pin_flag{ background-position: -165px -120px; width: 14px; height: 10px; } 
-.glyphicon_pinboard{ background-position: -195px -120px; width: 14px; height: 14px; } 
-.glyphicon_pinterest{ background-position: -225px -120px; width: 14px; height: 14px; } 
-.glyphicon_pizza{ background-position: -255px -120px; width: 13px; height: 14px; } 
-.glyphicon_play{ background-position: -284px -120px; width: 12px; height: 14px; } 
-.glyphicon_play_button{ background-position: -312px -120px; width: 14px; height: 14px; } 
-.glyphicon_playing_dices{ background-position: -342px -120px; width: 14px; height: 12px; } 
-.glyphicon_playlist{ background-position: -372px -120px; width: 14px; height: 12px; } 
-.glyphicon_podium{ background-position: -402px -120px; width: 14px; height: 11px; } 
-.glyphicon_pool{ background-position: -432px -120px; width: 14px; height: 14px; } 
-.glyphicon_posterous_spaces{ background-position: -462px -120px; width: 14px; height: 14px; } 
-.glyphicon_pot{ background-position: -492px -120px; width: 14px; height: 11px; } 
-.glyphicon_power{ background-position: -522px -120px; width: 13px; height: 14px; } 
-.glyphicon_print{ background-position: -551px -120px; width: 14px; height: 14px; } 
-.glyphicon_projector{ background-position: -581px -120px; width: 14px; height: 13px; } 
-.glyphicon_pushpin{ background-position: -611px -120px; width: 14px; height: 14px; } 
-.glyphicon_qrcode{ background-position: -641px -120px; width: 14px; height: 14px; } 
-.glyphicon_quora{ background-position: -671px -120px; width: 14px; height: 14px; } 
-.glyphicon_rabbit{ background-position: -701px -120px; width: 14px; height: 12px; } 
-.glyphicon_random{ background-position: -731px -120px; width: 14px; height: 10px; } 
-.glyphicon_read_it_later{ background-position: -761px -120px; width: 14px; height: 14px; } 
-.glyphicon_readability{ background-position: -791px -120px; width: 14px; height: 14px; } 
-.glyphicon_refresh{ background-position: -821px -120px; width: 13px; height: 14px; } 
-.glyphicon_remove{ background-position: -850px -120px; width: 14px; height: 14px; } 
-.glyphicon_remove_only{ background-position: -880px -120px; width: 14px; height: 14px; } 
-.glyphicon_repeat{ background-position: -910px -120px; width: 12px; height: 14px; } 
-.glyphicon_resize_full{ background-position: -938px -120px; width: 14px; height: 14px; } 
-.glyphicon_resize_small{ background-position: -968px -120px; width: 14px; height: 14px; } 
-.glyphicon_restart{ background-position: -998px -120px; width: 14px; height: 14px; } 
-.glyphicon_retweet{ background-position: -1028px -120px; width: 14px; height: 8px; } 
-.glyphicon_retweet_bold{ background-position: -1058px -120px; width: 14px; height: 9px; } 
-.glyphicon_rewind{ background-position: -1088px -120px; width: 14px; height: 11px; } 
-.glyphicon_riflescope{ background-position: -1118px -120px; width: 14px; height: 14px; } 
-.glyphicon_right_arrow{ background-position: -1148px -120px; width: 14px; height: 13px; } 
-.glyphicon_right_indent{ background-position: -1178px -120px; width: 14px; height: 13px; } 
-.glyphicon_ring{ background-position: -1208px -120px; width: 12px; height: 14px; } 
-.glyphicon_road{ background-position: -1236px -120px; width: 14px; height: 12px; } 
-.glyphicon_rotation_lock{ background-position: -1266px -120px; width: 14px; height: 12px; } 
-.glyphicon_roundabout{ background-position: -1296px -120px; width: 14px; height: 14px; } 
-.glyphicon_router{ background-position: -1326px -120px; width: 14px; height: 13px; } 
-.glyphicon_rss{ background-position: -1356px -120px; width: 14px; height: 14px; } 
-.glyphicon_rugby{ background-position: -1386px -120px; width: 13px; height: 14px; } 
-.glyphicon_ruller{ background-position: -1415px -120px; width: 14px; height: 7px; } 
-.glyphicon_sampler{ background-position: -1445px -120px; width: 14px; height: 11px; } 
-.glyphicon_scissors{ background-position: -1475px -120px; width: 12px; height: 14px; } 
-.glyphicon_screenshot{ background-position: -1503px -120px; width: 14px; height: 14px; } 
-.glyphicon_scuba_diving{ background-position: -1533px -120px; width: 14px; height: 12px; } 
-.glyphicon_search{ background-position: -1563px -120px; width: 14px; height: 14px; } 
-.glyphicon_security_camera{ background-position: -1593px -120px; width: 14px; height: 14px; } 
-.glyphicon_settings{ background-position: -1623px -120px; width: 14px; height: 14px; } 
-.glyphicon_share{ background-position: -1653px -120px; width: 14px; height: 11px; } 
-.glyphicon_share_alt{ background-position: -1683px -120px; width: 14px; height: 14px; } 
-.glyphicon_sheriffs_star{ background-position: -1713px -120px; width: 13px; height: 14px; } 
-.glyphicon_shield{ background-position: -1742px -120px; width: 13px; height: 14px; } 
-.glyphicon_shopping_bag{ background-position: -1771px -120px; width: 12px; height: 14px; } 
-.glyphicon_shopping_cart{ background-position: -1799px -120px; width: 14px; height: 12px; } 
-.glyphicon_show_big_thumbnails{ background-position: -1829px -120px; width: 14px; height: 14px; } 
-.glyphicon_show_lines{ background-position: -1859px -120px; width: 14px; height: 9px; } 
-.glyphicon_show_thumbnails{ background-position: -1889px -120px; width: 14px; height: 14px; } 
-.glyphicon_show_thumbnails_with_lines{ background-position: -1919px -120px; width: 14px; height: 9px; } 
-.glyphicon_signal{ background-position: -1949px -120px; width: 14px; height: 14px; } 
-.glyphicon_skitch{ background-position: -1979px -120px; width: 14px; height: 14px; } 
-.glyphicon_skull{ background-position: 0 -150px; width: 13px; height: 14px; } 
-.glyphicon_skype{ background-position: -29px -150px; width: 14px; height: 14px; } 
-.glyphicon_smoking{ background-position: -59px -150px; width: 14px; height: 14px; } 
-.glyphicon_snorkel_diving{ background-position: -89px -150px; width: 14px; height: 13px; } 
-.glyphicon_snowflake{ background-position: -119px -150px; width: 14px; height: 14px; } 
-.glyphicon_soccer_ball{ background-position: -149px -150px; width: 14px; height: 14px; } 
-.glyphicon_sort{ background-position: -179px -150px; width: 14px; height: 14px; } 
-.glyphicon_spade{ background-position: -209px -150px; width: 14px; height: 14px; } 
-.glyphicon_spotify{ background-position: -239px -150px; width: 14px; height: 14px; } 
-.glyphicon_spray{ background-position: -269px -150px; width: 11px; height: 14px; } 
-.glyphicon_star{ background-position: -296px -150px; width: 14px; height: 13px; } 
-.glyphicon_stats{ background-position: -326px -150px; width: 14px; height: 13px; } 
-.glyphicon_step_backward{ background-position: -356px -150px; width: 11px; height: 14px; } 
-.glyphicon_step_forward{ background-position: -383px -150px; width: 11px; height: 14px; } 
-.glyphicon_stop{ background-position: -410px -150px; width: 14px; height: 14px; } 
-.glyphicon_stopwatch{ background-position: -440px -150px; width: 12px; height: 14px; } 
-.glyphicon_stroller{ background-position: -468px -150px; width: 13px; height: 14px; } 
-.glyphicon_stumbleupon{ background-position: -497px -150px; width: 14px; height: 14px; } 
-.glyphicon_suitcase{ background-position: -527px -150px; width: 14px; height: 13px; } 
-.glyphicon_sun{ background-position: -557px -150px; width: 14px; height: 14px; } 
-.glyphicon_sweater{ background-position: -587px -150px; width: 14px; height: 12px; } 
-.glyphicon_t-shirt{ background-position: -617px -150px; width: 14px; height: 12px; } 
-.glyphicon_table{ background-position: -647px -150px; width: 14px; height: 14px; } 
-.glyphicon_table_tennis{ background-position: -677px -150px; width: 14px; height: 14px; } 
-.glyphicon_tablet{ background-position: -707px -150px; width: 14px; height: 14px; } 
-.glyphicon_tag{ background-position: -737px -150px; width: 14px; height: 14px; } 
-.glyphicon_tags{ background-position: -767px -150px; width: 14px; height: 11px; } 
-.glyphicon_tea_kettle{ background-position: -797px -150px; width: 14px; height: 12px; } 
-.glyphicon_temple_buddhist{ background-position: -827px -150px; width: 14px; height: 11px; } 
-.glyphicon_temple_christianity_church{ background-position: -857px -150px; width: 13px; height: 14px; } 
-.glyphicon_temple_hindu{ background-position: -886px -150px; width: 14px; height: 14px; } 
-.glyphicon_temple_islam{ background-position: -916px -150px; width: 14px; height: 13px; } 
-.glyphicon_text_bigger{ background-position: -946px -150px; width: 14px; height: 13px; } 
-.glyphicon_text_height{ background-position: -976px -150px; width: 14px; height: 13px; } 
-.glyphicon_text_resize{ background-position: -1006px -150px; width: 14px; height: 14px; } 
-.glyphicon_text_smaller{ background-position: -1036px -150px; width: 14px; height: 10px; } 
-.glyphicon_text_strike{ background-position: -1066px -150px; width: 13px; height: 14px; } 
-.glyphicon_text_underline{ background-position: -1095px -150px; width: 12px; height: 14px; } 
-.glyphicon_text_width{ background-position: -1123px -150px; width: 13px; height: 14px; } 
-.glyphicon_thumbs_down{ background-position: -1152px -150px; width: 14px; height: 12px; } 
-.glyphicon_thumbs_up{ background-position: -1182px -150px; width: 14px; height: 12px; } 
-.glyphicon_tie{ background-position: -1212px -150px; width: 6px; height: 14px; } 
-.glyphicon_tint{ background-position: -1234px -150px; width: 13px; height: 14px; } 
-.glyphicon_train{ background-position: -1263px -150px; width: 11px; height: 14px; } 
-.glyphicon_tree_conifer{ background-position: -1290px -150px; width: 12px; height: 14px; } 
-.glyphicon_tree_deciduous{ background-position: -1318px -150px; width: 11px; height: 14px; } 
-.glyphicon_truck{ background-position: -1345px -150px; width: 14px; height: 12px; } 
-.glyphicon_tumblr{ background-position: -1375px -150px; width: 14px; height: 14px; } 
-.glyphicon_turtle{ background-position: -1405px -150px; width: 14px; height: 8px; } 
-.glyphicon_twitter{ background-position: -1435px -150px; width: 14px; height: 14px; } 
-.glyphicon_umbrella{ background-position: -1465px -150px; width: 13px; height: 14px; } 
-.glyphicon_unchecked{ background-position: -1494px -150px; width: 14px; height: 14px; } 
-.glyphicon_unlock{ background-position: -1524px -150px; width: 11px; height: 14px; } 
-.glyphicon_unshare{ background-position: -1551px -150px; width: 14px; height: 11px; } 
-.glyphicon_up_arrow{ background-position: -1581px -150px; width: 13px; height: 14px; } 
-.glyphicon_upload{ background-position: -1610px -150px; width: 14px; height: 14px; } 
-.glyphicon_usd{ background-position: -1640px -150px; width: 9px; height: 14px; } 
-.glyphicon_user{ background-position: -1665px -150px; width: 14px; height: 13px; } 
-.glyphicon_user_add{ background-position: -1695px -150px; width: 14px; height: 11px; } 
-.glyphicon_user_remove{ background-position: -1725px -150px; width: 14px; height: 12px; } 
-.glyphicon_vases{ background-position: -1755px -150px; width: 14px; height: 14px; } 
-.glyphicon_vcard{ background-position: -1785px -150px; width: 13px; height: 14px; } 
-.glyphicon_vector_path_all{ background-position: -1814px -150px; width: 14px; height: 14px; } 
-.glyphicon_vector_path_circle{ background-position: -1844px -150px; width: 14px; height: 14px; } 
-.glyphicon_vector_path_curve{ background-position: -1874px -150px; width: 14px; height: 14px; } 
-.glyphicon_vector_path_line{ background-position: -1904px -150px; width: 14px; height: 14px; } 
-.glyphicon_vector_path_polygon{ background-position: -1934px -150px; width: 14px; height: 13px; } 
-.glyphicon_vector_path_square{ background-position: -1964px -150px; width: 14px; height: 14px; } 
-.glyphicon_vimeo{ background-position: 0 -180px; width: 14px; height: 14px; } 
-.glyphicon_volume_down{ background-position: -30px -180px; width: 14px; height: 13px; } 
-.glyphicon_volume_up{ background-position: -60px -180px; width: 13px; height: 14px; } 
-.glyphicon_wallet{ background-position: -89px -180px; width: 14px; height: 11px; } 
-.glyphicon_warning_sign{ background-position: -119px -180px; width: 14px; height: 12px; } 
-.glyphicon_webcam{ background-position: -149px -180px; width: 11px; height: 14px; } 
-.glyphicon_wifi{ background-position: -176px -180px; width: 14px; height: 10px; } 
-.glyphicon_wifi_alt{ background-position: -206px -180px; width: 14px; height: 14px; } 
-.glyphicon_woman{ background-position: -236px -180px; width: 14px; height: 14px; } 
-.glyphicon_wordpress{ background-position: -266px -180px; width: 14px; height: 14px; } 
-.glyphicon_xing{ background-position: -296px -180px; width: 14px; height: 14px; } 
-.glyphicon_yahoo{ background-position: -326px -180px; width: 14px; height: 14px; } 
-.glyphicon_youtube{ background-position: -356px -180px; width: 14px; height: 14px; } 
-.glyphicon_zoom_in{ background-position: -386px -180px; width: 14px; height: 14px; } 
-.glyphicon_zoom_out{ background-position: -416px -180px; width: 14px; height: 14px; } 
-.glyphicon_zootool{ background-position: -446px -180px; width: 14px; height: 14px; } 
+.dropdown-menu > li > a:hover > .glyphicons:before {
+  color: #FFF;
+}
+.glyphicons.top2{
+    padding-top:2px;
+}
+.glyphicons.bottom2{
+    padding-bottom:2px;
+}
+.glyphicons.top4, .top4{
+    padding-top:4px;
+}
+.icon-top2{
+    margin-top:2px;
+}
+.glyphicons.white:before {
+  color: #FFF;
+}
+.glyphicons.default:before {
+  color: #CB0044;
+}
+.glyphicons.red:before {
+  color: #FF0000;
+}
+.glyphicons.blue:before {
+  color: #009AA6;
+}
+.glyphicons.green:before {
+  color: #7ABB00;
+}
+.glyphicons.grey:before {
+  color: #BCBDBC;
+}
+.glyphicons.orange:before {
+  color: #FFB612;
+}
+.glyphicons.disabled:before {
+  color: #C7C2BA;
+}
+.glyphicons.size8:before {
+  font: 8px 'Glyphicons Regular';
+}
+.glyphicons.size10:before {
+  font: 10px 'Glyphicons Regular';
+}
+.glyphicons.size14:before {
+  font: 14px 'Glyphicons Regular';
+}
+.glyphicons.size16:before {
+  font: 16px 'Glyphicons Regular';
+}
+.glyphicons.size18:before {
+  font: 18px 'Glyphicons Regular';
+}
+.glyphicons.size20:before {
+  font: 20px 'Glyphicons Regular';
+}
+.glyphicons.size22:before {
+  font: 22px 'Glyphicons Regular';
+}
+.glyphicons.size24:before {
+  font: 24px 'Glyphicons Regular';
+}
+.glyphicons.size28:before {
+  font: 28px 'Glyphicons Regular';
+}
+.glyphicons.size32:before {
+  font: 32px 'Glyphicons Regular';
+}
+.glyphicons.glass:before {
+  content: "\E001";
+}
+.glyphicons.leaf:before {
+  content: "\E002";
+}
+.glyphicons.dog:before {
+  content: "\1F415";
+}
+.glyphicons.user:before {
+  content: "\E004";
+}
+.glyphicons.girl:before {
+  content: "\1F467";
+}
+.glyphicons.car:before {
+  content: "\E006";
+}
+.glyphicons.user_add:before {
+  content: "\E007";
+}
+.glyphicons.user_remove:before {
+  content: "\E008";
+}
+.glyphicons.film:before {
+  content: "\E009";
+}
+.glyphicons.magic:before {
+  content: "\E010";
+}
+.glyphicons.envelope:before {
+  content: "\2709";
+}
+.glyphicons.camera:before {
+  content: "\1F4F7";
+}
+.glyphicons.heart:before {
+  content: "\E013";
+}
+.glyphicons.beach_umbrella:before {
+  content: "\E014";
+}
+.glyphicons.train:before {
+  content: "\1F686";
+}
+.glyphicons.print:before {
+  content: "\E016";
+}
+.glyphicons.bin:before {
+  content: "\E017";
+}
+.glyphicons.music:before {
+  content: "\E018";
+}
+.glyphicons.note:before {
+  content: "\E019";
+}
+.glyphicons.heart_empty:before {
+  content: "\E020";
+}
+.glyphicons.home:before {
+  content: "\E021";
+}
+.glyphicons.snowflake:before {
+  content: "\2744";
+}
+.glyphicons.fire:before {
+  content: "\1F525";
+}
+.glyphicons.magnet:before {
+  content: "\E024";
+}
+.glyphicons.parents:before {
+  content: "\E025";
+}
+.glyphicons.binoculars:before {
+  content: "\E026";
+}
+.glyphicons.road:before {
+  content: "\E027";
+}
+.glyphicons.search:before {
+  content: "\E028";
+}
+.glyphicons.cars:before {
+  content: "\E029";
+}
+.glyphicons.notes_2:before {
+  content: "\E030";
+}
+.glyphicons.pencil:before {
+  content: "\270F";
+}
+.glyphicons.bus:before {
+  content: "\1F68C";
+}
+.glyphicons.wifi_alt:before {
+  content: "\E033";
+}
+.glyphicons.luggage:before {
+  content: "\E034";
+}
+.glyphicons.old_man:before {
+  content: "\E035";
+}
+.glyphicons.woman:before {
+  content: "\1F469";
+}
+.glyphicons.file:before {
+  content: "\E037";
+}
+.glyphicons.coins:before {
+  content: "\E038";
+}
+.glyphicons.airplane:before {
+  content: "\2708";
+}
+.glyphicons.notes:before {
+  content: "\E040";
+}
+.glyphicons.stats:before {
+  content: "\E041";
+}
+.glyphicons.charts:before {
+  content: "\E042";
+}
+.glyphicons.pie_chart:before {
+  content: "\E043";
+}
+.glyphicons.group:before {
+  content: "\E044";
+}
+.glyphicons.keys:before {
+  content: "\E045";
+}
+.glyphicons.calendar:before {
+  content: "\1F4C5";
+}
+.glyphicons.router:before {
+  content: "\E047";
+}
+.glyphicons.camera_small:before {
+  content: "\E048";
+}
+.glyphicons.dislikes:before {
+  content: "\E049";
+}
+.glyphicons.star:before {
+  content: "\E050";
+}
+.glyphicons.link:before {
+  content: "\E051";
+}
+.glyphicons.eye_open:before {
+  content: "\E052";
+}
+.glyphicons.eye_close:before {
+  content: "\E053";
+}
+.glyphicons.alarm:before {
+  content: "\E054";
+}
+.glyphicons.clock:before {
+  content: "\E055";
+}
+.glyphicons.stopwatch:before {
+  content: "\E056";
+}
+.glyphicons.projector:before {
+  content: "\E057";
+}
+.glyphicons.history:before {
+  content: "\E058";
+}
+.glyphicons.truck:before {
+  content: "\E059";
+}
+.glyphicons.cargo:before {
+  content: "\E060";
+}
+.glyphicons.compass:before {
+  content: "\E061";
+}
+.glyphicons.keynote:before {
+  content: "\E062";
+}
+.glyphicons.paperclip:before {
+  content: "\1F4CE";
+}
+.glyphicons.power:before {
+  content: "\E064";
+}
+.glyphicons.lightbulb:before {
+  content: "\E065";
+}
+.glyphicons.tag:before {
+  content: "\E066";
+}
+.glyphicons.tags:before {
+  content: "\E067";
+}
+.glyphicons.cleaning:before {
+  content: "\E068";
+}
+.glyphicons.ruller:before {
+  content: "\E069";
+}
+.glyphicons.gift:before {
+  content: "\E070";
+}
+.glyphicons.umbrella:before {
+  content: "\2602";
+}
+.glyphicons.book:before {
+  content: "\E072";
+}
+.glyphicons.bookmark:before {
+  content: "\1F516";
+}
+.glyphicons.wifi:before {
+  content: "\E074";
+}
+.glyphicons.cup:before {
+  content: "\E075";
+}
+.glyphicons.stroller:before {
+  content: "\E076";
+}
+.glyphicons.headphones:before {
+  content: "\E077";
+}
+.glyphicons.headset:before {
+  content: "\E078";
+}
+.glyphicons.warning_sign:before {
+  content: "\E079";
+}
+.glyphicons.signal:before {
+  content: "\E080";
+}
+.glyphicons.retweet:before {
+  content: "\E081";
+}
+.glyphicons.refresh:before {
+  content: "\E082";
+}
+.glyphicons.roundabout:before {
+  content: "\E083";
+}
+.glyphicons.random:before {
+  content: "\E084";
+}
+.glyphicons.heat:before {
+  content: "\E085";
+}
+.glyphicons.repeat:before {
+  content: "\E086";
+}
+.glyphicons.display:before {
+  content: "\E087";
+}
+.glyphicons.log_book:before {
+  content: "\E088";
+}
+.glyphicons.address_book:before {
+  content: "\E089";
+}
+.glyphicons.building:before {
+  content: "\E090";
+}
+.glyphicons.eyedropper:before {
+  content: "\E091";
+}
+.glyphicons.adjust:before {
+  content: "\E092";
+}
+.glyphicons.tint:before {
+  content: "\E093";
+}
+.glyphicons.crop:before {
+  content: "\E094";
+}
+.glyphicons.vector_path_square:before {
+  content: "\E095";
+}
+.glyphicons.vector_path_circle:before {
+  content: "\E096";
+}
+.glyphicons.vector_path_polygon:before {
+  content: "\E097";
+}
+.glyphicons.vector_path_line:before {
+  content: "\E098";
+}
+.glyphicons.vector_path_curve:before {
+  content: "\E099";
+}
+.glyphicons.vector_path_all:before {
+  content: "\E100";
+}
+.glyphicons.font:before {
+  content: "\E101";
+}
+.glyphicons.italic:before {
+  content: "\E102";
+}
+.glyphicons.bold:before {
+  content: "\E103";
+}
+.glyphicons.text_underline:before {
+  content: "\E104";
+}
+.glyphicons.text_strike:before {
+  content: "\E105";
+}
+.glyphicons.text_height:before {
+  content: "\E106";
+}
+.glyphicons.text_width:before {
+  content: "\E107";
+}
+.glyphicons.text_resize:before {
+  content: "\E108";
+}
+.glyphicons.left_indent:before {
+  content: "\E109";
+}
+.glyphicons.right_indent:before {
+  content: "\E110";
+}
+.glyphicons.align_left:before {
+  content: "\E111";
+}
+.glyphicons.align_center:before {
+  content: "\E112";
+}
+.glyphicons.align_right:before {
+  content: "\E113";
+}
+.glyphicons.justify:before {
+  content: "\E114";
+}
+.glyphicons.list:before {
+  content: "\E115";
+}
+.glyphicons.text_smaller:before {
+  content: "\E116";
+}
+.glyphicons.text_bigger:before {
+  content: "\E117";
+}
+.glyphicons.embed:before {
+  content: "\E118";
+}
+.glyphicons.embed_close:before {
+  content: "\E119";
+}
+.glyphicons.array:before {
+  content: "\E120";
+}
+.glyphicons.message_full:before {
+  content: "\E121";
+}
+.glyphicons.message_empty:before {
+  content: "\E122";
+}
+.glyphicons.message_in:before {
+  content: "\E123";
+}
+.glyphicons.message_out:before {
+  content: "\E124";
+}
+.glyphicons.message_plus:before {
+  content: "\E125";
+}
+.glyphicons.message_minus:before {
+  content: "\E126";
+}
+.glyphicons.message_ban:before {
+  content: "\E127";
+}
+.glyphicons.message_flag:before {
+  content: "\E128";
+}
+.glyphicons.message_lock:before {
+  content: "\E129";
+}
+.glyphicons.message_new:before {
+  content: "\E130";
+}
+.glyphicons.inbox:before {
+  content: "\E131";
+}
+.glyphicons.inbox_plus:before {
+  content: "\E132";
+}
+.glyphicons.inbox_minus:before {
+  content: "\E133";
+}
+.glyphicons.inbox_lock:before {
+  content: "\E134";
+}
+.glyphicons.inbox_in:before {
+  content: "\E135";
+}
+.glyphicons.inbox_out:before {
+  content: "\E136";
+}
+.glyphicons.cogwheel:before {
+  content: "\E137";
+}
+.glyphicons.cogwheels:before {
+  content: "\E138";
+}
+.glyphicons.picture:before {
+  content: "\E139";
+}
+.glyphicons.adjust_alt:before {
+  content: "\E140";
+}
+.glyphicons.database_lock:before {
+  content: "\E141";
+}
+.glyphicons.database_plus:before {
+  content: "\E142";
+}
+.glyphicons.database_minus:before {
+  content: "\E143";
+}
+.glyphicons.database_ban:before {
+  content: "\E144";
+}
+.glyphicons.folder_open:before {
+  content: "\E145";
+}
+.glyphicons.folder_plus:before {
+  content: "\E146";
+}
+.glyphicons.folder_minus:before {
+  content: "\E147";
+}
+.glyphicons.folder_lock:before {
+  content: "\E148";
+}
+.glyphicons.folder_flag:before {
+  content: "\E149";
+}
+.glyphicons.folder_new:before {
+  content: "\E150";
+}
+.glyphicons.edit:before {
+  content: "\E151";
+}
+.glyphicons.new_window:before {
+  content: "\E152";
+}
+.glyphicons.check:before {
+  content: "\E153";
+}
+.glyphicons.unchecked:before {
+  content: "\E154";
+}
+.glyphicons.more_windows:before {
+  content: "\E155";
+}
+.glyphicons.show_big_thumbnails:before {
+  content: "\E156";
+}
+.glyphicons.show_thumbnails:before {
+  content: "\E157";
+}
+.glyphicons.show_thumbnails_with_lines:before {
+  content: "\E158";
+}
+.glyphicons.show_lines:before {
+  content: "\E159";
+}
+.glyphicons.playlist:before {
+  content: "\E160";
+}
+.glyphicons.imac:before {
+  content: "\E161";
+}
+.glyphicons.macbook:before {
+  content: "\E162";
+}
+.glyphicons.ipad:before {
+  content: "\E163";
+}
+.glyphicons.iphone:before {
+  content: "\E164";
+}
+.glyphicons.iphone_transfer:before {
+  content: "\E165";
+}
+.glyphicons.iphone_exchange:before {
+  content: "\E166";
+}
+.glyphicons.ipod:before {
+  content: "\E167";
+}
+.glyphicons.ipod_shuffle:before {
+  content: "\E168";
+}
+.glyphicons.ear_plugs:before {
+  content: "\E169";
+}
+.glyphicons.record:before {
+  content: "\E170";
+}
+.glyphicons.step_backward:before {
+  content: "\E171";
+}
+.glyphicons.fast_backward:before {
+  content: "\E172";
+}
+.glyphicons.rewind:before {
+  content: "\E173";
+}
+.glyphicons.play:before {
+  content: "\E174";
+}
+.glyphicons.pause:before {
+  content: "\E175";
+}
+.glyphicons.stop:before {
+  content: "\E176";
+}
+.glyphicons.forward:before {
+  content: "\E177";
+}
+.glyphicons.fast_forward:before {
+  content: "\E178";
+}
+.glyphicons.step_forward:before {
+  content: "\E179";
+}
+.glyphicons.eject:before {
+  content: "\E180";
+}
+.glyphicons.facetime_video:before {
+  content: "\E181";
+}
+.glyphicons.download_alt:before {
+  content: "\E182";
+}
+.glyphicons.mute:before {
+  content: "\E183";
+}
+.glyphicons.volume_down:before {
+  content: "\E184";
+}
+.glyphicons.volume_up:before {
+  content: "\E185";
+}
+.glyphicons.screenshot:before {
+  content: "\E186";
+}
+.glyphicons.move:before {
+  content: "\E187";
+}
+.glyphicons.more:before {
+  content: "\E188";
+}
+.glyphicons.brightness_reduce:before {
+  content: "\E189";
+}
+.glyphicons.brightness_increase:before {
+  content: "\E190";
+}
+.glyphicons.circle_plus:before {
+  content: "\E191";
+}
+.glyphicons.circle_minus:before {
+  content: "\E192";
+}
+.glyphicons.circle_remove:before {
+  content: "\E193";
+}
+.glyphicons.circle_ok:before {
+  content: "\E194";
+}
+.glyphicons.circle_question_mark:before {
+  content: "\E195";
+}
+.glyphicons.circle_info:before {
+  content: "\E196";
+}
+.glyphicons.circle_exclamation_mark:before {
+  content: "\E197";
+}
+.glyphicons.remove:before {
+  content: "\E198";
+}
+.glyphicons.ok:before {
+  content: "\E199";
+}
+.glyphicons.ban:before {
+  content: "\E200";
+}
+.glyphicons.download:before {
+  content: "\E201";
+}
+.glyphicons.upload:before {
+  content: "\E202";
+}
+.glyphicons.shopping_cart:before {
+  content: "\E203";
+}
+.glyphicons.lock:before {
+  content: "\1F512";
+}
+.glyphicons.unlock:before {
+  content: "\E205";
+}
+.glyphicons.electricity:before {
+  content: "\E206";
+}
+.glyphicons.ok_2:before {
+  content: "\E207";
+}
+.glyphicons.remove_2:before {
+  content: "\E208";
+}
+.glyphicons.cart_out:before {
+  content: "\E209";
+}
+.glyphicons.cart_in:before {
+  content: "\E210";
+}
+.glyphicons.left_arrow:before {
+  content: "\E211";
+}
+.glyphicons.right_arrow:before {
+  content: "\E212";
+}
+.glyphicons.down_arrow:before {
+  content: "\E213";
+}
+.glyphicons.up_arrow:before {
+  content: "\E214";
+}
+.glyphicons.resize_small:before {
+  content: "\E215";
+}
+.glyphicons.resize_full:before {
+  content: "\E216";
+}
+.glyphicons.circle_arrow_left:before {
+  content: "\E217";
+}
+.glyphicons.circle_arrow_right:before {
+  content: "\E218";
+}
+.glyphicons.circle_arrow_top:before {
+  content: "\E219";
+}
+.glyphicons.circle_arrow_down:before {
+  content: "\E220";
+}
+.glyphicons.play_button:before {
+  content: "\E221";
+}
+.glyphicons.unshare:before {
+  content: "\E222";
+}
+.glyphicons.share:before {
+  content: "\E223";
+}
+.glyphicons.chevron-right:before {
+  content: "\E224";
+}
+.glyphicons.chevron-left:before {
+  content: "\E225";
+}
+.glyphicons.bluetooth:before {
+  content: "\E226";
+}
+.glyphicons.euro:before {
+  content: "\20AC";
+}
+.glyphicons.usd:before {
+  content: "\E228";
+}
+.glyphicons.gbp:before {
+  content: "\E229";
+}
+.glyphicons.retweet_2:before {
+  content: "\E230";
+}
+.glyphicons.moon:before {
+  content: "\E231";
+}
+.glyphicons.sun:before {
+  content: "\2609";
+}
+.glyphicons.cloud:before {
+  content: "\2601";
+}
+.glyphicons.direction:before {
+  content: "\E234";
+}
+.glyphicons.brush:before {
+  content: "\E235";
+}
+.glyphicons.pen:before {
+  content: "\E236";
+}
+.glyphicons.zoom_in:before {
+  content: "\E237";
+}
+.glyphicons.zoom_out:before {
+  content: "\E238";
+}
+.glyphicons.pin:before {
+  content: "\E239";
+}
+.glyphicons.albums:before {
+  content: "\E240";
+}
+.glyphicons.rotation_lock:before {
+  content: "\E241";
+}
+.glyphicons.flash:before {
+  content: "\E242";
+}
+.glyphicons.google_maps:before {
+  content: "\E243";
+}
+.glyphicons.anchor:before {
+  content: "\2693";
+}
+.glyphicons.conversation:before {
+  content: "\E245";
+}
+.glyphicons.chat:before {
+  content: "\E246";
+}
+.glyphicons.male:before {
+  content: "\E247";
+}
+.glyphicons.female:before {
+  content: "\E248";
+}
+.glyphicons.asterisk:before {
+  content: "\002A";
+}
+.glyphicons.divide:before {
+  content: "\00F7";
+}
+.glyphicons.snorkel_diving:before {
+  content: "\E251";
+}
+.glyphicons.scuba_diving:before {
+  content: "\E252";
+}
+.glyphicons.oxygen_bottle:before {
+  content: "\E253";
+}
+.glyphicons.fins:before {
+  content: "\E254";
+}
+.glyphicons.fishes:before {
+  content: "\E255";
+}
+.glyphicons.boat:before {
+  content: "\E256";
+}
+.glyphicons.delete:before {
+  content: "\E257";
+}
+.glyphicons.sheriffs_star:before {
+  content: "\E258";
+}
+.glyphicons.qrcode:before {
+  content: "\E259";
+}
+.glyphicons.barcode:before {
+  content: "\E260";
+}
+.glyphicons.pool:before {
+  content: "\E261";
+}
+.glyphicons.buoy:before {
+  content: "\E262";
+}
+.glyphicons.spade:before {
+  content: "\E263";
+}
+.glyphicons.bank:before {
+  content: "\1F3E6";
+}
+.glyphicons.vcard:before {
+  content: "\E265";
+}
+.glyphicons.electrical_plug:before {
+  content: "\E266";
+}
+.glyphicons.flag:before {
+  content: "\E267";
+}
+.glyphicons.credit_card:before {
+  content: "\E268";
+}
+.glyphicons.keyboard-wireless:before {
+  content: "\E269";
+}
+.glyphicons.keyboard-wired:before {
+  content: "\E270";
+}
+.glyphicons.shield:before {
+  content: "\E271";
+}
+.glyphicons.ring:before {
+  content: "\02DA";
+}
+.glyphicons.cake:before {
+  content: "\E273";
+}
+.glyphicons.drink:before {
+  content: "\E274";
+}
+.glyphicons.beer:before {
+  content: "\E275";
+}
+.glyphicons.fast_food:before {
+  content: "\E276";
+}
+.glyphicons.cutlery:before {
+  content: "\E277";
+}
+.glyphicons.pizza:before {
+  content: "\E278";
+}
+.glyphicons.birthday_cake:before {
+  content: "\E279";
+}
+.glyphicons.tablet:before {
+  content: "\E280";
+}
+.glyphicons.settings:before {
+  content: "\E281";
+}
+.glyphicons.bullets:before {
+  content: "\E282";
+}
+.glyphicons.cardio:before {
+  content: "\E283";
+}
+.glyphicons.t-shirt:before {
+  content: "\E284";
+}
+.glyphicons.pants:before {
+  content: "\E285";
+}
+.glyphicons.sweater:before {
+  content: "\E286";
+}
+.glyphicons.fabric:before {
+  content: "\E287";
+}
+.glyphicons.leather:before {
+  content: "\E288";
+}
+.glyphicons.scissors:before {
+  content: "\E289";
+}
+.glyphicons.bomb:before {
+  content: "\1F4A3";
+}
+.glyphicons.skull:before {
+  content: "\1F480";
+}
+.glyphicons.celebration:before {
+  content: "\E292";
+}
+.glyphicons.tea_kettle:before {
+  content: "\E293";
+}
+.glyphicons.french_press:before {
+  content: "\E294";
+}
+.glyphicons.coffe_cup:before {
+  content: "\E295";
+}
+.glyphicons.pot:before {
+  content: "\E296";
+}
+.glyphicons.grater:before {
+  content: "\E297";
+}
+.glyphicons.kettle:before {
+  content: "\E298";
+}
+.glyphicons.hospital:before {
+  content: "\1F3E5";
+}
+.glyphicons.hospital_h:before {
+  content: "\E300";
+}
+.glyphicons.microphone:before {
+  content: "\1F3A4";
+}
+.glyphicons.webcam:before {
+  content: "\E302";
+}
+.glyphicons.temple_christianity_church:before {
+  content: "\E303";
+}
+.glyphicons.temple_islam:before {
+  content: "\E304";
+}
+.glyphicons.temple_hindu:before {
+  content: "\E305";
+}
+.glyphicons.temple_buddhist:before {
+  content: "\E306";
+}
+.glyphicons.bicycle:before {
+  content: "\1F6B2";
+}
+.glyphicons.life_preserver:before {
+  content: "\E308";
+}
+.glyphicons.share_alt:before {
+  content: "\E309";
+}
+.glyphicons.comments:before {
+  content: "\E310";
+}
+.glyphicons.flower:before {
+  content: "\2698";
+}
+.glyphicons.baseball:before {
+  content: "\26BE";
+}
+.glyphicons.rugby:before {
+  content: "\E313";
+}
+.glyphicons.ax:before {
+  content: "\E314";
+}
+.glyphicons.table_tennis:before {
+  content: "\E315";
+}
+.glyphicons.bowling:before {
+  content: "\1F3B3";
+}
+.glyphicons.tree_conifer:before {
+  content: "\E317";
+}
+.glyphicons.tree_deciduous:before {
+  content: "\E318";
+}
+.glyphicons.more_items:before {
+  content: "\E319";
+}
+.glyphicons.sort:before {
+  content: "\E320";
+}
+.glyphicons.filter:before {
+  content: "\E321";
+}
+.glyphicons.gamepad:before {
+  content: "\E322";
+}
+.glyphicons.playing_dices:before {
+  content: "\E323";
+}
+.glyphicons.calculator:before {
+  content: "\E324";
+}
+.glyphicons.tie:before {
+  content: "\E325";
+}
+.glyphicons.wallet:before {
+  content: "\E326";
+}
+.glyphicons.piano:before {
+  content: "\E327";
+}
+.glyphicons.sampler:before {
+  content: "\E328";
+}
+.glyphicons.podium:before {
+  content: "\E329";
+}
+.glyphicons.soccer_ball:before {
+  content: "\E330";
+}
+.glyphicons.blog:before {
+  content: "\E331";
+}
+.glyphicons.dashboard:before {
+  content: "\E332";
+}
+.glyphicons.certificate:before {
+  content: "\E333";
+}
+.glyphicons.bell:before {
+  content: "\1F514";
+}
+.glyphicons.candle:before {
+  content: "\E335";
+}
+.glyphicons.pushpin:before {
+  content: "\1F4CC";
+}
+.glyphicons.iphone_shake:before {
+  content: "\E337";
+}
+.glyphicons.pin_flag:before {
+  content: "\E338";
+}
+.glyphicons.turtle:before {
+  content: "\1F422";
+}
+.glyphicons.rabbit:before {
+  content: "\1F407";
+}
+.glyphicons.globe:before {
+  content: "\E341";
+}
+.glyphicons.briefcase:before {
+  content: "\1F4BC";
+}
+.glyphicons.hdd:before {
+  content: "\E343";
+}
+.glyphicons.thumbs_up:before {
+  content: "\E344";
+}
+.glyphicons.thumbs_down:before {
+  content: "\E345";
+}
+.glyphicons.hand_right:before {
+  content: "\E346";
+}
+.glyphicons.hand_left:before {
+  content: "\E347";
+}
+.glyphicons.hand_up:before {
+  content: "\E348";
+}
+.glyphicons.hand_down:before {
+  content: "\E349";
+}
+.glyphicons.fullscreen:before {
+  content: "\E350";
+}
+.glyphicons.shopping_bag:before {
+  content: "\E351";
+}
+.glyphicons.book_open:before {
+  content: "\E352";
+}
+.glyphicons.nameplate:before {
+  content: "\E353";
+}
+.glyphicons.nameplate_alt:before {
+  content: "\E354";
+}
+.glyphicons.vases:before {
+  content: "\E355";
+}
+.glyphicons.bullhorn:before {
+  content: "\E356";
+}
+.glyphicons.dumbbell:before {
+  content: "\E357";
+}
+.glyphicons.suitcase:before {
+  content: "\E358";
+}
+.glyphicons.file_import:before {
+  content: "\E359";
+}
+.glyphicons.file_export:before {
+  content: "\E360";
+}
+.glyphicons.bug:before {
+  content: "\1F41B";
+}
+.glyphicons.crown:before {
+  content: "\1F451";
+}
+.glyphicons.smoking:before {
+  content: "\E363";
+}
+.glyphicons.cloud-upload:before {
+  content: "\E364";
+}
+.glyphicons.cloud-download:before {
+  content: "\E365";
+}
+.glyphicons.restart:before {
+  content: "\E366";
+}
+.glyphicons.security_camera:before {
+  content: "\E367";
+}
+.glyphicons.expand:before {
+  content: "\E368";
+}
+.glyphicons.collapse:before {
+  content: "\E369";
+}
+.glyphicons.collapse_top:before {
+  content: "\E370";
+}
+.glyphicons.globe_af:before {
+  content: "\E371";
+}
+.glyphicons.global:before {
+  content: "\E372";
+}
+.glyphicons.spray:before {
+  content: "\E373";
+}
+.glyphicons.nails:before {
+  content: "\E374";
+}
+.glyphicons.claw_hammer:before {
+  content: "\E375";
+}
+.glyphicons.classic_hammer:before {
+  content: "\E376";
+}
+.glyphicons.hand_saw:before {
+  content: "\E377";
+}
+.glyphicons.riflescope:before {
+  content: "\E378";
+}
+.glyphicons.electrical_socket_eu:before {
+  content: "\E379";
+}
+.glyphicons.electrical_socket_us:before {
+  content: "\E380";
+}
+.glyphicons.message_forward:before {
+  content: "\E381";
+}
+.glyphicons.coat_hanger:before {
+  content: "\E382";
+}
+.glyphicons.dress:before {
+  content: "\1F457";
+}
+.glyphicons.bathrobe:before {
+  content: "\E384";
+}
+.glyphicons.shirt:before {
+  content: "\E385";
+}
+.glyphicons.underwear:before {
+  content: "\E386";
+}
+.glyphicons.log_in:before {
+  content: "\E387";
+}
+.glyphicons.log_out:before {
+  content: "\E388";
+}
+.glyphicons.exit:before {
+  content: "\E389";
+}
+.glyphicons.new_window_alt:before {
+  content: "\E390";
+}
+.glyphicons.video_sd:before {
+  content: "\E391";
+}
+.glyphicons.video_hd:before {
+  content: "\E392";
+}
+.glyphicons.subtitles:before {
+  content: "\E393";
+}
+.glyphicons.sound_stereo:before {
+  content: "\E394";
+}
+.glyphicons.sound_dolby:before {
+  content: "\E395";
+}
+.glyphicons.sound_5_1:before {
+  content: "\E396";
+}
+.glyphicons.sound_6_1:before {
+  content: "\E397";
+}
+.glyphicons.sound_7_1:before {
+  content: "\E398";
+}
+.glyphicons.copyright_mark:before {
+  content: "\E399";
+}
+.glyphicons.registration_mark:before {
+  content: "\E400";
+}
+.glyphicons.radar:before {
+  content: "\E401";
+}
+.glyphicons.skateboard:before {
+  content: "\E402";
+}
+.glyphicons.golf_course:before {
+  content: "\E403";
+}
+.glyphicons.sorting:before {
+  content: "\E404";
+}
+.glyphicons.sort-by-alphabet:before {
+  content: "\E405";
+}
+.glyphicons.sort-by-alphabet-alt:before {
+  content: "\E406";
+}
+.glyphicons.sort-by-order:before {
+  content: "\E407";
+}
+.glyphicons.sort-by-order-alt:before {
+  content: "\E408";
+}
+.glyphicons.sort-by-attributes:before {
+  content: "\E409";
+}
+.glyphicons.sort-by-attributes-alt:before {
+  content: "\E410";
+}
+.glyphicons.compressed:before {
+  content: "\E411";
+}
+.glyphicons.package:before {
+  content: "\1F4E6";
+}
+.glyphicons.cloud_plus:before {
+  content: "\E413";
+}
+.glyphicons.cloud_minus:before {
+  content: "\E414";
+}
+.glyphicons.disk_save:before {
+  content: "\E415";
+}
+.glyphicons.disk_open:before {
+  content: "\E416";
+}
+.glyphicons.disk_saved:before {
+  content: "\E417";
+}
+.glyphicons.disk_remove:before {
+  content: "\E418";
+}
+.glyphicons.disk_import:before {
+  content: "\E419";
+}
+.glyphicons.disk_export:before {
+  content: "\E420";
+}
+.glyphicons.tower:before {
+  content: "\E421";
+}
+.glyphicons.send:before {
+  content: "\E422";
+}
+.glyphicons.git_branch:before {
+  content: "\E423";
+}
+.glyphicons.git_create:before {
+  content: "\E424";
+}
+.glyphicons.git_private:before {
+  content: "\E425";
+}
+.glyphicons.git_delete:before {
+  content: "\E426";
+}
+.glyphicons.git_merge:before {
+  content: "\E427";
+}
+.glyphicons.git_pull_request:before {
+  content: "\E428";
+}
+.glyphicons.git_compare:before {
+  content: "\E429";
+}
+.glyphicons.git_commit:before {
+  content: "\E430";
+}
+.glyphicons.construction_cone:before {
+  content: "\E431";
+}
+.glyphicons.shoe_steps:before {
+  content: "\E432";
+}
+.glyphicons.plus:before {
+  content: "\002B";
+}
+.glyphicons.minus:before {
+  content: "\2212";
+}
+.glyphicons.redo:before {
+  content: "\E435";
+}
+.glyphicons.undo:before {
+  content: "\E436";
+}
+.glyphicons.golf:before {
+  content: "\E437";
+}
+.glyphicons.hockey:before {
+  content: "\E438";
+}
+.glyphicons.pipe:before {
+  content: "\E439";
+}
+.glyphicons.wrench:before {
+  content: "\1F527";
+}
+.glyphicons.folder_closed:before {
+  content: "\E441";
+}
+.glyphicons.phone_alt:before {
+  content: "\E442";
+}
+.glyphicons.earphone:before {
+  content: "\E443";
+}
+.glyphicons.floppy_disk:before {
+  content: "\E444";
+}
+.glyphicons.floppy_saved:before {
+  content: "\E445";
+}
+.glyphicons.floppy_remove:before {
+  content: "\E446";
+}
+.glyphicons.floppy_save:before {
+  content: "\E447";
+}
+.glyphicons.floppy_open:before {
+  content: "\E448";
+}
+.glyphicons.translate:before {
+  content: "\E449";
+}
+.glyphicons.fax:before {
+  content: "\E450";
+}
+.glyphicons.factory:before {
+  content: "\1F3ED";
+}
+.glyphicons.shop_window:before {
+  content: "\E452";
+}
+.glyphicons.shop:before {
+  content: "\E453";
+}
+.glyphicons.kiosk:before {
+  content: "\E454";
+}
+.glyphicons.kiosk_wheels:before {
+  content: "\E455";
+}
+.glyphicons.kiosk_light:before {
+  content: "\E456";
+}
+.glyphicons.kiosk_food:before {
+  content: "\E457";
+}
+.glyphicons.transfer:before {
+  content: "\E458";
+}
+.glyphicons.money:before {
+  content: "\E459";
+}
+.glyphicons.header:before {
+  content: "\E460";
+}
+.glyphicons.blacksmith:before {
+  content: "\E461";
+}
+.glyphicons.saw_blade:before {
+  content: "\E462";
+}
+.glyphicons.basketball:before {
+  content: "\E463";
+}
+.glyphicons.server:before {
+  content: "\E464";
+}
+.glyphicons.server_plus:before {
+  content: "\E465";
+}
+.glyphicons.server_minus:before {
+  content: "\E466";
+}
+.glyphicons.server_ban:before {
+  content: "\E467";
+}
+.glyphicons.server_flag:before {
+  content: "\E468";
+}
+.glyphicons.server_lock:before {
+  content: "\E469";
+}
+.glyphicons.server_new:before {
+  content: "\E470";
+}
+/*!
+ *
+ *  Project:  GLYPHICONS HALFLINGS
+ *  Author:   Jan Kovarik - www.glyphicons.com
+ *  Twitter:  @glyphicons
+ *
+ */
+@font-face {
+  font-family: 'Glyphicons Filetypes Regular';
+  src: url('../fonts/glyphicons-filetypes-regular.eot');
+  src: url('../fonts/glyphicons-filetypes-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-filetypes-regular.woff') format('woff'), url('../fonts/glyphicons-filetypes-regular.ttf') format('truetype'), url('../fonts/glyphicons-filetypes-regular.svg#glyphicons_filetypesregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.filetype {
+  display: inline-block;
+  position: relative;
+  color: #1d1d1b;
+  text-decoration: none;
+  *display: inline;
+  *zoom: 1;
+  vertical-align: middle;
+}
+.filetype:before {
+  left: 0;
+  top: 0;
+  display: inline-block;
+  margin: 0 4px 1px 4px;
+  font: 12px 'Glyphicons Filetypes Regular';
+  font-style: normal;
+  font-weight: normal;
+  color: #1d1d1b;
+  *display: inline;
+  *zoom: 1;
+  vertical-align: middle;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+}
+.filetype.white:before {
+  color: #FFF;
+}
+.filetype.default:before {
+  color: #CB0044;
+}
+.filetype.red:before {
+  color: #FF0000;
+}
+.filetype.blue:before {
+  color: #009AA6;
+}
+.filetype.green:before {
+  color: #7ABB00;
+}
+.filetype.grey:before {
+  color: #BCBDBC;
+}
+.filetype.orange:before {
+  color: #FFB612;
+}
+.filetype.disabled:before {
+  color: #C7C2BA;
+}
+.filetype.size8:before {
+  font: 8px 'Glyphicons Filetypes Regular';
+}
+.filetype.size10:before {
+  font: 10px 'Glyphicons Filetypes Regular';
+}
+.filetype.size14:before {
+  font: 14px 'Glyphicons Filetypes Regular';
+}
+.filetype.size16:before {
+  font: 16px 'Glyphicons Filetypes Regular';
+}
+.filetype.size18:before {
+  font: 18px 'Glyphicons Filetypes Regular';
+}
+.filetype.size20:before {
+  font: 20px 'Glyphicons Filetypes Regular';
+}
+.filetype.size22:before {
+  font: 22px 'Glyphicons Filetypes Regular';
+}
+.filetype.size24:before {
+  font: 24px 'Glyphicons Filetypes Regular';
+}
+.filetype.size28:before {
+  font: 28px 'Glyphicons Filetypes Regular';
+}
+.filetype.size32:before {
+  font: 32px 'Glyphicons Filetypes Regular';
+}
+.filetype.txt:before {
+  content: "\E001";
+}
+.filetype.doc:before {
+  content: "\E002";
+}
+.filetype.rtf:before {
+  content: "\E003";
+}
+.filetype.log:before {
+  content: "\E004";
+}
+.filetype.tex:before {
+  content: "\E005";
+}
+.filetype.msg:before {
+  content: "\E006";
+}
+.filetype.text:before {
+  content: "\E007";
+}
+.filetype.wpd:before {
+  content: "\E008";
+}
+.filetype.wps:before {
+  content: "\E009";
+}
+.filetype.docx:before {
+  content: "\E010";
+}
+.filetype.page:before {
+  content: "\E011";
+}
+.filetype.csv:before {
+  content: "\E012";
+}
+.filetype.dat:before {
+  content: "\E013";
+}
+.filetype.tar:before {
+  content: "\E014";
+}
+.filetype.xml:before {
+  content: "\E015";
+}
+.filetype.vcf:before {
+  content: "\E016";
+}
+.filetype.pps:before {
+  content: "\E017";
+}
+.filetype.key:before {
+  content: "\1F511";
+}
+.filetype.ppt:before {
+  content: "\E019";
+}
+.filetype.pptx:before {
+  content: "\E020";
+}
+.filetype.sdf:before {
+  content: "\E021";
+}
+.filetype.gbr:before {
+  content: "\E022";
+}
+.filetype.ged:before {
+  content: "\E023";
+}
+.filetype.mp3:before {
+  content: "\E024";
+}
+.filetype.m4a:before {
+  content: "\E025";
+}
+.filetype.waw:before {
+  content: "\E026";
+}
+.filetype.wma:before {
+  content: "\E027";
+}
+.filetype.mpa:before {
+  content: "\E028";
+}
+.filetype.iff:before {
+  content: "\E029";
+}
+.filetype.aif:before {
+  content: "\E030";
+}
+.filetype.ra:before {
+  content: "\E031";
+}
+.filetype.mid:before {
+  content: "\E032";
+}
+.filetype.m3v:before {
+  content: "\E033";
+}
+.filetype.e_3gp:before {
+  content: "\E034";
+}
+.filetype.shf:before {
+  content: "\E035";
+}
+.filetype.avi:before {
+  content: "\E036";
+}
+.filetype.asx:before {
+  content: "\E037";
+}
+.filetype.mp4:before {
+  content: "\E038";
+}
+.filetype.e_3g2:before {
+  content: "\E039";
+}
+.filetype.mpg:before {
+  content: "\E040";
+}
+.filetype.asf:before {
+  content: "\E041";
+}
+.filetype.vob:before {
+  content: "\E042";
+}
+.filetype.wmv:before {
+  content: "\E043";
+}
+.filetype.mov:before {
+  content: "\E044";
+}
+.filetype.srt:before {
+  content: "\E045";
+}
+.filetype.m4v:before {
+  content: "\E046";
+}
+.filetype.flv:before {
+  content: "\E047";
+}
+.filetype.rm:before {
+  content: "\E048";
+}
+.filetype.png:before {
+  content: "\E049";
+}
+.filetype.psd:before {
+  content: "\E050";
+}
+.filetype.psp:before {
+  content: "\E051";
+}
+.filetype.jpg:before {
+  content: "\E052";
+}
+.filetype.tif:before {
+  content: "\E053";
+}
+.filetype.tiff:before {
+  content: "\E054";
+}
+.filetype.gif:before {
+  content: "\E055";
+}
+.filetype.bmp:before {
+  content: "\E056";
+}
+.filetype.tga:before {
+  content: "\E057";
+}
+.filetype.thm:before {
+  content: "\E058";
+}
+.filetype.yuv:before {
+  content: "\E059";
+}
+.filetype.dds:before {
+  content: "\E060";
+}
+.filetype.ai:before {
+  content: "\E061";
+}
+.filetype.eps:before {
+  content: "\E062";
+}
+.filetype.ps:before {
+  content: "\E063";
+}
+.filetype.svg:before {
+  content: "\E064";
+}
+.filetype.pdf:before {
+  content: "\E065";
+}
+.filetype.pct:before {
+  content: "\E066";
+}
+.filetype.indd:before {
+  content: "\E067";
+}
+.filetype.xlr:before {
+  content: "\E068";
+}
+.filetype.xls:before {
+  content: "\E069";
+}
+.filetype.xlsx:before {
+  content: "\E070";
+}
+.filetype.db:before {
+  content: "\E071";
+}
+.filetype.dbf:before {
+  content: "\E072";
+}
+.filetype.mdb:before {
+  content: "\E073";
+}
+.filetype.pdb:before {
+  content: "\E074";
+}
+.filetype.sql:before {
+  content: "\E075";
+}
+.filetype.aacd:before {
+  content: "\E076";
+}
+.filetype.app:before {
+  content: "\E077";
+}
+.filetype.exe:before {
+  content: "\E078";
+}
+.filetype.com:before {
+  content: "\E079";
+}
+.filetype.bat:before {
+  content: "\E080";
+}
+.filetype.apk:before {
+  content: "\E081";
+}
+.filetype.jar:before {
+  content: "\E082";
+}
+.filetype.hsf:before {
+  content: "\E083";
+}
+.filetype.pif:before {
+  content: "\E084";
+}
+.filetype.vb:before {
+  content: "\E085";
+}
+.filetype.cgi:before {
+  content: "\E086";
+}
+.filetype.css:before {
+  content: "\E087";
+}
+.filetype.js:before {
+  content: "\E088";
+}
+.filetype.php:before {
+  content: "\E089";
+}
+.filetype.xhtml:before {
+  content: "\E090";
+}
+.filetype.htm:before {
+  content: "\E091";
+}
+.filetype.html:before {
+  content: "\E092";
+}
+.filetype.asp:before {
+  content: "\E093";
+}
+.filetype.cer:before {
+  content: "\E094";
+}
+.filetype.jsp:before {
+  content: "\E095";
+}
+.filetype.cfm:before {
+  content: "\E096";
+}
+.filetype.aspx:before {
+  content: "\E097";
+}
+.filetype.rss:before {
+  content: "\E098";
+}
+.filetype.csr:before {
+  content: "\E099";
+}
+.filetype.less:before {
+  content: "\003C";
+}
+.filetype.otf:before {
+  content: "\E101";
+}
+.filetype.ttf:before {
+  content: "\E102";
+}
+.filetype.font:before {
+  content: "\E103";
+}
+.filetype.fnt:before {
+  content: "\E104";
+}
+.filetype.eot:before {
+  content: "\E105";
+}
+.filetype.woff:before {
+  content: "\E106";
+}
+.filetype.zip:before {
+  content: "\E107";
+}
+.filetype.zipx:before {
+  content: "\E108";
+}
+.filetype.rar:before {
+  content: "\E109";
+}
+.filetype.targ:before {
+  content: "\E110";
+}
+.filetype.sitx:before {
+  content: "\E111";
+}
+.filetype.deb:before {
+  content: "\E112";
+}
+.filetype.e_7z:before {
+  content: "\E113";
+}
+.filetype.pkg:before {
+  content: "\E114";
+}
+.filetype.rpm:before {
+  content: "\E115";
+}
+.filetype.cbr:before {
+  content: "\E116";
+}
+.filetype.gz:before {
+  content: "\E117";
+}
+.filetype.dmg:before {
+  content: "\E118";
+}
+.filetype.cue:before {
+  content: "\E119";
+}
+.filetype.bin:before {
+  content: "\E120";
+}
+.filetype.iso:before {
+  content: "\E121";
+}
+.filetype.hdf:before {
+  content: "\E122";
+}
+.filetype.vcd:before {
+  content: "\E123";
+}
+.filetype.bak:before {
+  content: "\E124";
+}
+.filetype.tmp:before {
+  content: "\E125";
+}
+.filetype.ics:before {
+  content: "\E126";
+}
+.filetype.msi:before {
+  content: "\E127";
+}
+.filetype.cfg:before {
+  content: "\E128";
+}
+.filetype.ini:before {
+  content: "\E129";
+}
+.filetype.prf:before {
+  content: "\E130";
+}

@@ -22,10 +22,10 @@
 		<?php if ($this->params->action != 'profil') : ?>
                 <td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('dotations', 'edit')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('controller'=>'Dotations','action' => 'edit', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil"></span>', array('controller'=>'Dotations','action' => 'edit', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('dotations', 'delete')) : ?>
-                    <?php echo $this->Html->link('<i class="icon-trash"></i>', array('controller'=>'Dotations','action' => 'delete', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette dotation ?')); ?>                    
+                    <?php echo $this->Html->link('<span class="glyphicons bin"></span>', array('controller'=>'Dotations','action' => 'delete', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette dotation ?')); ?>                    
                     <?php endif; ?> 
 		</td>
                 <?php endif; ?>

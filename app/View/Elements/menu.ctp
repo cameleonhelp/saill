@@ -50,8 +50,9 @@
   <?php $classCRAActivites = in_array($controller,array('activitesreelles_rapport','activitesreelles_export_doc')) ? $active : ''; ?>    
   <?php $classCRAFacturations = in_array($controller,array('facturations_rapport','facturations_export_doc')) ? $active : ''; ?>   
   <?php $classCRAPlancharges = in_array($controller,array('plancharges_rapport','plancharges_export_doc')) ? $active : ''; ?>  
+  <?php $classCRAPlanchargesAgents = in_array($controller,array('plancharges_rapportagent')) ? $active : ''; ?> 
   <?php $classCRADashboard = in_array($controller,array('dashboards_index','dashboards_export_doc')) ? $active : ''; ?> 
-  <?php $classRapports = in_array($active,array($classCRAActions,$classCRAActivites,$classCRASaisie,$classCRAFacturations,$classCRAPlancharges,$classCRADashboard,$classCRAActions7,$classCRALogistique)) ? $divactive : ''; ?> 
+  <?php $classRapports = in_array($active,array($classCRAPlanchargesAgents,$classCRAActions,$classCRAActivites,$classCRASaisie,$classCRAFacturations,$classCRAPlancharges,$classCRADashboard,$classCRAActions7,$classCRALogistique)) ? $divactive : ''; ?> 
   <?php $classContactUs = in_array($controller,array('contacts_add')) ? $active : ''; ?>               
   <?php $classAddFavorites = 'notactive'; ?>  
   <?php $classDivers = in_array($active,array($classContactUs,$classAddFavorites)) ? $divactive : ''; ?> 
@@ -228,7 +229,8 @@
             <li class="<?php echo $classCRAFacturations; ?>"><?php echo $this->Html->link('Facturations estimées',array('controller'=>'facturations','action'=>'rapport'),array('escape' => false)); ?></li>            
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'rapports')) : ?>
-            <li class="<?php echo $classCRAPlancharges; ?>"><?php echo $this->Html->link('Plan de charges',array('controller'=>'plancharges','action'=>'rapport'),array('escape' => false)); ?></li>            
+            <li class="<?php echo $classCRAPlancharges; ?>"><?php echo $this->Html->link('Plan de charges projet',array('controller'=>'plancharges','action'=>'rapport'),array('escape' => false)); ?></li>            
+            <li class="<?php echo $classCRAPlanchargesAgents; ?>"><?php echo $this->Html->link('Plan de charges agent',array('controller'=>'plancharges','action'=>'rapportagent'),array('escape' => false)); ?></li>            
             <?php endif; ?>   
             <?php if (userAuth('profil_id')!='2' && (isAuthorized('facturations', 'rapports') || isAuthorized('plancharges', 'rapports'))) : ?>
             <li class="divider"></li>
@@ -249,3 +251,33 @@
         <section>
     </div>    
 </section>
+<script language="javascript" type="text/javascript">
+$(document).ready(function(){
+  $(".jQueryBookmark").click(function(e){
+    e.preventDefault(); // this will prevent the anchor tag from going the user off to the link
+    <?php 
+        $root = strpos(ROOT,'/')!==false ? explode('/',ROOT) : explode('\\',ROOT);
+        $last = count($root)-1;            
+        $urlSite = str_replace('\\','/',FULL_BASE_URL.DS.$root[$last].DS);    
+    ?>
+    var bookmarkUrl = '<?php echo $urlSite; ?>';
+    var bookmarkTitle = 'SNCF - SAILL';
+
+    if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) { 
+            alert("Cette fonction n'est pas disponible sur Chrome\n\r. Cliquez sur l'étoile pour ajouter cette adresse à vos favoris\n\rou utilisez le raccourci clavier Ctrl-D (Command+D pour Macs) pour créer le favoris.");      
+    }else if (window.sidebar) { // For Mozilla Firefox Bookmark
+        window.sidebar.addPanel(bookmarkTitle, bookmarkUrl,"");
+    } else if( window.external || document.all) { // For IE Favorite
+        window.external.AddFavorite( bookmarkUrl, bookmarkTitle);
+    } else if(window.opera) { // For Opera Browsers
+        $("a.jQueryBookmark").attr("href",bookmarkUrl);
+        $("a.jQueryBookmark").attr("title",bookmarkTitle);
+        $("a.jQueryBookmark").attr("rel","sidebar");
+    } else { // for other browsers which does not support
+         alert('Votre navigateur ne supporte pas cette fonction.');
+         return false;
+    }
+    return false;
+  });
+});
+</script>

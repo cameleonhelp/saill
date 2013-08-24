@@ -1,11 +1,18 @@
+.accordionMod{
+    font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', Arial;
+    font-weight: lighter;     
+}
+
 .accordionMod .accordion-group{
-    margin: 0px;
+    margin: 0px;    
 }
 .accordionMod .accordion-heading {
     background-color:#FFFFFF; 
     border-radius:0; 
     padding:0; 
     margin:0px;
+    font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', Arial;
+    font-weight: lighter;    
 }
 .accordionMod .accordion-heading .accordion-toggle {
     margin:0px 0px; 

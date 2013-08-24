@@ -4,22 +4,22 @@
                 <div class="container">
                 <ul class="nav">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'add')) : ?>
-                <li><?php echo $this->Html->link('<i class="icon-plus"></i>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<span class="glyphicons plus size14"></span>', array('action' => 'add'),array('escape' => false,'class'=>'showoverlay')); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous')); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous'),array('class'=>'showoverlay')); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif')); ?></li>
-                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif')); ?></li>
+                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif'),array('class'=>'showoverlay')); ?></li>
+                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif'),array('class'=>'showoverlay')); ?></li>
                      </ul>
                  </li>                 
                 </ul> 
                 <?php echo $this->Form->create("Contrat",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche dans tous les champs')); ?>
-                    <button type="submit" class="btn">Rechercher</button>
+                    <button type="submit" class="btn showoverlay">Rechercher</button>
                 <?php echo $this->Form->end(); ?> 
                 </div>
             </div>
@@ -46,16 +46,16 @@
 		<td style='text-align: center;'><?php echo h($contrat['Contrat']['ANNEEDEBUT']); ?>&nbsp;</td>
 		<td style='text-align: center;'><?php echo h($contrat['Contrat']['ANNEEFIN']); ?>&nbsp;</td>
 		<!--<td style='text-align: right;'><?php echo h($contrat['Contrat']['MONTANT']); ?> k€&nbsp;</td>//-->
-		<td style='text-align: center;'><?php echo $contrat['Contrat']['ACTIF']==1 ? '<i class="icon-ok"></i>' : ''; ?>&nbsp;</td>
+		<td style='text-align: center;'><?php echo $contrat['Contrat']['ACTIF']==1 ? '<span class="glyphicons ok_2"></span>' : ''; ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'view')) : ?>
-                    <?php echo '<i class="icon-eye-open" rel="popover" data-title="<h3>Contrat :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($contrat['Contrat']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($contrat['Contrat']['modified']).'" data-trigger="click" style="cursor: pointer;"></i>'; ?>&nbsp;
+                    <?php echo '<span class="glyphicons eye_open" rel="popover" data-title="<h3>Contrat :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($contrat['Contrat']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($contrat['Contrat']['modified']).'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'edit')) : ?>        
-                    <?php echo $this->Html->link('<i class="icon-pencil"></i>', array('action' => 'edit', $contrat['Contrat']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil"></span>', array('action' => 'edit', $contrat['Contrat']['id']),array('escape' => false,'class'=>'showoverlay')); ?>&nbsp;
 		    <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'delete')) : ?>
-                    <?php echo $contrat['Tjmcontrat']['id']>1 ? $this->Form->postLink('<i class="icon-trash"></i>', array('action' => 'delete', $contrat['Contrat']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce contrat ?')):''; ?>
+                    <?php echo $contrat['Tjmcontrat']['id']>1 ? $this->Form->postLink('<span class="glyphicons bin"></span>', array('action' => 'delete', $contrat['Contrat']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce contrat ?')):''; ?>
                     <?php endif; ?>
                 </td>
 	</tr>
@@ -65,7 +65,7 @@
 	</table>
         <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>
         <div class="pull-right"><?php	echo $this->Paginator->counter('Nombre total d\'éléments : {:count}');	?></div>
-        <div class="pagination  pagination-centered">
+        <div class="pagination  pagination-centered showoverlay">
         <ul>
 	<?php
                 echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";

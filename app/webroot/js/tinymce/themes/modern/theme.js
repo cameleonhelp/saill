@@ -16,7 +16,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	// Default menus
 	var defaultMenus = {
 		file: {title: 'File', items: 'newdocument'},
-		edit: {title: 'Edit', items: 'undo redo | cut copy paste | selectall'},
+		edit: {title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall'},
 		insert: {title: 'Insert', items: '|'},
 		view: {title: 'View', items: 'visualaid |'},
 		format: {title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
@@ -356,10 +356,6 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			if (panel) {
 				panel.hide();
 				DOM.removeClass(editor.getBody(), 'mce-edit-focus');
-
-				if (document.activeElement && document.activeElement.className.indexOf('mce-content-body') == -1) {
-					DOM.setStyle(document.body, 'padding-top', 0);
-				}
 			}
 		}
 

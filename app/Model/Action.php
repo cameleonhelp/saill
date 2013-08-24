@@ -213,8 +213,12 @@ class Action extends AppModel {
         } 
         
         public function getDestinataire($id){
+            $value = false;
+            if ($id != 0):
             $sql = 'SELECT CONCAT(NOM," ",PRENOM) AS NOMLONG FROM utilisateurs WHERE id="'.$id.'"';
             $result = $this->query($sql);
-            return $result[0][0]['NOMLONG'];
+            $value =  $result[0][0]['NOMLONG'];
+            endif;
+            return $value;
         }
 }

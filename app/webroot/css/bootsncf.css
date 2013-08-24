@@ -154,11 +154,13 @@ textarea {
 }
 body {
   margin: 0;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', Arial;
+  font-weight: lighter; 
   font-size: 12px;
   line-height: 18px;
   color: #747678;
   background-color: #ffffff;
+ 
 }
 a {
   color: #a1006b;
@@ -492,7 +494,7 @@ table {
 }
 .table th,
 .table td {
-  padding: 8px;
+  padding: 8px !important;
   line-height: 18px;
   text-align: left;
   vertical-align: top;
@@ -2988,4 +2990,13 @@ a.badge:hover {
 
 .navbar .nav > li > a {
   padding: 7px  7px 7px;
+}
+
+td.actions {
+	text-align: center;
+	white-space: nowrap;
+}
+table td.actions a {
+	margin: 0px 0px;
+	padding:0px 0px;
 }

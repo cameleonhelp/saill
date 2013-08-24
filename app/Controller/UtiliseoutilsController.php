@@ -16,7 +16,7 @@ class UtiliseoutilsController extends AppController {
         );
     
     public function beforeFilter() {   
-        $this->Auth->allow(array('mailupdate'));
+        $this->Auth->allow(array('mailprogressstate','index'));
         parent::beforeFilter();
     }   
         
@@ -222,6 +222,7 @@ class UtiliseoutilsController extends AppController {
                 if (!$this->Utiliseoutil->exists($id)) {
 			throw new NotFoundException(__('Ouvertures des droits incorrecte'));
 		}
+                $this->Utiliseoutil->id = $id;
 		if ($this->request->is('post') || $this->request->is('put')) {
                         $this->autoprogressState($id);
                         $this->History->goBack(1);
@@ -432,7 +433,11 @@ class UtiliseoutilsController extends AppController {
                     $history['Historyutilisateur']['utilisateur_id']=$record['Utiliseoutil']['utilisateur_id'];
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - changement d'état d'une ouverture de droit".' par '.$utilisateur['Utilisateur']['NOMLONG'];
                     $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                     
-                }              
+                }    
+                if(userAuth('id')!=""): 
+                    $this->redirect(array('action'=>"index",'tous','tous'));
+                endif;
+                //view créée avec un window.close() pour fermer la fenêtre
 	}          
         
 /**
@@ -526,7 +531,7 @@ class UtiliseoutilsController extends AppController {
             $domaine = isset($domaine['Domaine']['NOM']) ? $domaine['Domaine']['NOM'] : "Demandez un complément d'information à l'émetteur de cette demande";
             $objet = 'SAILL : Demande d\'ouverture de droit ['.$nom.']';
             $message = "Demande d'ouverture de droit pour : ";
-            $url = FULL_BASE_URL.$this->params->base.'/mailprogressstate/'.$utiliseoutil['Utiliseoutil']['id']."/".$gestionnaire;
+            $url = $gestionnaire != '' ? FULL_BASE_URL.$this->params->base.'/utiliseoutils/mailprogressstate/'.$utiliseoutil['Utiliseoutil']['id']."/".$gestionnaire : '';
             if($valideur!=null): 
                 $to = $valideur; 
                 $objet = "SAILL : Demande de validation pour ".$nom;
@@ -538,9 +543,10 @@ class UtiliseoutilsController extends AppController {
                     <li>Agent :'.$utiliseoutil['Utilisateur']['NOMLONG'].'</li>
                     <li>Identifiant :'.$utiliseoutil['Utilisateur']['username'].'</li>
                     <li>Email :'.$email.'</li>
-                    <li>Projet :'.$domaine.'</li>
+                    <li>Domaine :'.$domaine.'</li>
                     <li>Section :'.$section['Section']['NOM'].'</li>
-                    <li>Localisation :'.$site['Site']['NOM'].'</li>                        
+                    <li>Localisation :'.$site['Site']['NOM'].'</li>   
+                    <li>Groupe Caliber :</li>  
                     </ul><br>'.$url;
             if($to!=''):
                 try{
@@ -593,7 +599,7 @@ class UtiliseoutilsController extends AppController {
             $domaine = isset($domaine['Domaine']['NOM']) ? $domaine['Domaine']['NOM'] : "Demandez un complément d'information à l'émetteur de cette demande";
             $objet = 'SAILL : //!\ URGENT RELANCE : Demande d\'ouverture de droit ['.$nom.']';
             $message = "URGENT RELANCE : Demande d'ouverture de droit pour : ";
-            $url = FULL_BASE_URL.$this->params->base.'/mailprogressstate/'.$utiliseoutil['Utiliseoutil']['id']."/".$gestionnaire;
+            $url = FULL_BASE_URL.$this->params->base.'/utiliseoutils/mailprogressstate/'.$utiliseoutil['Utiliseoutil']['id']."/".$gestionnaire;
             $message .= $message.'<ul>
                     <li>Outil :'.$nom.'</li>
                     <li>Agent :'.$utiliseoutil['Utilisateur']['NOMLONG'].'</li>

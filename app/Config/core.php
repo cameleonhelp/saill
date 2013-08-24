@@ -283,3 +283,10 @@ Cache::config('_cake_model_', array(
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
 ));
+
+/**
+ * Gestion des exception personnalisée
+ * 
+ */
+//Configure::write('Exception.handler', 'AppExceptionHandler::handle');
+//Configure::write('Exception.renderer', 'AppExceptionRenderer');
