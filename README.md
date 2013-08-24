@@ -19,3 +19,4 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 5.2.47](http://www
 
 * [TinyMCE 4.0.5](http://www.tinymce.com) - Editeur WYSWYG
 
+Version 2.0.2 en cours beaucoup d'amélioration, de corrections, intégration de bootstrap 3.0.0
