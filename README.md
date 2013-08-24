@@ -1,5 +1,5 @@
-SAILL 2
-=======
+SAILL
+=====
 
 SAILL [Suivi d'Activités, d'Indisponibilité, des Livrables et de la Logistique] est un site pour suivre l'activité d'une équipe de développeurs, ainsi que le suivi logistique du matériel mis à disposition.
 
