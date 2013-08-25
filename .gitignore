@@ -1,17 +1,31 @@
+# App do not include
+#####################
 nbproject/*
-*.DS_Store
 app/tmp/*
+sql/*
+manuel SAILL.2/*
+*_bak.ctp
+*_old.ctp
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# Sauvegardes
+######################
+*.bak
+
+# Files
+######################
 *.pdf
 *.ppt
 *.doc
 *.db
-sql/*
-*.bak
-manuel SAILL.2/*
-
-
 *.sql
-
-app/View/Elements/menu_bak.ctp
-
-app/View/Elements/menu_old.ctp
