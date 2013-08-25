@@ -1,5 +1,56 @@
+## LEGEND ##
+[X] A faire
+[O] En cours il existe déjà des choses de faites
+[F] A corriger existe encore des bugs
+[V] Vérifié et validé
+(1) pas urgent
+(2) normal
+(3) urgent
+(4) bloquant
+## LEGEND ##
+
+## 210.001
+ * [X](1) [CakePHP] : intégration de la version 3.0.0 à sa sortie
+
+## 202.002
+ * [X](1) [Actions-index] : test de remplacement la timeline par chronoline.js si concluant inclure dans cette version
+ * [X](1) [Actions-Add-Edit-index] : Intégrer une gestion de risque sur l'action reprendre tableau de criticité IDEO et ajouter un champs risque dans l'action (combinaison entre probabilité et gravité)
+ *                                   Gravité = (impact coût + impact délais + impact qualité)/3 pour simplifier on va parler que gravité le mieux étant de mettre en place une matrice de risque sous forme de tableau
+ *                                   avec un indice pour chaque point d'intersection et un niveau à afficher
+
+## 202.001
+ * [V](1) Nouvelle numérotation de version
+ * [V](2) [Activitésréelles-Index] : Date n'étant pas du mois apparaissent en grisé
+ * [V](2) [Activitésréelles-Index] : Décompter les date en grisé du total de la semaine
+ * [V](2) [Utilisateurs-Login] : ajout d'une fonctionnalité et d'une vue pour initialiser le mot de passe généré de façon aléatoire par l'application, envois d'un mail à l'utilisateur 
+ * [V](2) [Activitésréelles-Index] : Ajouter un filtre sur les indisponibilités pour les afficher ou non dans le filtre etats à renommer en filtres ... et en mettant des headers dans la dropdown
+ * [V](1) [TinyMCE] : Intégrer la nouvelle version 4.0.4 
+ * [V](1) [Highcharts] : Intégrer la nouvelle version 3.0.5 
+ * [V](1) [TinyMCE] : Ajout du plugin unlink 
+ * [V](1) [CakePHP] : Intégrer la version 2.3.9 
+ * [V](1) [All submit form] : Intégration de la mise en place de l'overlay
+ * [V](1) [MCD] : révision du MCD pour intégrer la mise en place de la périodicité, création d'une nouvelle table et ajout de champs dans la table actions. 
+ * [V](1) [MCD] : révision du MCD pour intégrer la mise en place de la criticité INT nullable pour future version
+ * [V](1) [MCD] : Prévoir un script de création du compte admin, profil, autorisation
+ * [V](1)         Export du script de création de la base. 
+ * [V](2) [Actions-Add-Edit] : ajout de la périodicité, création d'une table pour sauvegarder la périodicité et ajout de champs dans la table action.
+ * [V](2)                      Modification de la vue pour l'ajout et la modification
+ * [V](2)                      Sauvegarde de la périodicité
+ * [V](2)                      Calcul des jours pour lesquels il faut créer une action
+ * [V](2)                      Suppression des boutons pour ajouter des feuilles de temps, modifier ou consulter (pour éviter une confusion entre les actions et les activités réelles)
+ * [F](2)                      (controller) Modification de l'ajout pour la création des actions
+ * [X](2)                      (controller) Modification de l'edit pour mettre à jour l'action et la périodicité (suppression des actions encore à faire et création de nouvelles actions à partir de la date du jour)
+ * [V](2)                      Suppression de la périodicité de l'action
+ * [V](2)                      Suppression de la périodicité des action encore à faire liées à cette périodicité
+ * [O](1) [Facturation-RapportSS2I] : Nouveau créer un rapport pour calculer la charges des agents à facturer à la SS2I
+ * [X](2) [#FIX:Facturation-edit] édition de la facturation (enregistrement d'une nouvelle version, erreur ou ne fait rien)
+ * [X](3) [#FIX:Facturation-Rapport] calcul sur les rapports activités - facturation erronés à revoir
+ * [X](2) [Action-index] : donner la possibilité de sélectionner plusieurs actions pour les supprimer ou les dupliquer
+ * [X](1) [#FIX:Utiliseoutils-index] : liste des utilisateurs incorrecte
+ * [V](2) [#FIX: toutes les pages] : showoverlay à mettre sur les boutons et non sur pagination class="pagination pagination-centered !showoverlay!"
+
 ## b069
- * Intégrer la mise à jour de bootstrap 3.0.0RC1 => travail énorme remis à plus tard car prévoir une refonte des pages
+ * Intégrer la mise à jour de bootstrap 3.0.0RC1 => travail énorme remis à plus tard car prévoir une refonte des pages cf 2.1.0 maquette en place reste à intégrer le framework php et le MVC
  * Intégrer les icones glyphicons sous forme de police avec différentes tailles et couleurs travail sur le css à part pour déjà avoir une bonne base puis intégration au code ensuite. - OK
  * appliquer overlay sur les actions le demandant en même temps - ajouter la classe showoverlay - OK
  * [#FIX] Achats filtre activités revoir requete ne pas remonter toutes les activités mais uniquement celles ayant des achats - OK
@@ -7,8 +58,8 @@
  * ActionLivrables/Add voir si possible de mettre sous forme de tableau avec selection multiple - OK
  * mettre en place une meilleure gestion des erreurs que dans le appcontroller - ajout dans /lib/Cake/Error/exceptions.php de l'exception NotAuthorizedException - OK
  * [#FIX] Ajout de la date de création et de modification sur la duplication de matériel - OK
- * traduction de l'application à l'aide du fichier default.po
- * utilisateur ajout possibilité de modifier l'état sans avoir à éditer l'utilisateur
+ * traduction de l'application à l'aide du fichier default.po - Abandonné
+ * utilisateur ajout possibilité de modifier l'état sans avoir à éditer l'utilisateur - OK
 
 ## b068
  * Livrable ajouter un filtre mon équipe comme pour action pour le gestionnaire - OK
