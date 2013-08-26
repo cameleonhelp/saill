@@ -23,9 +23,9 @@ Version 2.0.2 en cours beaucoup d'amélioration, de corrections, intégration de
 
 * Travail réalisé en majorité sur les actions :
 
- - [ ] Mise en place de taches périodiques
+ - [x] Mise en place de taches périodiques
  
- - [ ] Possibilité de supprimer, dupliquer ou de clore en masse des actions
+ - [x] Possibilité de supprimer, de clore en masse des actions
  
 * Activités réelles :
 
