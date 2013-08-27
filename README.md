@@ -50,12 +50,12 @@ Version 2.0.2 à venir beaucoup d'amélioration, de corrections
  - [x] Corrections de certains bugs
 
  - [x] mise à jour de certains composants
- - 
+
 Version 2.0.3 :
 
 * Actions :
 
- - [ ] Mise en place de la gestion des risque sur les actions
+ - [ ] Mise en place de la gestion des risques sur les actions
 
  - [ ] Rapport sur le calcul des risques
  
