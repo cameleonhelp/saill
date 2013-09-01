@@ -221,7 +221,6 @@ $(document).ready(function (){
     $(document).on('change','#ActionSTART',function(e){
         newDate = addMonth($(this).val(),1);
         $('#ActionEND').val(newDate);
-        $('#ActionEND').datepicker('update', newDate);
         $('#ActionEND').focus();
     })    
 <?php if(isset($chartresults)): ?>

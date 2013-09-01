@@ -126,29 +126,45 @@
                        <td class="header" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['NUMEROFTGALILEI']; ?></td>
                        <td class="header" style="vertical-align: middle;text-align: right;"><?php echo $group['Facturation']['VERSION']; ?></td>                 
                 <?php endif; ?>
+                <?php $nbdisable = 0; ?>
                 <td><?php echo $facturation['Facturation']['projet_NOM'].' - '.$facturation['Activite']['NOM']; ?></td>    
                 <?php $date = new DateTime(CUSDate($group['Facturation']['DATE'])); ?> 
-                <?php $classLu = isFerie($date) ? 'class="ferie"' : ''; ?>
-                <td style="text-align: center;" <?php echo $classLu; ?>><?php echo $facturation['Facturation']['LU']!=0 ? $facturation['Facturation']['LU'] : ""; ?></td> 
+                <?php $month = isset($this->params->pass[1]) ? $this->params->pass[1] : date('m'); ?>
+                <?php $disabled = $month!= 'tous' && dateInMonth($date->format('d/m/Y'),$month) ? 'disable-date' : ''; ?>
+                <?php $classLU = isFerie($date) ? 'class="ferie '.$disabled.'"' : 'class="'.$disabled.'"'; ?>
+                <td style="text-align: center;" <?php echo $classLU; ?>><?php echo $facturation['Facturation']['LU']!=0 ? $facturation['Facturation']['LU'] : ""; ?></td> 
+                <?php $nbdisable = $disabled != '' && $facturation['Facturation']['LU'] > 0 ? $facturation['Facturation']['LU'] : 0; ?>                
                 <?php $date->add(new DateInterval('P1D')); ?>
-                <?php $classMA = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <?php $disabled = $month!= 'tous' && dateInMonth($date->format('d/m/Y'),$month) ? 'disable-date' : ''; ?>
+                <?php $classMA = isFerie($date) ? 'class="ferie '.$disabled.'"' : 'class="'.$disabled.'"'; ?>               
                 <td style="text-align: center;" <?php echo $classMA; ?>><?php echo $facturation['Facturation']['MA']!=0 ? $facturation['Facturation']['MA'] : ""; ?></td> 
+                <?php $nbdisable = $disabled != '' && $facturation['Facturation']['MA'] > 0 ? $facturation['Facturation']['MA']+$nbdisable : $nbdisable; ?>             
                 <?php $date->add(new DateInterval('P1D')); ?>
-                <?php $classME = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <?php $disabled = $month!= 'tous' && dateInMonth($date->format('d/m/Y'),$month) ? 'disable-date' : ''; ?>
+                <?php $classME = isFerie($date) ? 'class="ferie '.$disabled.'"' : 'class="'.$disabled.'"'; ?>              
                 <td style="text-align: center;" <?php echo $classME; ?>><?php echo $facturation['Facturation']['ME']!=0 ? $facturation['Facturation']['ME'] : ""; ?></td> 
+                <?php $nbdisable = $disabled != '' && $facturation['Facturation']['ME'] > 0 ? $facturation['Facturation']['ME']+$nbdisable : $nbdisable; ?>           
                 <?php $date->add(new DateInterval('P1D')); ?>
-                <?php $classJE = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <?php $disabled = $month!= 'tous' && dateInMonth($date->format('d/m/Y'),$month) ? 'disable-date' : ''; ?>
+                <?php $classJE = isFerie($date) ? 'class="ferie '.$disabled.'"' : 'class="'.$disabled.'"'; ?>               
                 <td style="text-align: center;" <?php echo $classJE; ?>><?php echo $facturation['Facturation']['JE']!=0 ? $facturation['Facturation']['JE'] : ""; ?></td> 
+                <?php $nbdisable = $disabled != '' && $facturation['Facturation']['JE'] > 0 ? $facturation['Facturation']['JE']+$nbdisable : $nbdisable; ?>             
                 <?php $date->add(new DateInterval('P1D')); ?>
-                <?php $classVE = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <?php $disabled = $month!= 'tous' && dateInMonth($date->format('d/m/Y'),$month) ? 'disable-date' : ''; ?>
+                <?php $classVE = isFerie($date) ? 'class="ferie '.$disabled.'"' : 'class="'.$disabled.'"'; ?>              
                 <td style="text-align: center;" <?php echo $classVE; ?>><?php echo $facturation['Facturation']['VE']!=0 ? $facturation['Facturation']['VE'] : ""; ?></td> 
+                <?php $nbdisable = $disabled != '' && $facturation['Facturation']['VE'] > 0 ? $facturation['Facturation']['VE']+$nbdisable : $nbdisable; ?>               
                 <?php $date->add(new DateInterval('P1D')); ?>
-                <?php $classSA = isFerie($date) ? ' ferie' : ''; ?> 
+                <?php $disabled = $month!= 'tous' && dateInMonth($date->format('d/m/Y'),$month) ? 'disable-date' : ''; ?>
+                <?php $classSA = isFerie($date) ? ' ferie '.$disabled: ' '.$disabled; ?>  
                 <td style="text-align: center;" class="week <?php echo $classSA; ?>"><?php echo $facturation['Facturation']['SA']!=0 ? $facturation['Facturation']['SA'] : ""; ?></td> 
+                <?php $nbdisable = $disabled != '' && $facturation['Facturation']['SA'] > 0 ? $facturation['Facturation']['SA']+$nbdisable : $nbdisable; ?>                
                 <?php $date->add(new DateInterval('P1D')); ?>
-                <?php $classDI = isFerie($date) ? ' ferie' : ''; ?>
+                <?php $disabled = $month!= 'tous' && dateInMonth($date->format('d/m/Y'),$month) ? 'disable-date' : ''; ?>
+                <?php $classDI = isFerie($date) ? ' ferie '.$disabled: ' '.$disabled; ?>  
                 <td style="text-align: center;" class="week <?php echo $classDI; ?>"><?php echo $facturation['Facturation']['DI']!=0 ? $facturation['Facturation']['DI'] : ""; ?></td> 
-                <td style="text-align: center;" class="sstotal"><?php echo $facturation['Facturation']['TOTAL']; ?></td> 
+                <?php $nbdisable = $disabled != '' && $facturation['Facturation']['DI'] > 0 ? $facturation['Facturation']['DI']+$nbdisable : $nbdisable; ?>              
+                <td style="text-align: center;" class="sstotal"><?php echo number_format($facturation['Facturation']['TOTAL']-$nbdisable,1); ?></td> 
                 <td style="text-align: center;">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'view')) : ?>
                     <?php echo '<span><span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><span class="glyphicons eye_open" rel="popover" data-title="<h3>Facturation :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($facturation['Facturation']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($facturation['Facturation']['modified']).'" data-trigger="click" style="cursor: pointer;"></span></span></span>'; ?>

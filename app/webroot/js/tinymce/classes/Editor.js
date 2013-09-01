@@ -74,7 +74,7 @@ define("tinymce/Editor", [
 	var extend = Tools.extend, each = Tools.each, explode = Tools.explode;
 	var inArray = Tools.inArray, trim = Tools.trim, resolve = Tools.resolve;
 	var Event = EventUtils.Event;
-	var isGecko = Env.gecko, isIE = Env.ie, isOpera = Env.opera;
+	var isGecko = Env.gecko, ie = Env.ie, isOpera = Env.opera;
 
 	function getEventTarget(editor, eventName) {
 		if (eventName == 'selectionchange' || eventName == 'drop') {
@@ -367,7 +367,6 @@ define("tinymce/Editor", [
 				self.on('submit', function() {
 					if (self.initialized) {
 						self.save();
-						self.isNotDirty = true;
 					}
 				});
 			}
@@ -375,7 +374,7 @@ define("tinymce/Editor", [
 			if (settings.add_unload_trigger) {
 				self._beforeUnload = function() {
 					if (self.initialized && !self.destroyed && !self.isHidden()) {
-						self.save({format: 'raw', no_events: true});
+						self.save({format: 'raw', no_events: true, set_dirty: false});
 					}
 				};
 
@@ -634,7 +633,7 @@ define("tinymce/Editor", [
 
 			// Domain relaxing enabled, then set document domain
 			// TODO: Fix this old stuff
-			if (self.editorManager.relaxedDomain && (isIE || (isOpera && parseFloat(window.opera.version()) < 11))) {
+			if (self.editorManager.relaxedDomain && (ie || (isOpera && parseFloat(window.opera.version()) < 11))) {
 				// We need to write the contents here in IE since multiple writes messes up refresh button and back button
 				url = 'javascript:(function(){document.open();document.domain="' + document.domain + '";' +
 					'var ed = window.parent.tinymce.get("' + self.id + '");document.write(ed.iframeHTML);' +
@@ -691,7 +690,7 @@ define("tinymce/Editor", [
 			}
 
 			// Setup iframe body
-			if ((!isIE || !self.editorManager.relaxedDomain) && !settings.content_editable) {
+			if ((!ie || !self.editorManager.relaxedDomain) && !settings.content_editable) {
 				doc.open();
 				doc.write(self.iframeHTML);
 				doc.close();
@@ -1167,7 +1166,7 @@ define("tinymce/Editor", [
 				// Get start node
 				root = self.getBody();
 				node = selection.getStart() || root;
-				node = isIE && node.ownerDocument != self.getDoc() ? self.getBody() : node; // Fix for IE initial state
+				node = ie && node.ownerDocument != self.getDoc() ? self.getBody() : node; // Fix for IE initial state
 
 				// Edge case for <p>|<img></p>
 				if (node.nodeName == 'IMG' && selection.isCollapsed()) {
@@ -1518,7 +1517,7 @@ define("tinymce/Editor", [
 			var self = this, doc = self.getDoc();
 
 			// Fixed bug where IE has a blinking cursor left from the editor
-			if (isIE && doc) {
+			if (ie && doc) {
 				doc.execCommand('SelectAll');
 			}
 
@@ -1637,7 +1636,10 @@ define("tinymce/Editor", [
 			}
 
 			args.element = elm = null;
-			self.isNotDirty = true;
+
+			if (args.set_dirty !== false) {
+				self.isNotDirty = true;
+			}
 
 			return html;
 		},
@@ -1681,42 +1683,54 @@ define("tinymce/Editor", [
 
 			// Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
 			// It will also be impossible to place the caret in the editor unless there is a BR element present
-			if (!isIE && (content.length === 0 || /^\s+$/.test(content))) {
+			if (content.length === 0 || /^\s+$/.test(content)) {
 				forcedRootBlockName = self.settings.forced_root_block;
 
 				// Check if forcedRootBlock is configured and that the block is a valid child of the body
 				if (forcedRootBlockName && self.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
-					content = '<' + forcedRootBlockName + '><br data-mce-bogus="1"></' + forcedRootBlockName + '>';
-				} else {
+					if (ie && ie < 11) {
+						// IE renders BR elements in blocks so lets just add an empty block
+						content = '<' + forcedRootBlockName + '></' + forcedRootBlockName + '>';
+					} else {
+						content = '<' + forcedRootBlockName + '><br data-mce-bogus="1"></' + forcedRootBlockName + '>';
+					}
+				} else if (!ie) {
+					// We need to add a BR when forced_root_block is disabled on non IE browsers to place the caret
 					content = '<br data-mce-bogus="1">';
 				}
 
 				body.innerHTML = content;
+
+				self.fire('SetContent', args);
+			} else {
+				// Parse and serialize the html
+				if (args.format !== 'raw') {
+					content = new Serializer({}, self.schema).serialize(
+						self.parser.parse(content, {isRootContent: true})
+					);
+				}
+
+				// Set the new cleaned contents to the editor
+				args.content = trim(content);
+				self.dom.setHTML(body, args.content);
+
+				// Do post processing
+				if (!args.no_events) {
+					self.fire('SetContent', args);
+				}
+
+				// Don't normalize selection if the focused element isn't the body in
+				// content editable mode since it will steal focus otherwise
+				/*if (!self.settings.content_editable || document.activeElement === self.getBody()) {
+					self.selection.normalize();
+				}*/
+			}
+
+			// Move selection to start of body if it's a after init setContent call
+			// This prevents IE 7/8 from moving focus to empty editors
+			if (!args.initial) {
 				self.selection.select(body, true);
 				self.selection.collapse(true);
-				self.fire('SetContent', args);
-				return;
-			}
-
-			// Parse and serialize the html
-			if (args.format !== 'raw') {
-				content = new Serializer({}, self.schema).serialize(
-					self.parser.parse(content, {isRootContent: true})
-				);
-			}
-
-			// Set the new cleaned contents to the editor
-			args.content = trim(content);
-			self.dom.setHTML(body, args.content);
-
-			// Do post processing
-			if (!args.no_events) {
-				self.fire('SetContent', args);
-			}
-
-			// Don't normalize selection if the focused element isn't the body in content editable mode since it will steal focus otherwise
-			if (!self.settings.content_editable || document.activeElement === self.getBody()) {
-				self.selection.normalize();
 			}
 
 			return args.content;
@@ -1989,7 +2003,7 @@ define("tinymce/Editor", [
 				self.removed = 1; // Cancels post remove event execution
 
 				// Fixed bug where IE has a blinking cursor left from the editor
-				if (isIE && doc) {
+				if (ie && doc) {
 					doc.execCommand('SelectAll');
 				}
 

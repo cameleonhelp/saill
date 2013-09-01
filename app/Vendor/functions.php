@@ -932,4 +932,87 @@ function styleBarreInd($avancement){
      }
      
     }
+    
+/**
+ * DateInMonth
+ * return boolean
+ * true : date in the month
+ * false : date is not in the month
+ */    
+    function dateInMonth($date,$month){
+        $m = explode('/', $date);
+        return $m[1] != $month;
+    }
+    
+/**
+ * generateRandomPassword
+ * @return string a random password with ASCII char (including symbols)
+ */    
+    function generateRandomPassword() {
+      //Initialize the random password
+      $password = '';
+
+      //Initialize a random desired length
+      $desired_length = rand(12, 15);
+
+      for($length = 0; $length < $desired_length; $length++) {
+        //Append a random ASCII character (including symbols)
+        $password .= chr(rand(32, 126));
+      }
+
+      return $password;
+    }   
+    
+    function colorNiveauRisque($niveau) {
+        $color = '';
+        switch ($niveau){
+             case NULL:
+                $color = 'none';
+                break;
+             case '0':
+                $color = '#F5F5F5';
+                break;                
+             case '1':
+                $color = '#CCDC00';
+                break;          
+             case '2':
+                $color = '#7AB800';
+                break;         
+             case '3':
+                $color = '#FFB612';
+                break;   
+             case '4':
+                $color = '#A1006B';
+                break;   
+             case '5':
+                $color = '#6E267B';
+                break;               
+        }
+        return $color;
+    } 
+    
+    function niveauToString($niveau){
+        $str = '';
+        switch ($niveau){
+             case '0':
+                $str = 'Improbable';
+                break;                
+             case '1':
+                $str = 'Très faible';
+                break;          
+             case '2':
+                $str = 'Faible';
+                break;         
+             case '3':
+                $str = 'Moyen';
+                break;   
+             case '4':
+                $str = 'Fort';
+                break;   
+             case '5':
+                $str = 'Très fort';
+                break;               
+        }
+        return $str;
+    }
 ?>

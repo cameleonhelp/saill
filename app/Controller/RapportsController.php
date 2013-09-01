@@ -97,6 +97,35 @@ class RapportsController extends AppController {
             }  
         endif;
     }     
+    
+    public function ss2i(){
+        $this->set('title_for_layout','Facturations des prestataires');
+        if (isAuthorized('activitesreelles', 'rapports')) :
+            if ($this->request->is('post')):
+                /** Calcul du rapport aprés submit **/
+                    $societes = $this->request->data['Rapport']['societe'];
+                    $start = '01/'.$this->request->data['Rapport']['mois'].'/'.$this->request->data['Rapport']['annee'];
+                    $end = @date('t',$start).'/'.$this->request->data['Rapport']['mois'].'/'.$this->request->data['Rapport']['annee'];            
+                    $rapportresult = $this->requestAction('facturations/forss2i', array('pass'=>array('societes'=>$societes,'start'=>CUSDate($start),'end'=>CUSDate($end),'indisponibilite'=>$this->request->data['Rapport']['indisponibilite'])));
+                    $this->set('results',$rapportresult['result']);
+                    $this->set('entrops',$rapportresult['trop']);
+            endif;
+            /** Au chargement de la page **/
+            $mois = array('01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre');
+            $this->set('mois',$mois);
+            $fiveyearago = date('Y')-5;
+            for($i=0;$i<6;$i++):
+                $year = $fiveyearago + $i;
+                $annee[$year]=$year;
+            endfor;
+            $this->set('annee',$annee);
+            $societes = $this->requestAction('societes/get_all_societe_id_name');
+            $this->set('societes',$societes);
+        else :
+            $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+            throw new NotAuthorizedException();
+        endif;  
+    }
 }
 
 ?>

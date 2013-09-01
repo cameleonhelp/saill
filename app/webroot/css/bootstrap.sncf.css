@@ -310,7 +310,7 @@ contenttitle,
 .sstitre{ font-size: 12.5px; font-weight: bold; line-height: 20px !important;}
 .horizontal {clear: both; display: inline !important;}
 .horizontal:after {content: " : " !important;}
-table thead th {background-color: #EAEAEA !important; text-align: center !important;}
+table thead th, table:not(.table-condensed) th {background-color: #EAEAEA !important; color:#3E3D40 !important; text-align: center !important;}
 .footer {background-color: #EAEAEA !important; height: 14px; font-weight: bold;}
 .header {background-color: #f9f9f9 !important;}
 div ol li {list-style-type: none; padding: 0; margin-left: -25px;}
@@ -392,6 +392,11 @@ a, a:focus {
 .ferie{
     background-color: #A1006B !important;
     color: #F7F7F7;
+}
+.disable-date{
+    z-index: 2;
+    background-color: rgba(0,0,0,0.1) !important;
+    color: #CCC !important;
 }
 /*.ferie:after{
     content: 'F';
@@ -1040,4 +1045,29 @@ span.icon_clear{
 /*style de la timeline */
 .timeline-band-0 .timeline-ether-bg {
     background-color: #FFFFFF;
+}
+
+.checkboxes_inline {
+    float: left;
+}
+.checkboxes_inline:after {
+    clear: both;
+}
+.checkboxes_inline:before {
+    clear: both;
+}
+
+.absolute-center { 
+    margin: auto; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    bottom: 0; 
+    right: 0; 
+}
+
+a:focus .glyphicons.icons-navbar:before,
+a:active .glyphicons.icons-navbar:before,
+a:hover .glyphicons.icons-navbar:before {
+    color: #FFF !important;
 }

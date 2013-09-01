@@ -90,7 +90,7 @@ class UtiliseoutilsController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->Utiliseoutil->recursive = 0;
 		$this->set('utiliseoutils', $this->paginate());
-                $conditions = array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0',$conditionetat);
+                $conditions = array('Utilisateur.id > 1','Utilisateur.profil_id > 0',$conditionetat);
                 if (userAuth('WIDEAREA')==0) {$restriction[]="Utilisateur.section_id=".userAuth('section_id'); $conditions = array_merge_recursive($conditions,$restriction);}
                 $this->Utiliseoutil->Utilisateur->recursive = -1;
                 $utilisateurs = $this->Utiliseoutil->find('all',array('fields' => array('Utilisateur.id','Utilisateur.NOM','Utilisateur.PRENOM'),'conditions'=>$conditions,'order'=>array('Utilisateur.NOMLONG'=>'asc'),'group'=>'Utilisateur.id','recursive'=>0));
@@ -222,10 +222,34 @@ class UtiliseoutilsController extends AppController {
                 if (!$this->Utiliseoutil->exists($id)) {
 			throw new NotFoundException(__('Ouvertures des droits incorrecte'));
 		}
-                $this->Utiliseoutil->id = $id;
 		if ($this->request->is('post') || $this->request->is('put')) {
-                        $this->autoprogressState($id);
-                        $this->History->goBack(1);
+                        //$this->autoprogressState($id);
+                        if ($this->Utiliseoutil->save($this->request->data)) {
+                                $nomoutil = "inconnu";
+                                $outil_id = isset($this->request->data['Utiliseoutil']['outil_id']) ? $this->request->data['Utiliseoutil']['outil_id'] : '';
+                                $listediffusion_id = isset($this->request->data['Utiliseoutil']['listediffusion_id']) ? $this->request->data['Utiliseoutil']['listediffusion_id'] : '';
+                                $dossierpartage_id = isset($this->request->data['Utiliseoutil']['dossierpartage_id']) ? $this->request->data['Utiliseoutil']['dossierpartage_id'] : '';
+                                if ($outil_id!='') :
+                                    $outils = $this->Utiliseoutil->Outil->find('first',array('fields'=>array('NOM'),'conditions'=>array('Outil.id'=>$outil_id),'recursive'=>-1));
+                                    $nomoutil = $outils['Outil']['NOM'];
+                                endif;
+                                if ($listediffusion_id!='') :
+                                    $outils = $this->Utiliseoutil->Listediffusion->find('first',array('fields'=>array('NOM'),'conditions'=>array('Listediffusion.id'=>$listediffusion_id),'recursive'=>-1));
+                                    $nomoutil = $outils['Listediffusion']['NOM'];
+                                endif;
+                                if ($dossierpartage_id!='') :
+                                    $outils = $this->Utiliseoutil->Dossierpartage->find('first',array('fields'=>array('NOM'),'conditions'=>array('Dossierpartage.id'=>$dossierpartage_id),'recursive'=>-1));
+                                    $nomoutil = $outils['Dossierpartage']['NOM'];
+                                endif;      
+                                $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$id)));
+                                $this->sendmailutiliseoutil($utiliseoutil);
+                                $this->addnewaction($id,$nomoutil);
+                                $history['Historyutilisateur']['utilisateur_id']=$this->request->data['Utiliseoutil']['utilisateur_id'];
+                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit".' par '.userAuth('NOMLONG');
+                                $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                            
+				$this->Session->setFlash(__('Ouvertures des droits sauvegardée'),'default',array('class'=>'alert alert-success'));
+                                $this->History->goBack(1);
+                        }                    
 		} else {
 			$options = array('conditions' => array('Utiliseoutil.' . $this->Utiliseoutil->primaryKey => $id));
 			$this->request->data = $this->Utiliseoutil->find('first', $options);
@@ -498,6 +522,7 @@ class UtiliseoutilsController extends AppController {
         }
         
         public function sendmailutiliseoutil($utiliseoutil,$valideur=null){
+            $to = '';
             if(!empty($utiliseoutil['Utiliseoutil']['outil_id']) && $utiliseoutil['Utiliseoutil']['outil_id']!=null):
                 $outil = $this->Utiliseoutil->Outil->find('first',array('conditions'=>array('Outil.id'=>$utiliseoutil['Utiliseoutil']['outil_id']),'recursive'=>0));
                 $nom = $outil['Outil']['NOM'];
@@ -529,17 +554,19 @@ class UtiliseoutilsController extends AppController {
             $from = userAuth('MAIL');
             $email = isset($utiliseoutil['Utilisateur']['MAIL']) ? $utiliseoutil['Utilisateur']['MAIL'] : "Demandez un complément d'information à l'émetteur de cette demande";
             $domaine = isset($domaine['Domaine']['NOM']) ? $domaine['Domaine']['NOM'] : "Demandez un complément d'information à l'émetteur de cette demande";
-            $objet = 'SAILL : Demande d\'ouverture de droit ['.$nom.']';
-            $message = "Demande d'ouverture de droit pour : ";
+            $objet = 'SAILL : Demande d\'intervention pour ['.$nom.']';
+            $message = "Demande d'intervention pour : ";
             $url = $gestionnaire != '' ? FULL_BASE_URL.$this->params->base.'/utiliseoutils/mailprogressstate/'.$utiliseoutil['Utiliseoutil']['id']."/".$gestionnaire : '';
+            $etat = $utiliseoutil['Utiliseoutil']['STATUT'];
             if($valideur!=null): 
                 $to = $valideur; 
                 $objet = "SAILL : Demande de validation pour ".$nom;
-                $message = "Demande de validation de droit pour : ";
+                $message = "Demande de validation pour : ";
                 $url = '';
             endif;
             $message .= $message.'<ul>
                     <li>Outil :'.$nom.'</li>
+                    <li>Etat :'.$etat.'</li>
                     <li>Agent :'.$utiliseoutil['Utilisateur']['NOMLONG'].'</li>
                     <li>Identifiant :'.$utiliseoutil['Utilisateur']['username'].'</li>
                     <li>Email :'.$email.'</li>
@@ -547,7 +574,7 @@ class UtiliseoutilsController extends AppController {
                     <li>Section :'.$section['Section']['NOM'].'</li>
                     <li>Localisation :'.$site['Site']['NOM'].'</li>   
                     <li>Groupe Caliber :</li>  
-                    </ul><br>'.$url;
+                    </ul><br>Merci de cliquer sur le lien ci-dessous, pour mettre à jour l\'avancement de la demande.<br>'.$url;
             if($to!=''):
                 try{
                 $email = new CakeEmail();
@@ -597,18 +624,21 @@ class UtiliseoutilsController extends AppController {
             $from = userAuth('MAIL');
             $email = isset($utiliseoutil['Utilisateur']['MAIL']) ? $utiliseoutil['Utilisateur']['MAIL'] : "Demandez un complément d'information à l'émetteur de cette demande";
             $domaine = isset($domaine['Domaine']['NOM']) ? $domaine['Domaine']['NOM'] : "Demandez un complément d'information à l'émetteur de cette demande";
-            $objet = 'SAILL : //!\ URGENT RELANCE : Demande d\'ouverture de droit ['.$nom.']';
-            $message = "URGENT RELANCE : Demande d'ouverture de droit pour : ";
+            $objet = 'SAILL : //!\ URGENT RELANCE : Demande d\'intervention pour ['.$nom.']';
+            $message = "URGENT RELANCE : Demande d'intervention pour : ";
             $url = FULL_BASE_URL.$this->params->base.'/utiliseoutils/mailprogressstate/'.$utiliseoutil['Utiliseoutil']['id']."/".$gestionnaire;
+            $etat = $utiliseoutil['Utiliseoutil']['STATUT'];
             $message .= $message.'<ul>
                     <li>Outil :'.$nom.'</li>
+                    <li>Etat :'.$etat.'</li>
                     <li>Agent :'.$utiliseoutil['Utilisateur']['NOMLONG'].'</li>
                     <li>Identifiant :'.$utiliseoutil['Utilisateur']['username'].'</li>
                     <li>Email :'.$email.'</li>
-                    <li>Projet :'.$domaine.'</li>
+                    <li>Domaine :'.$domaine.'</li>
                     <li>Section :'.$section['Section']['NOM'].'</li>
-                    <li>Localisation :'.$site['Site']['NOM'].'</li>                        
-                    </ul><br>'.$url;
+                    <li>Localisation :'.$site['Site']['NOM'].'</li>   
+                    <li>Groupe Caliber :</li>  
+                    </ul><br>Merci de cliquer sur le lien ci-dessous, pour mettre à jour l\'avancement de la demande.<br>'.$url;
             if($to!=''):
                 try{
                 $email = new CakeEmail();

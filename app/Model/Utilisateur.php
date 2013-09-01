@@ -481,7 +481,16 @@ class Utilisateur extends AppModel {
                 if (isset($val['Utilisateur']['DATEDEBUTACTIF'])) {
                     $results[$key]['Utilisateur']['DATEDEBUTACTIF'] = $this->dateFormatAfterFind($val['Utilisateur']['DATEDEBUTACTIF']);
                 } 
+                if (isset($val['Utilisateur']['societe_id'])) {
+                    $results[$key]['Utilisateur']['societe_NOM'] = $this->getSocieteForUser($val['Utilisateur']['societe_id']);
+                }                   
             }
             return $results;
+        }   
+        
+        public function getSocieteForUser($id){
+            $sql = "SELECT NOM FROM societes WHERE id='".$id."'";
+            $result = $this->query($sql);
+            return  !empty($result) ? $result[0]['societes']['NOM'] : "";
         }           
 }

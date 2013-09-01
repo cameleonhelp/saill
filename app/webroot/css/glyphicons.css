@@ -63,11 +63,20 @@
 .glyphicons.blue:before {
   color: #009AA6;
 }
+.glyphicons.marine:before {
+  color: #275A87;
+}
 .glyphicons.green:before {
   color: #7ABB00;
 }
 .glyphicons.grey:before {
   color: #BCBDBC;
+}
+.glyphicons.yellow:before {
+  color: #FFB511;
+}
+.glyphicons.hard-grey:before {
+  color: #777777;
 }
 .glyphicons.orange:before {
   color: #FFB612;
@@ -104,6 +113,10 @@
 }
 .glyphicons.size32:before {
   font: 32px 'Glyphicons Regular';
+}
+.glyphicons.blank:before {
+  content: "\E000";
+  width: 13px;
 }
 .glyphicons.glass:before {
   content: "\E001";
@@ -779,6 +792,12 @@
 }
 .glyphicons.chevron-left:before {
   content: "\E225";
+}
+.glyphicons.chevron-down:before {
+  content: "\E224";
+  -webkit-transform: rotate(90deg); 
+  -moz-transform: rotate(90deg);
+  -ms-transform:rotate(90deg); 
 }
 .glyphicons.bluetooth:before {
   content: "\E226";

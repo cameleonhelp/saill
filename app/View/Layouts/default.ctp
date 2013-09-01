@@ -46,7 +46,6 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 
                 echo $this->Html->script('jquery');
                 echo $this->Html->script('bootstrap');              
-                echo $this->Html->script('editable'); 
                 echo $this->Html->script('validate');  
                 echo $this->Html->script('additional-methods');                  
                 echo $this->Html->script('messages_fr'); 
@@ -57,6 +56,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->script('datetime');
                 echo $this->Html->script('navigation');
                 echo $this->Html->script('highcharts');
+                echo $this->Html->script('highcharts-more');
                 echo $this->Html->script('modules/exporting');   
                 echo $this->Html->script('modules/data');
                 echo $this->Html->script('newsticker'); 
@@ -153,7 +153,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
    statusbar:false,
    plugins: "hr link textcolor table code searchreplace <?php echo $this->params['controller']=='messages' ? 'charcount' : ''; ?>",
    menubar: "file edit insert format table tools",
-   toolbar: "undo redo | bold italic | hr link | forecolor backcolor | numlist bullist alignleft aligncenter alignright alignjustify | searchreplace",
+   toolbar: "undo redo | bold italic | hr link unlink | forecolor | backcolor | numlist bullist | alignleft aligncenter alignright alignjustify | searchreplace",
    height : "300",
    width : "100%"
     }); 
@@ -182,14 +182,14 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 <?php endif; ?>	
                 <div class="pull-left"><?php echo $this->Html->link($this->Html->image('logo-sncf-galactic.png',array('style'=>'margin-left:10px;margin-right:10px;')),"https://www.int.sncf.fr/",array('escape' => false)); ?>&nbsp;&nbsp;</div>
                 <div>
-                    <?php echo $this->Html->link('<span class="glyphicons home white size14"></span>&nbsp;S.A.I.L.L. -',array('controller'=>'pages','action'=>'home'),array('class'=>"brand showoverlay",'escape' => false)); ?>
+                    <?php echo $this->Html->link('<span class="glyphicons home hard-grey icons-navbar size14"></span>&nbsp;S.A.I.L.L. -',array('controller'=>'pages','action'=>'home'),array('class'=>"brand showoverlay",'escape' => false)); ?>
                     <?php echo $this->Html->link($title_for_layout,"#",array('class'=>"brand","style"=>"margin-left:-35px;margin-top:0px;margin-bottom:0px;",'escape' => false)); ?></div>
 		<?php if (userAuth('id') > 0): ?>
                 <div class="pull-right">
                     <ul class="nav pull-right">
                       <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                              <span class="glyphicons user white size14"></span></i>&nbsp;&nbsp;<?php echo userAuth('PRENOM'); ?>. <?php echo userAuth('NOM'); ?>
+                              <span class="glyphicons user hard-grey icons-navbar size14"></span></i>&nbsp;&nbsp;<?php echo userAuth('PRENOM'); ?>. <?php echo userAuth('NOM'); ?>
                               <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
@@ -294,7 +294,7 @@ $(document).ready(function () {
     }  
     
     /** permet d'affciher un overlay pour éviter les doubles cliques **/
-    $(document).on('click','.accordion-inner > ul > li > a, .showoverlay',function(e){
+    $(document).on('click','.menu1 .accordion-inner > ul > li > a, .showoverlay:not(".disabled")',function(e){
         var overlay = $('#overlay');
         overlay.show();          
     });
@@ -327,12 +327,11 @@ $(document).ready(function () {
     $(".date").datepicker({
         format: "dd/mm/yyyy",
         weekStart: 1,
-        todayBtn: true,
+        todayBtn: 'linked',
         language: "fr",
-        daysOfWeekDisabled: "0,6",
-        calendarWeeks: false,
         autoclose: true,
-        todayHighlight: true	 
+        todayHighlight: true,
+        orientation : 'auto'
     })
     
     /** affichage du message en bas de page pendant 10 secondes **/
@@ -356,16 +355,22 @@ $(document).ready(function () {
     /** Connexion validation du formulaire **/
     var container = $('#container_message');
     $("#formValidate").submit(function() {
-                         // update underlying textarea before submit validation
-                         tinyMCE.triggerSave();
-                 }).validate({ignore: "",errorContainer: container,errorLabelContainer: $("ol", container),wrapper: 'li',meta: "validate",
-     highlight: function(element) {
-         $(element).closest('.control-group').addClass('error');
-         },
-     unhighlight: function(element) {
-         $(element).closest('.control-group').removeClass('error');
-         }
-    });
+                     // update underlying textarea before submit validation
+                     tinyMCE.triggerSave();
+                     var overlay = $('#overlay');
+                     if ($("#formValidate").valid()) overlay.show();                         
+             }).validate({ignore: "",errorContainer: container,errorLabelContainer: $("ol", container),wrapper: 'li',meta: "validate",
+    highlight: function(element) {
+        $(element).closest('.control-group').addClass('error');
+        },
+    unhighlight: function(element) {
+        $(element).closest('.control-group').removeClass('error');
+        }
+   });
+
+    $(document).keyup(function(e) {
+      if (e.keyCode == 27) {$('#overlay').hide(); }   // esc
+    });    
     
     /** Check all **/
     $('.checkall').on('click',function (e) {
@@ -481,6 +486,12 @@ $(document).ready(function () {
     if (navigateur > -1) {
          $('#redModal').modal();
     }
+    
+    /*mise en place de showoverlay sur prev first prev et last*/
+    $('[rel=first]').parent('span').addClass('showoverlay');
+    $('[rel=prev]').parent('span').addClass('showoverlay');
+    $('[rel=next]').parent('span').addClass('showoverlay');
+    $('[rel=last]').parent('span').addClass('showoverlay');
 });
 </script>
 

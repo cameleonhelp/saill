@@ -1,4 +1,6 @@
-/*
+/**
+ * Sizzle.jQuery.js
+ *
  * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
  *

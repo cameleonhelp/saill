@@ -155,6 +155,122 @@ class ActionsController extends AppController {
 	}
 
 /**
+ * savePeriodicite
+ * 
+ * @return void
+ */        
+        public function savePeriodicite($periode){
+            $lastperiode = null;
+            $repeatdays_periodicite[] = '';
+            if ($periode!='Q'):
+                if(empty($this->request->data['Action']['periodicite_id'])) :
+                    $periodicite = array();
+                else:
+                    $this->Action->Periodicite->id = $this->request->data['Action']['periodicite_id'];
+                    $periodicite = $this->Action->Periodicite->read();
+                    $periodicite['Periodicite']['created']=$this->Action->Periodicite->read('created');
+                endif;
+                $end_periodicite = $periode == 'H' ? $this->request->data['Action']['REPETITIONHLAST'] : $this->request->data['Action']['REPETITIONMLAST'];
+                $periodicite['Periodicite']['END']= CUSDate($end_periodicite);
+                $alldays_periodicite =$periode == 'H' ? $this->request->data['Action']['REPETITIONHWEEK'] : $this->request->data['Action']['REPETITIONMMONTH'];
+                $periodicite['Periodicite']['REPEATALL']=$alldays_periodicite;
+                $repeatinmonth_periodicite =$periode == 'H' ? null : $this->request->data['Action']['REPETITIONMDAY'];
+                $periodicite['Periodicite']['ALLDAYMONTH']=$repeatinmonth_periodicite;
+                $repeatdays_periodicite = $periode == 'H' ? $this->request->data['Action']['REPETITIONHDAY'] : array();
+                $repeatdays_periodicite = is_array($repeatdays_periodicite) ? $repeatdays_periodicite : array();
+                $periodicite['Periodicite']['LU']=isset($repeatdays_periodicite) && in_array('1', $repeatdays_periodicite) ? 1 : 0;
+                $periodicite['Periodicite']['MA']=isset($repeatdays_periodicite) && in_array('2', $repeatdays_periodicite) ? 1 : 0;
+                $periodicite['Periodicite']['ME']=isset($repeatdays_periodicite) && in_array('3', $repeatdays_periodicite) ? 1 : 0;
+                $periodicite['Periodicite']['JE']=isset($repeatdays_periodicite) && in_array('4', $repeatdays_periodicite) ? 1 : 0;
+                $periodicite['Periodicite']['VE']=isset($repeatdays_periodicite) && in_array('5', $repeatdays_periodicite) ? 1 : 0;
+                $periodicite['Periodicite']['SA']=isset($repeatdays_periodicite) && in_array('6', $repeatdays_periodicite) ? 1 : 0;
+                $periodicite['Periodicite']['DI']=isset($repeatdays_periodicite) && in_array('7', $repeatdays_periodicite) ? 1 : 0;
+                $periodicite['Periodicite']['PERIODE']=$periode;
+                if(empty($this->request->data['Action']['periodicite_id'])) : $this->Action->Periodicite->create(); endif;
+                $this->Action->Periodicite->save($periodicite);
+                if(empty($this->request->data['Action']['periodicite_id'])) :
+                    $lastperiode = $this->Action->Periodicite->getInsertID();
+                else:
+                    $lastperiode = $this->Action->Periodicite->id;
+                endif;
+            endif;
+            return $lastperiode;
+        }
+        
+/**
+ * calculeDaysFromPeriodicite
+ * 
+ * @param periodicite_id
+ * @return array of date (echeance and start)
+ */        
+        public function calculDaysFromPeriodicite($id,$start=null){
+            $periodicite = $this->Action->Periodicite->find('first',array('conditions'=>array('Periodicite.id'=>$id),'recursive'=>-1));
+            $start = !empty($periodicite['Periodicite']['ALLDAYMONTH']) ?  $periodicite['Periodicite']['ALLDAYMONTH'].date('/m/Y') :  $start!=null ? $start : date('d/m/Y');
+            $start = new DateTime(CUSDate($start));            
+            $days = array();
+            if(!empty($periodicite)):
+                if ($periodicite['Periodicite']['PERIODE']=='H'):
+                    $days[] = $start->format('Y-m-d');
+                    $sofar = 7*$periodicite['Periodicite']['REPEATALL'];
+                    $interval = new DateInterval("P".$sofar."D"); 
+                    $end = new DateTime(CUSDate($periodicite['Periodicite']['END']));
+                    $period = new DatePeriod($start,$interval,$end);
+                    $whichday = array();
+                    if ($periodicite['Periodicite']['LU']) $whichday[]=1;
+                    if ($periodicite['Periodicite']['MA']) $whichday[]=2;
+                    if ($periodicite['Periodicite']['ME']) $whichday[]=3;
+                    if ($periodicite['Periodicite']['JE']) $whichday[]=4;
+                    if ($periodicite['Periodicite']['VE']) $whichday[]=5;
+                    if ($periodicite['Periodicite']['SA']) $whichday[]=6;
+                    if ($periodicite['Periodicite']['DI']) $whichday[]=7;
+                    foreach($period as $dt){
+                      for ($i=1; $i<8; $i++):
+                        $dt->add(new DateInterval('P1D'));
+                        if(in_array($dt->format("N"),$whichday)):
+                          $days[] = $dt->format("Y-m-d");
+                        endif;
+                      endfor;
+                    }                     
+                else:
+                    $interval = new DateInterval("P".$periodicite['Periodicite']['REPEATALL']."M"); 
+                    $end = new DateTime(CUSDate($periodicite['Periodicite']['END']));
+                    $period = new DatePeriod($start,$interval,$end);
+                    foreach($period as $dt){
+                      $days[] = $dt->format("Y-m-".$periodicite['Periodicite']['ALLDAYMONTH']);
+                    }                    
+                endif;
+            endif;
+            return $days;
+        }
+        
+        public function createNewAction(){
+            $this->request->data['Action']['periodicite_id'] = $this->savePeriodicite($this->request->data['Action']['REPETITION']);
+            $days = $this->calculDaysFromPeriodicite($this->request->data['Action']['periodicite_id'],$this->request->data['Action']['ECHEANCE']);
+            $record = $this->request->data;
+            debug($days);
+            foreach($days as $day):
+                if($day != $this->request->data['Action']['ECHEANCE']):
+                    $record['Action']['ECHEANCE'] = $day;
+                    unset($record['Action']['id']);
+                    $start = new DateTime($day);
+                    $start->sub(new DateInterval('P5D'));
+                    $record['Action']['STATUT'] = 'à faire';
+                    $record['Action']['DEBUT'] = $start->format("Y-m-d");
+                    $record['Action']['FREQUENCE'] = $this->request->data['Action']['REPETITION'];
+                    //debug($record);
+                    //exit();
+                    $this->Action->create();
+                    if ($this->Action->save($record)) {
+                            $this->saveHistory($this->Action->getInsertID()); 
+                            $this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
+                            $this->sendmailactions($this->Action->find('first',array('conditions'=>array('Action.id'=>$this->Action->getInsertID()))));
+                    } else {
+                            $this->Session->setFlash(__('Action incorrecte, veuillez corriger l\'action'),'default',array('class'=>'alert alert-error'));
+                    }
+                endif;
+            endforeach;            
+        }
+/**
  * add method
  *
  * @return void
@@ -162,15 +278,34 @@ class ActionsController extends AppController {
 	public function add() {
             if (isAuthorized('actions', 'add')) :
 		if ($this->request->is('post')) {
-			$this->Action->create();
-			if ($this->Action->save($this->request->data)) {
+                    /** Avant la création de l'action on doit créer une périodicité **/
+                    $this->request->data['Action']['periodicite_id'] = $this->savePeriodicite($this->request->data['Action']['REPETITION']);
+                    if ($this->request->data['Action']['REPETITION']!='Q'):
+                        $days = $this->calculDaysFromPeriodicite($this->request->data['Action']['periodicite_id'],$this->request->data['Action']['ECHEANCE']);
+                    else :
+                        $days[] = CUSDate($this->request->data['Action']['ECHEANCE']);
+                    endif;
+                    $record = $this->request->data;
+                    $success = false;
+                    foreach($days as $day):
+                        $record['Action']['ECHEANCE'] = $day;
+                        $start = new DateTime($day);
+                        $start->sub(new DateInterval('P5D'));
+                        $record['Action']['DEBUT'] = $start->format("Y-m-d");
+                        $record['Action']['STATUT'] = $record['Action']['STATUT']=='' ? 'à faire': $record['Action']['STATUT'];
+                        $record['Action']['FREQUENCE'] = $this->request->data['Action']['REPETITION'];
+                        $this->Action->create();
+                        if ($this->Action->save($record)) {
                                 $this->saveHistory($this->Action->getInsertID()); 
-				$this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
+                                $this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
                                 $this->sendmailactions($this->Action->find('first',array('conditions'=>array('Action.id'=>$this->Action->getInsertID()))));
-				$this->History->goBack(1);
-			} else {
-				$this->Session->setFlash(__('Action incorrecte, veuillez corriger l\'action'),'default',array('class'=>'alert alert-error'));
-			}
+                                $success = true;
+                        } else {
+                                $this->Session->setFlash(__('Action incorrecte, veuillez corriger l\'action'),'default',array('class'=>'alert alert-error'));
+                                $success = false;
+                        }
+                    endforeach;
+                    if($success) $this->History->goBack(1);
 		}
                 $etats = Configure::read('etatAction');
                 $this->set('etats',$etats); 
@@ -213,7 +348,21 @@ class ActionsController extends AppController {
 			throw new NotFoundException(__('Action incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                        $oldPeriode = $this->request->data['Action']['FREQUENCE'];
+                        $newPeriode = $this->request->data['Action']['REPETITION'];
                         $this->request->data['Action']['NEW']=0;
+                        /** Mise à jour du champs FREQUENCE des autres actions non terminée **/
+                        if($oldPeriode!=$newPeriode):
+                            $actions = $this->Action->find('all',array('conditions'=>array('Action.periodicite_id'=>$this->request->data['Action']['periodicite_id'],'Action.STATUT'=>'à faire'),'recursive=>0'));
+                            foreach($actions as $action):
+                                $this->Action->delete($action['Action']['id'],false);
+                            endforeach;
+                            $this->createNewAction();
+                        else:
+                            /** Avant la création de l'action on doit mettre à jour ou créer la périodicité **/
+                            $this->request->data['Action']['periodicite_id'] = $this->savePeriodicite($this->request->data['Action']['REPETITION']);  
+                            $this->request->data['Action']['FREQUENCE'] = $this->request->data['Action']['REPETITION'];
+                        endif;
 			if ($this->Action->save($this->request->data)) {
                                 $this->saveHistory($id);                                
 				$this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
@@ -262,7 +411,9 @@ class ActionsController extends AppController {
                 $this->set('histories',$histories);
                 $this->Action->Utilisateur->recursive = -1;
 		$nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
-		$this->set('nomlong', $nomlong);                 
+		$this->set('nomlong', $nomlong);  
+                $periodicite = $this->Action->Periodicite->find('first',array('conditions'=>array('Periodicite.id'=>$this->request->data['Action']['periodicite_id']),'recursive'=>0));
+                $this->set('periodicite',$periodicite);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();            
@@ -277,7 +428,7 @@ class ActionsController extends AppController {
  * @param string $id
  * @return void
  */
-	public function delete($id = null) {
+	public function delete($id = null,$msg=true) {
             if (isAuthorized('actions', 'delete')) :
 		$this->Action->id = $id;
 		if (!$this->Action->exists()) {
@@ -285,11 +436,15 @@ class ActionsController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Action->delete()) {
-			$this->Session->setFlash(__('Action supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			if($msg) :
+                            $this->Session->setFlash(__('Action supprimée'),'default',array('class'=>'alert alert-success'));
+                            $this->History->goBack();
+                        endif;
 		}
-		$this->Session->setFlash(__('Action <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		if($msg) :
+                    $this->Session->setFlash(__('Action <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
+                    $this->History->goBack();
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();        
@@ -364,6 +519,7 @@ class ActionsController extends AppController {
             $history['Historyaction']['CHARGEPREVUE']=$thisAction['Action']['DUREEPREVUE'];
             $history['Historyaction']['PRIORITE']=$thisAction['Action']['PRIORITE'];
             $history['Historyaction']['STATUT']=$thisAction['Action']['STATUT'];
+            $history['Historyaction']['NIVEAU']=$thisAction['Action']['NIVEAU'];
             $history['Historyaction']['COMMENTAIRE']='Le '.date('d/m/Y').' par '.userAuth('NOMLONG').'<br>'.$thisAction['Action']['COMMENTAIRE'];
             $this->Action->Historyaction->create();
             $this->Action->Historyaction->save($history);            
@@ -623,7 +779,7 @@ class ActionsController extends AppController {
         
         
         public function homeListeActions(){
-            $listactions = $this->Action->find('all',array('conditions'=>array('destinataire'=>userAuth('id'),'STATUT <>'=>"terminée"),'order'=>array('ECHEANCE'=>'ASC'),'limit' => 5,'recursive'=>-1));
+            $listactions = $this->Action->find('all',array('conditions'=>array('destinataire'=>userAuth('id'),'STATUT NOT IN("terminée","livré","annulée")'),'order'=>array('ECHEANCE'=>'ASC'),'limit' => 5,'recursive'=>-1));
             return $listactions;
         }   
         
@@ -638,7 +794,7 @@ class ActionsController extends AppController {
         }            
         
         public function homeNBRETARDActions(){
-            $nbactions = $this->Action->find('all',array('fields'=>array('COUNT(id) AS NB','STATUT','ECHEANCE'),'conditions'=>array('destinataire'=>userAuth('id'),'STATUT <>'=>"terminée","ECHEANCE <"=>date('Y-m-d')),'group'=>'STATUT','recursive'=>-1));
+            $nbactions = $this->Action->find('all',array('fields'=>array('COUNT(id) AS NB','STATUT','ECHEANCE'),'conditions'=>array('destinataire'=>userAuth('id'),'STATUT NOT IN("terminée","livré","annulée")',"ECHEANCE <"=>date('Y-m-d')),'group'=>'STATUT','recursive'=>-1));
             return $nbactions;
         }     
         
@@ -698,5 +854,56 @@ class ActionsController extends AppController {
             endforeach;
             
             return $eventAtts;
+        }
+        
+        public function deleteThisPeriodicite($action_id,$loop=false){
+            $this->Action->id = $action_id;
+            $this->Action->saveField('periodicite_id',null);
+            $this->Action->saveField('FREQUENCE','Q');
+            $this->Session->setFlash(__('Périodicité supprimé pour cette action'),'default',array('class'=>'alert alert-success'));
+            if(!$loop) $this->History->goBack();
+            
+        }
+        
+        public function deleteAllPeriodicite($action_id){
+            $periodicity_id = $this->Action->find('first',array('fields'=>array('Action.periodicite_id'),'conditions'=>array('Action.id'=>$action_id),'recursive'=>-1));
+            $allids = $this->Action->find('all',array('fields'=>array('Action.id'),'conditions'=>array('Action.periodicite_id'=>$periodicity_id['Action']['periodicite_id']),'recursive'=>-1));
+            foreach($allids as $id):
+                $this->deleteThisPeriodicite($id['Action']['id'],true);
+            endforeach;
+            $this->Session->setFlash(__('Périodicité supprimée pour toutes les autres actions'),'default',array('class'=>'alert alert-success'));
+            $this->History->goBack();
+        }     
+               
+        public function deleteall($id){
+            $this->delete($id,false);
+            echo $this->Session->setFlash(__('Actions supprimées'),'default',array('class'=>'alert alert-success'));
+        }
+        
+        public function closeall($id){
+            $this->Action->id = $id;
+            $this->Action->saveField('AVANCEMENT', '100');
+            $this->Action->saveField('STATUT', 'terminée');
+            $this->Action->saveField('NEW', '0');
+            $this->saveHistory($id);  
+            echo $this->Session->setFlash(__('Actions cloturées'),'default',array('class'=>'alert alert-success'));          
+        }
+        
+        public function risques(){
+            $this->set('title_for_layout','Etudes des risques par domaine');
+            if (isAuthorized('actions', 'rapports')) :
+                if ($this->request->is('post')):
+                    $domaine = $this->data['Action']['domaine_id'];
+                    $rapportresult = $this->Action->find('all',array('fields'=>array('Action.domaine_id', 'COUNT(Action.id) AS NB','Action.NIVEAU'),'conditions'=>array('Action.domaine_id'=>$domaine,'Action.STATUT NOT IN ("terminée","livrée")','Action.NIVEAU >'=>0),'order'=>array('Action.NIVEAU'=>'asc'),'group'=>array('Action.NIVEAU'),'recursive'=>0));
+                    $this->set('rapportresults',$rapportresult);
+                    $chartresult = $this->Action->find('all',array('fields'=>array('Action.domaine_id', 'COUNT(Action.id) AS NB','Action.NIVEAU'),'conditions'=>array('Action.domaine_id'=>$domaine,'Action.STATUT NOT IN ("terminée","livrée")','Action.NIVEAU >'=>0),'group'=>array('Action.NIVEAU'),'recursive'=>0));
+                    $this->set('chartresults',$chartresult);                                      
+                endif; 
+                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
+                $this->set('domaines',$domaines);                
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                throw new NotAuthorizedException();
+            endif;             
         }
 }

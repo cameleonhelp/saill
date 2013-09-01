@@ -340,7 +340,7 @@ define("tinymce/util/Quirks", [
 		 * Instead of:
 		 * <p style="color:red">bla|ed</p>
 		 */
-		function removeStylesWhenDeletingAccrossBlockElements() {
+		function removeStylesWhenDeletingAcrossBlockElements() {
 			function getAttributeApplyFunction() {
 				var template = dom.getAttribs(selection.getStart().cloneNode(false));
 
@@ -900,6 +900,23 @@ define("tinymce/util/Quirks", [
 			);
 		}
 
+		/**
+		 * iOS has a bug where it's impossible to type if the document has a touchstart event
+		 * bound and the user touches the document while having the on screen keyboard visible.
+		 *
+		 * The touch event moves the focus to the parent document while having the caret inside the iframe
+		 * this fix moves the focus back into the iframe document.
+		 */
+		function restoreFocusOnKeyDown() {
+			if (!editor.inline) {
+				editor.on('keydown', function() {
+					if (document.activeElement == document.body) {
+						editor.getWin().focus();
+					}
+				});
+			}
+		}
+
 		// All browsers
 		disableBackspaceIntoATable();
 		removeBlockQuoteOnBackSpace();
@@ -917,13 +934,14 @@ define("tinymce/util/Quirks", [
 			// iOS
 			if (Env.iOS) {
 				selectionChangeNodeChanged();
+				restoreFocusOnKeyDown();
 			} else {
 				selectAll();
 			}
 		}
 
 		// IE
-		if (isIE) {
+		if (isIE && Env.ie < 11) {
 			removeHrOnBackspace();
 			ensureBodyHasRoleApplication();
 			addNewLinesBeforeBrInPre();
@@ -938,7 +956,7 @@ define("tinymce/util/Quirks", [
 		if (isGecko) {
 			removeHrOnBackspace();
 			focusBody();
-			removeStylesWhenDeletingAccrossBlockElements();
+			removeStylesWhenDeletingAcrossBlockElements();
 			setGeckoEditingOptions();
 			addBrAfterLastLinks();
 			removeGhostSelection();

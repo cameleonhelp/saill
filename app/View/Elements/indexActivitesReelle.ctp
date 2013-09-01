@@ -5,19 +5,28 @@
                 <ul class="nav">
                 <?php $defaultEtat = $this->params->action == "afacturer" ? 'facture' : 'tous'; ?>
                 <?php $defaultAction = $this->params->action == "search" ? 'index' : $this->params->action; 
-                      $filtre_annee = isset($this->params->pass[3]) ? $this->params->pass[3] : date('Y'); ?>
+                      $filtre_annee = isset($this->params->pass[3]) ? $this->params->pass[3] : date('Y'); 
+                      $filtre_indisponible = isset($this->params->pass[4]) ? $this->params->pass[4] : 0;
+                ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'add') && strtolower($this->params->controller)=='activitesreelles') : ?>
                 <li><?php echo $this->Html->link('<span class="glyphicons plus size14" rel="tooltip" data-title="Ajoutez une nouvelle feuille de temps"></span>', array('action' => 'newactivite'),array('escape' => false,'class'=>'showoverlay')); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
                 <?php if ($defaultEtat == "tous") : ?>
                 <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtres ... <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                         <li class='muted bold' style='margin-left:20px;text-transform: uppercase;'>Etats</li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                         <li><?php echo $this->Html->link('Non facturé', array('action' => $defaultAction,'actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                         <li><?php echo $this->Html->link('Facturé', array('action' => $defaultAction,'facture',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Non facturé', array('action' => $defaultAction,'actif',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
-                         <li><?php echo $this->Html->link('Facturé', array('action' => $defaultAction,'facture',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                         <li class='muted bold' style='margin-left:20px;text-transform: uppercase;'>Indisponibilités</li>
+                         <?php
+                            $inverse_indisponible = $filtre_indisponible == 0 ? 1 : 0;
+                            $img_indisponible = $filtre_indisponible == 1 ?  "unchecked bottom2" : "check bottom2";
+                         ?>  
+                         <li><?php echo $this->Html->link('<span class="glyphicons '.$img_indisponible.'"></span> Indisponibilité', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee,$inverse_indisponible),array('escape' => false,'class'=>'showoverlay')); ?></li>                    
                      </ul>
                 </li> 
                 <?php else : ?>
@@ -27,11 +36,11 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Utilisateurs <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
-                     <li><?php echo $this->Html->link('Moi', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,  userAuth('id'),isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Moi', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,  userAuth('id'),isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($utilisateurs as $utilisateur): ?>
-                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,$utilisateur['Utilisateur']['id'],isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,$utilisateur['Utilisateur']['id'],isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
                          <?php endforeach; ?>
                       </ul>
                 </li>   
@@ -39,30 +48,30 @@
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Mois <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous',$filtre_annee),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
                      <li class="divider"></li>
-                     <li><?php echo $this->Html->link('Janvier', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','01',$filtre_annee),array('class'=>'showoverlay')); ?></li>
-                     <li><?php echo $this->Html->link('Février', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','02',$filtre_annee),array('class'=>'showoverlay')); ?></li>
-                     <li><?php echo $this->Html->link('Mars', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','03',$filtre_annee),array('class'=>'showoverlay')); ?></li>
-                     <li><?php echo $this->Html->link('Avril', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','04',$filtre_annee),array('class'=>'showoverlay')); ?></li>
-                     <li><?php echo $this->Html->link('Mai', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','05',$filtre_annee),array('class'=>'showoverlay')); ?></li>
-                     <li><?php echo $this->Html->link('Juin', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','06',$filtre_annee),array('class'=>'showoverlay')); ?></li>
-                     <li><?php echo $this->Html->link('Juillet', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','07',$filtre_annee),array('class'=>'showoverlay')); ?></li>
-                     <li><?php echo $this->Html->link('Août', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','08',$filtre_annee),array('class'=>'showoverlay')); ?></li>
-                     <li><?php echo $this->Html->link('Septembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','09',$filtre_annee),array('class'=>'showoverlay')); ?></li>
-                     <li><?php echo $this->Html->link('Octobre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','10',$filtre_annee),array('class'=>'showoverlay')); ?></li>
-                     <li><?php echo $this->Html->link('Novembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','11',$filtre_annee),array('class'=>'showoverlay')); ?></li>
-                     <li><?php echo $this->Html->link('Décembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','12',$filtre_annee),array('class'=>'showoverlay')); ?></li>                     
+                     <li><?php echo $this->Html->link('Janvier', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','01',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Février', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','02',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Mars', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','03',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Avril', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','04',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Mai', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','05',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Juin', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','06',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Juillet', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','07',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Août', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','08',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Septembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','09',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Octobre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','10',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Novembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','11',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Décembre', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','12',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay')); ?></li>                     
                       </ul>
                 </li> 
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Année <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('En cours', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',date('Y')),array('class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('En cours', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',date('Y'),$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($annees as $annee): ?>
                             <?php if ($annee[0]['ANNEE']!=0): ?>
-                            <li><?php echo $this->Html->link($annee[0]['ANNEE'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$annee[0]['ANNEE']),array('class'=>'showoverlay')); ?></li>
+                            <li><?php echo $this->Html->link($annee[0]['ANNEE'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$annee[0]['ANNEE'],$filtre_indisponible),array('class'=>'showoverlay')); ?></li>
                             <?php endif; ?>
                          <?php endforeach; ?>
                       </ul>
@@ -190,29 +199,44 @@
                     <small class="muted">(<?php echo strtoupper($activitesreelle['Domaine']['NOM']); ?>)</small>
                 <?php endif; ?>
                 </td>  
+                <?php $nbdisable = 0; ?>
                 <!--calculer les jours fériés pour mettre le style week sur les jours fériés //-->
-                <?php $date = new DateTime(CUSDate($group['Activitesreelle']['DATE'])); ?> 
-                <?php $classLu = isFerie($date) ? 'class="ferie"' : ''; ?>
+                <?php $date = new DateTime(CUSDate($group['Activitesreelle']['DATE'])); ?>
+                <?php $disabled = $this->params->pass[2]!= 'tous' && dateInMonth($date->format('d/m/Y'),$this->params->pass[2]) ? 'disable-date' : ''; ?>
+                <?php $classLu = isFerie($date) ? 'class="ferie '.$disabled.'"' : 'class="'.$disabled.'"'; ?>
                 <td style="text-align: center;" <?php echo $classLu; ?>><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['LU']>0 && $activitesreelle['Activitesreelle']['LU']<1) ? $activitesreelle['Activitesreelle']['LU_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['LU']!=0 ? $activitesreelle['Activitesreelle']['LU'] : ""; ?></span></td> 
+                <?php $nbdisable = $disabled != '' && $activitesreelle['Activitesreelle']['LU'] > 0 ? $activitesreelle['Activitesreelle']['LU'] : 0; ?>
                 <?php $date->add(new DateInterval('P1D')); ?>
-                <?php $classMA = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <?php $disabled = $this->params->pass[2]!= 'tous' && dateInMonth($date->format('d/m/Y'),$this->params->pass[2]) ? 'disable-date' : ''; ?>
+                <?php $classMA = isFerie($date) ? 'class="ferie '.$disabled.'"' : 'class="'.$disabled.'"'; ?>                
                 <td style="text-align: center;" <?php echo $classMA; ?>><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['MA']>0 && $activitesreelle['Activitesreelle']['MA']<1) ? $activitesreelle['Activitesreelle']['MA_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['MA']!=0 ? $activitesreelle['Activitesreelle']['MA'] : ""; ?></span></td> 
+                <?php $nbdisable = $disabled != '' && $activitesreelle['Activitesreelle']['MA'] > 0 ? $activitesreelle['Activitesreelle']['MA']+$nbdisable : $nbdisable; ?>
                 <?php $date->add(new DateInterval('P1D')); ?>
-                <?php $classME = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <?php $disabled = $this->params->pass[2]!= 'tous' && dateInMonth($date->format('d/m/Y'),$this->params->pass[2]) ? 'disable-date' : ''; ?>
+                <?php $classME = isFerie($date) ? 'class="ferie '.$disabled.'"' : 'class="'.$disabled.'"'; ?>                
                 <td style="text-align: center;" <?php echo $classME; ?>><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['ME']>0 && $activitesreelle['Activitesreelle']['ME']<1) ? $activitesreelle['Activitesreelle']['ME_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['ME']!=0 ? $activitesreelle['Activitesreelle']['ME'] : ""; ?></span></td> 
+                <?php $nbdisable = $disabled != '' && $activitesreelle['Activitesreelle']['ME'] > 0 ? $activitesreelle['Activitesreelle']['ME']+$nbdisable : $nbdisable; ?>
                 <?php $date->add(new DateInterval('P1D')); ?>
-                <?php $classJE = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <?php $disabled = $this->params->pass[2]!= 'tous' && dateInMonth($date->format('d/m/Y'),$this->params->pass[2]) ? 'disable-date' : ''; ?>
+                <?php $classJE = isFerie($date) ? 'class="ferie '.$disabled.'"' : 'class="'.$disabled.'"'; ?>                
                 <td style="text-align: center;" <?php echo $classJE; ?>><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['JE']>0 && $activitesreelle['Activitesreelle']['JE']<1) ? $activitesreelle['Activitesreelle']['JE_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['JE']!=0 ? $activitesreelle['Activitesreelle']['JE'] : ""; ?></span></td> 
+                <?php $nbdisable = $disabled != '' && $activitesreelle['Activitesreelle']['JE'] > 0 ? $activitesreelle['Activitesreelle']['JE']+$nbdisable : $nbdisable; ?>
                 <?php $date->add(new DateInterval('P1D')); ?>
-                <?php $classVE = isFerie($date) ? 'class="ferie"' : ''; ?>                
+                <?php $disabled = $this->params->pass[2]!= 'tous' && dateInMonth($date->format('d/m/Y'),$this->params->pass[2]) ? 'disable-date' : ''; ?>
+                <?php $classVE = isFerie($date) ? 'class="ferie '.$disabled.'"' : 'class="'.$disabled.'"'; ?>                
                 <td style="text-align: center;" <?php echo $classVE; ?>><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['VE']>0 && $activitesreelle['Activitesreelle']['VE']<1) ? $activitesreelle['Activitesreelle']['VE_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['VE']!=0 ? $activitesreelle['Activitesreelle']['VE'] : ""; ?></span></td> 
+                <?php $nbdisable = $disabled != '' && $activitesreelle['Activitesreelle']['VE'] > 0 ? $activitesreelle['Activitesreelle']['VE']+$nbdisable : $nbdisable; ?>
                 <?php $date->add(new DateInterval('P1D')); ?>
-                <?php $classSA = isFerie($date) ? ' ferie' : ''; ?> 
+                <?php $disabled = $this->params->pass[2]!= 'tous' && dateInMonth($date->format('d/m/Y'),$this->params->pass[2]) ? 'disable-date' : ''; ?>
+                <?php $classSA = isFerie($date) ? ' ferie '.$disabled: ' '.$disabled; ?> 
                 <td style="text-align: center;" class="week <?php echo $classSA; ?>"><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['SA']>0 && $activitesreelle['Activitesreelle']['SA']<1) ? $activitesreelle['Activitesreelle']['SA_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['SA']!=0 ? $activitesreelle['Activitesreelle']['SA'] : ""; ?></span></td> 
+                <?php $nbdisable = $disabled != '' && $activitesreelle['Activitesreelle']['SA'] > 0 ? $activitesreelle['Activitesreelle']['SA']+$nbdisable : $nbdisable; ?>
                 <?php $date->add(new DateInterval('P1D')); ?>
-                <?php $classDI = isFerie($date) ? ' ferie' : ''; ?>
+                <?php $disabled = $this->params->pass[2]!= 'tous' && dateInMonth($date->format('d/m/Y'),$this->params->pass[2]) ? 'disable-date' : ''; ?>
+                <?php $classDI = isFerie($date) ? ' ferie '.$disabled: ' '.$disabled; ?>
                 <td style="text-align: center;" class="week <?php echo $classDI; ?>"><span <?php echo ($activitesreelle['Activite']['projet_id']==1 && $activitesreelle['Activitesreelle']['DI']>0 && $activitesreelle['Activitesreelle']['DI']<1) ? $activitesreelle['Activitesreelle']['DI_TYPE']==1 ? "rel='tooltip' data-title='Matin'" : "rel='tooltip' data-title='Après-midi'" : ""; ?>><?php echo $activitesreelle['Activitesreelle']['DI']!=0 ? $activitesreelle['Activitesreelle']['DI'] : ""; ?></span></td> 
-                <td style="text-align: center;" class="sstotal"><?php echo $activitesreelle['Activitesreelle']['TOTAL']; ?></td> 
+                <?php $nbdisable = $disabled != '' && $activitesreelle['Activitesreelle']['DI'] > 0 ? $activitesreelle['Activitesreelle']['DI']+$nbdisable : $nbdisable; ?>
+                <td style="text-align: center;" class="sstotal"><?php echo number_format($activitesreelle['Activitesreelle']['TOTAL']-$nbdisable,1); ?></td> 
                 <td style="text-align: center;">
                 <?php if ($this->params->action != "afacturer") : ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'view')) : ?>

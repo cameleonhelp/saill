@@ -1,6 +1,7 @@
 <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
+                        <th width="5px">&nbsp;</th>
 			<th><?php echo 'Avancement'; ?></th>
 			<th width='90px'><?php echo 'Date de début prévue'; ?></th>
 			<th width='50px'><?php echo 'Charge prévue'; ?></th>
@@ -13,6 +14,8 @@
         <tbody>
 	<?php foreach ($histories as $history): ?>
 	<tr>
+                <?php $tooltip = $history['Historyaction']['NIVEAU'] != null ? 'Risque identifié de niveau '.$history['Historyaction']['NIVEAU'].' / 5' : 'Aucun risque identifié' ; ?>
+                <td style="background-color:<?php echo colorNiveauRisque($history['Historyaction']['NIVEAU']) ?>"><span class="cursor" style="display:block;line-height:100%;" rel='tooltip' data-title="<?php echo $tooltip; ?>">&nbsp;</span></td>
 		<?php $style = styleBarre(h($history['Historyaction']['AVANCEMENT'])); ?>
                 <td><div class="progress progress-<?php echo $style; ?>" style="margin-bottom:-10px;">
                 <div class="bar " style="width:<?php echo h($history['Historyaction']['AVANCEMENT']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($history['Historyaction']['AVANCEMENT']); ?>%"></div></div></td>

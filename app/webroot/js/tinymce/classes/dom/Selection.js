@@ -675,7 +675,10 @@ define("tinymce/dom/Selection", [
 		 * tinymce.activeEditor.selection.select(tinymce.activeEditor.dom.select('p')[0]);
 		 */
 		select: function(node, content) {
-			var t = this, dom = t.dom, rng = dom.createRng(), idx;
+			var self = this, dom = self.dom, rng = dom.createRng(), idx;
+
+			// Clear stored range set by FocusManager
+			self.lastFocusBookmark = null;
 
 			function setPoint(node, start) {
 				var walker = new TreeWalker(node, node);
@@ -706,7 +709,7 @@ define("tinymce/dom/Selection", [
 			}
 
 			if (node) {
-				if (!content && t.controlSelection.controlSelect(node)) {
+				if (!content && self.controlSelection.controlSelect(node)) {
 					return;
 				}
 
@@ -720,7 +723,7 @@ define("tinymce/dom/Selection", [
 					setPoint(node);
 				}
 
-				t.setRng(rng);
+				self.setRng(rng);
 			}
 
 			return node;
@@ -793,8 +796,19 @@ define("tinymce/dom/Selection", [
 
 			// Use last rng passed from FocusManager if it's available this enables
 			// calls to editor.selection.getStart() to work when caret focus is lost on IE
-			if (!w3c && self.restoreRng) {
-				return self.restoreRng;
+			if (!w3c && self.lastFocusBookmark) {
+				var bookmark = self.lastFocusBookmark;
+
+				// Convert bookmark to range IE 11 fix
+				if (bookmark.startContainer) {
+					rng = doc.createRange();
+					rng.setStart(bookmark.startContainer, bookmark.startOffset);
+					rng.setEnd(bookmark.endContainer, bookmark.endOffset);
+				} else {
+					rng = bookmark;
+				}
+
+				return rng;
 			}
 
 			// Found tridentSel object then we need to use that one
@@ -888,11 +902,10 @@ define("tinymce/dom/Selection", [
 
 					try {
 						sel.removeAllRanges();
+						sel.addRange(rng);
 					} catch (ex) {
-						// IE9 might throw errors here don't know why
+						// IE might throw errors here if the editor is within a hidden container and selection is changed
 					}
-
-					sel.addRange(rng);
 
 					// Forward is set to false and we have an extend function
 					if (forward === false && sel.extend) {

@@ -46,14 +46,14 @@
 	</table>
         <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>
         <div class="pull-right"><?php	echo $this->Paginator->counter('Nombre total d\'éléments : {:count}');	?></div>
-        <div class="pagination  pagination-centered showoverlay">
+	<div class="pagination pagination-centered">
         <ul>
 	<?php
-                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";
-		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled'))."</li>";
-		echo "<li>".$this->Paginator->numbers(array('separator' => ''))."</li>";
-		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabled'))."</li>";
-                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled'))."</li>";
+                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled showoverlay'))."</li>";
+		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled showoverlay'))."</li>";
+		echo "<li>".$this->Paginator->numbers(array('separator' => '','class'=>'showoverlay'))."</li>";
+		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabledshowoverlay'))."</li>";
+                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled showoverlay'))."</li>";
 	?>
         </ul>
 	</div>

@@ -38,7 +38,7 @@
 class EmailConfig {
 	public $smtp = array(
 		'transport' => 'Smtp',
-                'host' => 'localhost',
+        'host' => 'localhost',
 		'port' => 25,
 		'timeout' => 30,
 		'client' => null,

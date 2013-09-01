@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Vendor', 'ping', array('file'=>'class.ping.php'));
 /**
  * Materielinformatiques Controller
  *
@@ -279,5 +280,23 @@ class MaterielinformatiquesController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
             endif;                
-	}         
+	}     
+        
+        public function pinghost($host) {
+            /*$this->autoRender = false;
+            $host = "localhost";
+            $ping = new Ping($host);
+            $latency = $ping->ping();
+            $retour = false;
+            if ($latency) {
+              $retour = true;
+            }
+            $poste['IP']=gethostbyname($host);
+            $poste['RETOUR']=$retour;
+            $poste['HOST']=$host;
+            $poste['LATENCE']=$latency;
+            $result = json_encode($poste);*/
+            $result = false;
+            return $result;
+        }
 }

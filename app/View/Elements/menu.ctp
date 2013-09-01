@@ -44,15 +44,17 @@
   <?php $classUtiliseOutils = in_array($controller,array('utiliseoutils_index','utiliseoutils_add','utiliseoutils_edit','utiliseoutils_delete','utiliseoutils_search')) ? $active : ''; ?>    
   <?php $classLogistique = in_array($active,array($classPetitMateriels,$classUtilisateurs,$classMateriels,$classUtiliseOutils)) ? $divactive : ''; ?> 
   <?php $classCRAActions = in_array($controller,array('actions_rapport','actions_export_doc')) ? $active : ''; ?>   
+  <?php $classCRARisques = in_array($controller,array('actions_risques')) ? $active : ''; ?> 
   <?php $classCRAActions7 = in_array($controller,array('actions_last7days')) ? $active : ''; ?>
   <?php $classCRALogistique = in_array($controller,array('rapports_logistique')) ? $active : ''; ?>
   <?php $classCRASaisie = in_array($controller,array('rapports_etatsaisie')) ? $active : ''; ?>  
+  <?php $classCRASS2I = in_array($controller,array('rapports_ss2i')) ? $active : ''; ?>  
   <?php $classCRAActivites = in_array($controller,array('activitesreelles_rapport','activitesreelles_export_doc')) ? $active : ''; ?>    
   <?php $classCRAFacturations = in_array($controller,array('facturations_rapport','facturations_export_doc')) ? $active : ''; ?>   
   <?php $classCRAPlancharges = in_array($controller,array('plancharges_rapport','plancharges_export_doc')) ? $active : ''; ?>  
   <?php $classCRAPlanchargesAgents = in_array($controller,array('plancharges_rapportagent')) ? $active : ''; ?> 
   <?php $classCRADashboard = in_array($controller,array('dashboards_index','dashboards_export_doc')) ? $active : ''; ?> 
-  <?php $classRapports = in_array($active,array($classCRAPlanchargesAgents,$classCRAActions,$classCRAActivites,$classCRASaisie,$classCRAFacturations,$classCRAPlancharges,$classCRADashboard,$classCRAActions7,$classCRALogistique)) ? $divactive : ''; ?> 
+  <?php $classRapports = in_array($active,array($classCRAPlanchargesAgents,$classCRAActions,$classCRARisques,$classCRAActivites,$classCRASaisie,$classCRASS2I,$classCRAFacturations,$classCRAPlancharges,$classCRADashboard,$classCRAActions7,$classCRALogistique)) ? $divactive : ''; ?> 
   <?php $classContactUs = in_array($controller,array('contacts_add')) ? $active : ''; ?>               
   <?php $classAddFavorites = 'notactive'; ?>  
   <?php $classDivers = in_array($active,array($classContactUs,$classAddFavorites)) ? $divactive : ''; ?> 
@@ -216,6 +218,7 @@
             <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'rapports')) : ?>
             <li class="<?php echo $classCRAActions; ?>"><?php echo $this->Html->link('Actions',array('controller'=>'actions','action'=>'rapport'),array('escape' => false)); ?></li>
             <li class="<?php echo $classCRAActions7; ?>"><?php echo $this->Html->link('7 derniers jours',array('controller'=>'actions','action'=>'last7days'),array('escape' => false)); ?></li>
+            <li class="<?php echo $classCRARisques; ?>"><?php echo $this->Html->link('Risques',array('controller'=>'actions','action'=>'risques'),array('escape' => false)); ?></li>
             <li class="divider"></li>
             <li class="<?php echo $classCRALogistique; ?>"><?php echo $this->Html->link('Logistique',array('controller'=>'rapports','action'=>'logistique'),array('escape' => false)); ?></li>
             <li class="divider"></li>
@@ -227,6 +230,7 @@
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'rapports')) : ?>
             <li class="<?php echo $classCRAFacturations; ?>"><?php echo $this->Html->link('Facturations estimées',array('controller'=>'facturations','action'=>'rapport'),array('escape' => false)); ?></li>            
+            <li class="<?php echo $classCRASS2I; ?>"><?php echo $this->Html->link('Facturation SS2I',array('controller'=>'rapports','action'=>'ss2i'),array('escape' => false)); ?></li>
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'rapports')) : ?>
             <li class="<?php echo $classCRAPlancharges; ?>"><?php echo $this->Html->link('Plan de charges projet',array('controller'=>'plancharges','action'=>'rapport'),array('escape' => false)); ?></li>            

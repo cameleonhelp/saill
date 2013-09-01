@@ -146,5 +146,10 @@ class SocietesController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
             endif;                
-        }            
+        }        
+        
+        public function get_all_societe_id_name(){
+            $societes = $this->Societe->find('list',array('fields'=>array('Societe.id','Societe.NOM'),'order'=>array('Societe.NOM'=>'asc'),'recursive'=>-1));
+            return $societes;
+        }
 }

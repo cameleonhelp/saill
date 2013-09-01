@@ -17,7 +17,7 @@ class ActivitesreellesController extends AppController {
  *
  * @return void
  */
-	public function index($etat=null,$utilisateur=null,$mois=null,$annee=null) {
+	public function index($etat=null,$utilisateur=null,$mois=null,$annee=null,$indisponibilite=null) {
             //$this->Session->delete('history');
             if (isAuthorized('activitesreelles', 'index')) :
                 switch ($etat){
@@ -78,6 +78,15 @@ class ActivitesreellesController extends AppController {
                         $newconditions[]="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
                         $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
                         $fperiode = "pour le mois de ".$moiscal[$mois]." ".$annee;
+                        break;                      
+                }  
+                $indisponibilite = $indisponibilite==null ? 0 : $indisponibilite;
+                switch ($indisponibilite){
+                    case '1':
+                        $newconditions[]="Activite.projet_id!=1";
+                        break;
+                    default:
+                        $newconditions[]="1=1";
                         break;                      
                 }  
                 $this->set('fperiode',$fperiode);                
@@ -565,6 +574,7 @@ class ActivitesreellesController extends AppController {
         }   
         
         public function Absences(){
+            $pass = isset($this->request->data['Activitesreelle']['pass']) ? $this->request->data['Activitesreelle']['pass'] : '0';
             $this->Session->delete('history');
             $date = isset($this->request->data['Activitesreelle']['month']) ? $this->request->data['Activitesreelle']['month'] : date('Y-m-d');
             $annee = date('Y',strtotime($date));
@@ -574,9 +584,15 @@ class ActivitesreellesController extends AppController {
             $datedebut = absstartWeek(new DateTime($datedebut));            
             $datefin = $annee."-".$mois."-".$dernierjour;
             $this->Activitesreelle->Utilisateur->recursive = -1;
+            if($pass == '0'):
             $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Utilisateur.DATEDEBUTACTIF','Utilisateur.FINMISSION'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0','OR' => array('AND'=>array('OR'=>array('Utilisateur.DATEDEBUTACTIF < "'.$datefin.'"','Utilisateur.DATEDEBUTACTIF IS NULL'),'Utilisateur.FINMISSION > "'.$datedebut.'"'),'Utilisateur.FINMISSION IS NULL')),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
+            else:
+                $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
+                $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Utilisateur.DATEDEBUTACTIF','Utilisateur.FINMISSION'),'conditions'=>array('Utilisateur.id IN ('.$monequipe.')','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0','OR' => array('AND'=>array('OR'=>array('Utilisateur.DATEDEBUTACTIF < "'.$datefin.'"','Utilisateur.DATEDEBUTACTIF IS NULL'),'Utilisateur.FINMISSION > "'.$datedebut.'"'),'Utilisateur.FINMISSION IS NULL')),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
+            endif;
             $this->set('utilisateurs',$utilisateurs);  
             $this->Activitesreelle->recursive = 0;
+            if($pass == '0'):
             $viewabsences = "SELECT 
                             Activitesreelle.DATE,
                             Activitesreelle.LU, Activitesreelle.MA, Activitesreelle.ME,  Activitesreelle.JE, Activitesreelle.VE, Activitesreelle.SA, Activitesreelle.DI,
@@ -587,6 +603,18 @@ class ActivitesreellesController extends AppController {
                             WHERE Activite.projet_id = 1 
                             AND Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'
                             ORDER BY Activitesreelle.DATE ASC;";
+            else:
+            $viewabsences = "SELECT 
+                            Activitesreelle.DATE,
+                            Activitesreelle.LU, Activitesreelle.MA, Activitesreelle.ME,  Activitesreelle.JE, Activitesreelle.VE, Activitesreelle.SA, Activitesreelle.DI,
+                            Activitesreelle.LU_TYPE, Activitesreelle.MA_TYPE, Activitesreelle.ME_TYPE,  Activitesreelle.JE_TYPE, Activitesreelle.VE_TYPE, Activitesreelle.SA_TYPE, Activitesreelle.DI_TYPE,
+                            Activitesreelle.utilisateur_id
+                            FROM activitesreelles AS Activitesreelle 
+                            LEFT JOIN activites AS Activite ON (Activitesreelle.activite_id = Activite.id)
+                            WHERE Activite.projet_id = 1 
+                            AND Activitesreelle.utilisateur_id IN (".$monequipe.") AND Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'
+                            ORDER BY Activitesreelle.DATE ASC;";
+            endif;
             $indisponibilites = $this->Activitesreelle->query($viewabsences);
             $this->set('indisponibilites',$indisponibilites);
         }
@@ -657,6 +685,8 @@ class ActivitesreellesController extends AppController {
                 $entropfirst = $interval->format('%a');
                 switch ($entropfirst):
                     case 1:
+                        $enmoins1[$i]['date']=$datetime1;
+                        $enmoins1[$i]['mois']=$datetime1->format('m');                        
                         $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
                         $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];
                         $enmoins1[$i]['domaine_id']=$firstweek['Activitesreelle']['domaine_id'];
@@ -664,6 +694,8 @@ class ActivitesreellesController extends AppController {
                         $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Activitesreelle']['domaine_id'];                       
                         break;
                     case 2:
+                        $enmoins1[$i]['date']=$datetime1;
+                        $enmoins1[$i]['mois']=$datetime1->format('m');                        
                         $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
                         $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];
                         $enmoins1[$i]['domaine_id']=$firstweek['Activitesreelle']['domaine_id'];
@@ -671,6 +703,8 @@ class ActivitesreellesController extends AppController {
                         $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Activitesreelle']['domaine_id'];                        
                         break;
                     case 3:
+                        $enmoins1[$i]['date']=$datetime1;
+                        $enmoins1[$i]['mois']=$datetime1->format('m');                        
                         $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
                         $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];
                         $enmoins1[$i]['domaine_id']=$firstweek['Activitesreelle']['domaine_id'];                        
@@ -678,6 +712,8 @@ class ActivitesreellesController extends AppController {
                         $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Activitesreelle']['domaine_id'];                        
                         break;
                     case 4:
+                        $enmoins1[$i]['date']=$datetime1;
+                        $enmoins1[$i]['mois']=$datetime1->format('m');                        
                         $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
                         $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];                        
                         $enmoins1[$i]['domaine_id']=$firstweek['Activitesreelle']['domaine_id'];                       
@@ -685,6 +721,8 @@ class ActivitesreellesController extends AppController {
                         $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Activitesreelle']['domaine_id'];                         
                         break;
                     case 5:
+                        $enmoins1[$i]['date']=$datetime1;
+                        $enmoins1[$i]['mois']=$datetime1->format('m');                        
                         $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
                         $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];                        
                         $enmoins1[$i]['domaine_id']=$firstweek['Activitesreelle']['domaine_id'];                        
@@ -692,6 +730,8 @@ class ActivitesreellesController extends AppController {
                         $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Activitesreelle']['domaine_id'];                         
                         break;
                     case 6:
+                        $enmoins1[$i]['date']=$datetime1;
+                        $enmoins1[$i]['mois']=$datetime1->format('m');
                         $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
                         $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];                        
                         $enmoins1[$i]['domaine_id']=$firstweek['Activitesreelle']['domaine_id'];                        
@@ -714,6 +754,8 @@ class ActivitesreellesController extends AppController {
                 $entropfirst = $interval->format('%a');
                 switch ($entropfirst):
                     case 1:
+                        $enmoins2[$i]['date']=$datetime1;
+                        $enmoins2[$i]['mois']=$datetime1->format('m');                        
                         $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
                         $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
                         $enmoins2[$i]['domaine_id']=$lastweek['Activitesreelle']['domaine_id'];                        
@@ -721,6 +763,8 @@ class ActivitesreellesController extends AppController {
                         $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Activitesreelle']['domaine_id'];                      
                         break;
                     case 2:
+                        $enmoins2[$i]['date']=$datetime1;
+                        $enmoins2[$i]['mois']=$datetime1->format('m');                        
                         $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
                         $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
                         $enmoins2[$i]['domaine_id']=$lastweek['Activitesreelle']['domaine_id'];                           
@@ -728,6 +772,8 @@ class ActivitesreellesController extends AppController {
                         $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Activitesreelle']['domaine_id'];                         
                         break;
                     case 3:
+                        $enmoins2[$i]['date']=$datetime1;
+                        $enmoins2[$i]['mois']=$datetime1->format('m');                        
                         $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
                         $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
                         $enmoins2[$i]['domaine_id']=$lastweek['Activitesreelle']['domaine_id'];                           
@@ -735,6 +781,8 @@ class ActivitesreellesController extends AppController {
                         $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Activitesreelle']['domaine_id'];                          
                         break;
                     case 0:
+                        $enmoins2[$i]['date']=$datetime1;
+                        $enmoins2[$i]['mois']=$datetime1->format('m');                        
                         $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
                         $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
                         $enmoins2[$i]['domaine_id']=$lastweek['Activitesreelle']['domaine_id'];                           
@@ -742,6 +790,8 @@ class ActivitesreellesController extends AppController {
                         $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Activitesreelle']['domaine_id'];                         
                         break;
                     case 5:
+                        $enmoins2[$i]['date']=$datetime1;
+                        $enmoins2[$i]['mois']=$datetime1->format('m');                        
                         $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
                         $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
                         $enmoins2[$i]['domaine_id']=$lastweek['Activitesreelle']['domaine_id'];                           
@@ -749,6 +799,8 @@ class ActivitesreellesController extends AppController {
                         $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Activitesreelle']['domaine_id'];                         
                         break;
                     case 4:
+                        $enmoins2[$i]['date']=$datetime1;
+                        $enmoins2[$i]['mois']=$datetime1->format('m');                        
                         $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
                         $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
                         $enmoins2[$i]['domaine_id']=$lastweek['Activitesreelle']['domaine_id'];                           
@@ -775,7 +827,9 @@ class ActivitesreellesController extends AppController {
                     $assignedValues[$ukey] = array(
                         'projet_id' => $arrayItem['projet_id'],
                         'activite_id' => $arrayItem['activite_id'],
-                        'domaine_id' => $arrayItem['domaine_id']
+                        'domaine_id' => $arrayItem['domaine_id'],
+                        'mois' => $arrayItem['mois'],
+                        'date' => $arrayItem['date']
                     );
                 }
             }
@@ -804,7 +858,9 @@ class ActivitesreellesController extends AppController {
                 $sortedArray[$ukey][] = $arrayItem['aretirer'];
                 if (!isset($assignedValues[$ukey])){
                     $assignedValues[$ukey] = array(
-                        'projet_id' => $arrayItem['projet_id']
+                        'projet_id' => $arrayItem['projet_id'],
+                        'mois' => $arrayItem['mois'],
+                        'date' => $arrayItem['date']
                     );
                 }
             }
@@ -834,7 +890,9 @@ class ActivitesreellesController extends AppController {
                 if (!isset($assignedValues[$ukey])){
                     $assignedValues[$ukey] = array(
                         'projet_id' => $arrayItem['projet_id'],
-                        'domaine_id' => $arrayItem['domaine_id']
+                        'domaine_id' => $arrayItem['domaine_id'],
+                        'mois' => $arrayItem['mois'],
+                        'date' => $arrayItem['date']
                     );
                 }
             }
@@ -864,7 +922,9 @@ class ActivitesreellesController extends AppController {
                 if (!isset($assignedValues[$ukey])){
                     $assignedValues[$ukey] = array(
                         'projet_id' => $arrayItem['projet_id'],
-                        'activite_id' => $arrayItem['activite_id']
+                        'activite_id' => $arrayItem['activite_id'],
+                        'mois' => $arrayItem['mois'],
+                        'date' => $arrayItem['date']
                     );
                 }
             }

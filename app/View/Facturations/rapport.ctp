@@ -70,8 +70,9 @@
                 <?php 
                     $nbaction = $result[0]['NB'];
                     foreach($byprojet as $item):
-                        if($result['Activite']['projet_id']==$item['projet_id']):
+                        if($result['Activite']['projet_id']==$item['projet_id'] && $result[0]['MONTH']==$item['mois']):
                             $nbaction -= $item['sum'];
+                            $nbaction = number_format($nbaction, 1);
                         endif;
                     endforeach;
                 ?>
@@ -106,8 +107,9 @@
                 <?php 
                     $nbaction = $result[0]['NB'];
                     foreach($byprojetactivite as $item):
-                        if($result['Activite']['projet_id']==$item['projet_id'] && $result['Activite']['id']==$item['activite_id']):
+                        if($result['Activite']['projet_id']==$item['projet_id'] && $result['Activite']['id']==$item['activite_id'] && $result[0]['MONTH']==$item['mois']):
                             $nbaction -= $item['sum'];
+                            $nbaction = number_format($nbaction, 1);
                         endif;
                     endforeach;
                 ?>
@@ -145,8 +147,9 @@
                 <?php 
                     $nbaction = $result[0]['NB'];
                     foreach($byprojetactiviteutilisateur as $item):
-                        if($result['Activite']['projet_id']==$item['projet_id'] && $result['Activite']['id']==$item['activite_id'] && $result['Utilisateur']['id']==$item['utilisateur_id']):
+                        if($result['Activite']['projet_id']==$item['projet_id'] && $result['Activite']['id']==$item['activite_id'] && $result['Utilisateur']['id']==$item['utilisateur_id'] && $result[0]['MONTH']==$item['mois']):
                             $nbaction -= $item['sum'];
+                            $nbaction = number_format($nbaction, 1);
                         endif;
                     endforeach;
                 ?>                

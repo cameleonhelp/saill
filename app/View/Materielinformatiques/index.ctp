@@ -52,6 +52,7 @@
         <thead>
 	<tr>
 			<th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
+                        <th width="17px">&nbsp;</th>
 			<th><?php echo $this->Paginator->sort('typemateriel_id','Type de matériel'); ?></th>
 			<th><?php echo $this->Paginator->sort('section_id','Section'); ?></th>
 			<th><?php echo $this->Paginator->sort('assistance_id','Assistance'); ?></th>
@@ -66,6 +67,7 @@
 	<?php foreach ($materielinformatiques as $materielinformatique): ?>
 	<tr>
 		<td><?php echo h($materielinformatique['Materielinformatique']['NOM']); ?>&nbsp;</td>
+                <td style='text-align:center;'><span id="pingthishost" data-host="<?php echo h($materielinformatique['Materielinformatique']['NOM']); ?>" class="glyphicons grey radar size14 cursor showoverlay"></span></td>
 		<td><?php echo h($materielinformatique['Typemateriel']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($materielinformatique['Section']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($materielinformatique['Assistance']['NOM']); ?>&nbsp;</td>
@@ -94,15 +96,47 @@
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
 	<div class="pull-right"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>    
-	<div class="pagination  pagination-centered showoverlay">
+	<div class="pagination pagination-centered">
         <ul>
 	<?php
-                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";
-		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled'))."</li>";
-		echo "<li>".$this->Paginator->numbers(array('separator' => ''))."</li>";
-		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabled'))."</li>";
-                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled'))."</li>";
+                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled showoverlay'))."</li>";
+		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled showoverlay'))."</li>";
+		echo "<li>".$this->Paginator->numbers(array('separator' => '','class'=>'showoverlay'))."</li>";
+		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabledshowoverlay'))."</li>";
+                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled showoverlay'))."</li>";
 	?>
         </ul>
 	</div>
 </div>
+<script>
+     $(document).ready(function () {
+        
+        function hideoverlay(){
+            var overlay = $('#overlay');
+            overlay.hide();
+        }
+         
+        $(document).on('click','#pingthishost',function(e){
+            var host = $(this).attr('data-host');
+            var $this = $(this);
+            $(this).removeClass('red').removeClass('green').removeClass('grey');
+            $.ajax({
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'materielinformatiques','action'=>'pinghost')); ?>/"+host,
+                contentType: "application/json",
+                success: function(response) {
+                    var json = $.parseJSON(response);
+                    var color = 'red'; 
+                    if(json.LATENCE != false){color ='green'};
+                    $this.addClass(color);
+                    hideoverlay();
+                },
+                error: function(response,status,errorThrown) {
+                    var color = 'red'; 
+                    $this.addClass(color);
+                    hideoverlay();
+                }
+             });
+        });
+    });
+</script>

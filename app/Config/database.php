@@ -66,7 +66,7 @@ class DATABASE_CONFIG {
         'host' => 'localhost', //localhost - 10.0.0.8
         'login' => 'SAILLADM',
         'password' => 'S@ILL@DM',
-        'database' => 'saill_200',
+        'database' => 'saill_202',
         'prefix' => '',        
         'encoding' => 'utf8'
     );

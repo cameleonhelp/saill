@@ -48,6 +48,13 @@
                      </ul>
                  </li> 
                  <?php  endif; ?>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicons check"></span> Actions groupées <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Supprimer', "#",array('id'=>'deletelink','class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Terminer', "#",array('id'=>'closelink','class'=>'showoverlay')); ?></li>
+                     </ul>
+                </li>                 
                 </ul> 
                 <?php echo $this->Form->create("Action",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche dans tous les champs')); ?>
@@ -63,6 +70,10 @@
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
+                        <th style="text-align:center;width:15px !important;vertical-align: middle;padding-left:5px;"><?php echo $this->Form->input('checkall',array('type'=>'checkbox','label'=>false)) ; ?>
+                                <?php echo $this->Form->input('all_ids',array('type'=>'hidden')) ; ?>
+                        </th>   
+                        <th width="5px">&nbsp;</th>
 			<th><?php echo $this->Paginator->sort('Domaine.NOM','Domaine'); ?></th>
 			<th><?php echo $this->Paginator->sort('Utilisateur.NOMLONG','Emetteur'); ?></th>
                         <th><?php echo $this->Paginator->sort('Action.destinataire_nom','Destinataire'); ?></th>
@@ -70,9 +81,9 @@
 			<th width='90px'><?php echo $this->Paginator->sort('AVANCEMENT','% avancement'); ?></th>
 			<th width='60px'><?php echo $this->Paginator->sort('DEBUT','Date de début'); ?></th>
 			<th width='60px'><?php echo $this->Paginator->sort('ECHEANCE','Echéance'); ?></th>
-			<th width='60px'><?php echo $this->Paginator->sort('STATUT','Statut'); ?></th>
-                        <th width='60px'><?php echo $this->Paginator->sort('CRA','CRA'); ?></th>
-			<th width='70px'><?php echo $this->Paginator->sort('DUREEPREVUE','Charge prévue'); ?></th>
+			<th width='50px'><?php echo $this->Paginator->sort('STATUT','Statut'); ?></th>
+                        <th width='50px'><?php echo $this->Paginator->sort('CRA','CRA'); ?></th>
+			<th width='80px'><?php echo $this->Paginator->sort('DUREEPREVUE','Charge prévue'); ?></th>
 			<th width="50px"><?php echo $this->Paginator->sort('PRIORITE','Priorité'); ?></th>
 			<th class="actions" width='80px'><?php echo __('Actions'); ?></th>
 	</tr>
@@ -81,7 +92,10 @@
         <?php if (isset($actions)): ?>
 	<?php foreach ($actions as $action): ?>
 	<tr>
-		<td><?php echo h($action['Domaine']['NOM']); ?>&nbsp;</td>
+                <td style="text-align:center;padding-left:5px;vertical-align: middle;"><?php echo $this->Form->input('id',array('type'=>'checkbox','label'=>false,'class'=>'idselect','value'=>$action['Action']['id'])) ; ?></td>  
+                <?php $tooltip = $action['Action']['NIVEAU'] != null ? 'Risque identifié de niveau '.$action['Action']['NIVEAU'].' / 5' : 'Aucun risque identifié' ; ?>
+                <td style="background-color:<?php echo colorNiveauRisque($action['Action']['NIVEAU']) ?>"><span class="cursor" style="display:block;line-height:40px;" rel='tooltip' data-title="<?php echo $tooltip; ?>">&nbsp;</span></td>
+                <td><?php echo h($action['Domaine']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($action['Utilisateur']['NOM']." ".$action['Utilisateur']['PRENOM']); ?>&nbsp;</td>
                 <td><?php echo h($action['Action']['destinataire_nom']); ?>&nbsp;</td>
                 <td><?php echo h($action['Action']['OBJET']); ?>
@@ -103,7 +117,7 @@
 		<td style="text-align:center;"><?php $image = (isset($action['Action']['CRA']) && $action['Action']['CRA']==true) ? 'ok_2' : 'ok_2 disabled' ; ?>
                     <a href="#" class="incra cursor showoverlay" idaction="<?php echo $action['Action']['id']; ?>" ><span class="glyphicons <?php echo $image; ?>" rel="tooltip" data-title="Visible dans le CRA ou non"></span></a></td>               
                 <td style="text-align:center;">
-                    <a href="#" class="moins cursor showoverlay" style="float:left;margin-left: -3px;margin-right:2px;" idaction="<?php echo $action['Action']['id']; ?>" duree="<?php echo $action['Action']['DUREEPREVUE']; ?>"><span class="glyphicons circle_minus top3"></sapn></a>
+                    <a href="#" class="moins cursor showoverlay" style="float:left;margin-left: 3px;margin-right:2px;" idaction="<?php echo $action['Action']['id']; ?>" duree="<?php echo $action['Action']['DUREEPREVUE']; ?>"><span class="glyphicons circle_minus top3"></sapn></a>
                     <span rel="tooltip" data-title="<?php echo CHours2Days($action['Action']['DUREEPREVUE']); ?> jour(s)" style="float: left;width: 55%;"><?php echo h($action['Action']['DUREEPREVUE']); ?> h</span>
                     <a href="#" class="plus cursor showoverlay" style="float:left;" idaction="<?php echo $action['Action']['id']; ?>" duree="<?php echo $action['Action']['DUREEPREVUE']; ?>"><span class="glyphicons circle_plus top3"></a>
                 </td>
@@ -129,14 +143,14 @@
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
 	<div class="pull-right"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>     
-	<div class="pagination  pagination-centered showoverlay">
+	<div class="pagination pagination-centered">
         <ul>
 	<?php
-                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled'))."</li>";
-		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled'))."</li>";
-		echo "<li>".$this->Paginator->numbers(array('separator' => ''))."</li>";
-		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabled'))."</li>";
-                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled'))."</li>";
+                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled showoverlay'))."</li>";
+		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled showoverlay'))."</li>";
+		echo "<li>".$this->Paginator->numbers(array('separator' => '','class'=>'showoverlay'))."</li>";
+		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabledshowoverlay'))."</li>";
+                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled showoverlay'))."</li>";
 	?>
         </ul>
 	</div>
@@ -238,5 +252,103 @@ $(document).ready(function () {
             });
         }
     });  
+        $(document).on('click','#checkall',function(e){
+            $(this).parents().find(':checkbox').prop('checked', this.checked);
+            if ($(this).is(':checked')){
+                $(".idselect").each(
+                        function() {
+                            if ($("#all_ids").val()==""){
+                                $("#all_ids").val($(this).val());                    
+                            }else{
+                                $("#all_ids").val($("#all_ids").val()+"-"+$(this).val());
+                            }
+                        });          
+            }else{
+                $("#all_ids").val("");
+            }
+        });
+        
+        $(document).on('click','.idselect',function(e){
+            if ($(this).is(':checked')){
+                if ($("#all_ids").val()==""){
+                    $("#all_ids").val($(this).val());                    
+                }else{
+                    $("#all_ids").val($("#all_ids").val()+"-"+$(this).val());
+                }
+            } else {
+                var list = $("#all_ids").val();
+                $("#all_ids").val("");
+                tmp = list.replace($(this).val()+"-", "");
+                if (tmp == list) tmp = list.replace("-"+$(this).val(), ""); 
+                $("#all_ids").val(tmp);
+            }
+        });  
+        
+        $(document).on('click','#deletelink',function(e){
+            if(confirm("Voulez-vous supprimer toutes les actions sélectionnées ?")){
+                var ids = $("#all_ids").val();
+                var myarr = ids.split("-");
+                var length = myarr.length;
+                var overlay = $('#overlay');
+                for(var i = 0; i < length; i++){
+                    //alert(myarr[i]); 
+                    overlay.show();
+                    $.ajax({
+                        dataType: "html",
+                        type: "POST",
+                        url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'deleteall')); ?>/"+myarr[i],
+                        success: function(){
+                            if (i === length) {
+                            overlay.hide();
+                            location.reload();
+                            $(this).parents().find(':checkbox').prop('checked', false); 
+                            $("#all_ids").val('');
+                            }                    
+                        },
+                        error: function(){
+                            if (i === length) {
+                            overlay.hide();
+                            location.reload();
+                            $(this).parents().find(':checkbox').prop('checked', false); 
+                            $("#all_ids").val('');
+                            }                    
+                        }                        
+                    });
+                }
+            }  
+        });    
+        
+        $(document).on('click','#closelink',function(e){
+            if(confirm("Voulez-vous clore toutes les actions sélectionnées ?")){
+                var ids = $("#all_ids").val();
+                var myarr = ids.split("-");
+                var length = myarr.length;
+                var overlay = $('#overlay');
+                overlay.show(); 
+                for(var i = 0; i < length; i++){
+                    $.ajax({
+                        dataType: "html",
+                        type: "POST",
+                        url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'closeall')); ?>/"+myarr[i],
+                        success: function(){
+                            if (i === length) {
+                            overlay.hide();
+                            location.reload();
+                            $(this).parents().find(':checkbox').prop('checked', false); 
+                            $("#all_ids").val('');
+                            }                    
+                        },
+                        error: function(){
+                            if (i === length) {
+                            overlay.hide();
+                            location.reload();
+                            $(this).parents().find(':checkbox').prop('checked', false); 
+                            $("#all_ids").val('');
+                            }                    
+                        }                        
+                    });
+                }
+             }
+        });           
 });
 </script>

@@ -6,6 +6,7 @@ App::uses('AppModel', 'Model');
  * @property Utilisateur $Utilisateur
  * @property Domaine $Domaine
  * @property Activite $Activite
+ * @property Periodicite $Periodicite
  * @property Actionslivrable $Actionslivrable
  * @property Activitesreelle $Activitesreelle
  * @property Historyaction $Historyaction
@@ -95,6 +96,13 @@ class Action extends AppModel {
 		'Activite' => array(
 			'className' => 'Activite',
 			'foreignKey' => 'activite_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'Periodicite' => array(
+			'className' => 'Periodicite',
+			'foreignKey' => 'periodicite_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

@@ -23,7 +23,7 @@ class UtilisateursController extends AppController {
         /** DEBUT : cookie remember me **/
         $this->Cookie->key = 'qSI232qs*&sXOw!adre@34SAv!@*(XSL#$%)asGb$@11~_+!@#HKis~#^';
         $this->Cookie->httpOnly = true;   
-        $this->Auth->allow(array('login','logout'));
+        $this->Auth->allow(array('login','logout','initmypassword'));
         parent::beforeFilter();
     }    
     
@@ -449,7 +449,7 @@ class UtilisateursController extends AppController {
                             $this->Cookie->write('remember_me_cookie', $cookie, true, '2 weeks');
                         }
                         $this->Auth->login($utilisateur['Utilisateur']);
-                        $this->redirect($this->Auth->redirect());
+                        $this->redirect(array('controller'=>'pages','action'=>'home'));
                     } else {
                         $this->Session->setFlash(__('Mot de passe invalide, réessayer'),'default',array('class'=>'alert alert-error'));
                     }                    
@@ -629,6 +629,40 @@ class UtilisateursController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
                 throw new NotAuthorizedException();
             endif;                
+	} 
+
+/**
+ * initmypassword method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $id
+ * @return void
+ */
+	public function initmypassword() {
+            if ($this->request->is('post')) {
+                $username = $this->data['Utilisateur']['usernamelost'];
+                $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.username'=>$username),'recursive'=>0));
+                $this->Utilisateur->id = $utilisateur['Utilisateur']['id'];
+                $record = $this->Utilisateur->read();
+                unset($record['Utilisateur']['password']); 
+                unset($record['Utilisateur']['created']);
+                unset($record['Utilisateur']['modified']);
+                $password = generateRandomPassword();
+                $record['Utilisateur']['password']=$password; 
+                $record['Utilisateur']['created'] = $this->Utilisateur->read('created');
+                $record['Utilisateur']['modified'] = date('Y-m-d');                
+                if ($this->Utilisateur->save($record)) {
+                        $sendmail = $this->sendmailpassword($utilisateur,$password);
+                        $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mot de passe initialisé".' par '.$utilisateur['Utilisateur']['NOMLONG'];
+                        $this->Utilisateur->Historyutilisateur->save($history);
+                        $this->Session->setFlash(__('Mot de passe envoyé à votre adresse mail, si vous ne recevez pas l\'email contacter l\'administrateur'.$password),'default',array('class'=>'alert alert-success'));
+                        $this->History->goBack();
+                } 
+                $this->Session->setFlash(__('Mot de passe <b>NON</b> initialisé'),'default',array('class'=>'alert alert-error'));
+                $this->History->goBack(); 
+            }
 	} 
         
 	public function initadminpassword() {
@@ -875,6 +909,32 @@ class UtilisateursController extends AppController {
             endif;
         }       
 
+        public function sendmailpassword($utilisateur,$password){
+            $from =  'donotreply.saill@sncf.fr';
+            $to=$utilisateur['Utilisateur']['MAIL'];
+            $objet = "SAILL : Demande de nouveaux identifiants pour [".$utilisateur['Utilisateur']['NOM']." ".$utilisateur['Utilisateur']['PRENOM']."]";
+            $message = "Bonjour<br>comme demandé voici le nouvel identifiant pour ".$utilisateur['Utilisateur']['NOM']." ".$utilisateur['Utilisateur']['PRENOM'].
+                    "<ul>
+                    <li>Nouveau mot de passe à utiliser est : <b>".$password."</b></li>    
+                    <li>Votre login est inchangé</li>
+                    <li>Nous vous recommandons de changer ce mot de passe à votre prochaine connexion.</li>
+                    </ul>";
+            if($to!=''):
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('both')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+                }
+                catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                }  
+            endif;
+        }
+        
         public function sendmailprolongation($utilisateur){
             $mailtoGestannuaire = $this->requestAction('parameters/get_gestionnaireannuaire');
             $mailto[] = $mailtoGestannuaire['Parameter']['param'];
@@ -935,5 +995,15 @@ class UtilisateursController extends AppController {
             $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - état changé par ".userAuth('NOMLONG');
             $this->Utilisateur->Historyutilisateur->save($history);
             exit();
-        }        
+        }     
+        
+        public function insociete(){
+            $societes = $this->params->params['pass'];
+            foreach ($societes as &$value) {
+                @$societelist .= $value.',';
+            }  
+            $societe = 'Utilisateur.societe_id IN ('.substr_replace(@$societelist ,"",-1).')';  
+            $result = $this->Utilisateur->find('all',array('conditions'=>array('Utilisateur.ACTIF'=>1,$societe),'recursive'=>0));
+            return $result;
+        }
 }

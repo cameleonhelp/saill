@@ -1,4 +1,4 @@
-## LEGEND ##
+## DEBUT LEGEND ##
 [X] A faire
 [O] En cours il existe déjà des choses de faites
 [F] A corriger existe encore des bugs
@@ -7,16 +7,28 @@
 (2) normal
 (3) urgent
 (4) bloquant
-## LEGEND ##
+## FIN LEGEND ##
 
 ## 210.001
  * [X](1) [CakePHP] : intégration de la version 3.0.0 à sa sortie
+ * [X](1) [Bootstrap] : intégration de la version 3.0.0
 
-## 202.002
+## 203.002
  * [X](1) [Actions-index] : test de remplacement la timeline par chronoline.js si concluant inclure dans cette version
- * [X](1) [Actions-Add-Edit-index] : Intégrer une gestion de risque sur l'action reprendre tableau de criticité IDEO et ajouter un champs risque dans l'action (combinaison entre probabilité et gravité)
+
+## 203.001
+ * [V](1) [Activitesréelles-Absences] : Ajout d'un filtre pour les utilisateurs tous ou mon équipe
+ * [V](1) [materielinformatiques-Index] : ajouter une colone pour pinguer les postes retour par mail en cas d'erreur du résultat du ping - NE SEMBLE PAS FONCTIONNER EN INTERNE DU MOINS
+ * [V](1) [Actions-Add-Edit-index] : Intégrer une gestion de risque sur l'action reprendre tableau de criticité IDEO et ajouter un champs risque dans l'action (combinaison entre probabilité et gravité)
  *                                   Gravité = (impact coût + impact délais + impact qualité)/3 pour simplifier on va parler que gravité le mieux étant de mettre en place une matrice de risque sous forme de tableau
  *                                   avec un indice pour chaque point d'intersection et un niveau à afficher
+ *                                   Intégrer cette information dans l'hitorique la fiare apparaitre dans le tableau sous forme de cellule colorée
+ * [V](1) [Actions-Add-Edit-index] : voir si possibilité de mettre la matrice de risque dans une fenetre modal
+ * [V](1) [Actions-Index] : faire apparaitre dans une cellule le niveau de risque
+ * [V](1) [Rapports-Risques] : faire un rapports avec un graphe type toile d'arraignée du nombre d'actions pour un domaine en fonction des niveaux de risque
+ * [V](2) [#FIX:Connexion-Perte de mot de passe] Aucun mail envoyé !!! est-ce un filtre au niveau SNCF ?
+ * [V](1) [TinyMCE] : Intégrer la nouvelle version 4.0.5
+ * [V](1) [DatePicker] : Intégrer la nouvelle version 1.2.0 
 
 ## 202.001
  * [V](1) Nouvelle numérotation de version
@@ -38,16 +50,19 @@
  * [V](2)                      Sauvegarde de la périodicité
  * [V](2)                      Calcul des jours pour lesquels il faut créer une action
  * [V](2)                      Suppression des boutons pour ajouter des feuilles de temps, modifier ou consulter (pour éviter une confusion entre les actions et les activités réelles)
- * [F](2)                      (controller) Modification de l'ajout pour la création des actions
- * [X](2)                      (controller) Modification de l'edit pour mettre à jour l'action et la périodicité (suppression des actions encore à faire et création de nouvelles actions à partir de la date du jour)
+ * [V](2)                      (controller) Modification de l'ajout pour la création des actions
+ * [V](2)                      (controller) Modification de l'edit pour mettre à jour l'action et la périodicité - fait mais peu convaincant en cas de changement de périodicité à revoir dans la prochaine version
  * [V](2)                      Suppression de la périodicité de l'action
  * [V](2)                      Suppression de la périodicité des action encore à faire liées à cette périodicité
- * [O](1) [Facturation-RapportSS2I] : Nouveau créer un rapport pour calculer la charges des agents à facturer à la SS2I
- * [X](2) [#FIX:Facturation-edit] édition de la facturation (enregistrement d'une nouvelle version, erreur ou ne fait rien)
- * [X](3) [#FIX:Facturation-Rapport] calcul sur les rapports activités - facturation erronés à revoir
- * [X](2) [Action-index] : donner la possibilité de sélectionner plusieurs actions pour les supprimer ou les dupliquer
- * [X](1) [#FIX:Utiliseoutils-index] : liste des utilisateurs incorrecte
+ * [V](1) [Facturation-RapportSS2I] : Nouveau créer un rapport pour calculer la charges des agents à facturer à la SS2I
+ * [V](2) [#FIX:Facturation-edit] édition de la facturation (enregistrement d'une nouvelle version, erreur ou ne fait rien)
+ * [V](3) [#FIX:Facturation-Rapport] calcul sur les rapports activités - facturation erronés à revoir idem [Facturation-RapportSS2I] sur le détail par agent pour exemple BORG
+ * [V](2) [Action-index] : donner la possibilité de sélectionner plusieurs actions pour les supprimer, de les clore ou les dupliquer
+ * [V](1) [#FIX:Utiliseoutils-index] : liste des utilisateurs incorrecte
  * [V](2) [#FIX: toutes les pages] : showoverlay à mettre sur les boutons et non sur pagination class="pagination pagination-centered !showoverlay!"
+ * [V](2) [Facturation-Facturé-Index] : Date n'étant pas du mois apparaissent en grisé
+ * [V](2) [Facturation-Facturé-Index] : Décompter les date en grisé du total de la semaine
+ * [V](2) [Actions-Edit] : En cas de modification de FREQUENCE suppression des actions à faire avant de créer les nouvelles actions
 
 ## b069
  * Intégrer la mise à jour de bootstrap 3.0.0RC1 => travail énorme remis à plus tard car prévoir une refonte des pages cf 2.1.0 maquette en place reste à intégrer le framework php et le MVC

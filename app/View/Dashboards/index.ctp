@@ -351,7 +351,7 @@ $(document).ready(function (){
     $("#totalrafID").html(sumOfColumns('rafID','j'));
     $("#moyenneavancebudgetID").html(avancementBudget('1'));
     $("#moyenneavancechargeID").html(avancementCharge('1'));
-    
+    <?php if($israpport >0) : ?>
     $('#chartcontainer').highcharts({
         data: {
             table: document.getElementById('datatable')
@@ -392,5 +392,6 @@ $(document).ready(function (){
             }
         }
     });
+    <?php endif; ?>
 });
 </script>

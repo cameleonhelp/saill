@@ -685,7 +685,7 @@ define("tinymce/dom/DOMUtils", [
 			}
 
 			// IE & Opera
-			if (name.currentStyle && computed) {
+			if (elm.currentStyle && computed) {
 				return elm.currentStyle[name];
 			}
 
@@ -1596,78 +1596,6 @@ define("tinymce/dom/DOMUtils", [
 		 */
 		toHex: function(rgbVal) {
 			return this.styles.toHex(Tools.trim(rgbVal));
-		},
-
-		/**
-		 * Returns an array of all single CSS classes in the document. A single CSS class is a simple
-		 * rule like ".class" - complex ones like "div td.class" will not be added to output.
-		 *
-		 * @method getClasses
-		 * @return {Array} Array with class objects - each object has a class field - might be other fields in the future.
-		 */
-		getClasses: function() {
-			var self = this, classList = [], lookup = {}, filter = self.settings.class_filter, oldVal;
-
-			if (self.classes) {
-				return self.classes;
-			}
-
-			function addClasses(stylesheet) {
-				// IE style imports
-				each(stylesheet.imports, function(r) {
-					addClasses(r);
-				});
-
-				each(stylesheet.cssRules || stylesheet.rules, function(rule) {
-					// Real type or fake it on IE
-					switch (rule.type || 1) {
-						// Rule
-						case 1:
-							if (rule.selectorText) {
-								each(rule.selectorText.split(','), function(value) {
-									value = value.replace(/^\s*|\s*$|^\s\./g, "");
-
-									// Is internal or it doesn't contain a class
-									if (/\.mce/.test(value) || !/\.[\w\-]+$/.test(value)) {
-										return;
-									}
-
-									// Remove everything but class name
-									oldVal = value;
-									value = value.replace(/.*\.([a-z0-9_\-]+).*/i, '$1');
-
-									// Filter classes
-									if (filter && !(value = filter(value, oldVal))) {
-										return;
-									}
-
-									if (!lookup[value]) {
-										classList.push({'class': value});
-										lookup[value] = 1;
-									}
-								});
-							}
-							break;
-
-						// Import
-						case 3:
-							addClasses(rule.styleSheet);
-							break;
-					}
-				});
-			}
-
-			try {
-				each(self.doc.styleSheets, addClasses);
-			} catch (ex) {
-				// Ignore
-			}
-
-			if (classList.length > 0) {
-				self.classes = classList;
-			}
-
-			return classList;
 		},
 
 		/**
