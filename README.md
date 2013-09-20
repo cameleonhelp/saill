@@ -45,9 +45,9 @@ Version 2.0.4 :
 
  - [x] Mise à jours des composants TinyMCE et autres
 
- - Evolutions :
+ - [x] Corrections de petits bugs de la version 2.0.3
 
-  - [ ] Gestion des environnements avec une partie administration, gestion des demandes, des biens, des logiciels et des rapports pour connaitre le travail réalisé
+ - [ ] Evolution : Gestion des environnements avec une partie administration, gestion des demandes, des biens, des logiciels et des rapports pour connaitre le travail réalisé
 
 * CSS :
 
