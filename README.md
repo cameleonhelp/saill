@@ -27,7 +27,7 @@ Version 2.0.3 :
 
  - [x] Rapport sur le calcul des risques en forme de radar (toile arraignée)
 
- - [ ] Mise en place de chronoline à la place de timeline qui n'est plus maintenu (tests concluants fait, reste à mettre en place)
+ - [x] Mise en place de chronoline à la place de timeline qui n'est plus maintenu (tests concluants fait, reste à mettre en place)
 
  - [x] Correction de la cloture et suppression en masse
 
@@ -39,18 +39,24 @@ Version 2.0.4 :
 
 * Généralité :
 
- - Voir ci-dessous migration en douceur vers la version 3.0.0
+ - [x] Intégration de bootstrap 3.0.0
+ 
+ - [x] Mise à jour de CakePhp en version 2.4.1
 
- - Eventuelles corrections et évolutions de la version 2.0.3
+ - [x] Mise à jours des composants TinyMCE et autres
+
+ - Evolutions :
+
+  - [ ] Gestion des environnements avec une partie administration, gestion des demandes, des biens, des logiciels et des rapports pour connaitre le travail réalisé
 
 * CSS :
 
- - [ ] intégration du nouveau code pour les messages de bas de page
+ - [x] intégration du nouveau code pour les messages de bas de page
 
- - [ ] intégration du nouveau style flat pour tinyMCE
+ - [x] intégration du nouveau style flat pour tinyMCE
 
 * Javascript :
 
- - [ ] intégration des nouveaux codes personnalisés fait sur la maquette
+ - [x] intégration des nouveaux codes personnalisés fait sur la maquette
  
-Version 3.0.0 => intégration de bootstrap 3.0.0 et cakePHP 3.0.0
+Version 3.0.0 => intégration de cakePHP 3.0.0
