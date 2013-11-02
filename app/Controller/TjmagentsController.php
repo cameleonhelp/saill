@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Tjmagent $Tjmagent
  */
 class TjmagentsController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
     public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Tjmagent.NOM' => 'asc'),
         );
     
@@ -24,7 +24,7 @@ class TjmagentsController extends AppController {
                 $this->Tjmagent->recursive = 0;
 		$this->set('tjmagents', $this->paginate());
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -45,7 +45,7 @@ class TjmagentsController extends AppController {
 		$options = array('conditions' => array('Tjmagent.' . $this->Tjmagent->primaryKey => $id),'recursive'=>0);
 		$this->set('tjmagent', $this->Tjmagent->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -59,16 +59,21 @@ class TjmagentsController extends AppController {
             if (isAuthorized('tjmagents', 'add')) :
 		$this->set('title_for_layout','TJM agents');
                 if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Tjmagent->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			$this->Tjmagent->create();
 			if ($this->Tjmagent->save($this->request->data)) {
-				$this->Session->setFlash(__('TJM agent sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('TJM agent sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('TJM agent incorrect, veuillez corriger le TJM agent'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('TJM agent incorrect, veuillez corriger le TJM agent',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -87,18 +92,23 @@ class TjmagentsController extends AppController {
 			throw new NotFoundException(__('TJM agent incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Tjmagent->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			if ($this->Tjmagent->save($this->request->data)) {
-				$this->Session->setFlash(__('TJM agent sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('TJM agent sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('TJM agent incorrect, veuillez corriger le TJM agent'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('TJM agent incorrect, veuillez corriger le TJM agent',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Tjmagent.' . $this->Tjmagent->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Tjmagent->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -120,13 +130,13 @@ class TjmagentsController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Tjmagent->delete()) {
-			$this->Session->setFlash(__('TJM agent supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('TJM agent supprimé',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('TJM agent <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('TJM agent <b>NON</b> supprimé',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -146,7 +156,7 @@ class TjmagentsController extends AppController {
                 $this->set('tjmagents', $this->paginate());            
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }  

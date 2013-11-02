@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Achat $Achat
  */
 class AchatsController extends AppController {
-        public $components = array('History');  
+        public $components = array('History','Common');  
         public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Achat.DATE' => 'desc','Achat.LIBELLEACHAT' => 'asc'),
         );
         
@@ -48,7 +48,7 @@ class AchatsController extends AppController {
                 $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>"asc",'Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1','Activite.id IN ('.substr_replace($listein ,"",-1).')')));
                 $this->set('activites',$activites); 
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;
 	}
@@ -63,16 +63,21 @@ class AchatsController extends AppController {
                 $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
                 $this->set('activites',$activites);   
 		if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Achat->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			$this->Achat->create();
 			if ($this->Achat->save($this->request->data)) {
-				$this->Session->setFlash(__('Achat sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Achat sauvegardé',true),'flash_success');
                                 $this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Achat incorrect, veuillez corriger l\'achat'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Achat incorrect, veuillez corriger l\'achat',true),'flash_failure');
 			}
+                    endif;
                  endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                 
                 
@@ -93,18 +98,23 @@ class AchatsController extends AppController {
 			throw new NotFoundException(__('Achat incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Achat->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			if ($this->Achat->save($this->request->data)) {
-				$this->Session->setFlash(__('Achat sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Achat sauvegardé',true),'flash_success');
                                 $this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Achat incorrect, veuillez corriger l\'achat'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Achat incorrect, veuillez corriger l\'achat',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Achat.' . $this->Achat->primaryKey => $id));
 			$this->request->data = $this->Achat->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                 
 	}
@@ -125,13 +135,13 @@ class AchatsController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Achat->delete()) {
-			$this->Session->setFlash(__('Achat supprimé'),'default',array('class'=>'alert alert-success'));
-                        $this->History->goBack();
+			$this->Session->setFlash(__('Achat supprimé',true),'flash_success');
+                        $this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Achat <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-                $this->History->goBack();
+		$this->Session->setFlash(__('Achat <b>NON</b> supprimé',true),'flash_failure');
+                $this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -161,7 +171,7 @@ class AchatsController extends AppController {
                 $this->set('activites',$activites);   
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                  
         }    

@@ -1,18 +1,19 @@
+<div class="marginright20">
 <div class="actions form">
-<?php echo $this->Form->create('Action',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
-    <div class="control-group">
-        <label class="control-label sstitre  required" for="ActionDomaineId">Domaine : </label>
-        <div class="controls">
-            <?php echo $this->Form->select('domaine_id',$domaines,array('data-rule-required'=>'true','data-msg-required'=>"Le domaine est obligatoire",'empty'=>'Choisir un domaine')); ?>                  
+<?php echo $this->Form->create('Action',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+    <div class="form-group">
+        <label class="col-lg-4 required" for="ActionDomaineId">Domaine : </label>
+        <div class="col-lg-4">
+            <?php echo $this->Form->select('domaine_id',$domaines,array('data-rule-required'=>'true','class'=>"form-control",'data-msg-required'=>"Le domaine est obligatoire",'empty'=>'Choisir un domaine')); ?>                  
         </div>
     </div>
-    <div class="navbar">
-        <div class="navbar-inner">
-            <div class="container" style="margin-top:2px;text-align:center;">
-                <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-primary','type'=>'submit')); ?>   
-            </div>
-        </div>
+    <div style="clear:both;">
+    <div class="form-group">
+      <div class="btn-block-horizontal">
+            <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?>   
+      </div>
     </div>  
+    </div> 
 <?php echo $this->Form->end(); ?>     
 </div>
 <?php $israpport = isset($rapportresults) ? count($rapportresults) : 0; ?>
@@ -22,7 +23,7 @@
 <br>
 <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'actions par niveau de risque</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
         <thead>
             <tr>
             <th>Niveau</th>
@@ -40,8 +41,9 @@
     </table>
 </div>
 <?php if(isset($rapportresults) && $israpport==0) : ?>
-<div class="alert alert-block"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
+<div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
 <?php endif; ?>
+</div>
 <script>
 $(document).ready(function (){ 
     
@@ -50,7 +52,7 @@ $(document).ready(function (){
         $("."+id).each(function() {
           tot += parseFloat($(this).html());
         });
-        return tot;
+        return tot.toFixed(2);
      }   
     
     $("#total").html(sumOfColumns('nbaction'));

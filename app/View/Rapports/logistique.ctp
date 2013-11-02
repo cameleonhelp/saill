@@ -1,21 +1,24 @@
-<?php echo $this->Form->create('Rapport',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
-    <div class="control-group">
-        <label class="control-label sstitre  required" for="RapportSectionId">Section : </label>
-        <div class="controls">
-                <?php echo $this->Form->select('section_id',$sections,array('data-rule-required'=>'true','data-msg-required'=>"La section est obligatoire",'empty' => 'Choisir une section')); ?>
+<div class="marginright20">
+<div class="logistique form">
+<?php echo $this->Form->create('Rapport',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+    <div class="form-group">
+        <label class="col-lg-4 required" for="RapportSectionId">Section : </label>
+        <div class="col-lg-4">
+                <?php echo $this->Form->select('section_id',$sections,array('data-rule-required'=>'true','class'=>"form-control",'data-msg-required'=>"La section est obligatoire",'empty' => 'Choisir une section')); ?>
         </div>
     </div>
-    <div class="navbar">
-        <div class="navbar-inner">
-            <div class="container" style="margin-top:2px;text-align:center;">
-                <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-primary','type'=>'submit')); ?>   
-            </div>
-        </div>
+    <div style="clear:both;">
+    <div class="form-group">
+      <div class="btn-block-horizontal">
+            <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?>   
+      </div>
     </div>  
+    </div> 
 <?php echo $this->Form->end(); ?>
+</div>
 <?php if (isset($agents)): ?>
 <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'agents actif par site</div><br>
-<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
     <thead>
         <tr>
         <th>Section</th>
@@ -41,9 +44,9 @@
 </table>
 <?php endif; ?>
 <br/>
-<?php if (isset($materiels)): ?>
+<?php if (isset($materiels) && count($materiels)>0): ?>
 <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de matériel par type et état</div><br>
-<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
     <thead>
         <tr>
         <th>Section</th>
@@ -70,6 +73,11 @@
     </tfooter>      
 </table>
 <?php endif; ?>
+
+<?php if (isset($materiels) && count($materiels)==0): ?>
+<div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
+<?php endif; ?>
+</div>
 <script>
 $(document).ready(function (){ 
     function sumOfColumns(id) {
@@ -77,7 +85,7 @@ $(document).ready(function (){
         $("."+id).each(function() {
           tot += parseFloat($(this).html());
         });
-        return tot;
+        return tot.toFixed(2);
      }   
     
     $("#totalagent").html(sumOfColumns('nbagent'));

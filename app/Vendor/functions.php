@@ -1,5 +1,7 @@
 <?php
 App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
+App::uses('ConnectionManager', 'Model');
+
 /**
  * isFerie 
  * 
@@ -7,7 +9,7 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
  * @return boolean
  */
     function isFerie($date){
-        date_default_timezone_set('GMT');
+        date_default_timezone_set('Europe/Paris');
         $an = $date->format('Y');
         $tab_feries[] = $an.'-01-01'; // Jour de l'an
         $tab_feries[] = $an.'-05-01'; // Fête du travail
@@ -416,7 +418,7 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
             }
         }
         /*else {
-            SessionComponent::setFlash(__('Votre session est expirée veuillez rafraîchir la page.<br />Vos données ont été prises en compte, si toutefois cela n\'était pas le cas, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-error'));
+            SessionComponent::setFlash(__('Votre session est expirée veuillez rafraîchir la page.<br />Vos données ont été prises en compte, si toutefois cela n\'était pas le cas, veuillez contacter l\'administrateur.',true),'flash_failure');
         }*/ 
     }
         
@@ -469,6 +471,8 @@ App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
                     endswitch;
                 endif;           
             endforeach;
+        else:
+            Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
         endif;
         return $result;
     }
@@ -602,7 +606,7 @@ function styleBarre($avancement){
             $result = 'success';
             break; 
         default:
-            $result = 'danger progress-striped';
+            $result = 'default';
     }
     return $result;
 }
@@ -623,7 +627,7 @@ function styleBarreInd($avancement){
             $result = 'success';
             break; 
         default:
-            $result = 'danger progress-striped';
+            $result = 'danger progress-bar-striped';
     }
     return $result;
 }
@@ -853,8 +857,9 @@ function styleBarreInd($avancement){
     
     function goPrev(){
         $history = SessionComponent::read('User.history');
-        $pos = count($history)-2 < 0 ? 0 : count($history)-2;
+        $pos = count($history)-2 < 0 ? 0 : count($history)-2; 
         return $history[$pos];
+        exit();
     }
     
     function sort_arr_of_obj($array, $sortby, $direction='asc') {
@@ -1015,4 +1020,62 @@ function styleBarreInd($avancement){
         }
         return $str;
     }
-?>
+     
+/**
+ * Get random color hex value
+ *
+ * @param  int $id identifiant for user
+ * @param  int $max_r Maximum value for the red color
+ * @param  int $max_g Maximum value for the green color
+ * @param  int $max_b Maximum value for the blue color
+ * @return string
+ */
+function getIdColorHex($id, $max_r = 255, $max_g = 255, $max_b = 255)
+{
+    $key = 0.123456789;
+    $min = $key * $id;
+    $min = 100;
+    // ensure that values are in the range between 0 and 255
+    $max_r = max($min, min($max_r, 255));
+    $max_g = max($min, min($max_g, 255));
+    $max_b = max($min, min($max_b, 255));
+   
+    // generate and return the random color
+    return str_pad(dechex($max_r), 2, '0', STR_PAD_LEFT) .
+           str_pad(dechex($max_g), 2, '0', STR_PAD_LEFT) .
+           str_pad(dechex($max_b), 2, '0', STR_PAD_LEFT);
+}
+
+function filtre_is_actif($values=null,$default){
+    $return = $values != null ? true : false;
+    if(is_array($values) && is_array($default)):
+        $implodevalues = implode('', $values);
+        $implodedefault = implode('', $default);
+        $return = $implodevalues != $implodedefault ? true : false;
+    endif;
+    if(!is_array($values) && !is_array($default)):
+        $return = $values != $default ? true : false;
+    endif;
+    return $return == true ? ' filtreactif' : '';
+}
+
+function subfiltre_is_actif($values=null,$default){
+    $return = $values == null ? true : false;
+    if(is_array($values) && is_array($default)):
+        $implodevalues = implode('', $values);
+        $implodedefault = implode('', $default);
+        $return = $implodevalues == $implodedefault ? true : false;
+    endif;    
+    if(!is_array($values) && !is_array($default)):
+        $return = $values == $default ? true : false;
+    endif;
+    return $return == true ? ' subfilteractif' : '';
+}
+
+function classActive($class){
+      return $class == 'active_head' ? 'in' : '';
+}
+
+function classChevron($class){
+      return $class == 'active_head' ? 'chevron-down' : 'chevron-right grey';
+}

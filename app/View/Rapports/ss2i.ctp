@@ -1,44 +1,52 @@
-<?php echo $this->Form->create('Rapport',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
-    <table>
-        <tr>
-            <td rowspan="3"><label class="control-label sstitre required" for="RapportSociete">Sociétés : </label></td>
-            <td rowspan="3">
-                <?php echo $this->Form->select('societe',$societes,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le nom de la société est obligatoire")); ?>
-            </td>
-            <td style="height:56px"><label class="control-label sstitre" for="RapportMois">Mois : </label></td>
-            <td>
-                <?php echo $this->Form->select('mois',$mois,array('default'=>date('m'),'empty'=>false)); ?>
-            </td>
-        </tr>
-        <tr>
-            <td  style="height:56px"><label class="control-label sstitre" for="RapportAnnee">Année : </label></td>
-            <td>
-                <?php echo $this->Form->select('annee',$annee,array('default'=>date('Y'),'empty'=>false)); ?>
-            </td>
-        </tr>
-        <tr>
-            <td style="height:56px"><label class="control-label sstitre" for="RapportIndisponibilite">Indisponibilité : </label></td>
-            <td>
-                <?php echo $this->Form->input('indisponibilite',array('type'=>'checkbox','class'=>'yesno','value'=>1)); ?>&nbsp;<label class="labelAfter" for="RapportIndisponibilite"></label>            
-            </td>
-        </tr>        
-    </table>
-    <div class="navbar">
-        <div class="navbar-inner">
-            <div class="container" style="margin-top:2px;text-align:center;">
-                <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-primary','type'=>'submit')); ?>   
+<div class="marginright20">
+<div class="ss2i form">
+<?php echo $this->Form->create('Rapport',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+    <div class='block-panel block-panel-50-left'>
+        <div class="form-group">
+            <label class="col-lg-4 required"  for="RapportSociete">Sociétés : </label>
+            <div class="col-lg-offset-4">
+                    <?php echo $this->Form->select('societe',$societes,array('data-rule-required'=>'true','multiple'=>'true','class'=>"form-control multiselect size75",'size'=>"10",'data-msg-required'=>"La société est obligatoire",'hiddenField' => false)); ?>                 
             </div>
+        </div>         
+    </div>
+    <div class='block-panel block-panel-50-right'>
+        <div class="form-group">
+            <label class="col-lg-4 required" for="RapportMois">Mois :</label>
+            <div class="col-lg-4">
+                    <?php echo $this->Form->select('mois',$mois,array('default'=>date('m'),'class'=>"form-control",'empty'=>false)); ?>           
+            </div>            
         </div>
+        <div class="form-group">
+            <label class="col-lg-4 required" for="RapportAnnee">Année : </label>
+            <div class="col-lg-4">
+                    <?php echo $this->Form->select('annee',$annee,array('default'=>date('Y'),'class'=>"form-control",'empty'=>false)); ?>           
+            </div>            
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 required" for="RapportIndisponibilite">Indisponibilité : </label>
+            <div class="col-lg-4">
+                    <?php echo $this->Form->input('indisponibilite',array('type'=>'checkbox','class'=>'yesno','value'=>1)); ?>&nbsp;<label class="labelAfter" for="RapportIndisponibilite"></label>         
+            </div>            
+        </div>        
+    </div>
+    <div style="clear:both;">
+    <div class="form-group">
+      <div class="btn-block-horizontal">
+            <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?>   
+      </div>
     </div>  
+    </div>  
+</div>
 <?php echo $this->Form->end(); ?>
-<?php if (isset($results)): ?>
+<?php if (isset($results) && count($results)>0): ?>
 <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Facturation estimée par société</div><br>
-<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
     <thead>
         <tr>
         <th>Société</th>
         <th>Agents</th>
         <th>Jours</th>
+        <th>frais (€)</th>
         <th>Projet</th>
         <th>Activité</th>
         </tr>
@@ -59,6 +67,7 @@
                     endforeach;
                 ?>
             <td class="nb" style="text-align:right;"><?php echo $nbaction; ?></td>
+            <td class="frais"><?php echo $result[0]['FRAIS']; ?></td>
             <td><?php echo $result['Facturation']['projet_NOM']; ?></td>
             <td><?php echo $result['Activite']['NOM']; ?></td>
         </tr>           
@@ -68,21 +77,28 @@
     <tr>
         <td colspan="2" class="footer" style="text-align:right;">Total :</td>
         <td class="footer" id="total" style="text-align:center;"></td>
-        <td class="footer" colspan="2" style="text-align:left;">jours</td>
+        <td class="footer" id="totalfrais" style="text-align:center;"></td>
+        <td class="footer" colspan="2" style="text-align:left;">&nbsp;</td>
     </tr> 
     </tfooter>    
 </table>
 <?php endif; ?>
+<?php if(isset($results) && count($results)==0) : ?>
+<div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
+<?php endif; ?>
+</div>
 <script>
 $(document).ready(function (){ 
-    function sumOfColumns(id) {
+    function sumOfColumns(id,type) {
         var tot = 0;
         $("."+id).each(function() {
           tot += parseFloat($(this).html());
         });
-        return tot;
+        tot = isNaN(tot) ? 0 : tot;
+        return tot.toFixed(2)+" "+type;
      }   
     
-    $("#total").html(sumOfColumns('nb'));
+    $("#total").html(sumOfColumns('nb','j'));
+    $("#totalfrais").html(sumOfColumns('frais','€'));
 });
 </script>

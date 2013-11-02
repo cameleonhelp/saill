@@ -1,37 +1,44 @@
+<div class="marginright20">
 <div class="dashboards form">
-<?php echo $this->Form->create('Dashboard',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
-    <div class="alert alert-info">
-        Ce rapport est calculé pour l'année en cours, vous pouvez remonté la consommation pour une autre année en saisissant l'année ci-contre.
-        <?php echo $this->Form->input('ANNEE',array('type'=>'text','class'=>'span3')); ?><br>
-        Le budget contratuel et les prévisions resteront ceux de l'année courante. Pour plus d'information, consultez les activités des projets et les plan de charges de l'année concernée.
-    </div>      
-    <table>
-        <tr>
-            <td><label class="control-label sstitre  required" for="DashboardProjetId">Projets: </label></td>
-            <td>
-                    <?php echo $this->Form->select('projet_id',$listprojets,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le nom du projet est obligatoire")); ?>               
-                <br><?php echo $this->Form->input('SelectAllProjetId',array('type'=>'checkbox')); ?><label class="labelAfter" for="DashboardSelectAllProjetId">&nbsp;Tout sélectionner</label>            
-            </td>
-            <td><label class="control-label sstitre" for="DashboardPlanchargeId">Plan de charge : </label></td>
-            <td>
-                    <?php echo $this->Form->select('plancharge_id',$listplancharges,array('multiple'=>'true','size'=>"10")); ?>               
-                <br><?php echo $this->Form->input('SelectAllPlanchargeId',array('type'=>'checkbox')); ?><label class="labelAfter" for="DashboardSelectAllPlanchargeId">&nbsp;Tout sélectionner</label>            
-            </td>            
-        </tr>        
-    </table>
-    <div class="navbar">
-        <div class="navbar-inner">
-            <div class="container" style="margin-top:2px;text-align:center;">
-                <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-primary','type'=>'submit')); ?>   
-            </div>
+<?php echo $this->Form->create('Dashboard',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+    <div class="bs-callout bs-callout-info" style="margin-top:0px;">
+        <div style="display: table;">
+        <div style="float:left;vertical-align: middle;margin-right: 10px;">Ce rapport est calculé pour l'année en cours, vous pouvez remonté la consommation pour une autre année en saisissant l'année ci-contre.</div>&nbsp;
+        <?php echo $this->Form->input('ANNEE',array('type'=>'text','class'=>'form-control size-fix-75 dateyear-year')); ?><br>
+        <div style="float:left;">Le budget contractuel et les prévisions resteront ceux de l'année courante. Pour plus d'information, consultez les activités des projets et les plan de charges de l'année concernée.</div>
         </div>
+    </div> 
+    <div class='block-panel block-panel-50-left'>
+        <div class="form-group">
+            <label class="col-lg-4 required" for="DashboardProjetId">Projets: </label>
+            <div class="col-lg-offset-4">
+                    <?php echo $this->Form->select('projet_id',$listprojets,array('data-rule-required'=>'true','multiple'=>'true','class'=>"form-control multiselect size75",'size'=>"10",'data-msg-required'=>"Le nom du projet est obligatoire",'hiddenField' => false)); ?>               
+                <br><?php echo $this->Form->input('SelectAllProjetId',array('type'=>'checkbox')); ?><label class="labelAfter" for="DashboardSelectAllProjetId">&nbsp;Tout sélectionner</label>  
+            </div>
+        </div>        
+    </div>
+    <div class='block-panel block-panel-50-right'>
+        <div class="form-group">
+            <label class="col-lg-4" for="DashboardPlanchargeId">Plan de charge : </label>
+            <div class="col-lg-offset-4">
+                    <?php echo $this->Form->select('plancharge_id',$listplancharges,array('multiple'=>'true','size'=>"10",'class'=>"form-control multiselect size75")); ?>               
+                <br><?php echo $this->Form->input('SelectAllPlanchargeId',array('type'=>'checkbox')); ?><label class="labelAfter" for="DashboardSelectAllPlanchargeId">&nbsp;Tout sélectionner</label>            
+            </div>            
+        </div>       
+    </div>    
+    <div style="clear:both;">
+    <div class="form-group">
+      <div class="btn-block-horizontal">
+            <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?>   
+      </div>
     </div>  
+    </div> 
 <?php echo $this->Form->end(); ?>     
 </div>
 <?php $israpport = isset($results) ? count($results) : 0; ?>
 <?php $style = $israpport==0 ? 'style="display:none;"' : ''; ?>
 <div id="rapport" <?php echo $style; ?>>
-    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc icon-top2"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn','escape' => false)); ?></div>
+    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc" style="vertical-align: bottom;"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn btn-sm btn-default','escape' => false)); ?></div>
 <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
     <table id="datatable" style="display:none;">
         <thead>
@@ -53,7 +60,7 @@
     </table>
 <br><br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Tableau CRA</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="datatable">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="datatable" style="width:100%;">
         <thead>
             <tr>
             <th rowspan="2" style="vertical-align: middle;">Projet</th>
@@ -82,29 +89,34 @@
                 <td style="text-align: right;" class="facturebudget1"><?php echo $result[0]['BUDGETFACTURE']; ?></td>
                 <td style="text-align: right;" class="facturecharge1"><?php echo $result[0]['TOTALCHARGEFACTUREE']; ?></td> 
                 <td style="text-align: right;" class="avancebudget1">
-                    <?php $styleB = styleBarreInd(h($result[0]['AVANCEMENTBUDGET'])); ?>
-                    <div class="progress progress-<?php echo $styleB; ?>" style="margin-bottom:-10px;width:100%;float: left;">
-                    <div class="bar" style="width:<?php echo h($result[0]['AVANCEMENTBUDGET']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%"><?php echo $result[0]['AVANCEMENTCHARGE'] > 0 ? $result[0]['AVANCEMENTCHARGE']."%" : ''; ?></div></div>
+                    <?php $styleB1 = $result[0]['AVANCEMENTBUDGET']>100 ? 'progress-striped' : ''; ?>
+                    <?php $styleB2 = styleBarreInd(h($result[0]['AVANCEMENTBUDGET'])); ?>
+                    <div class="progress <?php echo $styleB1; ?>"  style="margin-bottom:-10px;">
+                      <div class="progress-bar progress-bar-<?php echo $styleB2; ?>  " style="width: <?php echo h($result[0]['AVANCEMENTBUDGET']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTBUDGET']); ?>%"><?php echo $result[0]['AVANCEMENTBUDGET'] > 0 ? $result[0]['AVANCEMENTBUDGET']."%" : ''; ?></div>
+                    </div>
                 </td>
                 <td style="text-align: right;" class="avancecharge1">
-                    <?php $styleC = styleBarreInd(h($result[0]['AVANCEMENTCHARGE'])); ?>
-                    <div class="progress progress-<?php echo $styleC; ?>" style="margin-bottom:-10px;width:100%;float: left;">
-                    <div class="bar" style="width:<?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%"><?php echo $result[0]['AVANCEMENTCHARGE'] > 0 ? $result[0]['AVANCEMENTCHARGE']."%" : ''; ?></div></div>       
+                    <?php $styleC1 = $result[0]['AVANCEMENTCHARGE']>100 ? 'progress-striped' : ''; ?>
+                    <?php $styleC2 = styleBarreInd(h($result[0]['AVANCEMENTCHARGE'])); ?>
+                    <div class="progress <?php echo $styleC1; ?>"  style="margin-bottom:-10px;">
+                      <div class="progress-bar progress-bar-<?php echo $styleC2; ?>  " style="width: <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%"><?php echo $result[0]['AVANCEMENTCHARGE'] > 0 ? $result[0]['AVANCEMENTCHARGE']."%" : ''; ?></div>
+                    </div>  
+                </td>
                 <td style="text-align: right;" class="raf1"><?php echo $result[0]['RAF']<0 ? 0 : $result[0]['RAF']; ?></td>    
             </tr>           
             <?php endforeach; ?>
         </tbody>
         <tfooter>
 	<tr>
-            <td class="footer" style="text-align:right;">Total :</td>
-            <td class="footer" id="moyennetjm1" style="text-align:right;"></td>
-            <td class="footer" id="totalcontratbudget1" style="text-align:right;"></td>
-            <td class="footer" id="totalcontratcharge1" style="text-align:right;"></td>
-            <td class="footer" id="totalfacturebudget1" style="text-align:right;"></td>
-            <td class="footer" id="totalfacturecharge1" style="text-align:right;"></td>
-            <td class="footer" id="moyenneavancebudget1" style="text-align:right;"></td>
-            <td class="footer" id="moyenneavancecharge1" style="text-align:right;"></td>
-            <td class="footer" id="totalraf1" style="text-align:right;"></td>            
+            <td class="footer nowrap" style="text-align:right;">Total :</td>
+            <td class="footer nowrap" id="moyennetjm1" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalcontratbudget1" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalcontratcharge1" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalfacturebudget1" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalfacturecharge1" style="text-align:right;"></td>
+            <td class="footer nowrap" id="moyenneavancebudget1" style="text-align:right;"></td>
+            <td class="footer nowrap" id="moyenneavancecharge1" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalraf1" style="text-align:right;"></td>            
 	</tr> 
         </tfooter>
     </table>
@@ -123,7 +135,7 @@
     <?php endif; ?>
     <br />
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Tableau général</div><br>    
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="datatable">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="datatable" style="width:100%;">
         <thead>
             <tr>
             <th rowspan="2" style="vertical-align: middle;">Projet</th>
@@ -174,27 +186,27 @@
         </tbody>
         <tfooter>
 	<tr>
-            <td class="footer" style="text-align:right;">Total :</td>
-            <td class="footer" id="moyennetjm" style="text-align:right;"></td>
-            <td class="footer" id="totalcontratbudget" style="text-align:right;"></td>
-            <td class="footer" id="totalcontratcharge" style="text-align:right;"></td>
-            <td class="footer" id="totalprevisionbudget" style="text-align:right;"></td>
-            <td class="footer" id="totalprevisioncharge" style="text-align:right;"></td>
-            <td class="footer" id="totalreelbudget" style="text-align:right;"></td>
-            <td class="footer" id="totalreelcharge" style="text-align:right;"></td>
-            <td class="footer" id="totalfacturebudget" style="text-align:right;"></td>
-            <td class="footer" id="totalfacturecharge" style="text-align:right;"></td>
-            <td class="footer" id="moyenneavancebudget" style="text-align:right;"></td>
-            <td class="footer" id="moyenneavancecharge" style="text-align:right;"></td>
-            <td class="footer" id="totalecart" style="text-align:center;"></td>
-            <td class="footer" id="totalrac" style="text-align:right;"></td>
-            <td class="footer" id="totalraf" style="text-align:right;"></td>            
+            <td class="footer nowrap" style="text-align:right;">Total :</td>
+            <td class="footer nowrap" id="moyennetjm" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalcontratbudget" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalcontratcharge" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalprevisionbudget" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalprevisioncharge" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalreelbudget" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalreelcharge" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalfacturebudget" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalfacturecharge" style="text-align:right;"></td>
+            <td class="footer nowrap" id="moyenneavancebudget" style="text-align:right;"></td>
+            <td class="footer nowrap" id="moyenneavancecharge" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalecart" style="text-align:center;"></td>
+            <td class="footer nowrap" id="totalrac" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalraf" style="text-align:right;"></td>            
 	</tr> 
         </tfooter>
     </table>
     <br />
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Indicateurs département</div><br>    
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
         <thead>
             <tr>
             <th rowspan="2" style="vertical-align: middle;">Projet</th>
@@ -220,36 +232,42 @@
                 <td style="text-align: right;" class="contratchargeID"><?php echo $result['CONTRAT']['CHARGE']; ?></td>               
                 <td style="text-align: right;" class="facturebudgetID"><?php echo $result[0]['BUDGETFACTURE']; ?></td>
                 <td style="text-align: right;" class="facturechargeID"><?php echo $result[0]['TOTALCHARGEFACTUREE']; ?></td> 
-                                <td style="text-align: right;" class="avancebudgetID">
-                    <?php $styleB = styleBarreInd(h($result[0]['AVANCEMENTBUDGET'])); ?>
-                    <div class="progress progress-<?php echo $styleB; ?>" style="margin-bottom:-10px;width:100%;float: left;">
-                    <div class="bar" style="width:<?php echo h($result[0]['AVANCEMENTBUDGET']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%"><?php echo $result[0]['AVANCEMENTCHARGE'] > 0 ? $result[0]['AVANCEMENTCHARGE']."%" : ''; ?></div></div>
+                <td style="text-align: right;" class="avancebudgetID">
+                    <?php $styleB1 = $result[0]['AVANCEMENTBUDGET']>100 ? 'progress-striped' : ''; ?>
+                    <?php $styleB2 = styleBarreInd(h($result[0]['AVANCEMENTBUDGET'])); ?>
+                    <div class="progress <?php echo $styleB1; ?>"  style="margin-bottom:-10px;">
+                      <div class="progress-bar progress-bar-<?php echo $styleB2; ?>  " style="width: <?php echo h($result[0]['AVANCEMENTBUDGET']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTBUDGET']); ?>%"><?php echo $result[0]['AVANCEMENTBUDGET'] > 0 ? $result[0]['AVANCEMENTBUDGET']."%" : ''; ?></div>
+                    </div>                    
                 </td>
                 <td style="text-align: right;" class="avancechargeID">
-                    <?php $styleC = styleBarreInd(h($result[0]['AVANCEMENTCHARGE'])); ?>
-                    <div class="progress progress-<?php echo $styleC; ?>" style="margin-bottom:-10px;width:100%;float: left;">
-                    <div class="bar" style="width:<?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%"><?php echo $result[0]['AVANCEMENTCHARGE'] > 0 ? $result[0]['AVANCEMENTCHARGE']."%" : ''; ?></div></div>       
+                    <?php $styleC1 = $result[0]['AVANCEMENTCHARGE']>100 ? 'progress-striped' : ''; ?>
+                    <?php $styleC2 = styleBarreInd(h($result[0]['AVANCEMENTCHARGE'])); ?>
+                    <div class="progress <?php echo $styleC1; ?>"  style="margin-bottom:-10px;">
+                      <div class="progress-bar progress-bar-<?php echo $styleC2; ?>  " style="width: <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%"><?php echo $result[0]['AVANCEMENTCHARGE'] > 0 ? $result[0]['AVANCEMENTCHARGE']."%" : ''; ?></div>
+                    </div>  
+                </td>    
                 <td style="text-align: right;" class="rafID"><?php echo $result[0]['RAF']<0 ? 0 : $result[0]['RAF']; ?></td>   
             </tr>           
             <?php endforeach; ?>
         </tbody>
         <tfooter>
 	<tr>
-            <td class="footer" style="text-align:right;">Total :</td>
-            <td class="footer" id="totalcontratbudgetID" style="text-align:right;"></td>
-            <td class="footer" id="totalcontratchargeID" style="text-align:right;"></td>
-            <td class="footer" id="totalfacturebudgetID" style="text-align:right;"></td>
-            <td class="footer" id="totalfacturechargeID" style="text-align:right;"></td>
-            <td class="footer" id="moyenneavancebudgetID" style="text-align:right;"></td>
-            <td class="footer" id="moyenneavancechargeID" style="text-align:right;"></td>
-            <td class="footer" id="totalrafID" style="text-align:right;"></td>            
+            <td class="footer nowrap" style="text-align:right;">Total :</td>
+            <td class="footer nowrap" id="totalcontratbudgetID" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalcontratchargeID" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalfacturebudgetID" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalfacturechargeID" style="text-align:right;"></td>
+            <td class="footer nowrap" id="moyenneavancebudgetID" style="text-align:right;"></td>
+            <td class="footer nowrap" id="moyenneavancechargeID" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalrafID" style="text-align:right;"></td>            
 	</tr> 
         </tfooter>
     </table>    
 </div>
 <?php if(isset($results) && $israpport==0) : ?>
-<div class="alert alert-block"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
+<div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
 <?php endif; ?>
+</div>
 <script>
 $(document).ready(function (){ 
 

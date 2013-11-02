@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Societe $Societe
  */
 class SocietesController extends AppController {
-        public $components = array('History'); 
+        public $components = array('History','Common'); 
     public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Societe.NOM' => 'asc'),
         /*'order' => array(
             'Post.title' => 'asc' /*/
@@ -25,7 +25,7 @@ class SocietesController extends AppController {
 		$this->Societe->recursive = 0;
 		$this->set('societes', $this->paginate());
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -45,7 +45,7 @@ class SocietesController extends AppController {
 		$options = array('conditions' => array('Societe.' . $this->Societe->primaryKey => $id),'recursive'=>0);
 		$this->set('societe', $this->Societe->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -58,16 +58,21 @@ class SocietesController extends AppController {
 	public function add() {
             if (isAuthorized('societes', 'add')) :
 		if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Societe->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			$this->Societe->create();
 			if ($this->Societe->save($this->request->data)) {
-				$this->Session->setFlash(__('Société sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Société sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Société incorrecte, veuillez corriger la société'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Société incorrecte, veuillez corriger la société',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -85,18 +90,23 @@ class SocietesController extends AppController {
 			throw new NotFoundException(__('Société incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Societe->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			if ($this->Societe->save($this->request->data)) {
-				$this->Session->setFlash(__('Société sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Société sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Société incorrecte, veuillez corriger la société'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Société incorrecte, veuillez corriger la société',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Societe.' . $this->Societe->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Societe->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -117,13 +127,13 @@ class SocietesController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Societe->delete()) {
-			$this->Session->setFlash(__('Société supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Société supprimé',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Société <b>NON</b> supprime'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Société <b>NON</b> supprime',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -143,7 +153,7 @@ class SocietesController extends AppController {
                 $this->set('societes', $this->paginate());              
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }        

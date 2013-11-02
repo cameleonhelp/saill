@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Projet $Projet
  */
 class ProjetsController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
         public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Projet.NOM' => 'asc'),
         'conditions' => array('Projet.id >' => 1),
         //'group'=>array('Projet.contrat_id'),
@@ -58,7 +58,7 @@ class ProjetsController extends AppController {
                 $export = $this->Projet->find('all',array('conditions'=>$newconditions,'order' => array('Projet.NOM' => 'asc'),'recursive'=>0));
                 $this->Session->write('xls_export',$export);                   
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -78,7 +78,7 @@ class ProjetsController extends AppController {
 		$options = array('conditions' => array('Projet.' . $this->Projet->primaryKey => $id));
 		$this->set('projet', $this->Projet->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -97,16 +97,21 @@ class ProjetsController extends AppController {
                 $factureProjet = Configure::read('factureProjet');
                 $this->set('facturation',$factureProjet);                
                 if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Projet->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			$this->Projet->create();
 			if ($this->Projet->save($this->request->data)) {
-				$this->Session->setFlash(__('Projet sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Projet sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Projet incorrect, veuillez corriger le projet'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Projet incorrect, veuillez corriger le projet',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -130,18 +135,23 @@ class ProjetsController extends AppController {
 			throw new NotFoundException(__('Projet incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Projet->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			if ($this->Projet->save($this->request->data)) {
-				$this->Session->setFlash(__('Projet sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Projet sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Projet incorrect, veuillez corriger le projet'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Projet incorrect, veuillez corriger le projet',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Projet.' . $this->Projet->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Projet->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -162,13 +172,13 @@ class ProjetsController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Projet->delete()) {
-			$this->Session->setFlash(__('Projet supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Projet supprimé',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Projet <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Projet <b>NON</b> supprimé',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -194,7 +204,7 @@ class ProjetsController extends AppController {
                 $this->set('contrats',$contrats);
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }      

@@ -6,14 +6,14 @@ App::uses('AppController', 'Controller');
  * @property Message $Message
  */
 class MessagesController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
     public function beforeFilter() {
         parent::beforeFilter();
         $this->Auth->allow();
     }  
     
     public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Message.id' => 'asc'),
         /*'order' => array(
             'Post.title' => 'asc' /*/
@@ -30,7 +30,7 @@ class MessagesController extends AppController {
 		$this->Message->recursive = 0;
 		$this->set('messages', $this->paginate());
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -50,7 +50,7 @@ class MessagesController extends AppController {
 		$options = array('conditions' => array('Message.' . $this->Message->primaryKey => $id));
 		$this->set('message', $this->Message->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -63,16 +63,21 @@ class MessagesController extends AppController {
 	public function add() {
             if (isAuthorized('messages', 'add')) :
 		if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Message->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			$this->Message->create();
 			if ($this->Message->save($this->request->data)) {
-				$this->Session->setFlash(__('Message sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Message sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Message incorrect, veuillez corriger le message.'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Message incorrect, veuillez corriger le message.',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -90,18 +95,23 @@ class MessagesController extends AppController {
 			throw new NotFoundException(__('Message incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Message->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			if ($this->Message->save($this->request->data)) {
-				$this->Session->setFlash(__('Message sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Message sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Message incorrect, veuillez corriger le message.'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Message incorrect, veuillez corriger le message.',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Message.' . $this->Message->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Message->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -122,13 +132,13 @@ class MessagesController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Message->delete()) {
-			$this->Session->setFlash(__('Message supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Message supprimé',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Message NON supprimé.'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Message NON supprimé.',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -176,7 +186,7 @@ class MessagesController extends AppController {
                 $this->set('messages', $this->paginate());
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }        

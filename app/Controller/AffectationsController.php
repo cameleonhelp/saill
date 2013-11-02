@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Affectation $Affectation
  */
 class AffectationsController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
 /**
  * index method
  *
@@ -18,7 +18,7 @@ class AffectationsController extends AppController {
                 $liste = $this->Affectation->find('all',array('conditions'=>array('Affectation.utilisateur_id'=>$id)));                
 		$this->set('affectations', $liste);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
             endif;                
 	}
@@ -38,7 +38,7 @@ class AffectationsController extends AppController {
 		$options = array('conditions' => array('Affectation.' . $this->Affectation->primaryKey => $id));
 		$this->set('affectation', $this->Affectation->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();          
             endif;                
 	}
@@ -53,20 +53,25 @@ class AffectationsController extends AppController {
                 $activites = $this->Affectation->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.ACTIVE'=>1),'recursive'=>0));
 		$this->set('activites', $activites);            
 		if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Affectation->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
                         $this->Affectation->utilisateur_id = $userid;
 			$this->Affectation->create();
 			if ($this->Affectation->save($this->request->data)) {
                                 $history['Historyutilisateur']['utilisateur_id']=$userid;
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une affectation par ".userAuth('NOMLONG');
                                 $this->Affectation->Utilisateur->Historyutilisateur->save($history);     
-				$this->Session->setFlash(__('Affectation sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Affectation sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Affectation incorrecte, veuillez corriger l\'affectation'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Affectation incorrecte, veuillez corriger l\'affectation',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();         
             endif;                
 	}
@@ -86,21 +91,26 @@ class AffectationsController extends AppController {
 			throw new NotFoundException(__('Affectation incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Affectation->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			if ($this->Affectation->save($this->request->data)) {
                                 $history['Historyutilisateur']['utilisateur_id']=$userid;
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour d'une affectation par ".userAuth('NOMLONG');
                                 $this->Affectation->Utilisateur->Historyutilisateur->save($history);                            
-				$this->Session->setFlash(__('Affectation sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Affectation sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Affectation incorrecte, veuillez corriger làffectation'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Affectation incorrecte, veuillez corriger làffectation',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Affectation.' . $this->Affectation->primaryKey => $id));
 			$this->request->data = $this->Affectation->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
             endif;                
 	}
@@ -123,13 +133,13 @@ class AffectationsController extends AppController {
                         $history['Historyutilisateur']['utilisateur_id']=$userid;
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une affectation par ".userAuth('NOMLONG');
                         $this->Affectation->Utilisateur->Historyutilisateur->save($history);                     
-			$this->Session->setFlash(__('Affectation supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Affectation supprimée',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Affectation <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Affectation <b>NON</b> supprimée',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
             endif;                
 	}
@@ -151,12 +161,12 @@ class AffectationsController extends AppController {
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une affectation par ".userAuth('NOMLONG');
                     $this->Affectation->Utilisateur->Historyutilisateur->create();
                     $this->Affectation->Utilisateur->Historyutilisateur->save($history);     
-                    $this->Session->setFlash(__('Affectation sauvegardée'),'default',array('class'=>'alert alert-success'));
+                    $this->Session->setFlash(__('Affectation sauvegardée',true),'flash_success');
                 } else {
-                    $this->Session->setFlash(__('Affectation <b>NON</b> sauvegardée'),'default',array('class'=>'alert alert-error'));
+                    $this->Session->setFlash(__('Affectation <b>NON</b> sauvegardée',true),'flash_failure');
                 }
             }            
-            $this->History->goBack();
+            $this->History->goBack(1);
             
         }
 }

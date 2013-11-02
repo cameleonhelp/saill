@@ -1156,8 +1156,8 @@ define("tinymce/tableplugin/Quirks", [
 						editor.dom.add(
 							editor.getBody(),
 							editor.settings.forced_root_block,
-							null,
-							Env.ie ? '&nbsp;' : '<br data-mce-bogus="1" />'
+							editor.settings.forced_root_block_attrs,
+							Env.ie && Env.ie < 11 ? '&nbsp;' : '<br data-mce-bogus="1" />'
 						);
 					} else {
 						editor.dom.add(editor.getBody(), 'br', {'data-mce-bogus': '1'});
@@ -1245,6 +1245,11 @@ define("tinymce/tableplugin/Quirks", [
 			fixBeforeTableCaretBug();
 			fixTableCaretPos();
 		}
+
+		if (Env.ie > 10) {
+			fixBeforeTableCaretBug();
+			fixTableCaretPos();
+		}
 	};
 });
 
@@ -1289,17 +1294,7 @@ define("tinymce/tableplugin/CellSelection", [
 			}
 		}
 
-		// Add cell selection logic
-		editor.on('MouseDown', function(e) {
-			if (e.button != 2) {
-				clear();
-
-				startCell = dom.getParent(e.target, 'td,th');
-				startTable = dom.getParent(startCell, 'table');
-			}
-		});
-
-		dom.bind(editor.getDoc(), 'mouseover', function(e) {
+		function cellSelectionHandler(e) {
 			var sel, table, target = e.target;
 
 			if (startCell && (tableGrid || target != startCell) && (target.nodeName == 'TD' || target.nodeName == 'TH')) {
@@ -1331,6 +1326,22 @@ define("tinymce/tableplugin/CellSelection", [
 
 				e.preventDefault();
 			}
+		}
+
+		// Add cell selection logic
+		editor.on('MouseDown', function(e) {
+			if (e.button != 2) {
+				clear();
+
+				startCell = dom.getParent(e.target, 'td,th');
+				startTable = dom.getParent(startCell, 'table');
+			}
+		});
+
+		dom.bind(editor.getDoc(), 'mouseover', cellSelectionHandler);
+
+		editor.on('remove', function() {
+			dom.unbind(editor.getDoc(), 'mouseover', cellSelectionHandler);
 		});
 
 		editor.on('MouseUp', function() {
@@ -1898,11 +1909,12 @@ define("tinymce/tableplugin/Plugin", [
 					html: generateTableGrid(),
 
 					onmousemove: function(e) {
-						var target = e.target;
+						var x, y, target = e.target;
 
 						if (target.nodeName == 'A') {
 							var table = editor.dom.getParent(target, 'table');
 							var pos = target.getAttribute('data-mce-index');
+							var rel = e.control.parent().rel;
 
 							if (pos != this.lastPos) {
 								pos = pos.split(',');
@@ -1910,17 +1922,33 @@ define("tinymce/tableplugin/Plugin", [
 								pos[0] = parseInt(pos[0], 10);
 								pos[1] = parseInt(pos[1], 10);
 
-								for (var y = 0; y < 10; y++) {
-									for (var x = 0; x < 10; x++) {
-										editor.dom.toggleClass(
-											table.rows[y].childNodes[x].firstChild,
-											'mce-active',
-											x <= pos[0] && y <= pos[1]
-										);
+								if (e.control.isRtl() || rel == 'tl-tr') {
+									for (y = 9; y >= 0; y--) {
+										for (x = 0; x < 10; x++) {
+											editor.dom.toggleClass(
+												table.rows[y].childNodes[x].firstChild,
+												'mce-active',
+												x >= pos[0] && y <= pos[1]
+											);
+										}
 									}
+
+									pos[0] = 9 - pos[0];
+									table.nextSibling.innerHTML = pos[0] + ' x '+ (pos[1] + 1);
+								} else {
+									for (y = 0; y < 10; y++) {
+										for (x = 0; x < 10; x++) {
+											editor.dom.toggleClass(
+												table.rows[y].childNodes[x].firstChild,
+												'mce-active',
+												x <= pos[0] && y <= pos[1]
+											);
+										}
+									}
+
+									table.nextSibling.innerHTML = (pos[0] + 1) + ' x '+ (pos[1] + 1);
 								}
 
-								table.nextSibling.innerHTML = (pos[0] + 1) + ' x '+ (pos[1] + 1);
 								this.lastPos = pos;
 							}
 						}

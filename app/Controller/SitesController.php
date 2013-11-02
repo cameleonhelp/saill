@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Site $Site
  */
 class SitesController extends AppController {
-        public $components = array('History'); 
+        public $components = array('History','Common'); 
     public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Site.NOM' => 'asc'),
         /*'order' => array(
             'Post.title' => 'asc' /*/
@@ -25,7 +25,7 @@ class SitesController extends AppController {
 		$this->Site->recursive = 0;
 		$this->set('sites', $this->paginate());
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -45,7 +45,7 @@ class SitesController extends AppController {
 		$options = array('conditions' => array('Site.' . $this->Site->primaryKey => $id),'recursive'=>0);
 		$this->set('site', $this->Site->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -58,16 +58,21 @@ class SitesController extends AppController {
 	public function add() {
             if (isAuthorized('sites', 'add')) :
 		if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Site->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			$this->Site->create();
 			if ($this->Site->save($this->request->data)) {
-				$this->Session->setFlash(__('Site sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Site sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Site incorrecte, veuillez corriger le site'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Site incorrecte, veuillez corriger le site',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -85,18 +90,23 @@ class SitesController extends AppController {
 			throw new NotFoundException(__('Site incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Site->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			if ($this->Site->save($this->request->data)) {
-				$this->Session->setFlash(__('Site sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Site sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Site incorrect, veuillez corriger le site'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Site incorrect, veuillez corriger le site',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Site.' . $this->Site->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Site->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -117,13 +127,13 @@ class SitesController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Site->delete()) {
-			$this->Session->setFlash(__('Site supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Site supprimé',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(___('Site <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(___('Site <b>NON</b> supprimé',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -143,7 +153,7 @@ class SitesController extends AppController {
                 $this->set('sites', $this->paginate());              
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }         

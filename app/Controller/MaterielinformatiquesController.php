@@ -7,9 +7,9 @@ App::import('Vendor', 'ping', array('file'=>'class.ping.php'));
  * @property Materielinformatique $Materielinformatique
  */
 class MaterielinformatiquesController extends AppController {
-        public $components = array('History'); 
+        public $components = array('History','Common'); 
     public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Materielinformatique.NOM' => 'asc'),
         /*'order' => array(
             'Post.title' => 'asc' /*/
@@ -79,7 +79,7 @@ class MaterielinformatiquesController extends AppController {
                 }
                 $this->set('sections',$sections);  
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -100,7 +100,7 @@ class MaterielinformatiquesController extends AppController {
 		$options = array('conditions' => array('Materielinformatique.' . $this->Materielinformatique->primaryKey => $id));
 		$this->set('materielinformatique', $this->Materielinformatique->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -125,16 +125,21 @@ class MaterielinformatiquesController extends AppController {
                 $this->set('etat',$etat); 
                 $this->set('title_for_layout','Postes informatique');
                 if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Materielinformatique->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			$this->Materielinformatique->create();
 			if ($this->Materielinformatique->save($this->request->data)) {
-				$this->Session->setFlash(__('Postes informatique sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Postes informatique sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Postes informatique incorrect, veuillez corriger le poste informatique'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Postes informatique incorrect, veuillez corriger le poste informatique',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -164,19 +169,30 @@ class MaterielinformatiquesController extends AppController {
 			throw new NotFoundException(__('Postes informatique incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Materielinformatique->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			if ($this->Materielinformatique->save($this->request->data)) {
-				$this->Session->setFlash(__('Postes informatique sauvegardé'),'default',array('class'=>'alert alert-success'));
+                            if ($this->request->data['Materielinformatique']['ETAT']=='En stock'):
+                                $dotations = $this->Materielinformatique->Dotation->find('all',array('conditions'=>array('Dotation.materielinformatiques_id'=>$id),'recursive'=>0));
+                                foreach($dotations as $dotation):
+                                    $this->Materielinformatique->requestAction('dotations/reception',array('pass'=>array($dotation['Dotation']['id'],$dotation['Dotation']['utilisateur_id'])));
+                                endforeach;    
+                            endif;
+				$this->Session->setFlash(__('Postes informatique sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Postes informatique incorrect, veuillez corriger le poste informatique'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Postes informatique incorrect, veuillez corriger le poste informatique',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Materielinformatique.' . $this->Materielinformatique->primaryKey => $id));
 			$this->request->data = $this->Materielinformatique->find('first', $options);
                         $this->set('materielinformatique',$this->request->data);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -198,13 +214,13 @@ class MaterielinformatiquesController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Materielinformatique->delete()) {
-			$this->Session->setFlash(__('Postes informatique supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Postes informatique supprimé',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Postes informatique <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Postes informatique <b>NON</b> supprimé',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -234,7 +250,7 @@ class MaterielinformatiquesController extends AppController {
                 $this->set('sections',$sections);                 
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }   
@@ -271,32 +287,39 @@ class MaterielinformatiquesController extends AppController {
                 $record['Materielinformatique']['modified'] = date('Y-m-d');
                 $this->Materielinformatique->create();
                 if ($this->Materielinformatique->save($record)) {
-                        $this->Session->setFlash(__('Poste informatique dupliqué'),'default',array('class'=>'alert alert-success'));
-                        $this->History->goBack();
+                        $this->Session->setFlash(__('Poste informatique dupliqué',true),'flash_success');
+                        $this->History->goBack(1);
                 } 
-		$this->Session->setFlash(__('Poste informatique <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Poste informatique <b>NON</b> dupliqué',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}     
         
         public function pinghost($host) {
-            /*$this->autoRender = false;
-            $host = "localhost";
-            $ping = new Ping($host);
-            $latency = $ping->ping();
-            $retour = false;
-            if ($latency) {
-              $retour = true;
-            }
-            $poste['IP']=gethostbyname($host);
+            $this->autoRender = false;
+            $ip = gethostbyname($host);
+            if($ip != NULL):
+                /*$ping = new Ping($ip);
+                $latency = $ping->ping();                
+                if ($latency) :*/
+                exec("ping -n 1 " . $ip, $output, $result);
+                if ($result == 0):
+                  $retour = true;
+                else :
+                  $retour = false;
+                endif; 
+            else:
+                $retour = false;  
+                $result = false;
+            endif;
+            $poste['IP']=$ip;
             $poste['RETOUR']=$retour;
             $poste['HOST']=$host;
-            $poste['LATENCE']=$latency;
-            $result = json_encode($poste);*/
-            $result = false;
+            $poste['LATENCE']=$result;
+            $result = json_encode($poste);
             return $result;
         }
 }

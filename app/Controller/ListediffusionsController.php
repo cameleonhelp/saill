@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Listediffusion $Listediffusion
  */
 class ListediffusionsController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
         public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Listediffusion.NOM' => 'asc'),
         /*'order' => array(
             'Post.title' => 'asc' /*/
@@ -29,7 +29,7 @@ class ListediffusionsController extends AppController {
                 $export = $this->Listediffusion->find('all',array('order' => array('Listediffusion.NOM' => 'asc'),'recursive'=>0));
                 $this->Session->write('xls_export',$export);                 
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -50,7 +50,7 @@ class ListediffusionsController extends AppController {
 		$options = array('conditions' => array('Listediffusion.' . $this->Listediffusion->primaryKey => $id));
 		$this->set('listediffusion', $this->Listediffusion->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -64,18 +64,23 @@ class ListediffusionsController extends AppController {
             if (isAuthorized('listediffusions', 'add')) :
 		$this->set('title_for_layout','Listes de diffusion');
                 if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Listediffusion->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			$this->Listediffusion->create();
 			if ($this->Listediffusion->save($this->request->data)) {
-				$this->Session->setFlash(__('Liste de diffusion sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Liste de diffusion sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Liste de diffusion incorrecte, veuillez corriger la liste de diffusion'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Liste de diffusion incorrecte, veuillez corriger la liste de diffusion',true),'flash_failure');
 			}
+                    endif;
                 endif;
                 $utilisateurs = $this->Listediffusion->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1','Utilisateur.profil_id > 0'),'order'=>'Utilisateur.NOMLONG ASC','recursive'=>-1));
                 $this->set('utilisateurs',$utilisateurs);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -94,12 +99,17 @@ class ListediffusionsController extends AppController {
 			throw new NotFoundException(__('Liste de diffusion incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Listediffusion->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			if ($this->Listediffusion->save($this->request->data)) {
-				$this->Session->setFlash(__('Liste de diffusion sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Liste de diffusion sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Liste de diffusion incorrecte, veuillez corriger la liste de diffusion'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Liste de diffusion incorrecte, veuillez corriger la liste de diffusion',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Listediffusion.' . $this->Listediffusion->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Listediffusion->find('first', $options);
@@ -107,7 +117,7 @@ class ListediffusionsController extends AppController {
                 $utilisateurs = $this->Listediffusion->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1','Utilisateur.profil_id > 0'),'order'=>'Utilisateur.NOMLONG ASC'));
                 $this->set('utilisateurs',$utilisateurs);                
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -129,13 +139,13 @@ class ListediffusionsController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Listediffusion->delete()) {
-			$this->Session->setFlash(__('Liste de diffusion supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Liste de diffusion supprimée',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Liste de diffusion NON supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Liste de diffusion NON supprimée',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -159,7 +169,7 @@ class ListediffusionsController extends AppController {
                 $this->Session->write('xls_export',$export);                    
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }  

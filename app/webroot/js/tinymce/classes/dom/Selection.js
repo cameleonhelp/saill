@@ -675,13 +675,15 @@ define("tinymce/dom/Selection", [
 		 * tinymce.activeEditor.selection.select(tinymce.activeEditor.dom.select('p')[0]);
 		 */
 		select: function(node, content) {
-			var self = this, dom = self.dom, rng = dom.createRng(), idx;
+			var self = this, dom = self.dom, rng = dom.createRng(), idx, nonEmptyElementsMap;
 
 			// Clear stored range set by FocusManager
 			self.lastFocusBookmark = null;
 
+			nonEmptyElementsMap = dom.schema.getNonEmptyElements();
+
 			function setPoint(node, start) {
-				var walker = new TreeWalker(node, node);
+				var root = node, walker = new TreeWalker(node, root);
 
 				do {
 					// Text node
@@ -695,17 +697,30 @@ define("tinymce/dom/Selection", [
 						return;
 					}
 
-					// BR element
-					if (node.nodeName == 'BR') {
+					// BR/IMG/INPUT elements
+					if (nonEmptyElementsMap[node.nodeName]) {
 						if (start) {
 							rng.setStartBefore(node);
 						} else {
-							rng.setEndBefore(node);
+							if (node.nodeName == 'BR') {
+								rng.setEndBefore(node);
+							} else {
+								rng.setEndAfter(node);
+							}
 						}
 
 						return;
 					}
 				} while ((node = (start ? walker.next() : walker.prev())));
+
+				// Failed to find any text node or other suitable location then move to the root of body
+				if (root.nodeName == 'BODY') {
+					if (start) {
+						rng.setStart(root, 0);
+					} else {
+						rng.setEnd(root, root.childNodes.length);
+					}
+				}
 			}
 
 			if (node) {
@@ -959,7 +974,7 @@ define("tinymce/dom/Selection", [
 		getNode: function() {
 			var self = this, rng = self.getRng(), elm;
 			var startContainer = rng.startContainer, endContainer = rng.endContainer;
-			var startOffset = rng.startOffset, endOffset = rng.endOffset;
+			var startOffset = rng.startOffset, endOffset = rng.endOffset, root = self.dom.getRoot();
 
 			function skipEmptyTextNodes(node, forwards) {
 				var orig = node;
@@ -973,7 +988,7 @@ define("tinymce/dom/Selection", [
 
 			// Range maybe lost after the editor is made visible again
 			if (!rng) {
-				return self.dom.getRoot();
+				return root;
 			}
 
 			if (rng.setStart) {
@@ -1021,7 +1036,14 @@ define("tinymce/dom/Selection", [
 				return elm;
 			}
 
-			return rng.item ? rng.item(0) : rng.parentElement();
+			elm = rng.item ? rng.item(0) : rng.parentElement();
+
+			// IE 7 might return elements outside the iframe
+			if (elm.ownerDocument !== self.win.document) {
+				elm = root;
+			}
+
+			return elm;
 		},
 
 		getSelectedBlocks: function(startElm, endElm) {
@@ -1310,13 +1332,57 @@ define("tinymce/dom/Selection", [
 			return self;
 		},
 
+		getScrollContainer: function() {
+			var scrollContainer, node = this.dom.getRoot();
+
+			while (node && node.nodeName != 'BODY') {
+				if (node.scrollHeight > node.clientHeight) {
+					scrollContainer = node;
+					break;
+				}
+
+				node = node.parentNode;
+			}
+
+			return scrollContainer;
+		},
+
 		scrollIntoView: function(elm) {
-			var y, viewPort, self = this, dom = self.dom;
+			var y, viewPort, self = this, dom = self.dom, root = dom.getRoot(), viewPortY, viewPortH;
+
+			function getPos(elm) {
+				var x = 0, y = 0;
+
+				var offsetParent = elm;
+				while (offsetParent && offsetParent.nodeType) {
+					x += offsetParent.offsetLeft || 0;
+					y += offsetParent.offsetTop || 0;
+					offsetParent = offsetParent.offsetParent;
+				}
+
+				return {x: x, y: y};
+			}
+
+			if (root.nodeName != 'BODY') {
+				var scrollContainer = self.getScrollContainer();
+				if (scrollContainer) {
+					y = getPos(elm).y - getPos(scrollContainer).y;
+					viewPortH = scrollContainer.clientHeight;
+					viewPortY = scrollContainer.scrollTop;
+					if (y < viewPortY || y + 25 > viewPortY + viewPortH) {
+						scrollContainer.scrollTop = y < viewPortY ? y : y - viewPortH + 25;
+					}
+
+					return;
+				}
+			}
 
 			viewPort = dom.getViewPort(self.editor.getWin());
 			y = dom.getPos(elm).y;
-			if (y < viewPort.y || y + 25 > viewPort.y + viewPort.h) {
-				self.editor.getWin().scrollTo(0, y < viewPort.y ? y : y - viewPort.h + 25);
+			viewPortY = viewPort.y;
+			viewPortH = viewPort.h;
+			if (y < viewPort.y || y + 25 > viewPortY + viewPortH) {
+				self.editor.getWin().scrollTo(0, y < viewPortY ? y : y - viewPortH + 25);
 			}
 		},
 

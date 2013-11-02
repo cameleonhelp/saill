@@ -1,6 +1,6 @@
 <br/>
 <div class="utiliseoutils index">
-	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
+	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax">
         <thead>
 	<tr>
 			<th><?php echo 'Outils'; ?></th>

@@ -185,8 +185,9 @@
  *
  */
         Configure::write('Session', array(
-            'defaults' => 'php',
-                    'timeout'=>'30' //30minutes
+            'defaults' => 'cake',
+            'timeout'=>'30', //30minutes
+            'autoRegenerate' => true
         ));
 
 /**
@@ -237,7 +238,7 @@
  * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.
  */
-	//date_default_timezone_set('UTC');
+	date_default_timezone_set('Europe/Paris');
 
 /**
  * Configure the cache handlers that CakePHP will use for internal

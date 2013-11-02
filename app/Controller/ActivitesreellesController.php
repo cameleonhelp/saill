@@ -7,7 +7,7 @@ App::uses('CakeEmail', 'Network/Email');
  * @property Activitesreelle $Activitesreelle
  */
 class ActivitesreellesController extends AppController {
-        public $components = array('History');    
+        public $components = array('History','Common');    
         public $paginate = array(
         'order' => array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc'),
         );
@@ -67,8 +67,10 @@ class ActivitesreellesController extends AppController {
                 switch ($mois){
                     case 'tous':
                     case null:
-                        $newconditions[]="1=1";
-                        $fperiode = "";
+                        $datedebut = $annee."-01-01";
+                        $datefin = $annee."-12-31";
+                        $newconditions[]="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
+                        $fperiode = "pour l'année ".$annee;
                         break;
                     default:
                         $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
@@ -96,7 +98,7 @@ class ActivitesreellesController extends AppController {
                 $this->set('utilisateurs',$utilisateurs);
                 $icsutilisateurs = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
                 $this->set('icsutilisateurs',$icsutilisateurs); 
-                $annee = $this->Activitesreelle->find('all',array('fields'=>array('YEAR(Activitesreelle.DATE) AS ANNEE'),'group'=>array('YEAR(Activitesreelle.DATE)'),'order'=>array('YEAR(Activitesreelle.DATE)' => 'asc')));
+                $annee = $this->Activitesreelle->find('all',array('fields'=>array('YEAR(Activitesreelle.DATE) AS ANNEE'),'group'=>array('YEAR(Activitesreelle.DATE)'),'order'=>array('YEAR(Activitesreelle.DATE)' => 'desc'),'limit'=>3));
                 $this->set('annees',$annee);                  
                 $this->Activitesreelle->recursive = 1;
                 $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc' ),'conditions'=>$newconditions));
@@ -106,8 +108,11 @@ class ActivitesreellesController extends AppController {
 		$this->Activitesreelle->recursive = 0;
                 $activitesreeelles = $this->Activitesreelle->find('all',$this->paginate);
 		$this->set('activitesreelles', $activitesreeelles);
+                $this->Activitesreelle->Utilisateur->recursive = -1;
+		$newftutilisateurs = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1','OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+		$this->set('newftutilisateurs', $newftutilisateurs);                
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;                
 	}
@@ -197,9 +202,12 @@ class ActivitesreellesController extends AppController {
 		$this->set('activitesreelles', $activitesreeelles);
                 $this->Activitesreelle->recursive = 0;
                 $export = $this->Activitesreelle->find('all',array('conditions'=>$newconditions,'order' => array('Activitesreelle.DATE' => 'asc')));
-                $this->Session->write('xls_export',$export);                 
+                $this->Session->write('xls_export',$export);  
+                $this->Activitesreelle->Utilisateur->recursive = -1;
+		$newftutilisateurs = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1','OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+		$this->set('newftutilisateurs', $newftutilisateurs);                
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;                
         }
@@ -220,7 +228,7 @@ class ActivitesreellesController extends AppController {
 		$options = array('conditions' => array('Activitesreelle.' . $this->Activitesreelle->primaryKey => $id));
 		$this->set('activitesreelle', $this->Activitesreelle->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();          
             endif;                
 	}
@@ -234,22 +242,27 @@ class ActivitesreellesController extends AppController {
             if (isAuthorized('activitesreelles', 'add')) :
                 $this->set('title_for_layout','Feuilles de temps');            
 		if ($this->request->is('post')) {
-                $activitesreelles = $this->request->data['Activitesreelle'];  
-                foreach($activitesreelles as $activitesreelle):
-                    if (is_array($activitesreelle) && $activitesreelle['activite_id'] != '' && $this->isUnique($activitesreelle['utilisateur_id'], $activitesreelle['activite_id'], $activitesreelle['domaine_id'],$date)):
-                        $this->Activitesreelle->create();
-                        if ($this->Activitesreelle->save($activitesreelle)):
-                            $this->Session->setFlash(__('La feuille de temps est sauvegardée'),'default',array('class'=>'alert alert-success'));
-                            $projet = $this->Activitesreelle->Activite->find('first',array('fields'=>array('projet_id'),'conditions'=>array('id'=>$activitesreelle['activite_id']),'recursive'=>-1));
-                            if ($projet['Activite']['projet_id']==1):
-                                    $this->sendmailabsences($activitesreelle);
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Activitesreelle->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
+                        $activitesreelles = $this->request->data['Activitesreelle'];  
+                        foreach($activitesreelles as $activitesreelle):
+                            if (is_array($activitesreelle) && $activitesreelle['activite_id'] != '' && $this->isUnique($activitesreelle['utilisateur_id'], $activitesreelle['activite_id'], $activitesreelle['domaine_id'],$date)):
+                                $this->Activitesreelle->create();
+                                if ($this->Activitesreelle->save($activitesreelle)):
+                                    $this->Session->setFlash(__('La feuille de temps est sauvegardée',true),'flash_success');
+                                    $projet = $this->Activitesreelle->Activite->find('first',array('fields'=>array('projet_id'),'conditions'=>array('id'=>$activitesreelle['activite_id']),'recursive'=>-1));
+                                    if ($projet['Activite']['projet_id']==1):
+                                            $this->sendmailabsences($activitesreelle);
+                                    endif;
+                                else :
+                                    $this->Session->setFlash(__('La feuille de temps est incorrecte, veuillez corriger la feuille de temps',true),'flash_failure');
+                                endif;   
                             endif;
-                        else :
-                            $this->Session->setFlash(__('La feuille de temps est incorrecte, veuillez corriger la feuille de temps'),'default',array('class'=>'alert alert-error'));
-                        endif;   
+                        endforeach; 
+                        $this->History->goBack(1); 
                     endif;
-                endforeach; 
-                $this->History->goBack(1); 
                 }
                 $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('conditions'=>array('id'=>$utilisateur_id),'recursive'=>-1));
                 $this->set('utilisateur',$utilisateur);
@@ -266,7 +279,7 @@ class ActivitesreellesController extends AppController {
                     $this->request->data['Activitesreelle']['activite_id'] = $action['Action']['activite_id'];
                 endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;                
         }
@@ -278,17 +291,24 @@ class ActivitesreellesController extends AppController {
  */        
         public function newactivite(){
             if (isAuthorized('activitesreelles', 'add')) :
-                $this->set('title_for_layout','Feuilles de temps');            
+                $this->set('title_for_layout','Feuilles de temps');   
 		if ($this->request->is('post')) {
-                    $this->redirect(array('action' => 'add',$this->data['Activitesreelle']['utilisateur_id'],  CUSDate($this->data['Activitesreelle']['DATE'])));
+                    $idft = $this->Activitesreelle->find('first',array('fields'=>array('Activitesreelle.id','Activitesreelle.VEROUILLE'),'conditions'=>array('Activitesreelle.utilisateur_id'=>$this->data['Activitesreelle']['utilisateur_id'],'Activitesreelle.DATE'=>startWeek(CUSDate($this->data['Activitesreelle']['DATE']))),'recursive'=>-1));
+                    if(!isset($idft['Activitesreelle']['id'])):
+                        $this->redirect(array('action' => 'add',$this->data['Activitesreelle']['utilisateur_id'],  CUSDate($this->data['Activitesreelle']['DATE'])));
+                    else :
+                        if($idft['Activitesreelle']['VEROUILLE']==1):
+                            $this->redirect(array('action' => 'edit',$idft['Activitesreelle']['id']));
+                        else:
+                            $this->Session->setFlash(__('La feuille de temps existe déjà et elle est soumise pour facturation, contacter l\'administrateur via le formulaire de contact pour lui demander de déverouiller cette feuille de temps.',true),'flash_info');
+                            $this->History->notmove();
+                        endif;
+                    endif;
 		}
-                $this->Activitesreelle->Utilisateur->recursive = -1;
-		$utilisateurs = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1','OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
-		$this->set('utilisateurs', $utilisateurs);
                 $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id')),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));           
                 $this->set('utilisateur', $utilisateur);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;                           
         }
@@ -306,30 +326,35 @@ class ActivitesreellesController extends AppController {
 			throw new NotFoundException(__('Feuille de temps incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-                    $activitesreelles = $this->request->data['Activitesreelle'];  
-                    foreach($activitesreelles as $activitesreelle):
-                        if (is_array($activitesreelle) && isset($activitesreelle['id']) && $activitesreelle['activite_id'] != '' && $this->isUnique($activitesreelle['utilisateur_id'], $activitesreelle['activite_id'], $activitesreelle['domaine_id'],$activitesreelle['DATE'])):
-                            //$this->Activitesreelle->create();
-                            if ($this->Activitesreelle->save($activitesreelle)):
-                                $this->Session->setFlash(__('La feuille de temps est sauvegardée'),'default',array('class'=>'alert alert-success'));
-                                $projet = $this->Activitesreelle->Activite->find('first',array('fields'=>array('projet_id'),'conditions'=>array('id'=>$activitesreelle['activite_id']),'recursive'=>-1));
-                                if ($projet['Activite']['projet_id']==1):
-                                    $this->sendmailabsences($activitesreelle);
-                                endif;
-                            else :
-                                $this->Session->setFlash(__('La feuille de temps est incorrecte, veuillez corriger la feuille de temps'),'default',array('class'=>'alert alert-error'));
-                            endif; 
-                        elseif (is_array($activitesreelle) && !isset($activitesreelle['id']) && $activitesreelle['activite_id'] != ''):
-                            $this->Activitesreelle->create();
-                            if ($this->Activitesreelle->save($activitesreelle)):
-                                $this->Session->setFlash(__('La feuille de temps est sauvegardée'),'default',array('class'=>'alert alert-success'));
-                                
-                            else :
-                                $this->Session->setFlash(__('La feuille de temps est incorrecte, veuillez corriger la feuille de temps'),'default',array('class'=>'alert alert-error'));
-                            endif; 
-                        endif;
-                    endforeach; 
-                    $this->History->goBack(1); 
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Activitesreelle->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
+                        $activitesreelles = $this->request->data['Activitesreelle'];  
+                        foreach($activitesreelles as $activitesreelle):
+                            if (is_array($activitesreelle) && isset($activitesreelle['id']) && $activitesreelle['activite_id'] != '' && $this->isUnique($activitesreelle['utilisateur_id'], $activitesreelle['activite_id'], $activitesreelle['domaine_id'],$activitesreelle['DATE'])):
+                                //$this->Activitesreelle->create();
+                                if ($this->Activitesreelle->save($activitesreelle)):
+                                    $this->Session->setFlash(__('La feuille de temps est sauvegardée',true),'flash_success');
+                                    $projet = $this->Activitesreelle->Activite->find('first',array('fields'=>array('projet_id'),'conditions'=>array('id'=>$activitesreelle['activite_id']),'recursive'=>-1));
+                                    if ($projet['Activite']['projet_id']==1):
+                                        $this->sendmailabsences($activitesreelle);
+                                    endif;
+                                else :
+                                    $this->Session->setFlash(__('La feuille de temps est incorrecte, veuillez corriger la feuille de temps',true),'flash_failure');
+                                endif; 
+                            elseif (is_array($activitesreelle) && !isset($activitesreelle['id']) && $activitesreelle['activite_id'] != ''):
+                                $this->Activitesreelle->create();
+                                if ($this->Activitesreelle->save($activitesreelle)):
+                                    $this->Session->setFlash(__('La feuille de temps est sauvegardée',true),'flash_success');
+
+                                else :
+                                    $this->Session->setFlash(__('La feuille de temps est incorrecte, veuillez corriger la feuille de temps',true),'flash_failure');
+                                endif; 
+                            endif;
+                        endforeach; 
+                        $this->History->goBack(1); 
+                   endif;
 		} else {
                     $date = $this->Activitesreelle->find('first',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'conditions'=>array('Activitesreelle.id'=>$id),'recursive'=>-1));
                     $activitesreelles = $this->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$date['Activitesreelle']['utilisateur_id'],'Activitesreelle.DATE'=>CUSDate($date['Activitesreelle']['DATE'])),'recursive'=>-1));
@@ -342,7 +367,7 @@ class ActivitesreellesController extends AppController {
                     $this->set('activites', $activites);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();       
             endif;                
 	}
@@ -367,17 +392,17 @@ class ActivitesreellesController extends AppController {
                 if ($activitesreelles['Activitesreelle']['VEROUILLE']==1):
                     if ($this->Activitesreelle->delete()) {
                         if(!$loop):
-                        $this->Session->setFlash(__('Feuille de temps supprimée'),'default',array('class'=>'alert alert-success'));
-                        $this->History->goBack();
+                        $this->Session->setFlash(__('Feuille de temps supprimée',true),'flash_success');
+                        $this->History->goBack(1);
                         endif;
                     }
                 endif;
                 if(!$loop):
-                $this->Session->setFlash(__('Feuille de temps <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-                $this->History->goBack();
+                $this->Session->setFlash(__('Feuille de temps <b>NON</b> supprimée',true),'flash_failure');
+                $this->History->goBack(1);
                 endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();        
             endif;                
 	}
@@ -409,7 +434,7 @@ class ActivitesreellesController extends AppController {
                 }                
                 $this->Activitesreelle->create();
                 if ($this->Activitesreelle->save($record)) {
-                    $this->Session->setFlash(__('Feuille de temps dupliquée'),'default',array('class'=>'alert alert-success'));
+                    $this->Session->setFlash(__('Feuille de temps dupliquée',true),'flash_success');
                     $lastid = $this->Activitesreelle->getLastInsertID();
                     $projet = $this->Activitesreelle->Activite->find('first',array('fields'=>array('projet_id'),'conditions'=>array('id'=>$lastid),'recursive'=>-1));
                     if ($projet['Activite']['projet_id']==1):
@@ -417,9 +442,9 @@ class ActivitesreellesController extends AppController {
                     endif;                        
                         $this->redirect(array('action' => 'edit',$this->Activitesreelle->getLastInsertID()));
                 } 
-		$this->Session->setFlash(__('Feuille de temps <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));    
+		$this->Session->setFlash(__('Feuille de temps <b>NON</b> dupliqué',true),'flash_failure');    
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}  
@@ -447,16 +472,16 @@ class ActivitesreellesController extends AppController {
                 $record['Activitesreelle']['DATE'] = $date->format('d/m/Y');
                 if ($this->ActiviteExists($record['Activitesreelle']['utilisateur_id'], $record['Activitesreelle']['DATE'], $record['Activitesreelle']['activite_id']) > 0){
                     $this->Session->setFlash(__('Feuille de temps existante'),'default',array('class'=>'alert alert-info'));
-                    $this->History->goBack();
+                    $this->History->goBack(1);
                 }                
                 $this->Activitesreelle->create();
                 if ($this->Activitesreelle->save($record)) {
-                    $this->Session->setFlash(__('Feuille de temps dupliquée'),'default',array('class'=>'alert alert-success'));
-                    $this->History->goBack();
+                    $this->Session->setFlash(__('Feuille de temps dupliquée',true),'flash_success');
+                    $this->History->goBack(1);
                 } 
-		$this->Session->setFlash(__('Feuille de temps <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));  
+		$this->Session->setFlash(__('Feuille de temps <b>NON</b> dupliqué',true),'flash_failure');  
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();        
             endif;                
 	}   
@@ -485,19 +510,19 @@ class ActivitesreellesController extends AppController {
                     $this->Activitesreelle->create();
                     if ($this->Activitesreelle->save($record)) {
                         if(!$loop):
-                        $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation'),'default',array('class'=>'alert alert-success'));
+                        $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation',true),'flash_success');
                         endif;
                     } else {
                     if(!$loop):
-                    $this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation'),'default',array('class'=>'alert alert-error')); 
+                    $this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation',true),'flash_failure'); 
                     endif;  
                     }
                 endif;
                 if(!$loop):
-                $this->History->goBack();
+                $this->History->goBack(1);
                 endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
             endif;                
 	}   
@@ -522,12 +547,12 @@ class ActivitesreellesController extends AppController {
                 $record['Activitesreelle']['VEROUILLE'] = 1;
                 $this->Activitesreelle->create();
                 if ($this->Activitesreelle->save($record)) {
-                    $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation'),'default',array('class'=>'alert alert-success'));
-                    $this->History->goBack();
+                    $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation',true),'flash_success');
+                    $this->History->goBack(1);
                 } 
-		$this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation'),'default',array('class'=>'alert alert-error')); 
+		$this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation',true),'flash_failure'); 
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
             endif;                
 	}          
@@ -554,7 +579,7 @@ class ActivitesreellesController extends AppController {
 		$this->set('activitesreelles', $activitesreeelles);             
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
             endif;                
         }          
@@ -635,7 +660,7 @@ class ActivitesreellesController extends AppController {
                     }  
                     $domaine = 'Activite.projet_id IN ('.substr_replace($projetlist ,"",-1).')';
                     $periode = 'Activitesreelle.DATE BETWEEN "'. startWeek(CUSDate($this->request->data['Activitesreelle']['START'])).'" AND "'.  endWeek(CUSDate($this->request->data['Activitesreelle']['END'])).'"';
-                    $rapportresult = $this->Activitesreelle->find('all',array('fields'=>array('MONTH(Activitesreelle.DATE) AS MONTH', 'YEAR(Activitesreelle.DATE) AS YEAR','Activite.projet_id','SUM(Activitesreelle.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Activitesreelle.DATE)'=>'asc','YEAR(Activitesreelle.DATE)'=>'asc'),'group'=>array('Activite.projet_id','MONTH(Activitesreelle.DATE)','YEAR(Activitesreelle.DATE)'),'recursive'=>0));
+                    $rapportresult = $this->Activitesreelle->find('all',array('fields'=>array('MONTH(Activitesreelle.DATE) AS MONTH', 'YEAR(Activitesreelle.DATE) AS YEAR','Activite.projet_id','SUM(Activitesreelle.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Activitesreelle.DATE)'=>'asc','YEAR(Activitesreelle.DATE)'=>'asc'),'group'=>array('Activite.projet_id'),'recursive'=>0));
                     $this->set('rapportresults',$rapportresult); //'Activite.projet_id>1',
                     $activitefirstweek = $this->Activitesreelle->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Activitesreelle.domaine_id', 'SUM(Activitesreelle.LU) AS LU', 'SUM(Activitesreelle.MA) AS MA', 'SUM(Activitesreelle.ME) AS ME', 'SUM(Activitesreelle.JE) AS JE', 'SUM(Activitesreelle.VE) AS VE', 'SUM(Activitesreelle.SA) AS SA', 'SUM(Activitesreelle.DI) AS DI','Activitesreelle.DATE AS DATE'),'conditions'=>array($destinataire,$domaine,'Activitesreelle.DATE'=>startWeek(CUSDate($this->request->data['Activitesreelle']['START']))),'group'=>array('Activite.projet_id','Activite.id','Activitesreelle.domaine_id'),'recursive'=>0));  
                     $activitelastweek = $this->Activitesreelle->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Activitesreelle.domaine_id', 'SUM(Activitesreelle.LU) AS LU', 'SUM(Activitesreelle.MA) AS MA', 'SUM(Activitesreelle.ME) AS ME', 'SUM(Activitesreelle.JE) AS JE', 'SUM(Activitesreelle.VE) AS VE', 'SUM(Activitesreelle.SA) AS SA', 'SUM(Activitesreelle.DI) AS DI','Activitesreelle.DATE AS DATE'),'conditions'=>array($destinataire,$domaine,'Activitesreelle.DATE'=>startWeek(CUSDate($this->request->data['Activitesreelle']['END']))),'group'=>array('Activite.projet_id','Activite.id','Activitesreelle.domaine_id'),'recursive'=>0));  
@@ -648,9 +673,9 @@ class ActivitesreellesController extends AppController {
                     $this->set('byprojetactivite',$byprojetactivite);
                     $chartresult = $this->Activitesreelle->find('all',array('fields'=>array('Activite.projet_id','SUM(Activitesreelle.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('Activite.projet_id'=>'asc'),'group'=>array('Activite.projet_id'),'recursive'=>0));
                     $this->set('chartresults',$chartresult);                    
-                    $detailrapportresult = $this->Activitesreelle->find('all',array('fields'=>array('MONTH(Activitesreelle.DATE) AS MONTH', 'YEAR(Activitesreelle.DATE) AS YEAR','Activite.NOM','Activite.id','Activite.projet_id','SUM(Activitesreelle.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Activitesreelle.DATE)'=>'asc','YEAR(Activitesreelle.DATE)'=>'asc'),'group'=>array('Activite.projet_id','Activite.NOM','MONTH(Activitesreelle.DATE)','YEAR(Activitesreelle.DATE)'),'recursive'=>0));
+                    $detailrapportresult = $this->Activitesreelle->find('all',array('fields'=>array('MONTH(Activitesreelle.DATE) AS MONTH', 'YEAR(Activitesreelle.DATE) AS YEAR','Activite.NOM','Activite.id','Activite.projet_id','SUM(Activitesreelle.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Activitesreelle.DATE)'=>'asc','YEAR(Activitesreelle.DATE)'=>'asc'),'group'=>array('Activite.projet_id','Activite.NOM'),'recursive'=>0));
                     $this->set('detailrapportresults',$detailrapportresult);
-                    $rapportdomainesresult = $this->Activitesreelle->find('all',array('fields'=>array('MONTH(Activitesreelle.DATE) AS MONTH', 'YEAR(Activitesreelle.DATE) AS YEAR','Activite.projet_id','Activitesreelle.domaine_id','SUM(Activitesreelle.TOTAL) AS NB','Domaine.NOM'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Activitesreelle.DATE)'=>'asc','YEAR(Activitesreelle.DATE)'=>'asc'),'group'=>array('Activite.projet_id','Activitesreelle.domaine_id','MONTH(Activitesreelle.DATE)','YEAR(Activitesreelle.DATE)'),'recursive'=>0));
+                    $rapportdomainesresult = $this->Activitesreelle->find('all',array('fields'=>array('MONTH(Activitesreelle.DATE) AS MONTH', 'YEAR(Activitesreelle.DATE) AS YEAR','Activite.projet_id','Activitesreelle.domaine_id','SUM(Activitesreelle.TOTAL) AS NB','Domaine.NOM'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Activitesreelle.DATE)'=>'asc','YEAR(Activitesreelle.DATE)'=>'asc'),'group'=>array('Activite.projet_id','Activitesreelle.domaine_id'),'recursive'=>0));
                     $this->set('rapportdomainesresults',$rapportdomainesresult);                    
                     $this->Session->delete('rapportresults');  
                     $this->Session->delete('detailrapportresults');     
@@ -670,7 +695,7 @@ class ActivitesreellesController extends AppController {
                 $domaines = $this->Activitesreelle->Activite->Projet->find('list',array('fields'=>array('id','NOM'),'order'=>array('Projet.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	} 
@@ -949,7 +974,7 @@ class ActivitesreellesController extends AppController {
                 $this->set('rowsdetail',$data);              
 		$this->render('export_doc','export_doc');
             else:
-                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport'),'default',array('class'=>'alert alert-error'));             
+                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport',true),'flash_failure');             
                 $this->redirect(array('action'=>'rapport'));
             endif;
         }         
@@ -974,6 +999,7 @@ class ActivitesreellesController extends AppController {
                     $newFacturation['Facturation']['SA']=$record['Activitesreelle']['SA'];
                     $newFacturation['Facturation']['DI']=$record['Activitesreelle']['DI'];
                     $newFacturation['Facturation']['TOTAL']=$record['Activitesreelle']['TOTAL'];
+                    $newFacturation['Facturation']['FRAIS']=$record['Activitesreelle']['FRAIS'];
                     $this->Activitesreelle->Facturation->create();
                     if($this->Activitesreelle->Facturation->save($newFacturation)){
                         $lastInsert = $this->Activitesreelle->Facturation->getLastInsertID();
@@ -981,9 +1007,9 @@ class ActivitesreellesController extends AppController {
                         $this->Activitesreelle->saveField('facturation_id', $lastInsert);
                     }
                 endforeach;
-                echo $this->Session->setFlash(__('Feuilles de temps facturées'),'default',array('class'=>'alert alert-success'));
+                echo $this->Session->setFlash(__('Feuilles de temps facturées',true),'flash_success');
             else:
-                echo $this->Session->setFlash(__('Aucune feuilles de temps sélectionnées'),'default',array('class'=>'alert alert-error'));
+                echo $this->Session->setFlash(__('Aucune feuilles de temps sélectionnées',true),'flash_failure');
             endif;
             exit();
         }
@@ -995,9 +1021,9 @@ class ActivitesreellesController extends AppController {
                     $this->Activitesreelle->id = $id;
                     $this->Activitesreelle->saveField('VEROUILLE', 1);                    
                 endforeach;
-                echo $this->Session->setFlash(__('Feuilles de temps rejetées'),'default',array('class'=>'alert alert-success'));
+                echo $this->Session->setFlash(__('Feuilles de temps rejetées',true),'flash_success');
             else:
-                echo $this->Session->setFlash(__('Aucune feuilles de temps sélectionnées'),'default',array('class'=>'alert alert-error'));                
+                echo $this->Session->setFlash(__('Aucune feuilles de temps sélectionnées',true),'flash_failure');                
             endif;
             exit();
         }  
@@ -1009,8 +1035,8 @@ class ActivitesreellesController extends AppController {
             $facturation = $this->Activitesreelle->Facturation->find('first',array('conditions'=>array('Facturation.activitesreelle_id'=>$id,'Facturation.VISIBLE'=>0),'recursive'=>-1));
             $this->Activitesreelle->Facturation->id = $facturation['Facturation']['id'];
             $this->Activitesreelle->Facturation->saveField('VISIBLE', 1);
-            echo $this->Session->setFlash(__('Feuille de temps déverouillée'),'default',array('class'=>'alert alert-success'));
-            $this->History->goBack();
+            echo $this->Session->setFlash(__('Feuille de temps déverouillée',true),'flash_success');
+            $this->History->goBack(1);
         } 
           
 /**
@@ -1046,7 +1072,7 @@ class ActivitesreellesController extends AppController {
                 foreach($ids as $id):
                     $this->updatefacturation($id,true);
                 endforeach;    
-                $this->History->goBack();
+                $this->History->goBack(1);
             endif;
             exit();
         }
@@ -1057,7 +1083,7 @@ class ActivitesreellesController extends AppController {
                 foreach($ids as $id):
                     $this->delete($id,true);
                 endforeach;  
-                $this->History->goBack();
+                $this->History->goBack(1);
             endif;
             exit();
         }     
@@ -1077,7 +1103,7 @@ class ActivitesreellesController extends AppController {
             $record['Activitesreelle']['modified'] = date('Y-m-d'); 
             if ($activitesreelle!=false):
                 $this->Activitesreelle->id=$activitesreelle[0]['Activitesreelle']['id'];
-                $record['Activitesreelle']['TOTAL']=$activitesreelle[0]['Activitesreelle']['TOTAL'];
+                $record['Activitesreelle']['TOTAL']= isset ($activitesreelle[0]['Activitesreelle']['TOTAL']) && $activitesreelle[0]['Activitesreelle']['TOTAL'] != null ? $activitesreelle[0]['Activitesreelle']['TOTAL'] : 0;
                 $record['Activitesreelle']['created'] = $activitesreelle[0]['Activitesreelle']['created'];
             else:
                 $this->Activitesreelle->create();
@@ -1093,6 +1119,7 @@ class ActivitesreellesController extends AppController {
                     $record['Activitesreelle']['MA_TYPE']=$type;
                     $this->Activitesreelle->save($record);
                     break;
+                case 'ME':                
                     $record['Activitesreelle']['ME']=$duree;
                     $record['Activitesreelle']['ME_TYPE']=$type;
                     $this->Activitesreelle->save($record);
@@ -1121,7 +1148,7 @@ class ActivitesreellesController extends AppController {
             endswitch;
             //JLR :: retirer les samedi et dimanche du total
             $total = $this->Activitesreelle->find('first',array('fields'=>array('(LU+MA+ME+JE+VE) AS TOTAL','DATE','VEROUILLE'),'conditions'=>array('Activitesreelle.utilisateur_id'=>$utilisateur_id,'Activitesreelle.activite_id'=>$activite_id,'Activitesreelle.DATE'=>$date),'recursive'=>-1));
-            $record['Activitesreelle']['TOTAL'] = $total[0]['TOTAL'];
+            $record['Activitesreelle']['TOTAL'] = !isset($total[0]['TOTAL']) || $total[0]['TOTAL']==null ? 0 : $total[0]['TOTAL'];
             $this->Activitesreelle->save($record);
         }
         
@@ -1156,7 +1183,7 @@ class ActivitesreellesController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
                 }  
             endif;
         }
@@ -1218,8 +1245,9 @@ class ActivitesreellesController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
                 }  
             endif;
+            $this->History->notmove();
         }         
 }

@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Section $Section
  */
 class SectionsController extends AppController {
-        public $components = array('History'); 
+        public $components = array('History','Common'); 
     public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Section.NOM' => 'asc'),
         /*'order' => array(
             'Post.title' => 'asc' /*/
@@ -25,7 +25,7 @@ class SectionsController extends AppController {
 		$this->Section->recursive = 0;
 		$this->set('sections', $this->paginate());
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -45,7 +45,7 @@ class SectionsController extends AppController {
 		$options = array('conditions' => array('Section.' . $this->Section->primaryKey => $id),'recursive'=>0);
 		$this->set('section', $this->Section->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -60,16 +60,21 @@ class SectionsController extends AppController {
                 $responsable = $this->Section->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'conditions'=>array('id >'=>1,'HIERARCHIQUE'=>1)));
                 $this->set('responsable',$responsable);
 		if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Section->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			$this->Section->create();
 			if ($this->Section->save($this->request->data)) {
-				$this->Session->setFlash(__('Section sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Section sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Section incorrecte, veuillez corriger la section'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Section incorrecte, veuillez corriger la section',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -89,18 +94,23 @@ class SectionsController extends AppController {
 			throw new NotFoundException(__('Section incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Section->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			if ($this->Section->save($this->request->data)) {
-				$this->Session->setFlash(__('Section sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Section sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Section incorrecte, veuillez corriger la section'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Section incorrecte, veuillez corriger la section',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Section.' . $this->Section->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Section->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -121,13 +131,13 @@ class SectionsController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Section->delete()) {
-			$this->Session->setFlash(__('Section supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Section supprimée',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Section <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Section <b>NON</b> supprimée',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -147,7 +157,7 @@ class SectionsController extends AppController {
                 $this->set('sections', $this->paginate());              
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }      

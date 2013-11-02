@@ -1,3 +1,4 @@
+<div class="marginright10">
 <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
 <thead>
 <tr>
@@ -26,9 +27,10 @@
                 $file = str_replace('/', '-', $file);                    
             endif;
         ?>
-        <td style="text-align:center;"><?php echo $this->Html->link('<span class="glyphicons bin"></span>',array('action'=>'deletebackup',$file),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette sauvegarde.')); ?>&nbsp;</td>
-        <td style="text-align:center;"><?php echo $this->Html->link('<span class="glyphicons download"></span>',array('action'=>'restorebdd',$file),array('escape' => false), __('Etes-vous certain de vouloir restaurer cette sauvegarde.')); ?>&nbsp;</td>
+        <td style="text-align:center;"><?php echo $this->Html->link('<span class="glyphicons bin notchange"></span>',array('action'=>'deletebackup',$file),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette sauvegarde.')); ?>&nbsp;</td>
+        <td style="text-align:center;"><?php echo $this->Html->link('<span class="glyphicons download notchange"></span>',array('action'=>'restorebdd',$file),array('escape' => false), __('Etes-vous certain de vouloir restaurer cette sauvegarde.')); ?>&nbsp;</td>
 </tr>
 <?php endforeach; ?>
 </tbody>
 </table>
+</div>

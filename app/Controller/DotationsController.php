@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Dotation $Dotation
  */
 class DotationsController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
 /**
  * index method
  *
@@ -18,7 +18,7 @@ class DotationsController extends AppController {
                 $liste = $this->Dotation->find('all',array('conditions'=>array('Dotation.utilisateur_id'=>$id)));
 		$this->set('dotations', $liste);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -38,7 +38,7 @@ class DotationsController extends AppController {
 		$options = isset($id) ? array('conditions' => array('Dotation.' . $this->Dotation->primaryKey => $id)) : '';
 		$this->set('dotation', $this->Dotation->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -57,9 +57,13 @@ class DotationsController extends AppController {
                 $matautre = $this->Dotation->Typemateriel->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Typemateriel.id >2'),'order'=>array('Typemateriel.NOM'=>"asc"),'recursive'=>-1));
 		$this->set('matautre', $matautre);                
 		if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Dotation->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
                         $this->Dotation->utilisateur_id = $userid;
 			$this->Dotation->create();
-                        $idmat = $this->request->data['Dotation']['materielinformatiques_id'];
+                        $idmat = isset($this->request->data['Dotation']['materielinformatiques_id']) ? $this->request->data['Dotation']['materielinformatiques_id'] : null;
 			if ($this->Dotation->save($this->request->data,false)) {
                                 if(isset($this->request->data['Dotation']['materielinformatiques_id']) && !empty($this->request->data['Dotation']['materielinformatiques_id'])){
                                     $this->Dotation->Materielinformatique->id = $idmat;
@@ -72,14 +76,15 @@ class DotationsController extends AppController {
                                 $history['Historyutilisateur']['utilisateur_id']=$userid;
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une dotation";
                                 $this->Dotation->Utilisateur->Historyutilisateur->save($history);                               
-				$this->Session->setFlash(__('Dotation sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Dotation sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation',true),'flash_failure');
 			}
+                    endif;                        
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -97,22 +102,27 @@ class DotationsController extends AppController {
 			throw new NotFoundException(__('Dotation incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Dotation->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			if ($this->Dotation->save($this->request->data)) {
                                 $history['Historyutilisateur']['utilisateur_id']=$userid;
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour de la dotation dotation";
                                 $this->Dotation->Utilisateur->Historyutilisateur->save($history); 				
-                            $this->Session->setFlash(__('Dotation sauvegardée'),'default',array('class'=>'alert alert-success'));
+                            $this->Session->setFlash(__('Dotation sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Dotation.' . $this->Dotation->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Dotation->find('first', $options);
         		$this->set('dotation', $this->Dotation->find('first', $options));                        
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -135,14 +145,24 @@ class DotationsController extends AppController {
                         $history['Historyutilisateur']['utilisateur_id']=$userid;
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une dotation";
                         $this->Dotation->Utilisateur->Historyutilisateur->save($history);                     
-			$this->Session->setFlash(__('Dotation supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Dotation supprimée',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Dotation <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Dotation <b>NON</b> supprimée',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
+        
+        public function reception($id,$userid){
+            $this->Dotation->id = $id;
+            $dotation = $this->Dotation->find('all',array('conditions'=>array('Dotation.id'=>$id),'recursive'=>-1));
+            $this->Dotation->saveField('DATEREMISE',date('Y-m-d'));
+            $this->Dotation->saveField('utilisateur_id',0);
+            $history['Historyutilisateur']['utilisateur_id']=$userid;
+            $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour de la dotation dotation";
+            $this->Dotation->Utilisateur->Historyutilisateur->save($history); 				
+        }
 }

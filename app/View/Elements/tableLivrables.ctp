@@ -1,6 +1,6 @@
 <br/>
 <div class="livrables index">
-	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
+	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped tablemax">
         <thead>
 	<tr>
 			<th><?php echo 'Nom'; ?></th>
@@ -23,7 +23,7 @@
 		<td style="text-align: center;"><?php echo h(isset($livrable['Livrable']['DATELIVRAISON']) ? $livrable['Livrable']['DATELIVRAISON'] : ''); ?>&nbsp;</td>
                 <td>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'delete')) : ?>
-                <?php echo $this->Html->link('<sapn class="glyphicons bin"></span>', array('controller'=>'Actionslivrables','action' => 'delete', $livrable['Actionslivrable']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette association ?')); ?>                    
+                <?php echo $this->Html->link('<sapn class="glyphicons bin notchange"></span>', array('controller'=>'Actionslivrables','action' => 'delete', $livrable['Actionslivrable']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette association ?')); ?>                    
                 <?php endif; ?>	
                 </td>
         </tr>

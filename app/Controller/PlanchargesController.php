@@ -7,9 +7,9 @@ App::uses('CakeEmail', 'Network/Email');
  * @property Plancharge $Plancharge
  */
 class PlanchargesController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
         public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         //'threaded',
         'order' => array('Plancharge.ANNEE' => 'asc','Contrat.NOM' => 'asc'),
         //'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),
@@ -24,17 +24,12 @@ class PlanchargesController extends AppController {
             //$this->Session->delete('history');
             if (isAuthorized('plancharges', 'index')) :
                 $this->set('title_for_layout','Plans de charge'); 
-                if ($annee==null || $annee=='<'){ $annee = new DateTime(); $annee = $annee->format('Y'); }
                 switch ($annee){
                     case 'tous':
+                    case null:                        
                         $newconditions[]="1=1";
                         $fannee = "de tous les plans de charge pour toutes les années";
-                        break;
-                    case null:
-                    case '<':
-                        $newconditions[]="Plancharge.ANNEE = '".$annee."'";
-                        $fannee = "tous les plans de charge de ".$annee;
-                        break;                         
+                        break;                       
                     default:
                         $newconditions[]="Plancharge.ANNEE = '".$annee."'";
                         $fannee = "tous les plans de charge de ".$annee;
@@ -69,9 +64,11 @@ class PlanchargesController extends AppController {
                 $annees = $this->Plancharge->find('all',array('fields'=>array('Plancharge.ANNEE'),'group'=>'Plancharge.ANNEE','recursive'=>-1));
                 $this->set('annees',$annees);
                 $contrats = $this->Plancharge->find('all',array('fields'=>array('Plancharge.contrat_id','Contrat.NOM'),'group'=>'Contrat.NOM','recursive'=>0));
-                $this->set('contrats',$contrats);                  
+                $this->set('contrats',$contrats);  
+                $addcontrats = $this->Plancharge->Contrat->find('list',array('fields'=>array('Contrat.id','Contrat.NOM'),'conditions'=>array('Contrat.ACTIF'=>1,'Contrat.id>1'),'order'=>'Contrat.NOM'));
+                $this->set('addcontrats',$addcontrats);                
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;                  
 	}
@@ -81,22 +78,26 @@ class PlanchargesController extends AppController {
  *
  * @return void
  */
-	public function add() {
+	public function addnewpc() {
             if (isAuthorized('plancharges', 'add')) :
                 $this->set('title_for_layout','Plan de charge');                  
 		if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Plancharge->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			$this->Plancharge->create();
 			if ($this->Plancharge->save($this->request->data)) {
-				$this->Session->setFlash(__('Plan de charge créé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Plan de charge créé',true),'flash_success');
 				$this->redirect(array('controller'=>'detailplancharges','action' => 'add',$this->Plancharge->getLastInsertID()));
 			} else {
-				$this->Session->setFlash(__('Plan de charge incorrect, veuillez corriger le plan de charge'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Plan de charge incorrect, veuillez corriger le plan de charge',true),'flash_failure');
+                                $this->History->notmove();
 			}
+                    endif;
 		endif;
-                $contrats = $this->Plancharge->Contrat->find('list',array('fields'=>array('Contrat.id','Contrat.NOM'),'conditions'=>array('Contrat.ACTIF'=>1,'Contrat.id>1'),'order'=>'Contrat.NOM'));
-                $this->set('contrats',$contrats);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;                  
 	}
@@ -117,6 +118,10 @@ class PlanchargesController extends AppController {
                 $options = array('conditions' => array('Plancharge.' . $this->Plancharge->primaryKey => $id));
                 $thisplancharge = $this->Plancharge->find('first', $options);
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Plancharge->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
                         $this->request->data['Plancharge']['ETP']=$thisplancharge['Plancharge']['ETP'];
                         $this->request->data['Plancharge']['CHARGES']=$thisplancharge['Plancharge']['CHARGES'];
 			if ($this->Plancharge->save($this->request->data)) {
@@ -131,16 +136,17 @@ class PlanchargesController extends AppController {
                                     $this->Plancharge->Detailplancharge->create();
                                     $this->Plancharge->Detailplancharge->save($record);
                                 endforeach;
-				$this->Session->setFlash(__('Nouvelle version du plan de charge créée'),'default',array('class'=>'alert alert-success'));                                
-				$this->History->goBack();;
+				$this->Session->setFlash(__('Nouvelle version du plan de charge créée',true),'flash_success');                                
+				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Plan de charge incorrect, veuillez corriger le plan de charge'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Plan de charge incorrect, veuillez corriger le plan de charge',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$this->request->data = $thisplancharge;
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;                  
 	}
@@ -160,11 +166,11 @@ class PlanchargesController extends AppController {
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Plancharge->delete()) {
-			$this->Session->setFlash(__('Plancharge deleted'));
-			$this->redirect(array('action' => 'index'));
+			$this->Session->setFlash(__('Plan de charge supprimé',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Plancharge was not deleted'));
-		$this->redirect(array('action' => 'index'));
+		$this->Session->setFlash(__('Plan de charge <b>NON</b> supprimé',true),'flash_failure');
+		$this->History->goBack(1);
 	}
         
 /**
@@ -211,7 +217,7 @@ class PlanchargesController extends AppController {
                 $domaines = $this->Plancharge->Detailplancharge->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;               
 	}    
@@ -243,7 +249,7 @@ class PlanchargesController extends AppController {
                 endforeach;
                 $this->set('annees',$years);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;               
 	}         
@@ -256,7 +262,7 @@ class PlanchargesController extends AppController {
                 $this->set('rowsdetail',$data);              
 		$this->render('export_doc','export_doc');
             else:
-                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport'),'default',array('class'=>'alert alert-error'));             
+                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport',true),'flash_failure');             
                 $this->redirect(array('action'=>'rapport'));
             endif;
         }         
@@ -266,10 +272,10 @@ class PlanchargesController extends AppController {
             $plancharge = $this->Plancharge->find('first',array('fields'=>array('VISIBLE'),'conditions'=>array('Plancharge.id'=>$id),'recursive'=>-1));
             $newvalue = $plancharge['Plancharge']['VISIBLE']==0 ? 1 : 0;
             if($this->Plancharge->saveField('VISIBLE', $newvalue)):
-                $this->Session->setFlash(__('Plan de charge mis à jour'),'default',array('class'=>'alert alert-success'));
+                $this->Session->setFlash(__('Plan de charge mis à jour',true),'flash_success');
                 exit();
             endif;
-            $this->Session->setFlash(__('Echec de la mise à jour du plan de charge'),'default',array('class'=>'alert alert-error'));
+            $this->Session->setFlash(__('Echec de la mise à jour du plan de charge',true),'flash_failure');
             exit();
         }
         
@@ -300,9 +306,9 @@ class PlanchargesController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
                 }  
             endif;
-            $this->History->goBack();
+            $this->History->goBack(1);
         } 
 }

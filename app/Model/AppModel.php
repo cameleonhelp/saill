@@ -40,8 +40,39 @@ class AppModel extends Model {
  * @param string $dateString
  * @return date au format français pour affichage
  */  
+        public function datetimeFormatAfterFind($dateString) {
+            return (isset($dateString) && $dateString != '0000-00-00 00:00:00') ? date('d/m/Y H:i:s', strtotime($dateString)) : null;
+        }
+        
+ /**
+ * dateFormatAfterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $dateString
+ * @return date au format français pour affichage
+ */  
         public function dateFormatAfterFind($dateString) {
             return (isset($dateString) && $dateString != '0000-00-00') ? date('d/m/Y', strtotime($dateString)) : null;
+        }        
+               
+/**
+ * dateFormatBeforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $dateString
+ * @return date au format anglais pour enregistrer dans la base
+ */           
+        public function datetimeFormatBeforeSave($dateString) {
+            $datetime = explode(' ',$dateString);
+            $d = explode('/',$datetime[0]);
+            $h = explode(':',$datetime[1]);
+            if(isset($d[1])):
+                return date('Y-m-d H:i:s', mktime($h[0], $h[1], $h[2], $d[1], $d[0], $d[2]));
+            else:
+                return $dateString;
+            endif;
         }
         
 /**

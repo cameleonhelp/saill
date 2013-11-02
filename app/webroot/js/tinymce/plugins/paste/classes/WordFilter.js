@@ -19,27 +19,22 @@ define("tinymce/pasteplugin/WordFilter", [
 	"tinymce/html/DomParser",
 	"tinymce/html/Schema",
 	"tinymce/html/Serializer",
-	"tinymce/html/Node"
-], function(Tools, DomParser, Schema, Serializer, Node) {
-	return function(editor) {
-		var each = Tools.each;
+	"tinymce/html/Node",
+	"tinymce/pasteplugin/Utils"
+], function(Tools, DomParser, Schema, Serializer, Node, Utils) {
+	function isWordContent(content) {
+		return (/class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i).test(content);
+	}
 
-		editor.on('PastePreProcess', function(e) {
+	function WordFilter(editor) {
+		var settings = editor.settings;
+
+		editor.on('BeforePastePreProcess', function(e) {
 			var content = e.content, retainStyleProperties, validStyles;
 
-			retainStyleProperties = editor.settings.paste_retain_style_properties;
+			retainStyleProperties = settings.paste_retain_style_properties;
 			if (retainStyleProperties) {
 				validStyles = Tools.makeMap(retainStyleProperties);
-			}
-
-			function process(items) {
-				each(items, function(v) {
-					if (v.constructor == RegExp) {
-						content = content.replace(v, '');
-					} else {
-						content = content.replace(v[0], v[1]);
-					}
-				});
 			}
 
 			/**
@@ -116,13 +111,13 @@ define("tinymce/pasteplugin/WordFilter", [
 						}
 
 						// Detect unordered lists look for bullets
-						if (/^\s*[\u2022\u00b7\u00a7\u00d8o\u25CF]\s*$/.test(nodeText)) {
+						if (/^\s*[\u2022\u00b7\u00a7\u00d8\u25CF]\s*$/.test(nodeText)) {
 							convertParagraphToLi(node, listStartTextNode, 'ul');
 							continue;
 						}
 
 						// Detect ordered lists 1., a. or ixv.
-						if (/^\s*\w+\./.test(nodeText)) {
+						if (/^\s*\w+\.$/.test(nodeText)) {
 							// Parse OL start number
 							var matches = /([0-9])\./.exec(nodeText);
 							var start = 1;
@@ -188,16 +183,16 @@ define("tinymce/pasteplugin/WordFilter", [
 				return null;
 			}
 
-			if (editor.settings.paste_enable_default_filters === false) {
+			if (settings.paste_enable_default_filters === false) {
 				return;
 			}
 
 			// Detect is the contents is Word junk HTML
-			if (/class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i.test(e.content)) {
+			if (isWordContent(e.content)) {
 				e.wordContent = true; // Mark it for other processors
 
 				// Remove basic Word junk
-				process([
+				content = Utils.filter(content, [
 					// Word comments like conditional comments etc
 					/<!--[\s\S]+?-->/gi,
 
@@ -221,10 +216,15 @@ define("tinymce/pasteplugin/WordFilter", [
 					]
 				]);
 
+				var validElements = settings.paste_word_valid_elements;
+				if (!validElements) {
+					validElements = '@[style],-strong/b,-em/i,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
+						'-table,-tr,-td[colspan|rowspan],-th,-thead,-tfoot,-tbody,-a[!href],sub,sup,strike,br';
+				}
+
 				// Setup strict schema
 				var schema = new Schema({
-					valid_elements: '@[style],-strong/b,-em/i,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,-table,' +
-								'-tr,-td[colspan|rowspan],-th,-thead,-tfoot,-tbody,-a[!href],sub,sup,strike'
+					valid_elements: validElements
 				});
 
 				// Parse HTML into DOM structure
@@ -255,5 +255,9 @@ define("tinymce/pasteplugin/WordFilter", [
 				e.content = new Serializer({}, schema).serialize(rootNode);
 			}
 		});
-	};
+	}
+
+	WordFilter.isWordContent = isWordContent;
+
+	return WordFilter;
 });

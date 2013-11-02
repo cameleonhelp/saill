@@ -1,27 +1,34 @@
-<?php echo $this->Form->create('Rapport',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
-    <table>
-        <tr>
-            <td><label class="control-label sstitre" for="RapportMois">Mois : </label></td>
-            <td>
-                <?php echo $this->Form->select('mois',$mois,array('default'=>date('m'),'empty'=>false)); ?>
-            </td>
-            <td><label class="control-label sstitre" for="RapportAnnee">Année : </label></td>
-            <td>
-                <?php echo $this->Form->select('annee',$annee,array('default'=>date('Y'),'empty'=>false)); ?>
-            </td>
-        </tr>
-    </table>
-    <div class="navbar">
-        <div class="navbar-inner">
-            <div class="container" style="margin-top:2px;text-align:center;">
-                <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-primary','type'=>'submit')); ?>   
+<div class="marginright20">
+<div class="etatsaisie form">
+<?php echo $this->Form->create('Rapport',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+    <div class='block-panel block-panel-50-left'>
+        <div class="form-group">
+            <label class="col-lg-4 required" for="RapportMois">Mois : </label>
+            <div class="col-lg-4">
+                    <?php echo $this->Form->select('mois',$mois,array('default'=>date('m'),'class'=>"form-control",'empty'=>false)); ?>  
             </div>
-        </div>
+        </div>        
+    </div>
+    <div class='block-panel block-panel-50-right'>
+        <div class="form-group">
+            <label class="col-lg-4 required" for="RapportAnnee">Année : </label>
+            <div class="col-lg-4">
+                    <?php echo $this->Form->select('annee',$annee,array('default'=>date('Y'),'class'=>"form-control",'empty'=>false)); ?>           
+            </div>            
+        </div>     
+    </div>
+    <div style="clear:both;">
+    <div class="form-group">
+      <div class="btn-block-horizontal">
+            <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?>   
+      </div>
     </div>  
+    </div> 
 <?php echo $this->Form->end(); ?>
-<?php if (isset($results)): ?>
+</div>
+<?php if (isset($results) && count($results)>0): ?>
 <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Saisie activités des agents</div><br>
-<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
     <thead>
         <tr>
         <th>Agent</th>
@@ -34,9 +41,9 @@
             <td><?php echo $result['SAISIE']['NOMLONG']; ?></td>
             <?php
             if(($result['SAISIE']['TOTAL']-intval($nbmaxopen))!=0):
-                $badge = 'badge-important';
+                $badge = 'badge-important showoverlay';
             elseif(($result['SAISIE']['TOTAL']-intval($nbmaxopen))==0 && $result['SAISIE']['VEROUILLE']!=0):
-                $badge = 'badge-warning';
+                $badge = 'badge-warning showoverlay';
             else:
                 $badge = 'badge-success';
             endif;
@@ -52,7 +59,7 @@
 </table>
 <br/>
 <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Agents avec aucune saisie</div><br>
-<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
     <thead>
         <tr>
         <th>Agent</th>
@@ -64,17 +71,23 @@
         <tr>
             <td><?php echo $result['Utilisateur']['NOMLONG']; ?></td>
             <td style="text-align: center">
-                <a href="#"><span rel="tooltip" data-title="Envoyer un mail de relance" class="sendmailrelance"  userid="<?php echo $result['Utilisateur']['id']; ?>"><span class="glyphicons envelope"></span></span></a>
+                <a href="#"><span rel="tooltip" data-title="Envoyer un mail de relance" class="sendmailrelance"  userid="<?php echo $result['Utilisateur']['id']; ?>"><span class="glyphicons envelope notchange showoverlay"></span></span></a>
             </td>
         </tr>           
         <?php endforeach; ?>
     </tbody>    
 </table>
 <?php endif; ?>
+
+<?php if (isset($results) && count($results)==0): ?>
+<div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
+<?php endif; ?>
+</div>
 <script>
 $(document).ready(function () {    
     $(document).on('click','.sendmail',function(e){
         var id = $(this).attr('userid');
+        var overlay = $('#overlay');
         $.ajax({
             dataType: "html",
             type: "POST",
@@ -82,10 +95,14 @@ $(document).ready(function () {
             data: ({})
         }).error(function ( data ) {
             location.reload();
+            overlay.hide();
+        }).success(function ( data ) {
+            overlay.hide();
         });
     });  
     $(document).on('click','.sendmailrelance',function(e){
         var id = $(this).attr('userid');
+        var overlay = $('#overlay');
         $.ajax({
             dataType: "html",
             type: "POST",
@@ -93,6 +110,9 @@ $(document).ready(function () {
             data: ({})
         }).error(function ( data ) {
             location.reload();
+            overlay.hide();            
+        }).success(function ( data ) {
+            overlay.hide();
         });
     });
 });    

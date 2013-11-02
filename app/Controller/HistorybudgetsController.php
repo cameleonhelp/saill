@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Historybudget $Historybudget
  */
 class HistorybudgetsController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
 /**
  * index method
  *
@@ -17,7 +17,7 @@ class HistorybudgetsController extends AppController {
 		$historybudgets = $this->Historybudget->find('all',array('conditions'=>array('Historybudget.activite_id'=>$id),'recursive'=>-1,'order'=>array('Historybudget.ANNEE'=>'desc')));
 		$this->set('historybudgets', $historybudgets);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
             endif;  
 	}
@@ -39,11 +39,11 @@ class HistorybudgetsController extends AppController {
                             $lastidcheck = isset($lastcheck['Historybudget']['id']) ? $lastcheck['Historybudget']['id'] : null;
                             if ($history['Historybudget']['ACTIF']==1) {$this->saveActiviteBudget($history['Historybudget']['activite_id'], $history_id,$lastidcheck);}                          
 			} 
-                        $this->Session->setFlash(__('Historique du budget sauvegardé'),'default',array('class'=>'alert alert-success'));
+                        $this->Session->setFlash(__('Historique du budget sauvegardé',true),'flash_success');
 			$this->History->goBack(1);                        
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
             endif;                 
 	}
@@ -70,7 +70,7 @@ class HistorybudgetsController extends AppController {
                             $newhistory = $this->Historybudget->find('first',array('conditions'=>array('id'=>$id),'recursive'=>-1));
                             if ($newhistory['Historybudget']['ACTIF']==1) {$this->saveActiviteBudget($newhistory['Historybudget']['activite_id'], $id,$lastidcheck);}
                             if ($history['Historybudget']['ACTIF']==1 && $newhistory['Historybudget']['ACTIF']==0){$this->resethistory($id,$newhistory['Historybudget']['activite_id']);}
-                            $this->Session->setFlash(__('Historique du budget modifié'),'default',array('class'=>'alert alert-success'));
+                            $this->Session->setFlash(__('Historique du budget modifié',true),'flash_success');
                             $this->History->goBack(1);                             
 			} 
 		} else {
@@ -78,7 +78,7 @@ class HistorybudgetsController extends AppController {
 			$this->request->data = $this->Historybudget->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
             endif; 
 	}
@@ -99,13 +99,13 @@ class HistorybudgetsController extends AppController {
                 $newhistory = $this->Historybudget->find('first',array('conditions'=>array('id'=>$id),'recursive'=>-1));
 		if ($this->Historybudget->delete()) {
                         if ($newhistory['Historybudget']['ACTIF']==1){$this->resethistory($id,$newhistory['Historybudget']['activite_id']);}
-                        $this->Session->setFlash(__('Historique de l\'activité supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+                        $this->Session->setFlash(__('Historique de l\'activité supprimé',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Historique de l\'activité <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Historique de l\'activité <b>NON</b> supprimé',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();         
             endif;                   
 	}
@@ -121,12 +121,13 @@ class HistorybudgetsController extends AppController {
                 $this->Historybudget->saveField('ACTIF', 1);
                 exit();
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
             endif;             
         }
         
         public function saveActiviteBudget($activite_id=null,$history_id=null,$lastcheck=null){
+            if($history_id != null):
             $history = $this->Historybudget->find('first',array('conditions'=>array('Historybudget.id'=>$history_id)));
             $this->Historybudget->Activite->id=$activite_id;
             $this->Historybudget->Activite->saveField('BUDJETRA', $history['Historybudget']['PREVU']);
@@ -134,6 +135,7 @@ class HistorybudgetsController extends AppController {
             if ($lastcheck!=null && $lastcheck!=$history_id):
                 $this->Historybudget->id = $lastcheck;
                 $this->Historybudget->saveField('ACTIF', 0);
+            endif;
             endif;
         }
         

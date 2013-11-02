@@ -1,6 +1,6 @@
 <br/>
 <div class="historyUtilisateur index">
-	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
+	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax">
         <thead>
 	<tr>
 			<th width='85px'><?php echo 'Date'; ?></th>

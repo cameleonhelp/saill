@@ -7,10 +7,10 @@ App::uses('CakeEmail', 'Network/Email');
  * @property Utilisateur $Utilisateur
  */
 class UtilisateursController extends AppController {
-    public $components = array('History'); 
+    public $components = array('History','Common'); 
     var $name = 'Utilisateurs';
     public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Utilisateur.NOM' => 'asc','Utilisateur.PRENOM' => 'asc'),
         'conditions'=>array('Utilisateur.id > '=> 1),
         );
@@ -120,7 +120,7 @@ class UtilisateursController extends AppController {
                 $this->set('hierarchique',$hierarchique);  
                 endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -140,7 +140,7 @@ class UtilisateursController extends AppController {
 		$options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));
 		$this->set('utilisateur', $this->Utilisateur->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -155,7 +155,11 @@ class UtilisateursController extends AppController {
                 $this->Utilisateur->Societe->recursive = -1;
                 $societe = $this->Utilisateur->Societe->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
                 $this->set('societe',$societe);
-                if ($this->request->is('post')) :                  
+                if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Utilisateur->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			$this->Utilisateur->create();
 			if ($this->Utilisateur->save($this->request->data)) {
                                 $lastid = $this->Utilisateur->getLastInsertID();
@@ -167,14 +171,15 @@ class UtilisateursController extends AppController {
                                 $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur créé".' par '.userAuth('NOMLONG');
                                 $this->Utilisateur->Historyutilisateur->save($history);                              
-				$this->Session->setFlash(__('Utilisateur sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Utilisateur sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Utilisateur incorrect, veuillez corriger l\'utilisateur'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Utilisateur incorrect, veuillez corriger l\'utilisateur',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -189,19 +194,24 @@ class UtilisateursController extends AppController {
 	public function edit($id = null) {
             if (isAuthorized('utilisateurs', 'edit')) :
                 if (!$this->Utilisateur->exists($id)) {
-			throw new NotFoundException(__('Utilisateur incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Utilisateur incorrect',true),'flash_failure');
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-                    $this->Utilisateur->id = $id;
-                    if ($this->Utilisateur->save($this->request->data)) {
-                        $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
-                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur mis à jour".' par '.userAuth('NOMLONG');
-                        $this->Utilisateur->Historyutilisateur->save($history);                            
-				$this->Session->setFlash(__('Utilisateur sauvegardé'),'default',array('class'=>'alert alert-success'));
-				$this->History->goBack(1);
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Utilisateur->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
+                        $this->Utilisateur->id = $id;
+                        if ($this->Utilisateur->save($this->request->data)) {
+                            $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
+                            $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur mis à jour".' par '.userAuth('NOMLONG');
+                            $this->Utilisateur->Historyutilisateur->save($history);                            
+                            $this->Session->setFlash(__('Utilisateur sauvegardé',true),'flash_success');
+                            $this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Utilisateur incorrect, veuillez corriger l\'utilisateur'),'default',array('class'=>'alert alert-error'));
+                            $this->Session->setFlash(__('Utilisateur incorrect, veuillez corriger l\'utilisateur',true),'flash_failure');
 			}
+                    endif;
 		} else {
                         $this->Utilisateur->Societe->recursive = -1;
                         $societe = $this->Utilisateur->Societe->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
@@ -276,7 +286,7 @@ class UtilisateursController extends AppController {
                         $this->set('tabVT',$tabVT);                        
                 }
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -302,21 +312,21 @@ class UtilisateursController extends AppController {
                             $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
                             $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - utilisateur supprimé".' par '.userAuth('NOMLONG');
                             $this->Utilisateur->Historyutilisateur->save($history);
-                            $this->Session->setFlash(__('Utilisateur désactivé'),'default',array('class'=>'alert alert-success'));
-                            $this->History->goBack();
+                            $this->Session->setFlash(__('Utilisateur désactivé',true),'flash_success');
+                            $this->History->goBack(1);
                     endif;
                     $this->Utilisateur->delete($id);
-                    $this->Session->setFlash(__('Utilisateur <b>NON</b> désactivé'),'default',array('class'=>'alert alert-error'));
-                    $this->History->goBack();                    
+                    $this->Session->setFlash(__('Utilisateur <b>NON</b> désactivé',true),'flash_failure');
+                    $this->History->goBack(1);                    
                  else:
                     $this->Utilisateur->delete($id);
-                    $this->Session->setFlash(__('Utilisateur supprimé'),'default',array('class'=>'alert alert-success'));
-                    $this->History->goBack();
+                    $this->Session->setFlash(__('Utilisateur supprimé',true),'flash_success');
+                    $this->History->goBack(1);
                  endif;
-		$this->Session->setFlash(__('Utilisateur <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Utilisateur <b>NON</b> supprimé',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -332,7 +342,7 @@ class UtilisateursController extends AppController {
 	public function profil($id=null) {
             $this->set('title_for_layout','Mon profil');
             if (!$this->Utilisateur->exists($id)) {
-                    throw new NotFoundException(__('Utilisateur incorrect'),'default',array('class'=>'alert alert-error'));
+                    throw new NotFoundException(__('Utilisateur incorrect',true),'flash_failure');
             }
             if ($this->request->is('post') || $this->request->is('put')) {
                 $this->Utilisateur->id = $id;
@@ -341,10 +351,10 @@ class UtilisateursController extends AppController {
                     $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur mis à jour".' par '.userAuth('NOMLONG');
                     $this->Utilisateur->Historyutilisateur->save($history);                            
-                            $this->Session->setFlash(__('Profil utilisateur sauvegardé'),'default',array('class'=>'alert alert-success'));
-                            $this->History->goBack();
+                            $this->Session->setFlash(__('Profil utilisateur sauvegardé',true),'flash_success');
+                            $this->History->goBack(1);
                     } else {
-                            $this->Session->setFlash(__('Profil utilisateur incorrect, veuillez corriger l\'utilisateur'),'default',array('class'=>'alert alert-error'));
+                            $this->Session->setFlash(__('Profil utilisateur incorrect, veuillez corriger l\'utilisateur',true),'flash_failure');
                     }
             } else {
                         $this->Utilisateur->Societe->recursive = -1;
@@ -437,6 +447,7 @@ class UtilisateursController extends AppController {
                         $autorisations = $this->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.profil_id'=>$utilisateur['Utilisateur']['profil_id'])));
                         $this->Session->renew();
                         $this->Session->write(AUTHORIZED,$autorisations);
+                        $this->Session->write('userMenu', $utilisateur['Utilisateur']['MENU']);
                         /** cookie pour remember me **/
                         if ($this->Auth->request->data['Utilisateur']['remember_me'] == 1) {
                             // remove "remember me checkbox"
@@ -449,12 +460,17 @@ class UtilisateursController extends AppController {
                             $this->Cookie->write('remember_me_cookie', $cookie, true, '2 weeks');
                         }
                         $this->Auth->login($utilisateur['Utilisateur']);
-                        $this->redirect(array('controller'=>'pages','action'=>'home'));
+                        //if(!empty(userAuth('LASTURL'))):
+                            //$url = isset(userAuth('LASTURL')) ? userAuth('LASTURL') : array('controller'=>'pages','action'=>'home');
+                            //$this->redirect($url);
+                        //else:                        
+                            $this->redirect(array('controller'=>'pages','action'=>'home'));
+                        //endif;
                     } else {
-                        $this->Session->setFlash(__('Mot de passe invalide, réessayer'),'default',array('class'=>'alert alert-error'));
+                        $this->Session->setFlash(__('Mot de passe invalide, réessayer',true),'flash_failure');
                     }                    
                 } else {
-                    $this->Session->setFlash(__('Login inexistant ou compte invalide, contacter l\'administrateur'),'default',array('class'=>'alert alert-error'));
+                    $this->Session->setFlash(__('Login inexistant ou compte invalide, contacter l\'administrateur',true),'flash_failure');
                 }
             }
             /** si login pas posté **/
@@ -480,12 +496,12 @@ class UtilisateursController extends AppController {
                         } else {
                         $this->Session->renew();
                         $this->Cookie->delete('remember_me_cookie');
-                        $this->Session->setFlash(__('Cookie : Mot de passe invalide, réessayer'),'default',array('class'=>'alert alert-error'));
+                        $this->Session->setFlash(__('Cookie : Mot de passe invalide, réessayer',true),'flash_failure');
                         }                    
                     } else {
                     $this->Session->renew();
                     $this->Cookie->delete('remember_me_cookie');
-                    $this->Session->setFlash(__('Cookie : Login inexistant ou compte invalide, contacter l\'administrateur'),'default',array('class'=>'alert alert-error'));
+                    $this->Session->setFlash(__('Cookie : Login inexistant ou compte invalide, contacter l\'administrateur',true),'flash_failure');
                     }
                 }
             }
@@ -580,20 +596,20 @@ class UtilisateursController extends AppController {
                     unset($record['Utilisateur']['FINMISSION']);
                 }
                 $this->Utilisateur->create();
-
                 if ($this->Utilisateur->save($record)) {
                         $lastid = $this->Utilisateur->id;
                         $this->addnewaction($lastid);
                         $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Utilisateur dupliqué à partir de ".$NOMLONG.' par '.userAuth('NOMLONG');
                         $this->Utilisateur->Historyutilisateur->save($history);
-                        $this->Session->setFlash(__('Utilisateur dupliqué'),'default',array('class'=>'alert alert-success'));
+                        $this->Utilisateur->requestAction('utiliseoutils/duplicate_from_user', array('pass' => array($id,$lastid)));
+                        $this->Session->setFlash(__('Utilisateur dupliqué',true),'flash_success');
                         $this->redirect(array('action'=>'edit',$lastid));
                 } 
-		$this->Session->setFlash(__('Utilisateur <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Utilisateur <b>NON</b> dupliqué',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}   
@@ -620,13 +636,13 @@ class UtilisateursController extends AppController {
                         $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mot de passe initialisé".' par '.userAuth('NOMLONG');
                         $this->Utilisateur->Historyutilisateur->save($history);
-                        $this->Session->setFlash(__('Mot de passe de l\'utilisateur initialisé'),'default',array('class'=>'alert alert-success'));
-                        $this->History->goBack();
+                        $this->Session->setFlash(__('Mot de passe de l\'utilisateur initialisé',true),'flash_success');
+                        $this->History->goBack(1);
                 } 
-		$this->Session->setFlash(__('Mot de passe de l\'utilisateur <b>NON</b> initialisé'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Mot de passe de l\'utilisateur <b>NON</b> initialisé',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	} 
@@ -641,27 +657,32 @@ class UtilisateursController extends AppController {
  */
 	public function initmypassword() {
             if ($this->request->is('post')) {
-                $username = $this->data['Utilisateur']['usernamelost'];
-                $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.username'=>$username),'recursive'=>0));
-                $this->Utilisateur->id = $utilisateur['Utilisateur']['id'];
-                $record = $this->Utilisateur->read();
-                unset($record['Utilisateur']['password']); 
-                unset($record['Utilisateur']['created']);
-                unset($record['Utilisateur']['modified']);
-                $password = generateRandomPassword();
-                $record['Utilisateur']['password']=$password; 
-                $record['Utilisateur']['created'] = $this->Utilisateur->read('created');
-                $record['Utilisateur']['modified'] = date('Y-m-d');                
-                if ($this->Utilisateur->save($record)) {
-                        $sendmail = $this->sendmailpassword($utilisateur,$password);
-                        $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
-                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mot de passe initialisé".' par '.$utilisateur['Utilisateur']['NOMLONG'];
-                        $this->Utilisateur->Historyutilisateur->save($history);
-                        $this->Session->setFlash(__('Mot de passe envoyé à votre adresse mail, si vous ne recevez pas l\'email contacter l\'administrateur'.$password),'default',array('class'=>'alert alert-success'));
-                        $this->History->goBack();
-                } 
-                $this->Session->setFlash(__('Mot de passe <b>NON</b> initialisé'),'default',array('class'=>'alert alert-error'));
-                $this->History->goBack(); 
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Utilisateur->validate = array();
+                        $this->History->goBack(1);
+                    else:                 
+                        $username = $this->data['Utilisateur']['usernamelost'];
+                        $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.username'=>$username),'recursive'=>0));
+                        $this->Utilisateur->id = $utilisateur['Utilisateur']['id'];
+                        $record = $this->Utilisateur->read();
+                        unset($record['Utilisateur']['password']); 
+                        unset($record['Utilisateur']['created']);
+                        unset($record['Utilisateur']['modified']);
+                        $password = generateRandomPassword();
+                        $record['Utilisateur']['password']=$password; 
+                        $record['Utilisateur']['created'] = $this->Utilisateur->read('created');
+                        $record['Utilisateur']['modified'] = date('Y-m-d');                
+                        if ($this->Utilisateur->save($record)) {
+                                $sendmail = $this->sendmailpassword($utilisateur,$password);
+                                $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
+                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mot de passe initialisé".' par '.$utilisateur['Utilisateur']['NOMLONG'];
+                                $this->Utilisateur->Historyutilisateur->save($history);
+                                $this->Session->setFlash(__('Mot de passe envoyé à votre adresse mail, si vous ne recevez pas l\'email contacter l\'administrateur',true),'flash_success');
+                                $this->History->goBack(1);
+                        } 
+                        $this->Session->setFlash(__('Mot de passe <b>NON</b> initialisé',true),'flash_failure');
+                        $this->History->goBack(1); 
+                    endif;
             }
 	} 
         
@@ -679,13 +700,13 @@ class UtilisateursController extends AppController {
                         $history['Historyutilisateur']['utilisateur_id']=$this->Utilisateur->id;
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mot de passe initialisé".' par '.userAuth('NOMLONG');
                         $this->Utilisateur->Historyutilisateur->save($history);
-                        $this->Session->setFlash(__('Mot de passe de l\'administrateur initialisé'),'default',array('class'=>'alert alert-success'));
-                        $this->History->goBack();
+                        $this->Session->setFlash(__('Mot de passe de l\'administrateur initialisé',true),'flash_success');
+                        $this->History->goBack(1);
                 } 
-		$this->Session->setFlash(__('Mot de passe de l\'administrateur <b>NON</b> initialisé'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Mot de passe de l\'administrateur <b>NON</b> initialisé',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}         
@@ -711,7 +732,7 @@ class UtilisateursController extends AppController {
                 $this->set('sections',$sections);
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }    
@@ -825,9 +846,9 @@ class UtilisateursController extends AppController {
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - compte prolongé jusqu'au ".$date.' par '.userAuth('NOMLONG');
                     $this->Utilisateur->Historyutilisateur->save($history);
                 endforeach;
-                echo $this->Session->setFlash(__('Comptes prolongés'),'default',array('class'=>'alert alert-success'));
+                echo $this->Session->setFlash(__('Comptes prolongés',true),'flash_success');
             else:
-                echo $this->Session->setFlash(__('Aucun utilisateur sélectionné'),'default',array('class'=>'alert alert-error'));
+                echo $this->Session->setFlash(__('Aucun utilisateur sélectionné',true),'flash_failure');
             endif;
             exit();
         }
@@ -836,17 +857,17 @@ class UtilisateursController extends AppController {
             $ids = explode('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
-                    $this->Utilisateur->create();
                     $this->Utilisateur->id = $id;
-                    $etat = $this->Utilisateur->ACTIF == 0 ? 1 : 0;
+                    $old_etat = $this->Utilisateur->find('first',array('fields'=>array('Utilisateur.ACTIF'),'conditions'=>array('Utilisateur.id'=>$id),'recursive'=>-1));
+                    $etat = $old_etat['Utilisateur']['ACTIF'] == 0 ? 1 : 0;
                     $this->Utilisateur->saveField('ACTIF', $etat);
                     $history['Historyutilisateur']['utilisateur_id']=$id;
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - état changé par ".userAuth('NOMLONG');
                     $this->Utilisateur->Historyutilisateur->save($history);
                 endforeach;
-                echo $this->Session->setFlash(__('Comptes désactivés'),'default',array('class'=>'alert alert-success'));
+                echo $this->Session->setFlash(__('Comptes désactivés',true),'flash_success');
             else:
-                echo $this->Session->setFlash(__('Aucun utilisateur sélectionné'),'default',array('class'=>'alert alert-error'));
+                echo $this->Session->setFlash(__('Aucun utilisateur sélectionné',true),'flash_failure');
             endif;
             exit();
         }      
@@ -872,11 +893,11 @@ class UtilisateursController extends AppController {
         public function saveAdmPassword(){
               $this->Utilisateur->id = 1;
               if ($this->Utilisateur->saveField('password', $this->data['Utilisateur']['password_new'])):
-                  $this->Session->setFlash(__('Mot de passe administrateur mis à jour'),'default',array('class'=>'alert alert-success'));
+                  $this->Session->setFlash(__('Mot de passe administrateur mis à jour',true),'flash_success');
               else:
-                  $this->Session->setFlash(__('Mot de passe administrateur <b>NON</b> mis à jour'),'default',array('class'=>'alert alert-error')); 
+                  $this->Session->setFlash(__('Mot de passe administrateur <b>NON</b> mis à jour',true),'flash_failure'); 
               endif;
-              $this->History->goBack();
+              $this->History->goBack(1);
         }
         
         public function sendmailnewutilisateur($utilisateur){
@@ -904,10 +925,43 @@ class UtilisateursController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
                 }  
             endif;
         }       
+        
+        public function sendmailgestannuaire($id){
+            $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$id),'recursive'=>0));
+            $mailtoGestannuaire = $this->requestAction('parameters/get_gestionnaireannuaire');
+            $mailto[] = $mailtoGestannuaire['Parameter']['param'];
+            $finmission = $utilisateur['Utilisateur']['FINMISSION'] = '' ? "05/01".(date('Y')+1) : $utilisateur['Utilisateur']['FINMISSION'];
+            $to=$mailto;
+            $from = userAuth('MAIL');
+            $objet = "SAILL : Ajout d'un nouvel utilisateur [".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].']';
+            $message = "Merci de traiter cette demande concernant l'arrivée de ".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].
+                    '<ul>
+                    <li>Date de naissance :'.$utilisateur['Utilisateur']['NAISSANCE'].'</li>
+                    <li>Société :'.$utilisateur['Societe']['NOM'].'</li>
+                    <li>Fin de mission :'.$finmission.'</li>
+                    <li>Commentaire :'.$utilisateur['Utilisateur']['COMMENTAIRE'].'</li>                      
+                    </ul>';
+            if($to!=''):
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+                $this->Session->setFlash(__('Mail envoyé avec succès',true),'flash_success');
+                }
+                catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                }  
+            endif;
+            $this->History->goBack(1);
+        }
 
         public function sendmailpassword($utilisateur,$password){
             $from =  'donotreply.saill@sncf.fr';
@@ -928,9 +982,10 @@ class UtilisateursController extends AppController {
                         ->to($to)
                         ->subject($objet)
                         ->send($message);
+                $this->Session->setFlash(__('Mail avec le mot de passe envoyé avec succès',true),'flash_success');
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
                 }  
             endif;
         }
@@ -959,7 +1014,7 @@ class UtilisateursController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
                 }  
             endif;
         }  
@@ -1005,5 +1060,19 @@ class UtilisateursController extends AppController {
             $societe = 'Utilisateur.societe_id IN ('.substr_replace(@$societelist ,"",-1).')';  
             $result = $this->Utilisateur->find('all',array('conditions'=>array('Utilisateur.ACTIF'=>1,$societe),'recursive'=>0));
             return $result;
+        }
+        
+        public function getmenuvisible(){
+            $utilisateur=$this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>  userAuth('id')),'recursive'=>-1));
+            return $utilisateur['Utilisateur']['MENU']==1 ? true : false;
+        }
+        
+        public function setmenuvisible(){
+            $this->Utilisateur->id = userAuth('id');  
+            $utilisateur=$this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>  userAuth('id')),'recursive'=>-1));
+            $value = $utilisateur['Utilisateur']['MENU']==1 ? 0 : 1;
+            $this->Utilisateur->saveField('MENU', $value);
+            $this->Session->write('userMenu', $value);
+            exit();
         }
 }

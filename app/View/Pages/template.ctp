@@ -35,7 +35,7 @@ App::uses('Debugger', 'Utility');
             </ul> 
             <form class="navbar-form clearfix pull-right ">
                 <input class="span6" type="text">
-                <button type="submit" class="btn">Rechercher</button>
+                <button type="submit" class="btn form-btn showoverlay">Rechercher</button>
             </form>
             </div>
         </div>
@@ -78,7 +78,7 @@ App::uses('Debugger', 'Utility');
 		echo '</div>';	?>
 </p>
 <p>
-    <div class="controls">
+    <div class="col-lg-offset-4 form-control">
         <div class="input-append date" data-date="<?php echo date('d/m/Y'); ?>" data-date-format="dd/mm/yyyy">
             <input class="span5" size="16" type="text" placeholder="ex.: <?php echo date('d/m/Y'); ?>">
             <button class="btninput dateremove" type="button" id="remove" name="remove" rel="tooltip" data-title="Effacer la date"><i class="icon-remove"></i></button>
@@ -104,21 +104,21 @@ App::uses('Debugger', 'Utility');
 
 <p>
     <div class="btn-group">
-    <button class="btn  btn-primary"><i class="icon-plus icon-white"></i></button>
-    <button class="btn"><i class="icon-pencil"></i></button>
-    <button class="btn"><i class="icon-retweet"></i></button>    
+    <button class="btn btn-sm  btn-primary"><i class="icon-plus icon-white"></i></button>
+    <button class="btn"><i class="icon-pencil notchange"></i></button>
+    <button class="btn"><i class="icon-retweet notchange"></i></button>    
     <button class="btn"><i class="icon-zoom-in"></i></button>
     <button class="btn"><i class="icon-ok-circle"></i></button>
     <button class="btn"><i class="icon-trash"></i></button>
     </div>
 </p>
     <p>
-    <button class="btn btn-primary" type="button">Default button</button>
+    <button class="btn btn-sm btn-primary" type="button">Default button</button>
     <button class="btn" type="button">Default button</button>
     </p>
     <div class="btn-group pull-right" data-toggle="buttons-radio">
     <button class="btn" id="expand" onclick="$('.collapse').collapse('show');return false;"><i class="icon-resize-full"></i></button>
-    <button class="btn btn-inverse disabled" id="collapse" onclick="$('.collapse').collapse('hide');return false;"><i class="icon-resize-small icon-white"></i></button>
+    <button class="btn btn-sm btn-inverse disabled" id="collapse" onclick="$('.collapse').collapse('hide');return false;"><i class="icon-resize-small icon-white"></i></button>
     </div>
     <div class="accordion" style="clear:both;" id="accordion2" name="accordion2">
         <div class="accordion-group">
@@ -190,7 +190,7 @@ App::uses('Debugger', 'Utility');
         <div class="navbar">
         <div class="navbar-inner">
             <div class="container" style="margin-top:2px;text-align:center;">
-                <button class="btn btn-primary" type="button">Enregistrer</button>
+                <button class="btn btn-sm btn-primary" type="button">Enregistrer</button>
                 <button class="btn" type="button">Annuler</button>                
             </div>
         </div>
@@ -202,38 +202,38 @@ App::uses('Debugger', 'Utility');
         </thead>
         <tbody>
         <tr><td><div id="NOM" data-type="text" data-pk="1" data-name="NOM" data-url="post.php" data-original-title="Saisir le nom" style="cursor:url(img/pen_i.cur),pointer;">Truc</div></td><td>Marcel</td><td>0000000</td><td>SAMBA</td><td>SNCF</td><td>
-    <i class="icon-pencil"></i>
-    <i class="icon-retweet"></i>  
-    <i class="icon-zoom-in" rel="popover" data-title="<h3>Fiche identité :</h3>" data-content="<contenttitle>Tél:</contenttitle> 000000<br/><contenttitle>Mail:</contenttitle> <a href='mailto:marcel.truc@sncf.fr'>marcel.truc@sncf.fr</a>" data-trigger="click" style="cursor: pointer;"></i>
+    <i class="icon-pencil notchange"></i>
+    <i class="icon-retweet notchange"></i>  
+    <i class="icon-zoom-in" data-rel="popover" data-title="<h3>Fiche identité :</h3>" data-content="<contenttitle>Tél:</contenttitle> 000000<br/><contenttitle>Mail:</contenttitle> <a href='mailto:marcel.truc@sncf.fr'>marcel.truc@sncf.fr</a>" data-trigger="click" style="cursor: pointer;"></i>
     <i class="icon-ok-circle" data-toggle="modal" data-target="#initpsw-msg" style="cursor: pointer;"></i>
     <i class="icon-trash" data-toggle="modal" data-target="#delete-msg" style="cursor: pointer;"></i>
     </td></tr>
-        <tr><td>Dupleix</td><td>Auguste</td><td>1111111</td><td>SAMBA</td><td>SNCF</td><td><i class="icon-pencil"></i>
-    <i class="icon-retweet"></i>  
-    <i class="icon-zoom-in" rel="popover" data-title="<h3>Fiche identité :</h3>" data-content="<contenttitle>Tél:</contenttitle> 000001<br/><contenttitle>Mail:</contenttitle> <a href='mailto:auguste.dupleix@sncf.fr'>auguste.dupleix@sncf.fr</a>" data-trigger="click" style="cursor: pointer;"></i>
+        <tr><td>Dupleix</td><td>Auguste</td><td>1111111</td><td>SAMBA</td><td>SNCF</td><td><i class="icon-pencil notchange"></i>
+    <i class="icon-retweet notchange"></i>  
+    <i class="icon-zoom-in" data-rel="popover" data-title="<h3>Fiche identité :</h3>" data-content="<contenttitle>Tél:</contenttitle> 000001<br/><contenttitle>Mail:</contenttitle> <a href='mailto:auguste.dupleix@sncf.fr'>auguste.dupleix@sncf.fr</a>" data-trigger="click" style="cursor: pointer;"></i>
     <i class="icon-ok-circle"></i>
     <i class="icon-trash"></i>
     </td></tr>
-        <tr><td>Calamity</td><td>Gontran</td><td>2222222</td><td>SAMBA</td><td>SNCF</td><td><i class="icon-pencil"></i>
-    <i class="icon-retweet"></i>  
+        <tr><td>Calamity</td><td>Gontran</td><td>2222222</td><td>SAMBA</td><td>SNCF</td><td><i class="icon-pencil notchange"></i>
+    <i class="icon-retweet notchange"></i>  
     <i class="icon-zoom-in"></i>
     <i class="icon-ok-circle"></i>
     <i class="icon-trash"></i>
     </td></tr>
-        <tr><td>Dussolier</td><td>Emilie</td><td>33333333</td><td>SAMBA</td><td>SNCF</td><td><i class="icon-pencil"></i>
-    <i class="icon-retweet"></i>  
+        <tr><td>Dussolier</td><td>Emilie</td><td>33333333</td><td>SAMBA</td><td>SNCF</td><td><i class="icon-pencil notchange"></i>
+    <i class="icon-retweet notchange"></i>  
     <i class="icon-zoom-in"></i>
     <i class="icon-ok-circle"></i>
     <i class="icon-trash"></i>
     </td></tr>
-        <tr><td>Grosjean</td><td>Irène</td><td>4444444</td><td>SAMBA</td><td>SNCF</td><td><i class="icon-pencil"></i>
-    <i class="icon-retweet"></i>  
+        <tr><td>Grosjean</td><td>Irène</td><td>4444444</td><td>SAMBA</td><td>SNCF</td><td><i class="icon-pencil notchange"></i>
+    <i class="icon-retweet notchange"></i>  
     <i class="icon-zoom-in"></i>
     <i class="icon-ok-circle"></i>
     <i class="icon-trash"></i>
     </td></tr>
-        <tr><td>Melchior</td><td>Lucie</td><td>5555555</td><td>SAMBA</td><td>SNCF</td><td><i class="icon-pencil"></i>
-    <i class="icon-retweet"></i>  
+        <tr><td>Melchior</td><td>Lucie</td><td>5555555</td><td>SAMBA</td><td>SNCF</td><td><i class="icon-pencil notchange"></i>
+    <i class="icon-retweet notchange"></i>  
     <i class="icon-zoom-in"></i>
     <i class="icon-ok-circle"></i>
     <i class="icon-trash"></i>
@@ -256,7 +256,7 @@ App::uses('Debugger', 'Utility');
         <div class="navbar-inner">
             <div class="container">
             <ul class="nav">
-            <li><a href="#"><span class="glyphicons plus size14"></span></a></li>
+            <li><a href="#"><span class="glyphicons plus size14 margintop4"></span></a></li>
             <li class="divider-vertical-only"></li>
             <li><a href="#">Prolonger</a></li>
             <li><a href="#">Supprimer</a></li>

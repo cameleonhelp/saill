@@ -31,8 +31,12 @@ define("tinymce/util/LocalStorage", [], function() {
 	var LocalStorage, storageElm, items, keys, userDataKey, hasOldIEDataSupport;
 
 	// Check for native support
-	if (window.localStorage) {
-		return localStorage;
+	try {
+		if (window.localStorage) {
+			return localStorage;
+		}
+	} catch (ex) {
+		// Ignore
 	}
 
 	userDataKey = "tinymce";
@@ -87,10 +91,23 @@ define("tinymce/util/LocalStorage", [], function() {
 		data = storageElm.getAttribute(userDataKey) || '';
 
 		do {
-			key = next(parseInt(next(), 32) || 0);
+			var offset = next();
+			if (offset === null) {
+				break;
+			}
+
+			key = next(parseInt(offset, 32) || 0);
 			if (key !== null) {
-				value = next(parseInt(next(), 32) || 0);
-				items[key] = value;
+				offset = next();
+				if (offset === null) {
+					break;
+				}
+
+				value = next(parseInt(offset, 32) || 0);
+
+				if (key) {
+					items[key] = value;
+				}
 			}
 		} while (key !== null);
 
@@ -114,7 +131,13 @@ define("tinymce/util/LocalStorage", [], function() {
 		}
 
 		storageElm.setAttribute(userDataKey, data);
-		storageElm.save(userDataKey);
+
+		try {
+			storageElm.save(userDataKey);
+		} catch (ex) {
+			// Ignore disk full
+		}
+
 		updateKeys();
 	}
 

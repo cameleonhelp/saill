@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Livrable $Livrable
  */
 class LivrablesController extends AppController {
-        public $components = array('History'); 
+        public $components = array('History','Common'); 
     public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Livrable.NOM' => 'asc'),
         /*'order' => array(
             'Post.title' => 'asc' /*/
@@ -22,6 +22,35 @@ class LivrablesController extends AppController {
 	public function index($filtreChrono=null,$filtreEtat=null,$filtregestionnaire=null) {
             //$this->Session->delete('history');
             if (isAuthorized('livrables', 'index')) :
+                if (areaIsVisible() || $filtregestionnaire==userAuth('id')):
+                switch ($filtregestionnaire){
+                    case 'tous':   
+                        $newconditions[]="1=1";
+                        $fgestionnaire = "de tous les gestionnaires";
+                        break;  
+                    case 'equipe':   
+                        $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
+                        $newconditions[]="Livrable.utilisateur_id in (".$monequipe.")";
+                        $fgestionnaire = "de mon équipe";
+                        break;                      
+                    case null:   
+                        $newconditions[]="Livrable.utilisateur_id = '".userAuth('id')."'";
+                        $this->Livrable->Utilisateur->recursive = -1;
+                        $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> userAuth('id'))));
+                        $fgestionnaire = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG']; 
+                        break;                     
+                    default :
+                        $newconditions[]="Livrable.utilisateur_id = '".$filtregestionnaire."'";
+                        $this->Livrable->Utilisateur->recursive = -1;
+                        $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> $filtregestionnaire)));
+                        $fgestionnaire = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG'];                     
+                    }  
+                else:
+                        $newconditions[]="Livrable.utilisateur_id = '".userAuth('id')."'";
+                        $this->Livrable->Utilisateur->recursive = -1;
+                        $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> userAuth('id'))));
+                        $fgestionnaire = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG'];                
+                endif;                   
                 switch ($filtreChrono){
                     case 'toutes':
                     case null:  
@@ -91,36 +120,7 @@ class LivrablesController extends AppController {
                         $fetat = "dont l'état est autre que 'validé'";
                         break;                      
                     }    
-                $this->set('fetat',$fetat);  
-                if (areaIsVisible() || $filtregestionnaire==userAuth('id')):
-                switch ($filtregestionnaire){
-                    case 'tous':   
-                        $newconditions[]="1=1";
-                        $fgestionnaire = "de tous les gestionnaires";
-                        break;  
-                    case 'equipe':   
-                        $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
-                        $newconditions[]="Livrable.utilisateur_id in (".$monequipe.")";
-                        $fgestionnaire = "de mon équipe";
-                        break;                      
-                    case null:   
-                        $newconditions[]="Livrable.utilisateur_id = '".userAuth('id')."'";
-                        $this->Livrable->Utilisateur->recursive = -1;
-                        $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> userAuth('id'))));
-                        $fgestionnaire = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG']; 
-                        break;                     
-                    default :
-                        $newconditions[]="Livrable.utilisateur_id = '".$filtregestionnaire."'";
-                        $this->Livrable->Utilisateur->recursive = -1;
-                        $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> $filtregestionnaire)));
-                        $fgestionnaire = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG'];                     
-                    }  
-                else:
-                        $newconditions[]="Livrable.utilisateur_id = '".userAuth('id')."'";
-                        $this->Livrable->Utilisateur->recursive = -1;
-                        $nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array('Utilisateur.id'=> userAuth('id'))));
-                        $fgestionnaire = "dont le gestionnaire est ".$nomlong['Utilisateur']['NOMLONG'];                
-                endif;                     
+                $this->set('fetat',$fetat);                    
                 $this->set('fgestionnaire',$fgestionnaire); 
                 $this->Livrable->Utilisateur->recursive = -1;
                 $gestionnaires = $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
@@ -132,7 +132,7 @@ class LivrablesController extends AppController {
                 $export = $this->Livrable->find('all',array('conditions'=>$newconditions,'order' => array('Livrable.NOM' => 'asc')));
                 $this->Session->write('xls_export',$export);                   
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -152,7 +152,7 @@ class LivrablesController extends AppController {
 		$options = array('conditions' => array('Livrable.' . $this->Livrable->primaryKey => $id));
 		$this->set('livrable', $this->Livrable->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -173,9 +173,13 @@ class LivrablesController extends AppController {
 		$nomlong = $this->Livrable->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
 		$this->set('nomlong', $nomlong);                 
 		if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Livrable->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			$this->Livrable->create();
 			if ($this->Livrable->save($this->request->data)) {
-				$this->Session->setFlash(__('Livrable sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Livrable sauvegardé',true),'flash_success');
                                 //enregistrer le suivilivrable
                                 $thisLivrable = $this->Livrable->find('first',array('conditions'=>array('Livrable.id'=>$this->Livrable->getInsertID())));
                                 $suiviliv['Suivilivrable']['livrable_id']=$thisLivrable['Livrable']['id'];
@@ -188,11 +192,12 @@ class LivrablesController extends AppController {
                                 $action_id = $this->addnewaction($this->Livrable->getInsertID());
 				$this->redirect(array('controller'=>'actions','action'=>'edit',$action_id));
 			} else {
-				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -218,11 +223,15 @@ class LivrablesController extends AppController {
                 $suivilivrables = $this->Livrable->Suivilivrable->find('all',array('conditions'=>array('Suivilivrable.livrable_id'=>$id),'order'=>array('Suivilivrable.created'=>'desc','Suivilivrable.id'=>'desc')));
                 $this->set('Suivilivrables',$suivilivrables);                 
 		if (!$this->Livrable->exists($id)) {
-			throw new NotFoundException(__('Livrable incorrect'),'default',array('class'=>'alert alert-error'));
+			throw new NotFoundException(__('Livrable incorrect',true),'flash_failure');
 		}
-		if ($this->request->is('post') || $this->request->is('put')) {                    
+		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Livrable->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			if ($this->Livrable->save($this->request->data)) {
-				$this->Session->setFlash(__('Livrable sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Livrable sauvegardé',true),'flash_success');
                                 //enregistrer le suivilivrable   
                                 $thisLivrable = $this->Livrable->find('first',array('conditions'=>array('Livrable.id'=>$id)));
                                 $suiviliv['Suivilivrable']['livrable_id']=$thisLivrable['Livrable']['id'];
@@ -234,15 +243,16 @@ class LivrablesController extends AppController {
                                 $this->Livrable->Suivilivrable->save($suiviliv);
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Livrable incorrect, veuillez corriger le livrable',true),'flash_failure');
 			}
+                    endif;
 		} else {
                         $this->Livrable->recursive = 0;
 			$options = array('conditions' => array('Livrable.' . $this->Livrable->primaryKey => $id));
 			$this->request->data = $this->Livrable->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -263,13 +273,13 @@ class LivrablesController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Livrable->delete()) {
-			$this->Session->setFlash(__('Livrable supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Livrable supprimé',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Livrable <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Livrable <b>NON</b> supprimé',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -294,7 +304,7 @@ class LivrablesController extends AppController {
                 $this->Session->write('xls_export',$this->paginate());                
                 $this->render('index'); 
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }       
@@ -330,13 +340,13 @@ class LivrablesController extends AppController {
                 unset($record['Suivilivrable']);
                 $this->Livrable->create();
                 if ($this->Livrable->save($record)) {
-                        $this->Session->setFlash(__('Livrable dupliqué'),'default',array('class'=>'alert alert-success'));
-                        $this->History->goBack();
+                        $this->Session->setFlash(__('Livrable dupliqué',true),'flash_success');
+                        $this->History->goBack(1);
                 } 
-		$this->Session->setFlash(__('Livrable <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Livrable <b>NON</b> dupliqué',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}  

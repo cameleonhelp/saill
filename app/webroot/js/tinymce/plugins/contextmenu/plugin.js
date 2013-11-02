@@ -50,7 +50,15 @@ tinymce.PluginManager.add('contextmenu', function(editor) {
 				context: 'contextmenu'
 			});
 
+			// allow css to target this special menu
+			menu.addClass('contextmenu');
+
 			menu.renderTo(document.body);
+
+			editor.on('remove', function() {
+				menu.remove();
+				menu = null;
+			});
 		} else {
 			menu.show();
 		}
@@ -65,10 +73,5 @@ tinymce.PluginManager.add('contextmenu', function(editor) {
 		}
 
 		menu.moveTo(pos.x, pos.y);
-
-		editor.on('remove', function() {
-			menu.remove();
-			menu = null;
-		});
 	});
 });

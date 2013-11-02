@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Contrat $Contrat
  */
 class ContratsController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
         public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Contrat.NOM' => 'asc'),
         'conditions' => array('Contrat.id >' => 1),
         );
@@ -41,7 +41,7 @@ class ContratsController extends AppController {
 		$this->set('contrats', $this->paginate());
                 $this->set('fcontrat',$fcontrat);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -61,7 +61,7 @@ class ContratsController extends AppController {
 		$options = array('conditions' => array('Contrat.' . $this->Contrat->primaryKey => $id));
 		$this->set('contrat', $this->Contrat->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -76,16 +76,21 @@ class ContratsController extends AppController {
                 $tjmcontrats = $this->Contrat->Tjmcontrat->find('list',array('fields' => array('id', 'TJM'),'recursive'=>-1));
                 $this->set('tjmcontrats',$tjmcontrats);             
 		if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Contrat->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			$this->Contrat->create();
 			if ($this->Contrat->save($this->request->data)) {
-				$this->Session->setFlash(__('Contrat sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Contrat sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Contrat incorrect, veuillez corriger le contrat'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Contrat incorrect, veuillez corriger le contrat',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -105,18 +110,23 @@ class ContratsController extends AppController {
 			throw new NotFoundException(__('Contrat incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Contrat->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			if ($this->Contrat->save($this->request->data)) {
-				$this->Session->setFlash(__('Contrat sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Contrat sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Contrat incorrect, veuillez corriger le contrat'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Contrat incorrect, veuillez corriger le contrat',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Contrat.' . $this->Contrat->primaryKey => $id));
 			$this->request->data = $this->Contrat->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -137,13 +147,13 @@ class ContratsController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Contrat->delete()) {
-			$this->Session->setFlash(__('Contrat supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Contrat supprimé',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Contrat <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Contrat <b>NON</b> supprimé',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -163,7 +173,7 @@ class ContratsController extends AppController {
                 $this->set('contrats', $this->paginate());              
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }         

@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Profil $Profil
  */
 class ProfilsController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
     public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Profil.NOM' => 'asc'),
         /*'order' => array(
             'Post.title' => 'asc' /*/
@@ -25,7 +25,7 @@ class ProfilsController extends AppController {
 		$this->Profil->recursive = 0;
 		$this->set('profils', $this->paginate());
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -45,7 +45,7 @@ class ProfilsController extends AppController {
 		$options = array('conditions' => array('Profil.' . $this->Profil->primaryKey => $id),'recursive'=>0);
 		$this->set('profil', $this->Profil->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -58,16 +58,21 @@ class ProfilsController extends AppController {
 	public function add() {
             if (isAuthorized('profils', 'add')) :
 		if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Profil->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			$this->Profil->create();
 			if ($this->Profil->save($this->request->data)) {
-				$this->Session->setFlash(__('Profil sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Profil sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Profil incorrect, veuillez corriger le profil'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Profil incorrect, veuillez corriger le profil',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -85,18 +90,23 @@ class ProfilsController extends AppController {
 			throw new NotFoundException(__('Profil incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Profil->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			if ($this->Profil->save($this->request->data)) {
-				$this->Session->setFlash(__('Profil sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Profil sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Profil incorrect, veuillez corriger le profil'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Profil incorrect, veuillez corriger le profil',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Profil.' . $this->Profil->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Profil->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -122,13 +132,13 @@ class ProfilsController extends AppController {
                             $this->Profil->Autorisation->id=$autorisation['Autorisation']['id'];
                             $this->Profil->Autorisation->delete();
                         endforeach;                    
-			$this->Session->setFlash(__('Profil supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Profil supprimé',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Profil NON supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Profil NON supprimé',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -149,7 +159,7 @@ class ProfilsController extends AppController {
                 $this->set('profils', $this->paginate());
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }  
@@ -182,13 +192,13 @@ class ProfilsController extends AppController {
                             $this->Profil->Autorisation->create();
                             $this->Profil->Autorisation->save($autorisation);
                         endforeach;
-                        $this->Session->setFlash(__('Profil dupliqué'),'default',array('class'=>'alert alert-success'));
-                        $this->History->goBack();
+                        $this->Session->setFlash(__('Profil dupliqué',true),'flash_success');
+                        $this->History->goBack(1);
                 } 
-		$this->Session->setFlash(__('Profil <b>NON</b> dupliqué'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Profil <b>NON</b> dupliqué',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}           

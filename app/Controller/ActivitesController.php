@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Activite $Activite
  */
 class ActivitesController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
         public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Projet.NOM'=>'asc','Activite.NOM' => 'asc'),
         //'conditions' => array('Activite.projet_id >' => 1),
         //'group'=>array('Activite.projet_id'),
@@ -70,7 +70,7 @@ class ActivitesController extends AppController {
                 $export = $this->Activite->find('all',array('conditions'=>$newconditions,'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'recursive'=>0));
                 $this->Session->write('xls_export',$export);                
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
             endif;                
 	}
@@ -90,7 +90,7 @@ class ActivitesController extends AppController {
 		$options = array('conditions' => array('Activite.' . $this->Activite->primaryKey => $id),'recursive'=>-1);
 		$this->set('activite', $this->Activite->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();        
             endif;                
 	}
@@ -105,16 +105,21 @@ class ActivitesController extends AppController {
                 $projets = $this->Activite->Projet->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'recursive'=>-1));
                 $this->set('projets',$projets);               
 		if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Activite->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			$this->Activite->create();
 			if ($this->Activite->save($this->request->data)) {
-				$this->Session->setFlash(__('Activité sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Activité sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Activité incorrecte, veuillez corriger l\'activité'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Activité incorrecte, veuillez corriger l\'activité',true),'flash_failure');
 			}
+                   endif;
                 endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();    
             endif;                
 	}
@@ -136,18 +141,23 @@ class ActivitesController extends AppController {
 			throw new NotFoundException(__('Activité incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Activite->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			if ($this->Activite->save($this->request->data)) {
-				$this->Session->setFlash(__('Activité sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Activité sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Activité incorrecte, veuillez corriger l\'activité'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Activité incorrecte, veuillez corriger l\'activité',true),'flash_failure');
 			}
+                    endif;
 		} else {                    
 			$options = array('conditions' => array('Activite.' . $this->Activite->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Activite->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();        
             endif;                
 	}
@@ -168,13 +178,13 @@ class ActivitesController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Activite->delete()) {
-			$this->Session->setFlash(__('Activité supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Activité supprimée',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Activité <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Activité <b>NON</b> supprimée',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();         
             endif;                
 	}
@@ -205,7 +215,7 @@ class ActivitesController extends AppController {
                 $this->set('projets',$projets);   
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;               
         }   

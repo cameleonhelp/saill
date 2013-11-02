@@ -1,14 +1,15 @@
+<div class="marginright20">
 <div class="detailplancharges form">
-    <div class="alert alert-info">
-        Les vancances de février (5 jours), pâques (5 jours), été (5 jours en juillet et 10 jours en août) et noël (5 jours en décembre) sont prises en comptes
+    <div class="bs-callout bs-callout-info" style="margin-top:0px;">
+        Les vacances de février (5 jours), pâques (5 jours), été (5 jours en juillet et 10 jours en août) et noël (5 jours en décembre) sont prises en comptes
     </div>      
-    <?php echo $this->Form->create('Detailplancharge',array('id'=>'formValidate','class'=>'form-horizontal','action'=>'save','inputDefaults' => array('label'=>false,'div' => false))); ?> 
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" id='detailplanchargeTable'>
+    <?php echo $this->Form->create('Detailplancharge',array('id'=>'formValidate','class'=>'form-horizontal','novalidate'=>true,'action'=>'save','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?> 
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax" id='detailplanchargeTable'>
         <thead>
 	<tr>
-			<th><label class="control-label sstitre required center">Utilisateur</label></th>
-			<th><label class="control-label sstitre required center">Domaine</label></th>
-			<th><label class="control-label sstitre required center">Projet/Activité</label></th>
+			<th><label class="required center">Utilisateur</label></th>
+			<th><label class="required center">Domaine</label></th>
+			<th><label class="required center">Projet/Activité</label></th>
 			<th><?php echo 'Etp'; ?></th>
 			<th><?php echo 'Jan.'; ?></th>
 			<th><?php echo 'Fév.'; ?></th>
@@ -34,16 +35,16 @@
 	<tr rowindex="<?php echo $i; ?>">
 		<td class="tdmonth">
                     <?php if($detailplancharge['Detailplancharge']['userIsActif'] ||$detailplancharge['Detailplancharge']['utilisateur_id']<0 ) :?>
-                    <?php echo $this->Form->select('Detailplancharge.'.$i.'.utilisateur_id',$utilisateurs,array('data-rule-required'=>'true','class'=>'utilisateur','default'=>$detailplancharge['Detailplancharge']['utilisateur_id'],'data-msg-required'=>'Le nom de l\'utilisateur est obligatoire','empty' => 'Choisir un utilisateur')); ?>                    
+                    <?php echo $this->Form->select('Detailplancharge.'.$i.'.utilisateur_id',$utilisateurs,array('data-rule-required'=>'true','class'=>'utilisateur form-control','default'=>$detailplancharge['Detailplancharge']['utilisateur_id'],'data-msg-required'=>'Le nom de l\'utilisateur est obligatoire','empty' => 'Choisir un utilisateur')); ?>                    
                     <?php else : ?>
                     <?php echo $detailplancharge['Utilisateur']['NOMLONG']; ?>                    
                     <?php endif; ?>
                 </td>
 		<td class="tdmonth">
-                    <?php echo $this->Form->select('Detailplancharge.'.$i.'.domaine_id',$domaines,array('data-rule-required'=>'true','default'=>$detailplancharge['Detailplancharge']['domaine_id'],'data-msg-required'=>'Le nom du domaine est obligatoire','empty' => 'Choisir un domaine')); ?>                                        
+                    <?php echo $this->Form->select('Detailplancharge.'.$i.'.domaine_id',$domaines,array('class'=>'form-control','data-rule-required'=>'true','default'=>$detailplancharge['Detailplancharge']['domaine_id'],'data-msg-required'=>'Le nom du domaine est obligatoire','empty' => 'Choisir un domaine')); ?>                                        
                 </td>
 		<td class="tdmonth">
-                <select name="data[Detailplancharge][<?php echo $i; ?>][activite_id]" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Detailplancharge<?php echo $i; ?>ActiviteId"> 
+                <select name="data[Detailplancharge][<?php echo $i; ?>][activite_id]" class=" form-control" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Detailplancharge<?php echo $i; ?>ActiviteId"> 
                     <option value="">Choisir une activité</option>
                     <?php foreach ($activites as $activite) : ?>
                     <?php $selected = ''; ?>
@@ -52,21 +53,21 @@
                     <?php endforeach; ?>
                 </select>                        
                 </td>
-		<td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.ETP',array('class'=>'text-right monthpc etp','type'=>'text','value'=>$detailplancharge['Detailplancharge']['ETP'])); ?></td>  
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.JANVIER',array('class'=>'text-right monthpc','type'=>'text','value'=>$detailplancharge['Detailplancharge']['JANVIER'])); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.FEVRIER',array('class'=>'text-right monthpc','type'=>'text','value'=>$detailplancharge['Detailplancharge']['FEVRIER'])); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.MARS',array('class'=>'text-right monthpc','type'=>'text','value'=>$detailplancharge['Detailplancharge']['MARS'])); ?></td>                
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.AVRIL',array('class'=>'text-right monthpc','type'=>'text','value'=>$detailplancharge['Detailplancharge']['AVRIL'])); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.MAI',array('class'=>'text-right monthpc','type'=>'text','value'=>$detailplancharge['Detailplancharge']['MAI'])); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.JUIN',array('class'=>'text-right monthpc','type'=>'text','value'=>$detailplancharge['Detailplancharge']['JUIN'])); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.JUILLET',array('class'=>'text-right monthpc','type'=>'text','value'=>$detailplancharge['Detailplancharge']['JUILLET'])); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.AOUT',array('class'=>'text-right monthpc','type'=>'text','value'=>$detailplancharge['Detailplancharge']['AOUT'])); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.SEPTEMBRE',array('class'=>'text-right monthpc','type'=>'text','value'=>$detailplancharge['Detailplancharge']['SEPTEMBRE'])); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.OCTOBRE',array('class'=>'text-right monthpc','type'=>'text','value'=>$detailplancharge['Detailplancharge']['OCTOBRE'])); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.NOVEMBRE',array('class'=>'text-right monthpc','type'=>'text','value'=>$detailplancharge['Detailplancharge']['NOVEMBRE'])); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.DECEMBRE',array('class'=>'text-right monthpc','type'=>'text','value'=>$detailplancharge['Detailplancharge']['DECEMBRE'])); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.TOTAL',array('class'=>'text-right rowTotal','type'=>'text','value'=>$detailplancharge['Detailplancharge']['TOTAL'])); ?></td>
-		<td style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.TJM',array('class'=>'text-right','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['TJM'])); ?></td>
+		<td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.ETP',array('class'=>'text-right form-control monthpc etp','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['ETP'])); ?></td>  
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.JANVIER',array('class'=>'text-right form-control monthpc','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['JANVIER'])); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.FEVRIER',array('class'=>'text-right form-control monthpc','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['FEVRIER'])); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.MARS',array('class'=>'text-right form-control monthpc','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['MARS'])); ?></td>                
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.AVRIL',array('class'=>'text-right form-control monthpc','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['AVRIL'])); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.MAI',array('class'=>'text-right form-control monthpc','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['MAI'])); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.JUIN',array('class'=>'text-right form-control monthpc','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['JUIN'])); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.JUILLET',array('class'=>'text-right form-control monthpc','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['JUILLET'])); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.AOUT',array('class'=>'text-right form-control monthpc','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['AOUT'])); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.SEPTEMBRE',array('class'=>'text-right form-control monthpc','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['SEPTEMBRE'])); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.OCTOBRE',array('class'=>'text-right form-control monthpc','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['OCTOBRE'])); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.NOVEMBRE',array('class'=>'text-right form-control monthpc','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['NOVEMBRE'])); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.DECEMBRE',array('class'=>'text-right form-control monthpc','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['DECEMBRE'])); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.TOTAL',array('class'=>'text-right form-control rowTotal','style'=>'width:35px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['TOTAL'])); ?></td>
+		<td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.'.$i.'.TJM',array('class'=>'text-right form-control','style'=>'width:35px;margin-top:5px;margin-bottom:-9px;','type'=>'text','value'=>$detailplancharge['Detailplancharge']['TJM'])); ?></td>
                 <td id="Detailplancharge<?php echo $i; ?>CoutHtml" style='text-align: right;' class="rowcout"><?php echo $detailplancharge['Detailplancharge']['COUT']; ?></td>		
                 <td>
                     <?php if ($i==0) : ?>
@@ -77,20 +78,20 @@
                     <span class="glyphicons plus cursor" id="addRow"></span>
                     <?php echo $this->Form->input('Detailplancharge.'.$i.'.plancharge_id',array('type'=>'hidden','value'=>$detailplancharge['Detailplancharge']['plancharge_id'])); ?>
                     <?php echo $this->Form->input('Detailplancharge.'.$i.'.id',array('type'=>'hidden','value'=>$detailplancharge['Detailplancharge']['id'])); ?>
-                    <?php echo $this->Form->input('Detailplancharge.'.$i.'.COUT',array('class'=>'text-right monthpc','type'=>'hidden','value'=>$detailplancharge['Detailplancharge']['COUT'])); ?>
+                    <?php echo $this->Form->input('Detailplancharge.'.$i.'.COUT',array('class'=>'text-right form-control monthpc','type'=>'hidden','value'=>$detailplancharge['Detailplancharge']['COUT'])); ?>
 		</td>
 	</tr>
         <?php $i++; ?>
         <?php endforeach; ?>           
 	<tr id="templateRow">
 		<td class="tdmonth">
-                    <?php echo $this->Form->select('Detailplancharge.¤.utilisateur_id',$utilisateurs,array('class'=>'newselect utilisateur','data-msg-required'=>'Le nom de l\'utilisateur est obligatoire','empty' => 'Choisir un utilisateur')); ?>                    
+                    <?php echo $this->Form->select('Detailplancharge.¤.utilisateur_id',$utilisateurs,array('class'=>'newselect form-control utilisateur','data-msg-required'=>'Le nom de l\'utilisateur est obligatoire','empty' => 'Choisir un utilisateur')); ?>                    
                 </td>
 		<td class="tdmonth">
-                    <?php echo $this->Form->select('Detailplancharge.¤.domaine_id',$domaines,array('class'=>'newselect','data-msg-required'=>'Le nom du domaine est obligatoire','empty' => 'Choisir un domaine')); ?>                                        
+                    <?php echo $this->Form->select('Detailplancharge.¤.domaine_id',$domaines,array('class'=>'newselect form-control','data-msg-required'=>'Le nom du domaine est obligatoire','empty' => 'Choisir un domaine')); ?>                                        
                 </td>
 		<td class="tdmonth">
-                <select name="data[Detailplancharge][¤][activite_id]" class='newselect' data-msg-required="Le nom de l'activité est obligatoire" id="Detailplancharge¤ActiviteId"> 
+                <select name="data[Detailplancharge][¤][activite_id]" class='newselect form-control' data-msg-required="Le nom de l'activité est obligatoire" id="Detailplancharge¤ActiviteId"> 
                     <option value="">Choisir une activité</option>
                     <?php foreach ($activites as $activite) : ?>
                     <?php $selected = ''; ?>
@@ -99,23 +100,23 @@
                     <?php endforeach; ?>
                 </select>                        
                 </td>
-		<td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.ETP',array('class'=>'text-right monthpc etp newetp','type'=>'text','value'=>'1.0')); ?></td>  
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.JANVIER',array('class'=>'text-right monthpc newrow','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-01-01')))); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.FEVRIER',array('class'=>'text-right monthpc newrow','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-02-01')))); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.MARS',array('class'=>'text-right monthpc newrow','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-03-01')))); ?></td>                
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.AVRIL',array('class'=>'text-right monthpc newrow','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-04-01')))); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.MAI',array('class'=>'text-right monthpc newrow','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-05-01')))); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.JUIN',array('class'=>'text-right monthpc newrow','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-06-01')))); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.JUILLET',array('class'=>'text-right monthpc newrow','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-07-01')))); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.AOUT',array('class'=>'text-right monthpc newrow','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-08-01')))); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.SEPTEMBRE',array('class'=>'text-right monthpc newrow','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-09-01')))); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.OCTOBRE',array('class'=>'text-right monthpc newrow','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-10-01')))); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.NOVEMBRE',array('class'=>'text-right monthpc newrow','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-11-01')))); ?></td>
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.DECEMBRE',array('class'=>'text-right monthpc newrow','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-12-01')))); ?></td>
+		<td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.ETP',array('class'=>'text-right form-control monthpc etp newetp','style'=>'width:35px;','type'=>'text','value'=>'1.0')); ?></td>  
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.JANVIER',array('class'=>'text-right form-control monthpc newrow','style'=>'width:35px;','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-01-01')))); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.FEVRIER',array('class'=>'text-right form-control monthpc newrow','style'=>'width:35px;','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-02-01')))); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.MARS',array('class'=>'text-right form-control monthpc newrow','style'=>'width:35px;','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-03-01')))); ?></td>                
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.AVRIL',array('class'=>'text-right form-control monthpc newrow','style'=>'width:35px;','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-04-01')))); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.MAI',array('class'=>'text-right form-control monthpc newrow','style'=>'width:35px;','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-05-01')))); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.JUIN',array('class'=>'text-right form-control monthpc newrow','style'=>'width:35px;','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-06-01')))); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.JUILLET',array('class'=>'text-right form-control monthpc newrow','style'=>'width:35px;','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-07-01')))); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.AOUT',array('class'=>'text-right form-control monthpc newrow','style'=>'width:35px;','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-08-01')))); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.SEPTEMBRE',array('class'=>'text-right form-control monthpc newrow','style'=>'width:35px;','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-09-01')))); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.OCTOBRE',array('class'=>'text-right form-control monthpc newrow','style'=>'width:35px;','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-10-01')))); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.NOVEMBRE',array('class'=>'text-right form-control monthpc newrow','style'=>'width:35px;','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-11-01')))); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.DECEMBRE',array('class'=>'text-right form-control monthpc newrow','style'=>'width:35px;','type'=>'text','value'=>nbJoursOuvres(new DateTime($annee.'-12-01')))); ?></td>
                 <?php $total = nbJoursOuvres(new DateTime($annee.'-01-01')) + nbJoursOuvres(new DateTime($annee.'-02-01')) + nbJoursOuvres(new DateTime($annee.'-03-01'))+ nbJoursOuvres(new DateTime($annee.'-04-01'))+ nbJoursOuvres(new DateTime($annee.'-05-01'))+ nbJoursOuvres(new DateTime($annee.'-06-01')); ?>
                 <?php $total += nbJoursOuvres(new DateTime($annee.'-07-01')) + nbJoursOuvres(new DateTime($annee.'-08-01')) + nbJoursOuvres(new DateTime($annee.'-09-01'))+ nbJoursOuvres(new DateTime($annee.'-10-01'))+ nbJoursOuvres(new DateTime($annee.'-11-01'))+ nbJoursOuvres(new DateTime($annee.'-12-01')); ?>                
-                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.TOTAL',array('class'=>'text-right rowTotal','type'=>'text','value'=>$total)); ?></td>
-		<td style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.TJM',array('class'=>'text-right','style'=>'width:35px;','type'=>'text','value'=>'')); ?></td>
+                <td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.TOTAL',array('class'=>'text-right form-control rowTotal','style'=>'width:35px;','type'=>'text','value'=>$total)); ?></td>
+		<td class="tdmonth" style='text-align: center;'><?php echo $this->Form->input('Detailplancharge.¤.TJM',array('class'=>'text-right form-control','style'=>'width:35px;margin-top:5px;margin-bottom:-9px;','type'=>'text','value'=>'')); ?></td>
                 <td id="Detailplancharge¤CoutHtml" style='text-align: right;' class="rowcout"></td>		
                 <td>
                     <span class="glyphicons minus cursor" id="deleteRow"></span>
@@ -142,14 +143,15 @@
         </tr>
         </tfooter>
     </table>
-    <div class="navbar">
-        <div class="navbar-inner">
-            <div class="container" style="margin-top:2px;text-align:center;">
-                <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn showoverlay','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
-            </div>
-        </div>
+    <div style="clear:both;margin-top: 10px;">
+    <div class="form-group">
+      <div class="btn-block-horizontal">
+            <?php echo $this->Form->button('Annuler', array('type'=>'submit','class' => 'btn btn-sm btn-default showoverlay cancel','value'=>'cancel','div' => false, 'name' => 'cancel')); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?>                
+      </div>
     </div>  
+    </div> 
     <?php echo $this->Form->end(); ?>  
+</div>
 </div>
 <script>
     function sumOfETP() {

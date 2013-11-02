@@ -1,4 +1,4 @@
-<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" id="HistoryBudgetTable">
+<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax" id="HistoryBudgetTable">
         <thead>
 	<tr>
 			<th rowspan="2" style="vertical-align: middle;"><?php echo 'Année'; ?></th>
@@ -23,10 +23,10 @@
 		<td style="text-align:center;"><?php echo $this->Form->input('REVU',array('type'=>'hidden','class'=>'idhistory','value'=>$budget['Historybudget']['id']));?><?php echo $this->Form->input('ACTIF',array('type'=>'checkbox','class'=>'isactive savebudget','value'=>1,'checked'=>$budget['Historybudget']['ACTIF'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>&nbsp;</td>
                 <td>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activites', 'edit')) : ?>
-                    <?php echo $this->Html->link('<span class="glyphicons pencil"></span>', array('controller'=>'historybudgets','action' => 'edit', $budget['Historybudget']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('controller'=>'historybudgets','action' => 'edit', $budget['Historybudget']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activites', 'delete')) : ?>
-                    <?php echo $this->Html->link('<span class="glyphicons bin"></span>', array('controller'=>'historybudgets','action' => 'delete', $budget['Historybudget']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce budget ?')); ?>
+                    <?php echo $this->Html->link('<span class="glyphicons bin notchange"></span>', array('controller'=>'historybudgets','action' => 'delete', $budget['Historybudget']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce budget ?')); ?>
                     <?php endif; ?>                    
                 </td>
 	</tr>
@@ -36,7 +36,7 @@
         <tfooter>
             <tr>
                 <th colspan="5" class="footer" style="text-align: center;">
-                    <?php echo $this->Html->link('Nouveau budget',array('controller'=>'historybudgets','action'=>'add',$this->params->pass[0]), array('class' => 'btn btn-inverse')); ?>
+                    <?php echo $this->Html->link('Nouveau budget',array('controller'=>'historybudgets','action'=>'add',$this->params->pass[0]), array('class' => 'btn btn-sm btn-default')); ?>
                 </th>
             </tr>
         </tfooter>

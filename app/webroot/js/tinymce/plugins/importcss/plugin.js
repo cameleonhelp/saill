@@ -11,13 +11,33 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('importcss', function(editor) {
-	var each = tinymce.each;
+	var self = this, each = tinymce.each;
 
-	function getSelectors(doc) {
+	function compileFilter(filter) {
+		if (typeof(filter) == "string") {
+			return function(value) {
+				return value.indexOf(filter) !== -1;
+			};
+		} else if (filter instanceof RegExp) {
+			return function(value) {
+				return filter.test(value);
+			};
+		}
+
+		return filter;
+	}
+
+	function getSelectors(doc, fileFilter) {
 		var selectors = [], contentCSSUrls = {};
 
 		function append(styleSheet, imported) {
-			if (!imported && !contentCSSUrls[styleSheet.href]) {
+			var href = styleSheet.href, rules;
+
+			if (!imported && !contentCSSUrls[href]) {
+				return;
+			}
+
+			if (fileFilter && !fileFilter(href)) {
 				return;
 			}
 
@@ -25,7 +45,14 @@ tinymce.PluginManager.add('importcss', function(editor) {
 				append(styleSheet, true);
 			});
 
-			each(styleSheet.cssRules || styleSheet.rules, function(cssRule) {
+			try {
+				rules = styleSheet.cssRules || styleSheet.rules;
+			} catch (e) {
+				// Firefox fails on rules to remote domain for example: 
+				// @import url(//fonts.googleapis.com/css?family=Pathway+Gothic+One);
+			}
+
+			each(rules, function(cssRule) {
 				if (cssRule.styleSheet) {
 					append(cssRule.styleSheet, true);
 				} else if (cssRule.selectorText) {
@@ -41,7 +68,9 @@ tinymce.PluginManager.add('importcss', function(editor) {
 		});
 
 		try {
-			each(doc.styleSheets, append);
+			each(doc.styleSheets, function(styleSheet) {
+				append(styleSheet);
+			});
 		} catch (e) {}
 
 		return selectors;
@@ -96,33 +125,69 @@ tinymce.PluginManager.add('importcss', function(editor) {
 
 	if (!editor.settings.style_formats) {
 		editor.on('renderFormatsMenu', function(e) {
-			var selectorConverter = editor.settings.importcss_selector_converter || convertSelectorToFormat;
-			var selectors = {};
+			var settings = editor.settings, selectors = {};
+			var selectorConverter = settings.importcss_selector_converter || convertSelectorToFormat;
+			var selectorFilter = compileFilter(settings.importcss_selector_filter);
 
 			if (!editor.settings.importcss_append) {
 				e.control.items().remove();
 			}
 
-			each(getSelectors(editor.getDoc()), function(selector) {
+			var groups = settings.importcss_groups;
+			if (groups) {
+				for (var i = 0; i < groups.length; i++) {
+					groups[i].filter = compileFilter(groups[i].filter);
+				}
+			}
+
+			each(getSelectors(editor.getDoc(), compileFilter(settings.importcss_file_filter)), function(selector) {
 				if (selector.indexOf('.mce-') === -1) {
-					if (!selectors[selector]) {
-						var format = selectorConverter(selector);
+					if (!selectors[selector] && (!selectorFilter || selectorFilter(selector))) {
+						var format = selectorConverter.call(self, selector), menu;
 
 						if (format) {
 							var formatName = format.name || tinymce.DOM.uniqueId();
 
+							if (groups) {
+								for (var i = 0; i < groups.length; i++) {
+									if (!groups[i].filter || groups[i].filter(selector)) {
+										if (!groups[i].item) {
+											groups[i].item = {text: groups[i].title, menu: []};
+										}
+
+										menu = groups[i].item.menu;
+										break;
+									}
+								}
+							}
+
 							editor.formatter.register(formatName, format);
 
-							e.control.append(tinymce.extend({}, e.control.settings.itemDefaults, {
+							var menuItem = tinymce.extend({}, e.control.settings.itemDefaults, {
 								text: format.title,
 								format: formatName
-							}));
+							});
+
+							if (menu) {
+								menu.push(menuItem);
+							} else {
+								e.control.add(menuItem);
+							}
 						}
 
 						selectors[selector] = true;
 					}
 				}
 			});
+
+			each(groups, function(group) {
+				e.control.add(group.item);
+			});
+
+			e.control.renderNew();
 		});
 	}
+
+	// Expose default convertSelectorToFormat implementation
+	self.convertSelectorToFormat = convertSelectorToFormat;
 });

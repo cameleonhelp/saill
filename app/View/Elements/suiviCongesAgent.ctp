@@ -1,4 +1,4 @@
-<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
+<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax">
     <thead>
         <tr>
             <th>Type absences</th>
@@ -19,7 +19,7 @@
     </thead>
     <tbody>
          <tr>
-            <th>Congés</th>
+            <td class='header'>Congés</tdh>
                  <?php $totalrowC = 0; ?>
                  <?php for ($i=1;$i<13;$i++) :?>
                  <?php $mois = $i<10 ? '0'.$i : $i; ?>
@@ -29,7 +29,7 @@
             <td style='text-align: right;' class='13' id='totConge'><?php echo $totalrowC; ?></td>
         </tr>
         <tr>
-            <th>RQ</th>
+            <td class='header'>RQ</td>
                  <?php $totalrowRQ = 0; ?>            
                  <?php for ($i=1;$i<13;$i++) :?>
                  <?php $mois = $i<10 ? '0'.$i : $i; ?>
@@ -39,7 +39,7 @@
             <td style='text-align: right;' class='13' id='totRQ'><?php echo $totalrowRQ; ?></td>
         </tr>                            
         <tr>
-            <th>VT</th>
+            <td class='header'>VT</td>
                  <?php $totalrowVT = 0; ?>               
                  <?php for ($i=1;$i<13;$i++) :?>
                  <?php $mois = $i<10 ? '0'.$i : $i; ?>
@@ -51,20 +51,20 @@
     </tbody>
     <tfoot>
         <tr>
-            <th>Total</th>
-            <td id='total01' style='text-align: right;'></td>
-            <td id='total02' style='text-align: right;'></td>
-            <td id='total03' style='text-align: right;'></td>
-            <td id='total04' style='text-align: right;'></td>
-            <td id='total05' style='text-align: right;'></td>
-            <td id='total06' style='text-align: right;'></td>
-            <td id='total07' style='text-align: right;'></td>
-            <td id='total08' style='text-align: right;'></td>
-            <td id='total09' style='text-align: right;'></td>
-            <td id='total10' style='text-align: right;'></td>
-            <td id='total11' style='text-align: right;'></td>
-            <td id='total12' style='text-align: right;'></td>
-            <td id='total' style='text-align: right;'></td>
+            <td class='footer'>Total</td>
+            <td id='total01' class='nowrap' style='text-align: right;'></td>
+            <td id='total02' class='nowrap' style='text-align: right;'></td>
+            <td id='total03' class='nowrap' style='text-align: right;'></td>
+            <td id='total04' class='nowrap' style='text-align: right;'></td>
+            <td id='total05' class='nowrap' style='text-align: right;'></td>
+            <td id='total06' class='nowrap' style='text-align: right;'></td>
+            <td id='total07' class='nowrap' style='text-align: right;'></td>
+            <td id='total08' class='nowrap' style='text-align: right;'></td>
+            <td id='total09' class='nowrap' style='text-align: right;'></td>
+            <td id='total10' class='nowrap' style='text-align: right;'></td>
+            <td id='total11' class='nowrap' style='text-align: right;'></td>
+            <td id='total12' class='nowrap' style='text-align: right;'></td>
+            <td id='total' class='nowrap' style='text-align: right;'></td>
         </tr>                             
     </tfoot>
 </table>
@@ -74,7 +74,7 @@
         $("."+mois).each(function() {
           tot += parseFloat($(this).html());
         });
-        return tot+" j";
+        return tot.toFixed(2)+" j";
      }
      
      $(document).ready(function () {

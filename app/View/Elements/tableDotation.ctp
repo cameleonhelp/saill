@@ -1,6 +1,6 @@
 <br/>
 <div class="dotations index">
-	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
+	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax">
         <thead>
 	<tr>
 			<th><?php echo 'Poste informatique'; ?></th>
@@ -22,10 +22,10 @@
 		<?php if ($this->params->action != 'profil') : ?>
                 <td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('dotations', 'edit')) : ?>
-                    <?php echo $this->Html->link('<span class="glyphicons pencil"></span>', array('controller'=>'Dotations','action' => 'edit', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('controller'=>'Dotations','action' => 'edit', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('dotations', 'delete')) : ?>
-                    <?php echo $this->Html->link('<span class="glyphicons bin"></span>', array('controller'=>'Dotations','action' => 'delete', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette dotation ?')); ?>                    
+                    <?php echo $this->Html->link('<span class="glyphicons bin notchange"></span>', array('controller'=>'Dotations','action' => 'delete', $dotation['Dotation']['id'], $this->params->pass[0]),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette dotation ?')); ?>                    
                     <?php endif; ?> 
 		</td>
                 <?php endif; ?>

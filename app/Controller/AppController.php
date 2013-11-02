@@ -22,6 +22,7 @@
 
 App::uses('Controller', 'Controller');
 App::uses('HistoryComponent', 'Component');
+App::uses('ConnectionManager', 'Model');
 /**
  * Application Controller
  *
@@ -43,16 +44,22 @@ class AppController extends Controller {
             'loginRedirect' => array('controller' => 'pages','action' => 'display','home'),
             'loginAction' => array('controller' => 'Utilisateurs','action' => 'login'),
             'authError' => 'Cette action n\'est pas autorisé pour votre profil ?',
-            'authenticate' => array('Form' => array('userModel' => 'Utilisateurs')
+            'authenticate' => array('Form' => array('userModel' => 'Utilisateurs'),
             )
         )
     );
          
     public function beforeRender() { 
+        if($this->params['action']=='index' || $this->params['action']=='home' || $this->params['action']=='rapportagent' || $this->params['controller']=='pages' || $this->params['controller']=='dashboard' || $this->params['controller']=='risques' || $this->params['controller']=='rapports'|| $this->params['action']=='rapport' || $this->params['action']=='last7days'):
+            $url = $this->params->here;
+            $sql = "UPDATE utilisateurs SET LASTURL='".$url."' WHERE utilisateurs.id=".userAuth('id');
+            $db = ConnectionManager::getDataSource('default');
+            $db->rawQuery($sql);
+        endif;        
         parent::beforeRender();
     }
     
-    public function beforeRedirect($url, $status = null, $exit = true) { 
+    public function beforeRedirect($url, $status = null, $exit = true) {
         parent::beforeRedirect($url, $status, $exit);
     }
         
@@ -69,17 +76,5 @@ class AppController extends Controller {
         $this->Autorisationsrecursive = -1;
         $autorisation = $this->Autorisations->find('first',array('conditions'=>array('Autorisation.profil_id'=>$profil,'Autorisation.MODEL'=>$model),'fields'=>array('Autorisation.'.$action)));
         $this->set('autorisation',$autorisation);
-    }
-    
-    /*public function appError($error) {
-        if (Configure::read('debug') == 0):
-            $errormsg = 'Suite à une erreur, vous êtes redirigé vers cette page.<br>Veuillez essayer de nouveau, si cette erreur persiste, merci de contacter l\'administrateur en expliquant votre erreur.';
-            $this->Session->setFlash(__($errormsg),'default',array('class'=>'alert alert-error'));
-            $this->redirect(array('controller'=>'pages','action'=>'home'));        
-        else:
-            $this->redirect(array('controller'=>'errors','action'=>$error));
-        endif;
-    }  */  
-    
-    
+    }  
 }

@@ -1,4 +1,5 @@
 <?php $this->set('title_for_layout','Calendrier des absences'); ?>
+<div class="marginright10">
 <table class="table table-bordered table-striped table-hover" id="capture">
         <thead>
             <?php
@@ -8,11 +9,11 @@
             $pass = isset($this->data['Activitesreelle']['pass']) ? $this->data['Activitesreelle']['pass'] : '0';
             $strMonth = array('01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre');
             ?>
-            <?php echo $this->Form->create('Activitesreelle',array('action' => 'absences','style'=>'display:none;','inputDefaults' => array('label'=>false,'div' => false))); ?>
+            <?php echo $this->Form->create('Activitesreelle',array('action' => 'absences','style'=>'display:none;','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
                 <tr>
                     <th colspan="<?php echo ($maxday*2)+1; ?>" class="text-center">
                         <div class="btn-group pull-left">
-                            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                            <a class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" href="#">
                               Filtre utilisateurs
                               <span class="caret"></span>
                             </a>
@@ -21,11 +22,11 @@
                                 <li style="text-align:left;"><?php echo $this->Html->link('Mon équipe', "#",array('class'=>'showoverlay','id'=>"team")); ?></li>
                             </ul>
                         </div>
-                        <?php echo $this->Form->button('<span class="glyphicons left_arrow" rel="tooltip" data-title="Mois précédent"></span>', array('id'=>"previousMonth",'type'=>'button','class' => 'btn','style'=>'margin-right:75px;')); ?>
+                        <?php echo $this->Form->button('<span class="glyphicons left_arrow" data-container="body" rel="tooltip" data-title="Mois précédent"></span>', array('id'=>"previousMonth",'type'=>'button','class' => 'btn  btn-sm btn-default','style'=>'margin-right:75px;')); ?>
                             <?php echo $strMonth[$month]." ".$year; ?>
-                        <?php echo $this->Form->button('<span class="glyphicons right_arrow" rel="tooltip" data-title="Mois suivant"></span>', array('id'=>"nextMonth",'type'=>'button','class' => 'btn','style'=>'margin-left:75px;')); ?>
-                        <?php echo $this->Form->button('<span class="glyphicons clock" rel="tooltip" data-title="Mois courant"></span>', array('id'=>"today",'type'=>'button','class' => 'btn pull-right')); ?>
-                        <?php echo $this->Form->button('<span class="glyphicons camera" rel="tooltip" data-title="Enregistrez au format PNG"></span>', array('id'=>"canvas",'type'=>'button','class' => 'btn pull-right')); ?>
+                        <?php echo $this->Form->button('<span class="glyphicons right_arrow" data-container="body" rel="tooltip" data-title="Mois suivant"></span>', array('id'=>"nextMonth",'type'=>'button','class' => 'btn btn-sm btn-default','style'=>'margin-left:75px;')); ?>
+                        <?php echo $this->Form->button('<span class="glyphicons clock" data-container="body" rel="tooltip" data-title="Mois courant"></span>', array('id'=>"today",'type'=>'button','class' => 'btn  btn-sm btn-default pull-right')); ?>
+                        <?php echo $this->Form->button('<span class="glyphicons camera" data-container="body" rel="tooltip" data-title="Enregistrez au format PNG"></span>', array('id'=>"canvas",'type'=>'button','class' => 'btn  btn-sm btn-default pull-right')); ?>
                     </th>
                 </tr>
             <?php $day = new DateTime(); $date = isset($this->data['Activitesreelle']['month']) ? $this->data['Activitesreelle']['month'] : $day->format('Y-m-d'); ?>
@@ -33,7 +34,7 @@
             <?php echo $this->Form->input('pass',array('type'=>'hidden','value'=>$pass)); ?>
             <?php echo $this->Form->end(); ?>
             <tr>
-            <th class="nopadding nomargin nowrap" style="vertical-align: middle;" rowspan="2">Nom</th>
+            <th class="nowrap" style="vertical-align: middle;" rowspan="2">Nom</th>
             <?php 
             for($i=1;$i<$maxday;$i++) {
                 $nbday = date("N", mktime(0, 0, 0, $month, $i, $year))-1;
@@ -42,7 +43,7 @@
                 $classferie = isFerie($date) ? ' ferie' : '';                
                 $strday = array("Lu","Ma","Me","Je","Ve","Sa","Di");
                 $weekend = $date->format('N');
-                $class = $weekend >5 ? "class='absday week nopadding nomargin nowrap" : "class='absday nopadding nomargin nowrap";
+                $class = $weekend >5 ? "class='absday week text-center nowrap" : "class='absday text-center nowrap";
                 echo "<th colspan='2' ".$class.$classferie."'>".$strday[$nbday]."</th>";
             }
             ?>
@@ -54,7 +55,7 @@
                 $date=new DateTime($year.'-'.$month.'-'.$day);
                 $classferie = isFerie($date) ? ' ferie' : '';
                 $weekend = $date->format('N');
-                $class = $weekend >5 ? "class='absday week nopadding nomargin nowrap" : "class='absday nopadding nomargin nowrap";
+                $class = $weekend >5 ? "class='absday week nowrap text-center" : "class='absday nowrap text-center";
                 echo "<th colspan='2' ".$class.$classferie."'>".$day."</th>";
             }
             ?>
@@ -63,8 +64,8 @@
         </thead>
         <tbody>
             <?php foreach($utilisateurs as $utilisateur) : ?>
-            <tr>
-                <td class="nopadding nomargin nowrap" style="line-height: 4px;min-width:120px;"><div rel="tooltip" data-title="<?php echo $utilisateur['Utilisateur']['NOMLONG']." (".$utilisateur['Utilisateur']['username'].")"; ?>"><?php echo substr($utilisateur['Utilisateur']['PRENOM'],0,1).". ".$utilisateur['Utilisateur']['NOM']; ?></div></td>
+            <tr class="thin-height">
+                <td class="nowrap" style="max-width:120px !important;width:120px !important;min-width:120px !important;"><div  data-container="body" rel="tooltip" data-title="<?php echo $utilisateur['Utilisateur']['NOMLONG']." (".$utilisateur['Utilisateur']['username'].")"; ?>"><?php echo substr($utilisateur['Utilisateur']['PRENOM'],0,1).". ".$utilisateur['Utilisateur']['NOM']; ?></div></td>
             <?php
             $debutactif = CIntDateDeb($utilisateur['Utilisateur']['DATEDEBUTACTIF']); 
             $debutinactif = CIntDateFin($utilisateur['Utilisateur']['FINMISSION']);
@@ -74,7 +75,7 @@
                 $date=new DateTime($year.'-'.$month.'-'.$day);
                 $weekend = $date->format('N');
                 $classweek = $weekend >5 ?  ' week': '';              
-                $class = "class='absday nopadding nomargin nowrap";
+                $class = "class='absday nowrap";
                 $classferie = isFerie($date) ? ' ferie' : '';
                 if($debutactif > CIntDate($date->format('d/m/Y')) || $debutinactif < CIntDate($date->format('d/m/Y'))):
                     $classIndispo = ' indispo';
@@ -106,6 +107,7 @@
             endforeach; ?>
         </tbody>
     </table>
+    </div>
 <script>
      $(document).ready(function () {
          $("#previousMonth").on('click', function(e){

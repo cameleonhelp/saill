@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Dossierpartage $Dossierpartage
  */
 class DossierpartagesController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
     public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Dossierpartage.NOM' => 'asc'),
         /*'order' => array(
             'Post.title' => 'asc' /*/
@@ -26,7 +26,7 @@ class DossierpartagesController extends AppController {
                 $this->Dossierpartage->recursive = 0;
 		$this->set('dossierpartages', $this->paginate());
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -47,7 +47,7 @@ class DossierpartagesController extends AppController {
 		$options = array('conditions' => array('Dossierpartage.' . $this->Dossierpartage->primaryKey => $id),'recursive'=>0);
 		$this->set('dossierpartage', $this->Dossierpartage->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -63,16 +63,21 @@ class DossierpartagesController extends AppController {
                 $this->set('gestionnaire',$gestionnaire);                
 		$this->set('title_for_layout','Partages réseaux');
                 if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Dossierpartage->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			$this->Dossierpartage->create();
 			if ($this->Dossierpartage->save($this->request->data)) {
-				$this->Session->setFlash(__('Dossier partagé sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Dossier partagé sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Dossier partagé incorrecte, veuilez corriger le dossier partagé'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Dossier partagé incorrecte, veuilez corriger le dossier partagé',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -93,18 +98,23 @@ class DossierpartagesController extends AppController {
 			throw new NotFoundException(__('Dossier partagé incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Dossierpartage->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			if ($this->Dossierpartage->save($this->request->data)) {
-				$this->Session->setFlash(__('Dossier partagé sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Dossier partagé sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Dossier partagé incorrecte, veuillez corriger le dossier partagé'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Dossier partagé incorrecte, veuillez corriger le dossier partagé',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Dossierpartage.' . $this->Dossierpartage->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Dossierpartage->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -126,13 +136,13 @@ class DossierpartagesController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Dossierpartage->delete()) {
-			$this->Session->setFlash(__('Dossier partagé supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Dossier partagé supprimé',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Dossier partagé NON supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Dossier partagé NON supprimé',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -153,8 +163,13 @@ class DossierpartagesController extends AppController {
                 $this->set('dossierpartages', $this->paginate());              
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
-        }            
+        } 
+        
+        public function get_list_shared(){
+            $list = $this->Dossierpartage->find('list',array('fields'=>array('id','NOM'),"recursive"=>1));
+            return $list;
+        }
 }        

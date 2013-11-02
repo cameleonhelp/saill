@@ -1,108 +1,102 @@
 <div class="utilisateurs index">
-        <div class="navbar">
-            <div class="navbar-inner">
-                <div class="container">
-                <ul class="nav">
-                <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'add')) : ?>
-                <li><?php echo $this->Html->link('<span class="glyphicons plus size14"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
-                <li class="divider-vertical-only"></li>
-                <?php endif; ?>
-                <li class="dropdown">
-                <?php 
+                 <?php 
                 $pass0 = isset($this->params->pass[0]) ? $this->params->pass[0] : 'actif';
                 $pass1 = isset($this->params->pass[1]) ? $this->params->pass[1] : 'allsections';
                 $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous';
                 $pass3 = isset($this->params->pass[3]) ? $this->params->pass[3] : null;
-                ?>                
+                ?>  
+    <nav class="navbar toolbar marginright20">
+                <ul class="nav navbar-nav toolbar">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'add')) : ?>
+                <li><?php echo $this->Html->link('<span class="glyphicons plus size14 margintop4"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <li class="divider-vertical-only"></li>
+                <?php endif; ?>
+                <li class="dropdown <?php echo filtre_is_actif($pass0,'actif'); ?>">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',$pass1,$pass2,$pass3)); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',$pass1,$pass2,$pass3),array('class'=>'showoverlay'.subfiltre_is_actif($pass0,'tous'))); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',$pass1,$pass2,$pass3)); ?></li>
-                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',$pass1,$pass2,$pass3)); ?></li>
+                         <li><?php echo $this->Html->link('Actif', array('action' => 'index','actif',$pass1,$pass2,$pass3),array('class'=>'showoverlay'.subfiltre_is_actif($pass0,'actif'))); ?></li>
+                         <li><?php echo $this->Html->link('Inactif', array('action' => 'index','inactif',$pass1,$pass2,$pass3),array('class'=>'showoverlay'.subfiltre_is_actif($pass0,'inactif'))); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Nouveaux', array('action' => 'index','nouveau',$pass1,$pass2,$pass3)); ?></li>
-                         <li><?php echo $this->Html->link('Incomplet', array('action' => 'index','incomplet',$pass1,$pass2,$pass3)); ?></li>
+                         <li><?php echo $this->Html->link('Nouveaux', array('action' => 'index','nouveau',$pass1,$pass2,$pass3),array('class'=>'showoverlay'.subfiltre_is_actif($pass0,'nouveau'))); ?></li>
+                         <li><?php echo $this->Html->link('Incomplet', array('action' => 'index','incomplet',$pass1,$pass2,$pass3),array('class'=>'showoverlay'.subfiltre_is_actif($pass0,'incomplet'))); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('A prolonger', array('action' => 'index','aprolonger',$pass1,$pass2,$pass3)); ?></li>
+                         <li><?php echo $this->Html->link('A prolonger', array('action' => 'index','aprolonger',$pass1,$pass2,$pass3),array('class'=>'showoverlay'.subfiltre_is_actif($pass0,'aprolonger'))); ?></li>
                       </ul>
                  </li> 
-                <li class="dropdown">
+                <li class="dropdown <?php echo filtre_is_actif($pass1,'allsections'); ?>">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Sections <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index',$pass0,'allsections',$pass2,$pass3)); ?></li>
+                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index',$pass0,'allsections',$pass2,$pass3),array('class'=>'showoverlay'.subfiltre_is_actif($pass1,'allsections'))); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($sections as $section): ?>
-                            <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',$pass0,$section['Section']['id'],$pass2,$pass3)); ?></li>
+                            <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',$pass0,$section['Section']['id'],$pass2,$pass3),array('class'=>'showoverlay'.subfiltre_is_actif($pass1,$section['Section']['id']))); ?></li>
                          <?php endforeach; ?>
                       </ul>
                  </li>
-                <li class="dropdown">
+                <li class="dropdown <?php echo filtre_is_actif($pass2,'tous'); ?>">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Sociétés <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index',$pass0,$pass1,'tous',$pass3)); ?></li>
+                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index',$pass0,$pass1,'tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif($pass2,'tous'))); ?></li>
                      <li class="divider"></li>
-                     <li><?php echo $this->Html->link('SNCF', array('action' => 'index',$pass0,$pass1,'1',$pass3)); ?></li>
-                     <li><?php echo $this->Html->link('Autres', array('action' => 'index',$pass0,$pass1,'0',$pass3)); ?></li>
+                     <li><?php echo $this->Html->link('SNCF', array('action' => 'index',$pass0,$pass1,'1',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif($pass2,'1'))); ?></li>
+                     <li><?php echo $this->Html->link('Autres', array('action' => 'index',$pass0,$pass1,'0',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif($pass2,'0'))); ?></li>
                      </ul>
                  </li>                 
                 <li class="divider-vertical-only"></li>
-                <li><?php echo $this->Html->link('Filtre alphabétique','#',array('escape' => false,'id'=>'tooglealphafilter')); ?></li>
+                <li><?php echo $this->Html->link('Filtre alphabétique','#',array('escape' => false,'id'=>'tooglealphafilter','class'=>'paddingtop3'.filtre_is_actif($pass3,''))); ?></li>
                 <li class="divider-vertical-only"></li>                
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicons check"></span> Actions groupées <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Prolonger', "#",array('id'=>'prolongerlink')); ?></li>
-                     <li><?php echo $this->Html->link('Désactiver', "#",array('id'=>'desactiverlink')); ?></li>
+                     <li><?php echo $this->Html->link('Prolonger', "#",array('id'=>'prolongerlink','class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Désactiver', "#",array('id'=>'desactiverlink','class'=>'showoverlay')); ?></li>
                      </ul>
                 </li>                 
                  <li class="divider-vertical-only"></li>
-                <li><?php echo $this->Html->link('<span class="ico-xls icon-top2" rel="tooltip" data-title="Export Excel"></span>', array('action' => 'export_xls'),array('escape' => false)); ?></li>
+                <li><?php echo $this->Html->link('<span class="ico-xls" rel="tooltip" data-title="Export Excel"></span>', array('action' => 'export_xls'),array('class'=>"md",'escape' => false)); ?></li>
                 <li class="divider-vertical-only"></li>
                 </ul> 
-                <?php echo $this->Form->create("Utilisateur",array('action' => 'search','class'=>'navbar-form clearfix pull-right','inputDefaults' => array('label'=>false,'div' => false))); ?>
-                    <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche dans tous les champs')); ?>
-                    <button type="submit" class="btn">Rechercher</button>
+                <?php echo $this->Form->create("Utilisateur",array('action' => 'search', 'class'=>'toolbar-form pull-right','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+                    <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche ...','style'=>"width: 188px;",'class'=>"form-control")); ?>
+                    <button type="submit" class="btn form-btn showoverlay">Rechercher</button>
                 <?php echo $this->Form->end(); ?>                    
-                </div>
-            </div>
-        </div>
-        <div class="navbar" id="subnavfilter">
-            <div class="navbar-inner">
-                <div class="container">
-                    <ul class="nav">
-                        <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,$pass1,$pass2)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('A', array('action' => 'index',$pass0,$pass1,$pass2,0)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('B', array('action' => 'index',$pass0,$pass1,$pass2,1)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('C', array('action' => 'index',$pass0,$pass1,$pass2,2)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('D', array('action' => 'index',$pass0,$pass1,$pass2,3)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('E', array('action' => 'index',$pass0,$pass1,$pass2,4)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('F', array('action' => 'index',$pass0,$pass1,$pass2,5)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('G', array('action' => 'index',$pass0,$pass1,$pass2,6)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('H', array('action' => 'index',$pass0,$pass1,$pass2,7)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('I', array('action' => 'index',$pass0,$pass1,$pass2,8)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('J', array('action' => 'index',$pass0,$pass1,$pass2,9)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('K', array('action' => 'index',$pass0,$pass1,$pass2,10)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('L', array('action' => 'index',$pass0,$pass1,$pass2,11)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('M', array('action' => 'index',$pass0,$pass1,$pass2,12)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('N', array('action' => 'index',$pass0,$pass1,$pass2,13)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('O', array('action' => 'index',$pass0,$pass1,$pass2,14)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('P', array('action' => 'index',$pass0,$pass1,$pass2,15)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('Q', array('action' => 'index',$pass0,$pass1,$pass2,16)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('R', array('action' => 'index',$pass0,$pass1,$pass2,17)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('S', array('action' => 'index',$pass0,$pass1,$pass2,18)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('T', array('action' => 'index',$pass0,$pass1,$pass2,19)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('U', array('action' => 'index',$pass0,$pass1,$pass2,20)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('V', array('action' => 'index',$pass0,$pass1,$pass2,21)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('W', array('action' => 'index',$pass0,$pass1,$pass2,22)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('X', array('action' => 'index',$pass0,$pass1,$pass2,23)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('Y', array('action' => 'index',$pass0,$pass1,$pass2,24)); ?></li><li class="divider-vertical-only"></li>
-                        <li><?php echo $this->Html->link('Z', array('action' => 'index',$pass0,$pass1,$pass2,25)); ?></li>
+        </nav>
+        <nav class="navbar toolbar marginright20" id="subnavfilter" style="z-index:550;">
+                <ul class="nav navbar-nav toolbar">
+                        <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,$pass1,$pass2),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,''))); ?></li>
+                        <li><?php echo $this->Html->link('A', array('action' => 'index',$pass0,$pass1,$pass2,0),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'0'))); ?></li>
+                        <li><?php echo $this->Html->link('B', array('action' => 'index',$pass0,$pass1,$pass2,1),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'1'))); ?></li>
+                        <li><?php echo $this->Html->link('C', array('action' => 'index',$pass0,$pass1,$pass2,2),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'2'))); ?></li>
+                        <li><?php echo $this->Html->link('D', array('action' => 'index',$pass0,$pass1,$pass2,3),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'3'))); ?></li>
+                        <li><?php echo $this->Html->link('E', array('action' => 'index',$pass0,$pass1,$pass2,4),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'4'))); ?></li>
+                        <li><?php echo $this->Html->link('F', array('action' => 'index',$pass0,$pass1,$pass2,5),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'5'))); ?></li>
+                        <li><?php echo $this->Html->link('G', array('action' => 'index',$pass0,$pass1,$pass2,6),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'6'))); ?></li>
+                        <li><?php echo $this->Html->link('H', array('action' => 'index',$pass0,$pass1,$pass2,7),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'7'))); ?></li>
+                        <li><?php echo $this->Html->link('I', array('action' => 'index',$pass0,$pass1,$pass2,8),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'8'))); ?></li>
+                        <li><?php echo $this->Html->link('J', array('action' => 'index',$pass0,$pass1,$pass2,9),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'9'))); ?></li>
+                        <li><?php echo $this->Html->link('K', array('action' => 'index',$pass0,$pass1,$pass2,10),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'10'))); ?></li>
+                        <li><?php echo $this->Html->link('L', array('action' => 'index',$pass0,$pass1,$pass2,11),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'11'))); ?></li>
+                        <li><?php echo $this->Html->link('M', array('action' => 'index',$pass0,$pass1,$pass2,12),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'12'))); ?></li>
+                        <li><?php echo $this->Html->link('N', array('action' => 'index',$pass0,$pass1,$pass2,13),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'13'))); ?></li>
+                        <li><?php echo $this->Html->link('O', array('action' => 'index',$pass0,$pass1,$pass2,14),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'14'))); ?></li>
+                        <li><?php echo $this->Html->link('P', array('action' => 'index',$pass0,$pass1,$pass2,15),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'15'))); ?></li>
+                        <li><?php echo $this->Html->link('Q', array('action' => 'index',$pass0,$pass1,$pass2,16),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'16'))); ?></li>
+                        <li><?php echo $this->Html->link('R', array('action' => 'index',$pass0,$pass1,$pass2,17),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'17'))); ?></li>
+                        <li><?php echo $this->Html->link('S', array('action' => 'index',$pass0,$pass1,$pass2,18),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'18'))); ?></li>
+                        <li><?php echo $this->Html->link('T', array('action' => 'index',$pass0,$pass1,$pass2,19),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'19'))); ?></li>
+                        <li><?php echo $this->Html->link('U', array('action' => 'index',$pass0,$pass1,$pass2,20),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'20'))); ?></li>
+                        <li><?php echo $this->Html->link('V', array('action' => 'index',$pass0,$pass1,$pass2,21),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'21'))); ?></li>
+                        <li><?php echo $this->Html->link('W', array('action' => 'index',$pass0,$pass1,$pass2,22),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'22'))); ?></li>
+                        <li><?php echo $this->Html->link('X', array('action' => 'index',$pass0,$pass1,$pass2,23),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'23'))); ?></li>
+                        <li><?php echo $this->Html->link('Y', array('action' => 'index',$pass0,$pass1,$pass2,24),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'24'))); ?></li>
+                        <li><?php echo $this->Html->link('Z', array('action' => 'index',$pass0,$pass1,$pass2,25),array('class'=>'paddingtop3 sortalpha'.subfiltre_is_actif($pass3,'25'))); ?></li>
                     </ul>
-                </div>
-            </div>
-        </div>
-        <?php if ($this->params['action']=='index') { ?><code class="text-normal undersubnavbar"  style="z-index:-5;margin-bottom: 10px;display: block;"><em>Liste de <?php echo $futilisateur; ?> de <?php echo $fsection; ?> <?php echo $fsociete; ?> <?php echo $falpha; ?></em></code><?php } ?>
+        </nav>
+        <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 marginright20">
+            <strong>Filtre appliqué : </strong><em>Liste de <?php echo $futilisateur; ?> de <?php echo $fsection; ?> <?php echo $fsociete; ?> <?php echo $falpha; ?></em></div><?php } ?>
+        <div class="marginright10">
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
@@ -131,7 +125,7 @@
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'view')) : ?>
                     <?php $mail = (isset($utilisateur['Utilisateur']['MAIL']) && !empty($utilisateur['Utilisateur']['MAIL'])) ? '<a href=\'mailto:'.h($utilisateur['Utilisateur']['MAIL']).'\'>'.h($utilisateur['Utilisateur']['MAIL']).'</a>': 'Non attribué'; ?>
-                    <?php echo '<span class="glyphicons eye_open" rel="popover" data-title="<h3>Utilisateur :</h3>" data-content="<contenttitle>Nom Prénom: </contenttitle>'.h($utilisateur['Utilisateur']['NOMLONG'])
+                    <?php echo '<span class="glyphicons eye_open" data-rel="popover" data-title="<h3>Utilisateur :</h3>" data-content="<contenttitle>Nom Prénom: </contenttitle>'.h($utilisateur['Utilisateur']['NOMLONG'])
                                 .'<br/><contenttitle>Date naissance: </contenttitle>'.h($utilisateur['Utilisateur']['NAISSANCE'])
                                 .'<br/><contenttitle>Email: </contenttitle>'.$mail
                                 .'<br/><contenttitle>Login: </contenttitle>'.h($utilisateur['Utilisateur']['username'])
@@ -142,55 +136,57 @@
                                 .'<br/><contenttitle>Modifié le: </contenttitle>'.h($utilisateur['Utilisateur']['modified']).'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'edit')) : ?>
-                    <?php echo $this->Html->link('<span class="glyphicons pencil"></span>', array('action' => 'edit', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
                     <?php else: ?>
                     <span class="glyphicons blank"></span>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'delete')) : ?>
-                    <?php echo $this->Form->postLink('<span class="glyphicons bin"></span>', array('action' => 'delete', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet utilisateur ?')); ?>                    
+                    <?php echo $this->Form->postLink('<span class="glyphicons bin showoverlay notchange"></span>', array('action' => 'delete', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet utilisateur ?')); ?>                    
                     <?php else: ?>
                     <span class="glyphicons blank"></span>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'initpassword')) : ?>
-                    <?php echo $this->Form->postLink('<span class="glyphicons rotation_lock"></span>', array('action' => 'initpassword', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir initialiser le mot de passe de cet utilisateur ?')); ?>                                            
+                    <?php echo $this->Form->postLink('<span class="glyphicons showoverlay rotation_lock notchange"></span>', array('action' => 'initpassword', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir initialiser le mot de passe de cet utilisateur ?')); ?>                                            
                     <?php else: ?>
                     <span class="glyphicons blank"></span>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'duplicate')) : ?>
-                    <?php echo $this->Form->postLink('<span class="glyphicons retweet"></span>', array('action' => 'dupliquer', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cet utilisateur ?')); ?>
+                    <?php echo $this->Form->postLink('<span class="glyphicons showoverlay retweet notchange"></span>', array('action' => 'dupliquer', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cet utilisateur ?')); ?>
                     <?php else: ?>
                     <span class="glyphicons blank"></span>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('dotations', 'add')) : ?>
-                    <?php echo $this->Html->link('<span class="glyphicons cargo"></span>', array('controller'=>'dotations','action' => 'add', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
-                    <?php endif; ?>                    
+                    <?php echo $this->Html->link('<span class="glyphicons showoverlay cargo notchange"></span>', array('controller'=>'dotations','action' => 'add', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php endif; ?>  
+                    <?php echo $this->Html->link('<span class="glyphicons showoverlay envelope notchange"></span>', array('action' => 'sendmailgestannuaire', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
                 </td>
 	</tr>
         <?php endforeach; ?>
         <?php endif; ?>
         </tbody>
 	</table>
+        </div>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
-	<div class="pull-right"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>     
-	<div class="pagination pagination-centered">
-        <ul>
+	<div class="pull-right marginright20"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>     
+        <div class='text-center'>
+        <ul class="pagination pagination-sm">
 	<?php
-                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled showoverlay'))."</li>";
-		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled showoverlay'))."</li>";
+                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled showoverlay','escape'=>false))."</li>";
+		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled showoverlay','escape'=>false))."</li>";
 		echo "<li>".$this->Paginator->numbers(array('separator' => '','class'=>'showoverlay'))."</li>";
-		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabledshowoverlay'))."</li>";
-                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled showoverlay'))."</li>";
+		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabled showoverlay','escape'=>false))."</li>";
+                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled showoverlay','escape'=>false))."</li>";
 	?>
         </ul>
-	</div>
+        </div>
 </div>
 <script>
     
      $(document).ready(function () {
-        $('#subnavfilter').hide();
+        <?php if($pass3==null) : ?>$('#subnavfilter').hide();<?php endif; ?>
         
         $(document).on('click','#tooglealphafilter',function(e){
-            $('#subnavfilter').fadeToggle('slow');
+            $('#subnavfilter').fadeIn('slow');
         });        
     
         $(document).on('click','#prolongerlink',function(e){

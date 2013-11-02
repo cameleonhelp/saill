@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Facturation $Facturation
  */
 class FacturationsController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
     public $paginate = array(
         //'limit'=>9999
     );
@@ -25,8 +25,7 @@ class FacturationsController extends AppController {
             if (isAuthorized('facturations', 'index')) :            
                 if (areaIsVisible() || $utilisateur==userAuth('id')):
                 switch ($utilisateur){
-                    case 'tous':
-                    case '<':    
+                    case 'tous':    
                     case null:
                         $newconditions[]="1=1";
                         $futilisateur = "tous les utilisateurs";
@@ -85,7 +84,7 @@ class FacturationsController extends AppController {
                 $this->Facturation->recursive = 1;
                 $group = $this->Facturation->find('all',array('fields'=>array('Facturation.VERSION','Facturation.DATE','Facturation.utilisateur_id','Facturation.NUMEROFTGALILEI','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Facturation.DATE) AS NBACTIVITE'),'group'=>array('Facturation.DATE','Facturation.utilisateur_id','Facturation.VERSION'),'order'=>array('Facturation.utilisateur_id' => 'asc','Facturation.DATE' => 'desc' ),'conditions'=>$newconditions));
                 $this->set('groups',$group);
-                $annee = $this->Facturation->find('all',array('fields'=>array('YEAR(Facturation.DATE) AS ANNEE'),'group'=>array('YEAR(Facturation.DATE)'),'order'=>array('YEAR(Facturation.DATE)' => 'asc')));
+                $annee = $this->Facturation->find('all',array('fields'=>array('YEAR(Facturation.DATE) AS ANNEE'),'conditions'=>array('YEAR(Facturation.DATE) > 0'),'group'=>array('YEAR(Facturation.DATE)'),'order'=>array('YEAR(Facturation.DATE)' => 'asc')));
                 $this->set('annees',$annee);                
                 $this->paginate = array('limit'=>$this->Facturation->find('count'));                
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
@@ -96,7 +95,7 @@ class FacturationsController extends AppController {
                 $export = $this->Facturation->find('all',array('conditions'=>$newconditions,'order' => array('Facturation.DATE' => 'asc')));
                 $this->Session->write('xls_export',$export); 
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;                
 	}
@@ -193,7 +192,7 @@ class FacturationsController extends AppController {
                 $this->set('facturations', $this->paginate());              
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
             endif;                
         }  
@@ -212,30 +211,35 @@ class FacturationsController extends AppController {
         
         public function save(){
             if ($this->request->is('post')) {
-                $facturations = $this->request->data['Facturation'];
-                unset($facturations['¤']);
-                foreach($facturations as $facturation):
-                    if (is_array($facturation)):
-                        $this->Facturation->create();
-                        if ($this->Facturation->save($facturation)) {
-                            if (!isset($facturation['new'])):
-                                $lastId = $this->Facturation->getLastInsertID();
-                                $this->Facturation->Activitesreelle->id = $facturation['activitesreelle_id'];
-                                $this->Facturation->Activitesreelle->saveField('facturation_id', $lastId);
-                           endif;
-                            if (isset($facturation['VERSION']) && $facturation['VERSION'] > 0):
-                                $version = $facturation['VERSION']-1;
-                                $oldFacturationId = $this->getOldFacturationId($facturation['utilisateur_id'], CUSDate($facturation['DATE']), $facturation['activite_id'], $version);
-                                $this->Facturation->id = $oldFacturationId;
-                                $this->Facturation->saveField('VISIBLE', 1);
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Facturation->validate = array();
+                        $this->History->goBack(1);
+                    else:                
+                        $facturations = $this->request->data['Facturation'];
+                        unset($facturations['¤']);
+                        foreach($facturations as $facturation):
+                            if (is_array($facturation)):
+                                $this->Facturation->create();
+                                if ($this->Facturation->save($facturation)) {
+                                    if (!isset($facturation['new'])):
+                                        $lastId = $this->Facturation->getLastInsertID();
+                                        $this->Facturation->Activitesreelle->id = $facturation['activitesreelle_id'];
+                                        $this->Facturation->Activitesreelle->saveField('facturation_id', $lastId);
+                                   endif;
+                                    if (isset($facturation['VERSION']) && $facturation['VERSION'] > 0):
+                                        $version = $facturation['VERSION']-1;
+                                        $oldFacturationId = $this->getOldFacturationId($facturation['utilisateur_id'], CUSDate($facturation['DATE']), $facturation['activite_id'], $version);
+                                        $this->Facturation->id = $oldFacturationId;
+                                        $this->Facturation->saveField('VISIBLE', 1);
+                                    endif;
+                                    $this->Session->setFlash(__('La facturation est sauvegardée',true),'flash_success');
+                                } else {
+                                    $this->Session->setFlash(__('La facturation est incorrecte, veuillez corriger la facturation',true),'flash_failure');
+                                }                  
                             endif;
-                            $this->Session->setFlash(__('La facturation est sauvegardée'),'default',array('class'=>'alert alert-success'));
-                        } else {
-                            $this->Session->setFlash(__('La facturation est incorrecte, veuillez corriger la facturation'),'default',array('class'=>'alert alert-error'));
-                        }                  
-                    endif;
-                endforeach;
-                $this->History->goBack(1);
+                        endforeach;
+                        $this->History->goBack(1);
+                endif;
             }            
         }
         
@@ -277,18 +281,18 @@ class FacturationsController extends AppController {
                     //exit();
                     /*fin de la suppression des jours en trop*/
                     
-                    $rapportresult = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','Activite.projet_id','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode,'Facturation.VISIBLE'=>0),'order'=>array('MONTH(Facturation.DATE)'=>'asc','YEAR(Facturation.DATE)'=>'asc'),'group'=>array('Activite.projet_id','MONTH(Facturation.DATE)','YEAR(Facturation.DATE)'),'recursive'=>0));
+                    $rapportresult = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','Activite.projet_id','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode,'Facturation.VISIBLE'=>0),'order'=>array('MONTH(Facturation.DATE)'=>'asc','YEAR(Facturation.DATE)'=>'asc'),'group'=>array('Activite.projet_id'),'recursive'=>0));
                     $this->set('rapportresults',$rapportresult);
                     $chartresult = $this->Facturation->find('all',array('fields'=>array('Activite.projet_id','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode,'Facturation.VISIBLE'=>0),'order'=>array('Activite.projet_id'=>'asc'),'group'=>array('Activite.projet_id'),'recursive'=>0));
                     $this->set('chartresults',$chartresult);                    
-                    $detailrapportresult = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','Activite.id','Activite.NOM','Activite.projet_id','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode,'Facturation.VISIBLE'=>0),'order'=>array('MONTH(Facturation.DATE)'=>'asc','YEAR(Facturation.DATE)'=>'asc'),'group'=>array('Activite.projet_id','Activite.NOM','MONTH(Facturation.DATE)','YEAR(Facturation.DATE)'),'recursive'=>0));
+                    $detailrapportresult = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','Activite.id','Activite.NOM','Activite.projet_id','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode,'Facturation.VISIBLE'=>0),'order'=>array('MONTH(Facturation.DATE)'=>'asc','YEAR(Facturation.DATE)'=>'asc'),'group'=>array('Activite.projet_id','Activite.NOM'),'recursive'=>0));
                     $this->set('detailrapportresults',$detailrapportresult);
                     $this->Session->delete('rapportresults');  
                     $this->Session->delete('detailrapportresults');                      
                     $this->Session->write('rapportresults',$rapportresult);
                     $this->Session->write('detailrapportresults',$detailrapportresult);
                     if ($this->request->data['Facturation']['RepartitionUtilisateur']==1):
-                        $repartitions = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','Utilisateur.id','Utilisateur.NOM','Utilisateur.PRENOM','Activite.projet_id','Activite.id','Activite.NOM','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode,'Facturation.VISIBLE'=>0),'order'=>array('MONTH(Facturation.DATE)'=>'asc','YEAR(Facturation.DATE)'=>'asc','Facturation.utilisateur_id'=>'asc'),'group'=>array('Facturation.utilisateur_id','Activite.NOM','MONTH(Facturation.DATE)','YEAR(Facturation.DATE)'),'recursive'=>0));
+                        $repartitions = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','Utilisateur.id','Utilisateur.NOM','Utilisateur.PRENOM','Activite.projet_id','Activite.id','Activite.NOM','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$domaine,$periode,'Facturation.VISIBLE'=>0),'order'=>array('MONTH(Facturation.DATE)'=>'asc','YEAR(Facturation.DATE)'=>'asc','Facturation.utilisateur_id'=>'asc'),'group'=>array('Facturation.utilisateur_id','Activite.NOM'),'recursive'=>0));
                         $this->set('repartitions',$repartitions);
                         $this->Session->delete('repartitionresults');
                         $this->Session->write('repartitionresults',$repartitions);
@@ -304,7 +308,7 @@ class FacturationsController extends AppController {
                 $domaines = $this->Facturation->Activite->Projet->find('list',array('fields'=>array('id','NOM'),'order'=>array('Projet.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;             
 	}   
@@ -554,7 +558,7 @@ class FacturationsController extends AppController {
                 $this->set('rowsrepartition',$data);                
 		$this->render('export_doc','export_doc');
             else:
-                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport'),'default',array('class'=>'alert alert-error'));             
+                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport',true),'flash_failure');             
                 $this->redirect(array('action'=>'rapport'));
             endif;
         }         
@@ -574,6 +578,7 @@ class FacturationsController extends AppController {
             $options = $this->params->params['pass'];
             $societes = $options['societes'];
             $utilisateurs = $this->requestAction('utilisateurs/insociete', array('pass'=>$societes));
+            if(count($utilisateurs)>0):
             foreach($utilisateurs as $utilisateur):
                 @$listutilisateurs .= $utilisateur['Utilisateur']['id'].',';
             endforeach;
@@ -586,8 +591,9 @@ class FacturationsController extends AppController {
             $byprojetactiviteutilisateur = $this->array_sum_merge($entrop);
             $periode = 'Facturation.DATE BETWEEN "'. startWeek($start).'" AND "'.endWeek($end).'"';
             $indisponibilite = $options['indisponibilite'] ? '1=1': 'Activite.projet_id > 1';
-            $result = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','Utilisateur.id','Utilisateur.NOM','Utilisateur.PRENOM','Activite.projet_id','Utilisateur.societe_id','Activite.id','Activite.NOM','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$periode,$indisponibilite,'Facturation.VISIBLE'=>0),'order'=>array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc','Facturation.utilisateur_id'=>'asc'),'group'=>array('Facturation.utilisateur_id','Activite.NOM','MONTH(Facturation.DATE)','YEAR(Facturation.DATE)'),'recursive'=>0));
+            $result = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','SUM(Facturation.FRAIS) AS FRAIS','Utilisateur.id','Utilisateur.NOM','Utilisateur.PRENOM','Activite.projet_id','Utilisateur.societe_id','Activite.id','Activite.NOM','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$periode,$indisponibilite,'Facturation.VISIBLE'=>0),'order'=>array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc','Facturation.utilisateur_id'=>'asc'),'group'=>array('Facturation.utilisateur_id','Activite.projet_id','Activite.NOM'),'recursive'=>0));
             return array('trop'=>$byprojetactiviteutilisateur,'result'=>$result);
+            endif;
         }
         
         public function getEntropFirstSS2I($activitefirstweek=null){

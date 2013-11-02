@@ -11,7 +11,7 @@ App::uses('CakeEmail', 'Network/Email');
  * @author JLR
  */
 class ContactsController extends AppController {
-    public $components = array('History');
+    public $components = array('History','Common');
 /**
  * add method
  *
@@ -19,26 +19,30 @@ class ContactsController extends AppController {
  */
     public function add() {
         if ($this->request->is('post')) {
-            $this->Contact->set($this->data);
-            $mailto = $this->requestAction('parameters/get_contact');
-            $mailto = explode(';',$mailto['Parameter']['param']);
-            //send email using the Email component
-            try{
-            $email = new CakeEmail();
-            $email->config('smtp')
-                    ->emailFormat('html')
-                    ->from($this->data['Contact']['EMAIL'])
-                    ->to($mailto)
-                    ->subject('SAILL : ' . $this->data['Contact']['OBJET']);
-            if ($email->send("<b>De :</b> ".$this->data['Contact']['EMAIL']."<br><br><b>Message :</b><br><br>".$this->data['Contact']['MESSAGE'])) {
-                $this->Session->setFlash(__('Message envoyé avec succès'),'default',array('class'=>'alert alert-success'));
-            } else {
-                $this->Session->setFlash(__('Message <b>NON</b> envoyé'),'default',array('class'=>'alert alert-error'));
-            }
-            } catch(Exception $e){
-                $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
-            }
-           $this->redirect(array('action'=>'add'));
+            if (isset($this->params['data']['cancel'])) :
+                $this->History->goBack(1);
+            else:            
+                $this->Contact->set($this->data);
+                $mailto = $this->requestAction('parameters/get_contact');
+                $mailto = explode(';',$mailto['Parameter']['param']);
+                //send email using the Email component
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($this->data['Contact']['EMAIL'])
+                        ->to($mailto)
+                        ->subject('SAILL : ' . $this->data['Contact']['OBJET']);
+                if ($email->send("<b>De :</b> ".$this->data['Contact']['EMAIL']."<br><br><b>Message :</b><br><br>".$this->data['Contact']['MESSAGE'])) {
+                    $this->Session->setFlash(__('Message envoyé avec succès',true),'flash_success');
+                } else {
+                    $this->Session->setFlash(__('Message <b>NON</b> envoyé',true),'flash_failure');
+                }
+                } catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                }
+               $this->redirect(array('action'=>'add'));
+           endif;
         }
     }    
 

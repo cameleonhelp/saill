@@ -9,11 +9,11 @@ App::uses('CakeEmail', 'Network/Email');
 class ActionsController extends AppController {
 
         public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Action.ECHEANCE' => 'asc','Action.PRIORITE'=>'asc'),
         );
 
-        public $components = array('History');
+	public $components = array('History','Common');
         
         public function beforeRender() {             
             parent::beforeRender();
@@ -127,9 +127,12 @@ class ActionsController extends AppController {
                 $listeactions = $this->Action->find('all',array('conditions'=>$newconditions,'recursive'=>0));
                 $this->Session->delete('actions_index');
                 $this->Session->write('actions_index',$listeactions);
+                $export = $this->Action->find('all',array('conditions'=>$newconditions,'order' => array('Action.ECHEANCE' => 'asc'),'recursive'=>0));
+                $this->Session->delete('xls_export');
+                $this->Session->write('xls_export',$export);                 
                 $this->set('actions', $this->paginate());
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif; 
 	}
@@ -149,7 +152,7 @@ class ActionsController extends AppController {
 		$options = array('conditions' => array('Action.' . $this->Action->primaryKey => $id));
 		$this->set('action', $this->Action->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;                
 	}
@@ -255,6 +258,8 @@ class ActionsController extends AppController {
                     $start = new DateTime($day);
                     $start->sub(new DateInterval('P5D'));
                     $record['Action']['STATUT'] = 'à faire';
+                    $record['Action']['AVANCEMENT'] = 0;
+                    $record['Action']['NEW'] = 1;
                     $record['Action']['DEBUT'] = $start->format("Y-m-d");
                     $record['Action']['FREQUENCE'] = $this->request->data['Action']['REPETITION'];
                     //debug($record);
@@ -262,10 +267,10 @@ class ActionsController extends AppController {
                     $this->Action->create();
                     if ($this->Action->save($record)) {
                             $this->saveHistory($this->Action->getInsertID()); 
-                            $this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
+                            $this->Session->setFlash(__('Action sauvegardée',true),'flash_success');
                             $this->sendmailactions($this->Action->find('first',array('conditions'=>array('Action.id'=>$this->Action->getInsertID()))));
                     } else {
-                            $this->Session->setFlash(__('Action incorrecte, veuillez corriger l\'action'),'default',array('class'=>'alert alert-error'));
+                            $this->Session->setFlash(__('Action incorrecte, veuillez corriger l\'action',true),'flash_failure');
                     }
                 endif;
             endforeach;            
@@ -278,34 +283,40 @@ class ActionsController extends AppController {
 	public function add() {
             if (isAuthorized('actions', 'add')) :
 		if ($this->request->is('post')) {
-                    /** Avant la création de l'action on doit créer une périodicité **/
-                    $this->request->data['Action']['periodicite_id'] = $this->savePeriodicite($this->request->data['Action']['REPETITION']);
-                    if ($this->request->data['Action']['REPETITION']!='Q'):
-                        $days = $this->calculDaysFromPeriodicite($this->request->data['Action']['periodicite_id'],$this->request->data['Action']['ECHEANCE']);
-                    else :
-                        $days[] = CUSDate($this->request->data['Action']['ECHEANCE']);
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Action->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
+                        /** Avant la création de l'action on doit créer une périodicité **/
+                        $this->request->data['Action']['periodicite_id'] = $this->savePeriodicite($this->request->data['Action']['REPETITION']);
+                        if ($this->request->data['Action']['REPETITION']!='Q'):
+                            $days = $this->calculDaysFromPeriodicite($this->request->data['Action']['periodicite_id'],$this->request->data['Action']['ECHEANCE']);
+                        else :
+                            $days[] = CUSDate($this->request->data['Action']['ECHEANCE']);
+                        endif;
+                        $record = $this->request->data;
+                        $success = false;
+                        foreach($days as $day):
+                            $record['Action']['ECHEANCE'] = $day;
+                            $start = new DateTime($day);
+                            $start->sub(new DateInterval('P5D'));
+                            $record['Action']['DEBUT'] = $start->format("Y-m-d");
+                            $record['Action']['STATUT'] = $record['Action']['STATUT']=='' ? 'à faire': $record['Action']['STATUT'];
+                            unset($record['Action']['FREQUENCE']);
+                            $record['Action']['FREQUENCE'] = isset($this->request->data['Action']['REPETITION']) ? $this->request->data['Action']['REPETITION'] : $this->request->data['Action']['FREQUENCE'];
+                            $this->Action->create();
+                            if ($this->Action->save($record)) {
+                                    $this->saveHistory($this->Action->getInsertID()); 
+                                    $this->Session->setFlash(__('Action sauvegardée',true),'flash_success');
+                                    $this->sendmailactions($this->Action->find('first',array('conditions'=>array('Action.id'=>$this->Action->getInsertID()))));
+                                    $success = true;
+                            } else {
+                                    $this->Session->setFlash(__('Action incorrecte, veuillez corriger l\'action',true),'flash_failure');
+                                    $success = false;
+                            }
+                        endforeach;
+                        if($success) $this->History->goBack(1);
                     endif;
-                    $record = $this->request->data;
-                    $success = false;
-                    foreach($days as $day):
-                        $record['Action']['ECHEANCE'] = $day;
-                        $start = new DateTime($day);
-                        $start->sub(new DateInterval('P5D'));
-                        $record['Action']['DEBUT'] = $start->format("Y-m-d");
-                        $record['Action']['STATUT'] = $record['Action']['STATUT']=='' ? 'à faire': $record['Action']['STATUT'];
-                        $record['Action']['FREQUENCE'] = $this->request->data['Action']['REPETITION'];
-                        $this->Action->create();
-                        if ($this->Action->save($record)) {
-                                $this->saveHistory($this->Action->getInsertID()); 
-                                $this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
-                                $this->sendmailactions($this->Action->find('first',array('conditions'=>array('Action.id'=>$this->Action->getInsertID()))));
-                                $success = true;
-                        } else {
-                                $this->Session->setFlash(__('Action incorrecte, veuillez corriger l\'action'),'default',array('class'=>'alert alert-error'));
-                                $success = false;
-                        }
-                    endforeach;
-                    if($success) $this->History->goBack(1);
 		}
                 $etats = Configure::read('etatAction');
                 $this->set('etats',$etats); 
@@ -330,7 +341,7 @@ class ActionsController extends AppController {
 		$nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
 		$this->set('nomlong', $nomlong);                 
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();      
             endif;                 
         }
@@ -347,29 +358,37 @@ class ActionsController extends AppController {
                 if (!$this->Action->exists($id)) {
 			throw new NotFoundException(__('Action incorrecte'));
 		}
-		if ($this->request->is('post') || $this->request->is('put')) {
+		if ($this->request->is('post') || $this->request->is('put')) { 
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Action->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
                         $oldPeriode = $this->request->data['Action']['FREQUENCE'];
                         $newPeriode = $this->request->data['Action']['REPETITION'];
                         $this->request->data['Action']['NEW']=0;
                         /** Mise à jour du champs FREQUENCE des autres actions non terminée **/
                         if($oldPeriode!=$newPeriode):
-                            $actions = $this->Action->find('all',array('conditions'=>array('Action.periodicite_id'=>$this->request->data['Action']['periodicite_id'],'Action.STATUT'=>'à faire'),'recursive=>0'));
-                            foreach($actions as $action):
-                                $this->Action->delete($action['Action']['id'],false);
-                            endforeach;
+                            if($this->request->data['Action']['periodicite_id']!=''):
+                                $actions = $this->Action->find('all',array('conditions'=>array('Action.periodicite_id'=>$this->request->data['Action']['periodicite_id'],'Action.STATUT'=>'à faire'),'recursive=>0'));
+                                foreach($actions as $action):
+                                    $this->Action->delete($action['Action']['id'],false);
+                                endforeach;
+                            endif;
                             $this->createNewAction();
                         else:
                             /** Avant la création de l'action on doit mettre à jour ou créer la périodicité **/
                             $this->request->data['Action']['periodicite_id'] = $this->savePeriodicite($this->request->data['Action']['REPETITION']);  
-                            $this->request->data['Action']['FREQUENCE'] = $this->request->data['Action']['REPETITION'];
                         endif;
+                        $this->request->data['Action']['FREQUENCE'] = $this->request->data['Action']['REPETITION'];                        
 			if ($this->Action->save($this->request->data)) {
                                 $this->saveHistory($id);                                
-				$this->Session->setFlash(__('Action sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Action sauvegardée',true),'flash_success');
+                                //$this->sendmailactions($this->Action->find('first',array('conditions'=>array('Action.id'=>$id))));                                
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Action incorrecte, veuilelz corriger l\'action'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Action incorrecte, veuilelz corriger l\'action',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Action.' . $this->Action->primaryKey => $id));
 			$this->request->data = $this->Action->find('first', $options);
@@ -415,7 +434,7 @@ class ActionsController extends AppController {
                 $periodicite = $this->Action->Periodicite->find('first',array('conditions'=>array('Periodicite.id'=>$this->request->data['Action']['periodicite_id']),'recursive'=>0));
                 $this->set('periodicite',$periodicite);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;                 
         }
@@ -437,16 +456,16 @@ class ActionsController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Action->delete()) {
 			if($msg) :
-                            $this->Session->setFlash(__('Action supprimée'),'default',array('class'=>'alert alert-success'));
-                            $this->History->goBack();
+                            $this->Session->setFlash(__('Action supprimée',true),'flash_success');
+                            $this->History->goBack(1);
                         endif;
 		}
 		if($msg) :
-                    $this->Session->setFlash(__('Action <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-                    $this->History->goBack();
+                    $this->Session->setFlash(__('Action <b>NON</b> supprimée',true),'flash_failure');
+                    $this->History->goBack(1);
                 endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();        
             endif;                 
 	}
@@ -469,7 +488,7 @@ class ActionsController extends AppController {
                 $this->set('responsables',$responsables);                   
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                 
         }     
@@ -575,7 +594,7 @@ class ActionsController extends AppController {
                     $this->set('rapportresults',$rapportresult);
                     $chartresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Action.destinataire','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode,'Action.CRA'=>1),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)'),'recursive'=>0));
                     $this->set('chartresults',$chartresult);                    
-                    $detailrapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Action.destinataire','Action.STATUT','Action.OBJET','Domaine.NOM'),'conditions'=>array($destinataire,$domaine,$periode,'Action.CRA'=>1),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'recursive'=>0));
+                    $detailrapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Action.destinataire','Action.NIVEAU','Action.STATUT','Action.OBJET','Domaine.NOM'),'conditions'=>array($destinataire,$domaine,$periode,'Action.CRA'=>1),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'recursive'=>0));
                     $this->set('detailrapportresults',$detailrapportresult);
                     $this->Session->delete('rapportresults');  
                     $this->Session->delete('detailrapportresults');                      
@@ -588,7 +607,7 @@ class ActionsController extends AppController {
                         $this->Session->write('repartitionresults',$repartitions);
                     endif;    
                     if ($this->request->data['Action']['Rapportdetail']==1):
-                        $details = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','Domaine.NOM','Action.destinataire','Action.OBJET','Action.COMMENTAIRE','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc','Action.destinataire'=>'asc'),'recursive'=>0));
+                        $details = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Utilisateur.PRENOM','Domaine.NOM','Action.NIVEAU','Action.destinataire','Action.OBJET','Action.COMMENTAIRE','Action.STATUT'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc','Action.destinataire'=>'asc'),'recursive'=>0));
                         $this->set('details',$details);
                         $this->Session->delete('details');
                         $this->Session->write('details',$details);
@@ -604,7 +623,7 @@ class ActionsController extends AppController {
                 $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif; 
 	}     
@@ -624,7 +643,7 @@ class ActionsController extends AppController {
                     $today = new DateTime();
                     $daylastweek = $today->sub(new DateInterval('P7D'));
                     $periode = 'Action.modified BETWEEN "'.  startWeek($daylastweek->format('Y-m-d')).'" AND "'.  endWeek($daylastweek->format('Y-m-d')).'"';
-                    $details = $this->Action->find('all',array('fields'=>array('Utilisateur.NOM','Utilisateur.PRENOM','Domaine.NOM','Action.destinataire','Action.OBJET','Action.COMMENTAIRE','Action.STATUT','Action.modified'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('Action.modified'=>'asc','Action.destinataire'=>'asc'),'recursive'=>0));
+                    $details = $this->Action->find('all',array('fields'=>array('Utilisateur.NOM','Utilisateur.PRENOM','Domaine.NOM','Action.destinataire','Action.NIVEAU','Action.OBJET','Action.COMMENTAIRE','Action.STATUT','Action.modified'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('Action.modified'=>'asc','Action.destinataire'=>'asc'),'recursive'=>0));
                     $this->set('details',$details);
                     $this->Session->delete('details');
                     $this->Session->write('details',$details);                
@@ -634,7 +653,7 @@ class ActionsController extends AppController {
                 $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;             
 	}
@@ -664,13 +683,13 @@ class ActionsController extends AppController {
                 unset($record['Actionslivrable']);
                 $this->Action->create();
                 if ($this->Action->save($record)) {
-                        $this->Session->setFlash(__('Action dupliquée'),'default',array('class'=>'alert alert-success'));
-                        $this->History->goBack();
+                        $this->Session->setFlash(__('Action dupliquée',true),'flash_success');
+                        $this->History->goBack(1);
                 } 
-		$this->Session->setFlash(__('Action <b>NON</b> dupliquée'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Action <b>NON</b> dupliquée',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	} 
@@ -683,7 +702,7 @@ class ActionsController extends AppController {
                 $this->set('rowsdetail',$data);              
 		$this->render('export_doc','export_doc');
             else:
-                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport'),'default',array('class'=>'alert alert-error'));             
+                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport',true),'flash_failure');             
                 $this->redirect(array('action'=>'rapport'));
             endif;
         }       
@@ -731,7 +750,6 @@ class ActionsController extends AppController {
                 $this->Action->save($record);
                 $this->saveHistory($id); 
                 exit();
-                //$this->History->goBack();
         }        
         
         public function progressavancement(){
@@ -769,11 +787,18 @@ class ActionsController extends AppController {
         }        
         
         public function incra(){
-            $id = $this->request->data('id');
-            $this->Action->id = $id;
-            $cra = $this->Action->find('first',array('fields'=>array('CRA'),'conditions'=>array('Action.id'=>$id),'recursive'=>-1));
-            $this->Action->saveField('CRA', !$cra['Action']['CRA']);
-            //$this->History->goBack();
+            if($this->request->data('id')!==''):
+                $id = $this->request->data('id');
+                $this->Action->id = $id;
+                $cra = $this->Action->find('first',array('fields'=>array('CRA'),'conditions'=>array('Action.id'=>$id),'recursive'=>-1));
+                if($this->Action->saveField('CRA', !$cra['Action']['CRA'])):     
+                    $this->Session->setFlash(__('Information du CRA sauvegardée',true),'flash_success');
+                else :
+                    $this->Session->setFlash(__('Information du CRA <b>NON</b> sauvegardée',true),'flash_failure');
+                endif;
+            else :
+                $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
+            endif;
             exit();
         }
         
@@ -811,6 +836,7 @@ class ActionsController extends AppController {
                     '<ul>
                     <li>Echéance :'.$action['Action']['ECHEANCE'].'</li>
                     <li>Priorité :'.$action['Action']['PRIORITE'].'</li>
+                    <li>Résumé :'.$action['Action']['RESUME'].'</li> 
                     <li>Commentaire :'.$action['Action']['COMMENTAIRE'].'</li>                      
                     </ul>';
             if($to!=''):
@@ -824,18 +850,55 @@ class ActionsController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
                 }  
             endif;
-        }    
+        } 
+        
+        public function notifier($id){
+            $action = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id),'recursive'=>0));
+            $valideurs = $this->Action->Utilisateur->find('all',array('conditions'=>array('Utilisateur.id'=>$action['Action']['destinataire'])));
+            $mailto = array();
+            foreach($valideurs as $valideur):
+                $mailto[]=$valideur['Utilisateur']['MAIL'];
+            endforeach;
+            $to=$mailto;
+            $from = userAuth('MAIL');
+            $objet = 'SAILL : Demande d\'action ['.$action['Action']['OBJET'].']';
+            $message = "Merci de traiter l'action ".$action['Action']['OBJET'].
+                    '<ul>
+                    <li>Echéance :'.$action['Action']['ECHEANCE'].'</li>
+                    <li>Priorité :'.$action['Action']['PRIORITE'].'</li>
+                    <li>Résumé :'.$action['Action']['RESUME'].'</li> 
+                    <li>Commentaire :'.$action['Action']['COMMENTAIRE'].'</li>                      
+                    </ul>';
+            if($to!=''):
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+                $this->Session->setFlash(__('Mail envoyé à '.$action['Utilisateur']['NOMLONG'],true),'flash_success');
+                }
+                catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                }  
+            endif;
+            $this->History->notmove();
+        }         
         
         public function timelineData(){
             $datas = $this->Session->read('actions_index');
             $eventAtts = array();
             foreach($datas as $data):
+                $destinataire = $this->Action->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$data['Action']['destinataire']),'recursive'=>-1));
                 $date =  CDateTimeline($data['Action']['DEBUT']);
+                $resume = $data['Action']['RESUME'];
                 $phpmakedate = $date;
-                $description = '['.$data['Utilisateur']['NOMLONG'].'] - '.$data['Action']['OBJET'];
+                $description = '['.$destinataire['Utilisateur']['NOMLONG'].'] - '.$data['Action']['OBJET'];
                 if($data['Action']['DUREEPREVUE'] > 0){
                     $phpenddate = CDateTimeline($data['Action']['ECHEANCE']);
                     $durationEvent = false;
@@ -849,7 +912,8 @@ class ActionsController extends AppController {
                     'end' => $phpenddate,
                     'durationEvent' => $durationEvent,
                     'title' => $description,
-                    'description'=>"Echéance le : ".$data['Action']['ECHEANCE']."<br>Charge : ".($data['Action']['DUREEPREVUE']/8)." jour(s)<br>Etat : ".$data['Action']['STATUT']."<br>Avancement : ".$data['Action']['AVANCEMENT']." %"
+                    'id'=>$data['Action']['destinataire'],
+                    'description'=>"Résumé :<br>".$resume."<hr>Echéance le : ".$data['Action']['ECHEANCE']."<br>Charge : ".($data['Action']['DUREEPREVUE']/8)." jour(s)<br>Etat : ".$data['Action']['STATUT']."<br>Avancement : ".$data['Action']['AVANCEMENT']." %"
                 );
             endforeach;
             
@@ -860,8 +924,8 @@ class ActionsController extends AppController {
             $this->Action->id = $action_id;
             $this->Action->saveField('periodicite_id',null);
             $this->Action->saveField('FREQUENCE','Q');
-            $this->Session->setFlash(__('Périodicité supprimé pour cette action'),'default',array('class'=>'alert alert-success'));
-            if(!$loop) $this->History->goBack();
+            $this->Session->setFlash(__('Périodicité supprimé pour cette action',true),'flash_success');
+            if(!$loop) $this->History->goBack(1);
             
         }
         
@@ -871,22 +935,41 @@ class ActionsController extends AppController {
             foreach($allids as $id):
                 $this->deleteThisPeriodicite($id['Action']['id'],true);
             endforeach;
-            $this->Session->setFlash(__('Périodicité supprimée pour toutes les autres actions'),'default',array('class'=>'alert alert-success'));
-            $this->History->goBack();
+            $this->Session->setFlash(__('Périodicité supprimée pour toutes les autres actions',true),'flash_success');
+            $this->History->goBack(1);
         }     
                
-        public function deleteall($id){
-            $this->delete($id,false);
-            echo $this->Session->setFlash(__('Actions supprimées'),'default',array('class'=>'alert alert-success'));
+        public function deleteall(){
+            if($this->request->data('id')!==''):
+                $id = $this->request->data('id');
+                $this->Action->id = $id;
+                if($this->Action->delete()):
+                    echo $this->Session->setFlash(__('Actions supprimées',true),'flash_success'); 
+                else :
+                    $this->Session->setFlash(__('Actions <b>NON</b> supprimées',true),'flash_failure');
+                endif;
+            else :
+                $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
+            endif;
         }
         
-        public function closeall($id){
-            $this->Action->id = $id;
-            $this->Action->saveField('AVANCEMENT', '100');
-            $this->Action->saveField('STATUT', 'terminée');
-            $this->Action->saveField('NEW', '0');
-            $this->saveHistory($id);  
-            echo $this->Session->setFlash(__('Actions cloturées'),'default',array('class'=>'alert alert-success'));          
+        public function closeall(){
+            if($this->request->data('id')!==''):
+                $id = $this->request->data('id');
+                $this->Action->id = $id;
+                $cra = $this->Action->find('first',array('fields'=>array('CRA'),'conditions'=>array('Action.id'=>$id),'recursive'=>-1));
+                $this->Action->saveField('AVANCEMENT', '100');
+                $this->Action->saveField('STATUT', 'terminée');
+                if($this->Action->saveField('NEW', '0')):
+                    $this->saveHistory($id);  
+                    echo $this->Session->setFlash(__('Actions cloturées',true),'flash_success'); 
+                else :
+                    $this->Session->setFlash(__('Actions <b>NON</b> clotûrées correctement',true),'flash_failure');
+                endif;
+            else :
+                $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
+            endif;
+            exit();           
         }
         
         public function risques(){
@@ -902,8 +985,19 @@ class ActionsController extends AppController {
                 $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;             
         }
+        
+/**
+ * export_xls
+ * 
+ */       
+	function export_xls() {
+		$data = $this->Session->read('xls_export');
+                //$this->Session->delete('xls_export');                
+		$this->set('rows',$data);
+		$this->render('export_xls','export_xls');
+	}          
 }

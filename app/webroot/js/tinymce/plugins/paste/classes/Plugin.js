@@ -23,7 +23,7 @@ define("tinymce/pasteplugin/Plugin", [
 	var userIsInformed;
 
 	PluginManager.add('paste', function(editor) {
-		var self = this, clipboard;
+		var self = this, clipboard, settings = editor.settings;
 
 		function togglePlainTextPaste() {
 			if (clipboard.pasteFormat == "text") {
@@ -52,15 +52,46 @@ define("tinymce/pasteplugin/Plugin", [
 			self.clipboard.pasteFormat = "text";
 		}
 
+		if (settings.paste_preprocess) {
+			editor.on('PastePreProcess', function(e) {
+				settings.paste_preprocess.call(self, self, e);
+			});
+		}
+
+		if (settings.paste_postprocess) {
+			editor.on('PastePostProcess', function(e) {
+				settings.paste_postprocess.call(self, self, e);
+			});
+		}
+
 		editor.addCommand('mceInsertClipboardContent', function(ui, value) {
 			if (value.content) {
-				self.clipboard.paste(value.content);
+				self.clipboard.pasteHtml(value.content);
 			}
 
 			if (value.text) {
 				self.clipboard.pasteText(value.text);
 			}
 		});
+
+		// Block all drag/drop events
+		if (editor.paste_block_drop) {
+			editor.on('dragend dragover draggesture dragdrop drop drag', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+			});
+		}
+
+		// Prevent users from dropping data images on Gecko
+		if (!editor.settings.paste_data_images) {
+			editor.on('drop', function(e) {
+				var dataTransfer = e.dataTransfer;
+
+				if (dataTransfer && dataTransfer.files && dataTransfer.files.length > 0) {
+					e.preventDefault();
+				}
+			});
+		}
 
 		editor.addButton('pastetext', {
 			icon: 'pastetext',

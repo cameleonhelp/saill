@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Linkshared $Linkshared
  */
 class LinksharedsController extends AppController {
-        public $components = array('History'); 
+        public $components = array('History','Common'); 
     public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Linkshared.NOM' => 'asc'),
         /*'order' => array(
             'Post.title' => 'asc' /*/
@@ -42,7 +42,7 @@ class LinksharedsController extends AppController {
 		$options = array('conditions' => array('Linkshared.' . $this->Linkshared->primaryKey => $id));
 		$this->set('linkshared', $this->Linkshared->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -56,16 +56,21 @@ class LinksharedsController extends AppController {
             if (isAuthorized('linkshareds', 'add')) :
                 $this->set('title_for_layout','Liens partagés');
                 if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Linkshared->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			$this->Linkshared->create();
 			if ($this->Linkshared->save($this->request->data)) {
-				$this->Session->setFlash(__('Lien partagé sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Lien partagé sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Lien partagé incorrect, veuillez corriger le lien partagé'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Lien partagé incorrect, veuillez corriger le lien partagé',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -84,18 +89,23 @@ class LinksharedsController extends AppController {
 			throw new NotFoundException(__('Lien partagé incorrect'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Linkshared->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			if ($this->Linkshared->save($this->request->data)) {
-				$this->Session->setFlash(__('Lien partagé sauvegardé'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Lien partagé sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Lien partagé incorrect, veuillez corriger le lien partagé'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Lien partagé incorrect, veuillez corriger le lien partagé',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Linkshared.' . $this->Linkshared->primaryKey => $id));
 			$this->request->data = $this->Linkshared->find('first', $options);
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -116,13 +126,13 @@ class LinksharedsController extends AppController {
 			throw new NotFoundException(__('Lien partagé incorrect'));
 		}
 		if ($this->Linkshared->delete()) {
-			$this->Session->setFlash(__('Lien partagé supprimé'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Lien partagé supprimé',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Lien partagé <b>NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Lien partagé <b>NON</b> supprimé',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -143,7 +153,7 @@ class LinksharedsController extends AppController {
                 $this->set('linkshareds', $this->paginate());              
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }   

@@ -1,4 +1,5 @@
-<?php 
+<div class="marginright20">
+    <?php 
     $date = isset($activitesreelles[0]['Activitesreelle']['DATE']) ? $activitesreelles[0]['Activitesreelle']['DATE'] : date('d/m/Y');
     $date = (isset($this->params->pass[1]) && is_date($this->params->pass[1])) ? CFRDate($this->params->pass[1]) : $date;
     $datedebut = $date;
@@ -11,16 +12,16 @@
     $debutsemaine = debutsem($annee,$mois,$day);
     $finsemaine = finsem($annee, $mois, $day);
 ?>
-<?php echo $this->Form->create('Activitesreelle',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+<?php echo $this->Form->create('Activitesreelle',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
 <?php $nbjourouvresmax = 5; ?>
-<table cellpadding="0" cellspacing="0" class="table table-bordered" id="ActivitesreelleTable">
+<table cellpadding="0" cellspacing="0" class="table table-bordered tablemax" id="ActivitesreelleTable">
     <thead>
     <tr>
-        <th class="text-center" colspan="11">Répartition de l'activité pour la semaine du <span id="ActionreelleDebut" class="clearboth"><?php echo $debutsemaine; ?></span> au <span id="ActionreelleFin" class="clearboth"><?php echo $finsemaine; ?></span></th>
+        <th class="text-center" colspan="12">Répartition de l'activité pour la semaine du <span id="ActionreelleDebut" class="clearboth"><?php echo $debutsemaine; ?></span> au <span id="ActionreelleFin" class="clearboth"><?php echo $finsemaine; ?></span></th>
     </tr>
     <tr>
-        <th rowspan="2" style="width:200px !important;"><label class="control-label sstitre required">Activité</label></th>
-        <th rowspan="2" style="width:200px !important;"><label class="control-label sstitre">Domaine</label></th>
+        <th rowspan="2" style="min-width:200px;max-width:200px;width:200px !important;"><label class="required">Activité</label></th>
+        <th rowspan="2" style="min-width:200px;max-width:200px;width:200px !important;"><label>Domaine</label></th>
         <?php $date = new DateTime(CUSDate($debutsemaine)); $LU = $date->format('d'); ?> 
         <?php $classLU = isFerie($date) ? 'class="ferie"' : ''; 
               $nbjourouvresmax = isFerie($date) ? $nbjourouvresmax-1 : $nbjourouvresmax; ?>
@@ -48,6 +49,7 @@
         <?php $classDI = isFerie($date) ? ' ferie' : ''; ?>        
         <th class='week <?php echo $classDI; ?>' width='70px'>Di.</th>
         <th rowspan="2" width='70px'>Total</th>
+        <th rowspan="2" width='70px'>Frais</th>
         <th rowspan="2" width='35px'></th>
     </tr>
     <tr>
@@ -67,54 +69,70 @@
     <?php foreach($activitesreelles as $activitesreelle): ?>          
     <tr>
         <td>
-            <select name="data[Activitesreelle][<?php echo $i; ?>][activite_id]" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Activitesreelle<?php echo $i; ?>ActiviteId"> 
+            <div class="col-lg-12 form-horizontal">
+            <select name="data[Activitesreelle][<?php echo $i; ?>][activite_id]" class="form-control" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Activitesreelle<?php echo $i; ?>ActiviteId"> 
                 <option value="">Choisir une activité</option>
                 <?php foreach ($activites as $activite) : ?>
                 <?php $selected = ''; ?>
                 <?php $selected = $activite['Activite']['id']==$activitesreelle['Activitesreelle']['activite_id'] ? 'selected="selected"' :''; ?>
                     <option value="<?php echo $activite['Activite']['id']; ?>" <?php echo $selected; ?>><?php echo $activite['Projet']['NOM']; ?> - <?php echo $activite['Activite']['NOM']; ?></option>
                 <?php endforeach; ?>
-            </select>        
-            <br/>
-            Commence le matin
+            </select>  
+            <div>Commence le matin</div></div>
         </td>
         <td>
+            <div class="col-lg-12">
             <?php if ($this->params->action == 'edit') { ?>
                 <?php $selected = isset($activitesreelle['Activitesreelle']['domaine_id']) ? $activitesreelle['Activitesreelle']['domaine_id'] : ''; ?>
-                <?php echo $this->Form->select('Activitesreelle.'.$i.'.domaine_id',$domaines,array('default' => $selected,'empty' => 'Choisir un domaine')); ?>
+                <?php echo $this->Form->select('Activitesreelle.'.$i.'.domaine_id',$domaines,array('class'=>'form-control','default' => $selected,'empty' => 'Choisir un domaine')); ?>
             <?php } else { ?>
-                <?php echo $this->Form->select('Activitesreelle.'.$i.'.domaine_id',$domaines,array('empty' => 'Choisir un domaine')); ?>
-            <?php } ?>              
+                <?php echo $this->Form->select('Activitesreelle.'.$i.'.domaine_id',$domaines,array('class'=>'form-control','empty' => 'Choisir un domaine')); ?>
+            <?php } ?>  
+            </div>
         </td>
-        <td <?php echo $classLU; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.'.$i.'.LU',array('style'=>"width:35px",'class'=>' text-right day lu','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du lundi",'value'=>$activitesreelle['Activitesreelle']['LU'])); ?> j<br />
+        <td <?php echo $classLU; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.'.$i.'.LU',array('style'=>"width:45px",'class'=>'form-control form-inline text-right day lu','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du lundi",'value'=>$activitesreelle['Activitesreelle']['LU'])); ?><div class="nomargin nopadding pull-right"> j</div></div>
             <?php $luchecked = $activitesreelle['Activitesreelle']['LU_TYPE'] ==1 ? 'checked' :''; ?>
             <?php echo $this->Form->input('Activitesreelle.'.$i.'.LU_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>$luchecked)); ?>&nbsp;<label class='labelAfter' for='Activitesreelle<?php echo $i; ?>LUTYPE'></label>
+            </div>
         </td>
-        <td <?php echo $classMA; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.'.$i.'.MA',array('style'=>"width:35px",'class'=>' text-right day ma','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mardi",'value'=>$activitesreelle['Activitesreelle']['MA'])); ?> j<br />
+        <td <?php echo $classMA; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.'.$i.'.MA',array('style'=>"width:45px",'class'=>'form-control text-right day ma','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mardi",'value'=>$activitesreelle['Activitesreelle']['MA'])); ?><div class="nomargin nopadding pull-right"> j</div></div>
             <?php $machecked = $activitesreelle['Activitesreelle']['MA_TYPE'] ==1 ? 'checked' :''; ?>
             <?php echo $this->Form->input('Activitesreelle.'.$i.'.MA_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>$machecked)); ?>&nbsp;<label class='labelAfter' for='Activitesreelle<?php echo $i; ?>MATYPE'></label>
+            </div>
         </td>
-        <td <?php echo $classME; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.'.$i.'.ME',array('style'=>"width:35px",'class'=>' text-right day me','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mercredi",'value'=>$activitesreelle['Activitesreelle']['ME'])); ?> j<br />
+        <td <?php echo $classME; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.'.$i.'.ME',array('style'=>"width:45px",'class'=>'form-control text-right day me','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mercredi",'value'=>$activitesreelle['Activitesreelle']['ME'])); ?><div class="nomargin nopadding pull-right"> j</div></div>
             <?php $mechecked = $activitesreelle['Activitesreelle']['ME_TYPE'] ==1 ? 'checked' :''; ?>
             <?php echo $this->Form->input('Activitesreelle.'.$i.'.ME_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>$mechecked)); ?>&nbsp;<label class='labelAfter' for='Activitesreelle<?php echo $i; ?>METYPE'></label>
+            </div>
         </td>
-        <td <?php echo $classJE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.'.$i.'.JE',array('style'=>"width:35px",'class'=>' text-right day je','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du du jeudi",'value'=>$activitesreelle['Activitesreelle']['JE'])); ?> j<br />
+        <td <?php echo $classJE; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.'.$i.'.JE',array('style'=>"width:45px",'class'=>'form-control text-right day je','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du du jeudi",'value'=>$activitesreelle['Activitesreelle']['JE'])); ?><div class="nomargin nopadding pull-right"> j</div></div>
             <?php $jechecked = $activitesreelle['Activitesreelle']['JE_TYPE'] ==1 ? 'checked' :''; ?>
             <?php echo $this->Form->input('Activitesreelle.'.$i.'.JE_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>$jechecked)); ?>&nbsp;<label class='labelAfter' for='Activitesreelle<?php echo $i; ?>JETYPE'></label>
+            </div>
         </td>
-        <td <?php echo $classVE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.'.$i.'.VE',array('style'=>"width:35px",'class'=>' text-right day ve','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du vendredi",'value'=>$activitesreelle['Activitesreelle']['VE'])); ?> j<br />
+        <td <?php echo $classVE; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.'.$i.'.VE',array('style'=>"width:45px",'class'=>'form-control text-right day ve','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du vendredi",'value'=>$activitesreelle['Activitesreelle']['VE'])); ?><div class="nomargin nopadding pull-right"> j</div></div>
             <?php $vechecked = $activitesreelle['Activitesreelle']['VE_TYPE'] ==1 ? 'checked' :''; ?>
             <?php echo $this->Form->input('Activitesreelle.'.$i.'.VE_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>$vechecked)); ?>&nbsp;<label class='labelAfter' for='Activitesreelle<?php echo $i; ?>VETYPE'></label>
+            </div>
         </td>
-        <td class='week <?php echo $classSA; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.'.$i.'.SA',array('style'=>"width:35px",'class'=>' text-right day sa','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du samedi",'value'=>$activitesreelle['Activitesreelle']['SA'])); ?> j<br />
+        <td class='week <?php echo $classSA; ?>' width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.'.$i.'.SA',array('style'=>"width:45px",'class'=>'form-control text-right day sa','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du samedi",'value'=>$activitesreelle['Activitesreelle']['SA'])); ?><div class="nomargin nopadding pull-right"> j</div></div>
             <?php $sachecked = $activitesreelle['Activitesreelle']['SA_TYPE'] ==1 ? 'checked' :''; ?>
             <?php echo $this->Form->input('Activitesreelle.'.$i.'.SA_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>$sachecked)); ?>&nbsp;<label class='labelAfter' for='Activitesreelle<?php echo $i; ?>SATYPE'></label>
+            </div>
         </td>
-        <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.'.$i.'.DI',array('style'=>"width:35px",'class'=>' text-right day di','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>$activitesreelle['Activitesreelle']['DI'])); ?> j<br />
+        <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.'.$i.'.DI',array('style'=>"width:45px",'class'=>'form-control text-right day di','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>$activitesreelle['Activitesreelle']['DI'])); ?><div class="nomargin nopadding pull-right"> j</div></div>
             <?php $dichecked = $activitesreelle['Activitesreelle']['DI_TYPE'] ==1 ? 'checked' :''; ?>
             <?php echo $this->Form->input('Activitesreelle.'.$i.'.DI_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>$dichecked)); ?>&nbsp;<label class='labelAfter' for='Activitesreelle<?php echo $i; ?>DITYPE'></label>
+            </div>
         </td>
-        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.'.$i.'.TOTAL',array('type'=>'hidden','data-rule-isZero'=>true,'data-msg-isZero'=>"Le total est incorrect changez une valeur de votre saisie.",'value'=>$activitesreelle['Activitesreelle']['TOTAL'])); ?><?php echo $this->Form->input('Activitesreelle.'.$i.'.TotalDisabled',array('style'=>"width:35px",'class'=>' text-right total','for'=>'Activitesreelle'.$i.'TOTAL','disabled'=>'disabled','value'=>$activitesreelle['Activitesreelle']['TOTAL'])); ?> j</td>        
+        <td width='15px' style="text-align: center;">
+            <div class="form-horizontal"><div class="form-inline">
+                <?php echo $this->Form->input('Activitesreelle.'.$i.'.TOTAL',array('type'=>'hidden','data-rule-isZero'=>true,'data-msg-isZero'=>"Le total est incorrect changez une valeur de votre saisie.",'value'=>$activitesreelle['Activitesreelle']['TOTAL'])); ?><?php echo $this->Form->input('Activitesreelle.'.$i.'.TotalDisabled',array('style'=>"width:45px",'class'=>'form-control text-right total','for'=>'Activitesreelle'.$i.'TOTAL','disabled'=>'disabled','value'=>$activitesreelle['Activitesreelle']['TOTAL'])); ?><div class="nomargin nopadding pull-right"> j</div></div>
+        </td>   
+        <td width='15px' style="text-align: center;">
+            <div class="form-horizontal"><div class="form-inline">
+                <?php echo $this->Form->input('Activitesreelle.'.$i.'.FRAIS',array('type'=>'text','style'=>"width:45px",'class'=>'form-control text-right frais','for'=>'Activitesreelle'.$i.'FRAIS','value'=>isset($activitesreelle['Activitesreelle']['FRAIS']) ? $activitesreelle['Activitesreelle']['FRAIS'] : '' )); ?><div class="nomargin nopadding pull-right"> €</div></div>
+        </td>         
         <td> 
             <?php if ($i==0) : ?>
             <span class="glyphicons blank"></span>
@@ -135,7 +153,8 @@
     <?php else : ?>
     <tr>
         <td>
-            <select name="data[Activitesreelle][0][activite_id]" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Activitesreelle0ActiviteId"> 
+            <div class="col-lg-12 form-horizontal">
+            <select name="data[Activitesreelle][0][activite_id]" class="form-control" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Activitesreelle0ActiviteId"> 
                 <option value="">Choisir une activité</option>
                 <?php foreach ($activites as $activite) : ?>
                 <?php $selected = ''; ?>
@@ -143,40 +162,41 @@
                     <option value="<?php echo $activite['Activite']['id']; ?>" <?php echo $selected; ?>><?php echo $activite['Projet']['NOM']; ?> - <?php echo $activite['Activite']['NOM']; ?></option>
                 <?php endforeach; ?>
             </select>        
-            <br/>
-            &nbsp;&nbsp;&nbsp;Commence le matin
+            <div>Commence le matin</div></div>
         </td>
         <td>
-            <?php if ($this->params->action == 'edit') { ?>
-                <?php $selected = isset($activitesreelle['Activitesreelle']['domaine_id']) ? $activitesreelle['Activitesreelle']['domaine_id'] : ''; ?>
-                <?php echo $this->Form->select('Activitesreelle.0.domaine_id',$domaines,array('default' => $selected,'empty' => 'Choisir un domaine')); ?>
-            <?php } else { ?>
-                <?php echo $this->Form->select('Activitesreelle.0.domaine_id',$domaines,array('empty' => 'Choisir un domaine')); ?>
-            <?php } ?>              
+            <div class="col-lg-12">
+                <?php echo $this->Form->select('Activitesreelle.0.domaine_id',$domaines,array('class'=>'form-control','empty' => 'Choisir un domaine')); ?>
+            </div>              
         </td>        
-        <td <?php echo $classLU; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.0.LU',array('style'=>"width:35px",'class'=>' text-right day lu','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du lundi",'value'=>'0.0')); ?> j<br />
+        <td <?php echo $classLU; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.0.LU',array('style'=>"width:45px",'class'=>'form-control text-right day lu','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du lundi",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.0.LU_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle0LUTYPE'></label>
         </td>
-        <td <?php echo $classMA; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.0.MA',array('style'=>"width:35px",'class'=>' text-right day ma','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mardi",'value'=>'0.0')); ?> j<br />
+        <td <?php echo $classMA; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.0.MA',array('style'=>"width:45px",'class'=>'form-control text-right day ma','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mardi",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.0.MA_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle0MATYPE'></label>
         </td>
-        <td <?php echo $classME; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.0.ME',array('style'=>"width:35px",'class'=>' text-right day me','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mercredi",'value'=>'0.0')); ?> j<br />
+        <td <?php echo $classME; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.0.ME',array('style'=>"width:45px",'class'=>'form-control text-right day me','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mercredi",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.0.ME_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle0METYPE'></label>
         </td>
-        <td <?php echo $classJE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.0.JE',array('style'=>"width:35px",'class'=>' text-right day je','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du du jeudi",'value'=>'0.0')); ?> j<br />
+        <td <?php echo $classJE; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.0.JE',array('style'=>"width:45px",'class'=>'form-control text-right day je','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du du jeudi",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.0.JE_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle0JETYPE'></label>
         </td>
-        <td <?php echo $classVE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.0.VE',array('style'=>"width:35px",'class'=>' text-right day ve','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du vendredi",'value'=>'0.0')); ?> j<br />
+        <td <?php echo $classVE; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.0.VE',array('style'=>"width:45px",'class'=>'form-control text-right day ve','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du vendredi",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.0.VE_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle0VETYPE'></label>
         </td>
-        <td class='week <?php echo $classSA; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.0.SA',array('style'=>"width:35px",'class'=>' text-right day sa','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du samedi",'value'=>'0.0')); ?> j<br />
+        <td class='week <?php echo $classSA; ?>' width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.0.SA',array('style'=>"width:45px",'class'=>'form-control text-right day sa','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du samedi",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.0.SA_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle0SATYPE'></label>
         </td>
-        <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.0.DI',array('style'=>"width:35px",'class'=>' text-right day di','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>'0.0')); ?> j<br />
+        <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.0.DI',array('style'=>"width:45px",'class'=>'form-control text-right day di','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.0.DI_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle0DITYPE'></label>
         </td>
-        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.0.TOTAL',array('type'=>'hidden','data-rule-isZero'=>true,'data-msg-isZero'=>"Le total est incorrect changez une valeur de votre saisie.",'value'=>'0.0')); ?><?php echo $this->Form->input('Activitesreelle.0.TotalDisabled',array('style'=>"width:35px",'class'=>' text-right total','for'=>'Activitesreelle0TOTAL','disabled'=>'disabled','value'=>isset($this->data['Activitesreelle']['TOTAL']) ? $this->data['Activitesreelle']['TOTAL'] : "0.0")); ?> j</td>        
-        <td>    
+        <td width='15px' style="text-align: center;">
+            <div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.0.TOTAL',array('type'=>'hidden','data-rule-isZero'=>true,'data-msg-isZero'=>"Le total est incorrect changez une valeur de votre saisie.",'value'=>'0.0')); ?><?php echo $this->Form->input('Activitesreelle.0.TotalDisabled',array('style'=>"width:45px",'class'=>'form-control text-right total','for'=>'Activitesreelle0TOTAL','disabled'=>'disabled','value'=>isset($this->data['Activitesreelle']['TOTAL']) ? $this->data['Activitesreelle']['TOTAL'] : "0.0")); ?><div class="nomargin nopadding pull-right"> j</div></div></td>        
+        <td width='15px' style="text-align: center;">
+            <div class="form-horizontal"><div class="form-inline">
+                <?php echo $this->Form->input('Activitesreelle.0.FRAIS',array('style'=>"width:45px",'class'=>'form-control text-right frais','for'=>'Activitesreelle0FRAIS','value'=>$this->params->action == 'edit' ? $activitesreelle['Activitesreelle']['FRAIS'] : '0.00')); ?><div class="nomargin nopadding pull-right"> €</div></div>
+        </td>            
+            <td>    
             <span class="glyphicons blank"></span>
             <span class="glyphicons plus cursor" id="addRow"></span>             
             <?php echo $this->Form->input('Activitesreelle.0.DATE',array('type'=>'hidden','value'=>$datedebut)); ?>
@@ -189,41 +209,48 @@
     <?php endif; ?>    
     <tr  id="templateRow">
         <td>
-            <select name="data[Activitesreelle][¤][activite_id]" id="Activitesreelle¤ActiviteId" class="selectActivite"> 
+            <div class="col-lg-12 form-horizontal">
+            <select name="data[Activitesreelle][¤][activite_id]" class="form-control" id="Activitesreelle¤ActiviteId" class="selectActivite"> 
                 <option value="">Choisir une activité</option>
                 <?php foreach ($activites as $activite) : ?>
                     <option value="<?php echo $activite['Activite']['id']; ?>"><?php echo $activite['Projet']['NOM']; ?> - <?php echo $activite['Activite']['NOM']; ?></option>
                 <?php endforeach; ?>
             </select>        
-            <br/>
-            &nbsp;&nbsp;&nbsp;Commence le matin
+            <div>Commence le matin</div></div>
         </td>
-        <td>
-            <?php echo $this->Form->select('Activitesreelle.¤.domaine_id',$domaines,array('empty' => 'Choisir un domaine')); ?>         
-        </td>        
-        <td <?php echo $classLU; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.¤.LU',array('style'=>"width:35px",'class'=>' text-right day lu','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du lundi",'value'=>'0.0')); ?> j<br />
+        <td>            
+            <div class="col-lg-12">
+            <?php echo $this->Form->select('Activitesreelle.¤.domaine_id',$domaines,array('class'=>'form-control','empty' => 'Choisir un domaine')); ?>  
+            </div>              
+        </td>         
+        <td <?php echo $classLU; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.¤.LU',array('style'=>"width:45px",'class'=>'form-control text-right day lu','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du lundi",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.¤.LU_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle¤LUTYPE'></label>
         </td>
-        <td <?php echo $classMA; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.¤.MA',array('style'=>"width:35px",'class'=>' text-right day ma','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mardi",'value'=>'0.0')); ?> j<br />
+        <td <?php echo $classMA; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.¤.MA',array('style'=>"width:45px",'class'=>'form-control text-right day ma','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mardi",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.¤.MA_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle¤MATYPE'></label>
         </td>
-        <td <?php echo $classME; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.¤.ME',array('style'=>"width:35px",'class'=>' text-right day me','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mercredi",'value'=>'0.0')); ?> j<br />
+        <td <?php echo $classME; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.¤.ME',array('style'=>"width:45px",'class'=>'form-control text-right day me','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du mercredi",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.¤.ME_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle¤METYPE'></label>
         </td>
-        <td <?php echo $classJE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.¤.JE',array('style'=>"width:35px",'class'=>' text-right day je','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du du jeudi",'value'=>'0.0')); ?> j<br />
+        <td <?php echo $classJE; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.¤.JE',array('style'=>"width:45px",'class'=>'form-control text-right day je','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du du jeudi",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.¤.JE_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle¤JETYPE'></label>
         </td>
-        <td <?php echo $classVE; ?> width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.¤.VE',array('style'=>"width:35px",'class'=>' text-right day ve','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du vendredi",'value'=>'0.0')); ?> j<br />
+        <td <?php echo $classVE; ?> width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.¤.VE',array('style'=>"width:45px",'class'=>'form-control text-right day ve','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du vendredi",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.¤.VE_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle¤VETYPE'></label>
         </td>
-        <td class='week <?php echo $classSA; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.¤.SA',array('style'=>"width:35px",'class'=>' text-right day sa','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du samedi",'value'=>'0.0')); ?> j<br />
+        <td class='week <?php echo $classSA; ?>' width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.¤.SA',array('style'=>"width:45px",'class'=>'form-control text-right day sa','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du samedi",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.¤.SA_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle¤SATYPE'></label>
         </td>
-        <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.¤.DI',array('style'=>"width:35px",'class'=>' text-right day di','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>'0.0')); ?> j<br />
+        <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.¤.DI',array('style'=>"width:45px",'class'=>'form-control text-right day di','min'=>0,'max'=>1,'step'=>0.5,'data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>'0.0')); ?><div class="nomargin nopadding pull-right"> j</div></div>
         <?php echo $this->Form->input('Activitesreelle.¤.DI_TYPE',array('type'=>'checkbox','class'=>'yesno','checked'=>'checked')); ?>&nbsp;<label class='labelAfter' for='Activitesreelle¤DITYPE'></label>
         </td>
-        <td width='15px' style="text-align: center;"><?php echo $this->Form->input('Activitesreelle.¤.TOTAL',array('type'=>'hidden','class'=>'totalhidden','value'=>'0.0')); ?><?php echo $this->Form->input('Activitesreelle.¤.TotalDisabled',array('style'=>"width:35px",'class'=>' text-right total','for'=>'Activitesreelle¤TOTAL','disabled'=>'disabled','value'=>"0.0")); ?> j</td>        
-        <td>    
+        <td width='15px' style="text-align: center;">
+            <div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.¤.TOTAL',array('type'=>'hidden','class'=>'totalhidden','value'=>'0.0')); ?><?php echo $this->Form->input('Activitesreelle.¤.TotalDisabled',array('style'=>"width:45px",'class'=>'form-control text-right total','for'=>'Activitesreelle¤TOTAL','disabled'=>'disabled','value'=>"0.0")); ?><div class="nomargin nopadding pull-right"> j</div></div></td>        
+        <td width='15px' style="text-align: center;">
+            <div class="form-horizontal"><div class="form-inline">
+                <?php echo $this->Form->input('Activitesreelle.¤.FRAIS',array('style'=>"width:45px",'class'=>'form-control text-right frais','for'=>'Activitesreelle¤FRAIS','value'=>'0.00')); ?><div class="nomargin nopadding pull-right"> €</div></div>
+        </td>            
+            <td>    
             <span class="glyphicons minus cursor" id="deleteRow"></span>
             <span class="glyphicons plus cursor" id="addRow"></span>            
             <?php echo $this->Form->input('Activitesreelle.¤.DATE',array('type'=>'hidden','value'=>$datedebut)); ?>
@@ -246,27 +273,30 @@
         <td class="footer" id="totalsa" style="text-align:center;"></td>
         <td class="footer" id="totaldi" style="text-align:center;"></td>
         <td class="footer" id="totalactivites" style="text-align:center;"></td>
-        <td class="footer" width="90px" style="text-align:left;">jours</td>
+        <td colspan="2" class="footer" id="totalfrais" width="90px" style="text-align:center;"></td>
     </tr>            
     </tfooter>
 </table>
-    <div id="container_message_erreur_total" name="container_message_erreur_total" class="alert alert-error" style="display: block;">
-        <ol style="display: block;">
+    <div id="container_message_erreur_total" name="container_message_erreur_total" class="bs-callout bs-callout-danger" style="display: block;">
+        <ul style="display: block;list-style: none;margin-left:-30px;margin-bottom:-7px;">
             <li><label for="Activitesreelle0ActiviteId" class="error" style="display: block;">Le total devrait être de <?php echo $nbjourouvresmax; ?> ce qui n'est pas le cas, votre saisie est incomplète ou il y a une erreur de saisie.</label></li>
-        </ol>
+            <li><label for="Activitesreelle0ActiviteId" class="error" style="display: block;">Vous pouvez continuer à faire votre saisie plus tard, il faudra pour valider cette feuille de temps que la semaine soit complète.</label></li>
+        </ul>
     </div>
     <?php if ($utilisateur['Utilisateur']['profil_id']==-1 || isAuthorized('activitesreelles', 'masse')) : ?>
-    <div class="control-group">
+    <div class="form-group" style='margin-left:2px;'>
     <?php echo $this->Form->input('saisietotal',array('type'=>'checkbox')); ?>&nbsp;<label class='labelAfter' for="ActivitesreelleSaisietotal"><em>Saisie pour ressources génériques ou saisie en masse dans la colonne total</em></label>
     </div>
     <?php endif; ?>
-<div class="navbar">
-    <div class="navbar-inner">
-        <div class="container" style="margin-top:2px;text-align:center;">
-            <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn showoverlay','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                 
-        </div>
-    </div>
-</div>  
+    <div style="clear:both;margin-top: 10px;">
+    <div class="form-group">
+      <div class="btn-block-horizontal">
+            <?php $url = $this->Html->url(array('controller'=>'activitesreelles','action'=>'index','tous',userAuth('id'),date('m'))); ?>
+            <?php echo $this->Form->button('Annuler', array('type'=>'submit','class' => 'btn btn-sm btn-default showoverlay cancel','value'=>'cancel','div' => false, 'name' => 'cancel')); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?>                
+      </div>
+    </div>  
+    </div>  
+</div>
 <?php echo $this->Form->end(); ?>   
 
 <script>
@@ -296,11 +326,11 @@ $(document).ready(function () {
     
     $(document).on('change','.lu',function(e){
         e.preventDefault;
-        $("#totallu").html(sumOfColumns('lu'));
-        $("#totalactivites").html(sumOfColumns('total'));
+        $("#totallu").html(sumOfColumns('lu','j'));
+        $("#totalactivites").html(sumOfColumns('total','j'));
         if ($("#totallu").html()>1 || $("#totallu").html()<0) {$("#totallu").addClass('td-error')} else {$("#totallu").removeClass('td-error')}
-        var totalmax = <?php echo $nbjourouvresmax; ?>;
-        if ($("#totalactivites").html() != totalmax ) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}
+        var totalmax = <?php echo number_format((float)$nbjourouvresmax, 2); ?>;
+        if ($("#totalactivites").html() != totalmax.toFixed(2)+' j' && $("#totalactivites").html()!=0.00) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}
     });
     
     $(document).on('change','.total',function(e){
@@ -312,51 +342,51 @@ $(document).ready(function () {
     
     $(document).on('change','.ma',function(e){
         e.preventDefault;
-        $("#totalma").html(sumOfColumns('ma'));
-        $("#totalactivites").html(sumOfColumns('total'));
+        $("#totalma").html(sumOfColumns('ma','j'));
+        $("#totalactivites").html(sumOfColumns('total','j'));
         if ($("#totalma").html()>1 || $("#totalma").html()<0) {$("#totalma").addClass('td-error')} else {$("#totalma").removeClass('td-error')}
-        var totalmax = <?php echo $nbjourouvresmax; ?>;
-        if ($("#totalactivites").html() != totalmax ) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}        
+        var totalmax = <?php echo number_format((float)$nbjourouvresmax, 2); ?>;
+        if ($("#totalactivites").html() != totalmax.toFixed(2)+' j' && $("#totalactivites").html()!=0.00) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}        
     });    
     
     $(document).on('change','.me',function(e){
         e.preventDefault;
-        $("#totalme").html(sumOfColumns('me'));
-        $("#totalactivites").html(sumOfColumns('total'));
+        $("#totalme").html(sumOfColumns('me','j'));
+        $("#totalactivites").html(sumOfColumns('total','j'));
         if ($("#totalme").html()>1 || $("#totalme").html()<0) {$("#totalme").addClass('td-error')} else {$("#totalme").removeClass('td-error')}
-        var totalmax = <?php echo $nbjourouvresmax; ?>;
-        if ($("#totalactivites").html() != totalmax ) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}        
+        var totalmax = <?php echo number_format((float)$nbjourouvresmax, 2); ?>;
+        if ($("#totalactivites").html() != totalmax.toFixed(2)+' j' && $("#totalactivites").html()!=0.00){$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}        
     });
     
     $(document).on('change','.je',function(e){
         e.preventDefault;
-        $("#totalje").html(sumOfColumns('je'));
-        $("#totalactivites").html(sumOfColumns('total'));
+        $("#totalje").html(sumOfColumns('je','j'));
+        $("#totalactivites").html(sumOfColumns('total','j'));
         if ($("#totalje").html()>1 || $("#totalje").html()<0) {$("#totalje").addClass('td-error')} else {$("#totalje").removeClass('td-error')}
-        var totalmax = <?php echo $nbjourouvresmax; ?>;
-        if ($("#totalactivites").html() != totalmax ) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}
+        var totalmax = <?php echo number_format((float)$nbjourouvresmax, 2); ?>;
+        if ($("#totalactivites").html() != totalmax.toFixed(2)+' j' && $("#totalactivites").html()!=0.00) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}
     });
     
     $(document).on('change','.ve',function(e){
         e.preventDefault;
-        $("#totalve").html(sumOfColumns('ve'));
-        $("#totalactivites").html(sumOfColumns('total'));
+        $("#totalve").html(sumOfColumns('ve','j'));
+        $("#totalactivites").html(sumOfColumns('total','j'));
         if ($("#totalve").html()>1 || $("#totalve").html()<0) {$("#totalve").addClass('td-error')} else {$("#totalve").removeClass('td-error')}
-        var totalmax = <?php echo $nbjourouvresmax; ?>;
-        if ($("#totalactivites").html() != totalmax ) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}
+        var totalmax = <?php echo number_format((float)$nbjourouvresmax, 2); ?>;
+        if ($("#totalactivites").html() != totalmax.toFixed(2)+' j' && $("#totalactivites").html()!=0.00) {$("#totalactivites").addClass('td-error'); $("#container_message_erreur_total").fadeIn();} else {$("#totalactivites").removeClass('td-error'); $("#container_message_erreur_total").fadeOut();}
     });
     
     $(document).on('change','.sa',function(e){
         e.preventDefault;
-        $("#totalsa").html(sumOfColumns('sa'));
-        $("#totalactivites").html(sumOfColumns('total'));
+        $("#totalsa").html(sumOfColumns('sa','j'));
+        $("#totalactivites").html(sumOfColumns('total','j'));
         if ($("#totalsa").html()>1 || $("#totalsa").html()<0) {$("#totalsa").addClass('td-error')} else {$("#totalsa").removeClass('td-error')}
     });
     
     $(document).on('change','.di',function(e){
         e.preventDefault;
-        $("#totaldi").html(sumOfColumns('di'));
-        $("#totalactivites").html(sumOfColumns('total'));
+        $("#totaldi").html(sumOfColumns('di','j'));
+        $("#totalactivites").html(sumOfColumns('total','j'));
         if ($("#totaldi").html()>1 || $("#totaldi").html()<0) {$("#totaldi").addClass('td-error')} else {$("#totaldi").removeClass('td-error')}
     });
         
@@ -399,22 +429,24 @@ $(document).ready(function () {
         });         
     });    
     
-    function sumOfColumns(id) {
+    function sumOfColumns(id,type) {
         var tot = 0;
         $("."+id).each(function() {
           tot += parseFloat($(this).val());
         });
-        return tot;
+        if (isNaN(tot)){ tot = 0; }
+        return tot.toFixed(2)+' '+type;
      }    
      
-     $("#totallu").html(sumOfColumns('lu'));
-     $("#totalma").html(sumOfColumns('ma'));
-     $("#totalme").html(sumOfColumns('me'));
-     $("#totalje").html(sumOfColumns('je'));
-     $("#totalve").html(sumOfColumns('ve'));
-     $("#totalsa").html(sumOfColumns('sa'));
-     $("#totaldi").html(sumOfColumns('di'));
-     $("#totalactivites").html(sumOfColumns('total'));
+     $("#totallu").html(sumOfColumns('lu','j'));
+     $("#totalma").html(sumOfColumns('ma','j'));
+     $("#totalme").html(sumOfColumns('me','j'));
+     $("#totalje").html(sumOfColumns('je','j'));
+     $("#totalve").html(sumOfColumns('ve','j'));
+     $("#totalsa").html(sumOfColumns('sa','j'));
+     $("#totaldi").html(sumOfColumns('di','j'));
+     $("#totalactivites").html(sumOfColumns('total','j'));
+     $("#totalfrais").html(sumOfColumns('frais','€'));
      if ($("#totallu").html()>1 || $("#totallu").html()<0) {$("#totallu").addClass('td-error')} else {$("#totallu").removeClass('td-error')}
      if ($("#totalma").html()>1 || $("#totalma").html()<0) {$("#totalma").addClass('td-error')} else {$("#totalma").removeClass('td-error')}
      if ($("#totalme").html()>1 || $("#totalme").html()<0) {$("#totalme").addClass('td-error')} else {$("#totalme").removeClass('td-error')}

@@ -6,7 +6,7 @@ App::uses('AppController', 'Controller');
  * @property Suivilivrable $Suivilivrable
  */
 class SuivilivrablesController extends AppController {
-        public $components = array('History');
+        public $components = array('History','Common');
         public $paginate = array(
         'order' => array('Suivilivrable.created' => 'asc','Suivilivrable.id'=>'asc'),
           );
@@ -92,9 +92,9 @@ class SuivilivrablesController extends AppController {
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Suivilivrable->delete()) {
 			//$this->Session->setFlash(__('Suivilivrable deleted'));
-			$this->History->goBack();
+			$this->History->goBack(1);
 		}
 		//$this->Session->setFlash(__('Suivilivrable was not deleted'));
-		$this->History->goBack();
+		$this->History->goBack(1);
 	}
 }

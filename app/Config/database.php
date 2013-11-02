@@ -63,10 +63,10 @@ class DATABASE_CONFIG {
         'driver' => 'mysql',
         'connect' => 'mysql_connect',
         'persistent' => false,
-        'host' => 'localhost', //localhost - 10.0.0.8
+        'host' => 'localhost', 
         'login' => 'SAILLADM',
         'password' => 'S@ILL@DM',
-        'database' => 'saill_202',
+        'database' => 'saill',
         'prefix' => '',        
         'encoding' => 'utf8'
     );

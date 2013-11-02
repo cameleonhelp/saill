@@ -135,6 +135,15 @@ define("tinymce/FocusManager", [
 				}
 			});
 
+			editor.on('setcontent', function() {
+				lastRng = null;
+			});
+
+			// Remove last selection bookmark on mousedown see #6305
+			editor.on('mousedown', function() {
+				editor.selection.lastFocusBookmark = null;
+			});
+
 			editor.on('focusin', function() {
 				var focusedEditor = editorManager.focusedEditor;
 
@@ -153,6 +162,8 @@ define("tinymce/FocusManager", [
 					editor.focus(false);
 					editorManager.focusedEditor = editor;
 				}
+
+				lastRng = null;
 			});
 
 			editor.on('focusout', function() {

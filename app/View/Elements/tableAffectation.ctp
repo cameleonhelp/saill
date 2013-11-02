@@ -1,6 +1,6 @@
 <br/>
 <div class="affectations index">
-	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
+	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax">
         <thead>
 	<tr>
 			<th><?php echo 'Activités'; ?></th>
@@ -20,10 +20,10 @@
                 <?php if ($this->params->action != 'profil') : ?>		
                 <td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('affectations', 'edit')) : ?>
-                    <?php echo $this->Html->link('<span class="glyphicons pencil"></span>', array('controller'=>'affectations','action' => 'edit', $affectation['Affectation']['id'], $this->params->pass[0]),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('controller'=>'affectations','action' => 'edit', $affectation['Affectation']['id'], $this->params->pass[0]),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('affectations', 'delete')) : ?>
-                    <?php echo $this->Html->link('<span class="glyphicons bin"></span>', array('controller'=>'affectations','action' => 'delete', $affectation['Affectation']['id'], $this->params->pass[0]),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette affectation ?')); ?>                    
+                    <?php echo $this->Html->link('<span class="glyphicons bin notchange"></span>', array('controller'=>'affectations','action' => 'delete', $affectation['Affectation']['id'], $this->params->pass[0]),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette affectation ?')); ?>                    
                     <?php endif; ?>
 		</td>
                 <?php endif; ?>

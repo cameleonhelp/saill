@@ -1,44 +1,55 @@
+<div class="marginright20">
 <div class="actions form">
-<?php echo $this->Form->create('Activitesreelle',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
-    <table>
-        <tr>
-            <td ><label class="control-label sstitre  required" for="ActivitesreelleUtilisateurId">Utilisateur: </label></td>
-            <td >
-                    <?php echo $this->Form->select('utilisateur_id',$destinataires,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le choix d'un utilisateur est obligatoire")); ?>               
-                <br><?php echo $this->Form->input('SelectAll',array('type'=>'checkbox')); ?><label class="labelAfter" for="ActivitesreelleSelectAll">&nbsp;Tout sélectionner</label>
-            </td>
-            <td style="height:54px !important;"><label class="control-label sstitre  required" for="ActivitesreelleProjetId">Projet : </label></td>
-            <td>
-                    <?php echo $this->Form->select('projet_id',$domaines,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le projet est obligatoire")); ?>               
-                <br><?php echo $this->Form->input('SelectAllProjet',array('type'=>'checkbox')); ?><label class="labelAfter" for="ActivitesreelleSelectAllProjet">&nbsp;Tout sélectionner</label>            
-            </td>            
-        </tr>        
-        <tr>
-            <td><label class="control-label sstitre  required" for="ActivitesreelleSTART">Sur la période du: </label></td>
-            <td>
-                <div class="input-prepend date" data-date="<?php echo date('d/m/Y'); ?>" data-date-format="dd/mm/yyyy">
-                <?php $today = new dateTime(); ?>
-                <span class="add-on"><span class="glyphicons calendar"></span></span>             
-                <?php echo $this->Form->input('START',array('type'=>'text','placeholder'=>'ex.: '.$today->format('d/m/Y'),"readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>"La date de début de période est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
-                </div>  
-            </td>           
-            <td><label class="control-label sstitre  required" for="ActivitesreelleEND">au : </label></td>
-            <td>
-                <div class="input-prepend date" data-date="<?php echo date('d/m/Y'); ?>" data-date-format="dd/mm/yyyy">
-                <?php $today->add(new DateInterval('P1M')); ?>
-                <span class="add-on"><span class="glyphicons calendar"></span></span>             
-                <?php echo $this->Form->input('END',array('type'=>'text','placeholder'=>'ex.: '.$today->format('d/m/Y'),"readonly"=>'true','data-rule-required'=>'true','data-msg-required'=>"La date de fin de période est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
-                </div> 
-            </td>            
-        </tr> 
-    </table>
-    <div class="navbar">
-        <div class="navbar-inner">
-            <div class="container" style="margin-top:2px;text-align:center;">
-                <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-primary','type'=>'submit')); ?>   
+<?php echo $this->Form->create('Activitesreelle',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+    <div class='block-panel block-panel-50-left'>
+        <div class="form-group">
+            <label class="col-lg-4 required" for="ActivitesreelleUtilisateurId">Utilisateur: </label>
+            <div class="col-lg-offset-4">
+                    <?php echo $this->Form->select('utilisateur_id',$destinataires,array('data-rule-required'=>'true','multiple'=>'true','class'=>"form-control multiselect size75",'size'=>"10",'data-msg-required'=>"Le nom de l'utilisateur est obligatoire",'hiddenField' => false)); ?>               
+                <br><?php echo $this->Form->input('SelectAll',array('type'=>'checkbox')); ?><label class="labelAfter" for="ActivitesreelleSelectAll">&nbsp;Tout sélectionner</label>  
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-lg-4 required" for="ActivitesreelleSTART">Sur la période du: </label>
+            <div class="col-lg-6">
+              <div class="input-group">
+              <?php $today = new dateTime(); ?>
+              <?php echo $this->Form->input('START',array('type'=>'text','placeholder'=>'ex.: '.$today->format('d/m/Y'),'data-rule-required'=>'true','class'=>"form-control dateall",'data-msg-required'=>"La date de début de Début de période est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+              <span class="input-group-addon addon-middle date-addon-clean btn-addon" data-target="#ActivitesreelleSTART"><span class="glyphicons circle_remove grey"></span></span>
+              <span class="input-group-addon addon-middle date-addon-default btn-addon" data-target="#ActivitesreelleSTART" data-default="<?php echo date('d/m/Y'); ?>"><span class="glyphicons clock"></span></span>
+              <span class="input-group-addon date-addon-calendar btn-addon" data-target="#ActivitesreelleSTART"><span class="glyphicons calendar"></span></span>
+              </div>
+            </div>  
+        </div>          
+    </div>
+    <div class='block-panel block-panel-50-right'>
+        <div class="form-group">
+            <label class="col-lg-4 required" for="ActivitesreelleProjetId">Projet : </label>
+            <div class="col-lg-offset-4">
+                    <?php echo $this->Form->select('projet_id',$domaines,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'class'=>"form-control multiselect size75",'data-msg-required'=>"Le projet est obligatoire")); ?>               
+                <br><?php echo $this->Form->input('SelectAllProjet',array('type'=>'checkbox')); ?><label class="labelAfter" for="ActivitesreelleSelectAllProjet">&nbsp;Tout sélectionner</label>            
+            </div>            
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 required" for="ActivitesreelleEND">au : </label>
+            <div class="col-lg-6">
+              <div class="input-group">
+              <?php $today = new dateTime(); ?>
+              <?php echo $this->Form->input('END',array('type'=>'text','placeholder'=>'ex.: '.$today->format('d/m/Y'),'data-rule-required'=>'true','class'=>"form-control dateall",'data-msg-required'=>"La date de fin de Début de période est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+              <span class="input-group-addon addon-middle date-addon-clean btn-addon" data-target="#ActivitesreelleEND"><span class="glyphicons circle_remove grey"></span></span>
+              <span class="input-group-addon addon-middle date-addon-default btn-addon" data-target="#ActivitesreelleEND" data-default="<?php echo date('d/m/Y'); ?>"><span class="glyphicons clock"></span></span>
+              <span class="input-group-addon date-addon-calendar btn-addon" data-target="#ActivitesreelleEND"><span class="glyphicons calendar"></span></span>
+              </div>
+            </div>             
+        </div>        
+    </div>
+    <div style="clear:both;">
+    <div class="form-group">
+      <div class="btn-block-horizontal">
+            <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?>   
+      </div>
     </div>  
+    </div> 
 <?php echo $this->Form->end(); ?>   
 </div>
 <?php $israpport = isset($rapportresults) ? count($rapportresults) : 0; ?>
@@ -47,14 +58,14 @@
 ?>
 
 <div id="rapport" <?php echo $style; ?>>
-    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc icon-top2"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn','escape' => false)); ?></div>
+    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc" style="vertical-align: bottom;"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn btn-sm btn-default','escape' => false)); ?></div>
     <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br><br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jour réels consommés par projet</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
         <thead>
             <tr>
-            <th>Période</th>
+            <th>Début de période</th>
             <th>Projet</th>
             <th>Nombre</th>
             </tr>
@@ -86,10 +97,10 @@
     </table>
 <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jour réels consommés par projet et par domaines</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
         <thead>
             <tr>
-            <th>Période</th>
+            <th>Début de période</th>
             <th>Projet</th>
             <th>Domaine</th>
             <th>Nombre</th>
@@ -123,10 +134,10 @@
     </table>
 <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jours réels consommés par projet et activité</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
         <thead>
             <tr>
-            <th>Période</th>
+            <th>Début de période</th>
             <th>Projet</th>
             <th>Activité</th>
             <th>Nombre</th>
@@ -160,8 +171,9 @@
     </table>
 </div>
 <?php if(isset($rapportresults) && $israpport==0) : ?>
-<div class="alert alert-block"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
+<div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
 <?php endif; ?>
+</div>
 <script>
 $(document).ready(function (){ 
     
@@ -194,27 +206,13 @@ $(document).ready(function (){
         $("."+id).each(function() {
           tot += parseFloat($(this).html());
         });
-        return tot+' jours';
+        return tot.toFixed(2)+' jours';
      }    
-    
-    function addMonth($date,$nb){
-        var dateTimeSplit = $date.split(' ');
-        var dateSplit = dateTimeSplit[0].split('/');
-        var mois = (parseInt(dateSplit[1])+$nb) < 10 ? "0"+(parseInt(dateSplit[1])+$nb) : (parseInt(dateSplit[1])+$nb);
-        var currentDate = dateSplit[0] + '/' + mois + '/' + dateSplit[2];
-        return currentDate;
-    }
-    
+        
     $("#total").html(sumOfColumns('nbaction'));
     $("#totalbydomaine").html(sumOfColumns('nbactionbydomaine'));
     $("#totaldetail").html(sumOfColumns('nbactiondetail'));
-    
-    $(document).on('change','#ActionSTART',function(e){
-        newDate = addMonth($(this).val(),1);
-        $('#ActionEND').val(newDate);
-        $('#ActionEND').datepicker('update', newDate);
-        $('#ActionEND').focus();
-    })    
+ 
 <?php if(isset($chartresults)): ?>
     <?php foreach($chartresults as $result): 
         $nbaction = $result[0]['NB'];

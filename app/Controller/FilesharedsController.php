@@ -9,7 +9,7 @@ App::import('Vendor', 'ical', array('file'=>'class.iCalReader.php'));
  * /!\ extension php_mysql obligatoire
  */
 class FilesharedsController extends AppController {
-    public $components = array('History');
+    public $components = array('History','Common');
     
     public function shared(){
         $file = isset($this->data['Fileshared']['file']['name']) ? $this->data['Fileshared']['file']['name'] : '';
@@ -22,9 +22,9 @@ class FilesharedsController extends AppController {
             elseif(mkdir($completpath,0777)) :
              move_uploaded_file($this->data['Fileshared']['file']['tmp_name'],$completpath.DS.$this->data['Fileshared']['file']['name']);  
             endif;
-            $this->Session->setFlash(__('Fichier partagé'),'default',array('class'=>'alert alert-success'));
+            $this->Session->setFlash(__('Fichier partagé',true),'flash_success');
         else :
-            $this->Session->setFlash(__('Fichier <b>NON</b> reconnu <b>NON</b> partagé'),'default',array('class'=>'alert alert-error'));
+            $this->Session->setFlash(__('Fichier <b>NON</b> reconnu <b>NON</b> partagé',true),'flash_failure');
         endif;
         $this->redirect(array('controller'=>'pages','action'=>'home'));
     }
@@ -45,12 +45,12 @@ class FilesharedsController extends AppController {
             $fileurl = realpath($path).DS.$name[count($name)-1];
             if(file_exists($fileurl)):
                unlink($fileurl);
-               $this->Session->setFlash(__('Fichier supprimé'),'default',array('class'=>'alert alert-success'));
+               $this->Session->setFlash(__('Fichier supprimé',true),'flash_success');
             else  :
-               $this->Session->setFlash(__('Fichier <b>INCONNU NON</b> supprimé'),'default',array('class'=>'alert alert-error')); 
+               $this->Session->setFlash(__('Fichier <b>INCONNU NON</b> supprimé',true),'flash_failure'); 
             endif;
         else :
-            $this->Session->setFlash(__('Fichier <b>INEXISTANT NON</b> supprimé'),'default',array('class'=>'alert alert-error'));
+            $this->Session->setFlash(__('Fichier <b>INEXISTANT NON</b> supprimé',true),'flash_failure');
         endif;
         $this->redirect(array('controller'=>'pages','action'=>'home'));        
     }
@@ -79,9 +79,9 @@ class FilesharedsController extends AppController {
             $file = $completpath.DS.userAuth('id').'_'.$this->data['Fileshared']['file']['name'];
             $this->inserticstodb($file,$this->data['Fileshared']['utilisateur_id']);    
             $this->deleteicsfile($file);
-            $this->Session->setFlash(__('Fichier pris en compte et intégré dans l\'outil.'),'default',array('class'=>'alert alert-success'));
+            $this->Session->setFlash(__('Fichier pris en compte et intégré dans l\'outil.',true),'flash_success');
         else :
-            $this->Session->setFlash(__('Fichier <b>NON</b> reconnu'),'default',array('class'=>'alert alert-error'));
+            $this->Session->setFlash(__('Fichier <b>NON</b> reconnu',true),'flash_failure');
         endif;
         $this->redirect(array('controller'=>'activitesreelles','action'=>'index','tous',userAuth('id'),date('m')));        
     }

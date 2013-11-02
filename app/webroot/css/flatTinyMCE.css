@@ -1,0 +1,91 @@
+/*------------------------------------------------
+    Document   : flatTinyMCE
+    Created on : 9 sept. 2013, 11:13:07
+    Author     : 6404901Z
+    Description:
+         Custom TinyMCE CSS
+------------------------------------------------*/
+.mce-container{
+	background-color: #FFF !important;
+}
+.mce-flow-layout{
+	background-color: #f5f5f5 !important;
+}
+.mce-btn:not(.mce-primary){
+	background-color: #F5F5F5;
+	background-image: none !important;
+	background-repeat: repeat-x;
+        border-color: #E0E1DD #E0E1DD #E0E1DD;
+}
+.mce-btn:hover:not(.mce-disabled):not(.mce-primary){
+    border-color: #B2B4B3 #B2B4B3 #B2B4B3;
+    /*border: 1px solid #B2B4B3 !important;*/
+}
+.mce-primary {
+    min-width: 50px;
+    color: #3E3D40 !important;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.75);
+    background-color: #428bca !important;
+    background-image: none !important;
+    background-repeat: repeat-x;
+    zoom: 1;
+    border-color: #428bca #428bca #428bca;   
+}
+.mce-primary:hover {
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.75);
+    background-color: #357ebd !important;
+    background-image: none !important;
+    background-repeat: repeat-x;
+    zoom: 1;
+    border-color: #3071a9 #3071a9 #3071a9;
+}
+.mce-window{
+    border-width: 0px !important;
+}
+.mce-panel {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background-color: #FFF !important;
+    background-image: none !important;
+    background-repeat: repeat-x;
+    zoom: 1;
+}
+.mce-menu-item-sep{
+    height: 1px !important;
+    margin: 9px 4px !important;
+    overflow: hidden !important;
+    border-bottom: 1px solid #E5E5E5 !important;
+    width: 96% !important;
+}
+.dropdown-menu .divider {
+  height: 1px !important;
+  margin: 9px auto !important;
+  overflow: hidden !important;
+  background-color: #e5e5e5 !important;
+  width: 97% !important;
+}
+.mce-menu-item:hover, 
+.mce-menu-item.mce-selected, 
+.mce-menu-item:focus {
+    text-decoration: none;
+    color: #fff;
+    background-color: #428bca;
+    background-image: none !important;
+    background-repeat: repeat-x;
+    zoom: 1;
+}
+.mce-tooltip{
+    opacity:.7 !important;
+    filter:alpha(opacity=70) !important;
+}
+.mce-tooltip-inner{
+    -webkit-border-radius:0px !important;
+    -moz-border-radius:0px !important;
+    border-radius:0px !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    font-family: Arial !important;
+    font-weight: lighter !important; 
+    font-size: 12px !important;
+}

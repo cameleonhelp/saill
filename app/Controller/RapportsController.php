@@ -8,7 +8,7 @@ App::uses('CakeEmail', 'Network/Email');
  */
 class RapportsController extends AppController {
 
-    public $components = array('History');
+    public $components = array('History','Common');
     
     public function logistique(){
         $this->set('title_for_layout','Etat de la logistique par sections');
@@ -38,7 +38,7 @@ class RapportsController extends AppController {
             $sections = $this->requestAction('sections/getList');
             $this->set('sections',$sections);                 
         else :
-            $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+            $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
             throw new NotAuthorizedException();
         endif;   
     }
@@ -70,7 +70,7 @@ class RapportsController extends AppController {
             endfor;
             $this->set('annee',$annee);
         else :
-            $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+            $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
             throw new NotAuthorizedException();
         endif; 
     }
@@ -90,12 +90,14 @@ class RapportsController extends AppController {
                     ->to($to)
                     ->subject($objet)
                     ->send($message);
+            $this->Session->setFlash(__('Un mail est envoyé à '.$mailto['Utilisateur']['NOMLONG'],true),'flash_success');
             }
 
             catch(Exception $e){
-                $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
             }  
         endif;
+        $this->History->notmove();
     }     
     
     public function ss2i(){
@@ -122,7 +124,7 @@ class RapportsController extends AppController {
             $societes = $this->requestAction('societes/get_all_societe_id_name');
             $this->set('societes',$societes);
         else :
-            $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+            $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
             throw new NotAuthorizedException();
         endif;  
     }

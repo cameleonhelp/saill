@@ -7,9 +7,9 @@ App::uses('CakeEmail', 'Network/Email');
  * @property Utiliseoutil $Utiliseoutil
  */
 class UtiliseoutilsController extends AppController {
-        public $components = array('History'); 
+        public $components = array('History','Common'); 
     public $paginate = array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Utiliseoutil.created' => 'desc'),
         /*'order' => array(
             'Post.title' => 'asc' /*/
@@ -105,7 +105,7 @@ class UtiliseoutilsController extends AppController {
                 $this->set('listes',$liste);  
                 $this->set('partages',$partage);  
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -126,7 +126,7 @@ class UtiliseoutilsController extends AppController {
 		$options = array('conditions' => array('Utiliseoutil.' . $this->Utiliseoutil->primaryKey => $id));
 		$this->set('utiliseoutil', $this->Utiliseoutil->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -159,6 +159,10 @@ class UtiliseoutilsController extends AppController {
                 $etat = Configure::read('etatOuvertureDroit');
                 $this->set('etat',$etat);                 
                 if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Utiliseoutil->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
 			$this->Utiliseoutil->create();
 			if ($this->Utiliseoutil->save($this->request->data)) {
                                 $nomoutil = "inconnu";
@@ -183,17 +187,41 @@ class UtiliseoutilsController extends AppController {
                                 $history['Historyutilisateur']['utilisateur_id']=$this->request->data['Utiliseoutil']['utilisateur_id'];
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit".' par '.userAuth('NOMLONG');
                                 $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                            
-				$this->Session->setFlash(__('Ouvertures des droits sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Ouvertures des droits sauvegardée',true),'flash_success');
                                 $this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Ouvertures des droits incorrecte, veuillez corriger cette ouverture de droit'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Ouvertures des droits incorrecte, veuillez corriger cette ouverture de droit',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
+        
+        public function save_new($utilisateur_id,$droit_id,$type){
+            $record['Utiliseoutil']['utilisateur_id']=$utilisateur_id;
+            $outil_id = $type=='outil' ? $droit_id : '';
+            $group_id = $type=='group' ? $droit_id : '';
+            $record['Utiliseoutil']['listediffusion_id']= '';
+            $record['Utiliseoutil']['outil_id']= $outil_id;
+            $record['Utiliseoutil']['dossierpartage_id']= $group_id;
+            $record['Utiliseoutil']['STATUT']= "Demandé";
+            $record['Utiliseoutil']['created']= date('Y-m-d');
+            $record['Utiliseoutil']['modified']= date('Y-m-d');
+            $this->Utiliseoutil->create();
+            if ($this->Utiliseoutil->save($record)) {
+                $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$this->Utiliseoutil->getLastInsertID())));
+                $this->sendmailutiliseoutil($utiliseoutil);
+                $history['Historyutilisateur']['utilisateur_id']=$utilisateur_id;
+                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit".' par '.userAuth('NOMLONG');
+                $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                            
+                $this->Session->setFlash(__('Ouvertures des droits sauvegardée',true),'flash_success');               
+            } else {
+                $this->Session->setFlash(__('Ouvertures des droits incorrecte, veuillez corriger cette ouverture de droit',true),'flash_failure');
+            }
+        }
 
 /**
  * edit method
@@ -223,6 +251,10 @@ class UtiliseoutilsController extends AppController {
 			throw new NotFoundException(__('Ouvertures des droits incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Utiliseoutil->validate = array();
+                        $this->History->goBack(1);
+                    else:                     
                         //$this->autoprogressState($id);
                         if ($this->Utiliseoutil->save($this->request->data)) {
                                 $nomoutil = "inconnu";
@@ -242,21 +274,25 @@ class UtiliseoutilsController extends AppController {
                                     $nomoutil = $outils['Dossierpartage']['NOM'];
                                 endif;      
                                 $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$id)));
-                                $this->sendmailutiliseoutil($utiliseoutil);
+                                $newetat = $utiliseoutil['Utiliseoutil']['STATUT'];
+                                if($newetat=='Demande transférée' || $newetat=='A supprimer' || $newetat = 'En validation'):
+                                    $this->sendmailutiliseoutil($utiliseoutil,$valideur);  
+                                endif;
                                 $this->addnewaction($id,$nomoutil);
                                 $history['Historyutilisateur']['utilisateur_id']=$this->request->data['Utiliseoutil']['utilisateur_id'];
                                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit".' par '.userAuth('NOMLONG');
                                 $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                            
-				$this->Session->setFlash(__('Ouvertures des droits sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Ouvertures des droits sauvegardée',true),'flash_success');
                                 $this->History->goBack(1);
-                        }                    
+                        }  
+                    endif;
 		} else {
 			$options = array('conditions' => array('Utiliseoutil.' . $this->Utiliseoutil->primaryKey => $id));
 			$this->request->data = $this->Utiliseoutil->find('first', $options);
                         $this->set('utiliseoutil', $this->Utiliseoutil->find('first', $options));
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -282,13 +318,13 @@ class UtiliseoutilsController extends AppController {
                         $history['Historyutilisateur']['utilisateur_id']=$userid['Utiliseoutil']['utilisateur_id'];
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une ouverture de droit".' par '.userAuth('NOMLONG');
                         $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                         
-			$this->Session->setFlash(__('Ouvertures des droits supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Ouvertures des droits supprimée',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> supprimée',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -349,17 +385,19 @@ class UtiliseoutilsController extends AppController {
 		}
                 if ($this->Utiliseoutil->save($record)) { 
                     $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$id)));
-                    $this->sendmailutiliseoutil($utiliseoutil,$valideur);                       
+                    if($newetat=='Demande transférée' || $newetat=='A supprimer' || $newetat = 'En validation'):
+                        $this->sendmailutiliseoutil($utiliseoutil,$valideur);  
+                    endif;
                     $history['Historyutilisateur']['utilisateur_id']=$record['Utiliseoutil']['utilisateur_id'];
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - changement d'état d'une ouverture de droit".' par '.userAuth('NOMLONG');
                     $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                     
-                    $this->Session->setFlash(__('Ouvertures des droits progression de l\'état'),'default',array('class'=>'alert alert-success'));
+                    $this->Session->setFlash(__('Ouvertures des droits progression de l\'état',true),'flash_success');
                     exit();
                 }
-		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> progression de l\'état'),'default',array('class'=>'alert alert-error'));
+		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> progression de l\'état',true),'flash_failure');
 		exit();
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}    
@@ -406,7 +444,9 @@ class UtiliseoutilsController extends AppController {
                 $record['Utiliseoutil']['modified'] = date('Y-m-d');
                 if ($this->Utiliseoutil->save($record)) { 
                     $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$id),'recursive'=>0));
-                    $this->sendmailutiliseoutil($utiliseoutil,$valideur);                    
+                    if($newetat=='Demande transférée' || $newetat=='A supprimer' || $newetat = 'En validation'):
+                        $this->sendmailutiliseoutil($utiliseoutil,$valideur);  
+                    endif;                    
                     $history['Historyutilisateur']['utilisateur_id']=$record['Utiliseoutil']['utilisateur_id'];
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - changement d'état d'une ouverture de droit".' par '.userAuth('NOMLONG');
                     $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                     
@@ -485,7 +525,7 @@ class UtiliseoutilsController extends AppController {
                 $this->set('utilisateurs',$utilisateurs); 
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }         
@@ -514,9 +554,9 @@ class UtiliseoutilsController extends AppController {
                 foreach($ids as $id):
                     $this->autoprogressState($id);
                 endforeach;
-                echo $this->Session->setFlash(__('Mises à jour complétées'),'default',array('class'=>'alert alert-success'));
+                echo $this->Session->setFlash(__('Mises à jour complétées',true),'flash_success');
             else:
-                echo $this->Session->setFlash(__('Aucune ouverture de droit sélectionnée'),'default',array('class'=>'alert alert-error'));
+                echo $this->Session->setFlash(__('Aucune ouverture de droit sélectionnée',true),'flash_failure');
             endif;
             exit();
         }
@@ -554,8 +594,8 @@ class UtiliseoutilsController extends AppController {
             $from = userAuth('MAIL');
             $email = isset($utiliseoutil['Utilisateur']['MAIL']) ? $utiliseoutil['Utilisateur']['MAIL'] : "Demandez un complément d'information à l'émetteur de cette demande";
             $domaine = isset($domaine['Domaine']['NOM']) ? $domaine['Domaine']['NOM'] : "Demandez un complément d'information à l'émetteur de cette demande";
-            $objet = 'SAILL : Demande d\'intervention pour ['.$nom.']';
-            $message = "Demande d'intervention pour : ";
+            $objet = 'SAILL : Demande de création de compte ou d\'ouverture de droit pour ['.$nom.']';
+            $message = "Demande de création de compte ou d'ouverture de droit pour : ";
             $url = $gestionnaire != '' ? FULL_BASE_URL.$this->params->base.'/utiliseoutils/mailprogressstate/'.$utiliseoutil['Utiliseoutil']['id']."/".$gestionnaire : '';
             $etat = $utiliseoutil['Utiliseoutil']['STATUT'];
             if($valideur!=null): 
@@ -564,7 +604,19 @@ class UtiliseoutilsController extends AppController {
                 $message = "Demande de validation pour : ";
                 $url = '';
             endif;
-            $message .= $message.'<ul>
+            $groupcaliber = "";
+            switch(strtolower($section['Section']['NOM'])){
+                case 'groupement':
+                    $groupcaliber = "OSMOSE - Intégrateur ou PANAM - Intégrateur ou OSMOSE - Négociateur";
+                    break;
+                case 'moa':
+                    $groupcaliber = "OSMOSE - MOA SI ou PANAM - MOA SI ou OSMOSE Existant (devt) - MOE";
+                    break;
+                default:
+                    $groupcaliber = "OSMOSE - MOE ou PANAM - MOE ou OSMOSE Existant (devt) - MOA";
+                    break;                    
+            }
+            $message .= '<ul>
                     <li>Outil :'.$nom.'</li>
                     <li>Etat :'.$etat.'</li>
                     <li>Agent :'.$utiliseoutil['Utilisateur']['NOMLONG'].'</li>
@@ -573,9 +625,10 @@ class UtiliseoutilsController extends AppController {
                     <li>Domaine :'.$domaine.'</li>
                     <li>Section :'.$section['Section']['NOM'].'</li>
                     <li>Localisation :'.$site['Site']['NOM'].'</li>   
-                    <li>Groupe Caliber :</li>  
+                    <li>Groupe Caliber :'.$groupcaliber.'</li>  
                     </ul><br>Merci de cliquer sur le lien ci-dessous, pour mettre à jour l\'avancement de la demande.<br>'.$url;
-            if($to!=''):
+            $statuts = array('Demandé','En validation','A supprimer','Demande transférée');
+            if($to!='' && in_array($utiliseoutil['Utiliseoutil']['STATUT'],$statuts)):
                 try{
                 $email = new CakeEmail();
                 $email->config('smtp')
@@ -586,7 +639,7 @@ class UtiliseoutilsController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
                 }  
             endif;
         }        
@@ -650,9 +703,44 @@ class UtiliseoutilsController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage())),'default',array('class'=>'alert alert-error'));
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
                 }  
             endif;
-            $this->History->goBack(0);
-        }                
+            $this->History->notmove();
+        }      
+        
+        public function add_template(){
+            $utilisateur_id = $this->request->data['Utiliseoutil']['utilisateur_id'];
+            $outils = $this->requestAction('parameters/get_templateoutil');
+            $outils = explode(',',$outils['Parameter']['param']);
+            $groups = $this->requestAction('parameters/get_templategroupe');
+            $groups = explode(',',$groups['Parameter']['param']);
+            foreach($outils as $outil):
+                $this->save_new($utilisateur_id, $outil, 'outil');
+            endforeach;
+            foreach($groups as $group):
+                $this->save_new($utilisateur_id, $group, 'group');
+            endforeach;            
+            $this->History->goBack(1);
+        }
+        
+        public function duplicate_from_user($id,$new_user){
+            $droits = $this->Utiliseoutil->find('all',array('conditions'=>array('Utiliseoutil.utilisateur_id'=>$id),'recursive'=>-1));
+            foreach($droits as $droit):
+                    $newdroit = array();
+                    $newdroit['Utiliseoutil']['utilisateur_id']=$new_user;
+                    $newdroit['Utiliseoutil']['outil_id']=$droit['Utiliseoutil']['outil_id'];
+                    $newdroit['Utiliseoutil']['listediffusion_id']=$droit['Utiliseoutil']['listediffusion_id'];
+                    $newdroit['Utiliseoutil']['dossierpartage_id']=$droit['Utiliseoutil']['dossierpartage_id'];
+                    $newdroit['Utiliseoutil']['STATUT']='Demandé';
+                    $newdroit['Utiliseoutil']['TYPE']=$droit['Utiliseoutil']['TYPE'];
+                    $this->Utiliseoutil->create();
+                    $this->Utiliseoutil->save($newdroit);
+                    $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$this->Utiliseoutil->getLastInsertID())));
+                    $this->sendmailutiliseoutil($utiliseoutil);
+                    $history['Historyutilisateur']['utilisateur_id']=$new_user;
+                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit".' par '.userAuth('NOMLONG');
+                    $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                     
+            endforeach;
+        }        
 }

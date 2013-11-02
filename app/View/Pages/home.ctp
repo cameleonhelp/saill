@@ -1,8 +1,8 @@
-<div class="span22" style="margin-right: 25px !important;margin-left: 0px !important;">
+<div class='block-panel block-panel-66-left'>
 <?php
 $this->set('title_for_layout','Accueil');
 ?>
-<div class="well well-small orange_bar">
+<div class="well well-small top-header-orange">
     Ce site à pour objectif de suivre les activités, livrables réalisés sur le projet.<br/><br/>
     Ce site est accessible à toutes personnes travaillant sur le projet.<br/><br/>
     Un accès à votre profil vous permettra de suivre certaines informations vous concernant.<br/>
@@ -14,7 +14,7 @@ $this->set('title_for_layout','Accueil');
     Le suivi des livrables vous permettra de suivre l'avancement des livrables, ces livrables peuvent être liés à des actions.<br/><br/>
     Enfin des liens utiles à tous, peuvent être partagés, seul celui qui a déposé le lien, peux le modifier ou le supprimer.<br/>
     <br/>
-    Vous trouverez ci-dessous des fichiers qui sont à votre disposition ci-dessouspour vous aider dans votre activité ou des informations à connaître.<br/>
+    Vous trouverez ci-dessous des fichiers qui sont à votre disposition ci-dessous pour vous aider dans votre activité ou des informations à connaître.<br/>
     <br/>
     Nous espérons que ce site vous facilitera votre restitution d'activité et un meilleur partage de l'information.
 </div>
@@ -22,6 +22,6 @@ $this->set('title_for_layout','Accueil');
 <?php echo $this->element('elementsfields'); ?>
 </div>
 </div>
-<div class='offset22 block blue_bar'>
+<div class='block-panel block-panel-33-right' style="margin-right: 10px !important;">
 <?php echo $this->element('mystats'); ?>
 </div>

@@ -6,9 +6,9 @@ App::uses('AppController', 'Controller');
  * @property Autorisation $Autorisation
  */
 class AutorisationsController extends AppController {
-        public $components = array('History'); 
+        public $components = array('History','Common'); 
         public $paginate = array(
-            'limit' => 15,
+            'limit' => 25,
             'order' => array('Autorisation.profil_id' => 'asc','Autorisation.MODEL' => 'asc'),
             /*'order' => array(
                 'Post.title' => 'asc' /*/
@@ -41,7 +41,7 @@ class AutorisationsController extends AppController {
                 $profils = $this->Autorisation->find('all',array('fields' => array('Profil.id','Profil.NOM'),'group'=>'Profil.NOM','order'=>array('Profil.NOM'=>'asc'),'recursive'=>0));
                 $this->set('profils',$profils);                
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -61,7 +61,7 @@ class AutorisationsController extends AppController {
 		$options = array('conditions' => array('Autorisation.' . $this->Autorisation->primaryKey => $id));
 		$this->set('autorisation', $this->Autorisation->find('first', $options));
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -80,16 +80,21 @@ class AutorisationsController extends AppController {
                 $profil = $this->Autorisation->Profil->find('list',array('fields' => array('id', 'NOM'),'recursive'=>-1));
                 $this->set('profil',$profil);
 		if ($this->request->is('post')) :
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Autorisation->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			$this->Autorisation->create();
 			if ($this->Autorisation->save($this->request->data)) {
-				$this->Session->setFlash(__('Autorisation sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Autorisation sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Autorisation incorrecte, veuillez corriger l\'autorisation'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Autorisation incorrecte, veuillez corriger l\'autorisation',true),'flash_failure');
 			}
+                    endif;
 		endif;
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -111,19 +116,24 @@ class AutorisationsController extends AppController {
 			throw new NotFoundException(__('Autorisation incorrecte'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Autorisation->validate = array();
+                        $this->History->goBack(1);
+                    else:                    
 			if ($this->Autorisation->save($this->request->data)) {
-				$this->Session->setFlash(__('Autorisation sauvegardée'),'default',array('class'=>'alert alert-success'));
+				$this->Session->setFlash(__('Autorisation sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Autorisation incorrecte, veuillez corriger l\'autorisation'),'default',array('class'=>'alert alert-error'));
+				$this->Session->setFlash(__('Autorisation incorrecte, veuillez corriger l\'autorisation',true),'flash_failure');
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Autorisation.' . $this->Autorisation->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Autorisation->find('first', $options);
                         $this->set('autorisation', $this->Autorisation->find('first', $options));
 		}
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -144,13 +154,13 @@ class AutorisationsController extends AppController {
 		}
 		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Autorisation->delete()) {
-			$this->Session->setFlash(__('Autorisation supprimée'),'default',array('class'=>'alert alert-success'));
-			$this->History->goBack();
+			$this->Session->setFlash(__('Autorisation supprimée',true),'flash_success');
+			$this->History->goBack(1);
 		}
-		$this->Session->setFlash(__('Autorisation NON supprimée'),'default',array('class'=>'alert alert-error'));
-		$this->History->goBack();
+		$this->Session->setFlash(__('Autorisation NON supprimée',true),'flash_failure');
+		$this->History->goBack(1);
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
@@ -173,7 +183,7 @@ class AutorisationsController extends AppController {
                 $this->set('profils',$profils);                   
                 $this->render('index');
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }          

@@ -1,36 +1,41 @@
+<div class="marginright20">
 <div class="actions form">
-<?php echo $this->Form->create('Plancharge',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
-    <table>
-        <tr>
-            <td><label class="control-label sstitre  required" for="PlanchargeId">Plan de charge: </label></td>
-            <td>
-                    <?php echo $this->Form->select('id',$plancharges,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le nom du plan de charge est obligatoire")); ?>               
-                <br><?php echo $this->Form->input('SelectAll',array('type'=>'checkbox')); ?><label class="labelAfter" for="PlanchargeSelectAll">&nbsp;Tout sélectionner</label>            
-            </td> 
-            <td><label class="control-label sstitre  required" for="PlanchargeDomaineId">Domaine : </label></td>
-            <td>
-                    <?php echo $this->Form->select('domaine_id',$domaines,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'data-msg-required'=>"Le domaine est obligatoire")); ?>               
-                <br><?php echo $this->Form->input('SelectAllDomaine',array('type'=>'checkbox')); ?><label class="labelAfter" for="PlanchargeSelectAllDomaine">&nbsp;Tout sélectionner</label>            
-            </td>              
-        </tr>        
-    </table>
-    <div class="navbar">
-        <div class="navbar-inner">
-            <div class="container" style="margin-top:2px;text-align:center;">
-                <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-primary','type'=>'submit')); ?>   
+<?php echo $this->Form->create('Plancharge',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+    <div class='block-panel block-panel-50-left'>
+        <div class="form-group">
+            <label class="col-lg-4 required" for="PlanchargeId">Plan de charge: </label>
+            <div class="col-lg-offset-4">
+                    <?php echo $this->Form->select('id',$plancharges,array('data-rule-required'=>'true','multiple'=>'true','class'=>"form-control multiselect size75",'size'=>"10",'data-msg-required'=>"Le nom du plan de charge est obligatoire",'hiddenField' => false)); ?>               
+                <br><?php echo $this->Form->input('SelectAll',array('type'=>'checkbox')); ?><label class="labelAfter" for="PlanchargeSelectAll">&nbsp;Tout sélectionner</label>  
             </div>
-        </div>
+        </div>         
+    </div>
+    <div class='block-panel block-panel-50-right'>
+        <div class="form-group">
+            <label class="col-lg-4 required" for="PlanchargeDomaineId">Domaine : </label>
+            <div class="col-lg-offset-4">
+                    <?php echo $this->Form->select('domaine_id',$domaines,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'class'=>"form-control multiselect size75",'data-msg-required'=>"Le domaine est obligatoire")); ?>               
+                <br><?php echo $this->Form->input('SelectAllDomaine',array('type'=>'checkbox')); ?><label class="labelAfter" for="PlanchargeSelectAllDomaine">&nbsp;Tout sélectionner</label>            
+            </div>            
+        </div>     
+    </div>
+    <div style="clear:both;">
+    <div class="form-group">
+      <div class="btn-block-horizontal">
+            <?php echo $this->Form->button('Calculer le rapport', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?>   
+      </div>
     </div>  
+    </div> 
 <?php echo $this->Form->end(); ?>     
 </div>
 <?php $israpport = isset($rapportresults) ? count($rapportresults) : 0; ?>
 <?php $style = $israpport==0 ? 'style="display:none;"' : ''; ?>
 <div id="rapport" <?php echo $style; ?>>
-    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc icon-top2"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn','escape' => false)); ?></div>
+    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc" style="vertical-align: bottom;"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn btn-sm btn-default','escape' => false)); ?></div>
 <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br><br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Répartition des plans de charge par domaines</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
         <thead>
             <tr>
             <th>Année</th>
@@ -59,7 +64,7 @@
     </table>
 <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Détail de la répartition des plans de charge</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
         <thead>
             <tr>
             <th>Année</th>
@@ -90,8 +95,9 @@
     </table>
 </div>
 <?php if(isset($rapportresults) && $israpport==0) : ?>
-<div class="alert alert-block"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
+<div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
 <?php endif; ?>
+</div>
 <script>
 $(document).ready(function (){ 
 

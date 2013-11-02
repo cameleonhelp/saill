@@ -7,7 +7,7 @@ App::uses('AppController', 'Controller');
  * @property Dashboard $Dashboard
  */
 class DashboardsController extends AppController {
-    public $components = array('History');    
+    public $components = array('History','Common');    
     public function index() {
             $this->set('title_for_layout','Tableau de bord');
             if (isAuthorized('facturations', 'rapports') || isAuthorized('activitesreelles', 'rapports') || isAuthorized('plancharges', 'rapports')) :
@@ -117,7 +117,7 @@ class DashboardsController extends AppController {
                 endforeach;                
                 $this->set('listplancharges',$allpplancharges);                
             else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.'),'default',array('class'=>'alert alert-block'));
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                     
     }
@@ -128,7 +128,7 @@ class DashboardsController extends AppController {
                 $this->set('rowsrapport',$data);              
 		$this->render('export_doc','export_doc');
             else:
-                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport'),'default',array('class'=>'alert alert-error'));             
+                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport',true),'flash_failure');             
                 $this->redirect(array('action'=>'rapport'));
             endif;
         }        

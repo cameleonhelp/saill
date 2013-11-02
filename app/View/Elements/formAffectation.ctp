@@ -1,9 +1,9 @@
 
-<?php echo $this->Form->create('Affectation',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('label'=>false,'div' => false))); ?>
+<?php echo $this->Form->create('Affectation',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
 <table>  
     <tr>
     <td>
-        <label class="control-label sstitre  required" for="AffectationActiviteId">Activité : </label>
+        <label class="col-lg-4 control-label  required" for="AffectationActiviteId">Activité : </label>
     </td>
     <td>
             <select name="data[Affectation][activite_id]" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="AchatActiviteId"> 
@@ -16,7 +16,7 @@
             </select>           
     </td>
     <td>
-        <label class="control-label sstitre" for="AffectationREPARTITION">Clé de répartition : </label>
+        <label class="col-lg-4 control-label" for="AffectationREPARTITION">Clé de répartition : </label>
     </td>
     <td>
                 <?php echo $this->Form->input('REPARTITION'); ?> %        
@@ -26,7 +26,7 @@
 <div class="navbar">
     <div class="navbar-inner">
         <div class="container" style="margin-top:2px;text-align:center;">                
-            <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn showoverlay','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-primary','type'=>'submit')); ?>                
+            <?php echo $this->Form->button('Annuler', array('type'=>'button','class' => 'btn btn-sm showoverlay','onclick'=>"location.href='".goPrev()."'")); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?>                
         </div>
     </div>
 </div> 
