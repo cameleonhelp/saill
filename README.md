@@ -3,7 +3,7 @@ SAILL
 
 SAILL [Suivi d'Activités, d'Indisponibilité, des Livrables et de la Logistique] est un site pour suivre l'activité d'une équipe de développeurs, ainsi que le suivi logistique du matériel mis à disposition.
 
-SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 6.0.7](http://www.mysql.fr/downloads/workbench/)
+SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 6.0.8](http://www.mysql.fr/downloads/workbench/)
 
 ## Cette version s'appuie sur :
 
