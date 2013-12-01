@@ -44,7 +44,7 @@
                 <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit',$usage['Usage']['id']),array('escape' => false)); ?>&nbsp;
                 <?php endif; ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('usages', 'delete')) : ?>
-                <?php echo $this->Form->postLink('<span class="glyphicons bin showoverlay notchange"></span>', array('action' => 'delete',$usage['Usage']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet usage')); ?>                    
+                <?php echo $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete',$usage['Usage']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet usage')); ?>                    
                 <?php endif; ?>                    
             </td>
 	</tr>

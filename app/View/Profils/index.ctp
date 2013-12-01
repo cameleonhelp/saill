@@ -33,7 +33,7 @@
                     <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit', $profil['Profil']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('profils', 'delete')) : ?>
-                    <?php echo $profil['Profil']['id'] > 10 ? $this->Form->postLink('<span class="glyphicons bin showoverlay notchange"></span>', array('action' => 'delete', $profil['Profil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce profil ?') ): '<span class="glyphicons blank"></span>'; ?>
+                    <?php echo $profil['Profil']['id'] > 10 ? $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete', $profil['Profil']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce profil ?') ): '<span class="glyphicons blank"></span>'; ?>
                     <?php else : ?>
                     <span class="glyphicons blank"></span>
                     <?php endif; ?>

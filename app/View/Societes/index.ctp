@@ -37,7 +37,7 @@
                     <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit', $societe['Societe']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('societes', 'delete')) : ?>
-                    <?php echo $societe['Societe']['id']>1 ? $this->Form->postLink('<span class="glyphicons bin showoverlay notchange"></span>', array('action' => 'delete', $societe['Societe']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette société ?')):''; ?>
+                    <?php echo $societe['Societe']['id']>1 ? $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete', $societe['Societe']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette société ?')):''; ?>
                     <?php endif; ?>
 		</td>
 	</tr>

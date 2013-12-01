@@ -131,7 +131,7 @@
             <?php if (userAuth('profil_id')!='2' && isAuthorized('intergrationapplicatives', 'delete')) : ?>
             <?php $actif = $intergrationapplicative['Intergrationapplicative']['ACTIF']==true ? '' : ' grey'; ?>
             <?php $action = $intergrationapplicative['Intergrationapplicative']['ACTIF']==true ? 'supprimer' : 'activer'; ?>            
-            <?php echo $this->Form->postLink('<span class="glyphicons bin showoverlay notchange'.$actif.'"></span>', array('action' => 'delete', $intergrationapplicative['Intergrationapplicative']['id']),array('escape' => false), __('Etes-vous certain de vouloir '.$action.' cette instégration ?')); ?>                    
+            <?php echo $this->Form->postLink('<span class="glyphicons bin notchange'.$actif.'"></span>', array('action' => 'delete', $intergrationapplicative['Intergrationapplicative']['id']),array('escape' => false), __('Etes-vous certain de vouloir '.$action.' cette instégration ?')); ?>                    
             <?php endif; ?> 
             <?php if (userAuth('profil_id')!='2' && isAuthorized('intergrationapplicatives', 'duplicate')) : ?>
             <?php echo $this->Form->postLink('<span class="glyphicons retweet showoverlay notchange"></span>', array('action' => 'dupliquer', $intergrationapplicative['Intergrationapplicative']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cette intégration ?')); ?>
@@ -213,18 +213,14 @@ $(document).ready(function () {
     $(document).on('click','#installlink',function(e){
         if(confirm("Voulez-vous modifier le statut d'installation de toutes les intégrations sélectionnées ?")){
             var ids = $("#all_ids").val();
-            var myarr = ids.split("-");
-            var length = myarr.length;
             var overlay = $('#overlay');
             overlay.show(); 
-            for(var i = 0; i < length; i++){
                 $.ajax({
                     dataType: "html",
                     type: "POST",
-                    url: "<?php echo $this->Html->url(array('controller'=>'intergrationapplicatives','action'=>'installall')); ?>/"+myarr[i],
-                    data: ({id:myarr[i]})     
+                    url: "<?php echo $this->Html->url(array('controller'=>'intergrationapplicatives','action'=>'installall')); ?>/",
+                    data: ({all_ids:ids})     
                 });
-            }
         }
         location.reload();
         overlay.hide();   
@@ -234,18 +230,14 @@ $(document).ready(function () {
     $(document).on('click','#checklink',function(e){
         if(confirm("Voulez-vous modifier le statut de validation de toutes les intégrations sélectionnées ?")){
             var ids = $("#all_ids").val();
-            var myarr = ids.split("-");
-            var length = myarr.length;
             var overlay = $('#overlay');
             overlay.show(); 
-            for(var i = 0; i < length; i++){
-                $.ajax({
-                    dataType: "html",
-                    type: "POST",
-                    url: "<?php echo $this->Html->url(array('controller'=>'intergrationapplicatives','action'=>'checkall')); ?>/"+myarr[i],
-                    data: ({id:myarr[i]})     
-                });
-            }
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'intergrationapplicatives','action'=>'checkall')); ?>/",
+                data: ({all_ids:ids})       
+            });
         }
         location.reload();
         overlay.hide();   
@@ -255,18 +247,14 @@ $(document).ready(function () {
     $(document).on('click','#deletelink',function(e){
         if(confirm("Voulez-vous supprimer toutes les intégrations sélectionnées ?")){
             var ids = $("#all_ids").val();
-            var myarr = ids.split("-");
-            var length = myarr.length;
             var overlay = $('#overlay');
             overlay.show(); 
-            for(var i = 0; i < length; i++){
-                $.ajax({
-                    dataType: "html",
-                    type: "POST",
-                    url: "<?php echo $this->Html->url(array('controller'=>'intergrationapplicatives','action'=>'deleteall')); ?>/"+myarr[i],
-                    data: ({id:myarr[i]})     
-                });
-            }
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'intergrationapplicatives','action'=>'deleteall')); ?>/",
+                data: ({all_ids:ids})          
+            });
         }
         location.reload();
         overlay.hide();   

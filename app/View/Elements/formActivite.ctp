@@ -106,3 +106,5 @@
 <?php if ($this->params->action == 'edit') echo $this->Form->input('id',array('type'=>'hidden')); ?>    
 <?php echo $this->Form->end(); ?>
 </div>
+<!-- fenêtre modale //-->
+<?php echo $this->element('modalnewbudget'); ?>

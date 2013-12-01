@@ -44,7 +44,7 @@
                 <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit', $perimetre['Perimetre']['id']),array('escape' => false)); ?>&nbsp;
                 <?php endif; ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('perimetres', 'delete')) : ?>
-                <?php echo $this->Form->postLink('<span class="glyphicons bin showoverlay notchange"></span>', array('action' => 'delete', $perimetre['Perimetre']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce périmètre ?')); ?>                    
+                <?php echo $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete', $perimetre['Perimetre']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce périmètre ?')); ?>                    
                 <?php endif; ?>                    
             </td>
 	</tr>

@@ -23,7 +23,7 @@
 		<td style="text-align:center;"><?php echo $this->Form->input('REVU',array('type'=>'hidden','class'=>'idhistory','value'=>$budget['Historybudget']['id']));?><?php echo $this->Form->input('ACTIF',array('type'=>'checkbox','class'=>'isactive savebudget','value'=>1,'checked'=>$budget['Historybudget']['ACTIF'],'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>&nbsp;</td>
                 <td>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activites', 'edit')) : ?>
-                    <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('controller'=>'historybudgets','action' => 'edit', $budget['Historybudget']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons pencil notchange"></span>', "#",array('escape' => false,'data-id'=>$budget['Historybudget']['id'])); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activites', 'delete')) : ?>
                     <?php echo $this->Html->link('<span class="glyphicons bin notchange"></span>', array('controller'=>'historybudgets','action' => 'delete', $budget['Historybudget']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce budget ?')); ?>
@@ -36,7 +36,7 @@
         <tfooter>
             <tr>
                 <th colspan="5" class="footer" style="text-align: center;">
-                    <?php echo $this->Html->link('Nouveau budget',array('controller'=>'historybudgets','action'=>'add',$this->params->pass[0]), array('class' => 'btn btn-sm btn-default')); ?>
+                    <?php echo $this->Html->link('Nouveau budget',"#", array('class' => 'btn btn-sm btn-default','data-toggle'=>"modal", 'data-target'=>"#modalnewbudget")); ?>
                 </th>
             </tr>
         </tfooter>
@@ -67,6 +67,31 @@ $(document).ready(function () {
         $(this).parents().find('.isactive').prop('checked', false); 
         $(this).prop('checked', true);  
     });
-             
+      
+    $(document).on('click','.pencil',function(e){
+        var id = $(this).parent('a').attr('data-id');
+        $.ajax({
+            type: "POST",       
+            url: "<?php echo $this->Html->url(array('controller'=>'historybudgets','action'=>'json_get_info')); ?>/" + id,
+            contentType: "application/json",
+            success : function(response) {
+                var json = $.parseJSON(response);
+                $('.form-horizontal').append("<input type='hidden' name='data[Historybudget][id]' id='HistorybudgetId' value='"+json[0]['Historybudget']['id']+"'>");
+                $('#closemodalnewbudget').attr('type', "submit");
+                $('#HistorybudgetActiviteId').val(json[0]['Historybudget']['activite_id']);
+                $('#HistorybudgetANNEE').val(json[0]['Historybudget']['ANNEE']);
+                $('#HistorybudgetPREVU').val(json[0]['Historybudget']['PREVU']);
+                $('#HistorybudgetREVU').val(json[0]['Historybudget']['REVU']);
+                $checked = json[0]['Historybudget']['ACTIF'] == 1 ? true : false;
+                $('#HistorybudgetACTIF').prop('checked', $checked);
+                $('.modal-title').html('Modification du budget');
+                $('.form-horizontal').attr('action', "<?php echo $this->Html->url(array('controller'=>'historybudgets','action'=>'edit')); ?>");
+                $('#modalnewbudget').modal('show');
+            },
+            error :function(response,status,errorThrown) {
+                alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+            }
+         });
+    });      
 });
 </script>

@@ -213,7 +213,7 @@ class FacturationsController extends AppController {
             if ($this->request->is('post')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Facturation->validate = array();
-                        $this->History->goBack(1);
+                        $this->History->goBack(2);
                     else:                
                         $facturations = $this->request->data['Facturation'];
                         unset($facturations['¤']);
@@ -238,7 +238,7 @@ class FacturationsController extends AppController {
                                 }                  
                             endif;
                         endforeach;
-                        $this->History->goBack(1);
+                        $this->History->goBack(2);
                 endif;
             }            
         }

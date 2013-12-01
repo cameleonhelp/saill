@@ -41,7 +41,9 @@ class ParametersController extends AppController {
                 $templategroupe = $this->get_templategroupe();
                 $this->set('templategroupe',$templategroupe);  
                 $templateoutil = $this->get_templateoutil();
-                $this->set('templateoutil',$templateoutil);                    
+                $this->set('templateoutil',$templateoutil); 
+                $developpeur = $this->get_developpeur();
+                $this->set('developpeur',$developpeur);   
 	}
         
 	public function savebdd() {
@@ -172,7 +174,17 @@ class ParametersController extends AppController {
         public function get_gestionnaireannuaire(){
             $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'gestionnaireannuaire'),'recursive'=>-1));
             return $version;
-        }       
+        }      
+        
+        public function get_developpeur(){
+            $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'developpeur'),'recursive'=>-1));
+            return $version;
+        }  
+        
+        public function get_gestionnaireenvironnement(){
+            $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'destmailenv'),'recursive'=>-1));
+            return $version; 
+        }
         
         public function get_valideuroutil(){
             $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'valideuroutil'),'recursive'=>-1));

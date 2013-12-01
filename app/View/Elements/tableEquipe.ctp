@@ -24,7 +24,7 @@
     </div>
 <script>
 $(document).ready(function(e){
-    $('.showpickcolor').colorpicker({format:'hex'});
+    $('.showpickcolor').colorpicker({format:'hex',horizontal:true});
     
     $(document).on('click','.showpickcolor',function(e){
         var value = $(this).attr('data-color');

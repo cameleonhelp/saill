@@ -35,8 +35,8 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->css('chronoline');
                 echo $this->Html->css('datepicker');
                 echo $this->Html->css('colorpicker');
-                echo $this->Html->css('flatTinyMCE');
                 echo $this->Html->css('bs-custom-sncf');
+                echo $this->Html->css('iosswitch');
                 
                 echo $this->Html->script('jQuery/jquery');
                 echo $this->Html->script('bootstrap');              
@@ -150,7 +150,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 <div class="cursor marginright20" id="flash_message"><?php echo $this->Session->flash(); ?></div>
                 <div id="container_message" name="container_message" style="cursor:pointer;width: 98%;" class="alert alert-danger"><ol></ol></div>
                 <?php echo $this->fetch('content'); ?>
-                <div><?php                
+                <div><?php       
 //debug($this->Session->read('User.history'));
 //debug($this->Session->read('User.goback'));
 //debug($this->request->data);

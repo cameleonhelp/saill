@@ -35,16 +35,16 @@
 	<tr rowindex="<?php echo $i; ?>">
 		<td class="tdmonth">
                     <?php if($detailplancharge['Detailplancharge']['userIsActif'] ||$detailplancharge['Detailplancharge']['utilisateur_id']<0 ) :?>
-                    <?php echo $this->Form->select('Detailplancharge.'.$i.'.utilisateur_id',$utilisateurs,array('data-rule-required'=>'true','class'=>'utilisateur form-control','default'=>$detailplancharge['Detailplancharge']['utilisateur_id'],'data-msg-required'=>'Le nom de l\'utilisateur est obligatoire','empty' => 'Choisir un utilisateur')); ?>                    
+                    <?php echo $this->Form->select('Detailplancharge.'.$i.'.utilisateur_id',$utilisateurs,array('data-rule-required'=>'true','class'=>'utilisateur form-control','default'=>$detailplancharge['Detailplancharge']['utilisateur_id'],'data-msg-required'=>'Le nom de l\'utilisateur est obligatoire','empty' => 'Choisir un utilisateur','rel'=>"tooltip",'data-trigger'=>"hover",'data-placement'=>"auto",'title'=>$detailplancharge['Utilisateur']['NOMLONG'])); ?>                    
                     <?php else : ?>
                     <?php echo $detailplancharge['Utilisateur']['NOMLONG']; ?>                    
                     <?php endif; ?>
                 </td>
 		<td class="tdmonth">
-                    <?php echo $this->Form->select('Detailplancharge.'.$i.'.domaine_id',$domaines,array('class'=>'form-control','data-rule-required'=>'true','default'=>$detailplancharge['Detailplancharge']['domaine_id'],'data-msg-required'=>'Le nom du domaine est obligatoire','empty' => 'Choisir un domaine')); ?>                                        
+                    <?php echo $this->Form->select('Detailplancharge.'.$i.'.domaine_id',$domaines,array('class'=>'domaine form-control','data-rule-required'=>'true','default'=>$detailplancharge['Detailplancharge']['domaine_id'],'data-msg-required'=>'Le nom du domaine est obligatoire','empty' => 'Choisir un domaine','rel'=>"tooltip",'data-trigger'=>"hover",'data-placement'=>"auto",'title'=>$detailplancharge['Domaine']['NOM'])); ?>                                        
                 </td>
 		<td class="tdmonth">
-                <select name="data[Detailplancharge][<?php echo $i; ?>][activite_id]" class=" form-control" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Detailplancharge<?php echo $i; ?>ActiviteId"> 
+                <select name="data[Detailplancharge][<?php echo $i; ?>][activite_id]" class="activite form-control" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Detailplancharge<?php echo $i; ?>ActiviteId" rel="tooltip" data-trigger="hover" data-placement="auto" title="<?php echo $detailplancharge['Activite']['NOM']; ?>"> 
                     <option value="">Choisir une activité</option>
                     <?php foreach ($activites as $activite) : ?>
                     <?php $selected = ''; ?>
@@ -267,7 +267,7 @@ $(document).ready(function () {
         $("#totalcout").html(sumOfCout());         
     });      
     $(document).on('change','.utilisateur',function(e){
-        var id = $(this).val();
+        var id = $(this).val();        
         var index = 0;
         if ($(this).hasClass('newselect')) {
             index = $('#detailplanchargeTable tr').length-4; 
@@ -276,6 +276,7 @@ $(document).ready(function () {
         }
         var ETP = 'Detailplancharge'+index+'ETP';  
         var TJM = 'Detailplancharge'+index+'TJM';
+        $(this).attr('data-original-title',$('#Detailplancharge'+index+'UtilisateurId'+" option:selected").text());
         $.ajax({
             type: "POST",       
             url: "<?php echo $this->Html->url(array('controller'=>'utilisateurs','action'=>'infoutilisateur')); ?>/"+id,
@@ -311,5 +312,23 @@ $(document).ready(function () {
             }
         });
     }); 
+    $(document).on('change','.domaine',function(e){       
+        var index = 0;
+        if ($(this).hasClass('newselect')) {
+            index = $('#detailplanchargeTable tr').length-4; 
+        } else {
+            index = $(this).parents('tr').attr('rowindex');
+        }
+        $(this).attr('data-original-title',$('#Detailplancharge'+index+'DomaineId'+" option:selected").text());
+    });
+    $(document).on('change','.activite',function(e){       
+        var index = 0;
+        if ($(this).hasClass('newselect')) {
+            index = $('#detailplanchargeTable tr').length-4; 
+        } else {
+            index = $(this).parents('tr').attr('rowindex');
+        }
+        $(this).attr('data-original-title',$('#Detailplancharge'+index+'ActiviteId'+" option:selected").text());
+    });    
 });    
 </script>

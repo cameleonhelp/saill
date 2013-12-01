@@ -7,13 +7,12 @@
 html,
 body {
   height: 100%;
-  overflow: auto;
   font-family: Arial;
   font-weight: lighter; 
   font-size: 12px;
   line-height: 18px;
   color: #747678;
-  background-color: #ffffff;  
+  background-color: #ffffff; 
   /* The html and body elements cannot have any padding or margin. */
 }
 
@@ -429,6 +428,10 @@ float: left !important;
 .form-footer{
     clear:both;
 }
+.btn-group > .btn.filtreactif{
+     box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125) !important;
+     border: 1px solid #adadad !important;
+}
 
 /* Custom Page-header
 ---------------------------------------------------*/
@@ -748,6 +751,7 @@ panel-price-stats{
 
 #wrap > .container {
   padding: 40px 0px 0;
+  padding-bottom: 30px !important;
 }
 .container {
   width: auto;
@@ -1308,7 +1312,7 @@ code {
 }
 @media (min-width: 1200px) {
   .container {
-    width: 98%;      
+    width: 97.5%;      
     max-width: 100%;
   }
   .col-auto-margin{
@@ -1342,7 +1346,7 @@ code {
     float:left;
   }
   .block-panel-33-right{
-   width: 32%;
+   width: 31%;
    margin-left: 0px;
    margin-right: 0px;
    float: right;
@@ -1416,7 +1420,7 @@ code {
     float:left;
   }
   .block-panel-25-right{
-   width: 24%;
+   width: 4%;
    margin-left: 0px;
    margin-right: 0px;
    float: right;
@@ -1427,7 +1431,7 @@ code {
     float:left;
   }
   .block-panel-33-right{
-   width: 32%;
+   width: 31%;
    margin-left: 0px;
    margin-right: 0px;
    float: right;
@@ -1474,6 +1478,177 @@ code {
   }  
 }
 
+@media (min-width: 1600px) {
+  .container {
+    width: 96.5%;     
+    max-width: 100%;
+  }
+  .col-auto-margin{
+	width: 88.5%;
+  }  
+  .thin-col-82{
+      width: 67% !important;
+      min-width: 67% !important;
+      max-width: 67% !important;
+  } 
+  .table{
+      width:99.5% !important;
+  }
+  .col-25-right{
+   width: 23%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: right;
+  }
+  .block-panel-75-left{
+    width: 73%;
+    margin-right: 20px;    
+    float:left;
+  }
+  .block-panel-25-right{
+   width: 4%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: right;
+  }
+  .block-panel-66-left{
+    width: 66%;
+    margin-right: 20px;    
+    float:left;
+  }
+  .block-panel-33-right{
+   width: 31%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: right;
+  }
+ .block-panel-33-middle{
+   width: 30%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: left;
+  }
+  .block-panel-50-left{
+    width: 50%;
+    margin-right: 0px; 
+    padding-right: 20px;
+    float:left;
+  }
+  .block-panel-50-right{
+   width: 50%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: right;
+  }
+  .block-panel-33-left{
+    width: 30%;
+    margin-right: 20px;    
+    float:left;
+  }
+  .block-panel-66-right{
+   width: 63%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: right;
+  }
+  .block-panel-25-left{
+    width: 23%;
+    margin-right: 20px;    
+    float:left;
+  }
+  .block-panel-75-right{
+   width: 73%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: right;
+  }  
+}
+
+@media (min-width: 1800px) {
+  .container {
+    width: 98.2%;     
+    max-width: 100%;
+  }
+  .col-auto-margin{
+	width: 88.5%;
+  }  
+  .thin-col-82{
+      width: 67% !important;
+      min-width: 67% !important;
+      max-width: 67% !important;
+  } 
+  .table{
+      width:99.5% !important;
+  }
+  .col-25-right{
+   width: 23%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: right;
+  }
+  .block-panel-75-left{
+    width: 73%;
+    margin-right: 20px;    
+    float:left;
+  }
+  .block-panel-25-right{
+   width: 4%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: right;
+  }
+  .block-panel-66-left{
+    width: 66%;
+    margin-right: 20px;    
+    float:left;
+  }
+  .block-panel-33-right{
+   width: 31%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: right;
+  }
+ .block-panel-33-middle{
+   width: 30%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: left;
+  }
+  .block-panel-50-left{
+    width: 50%;
+    margin-right: 0px; 
+    padding-right: 20px;
+    float:left;
+  }
+  .block-panel-50-right{
+   width: 50%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: right;
+  }
+  .block-panel-33-left{
+    width: 30%;
+    margin-right: 20px;    
+    float:left;
+  }
+  .block-panel-66-right{
+   width: 63%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: right;
+  }
+  .block-panel-25-left{
+    width: 23%;
+    margin-right: 20px;    
+    float:left;
+  }
+  .block-panel-75-right{
+   width: 73%;
+   margin-left: 0px;
+   margin-right: 0px;
+   float: right;
+  }  
+}
 /* Block de texte
 --------------------------------------------------*/
 .bs-callout h4 {
@@ -2161,6 +2336,10 @@ label.italic{
     background-color: #AEA79F !important;
     color: #F7F7F7;
 }
+.tmpindispo{
+    background-color: #f1e7bc !important;
+    color: #F7F7F7;
+}
 .week {
     background-color: #CB0044 !important;
     color: #F7F7F7;
@@ -2484,4 +2663,9 @@ a.badge:hover {
 .dropdown-menu > li > a:hover > .glyphicons:before,
 .dropdown-menu > li > a:active > .glyphicons:before{
     color: #3E3D40 !important;
+}
+.has-error .input-group {
+border-color: #b94a48;
+-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }

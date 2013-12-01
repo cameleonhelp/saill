@@ -161,6 +161,13 @@ class Activitesreelle extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'Demandeabsence' => array(
+			'className' => 'Demandeabsence',
+			'foreignKey' => 'demandeabsence_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
 

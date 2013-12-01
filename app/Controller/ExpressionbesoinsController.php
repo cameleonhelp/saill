@@ -122,6 +122,8 @@ class ExpressionbesoinsController extends AppController {
 			if ($this->Expressionbesoin->save($this->request->data)) {
                                 $id = $this->Expressionbesoin->getLastInsertID();
                                 $this->saveHistory($id);
+                                $expb = $this->Expressionbesoin->find('all',array('conditions'=>array('Expressionbesoin.id'=>$id),'recursive'=>0));
+                                $this->sendmailajout($expb);
 				$this->Session->setFlash(__('Expression du besoin sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
@@ -270,7 +272,8 @@ class ExpressionbesoinsController extends AppController {
                         else :
                             $this->Session->setFlash(__('Modification du statut supprimé <b>NON</b> pris en compte pouter toutes les expressions de besoin sélectionnées',true),'flash_failure');
                         endif;
-                    endforeach;  
+                    endforeach; 
+                    sleep(3);
                     //$this->History->goBack(1);
                 endif;
             else :
@@ -319,10 +322,60 @@ class ExpressionbesoinsController extends AppController {
         
         public function rapport(){
             $this->set('title_for_layout','Rapport expression des besoins');
-            if (isAuthorized('expressionbesoins', 'delete')) :
+            if (isAuthorized('expressionbesoins', 'delete')) :               
                 $etats = $this->requestAction('etats/get_select/1');                
 		$lots = $this->requestAction('lots/get_select/1'); 
-                $this->set(compact('etats','lots'));   
+                $perimetres = $this->requestAction('perimetres/get_select/1'); 
+                $mois = array('01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre');
+                $fiveyearago = date('Y')-5;
+                for($i=0;$i<6;$i++):
+                    $year = $fiveyearago + $i;
+                    $annee[$year]=$year;
+                endfor;                
+                $this->set(compact('etats','lots','perimetres', 'mois', 'annee')); 
+                if ($this->request->is('post')):
+                    $mois = $this->data['Expressionbesoin']['mois'];
+                    $annee = $this->data['Expressionbesoin']['annee'];                     
+                    $selectlot = $this->data['Expressionbesoin']['lot_id']=='' || $this->data['Expressionbesoin']['lot_id']=='4' ? '' : ' AND lot_id = '.$this->data['Expressionbesoin']['lot_id'];
+                    $selectperimetre = $this->data['Expressionbesoin']['perimetre_id']=='' ? '' : ' AND perimetre_id = '.$this->data['Expressionbesoin']['perimetre_id'];
+                    $thisetats = $this->data['Expressionbesoin']['etat_id'];
+                    $listetats = '';
+                    foreach($thisetats as $key => $value):
+                        $listetats.=$value.',';
+                    endforeach;
+                    $selectetat = ' AND etat_id in ('.substr_replace($listetats ,"",-1).')';
+                    $sql = "select count(expressionbesoins.id) as NB,MONTH(DATELIVRAISON) as MOIS, lots.NOM as LOT,applications.NOM as APPLICATION,etats.NOM as ETAT, perimetres.`NOM` AS PERIMETRE
+                            from expressionbesoins
+                            LEFT JOIN lots on expressionbesoins.lot_id = lots.id
+                            LEFT JOIN applications on expressionbesoins.application_id = applications.id
+                            LEFT JOIN perimetres on expressionbesoins.perimetre_id = perimetres.id
+                            LEFT JOIN etats on expressionbesoins.etat_id = etats.id
+                            WHERE (DATELIVRAISON IS NOT NULL AND  DATELIVRAISON <> '0000-00-00' AND MONTH(DATELIVRAISON) = ".$mois.
+                            ") AND YEAR(DATELIVRAISON) = ".$annee." ".$selectlot.$selectperimetre.$selectetat.
+                            " group by lot_id, application_id, perimetre_id,etat_id
+                            order by MONTH(DATELIVRAISON) asc,lot_id asc, perimetre_id asc, application_id asc, etat_id asc;";
+                    $results = $this->Expressionbesoin->query($sql);
+                    $this->set('results',$results);
+                    $chartsql = "select count(expressionbesoins.id) as NB, lots.NOM as LOT, perimetres.`NOM` AS PERIMETRE
+                            from expressionbesoins
+                            LEFT JOIN lots on expressionbesoins.lot_id = lots.id
+                            LEFT JOIN perimetres on expressionbesoins.perimetre_id = perimetres.id
+                            WHERE (DATELIVRAISON IS NOT NULL AND  DATELIVRAISON <> '0000-00-00' AND MONTH(DATELIVRAISON) = ".$mois.
+                            ") AND YEAR(DATELIVRAISON) = ".$annee." ".$selectlot.$selectperimetre.$selectetat.
+                            " group by lot_id, perimetre_id
+                            order by lot_id asc, perimetre_id asc;";
+                    $chartresults = $this->Expressionbesoin->query($chartsql);
+                    $this->set('chartresults',$chartresults);   
+                    $charthistosql = "select count(expressionbesoins.id) as NB,MONTH(DATELIVRAISON) as MOIS, lots.NOM as LOT
+                            from expressionbesoins
+                            LEFT JOIN lots on expressionbesoins.lot_id = lots.id
+                            WHERE (DATELIVRAISON IS NOT NULL AND  DATELIVRAISON <> '0000-00-00'".
+                            ") AND YEAR(DATELIVRAISON) = ".$annee." ".$selectlot.$selectperimetre.$selectetat.
+                            " group by MONTH(DATELIVRAISON),lot_id
+                            order by MONTH(DATELIVRAISON) asc,lot_id asc;";
+                    $charthistoresults = $this->Expressionbesoin->query($charthistosql);
+                    $this->set('charthistoresults',$charthistoresults);                    
+                endif;                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -401,5 +454,33 @@ class ExpressionbesoinsController extends AppController {
                 $this->Session->setFlash(__('Fichier <b>NON</b> reconnu',true),'flash_failure');
             endif;            
             $this->History->notmove();
-        }        
+        }   
+        
+        public function sendmailajout($expb){
+            $valideurs = $this->requestAction('parameters/get_gestionnaireenvironnement');
+            $to = explode(';', $valideurs['Parameter']['param']);
+            $from = userAuth('MAIL');
+            $objet = 'SAILL : Nouvelle demande d\'environnement ['.$expb['Application']['NOM'].']';
+            $message = "Merci de traiter la demande suivnate: ".
+                    '<ul>
+                    <li>Application :'.$expb['Application']['NOM'].'</li>
+                    <li>Composant :'.$expb['Composant']['NOM'].'</li>
+                    <li>Périmètre :'.$expb['Perimetre']['NOM'].'</li> 
+                    <li>Lot :'.$expb['Lot']['NOM'].'</li>       
+                    </ul>';
+            if(count($to) > 0):
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+                }
+                catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                }  
+            endif;
+        }         
 }

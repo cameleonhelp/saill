@@ -50,7 +50,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicons check"></span> Actions groupées <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Prolonger', "#",array('id'=>'prolongerlink','class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Prolonger', "#",array('id'=>'prolongerlink','class'=>'')); ?></li>
                      <li><?php echo $this->Html->link('Désactiver', "#",array('id'=>'desactiverlink','class'=>'showoverlay')); ?></li>
                      </ul>
                 </li>                 
@@ -141,7 +141,7 @@
                     <span class="glyphicons blank"></span>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'delete')) : ?>
-                    <?php echo $this->Form->postLink('<span class="glyphicons bin showoverlay notchange"></span>', array('action' => 'delete', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet utilisateur ?')); ?>                    
+                    <?php echo $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet utilisateur ?')); ?>                    
                     <?php else: ?>
                     <span class="glyphicons blank"></span>
                     <?php endif; ?>
@@ -180,6 +180,7 @@
         </ul>
         </div>
 </div>
+<?php echo $this->element('modalprolongation'); ?>
 <script>
     
      $(document).ready(function () {
@@ -191,19 +192,8 @@
     
         $(document).on('click','#prolongerlink',function(e){
             var ids = $("#all_ids").val();
-            var overlay = $('#overlay');
-            overlay.show(); 
-            $.ajax({
-                dataType: "html",
-                type: "POST",
-                url: "<?php echo $this->Html->url(array('controller'=>'utilisateurs','action'=>'prolonger')); ?>/",
-                data: ({all_ids:ids})
-            }).done(function ( data ) {
-                location.reload();
-                overlay.hide();
-            });
-            $(this).parents().find(':checkbox').prop('checked', false);  
-            $("#all_ids").val('');
+            $("#UtilisateurIds").val(ids);
+            $('#modalprolongation').modal('toggle');
         });
         
         $(document).on('click','#desactiverlink',function(e){

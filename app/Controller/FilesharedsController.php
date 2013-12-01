@@ -107,7 +107,9 @@ class FilesharedsController extends AppController {
                 //JLR :: on ne rajoute pas les jours fériés et les week end
                 if($date->format('N')<6 && !isFerie($date)):
                     $activite_id =$this->requestAction('Activites/getId/'.$event['INDISPONIBILITE']);
-                    $allindispos[] = array("id"=>CIntDate(startWeek($date->format('Y-m-d'))),"DATE"=>startWeek($date->format('Y-m-d')),"DAY"=>$days[$date->format('N')],"TYPE"=>$type,"ACTIVITE"=>$activite_id['Activite']['id'],'utilisateur_id'=>$utilisateur_id,'DUREE'=>$nb);
+                    if(count($activite_id)>0):
+                        $allindispos[] = array("id"=>CIntDate(startWeek($date->format('Y-m-d'))),"DATE"=>startWeek($date->format('Y-m-d')),"DAY"=>$days[$date->format('N')],"TYPE"=>$type,"ACTIVITE"=>$activite_id['Activite']['id'],'utilisateur_id'=>$utilisateur_id,'DUREE'=>$nb);
+                    endif;
                 endif;
                 $date->add(new DateInterval('P1D'));
             endfor;

@@ -153,7 +153,7 @@
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('expressionbesoins', 'delete')) : ?>
                 <?php $actif = $expressionbesoin['Expressionbesoin']['ACTIF']==true ? '' : ' grey'; ?>
                 <?php $action = $expressionbesoin['Expressionbesoin']['ACTIF']==true ? 'supprimer' : 'activer'; ?>                  
-                <?php echo $this->Form->postLink('<span class="glyphicons showoverlay bin notchange'.$actif.'"></span>', array('action' => 'delete', $expressionbesoin['Expressionbesoin']['id']),array('escape' => false), __('Etes-vous certain de vouloir '.$action.' cette expression du besoin ?')); ?>                    
+                <?php echo $this->Form->postLink('<span class="glyphicons bin notchange'.$actif.'"></span>', array('action' => 'delete', $expressionbesoin['Expressionbesoin']['id']),array('escape' => false), __('Etes-vous certain de vouloir '.$action.' cette expression du besoin ?')); ?>                    
                 <?php endif; ?>  
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('expressionbesoins', 'duplicate')) : ?>
                 <?php echo $this->Form->postLink('<span class="glyphicons retweet showoverlay notchange"></span>', array('action' => 'dupliquer', $expressionbesoin['Expressionbesoin']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cette expression du besoin ?')); ?>

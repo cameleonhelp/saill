@@ -30,6 +30,7 @@ class HistorybudgetsController extends AppController {
 	public function add($activite_id=null) {
             $this->set('title_for_layout','Nouveau budget');
             $lastcheck = $this->Historybudget->find('first',array('fields'=>array('id'),'conditions'=>array('activite_id'=>$activite_id,'ACTIF'=>1),'recursive'=>-1));  
+            $activite_id = $activite_id==null ? $this->request->data['Historybudget']['activite_id'] : $activite_id;
             if (isAuthorized('activites', 'add') && $activite_id!=null) :            
 		if ($this->request->is('post')) :
 			$this->Historybudget->create();
@@ -40,7 +41,7 @@ class HistorybudgetsController extends AppController {
                             if ($history['Historybudget']['ACTIF']==1) {$this->saveActiviteBudget($history['Historybudget']['activite_id'], $history_id,$lastidcheck);}                          
 			} 
                         $this->Session->setFlash(__('Historique du budget sauvegardé',true),'flash_success');
-			$this->History->goBack(1);                        
+			$this->History->goBack(1);
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -57,11 +58,16 @@ class HistorybudgetsController extends AppController {
  */
 	public function edit($id = null) {
             $this->set('title_for_layout','Modification du budget');
+            $id = $id == null ? $this->request->data['Historybudget']['id'] : $id;
             if (isAuthorized('activites', 'edit') && $id!=null) :
 		if (!$this->Historybudget->exists($id)) {
 			throw new NotFoundException(__('Historique de budget invalide.'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Historybudget->validate = array();
+                        $this->History->goBack(2);
+                    else:    
                         $history = $this->Historybudget->find('first',array('conditions'=>array('id'=>$id),'recursive'=>-1));
                         $lastcheck = $this->Historybudget->find('first',array('fields'=>array('id'),'conditions'=>array('activite_id'=>$history['Historybudget']['activite_id'],'ACTIF'=>1),'recursive'=>-1)); 
 			$lastidcheck = isset($lastcheck['Historybudget']['id']) ? $lastcheck['Historybudget']['id'] : null;
@@ -71,8 +77,9 @@ class HistorybudgetsController extends AppController {
                             if ($newhistory['Historybudget']['ACTIF']==1) {$this->saveActiviteBudget($newhistory['Historybudget']['activite_id'], $id,$lastidcheck);}
                             if ($history['Historybudget']['ACTIF']==1 && $newhistory['Historybudget']['ACTIF']==0){$this->resethistory($id,$newhistory['Historybudget']['activite_id']);}
                             $this->Session->setFlash(__('Historique du budget modifié',true),'flash_success');
-                            $this->History->goBack(1);                             
+                            $this->History->goBack(2);                       
 			} 
+                    endif;
 		} else {
 			$options = array('conditions' => array('Historybudget.' . $this->Historybudget->primaryKey => $id));
 			$this->request->data = $this->Historybudget->find('first', $options);
@@ -146,4 +153,30 @@ class HistorybudgetsController extends AppController {
             $this->Historybudget->id = $id;
             $this->Historybudget->saveField('ACTIF', 0);            
         }
+        
+        public function json_get_info($id){
+            $this->autoRender = false;
+            $conditions[] = 'Historybudget.id='.$id;
+            $return = $this->Historybudget->find('all',array('conditions'=>$conditions,'recursive'=>-1));
+            $result = json_encode($return);
+            return $result;
+        }
+        
+        public function ajaxedit() {
+            $this->autoRender = false;
+            if (isAuthorized('activites', 'edit')) :
+		if ($this->request->is('post') || $this->request->is('put')) :
+                        $id = $this->request->data['Historybudget']['id'];
+			if ($this->Historybudget->save($this->request->data)) {
+				$this->Session->setFlash(__('Modification sauvegardée',true),'flash_success');
+			} else {
+				$this->Session->setFlash(__('Objet incorrect, veuillez corriger l\'objet',true),'flash_failure');
+			}
+                        $this->History->notmove();                        
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
+                throw new NotAuthorizedException();
+            endif;                 
+	}  
 }

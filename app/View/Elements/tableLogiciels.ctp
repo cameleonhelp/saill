@@ -20,7 +20,7 @@
                 <?php endif; ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('logiciels', 'delete')) : ?>
                 <!-- à mettre en ajax -->                
-                <?php echo $this->Form->postLink('<span class="glyphicons showoverlay bin notchange"></span>', array('controller'=>'assobienlogiciels','action' => 'ajaxdelete', $logiciel['Assobienlogiciel']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce logiciels ?')); ?>                    
+                <?php echo $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('controller'=>'assobienlogiciels','action' => 'ajaxdelete', $logiciel['Assobienlogiciel']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce logiciels ?')); ?>                    
                 <?php endif; ?>   
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('logiciels', 'edit')) : ?>
                 <?php echo $this->Html->link('<span class="glyphicons nameplate notchange"></span>', array('controller'=>'logiciels','action'=>'edit',$logiciel['Assobienlogiciel']['logiciel_id']),array('escape' => false)); ?>&nbsp;

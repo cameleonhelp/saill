@@ -142,7 +142,7 @@
             <?php if (userAuth('profil_id')!='2' && isAuthorized('biens', 'delete')) : ?>
             <?php $actif = $bien['Bien']['ACTIF']==true ? '' : ' grey'; ?>
             <?php $action = $bien['Bien']['ACTIF']==true ? 'supprimer' : 'activer'; ?>
-            <?php echo $this->Form->postLink('<span class="glyphicons showoverlay bin notchange'.$actif.'"></span>', array('action' => 'delete', $bien['Bien']['id']),array('escape' => false), __('Etes-vous certain de vouloir '.$action.' ce bien ?')); ?>                    
+            <?php echo $this->Form->postLink('<span class="glyphicons bin notchange'.$actif.'"></span>', array('action' => 'delete', $bien['Bien']['id']),array('escape' => false), __('Etes-vous certain de vouloir '.$action.' ce bien ?')); ?>                    
             <?php endif; ?>  
             <?php if (userAuth('profil_id')!='2' && isAuthorized('biens', 'duplicate')) : ?>
             <?php echo $this->Form->postLink('<span class="glyphicons showoverlay retweet notchange"></span>', array('action' => 'dupliquer', $bien['Bien']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer ce bien ?')); ?>

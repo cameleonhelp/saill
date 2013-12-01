@@ -10,6 +10,7 @@ App::uses('ConnectionManager', 'Model');
  */
     function isFerie($date){
         date_default_timezone_set('Europe/Paris');
+        $date = !is_object($date) ? new DateTime($date) : $date;
         $an = $date->format('Y');
         $tab_feries[] = $an.'-01-01'; // Jour de l'an
         $tab_feries[] = $an.'-05-01'; // Fête du travail
@@ -303,50 +304,57 @@ App::uses('ConnectionManager', 'Model');
             $day = CUSDate($indispo['Activitesreelle']['DATE']);
             if ($indispo['Activitesreelle']['LU'] > 0) :
                 $date = new DateTime($day);
-                $periodeLU = $indispo['Activitesreelle']['LU_TYPE'];                 
-                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeLU,'NB'=>$indispo['Activitesreelle']['LU']);
+                $periodeLU = $indispo['Activitesreelle']['LU_TYPE']; 
+                $tmp = $indispo['Activitesreelle']['demandeabsence_id']!=null ? true : false;
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeLU,'NB'=>$indispo['Activitesreelle']['LU'],'TMP'=>$tmp);
                 array_push($result,$newIndispo);
             endif;
             if ($indispo['Activitesreelle']['MA'] > 0) :
                 $date = new DateTime($day);
                 $date->add(new DateInterval('P1D'));
-                $periodeMA = $indispo['Activitesreelle']['MA_TYPE'];                
-                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeMA,'NB'=>$indispo['Activitesreelle']['MA']);
+                $periodeMA = $indispo['Activitesreelle']['MA_TYPE'];   
+                $tmp = $indispo['Activitesreelle']['demandeabsence_id']!=null ? true : false;
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeMA,'NB'=>$indispo['Activitesreelle']['MA'],'TMP'=>$tmp);
                 array_push($result,$newIndispo);
             endif;
             if ($indispo['Activitesreelle']['ME'] > 0) :
                 $date = new DateTime($day);
                 $date->add(new DateInterval('P2D'));
-                $periodeME = $indispo['Activitesreelle']['ME_TYPE'];                
-                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeME,'NB'=>$indispo['Activitesreelle']['ME']);
+                $periodeME = $indispo['Activitesreelle']['ME_TYPE']; 
+                $tmp = $indispo['Activitesreelle']['demandeabsence_id']!=null ? true : false;
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeME,'NB'=>$indispo['Activitesreelle']['ME'],'TMP'=>$tmp);
                 array_push($result,$newIndispo);
             endif;
             if ($indispo['Activitesreelle']['JE'] > 0) :
                 $date = new DateTime($day);
                 $date->add(new DateInterval('P3D'));
-                $periodeJE = $indispo['Activitesreelle']['JE_TYPE'];                             
-                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeJE,'NB'=>$indispo['Activitesreelle']['JE']);
+                $periodeJE = $indispo['Activitesreelle']['JE_TYPE']; 
+                $tmp = $indispo['Activitesreelle']['demandeabsence_id']!=null ? true : false;
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeJE,'NB'=>$indispo['Activitesreelle']['JE'],'TMP'=>$tmp);
                 array_push($result,$newIndispo);
             endif;
             if ($indispo['Activitesreelle']['VE'] > 0) :
                 $date = new DateTime($day);
                 $date->add(new DateInterval('P4D'));
-                $periodeVE = $indispo['Activitesreelle']['VE_TYPE'];                
-                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeVE,'NB'=>$indispo['Activitesreelle']['VE']);
+                $periodeVE = $indispo['Activitesreelle']['VE_TYPE']; 
+                $tmp = $indispo['Activitesreelle']['demandeabsence_id']!=null ? true : false;
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeVE,'NB'=>$indispo['Activitesreelle']['VE'],'TMP'=>$tmp);
                 array_push($result,$newIndispo);
             endif;            
             if ($indispo['Activitesreelle']['SA'] > 0) :
                 $date = new DateTime($day);
                 $date->add(new DateInterval('P5D'));
-                $periodeSA = $indispo['Activitesreelle']['SA_TYPE'];                          
-                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeSA,'NB'=>$indispo['Activitesreelle']['SA']);
+                $periodeSA = $indispo['Activitesreelle']['SA_TYPE'];  
+                $tmp = $indispo['Activitesreelle']['demandeabsence_id']!=null ? true : false;
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeSA,'NB'=>$indispo['Activitesreelle']['SA'],'TMP'=>$tmp);
                 array_push($result,$newIndispo);
             endif;
             if ($indispo['Activitesreelle']['DI'] > 0) :
                 $date = new DateTime($day);
                 $date->add(new DateInterval('P6D'));
-                $periodeDI = $indispo['Activitesreelle']['DI_TYPE'];                
-                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeDI,'NB'=>$indispo['Activitesreelle']['DI']);
+                $periodeDI = $indispo['Activitesreelle']['DI_TYPE'];  
+                $tmp = $indispo['Activitesreelle']['demandeabsence_id']!=null ? true : false;
+                $newIndispo = array('utilisateur_id'=>$indispo['Activitesreelle']['utilisateur_id'],'DATE'=>$date->format('Y-m-d'),'PERIODE'=>$periodeDI,'NB'=>$indispo['Activitesreelle']['DI'],'TMP'=>$tmp);
                 array_push($result,$newIndispo);
             endif;            
         } 
@@ -390,13 +398,13 @@ App::uses('ConnectionManager', 'Model');
         foreach ($arrays as $array):
             if ($utilisateur_id==$array['utilisateur_id']):
                 if ($date==$array['DATE']):
-                    $result = array('nb'=>$array['NB'],'periode'=>$array['PERIODE']);
+                    $result = array('nb'=>$array['NB'],'periode'=>$array['PERIODE'],'tmp'=>$array['TMP']);
                     break;
                 else:
-                    $result = array('nb'=>'','periode'=>'');
+                    $result = array('nb'=>'','periode'=>'','tmp'=>false);
                 endif;
             else :
-                $result = array('nb'=>'','periode'=>'');
+                $result = array('nb'=>'','periode'=>'','tmp'=>false);
             endif;
         endforeach;
         return $result;
@@ -1072,10 +1080,57 @@ function subfiltre_is_actif($values=null,$default){
     return $return == true ? ' subfilteractif' : '';
 }
 
+function subfiltre_btn_is_actif($values=null,$default){
+    $return = $values == null ? true : false; 
+    $return = (string)$values === (string)$default ? true : false;
+    return $return == true ? ' subfilteractif' : '';
+}
+
+function filtre_btn_is_actif($values=null,$default){
+    $return = $values != null ? true : false;
+    $return = (string)$values === (string)$default ? false : true;
+    return $return == true ? ' filtreactif' : '';
+}
+
 function classActive($class){
       return $class == 'active_head' ? 'in' : '';
 }
 
 function classChevron($class){
       return $class == 'active_head' ? 'chevron-down' : 'chevron-right grey';
+}
+
+function CReponse($reponse){
+    switch ($reponse) {
+        case null:
+            return 'En attente';
+            break;
+        case '1':
+            return 'Validée';
+            break;
+        case '2':
+            return 'Refusée';
+            break; 
+        case '3':
+            return 'Supprimée';
+            break;        
+    }
+}
+
+function array_uniquecolumn($arr,$arrsearch,$key)
+{
+    $newArray = array();
+
+    foreach($arr as $value) {
+        $newArray[] = $value[$arrsearch];
+    }
+    return (simple_array_unique($newArray,$key));
+}
+
+function simple_array_unique($array,$key){
+    $result = array();
+    foreach ($array as $value):
+        $result[]=$value[$key];
+    endforeach;
+    return array_unique($result);
 }

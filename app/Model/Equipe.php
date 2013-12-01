@@ -51,12 +51,12 @@ class Equipe extends AppModel {
 			'order' => ''
 		)
 	);
-        
+
         public function getAgent($id){
             $sql = "SELECT * FROM utilisateurs WHERE id='".$id."'";
             $result = $this->query($sql);
             return  !empty($result) ? $result[0] : "";
-        }   
+        }          
         
         public function getValideur($id){
             $sql = "SELECT * FROM utilisateurs WHERE id='".$id."'";
@@ -82,7 +82,7 @@ class Equipe extends AppModel {
                 }                   
                 if (isset($val['Equipe']['agent'])) {
                     $results[$key]['Agent'] = $this->getAgent($val['Equipe']['agent']);
-                }  
+                }              
                 if (isset($val['Equipe']['utilisateur_id'])) {
                     $results[$key]['Valideur'] = $this->getValideur($val['Equipe']['utilisateur_id']);
                 }                   

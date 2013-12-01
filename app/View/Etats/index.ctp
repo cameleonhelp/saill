@@ -46,7 +46,7 @@
                 <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit', $etat['Etat']['id']),array('escape' => false)); ?>&nbsp;
                 <?php endif; ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('etats', 'delete')) : ?>
-                <?php echo $this->Form->postLink('<span class="glyphicons bin showoverlay notchange"></span>', array('action' => 'delete', $etat['Etat']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet état ?')); ?>                    
+                <?php echo $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete', $etat['Etat']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cet état ?')); ?>                    
                 <?php endif; ?>                    
             </td>
 	</tr>

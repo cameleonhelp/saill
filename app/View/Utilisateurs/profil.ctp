@@ -227,7 +227,7 @@
         </div>
     </div>
 </div> 
-<?php if(userAuth('profil_id')>-1 && userAuth('profil_id')<6): ?>
+<?php if(isAuthorized('equipes', 'myprofil')): ?>
 <div class="panel">
   <div class="panel-heading">
     <h3 class="panel-title">
@@ -238,7 +238,8 @@
     </div>
     <div id="collapse6" class="panel-collapse collapse">
         <div class="panel-body">
-            <button type="button" class='btn btn-sm btn-default pull-right' onclick="location.href='<?php echo $this->Html->url('/equipes/add'); ?>';">Ajouter un agent</button><br>                   
+            <div class="pull-right">
+            <a class="btn btn-sm btn-default" data-toggle="modal" data-target="#modaladdequipe">Ajouter un agent</a></div><br> 
             <label class="sstitre">Liste des agents de mon équipe</label> 
             <?php echo $this->element('tableEquipe'); ?>
         </div>
@@ -270,3 +271,5 @@
 <?php echo $this->Form->input('id',array('type'=>'hidden')); ?>    
 <?php echo $this->Form->end(); ?>
 </div>
+<!-- fenêtre modale //-->
+<?php echo $this->element('modaladdequipe'); ?>

@@ -426,6 +426,8 @@ class UtilisateursController extends AppController {
                         $agents = $this->Utilisateur->Equipe->find('all',array('conditions'=>array('Equipe.utilisateur_id'=>$id),'recursive'=>-1));
                         $this->set('agents',$agents);
                         $this->set('nbagents',count($agents));
+                        $utilisateurs = $this->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.ACTIF'=>1,'Utilisateur.profil_id >'=>0),'order'=>array('NOMLONG'=>'asc'),'recursive'=>-1));
+                        $this->set('utilisateurs',$utilisateurs);                        
                     }             
         }
    
@@ -833,12 +835,13 @@ class UtilisateursController extends AppController {
         }    
         
         public function prolonger(){
-            $ids = explode('-', $this->request->data('all_ids'));
-            if(count($ids)>0 && $ids[0]!=""):
+            $this->autoRender = false;
+            $ids = explode('-', $this->request->data['Utilisateur']['ids']);
+            if(count($ids)>0 && $ids[0]!="" && $this->request->data['Utilisateur']['FINMISSION'] != ''):
                 foreach($ids as $id):
                     $this->Utilisateur->create();
                     $this->Utilisateur->id = $id;
-                    $date = "05/01/".(date('Y')+2);
+                    $date = $this->request->data['Utilisateur']['FINMISSION'];
                     $this->Utilisateur->saveField('FINMISSION', $date);
                     $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$id),'recursive'=>0));
                     $this->sendmailprolongation($utilisateur);
@@ -846,11 +849,12 @@ class UtilisateursController extends AppController {
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - compte prolongé jusqu'au ".$date.' par '.userAuth('NOMLONG');
                     $this->Utilisateur->Historyutilisateur->save($history);
                 endforeach;
+                sleep(3);
                 echo $this->Session->setFlash(__('Comptes prolongés',true),'flash_success');
             else:
-                echo $this->Session->setFlash(__('Aucun utilisateur sélectionné',true),'flash_failure');
+                echo $this->Session->setFlash(__('Aucun utilisateur sélectionné ou date de fin de mission non renseignée',true),'flash_failure');
             endif;
-            exit();
+            $this->History->notmove();
         }
         
         public function desactiver(){
@@ -865,6 +869,7 @@ class UtilisateursController extends AppController {
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - état changé par ".userAuth('NOMLONG');
                     $this->Utilisateur->Historyutilisateur->save($history);
                 endforeach;
+                sleep(3);
                 echo $this->Session->setFlash(__('Comptes désactivés',true),'flash_success');
             else:
                 echo $this->Session->setFlash(__('Aucun utilisateur sélectionné',true),'flash_failure');

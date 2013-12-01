@@ -48,12 +48,12 @@
     /**
      * Création d'un objet logiciels avec les information à afficher
      */
-    $mylogiciels[]=array('nom'=>'CakePHP','version'=>'2.4.2','url'=>'http://cakephp.org/','new'=>0);
-    $mylogiciels[]=array('nom'=>'BootStrap','version'=>'3.0.1','url'=>'http://getbootstrap.com/','new'=>1);
-    $mylogiciels[]=array('nom'=>'TinyMCE','version'=>'4.0.10','url'=>'http://www.tinymce.com/','new'=>1);
+    $mylogiciels[]=array('nom'=>'CakePHP','version'=>'2.4.3','url'=>'http://cakephp.org/','new'=>1);
+    $mylogiciels[]=array('nom'=>'BootStrap','version'=>'3.0.2','url'=>'http://getbootstrap.com/','new'=>0);
+    $mylogiciels[]=array('nom'=>'TinyMCE','version'=>'4.0.11','url'=>'http://www.tinymce.com/','new'=>1);
     $mylogiciels[]=array('nom'=>'jQuery','version'=>'1.10.2','url'=>'http://jquery.com/','new'=>0);
-    $mylogiciels[]=array('nom'=>'MySQL Workbench','version'=>'6.0.7','url'=>'http://dev.mysql.com/downloads/tools/workbench/','new'=>0);
-    $mylogiciels[]=array('nom'=>'Highcharts','version'=>'3.0.7','url'=>'https://github.com/highslide-software/highcharts.com/releases','new'=>1);
+    $mylogiciels[]=array('nom'=>'MySQL Workbench','version'=>'6.0.8','url'=>'http://dev.mysql.com/downloads/tools/workbench/','new'=>0);
+    $mylogiciels[]=array('nom'=>'Highcharts','version'=>'3.0.7','url'=>'https://github.com/highslide-software/highcharts.com/releases','new'=>0);
     $mylogiciels[]=array('nom'=>'Validate','version'=>'1.11.1','url'=>'https://github.com/jzaefferer/jquery-validation','new'=>0);
     $mylogiciels[]=array('nom'=>'Chronoline','version'=>'0.1.1','url'=>'https://github.com/StoicLoofah/chronoline.js','new'=>0);
     $mylogiciels[]=array('nom'=>'Datepicker','version'=>'1.2.0','url'=>'http://eternicode.github.io/bootstrap-datepicker/','new'=>0);
@@ -61,7 +61,7 @@
     $mylogiciels[]=array('nom'=>'MaskedInput','version'=>'1.3.1','url'=>'https://github.com/digitalBush/jquery.maskedinput/','new'=>0);
     $mylogiciels[]=array('nom'=>'Wamp Server','version'=>'2.2.E','url'=>'http://www.wampserver.com/#download-wrapper','new'=>0);
     $mylogiciels[]=array('nom'=>'Netbeans IDE','version'=>'7.4','url'=>'https://netbeans.org/downloads/index.html','new'=>0);
-    $mylogiciels[]=array('nom'=>'Plugin CakePHP','version'=>'0.9.6','url'=>'http://plugins.netbeans.org/plugin/44579/php-cakephp-framework','new'=>0);
+    $mylogiciels[]=array('nom'=>'Plugin CakePHP','version'=>'0.9.8','url'=>'http://plugins.netbeans.org/plugin/44579/php-cakephp-framework','new'=>1);
     ?>
     <div id="panel_apps_content" class="panel-collapse collapse">
       <div class="panel-body">

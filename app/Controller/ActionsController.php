@@ -453,9 +453,10 @@ class ActionsController extends AppController {
 		if (!$this->Action->exists()) {
 			throw new NotFoundException(__('Action incorrecte'));
 		}
-		//$this->request->onlyAllow('post', 'delete');
+                $action = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id),'recursive'=>0));
 		if ($this->Action->delete()) {
 			if($msg) :
+                            $this->sendmailactiondelete($action);
                             $this->Session->setFlash(__('Action supprimée',true),'flash_success');
                             $this->History->goBack(1);
                         endif;
@@ -787,17 +788,33 @@ class ActionsController extends AppController {
         }        
         
         public function incra(){
-            if($this->request->data('id')!==''):
-                $id = $this->request->data('id');
-                $this->Action->id = $id;
+            $ids = explode('-', $this->request->data('all_ids'));
+            if (count($ids)>1):
+                $ids = explode('-', $this->request->data('all_ids'));
+                if(count($ids)>0 && $ids[0]!=""):
+                    foreach($ids as $id):
+                        $this->Action->id = $id;
+                        $cra = $this->Action->find('first',array('fields'=>array('CRA'),'conditions'=>array('Action.id'=>$id),'recursive'=>-1));
+                        if($this->Action->saveField('CRA', !$cra['Action']['CRA'])):     
+                            $this->Session->setFlash(__('Information du CRA sauvegardée',true),'flash_success');
+                        else :
+                            $this->Session->setFlash(__('Information du CRA <b>NON</b> sauvegardée',true),'flash_failure');
+                        endif; 
+                    endforeach;
+                    sleep(3);
+                    echo $this->Session->setFlash(__('Mises à jour complétées',true),'flash_success');
+                else:
+                    echo $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
+                endif;
+            else:
+                $this->Action->id = $this->request->data('all_ids');
+                $id = $this->request->data('all_ids');
                 $cra = $this->Action->find('first',array('fields'=>array('CRA'),'conditions'=>array('Action.id'=>$id),'recursive'=>-1));
                 if($this->Action->saveField('CRA', !$cra['Action']['CRA'])):     
                     $this->Session->setFlash(__('Information du CRA sauvegardée',true),'flash_success');
                 else :
                     $this->Session->setFlash(__('Information du CRA <b>NON</b> sauvegardée',true),'flash_failure');
-                endif;
-            else :
-                $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
+                endif;                
             endif;
             exit();
         }
@@ -822,6 +839,38 @@ class ActionsController extends AppController {
             $nbactions = $this->Action->find('all',array('fields'=>array('COUNT(id) AS NB','STATUT','ECHEANCE'),'conditions'=>array('destinataire'=>userAuth('id'),'STATUT NOT IN("terminée","livré","annulée")',"ECHEANCE <"=>date('Y-m-d')),'group'=>'STATUT','recursive'=>-1));
             return $nbactions;
         }     
+        
+        public function sendmailactiondelete($action){
+            $valideurs = $this->Action->Utilisateur->find('all',array('conditions'=>array('Utilisateur.id'=>$action['Action']['destinataire'])));
+            $mailto = array();
+            foreach($valideurs as $valideur):
+                $mailto[]=$valideur['Utilisateur']['MAIL'];
+            endforeach;
+            $to=$mailto;
+            $from = userAuth('MAIL');
+            $objet = 'SAILL : Action supprimée ['.$action['Action']['OBJET'].']';
+            $message = "L'action ".$action['Action']['OBJET']." est supprimée.".
+                    '<ul>
+                    <li>Echéance :'.$action['Action']['ECHEANCE'].'</li>
+                    <li>Priorité :'.$action['Action']['PRIORITE'].'</li>
+                    <li>Résumé :'.$action['Action']['RESUME'].'</li> 
+                    <li>Commentaire :'.$action['Action']['COMMENTAIRE'].'</li>                      
+                    </ul>';
+            if($to!=''):
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+                }
+                catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                }  
+            endif;  
+        }
         
         public function sendmailactions($action){
             $valideurs = $this->Action->Utilisateur->find('all',array('conditions'=>array('Utilisateur.id'=>$action['Action']['destinataire'])));
@@ -940,36 +989,45 @@ class ActionsController extends AppController {
         }     
                
         public function deleteall(){
-            if($this->request->data('id')!==''):
-                $id = $this->request->data('id');
-                $this->Action->id = $id;
-                if($this->Action->delete()):
-                    echo $this->Session->setFlash(__('Actions supprimées',true),'flash_success'); 
-                else :
-                    $this->Session->setFlash(__('Actions <b>NON</b> supprimées',true),'flash_failure');
-                endif;
-            else :
-                $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
+            $ids = explode('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):
+                foreach($ids as $id):
+                    $this->Action->id = $id;
+                    if($this->Action->delete()):
+                        echo $this->Session->setFlash(__('Actions supprimées',true),'flash_success'); 
+                    else :
+                        $this->Session->setFlash(__('Actions <b>NON</b> supprimées',true),'flash_failure');
+                    endif;
+                endforeach;
+                sleep(3);
+                echo $this->Session->setFlash(__('Suppressions réalisées',true),'flash_success');
+            else:
+                echo $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
             endif;
+            exit(); 
         }
         
         public function closeall(){
-            if($this->request->data('id')!==''):
-                $id = $this->request->data('id');
-                $this->Action->id = $id;
-                $cra = $this->Action->find('first',array('fields'=>array('CRA'),'conditions'=>array('Action.id'=>$id),'recursive'=>-1));
-                $this->Action->saveField('AVANCEMENT', '100');
-                $this->Action->saveField('STATUT', 'terminée');
-                if($this->Action->saveField('NEW', '0')):
-                    $this->saveHistory($id);  
-                    echo $this->Session->setFlash(__('Actions cloturées',true),'flash_success'); 
-                else :
-                    $this->Session->setFlash(__('Actions <b>NON</b> clotûrées correctement',true),'flash_failure');
-                endif;
-            else :
-                $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
+            $ids = explode('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):
+                foreach($ids as $id):
+                    $this->Action->id = $id;
+                    $cra = $this->Action->find('first',array('fields'=>array('CRA'),'conditions'=>array('Action.id'=>$id),'recursive'=>-1));
+                    $this->Action->saveField('AVANCEMENT', '100');
+                    $this->Action->saveField('STATUT', 'terminée');
+                    if($this->Action->saveField('NEW', '0')):
+                        $this->saveHistory($id);  
+                        echo $this->Session->setFlash(__('Actions cloturées',true),'flash_success'); 
+                    else :
+                        $this->Session->setFlash(__('Actions <b>NON</b> clotûrées correctement',true),'flash_failure');
+                    endif;
+                endforeach;
+                sleep(3);
+                echo $this->Session->setFlash(__('Mises à jour complétées',true),'flash_success');
+            else:
+                echo $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
             endif;
-            exit();           
+            exit();                       
         }
         
         public function risques(){

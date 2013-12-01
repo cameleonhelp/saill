@@ -554,6 +554,7 @@ class UtiliseoutilsController extends AppController {
                 foreach($ids as $id):
                     $this->autoprogressState($id);
                 endforeach;
+                sleep(3);
                 echo $this->Session->setFlash(__('Mises à jour complétées',true),'flash_success');
             else:
                 echo $this->Session->setFlash(__('Aucune ouverture de droit sélectionnée',true),'flash_failure');

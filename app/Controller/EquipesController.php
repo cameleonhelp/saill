@@ -42,7 +42,7 @@ class EquipesController extends AppController {
 		if ($this->request->is('post')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Equipe->validate = array();
-                        $this->History->goBack(1);
+                        $this->History->notmove();
                     else:                    
 			$this->Equipe->create();
                         foreach ($this->request->data['Equipe']['agents'] as $agent) {
@@ -54,7 +54,7 @@ class EquipesController extends AppController {
                                     $this->Session->setFlash(__('Au moins un nouvel agent <b>N\'A PAS ETE</b> ajouté',true),'flash_failure');
                             }
                         }   
-                        $this->History->goBack(1);
+                        $this->History->notmove();
                     endif;
 		}
                 $utilisateurs = $this->Equipe->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.ACTIF'=>1,'Utilisateur.profil_id >'=>0),'order'=>array('NOMLONG'=>'asc'),'recursive'=>-1));
@@ -124,6 +124,30 @@ class EquipesController extends AppController {
             $agents = $this->Equipe->find('all',array('conditions'=>array('Equipe.utilisateur_id'=>$id)));
             return $agents;
         }
+        
+        public function listMyTeam($id = null){
+            $result = '';
+            $in = '';
+            $agents = $this->Equipe->find('all',array('conditions'=>array('Equipe.utilisateur_id'=>$id)));
+            foreach($agents as $agent):
+                $in .= $agent['Equipe']['agent'].",";
+            endforeach;
+            $in = ($in != ',' || $in != '') ? $in.$id : $id;
+            $list = $this->Equipe->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id in ('.$in.')')));
+            return $list;
+        }        
+        
+        public function getMyTeam($id = null){
+            $result = '';
+            $in = '';
+            $agents = $this->Equipe->find('all',array('conditions'=>array('Equipe.utilisateur_id'=>$id)));
+            foreach($agents as $agent):
+                $in .= $agent['Equipe']['agent'].",";
+            endforeach;
+            $in = ($in != ',' || $in != '') ? $in.$id : $id;
+            $list = $this->Equipe->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id in ('.$in.')')));
+            return $list;
+        }   
         
         public function saveColor($id,$color){
             $this->Equipe->id = $id;

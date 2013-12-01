@@ -17,7 +17,7 @@
         <?php echo $this->Html->link('<span class="glyphicons pencil notchange"></span>','#', array('data-id'=>$version['Version']['id'],'escape' => false)); ?>&nbsp;
         <?php endif; ?>
         <?php if (userAuth('profil_id')!='2' && isAuthorized('versions', 'delete')) : ?>
-        <?php echo $this->Form->postLink('<span class="glyphicons showoverlay bin notchange"></span>', array('controller'=>'versions','action' => 'ajaxdelete',$version['Version']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette version applicative')); ?>                    
+        <?php echo $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('controller'=>'versions','action' => 'ajaxdelete',$version['Version']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette version applicative')); ?>                    
         <?php endif; ?>                    
     </td>
 </tr>

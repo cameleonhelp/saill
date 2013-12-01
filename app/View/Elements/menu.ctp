@@ -10,7 +10,8 @@
   <?php $classLinkShared = in_array($controller,array('linkshareds_index','linkshareds_add','linkshareds_edit','linkshareds_delete','linkshareds_search')) ? $active : ''; ?>
   <?php $classLivrable = in_array($controller,array('livrables_index','livrables_add','livrables_edit','livrables_delete','livrables_search')) ? $active : ''; ?>
   <?php $classCalendardAbs = in_array($controller,array('activitesreelles_absences')) ? $active : ''; ?>
-  <?php $classGeneralites = in_array($active,array($classAction,$classActvitereelle,$classLinkShared,$classLivrable,$classCalendardAbs)) ? $divactive : ''; ?>               
+  <?php $classDemandeAbs = in_array($controller,array('demandeabsences_index','demandeabsences_add','demandeabsences_edit','demandeabsences_delete')) ? $active : ''; ?>  
+  <?php $classGeneralites = in_array($active,array($classAction,$classActvitereelle,$classLinkShared,$classLivrable,$classCalendardAbs,$classDemandeAbs)) ? $divactive : ''; ?>               
   <?php $classSections = in_array($controller,array('sections_index','sections_add','sections_edit','sections_delete','sections_search')) ? $active : ''; ?> 
   <?php $classSocietes = in_array($controller,array('societes_index','societes_add','societes_edit','societes_delete','societes_search')) ? $active : ''; ?> 
   <?php $classSites = in_array($controller,array('sites_index','sites_add','sites_edit','sites_delete','sites_search')) ? $active : ''; ?>               
@@ -20,7 +21,7 @@
   <?php $classAssistances = in_array($controller,array('assistances_index','assistances_add','assistances_edit','assistances_delete','assistances_search')) ? $active : ''; ?> 
   <?php $classListeDiffusions = in_array($controller,array('listediffusions_index','listediffusions_add','listediffusions_edit','listediffusions_delete','listediffusions_search')) ? $active : ''; ?>               
   <?php $classProfils = in_array($controller,array('profils_index','profils_add','profils_edit','profils_delete','profils_search')) ? $active : ''; ?>  
-  <?php $classParameters = in_array($controller,array('parameters_index')) ? $active : ''; ?>    
+  <?php $classParameters = in_array($controller,array('parameters_index','parameters_importcsvdata')) ? $active : ''; ?>    
   <?php $classParametersSave = in_array($controller,array('parameters_savebdd')) ? $active : ''; ?>    
   <?php $classParametersRestore = in_array($controller,array('parameters_restorebdd','parameters_listebackup')) ? $active : ''; ?>    
   <?php $classAutorisations = in_array($controller,array('autorisations_index','autorisations_add','autorisations_edit','autorisations_delete','autorisations_search')) ? $active : ''; ?>                
@@ -79,14 +80,15 @@
   <?php $classCRAPlanchargesAgents = in_array($controller,array('plancharges_rapportagent')) ? $active : ''; ?> 
   <?php $classCRADashboard = in_array($controller,array('dashboards_index','dashboards_export_doc')) ? $active : ''; ?> 
   <?php $classRapports = in_array($active,array($classCRAExpBesoin,$classCRAIntApp,$classCRAPlanchargesAgents,$classCRAActions,$classCRARisques,$classCRAActivites,$classCRASaisie,$classCRASS2I,$classCRAFacturations,$classCRAPlancharges,$classCRADashboard,$classCRAActions7,$classCRALogistique)) ? $divactive : ''; ?> 
-  <?php $classContactUs = in_array($controller,array('contacts_add')) ? $active : ''; ?>               
+  <?php $classContactUs = in_array($controller,array('contacts_add')) ? $active : ''; ?>  
+  <?php $classChangelog = in_array($controller,array('changelogdemandes_add','changelogdemandes_changelog','changelogdemandes_listetodo','changelogreponses_add','changelogreponses_view','changelogdemandes_edit','changelogdemandes_index','changelogversions_index')) ? $active : ''; ?> 
   <?php $classAddFavorites = 'notactive'; ?>  
   <?php $classBiens = in_array($controller,array('biens_index','biens_add','biens_edit','biens_delete','biens_search','biens_export_xls')) ? $active : ''; ?>    
   <?php $classLogiciels = in_array($controller,array('logiciels_index','logiciels_add','logiciels_edit','logiciels_delete','logiciels_search','logiciels_export_xls')) ? $active : ''; ?>      
   <?php $classIntApp = in_array($controller,array('intergrationapplicatives_add','intergrationapplicatives_export_xls','intergrationapplicatives_index','intergrationapplicatives_edit','intergrationapplicatives-delete','intergrationapplicatives_search')) ? $active : ''; ?>        
   <?php $classExpBesoin = in_array($controller,array('expressionbesoins_index','expressionbesoins_delete','expressionbesoins_search','expressionbesoins_add','expressionbesoins_edit','expressionbesoins_export_xls')) ? $active : ''; ?> 
   <?php $classEnvironnement = in_array($active,array($classBiens,$classLogiciels,$classIntApp,$classExpBesoin)) ? $divactive : ''; ?>      
-  <?php $classDivers = in_array($active,array($classContactUs,$classAddFavorites)) ? $divactive : ''; ?> 
+  <?php $classDivers = in_array($active,array($classContactUs,$classAddFavorites,$classChangelog)) ? $divactive : ''; ?> 
   <div class="scroll-btn-top"><span class="glyphicons down_arrow white"></span></div>
   <div class="panel-group" id="menu" style="margin-bottom: 15px;">
     <div class="panel panel-default">
@@ -114,9 +116,11 @@
                 <?php endif; ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'absences')) : ?>    
                 <li class="divider"></li>
-                <li class="<?php echo $classCalendardAbs; ?>"><?php echo $this->Html->link('Absences équipe',array('controller'=>'activitesreelles','action'=>'absences'),array('class'=>'showoverlay','escape' => false)); ?></li>
+                <li class="<?php echo $classCalendardAbs; ?>"><?php echo $this->Html->link('Calendrier équipe',array('controller'=>'activitesreelles','action'=>'absences'),array('class'=>'showoverlay','escape' => false)); ?></li>
                 <?php endif; ?>
-          </ul>
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('demandeabsences', 'index')) : ?>    
+                <li class="<?php echo $classDemandeAbs; ?>"><?php echo $this->Html->link('Absences prestataires',array('controller'=>'demandeabsences','action'=>'index'),array('class'=>'showoverlay','escape' => false)); ?></li>
+                <?php endif; ?>          </ul>
         </div>
       </div>
     </div>  
@@ -459,6 +463,7 @@
         <div class="panel-body">
             <ul>
                 <li class="<?php echo $classContactUs; ?>"><?php echo $this->Html->link('Nous contacter',array('controller'=>'contacts','action'=>'add'),array('class'=>'showoverlay','escape' => false)); ?></li>
+                <li class="<?php echo $classChangelog; ?>"><?php echo $this->Html->link('Changements SAILL',array('controller'=>'changelogdemandes','action'=>'add'),array('class'=>'showoverlay','escape' => false)); ?></li>
                 <li class="<?php echo $classAddFavorites; ?> jQueryBookmark"><?php echo $this->Html->link('Ajouter aux favoris',array('action'=>"#"),array('class'=>'showoverlay','escape' => false)); ?></li>
                 <li  class="margintop5 text-center text-muted text-italic text-medium">Version : <?php $version = $this->requestAction('parameters/get_version'); echo $version['Parameter']['param']; ?></li>
             </ul>

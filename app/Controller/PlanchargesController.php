@@ -111,7 +111,8 @@ class PlanchargesController extends AppController {
  */
 	public function edit($id = null) {
             if (isAuthorized('plancharges', 'edit')) :
-                $this->set('title_for_layout','Plan de charge');                  
+                $this->set('title_for_layout','Plan de charge'); 
+                $id = $id==null ? $this->request->data['Plancharge']['id'] : $id;
 		if (!$this->Plancharge->exists($id)) {
 			throw new NotFoundException(__('Plan de charge incorrect'));
 		}
@@ -120,10 +121,12 @@ class PlanchargesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Plancharge->validate = array();
-                        $this->History->goBack(1);
+                        $this->History->goBack(2);
                     else:                     
                         $this->request->data['Plancharge']['ETP']=$thisplancharge['Plancharge']['ETP'];
                         $this->request->data['Plancharge']['CHARGES']=$thisplancharge['Plancharge']['CHARGES'];
+                        unset($this->request->data['Plancharge']['id']);
+                        $this->Plancharge->create();
 			if ($this->Plancharge->save($this->request->data)) {
                                 $lastIdInsert = $this->Plancharge->getLastInsertID();
                                 $detailplancharges = $this->Plancharge->Detailplancharge->find('all',array('conditions'=>array('Detailplancharge.plancharge_id'=>$id)));
@@ -137,7 +140,7 @@ class PlanchargesController extends AppController {
                                     $this->Plancharge->Detailplancharge->save($record);
                                 endforeach;
 				$this->Session->setFlash(__('Nouvelle version du plan de charge créée',true),'flash_success');                                
-				$this->History->goBack(1);
+				$this->History->goBack(2);
 			} else {
 				$this->Session->setFlash(__('Plan de charge incorrect, veuillez corriger le plan de charge',true),'flash_failure');
 			}
@@ -311,4 +314,12 @@ class PlanchargesController extends AppController {
             endif;
             $this->History->goBack(1);
         } 
+        
+        public function json_get_info($id){
+            $this->autoRender = false;
+            $conditions[] = 'Plancharge.id='.$id;
+            $return = $this->Plancharge->find('all',array('conditions'=>$conditions,'recursive'=>-1));
+            $result = json_encode($return);
+            return $result;
+        }        
 }

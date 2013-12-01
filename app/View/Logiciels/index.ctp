@@ -140,7 +140,7 @@
                 <?php $actif = $logiciel['Logiciel']['ACTIF']==true ? '' : ' grey'; ?>
                 <?php $action = $logiciel['Logiciel']['ACTIF']==true ? 'supprimer' : 'activer'; ?>                
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('logiciels', 'delete')) : ?>
-                <?php echo $this->Form->postLink('<span class="glyphicons bin showoverlay notchange'.$actif.'"></span>', array('action' => 'delete', $logiciel['Logiciel']['id']),array('escape' => false), __('Etes-vous certain de vouloir '.$action.' ce logiciels ?')); ?>                    
+                <?php echo $this->Form->postLink('<span class="glyphicons bin notchange'.$actif.'"></span>', array('action' => 'delete', $logiciel['Logiciel']['id']),array('escape' => false), __('Etes-vous certain de vouloir '.$action.' ce logiciels ?')); ?>                    
                 <?php endif; ?>    
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('logiciels', 'duplicate')) : ?>
                 <?php echo $this->Form->postLink('<span class="glyphicons retweet showoverlay notchange"></span>', array('action' => 'dupliquer', $logiciel['Logiciel']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer ce logiciel ?')); ?>
@@ -233,18 +233,14 @@ $(document).ready(function () {
     $(document).on('click','#deletelink',function(e){
         if(confirm("Voulez-vous supprimer tous les logciels sélectionnés ?")){
             var ids = $("#all_ids").val();
-            var myarr = ids.split("-");
-            var length = myarr.length;
             var overlay = $('#overlay');
             overlay.show(); 
-            for(var i = 0; i < length; i++){
-                $.ajax({
-                    dataType: "html",
-                    type: "POST",
-                    url: "<?php echo $this->Html->url(array('controller'=>'logiciels','action'=>'deleteall')); ?>/"+myarr[i],
-                    data: ({id:myarr[i]})     
-                });
-            }
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'logiciels','action'=>'deleteall')); ?>/",
+                data: ({all_ids:ids})     
+            });
         }
         location.reload();
         overlay.hide();   

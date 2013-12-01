@@ -453,6 +453,7 @@ class BiensController extends AppController {
                     $this->Session->setFlash(__('Modification du statut installé <b>NON</b> pris en compte pour tous les biens sélectionnés',true),'flash_failure');
                 endif;
                 endforeach;
+                sleep(3);
             else :
                 $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
             endif;
@@ -468,6 +469,7 @@ class BiensController extends AppController {
                     $this->Session->setFlash(__('Modification du statut validé <b>NON</b> pris en compte pour tous les biens sélectionnés',true),'flash_failure');
                 endif;
                 endforeach;
+                sleep(3);
             else :
                 $this->Session->setFlash(__('Aucun bien sélectionné',true),'flash_failure');
             endif;
@@ -483,6 +485,7 @@ class BiensController extends AppController {
                         $this->Session->setFlash(__('Modification du statut supprimé <b>NON</b> pris en compte pour tous les biens sélectionnés',true),'flash_failure');
                     endif;
                 endforeach;
+                sleep(3);
             else :
                 $this->Session->setFlash(__('Aucun bien sélectionné',true),'flash_failure');
             endif;

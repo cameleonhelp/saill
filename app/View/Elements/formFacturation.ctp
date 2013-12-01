@@ -1,4 +1,5 @@
-<?php 
+<div class="marginright20">
+    <?php 
     /**
      * Savoir sur quelle date porte la facturation
      */
@@ -194,6 +195,7 @@
     </div>  
     </div>  
 <?php echo $this->Form->end(); ?>  
+</div>
 <script>
 $(document).ready(function () {
     $(document).on('change','.day',function(e){

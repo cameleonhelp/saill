@@ -31,14 +31,14 @@
                 <li><?php echo $this->Html->link('Facturé', array('controller'=>'facturations','action' => 'index'),array('escape' => false,'class'=>'paddingtop3')); ?></li>
                 <?php endif; ?>
                 <?php if (areaIsVisible()) :?>
-                <li class="dropdown <?php echo filtre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous'); ?>">
+                <li class="dropdown <?php echo filtre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : userAuth('id'),'tous'); ?>">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Utilisateurs <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous'))); ?></li>
-                     <li><?php echo $this->Html->link('Moi', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,  userAuth('id'),isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',  userAuth('id')))); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : userAuth('id'),'tous'))); ?></li>
+                     <li><?php echo $this->Html->link('Moi', array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,  userAuth('id'),isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : userAuth('id'),  userAuth('id')))); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($utilisateurs as $utilisateur): ?>
-                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,$utilisateur['Utilisateur']['id'],isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$utilisateur['Utilisateur']['id']))); ?></li>
+                            <li><?php echo $this->Html->link($utilisateur['Utilisateur']['NOMLONG'], array('action' => $defaultAction,isset($this->params->pass[0]) ? $this->params->pass[0] : $defaultEtat,$utilisateur['Utilisateur']['id'],isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$filtre_annee,$filtre_indisponible),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : userAuth('id'),$utilisateur['Utilisateur']['id']))); ?></li>
                          <?php endforeach; ?>
                       </ul>
                 </li>   
@@ -178,7 +178,11 @@
                   <div class="form-group">
                         <label for="ActivitesreelleUtilisateurId" class="col-lg-4 required">Pour</label>
                         <div class="col-lg-6">
-                          <?php echo $this->Form->select('utilisateur_id',$newftutilisateurs,array('data-rule-required'=>'true','class'=>'form-control','default'=>  userAuth('id'),'data-msg-required'=>"Le nom de l'utilisateur est obligatoire dans l'onglet Destinataire", 'empty' => 'Choisir un utilisateur')); ?>
+                            <?php if (userAuth('WIDEAREA')==1): ?>
+                            <?php  echo $this->Form->select('utilisateur_id',$newftutilisateurs,array('data-rule-required'=>'true','class'=>'form-control','default'=>  userAuth('id'),'data-msg-required'=>"Le nom de l'utilisateur est obligatoire dans l'onglet Destinataire", 'empty' => 'Choisir un utilisateur')); ?>                    
+                            <?php else : ?>
+                            <?php echo userAuth('NOMLONG'); ?><?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>userAuth('id'))); ?>
+                            <?php endif; ?>                        
                         </div>
                   </div>    
                   <div class="form-group">
@@ -300,13 +304,13 @@
                     <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange" rel="tooltip" data-title="Modification"></span>', array('action' => 'edit', $activitesreelle['Activitesreelle']['id']),array('escape' => false,'class'=>'showoverlay')); ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'delete') && $activitesreelle['Activitesreelle']['VEROUILLE'] == 1) : ?>
-                    <?php echo $this->Form->postLink('<span class="glyphicons bin showoverlay notchange" rel="tooltip" data-title="Suppression"></span>', array('action' => 'delete', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette feuille de temps ?')); ?>                    
+                    <?php echo $this->Form->postLink('<span class="glyphicons bin notchange" rel="tooltip" data-title="Suppression"></span>', array('action' => 'delete', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette feuille de temps ?')); ?>                    
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'update')) : ?>
                     <?php $img = $activitesreelle['Activitesreelle']['VEROUILLE']==0 ? 'thumbs_up' : 'thumbs_down'; ?>
-                    <?php echo $this->Form->postLink('<span class="glyphicons showoverlay '.$img.' notchange" rel="tooltip" data-title="A soumettre pour factution<br>si pouce en bas<br>Soumis pour facturation<br>si pouce en haut"></span>', array('action' => 'updatefacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour facturation ?')); ?>                    
+                    <?php echo $this->Form->postLink('<span class="glyphicons showoverlay '.$img.' notchange" rel="tooltip" data-title="A soumettre pour facturation<br>si pouce en bas<br>Soumis pour facturation<br>si pouce en haut"></span>', array('action' => 'updatefacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour facturation ?')); ?>                    
                     <?php endif; ?>
-                    <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'duplicate') && $activitesreelle['Activitesreelle']['VEROUILLE'] == 1) : ?>
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'duplicate')) : ?>
                     <?php echo $this->Html->link('<span class="glyphicons retweet showoverlay notchange" rel="tooltip" data-title="Duplication"></span>', array('action' => 'autoduplicate', $activitesreelle['Activitesreelle']['id']),array('escape' => false,'class'=>'showoverlay')); ?>                    
                     <?php endif; ?>
                 <?php else : ?>
@@ -361,9 +365,9 @@
                 <input type="hidden" name="InfroText" value="1">
                 <table>
                     <tbody>
-                        <tr><td><span class="clearable">
-                           <input type='text' style='width:530px;' class="data_field" id="memo" value="<?php echo $memo['Parameter']['param']; ?>" />
-                           <span class="icon_clear"><span class="glyphicons circle_remove grey top2"</span></span></td></tr>
+                        <tr><td>
+                           <textarea style='width:530px;' id="memo"><?php echo $memo['Parameter']['param']; ?></textarea>
+                           </td></tr>
                     </tbody>
                 </table>
                 </form>
@@ -399,7 +403,7 @@
 
          $(document).on('click','#InfroTextSubmit',function(e){
             //e.preventDefault();
-            var memo = $(this).parents().find('#memo').val();
+            var memo = tinymce.get('memo').getContent(); //$(this).parents().find('#memo').html();
             $.ajax({
                 dataType: "html",
                 type: "POST",

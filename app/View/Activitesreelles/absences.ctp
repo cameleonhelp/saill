@@ -84,16 +84,16 @@
                     if(is_date_utilisateur_in_array($date->format('Y-m-d'),$utilisateur['Utilisateur']['id'],$absences)):
                         $result = nb_periode($date->format('Y-m-d'),$utilisateur['Utilisateur']['id'],$absences);
                         if (substr($result['nb'],2,1)=='0') {
-                            $classIndispo1 = ' indispo';
-                            $classIndispo2 = ' indispo';
+                            $classIndispo1 = $result['tmp'] ? ' tmpindispo' : ' indispo';
+                            $classIndispo2 = $result['tmp'] ? ' tmpindispo' : ' indispo';
                         }                
                         if (substr($result['nb'],2,1)=='5' && $result['periode']) {
-                            $classIndispo1 = ' indispo';
+                            $classIndispo1 = $result['tmp'] ? ' tmpindispo' : ' indispo';
                             $classIndispo2 = '';
                         }
                         if (substr($result['nb'],2,1)=='5' && !($result['periode'])) {
                             $classIndispo1 = '';
-                            $classIndispo2 = ' indispo';
+                            $classIndispo2 = $result['tmp'] ? ' tmpindispo' : ' indispo';
                         }            
                         echo "<td ".$class.$classweek.$classferie.$classIndispo1."' style='line-height: 4px;'></td><td ".$class.$classweek.$classferie.$classIndispo2."'></td>";
                     else:

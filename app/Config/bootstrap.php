@@ -224,6 +224,22 @@ Configure::write(
     'typeAction',array('action'=>'Action','indisponibilité'=>'Absences','standard'=>'Automatique')
 );
 
+Configure::write(
+    'changelogEtatDemande',array('0'=>'Ouverte','1'=>'Version future','2'=>'Rejetée','3'=>'En cours','4'=>'Fermée') 
+);
+
+Configure::write(
+    'changelogEtatVersion',array('0'=>'Ouverte','1'=>'Fermée') 
+);
+
+Configure::write(
+    'changelogType',array('0'=>'Demande','1'=>'Anomalie','2'=>'Evolution','3'=>'Mise à jour composant','4'=>'Modélisation') 
+);
+
+Configure::write(
+    'changelogCriticite',array('0'=>'Sans contrainte','1'=>'Normale','2'=>'Urgente','3'=>'Bloquante') 
+);
+
 Configure::write('Config.language', 'fra');
 /**
  * Gestion d'exception personnalisée

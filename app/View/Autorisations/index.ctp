@@ -69,7 +69,7 @@
                     <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit', $autorisation['Autorisation']['id']),array('escape' => false,'class'=>'showoverlay')); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('autorisations', 'delete')) : ?>
-                    <?php echo $autorisation['Autorisation']['profil_id']>1 ?  $this->Form->postLink('<span class="glyphicons showoverlay bin notchange"></span>', array('action' => 'delete', $autorisation['Autorisation']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette autorisation ?')) : ''; ?>                    
+                    <?php echo $autorisation['Autorisation']['profil_id']>1 ?  $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete', $autorisation['Autorisation']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette autorisation ?')) : ''; ?>                    
                     <?php endif; ?>
                 </td>
 	</tr>

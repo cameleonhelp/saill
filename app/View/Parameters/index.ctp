@@ -110,6 +110,18 @@
     <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>isset($destmailenv['Parameter']['id']) ? $destmailenv['Parameter']['id'] : '')); ?>
     <?php echo $this->Form->end(); ?> 
     <div class="marginbottom15"></div>  
+    <?php /* Gérer le developpeur d'outil */ ?>
+    <?php echo $this->Form->create('Parameter',array('action'=>'saveParam','id'=>'formValidate8','class'=>'form-inline','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+        <div class="form-group" style="width:98%">
+            <label class="col-lg-2" for="ParameterGestEnv">Emails développeurs  : </label>
+            <div class="col-lg-offset-2">
+                <?php echo $this->Form->input('param',array('class'=>'form-control','id'=>'ParameterGestEnv','style'=>'width:86%;','type'=>'text','placeholder'=>'Emails des développeur de SAILL','value'=>isset($developpeur['Parameter']['param']) ? $developpeur['Parameter']['param'] : '','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+                <?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?>
+            </div> 
+        </div>
+    <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>isset($developpeur['Parameter']['id']) ? $developpeur['Parameter']['id'] : '')); ?>
+    <?php echo $this->Form->end(); ?> 
+    <div class="marginbottom15"></div>     
     <div class='block-panel block-panel-50-left'>
     <?php /* Gérer la liste d'outil par défaut */ ?>
     <?php echo $this->Form->create('Parameter',array('action'=>'saveParam','id'=>'formValidate9','class'=>'form-inline','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>

@@ -412,39 +412,57 @@ class IntergrationapplicativesController extends AppController {
         }  
         
         public function installall($id){
-            if($this->request->data('id')!==''):
-                if($this->ajax_install($id)):
-                    echo $this->Session->setFlash(__('Modification du statut installé pris en compte pour toutes les Intégration sélectionnées',true),'flash_success'); 
-                else :
-                    $this->Session->setFlash(__('Modification du statut installé <b>NON</b> pris en compte pour toutes les Intégration sélectionnées',true),'flash_failure');
-                endif;
+            $ids = explode('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):
+                foreach($ids as $id):
+                    if($this->ajax_install($id)):
+                        echo $this->Session->setFlash(__('Modification du statut installé pris en compte pour toutes les Intégration sélectionnées',true),'flash_success'); 
+                    else :
+                        $this->Session->setFlash(__('Modification du statut installé <b>NON</b> pris en compte pour toutes les Intégration sélectionnées',true),'flash_failure');
+                    endif;
+                endforeach;
+                sleep(3);
+                echo $this->Session->setFlash(__('Mises à jour du statut installé complétées',true),'flash_success');
             else :
                 $this->Session->setFlash(__('Aucune Intégration sélectionnée',true),'flash_failure');
             endif;
+            exit();            
         }
         
         public function checkall($id){
-            if($this->request->data('id')!==''):
-                if($this->ajax_check($id)):
-                    echo $this->Session->setFlash(__('Modification du statut validé pris en compte pour tous les intergrationapplicatives sélectionnés',true),'flash_success'); 
-                else :
-                    $this->Session->setFlash(__('Modification du statut validé <b>NON</b> pris en compte pour tous les intergrationapplicatives sélectionnés',true),'flash_failure');
-                endif;
+            $ids = explode('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):
+                foreach($ids as $id):
+                    if($this->ajax_check($id)):
+                        echo $this->Session->setFlash(__('Modification du statut validé pris en compte pour tous les intergrationapplicatives sélectionnés',true),'flash_success'); 
+                    else :
+                        $this->Session->setFlash(__('Modification du statut validé <b>NON</b> pris en compte pour tous les intergrationapplicatives sélectionnés',true),'flash_failure');
+                    endif;
+                endforeach;
+                sleep(3);
+                echo $this->Session->setFlash(__('Mises à jour du statut validé complétées',true),'flash_success');
             else :
-                $this->Session->setFlash(__('Aucun Intégration sélectionnée',true),'flash_failure');
+                $this->Session->setFlash(__('Aucune Intégration sélectionnée',true),'flash_failure');
             endif;
+            exit();              
         }
         
         public function deleteall($id){
-            if($this->request->data('id')!==''):
-                if($this->ajax_actif($id)):
-                    echo $this->Session->setFlash(__('Modification du statut supprimé pris en compte pour toutes les Intégration sélectionnées',true),'flash_success'); 
-                else :
-                    $this->Session->setFlash(__('Modification du statut supprimé <b>NON</b> pris en compte pour toutes les Intégration sélectionnées',true),'flash_failure');
-                endif;
+            $ids = explode('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):
+                foreach($ids as $id):
+                    if($this->ajax_actif($id)):
+                        echo $this->Session->setFlash(__('Modification du statut supprimé pris en compte pour toutes les Intégration sélectionnées',true),'flash_success'); 
+                    else :
+                        $this->Session->setFlash(__('Modification du statut supprimé <b>NON</b> pris en compte pour toutes les Intégration sélectionnées',true),'flash_failure');
+                    endif;
+                endforeach;
+                sleep(3);
+                echo $this->Session->setFlash(__('Mises à jour du statut supprimé complétées',true),'flash_success');
             else :
-                $this->Session->setFlash(__('Aucun Intégration sélectionnée',true),'flash_failure');
+                $this->Session->setFlash(__('Aucune Intégration sélectionnée',true),'flash_failure');
             endif;
+            exit();             
         }     
         
         public function rapport(){
@@ -460,6 +478,47 @@ class IntergrationapplicativesController extends AppController {
 		$environnements = $this->requestAction('types/get_select');
                 $lots = $this->requestAction('lots/get_select');
                 $this->set(compact('applications', 'mois', 'annee','lots','environnements'));
+                if ($this->request->is('post')):
+                    $mois = $this->data['Intergrationapplicative']['mois'];
+                    $annee = $this->data['Intergrationapplicative']['annee'];
+                    $thisapplications = $this->data['Intergrationapplicative']['application_id'];
+                    $listapplications = '';
+                    foreach($thisapplications as $key => $value):
+                        $listapplications.=$value.',';
+                    endforeach;
+                    $selectapplications = ' AND application_id in ('.substr_replace($listapplications ,"",-1).')';
+                    $selectlot = $this->data['Intergrationapplicative']['lot_id']=='' || $this->data['Intergrationapplicative']['lot_id']=='4' ? ' AND lot_id != 3' : ' AND (lot_id = '.$this->data['Intergrationapplicative']['lot_id'].' AND lot_id != 3)';
+                    $selecttype = $this->data['Intergrationapplicative']['environnement_id']=='' || $this->data['Intergrationapplicative']['environnement_id']=='16' ? '' : ' AND type_id = '.$this->data['Intergrationapplicative']['environnement_id'];
+                    $sql = "select count(intergrationapplicatives.id) as NB,MONTH(DATEINSTALL) as MOIS, lots.NOM as LOT,applications.NOM as APPLICATION, types.`NOM` AS TYPE
+                            from intergrationapplicatives
+                            LEFT JOIN lots on intergrationapplicatives.lot_id = lots.id
+                            LEFT JOIN applications on intergrationapplicatives.application_id = applications.id
+                            LEFT JOIN types on intergrationapplicatives.type_id = types.id
+                            WHERE MONTH(DATEINSTALL) = ".$mois.
+                            " AND YEAR(DATEINSTALL) = ".$annee." ".$selectapplications.$selectlot.$selecttype.
+                            " group by lot_id, application_id, type_id
+                            order by lot_id asc, application_id asc, type_id asc;";
+                    $results = $this->Intergrationapplicative->query($sql);
+                    $this->set('results',$results);
+                    $chartsql = "select count(intergrationapplicatives.id) as NB,lots.NOM as LOT,applications.NOM as APPLICATION
+                            from intergrationapplicatives
+                            LEFT JOIN lots on intergrationapplicatives.lot_id = lots.id
+                            LEFT JOIN applications on intergrationapplicatives.application_id = applications.id
+                            WHERE MONTH(DATEINSTALL) = ".$mois.
+                            " AND YEAR(DATEINSTALL) = ".$annee." ".$selectapplications.$selectlot.
+                            " group by lot_id, application_id
+                            order by lot_id asc, application_id asc;";
+                    $chartresults = $this->Intergrationapplicative->query($chartsql);
+                    $this->set('chartresults',$chartresults);   
+                    $charthistosql = "select count(intergrationapplicatives.id) as NB,lots.NOM as LOT,MONTH(DATEINSTALL) as MOIS
+                            from intergrationapplicatives
+                            LEFT JOIN lots on intergrationapplicatives.lot_id = lots.id
+                            WHERE YEAR(DATEINSTALL) = ".$annee." ".$selectapplications.$selectlot.$selecttype.
+                            " group by MONTH(DATEINSTALL),lot_id
+                            order by MONTH(DATEINSTALL) asc,lot_id asc;";
+                    $charthistoresults = $this->Intergrationapplicative->query($charthistosql);
+                    $this->set('charthistoresults',$charthistoresults);                     
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

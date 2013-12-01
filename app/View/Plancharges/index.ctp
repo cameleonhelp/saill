@@ -49,7 +49,7 @@
                   </div>                    
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" aria-hidden="true">Annuler</button>
+                <button type="button" class="btn btn-sm btn-default" name="cancel" id="closemodal">Annuler</button>
                 <?php echo $this->Form->button('Continuer', array('class' => 'btn btn-sm btn-primary pull-right showoverlay','type'=>'submit')); ?>
               </div>
               <?php echo $this->Form->end(); ?>
@@ -190,13 +190,14 @@
                     <?php echo '<span><span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><span class="glyphicons eye_open notchange" data-rel="popover" data-title="<h3>Plan de charge :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($plancharge['Plancharge']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($plancharge['Plancharge']['modified']).'" data-trigger="click" style="cursor: pointer;"></span></span></span>'; ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'edit')) : ?>
-                    <?php echo $this->Html->link('<span class="glyphicons retweet showoverlay notchange" rel="tooltip" data-title="Créer une nouvelle version"></span>', array('action' => 'edit', $plancharge['Plancharge']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="glyphicons retweet notchange"></span>', "#",array('escape' => false,'data-id'=>$plancharge['Plancharge']['id'])); ?>&nbsp;                    
+                    <?php //echo $this->Html->link('<span class="glyphicons retweet showoverlay notchange" rel="tooltip" data-title="Créer une nouvelle version"></span>', array('action' => 'edit', $plancharge['Plancharge']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'add')) : ?>
                     <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange" rel="tooltip" data-title="Modification"></span>', array('controller'=>'detailplancharges','action' => 'edit', $plancharge['Plancharge']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?> 
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'delete')) : ?>
-                    <?php echo $this->Form->postLink('<span class="glyphicons bin showoverlay notchange" rel="tooltip" data-title="Suppression"></span>', array('controller'=>'plancharges','action' => 'delete', $plancharge['Plancharge']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce plan de charge ?')); ?>
+                    <?php echo $this->Form->postLink('<span class="glyphicons bin notchange" rel="tooltip" data-title="Suppression"></span>', array('controller'=>'plancharges','action' => 'delete', $plancharge['Plancharge']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce plan de charge ?')); ?>
                     <?php endif; ?>                     
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'view')) : ?>
                     <?php echo $this->Html->link('<span class="ico-xls" rel="tooltip" data-title="Export Excel"></span>', array('action' => 'export_xls', $plancharge['Plancharge']['id']),array('escape' => false,'style'=>'margin-top:5px;display: inline-table;')); ?>&nbsp;
@@ -272,6 +273,34 @@ $(document).ready(function () {
     $(document).on('change','#PlanchargeContratId',function(e){
         e.preventDefault;
         $('#PlanchargeNOM').val($('#PlanchargeANNEE').val()+"-"+$('#PlanchargeContratId option:selected').text());
+    }); 
+    
+    $(document).on('click','.retweet',function(e){
+        var id = $(this).parent('a').attr('data-id');
+        $.ajax({
+            type: "POST",       
+            url: "<?php echo $this->Html->url(array('controller'=>'plancharges','action'=>'json_get_info')); ?>/" + id,
+            contentType: "application/json",
+            success : function(response) {
+                var json = $.parseJSON(response);
+                $('.form-horizontal').append("<input type='hidden' name='data[Plancharge][id]' id='PlanchargeId' value='"+json[0]['Plancharge']['id']+"'>");
+                $('#closemodal').attr('type', "submit");
+                $('#PlanchargeContratId').val(json[0]['Plancharge']['contrat_id']);
+                $('#PlanchargeANNEE').val(json[0]['Plancharge']['ANNEE']);
+                $('#PlanchargeNOM').val(json[0]['Plancharge']['NOM']);
+                $('#PlanchargeTJM').val(json[0]['Plancharge']['TJM']);
+                $('.modal-title').html('Duplication du plan de charges');
+                $('.form-horizontal').attr('action', "<?php echo $this->Html->url(array('controller'=>'plancharges','action'=>'edit')); ?>");
+                $('#newpcModal').modal('show');
+            },
+            error :function(response,status,errorThrown) {
+                alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+            }
+         });
+    });  
+    
+   $(document).on('click','#closemodal',function(e){
+        $('#newpcModal').modal('toggle');
     });     
 });
 </script>

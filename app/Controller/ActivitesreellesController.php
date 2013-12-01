@@ -191,6 +191,8 @@ class ActivitesreellesController extends AppController {
                 $this->Activitesreelle->Utilisateur->recursive = -1;
                 $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
                 $this->set('utilisateurs',$utilisateurs);
+                $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id')),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));           
+                $this->set('utilisateur', $utilisateur);                
                 $this->Activitesreelle->recursive = 1;
                 $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc' ),'conditions'=>$newconditions));
                 $this->set('groups',$group); 
@@ -244,7 +246,7 @@ class ActivitesreellesController extends AppController {
 		if ($this->request->is('post')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Activitesreelle->validate = array();
-                        $this->History->goBack(1);
+                        $this->History->goBack(2);
                     else:                    
                         $activitesreelles = $this->request->data['Activitesreelle'];  
                         foreach($activitesreelles as $activitesreelle):
@@ -261,7 +263,7 @@ class ActivitesreellesController extends AppController {
                                 endif;   
                             endif;
                         endforeach; 
-                        $this->History->goBack(1); 
+                        $this->History->goBack(2); 
                     endif;
                 }
                 $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('conditions'=>array('id'=>$utilisateur_id),'recursive'=>-1));
@@ -328,7 +330,7 @@ class ActivitesreellesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Activitesreelle->validate = array();
-                        $this->History->goBack(1);
+                        $this->History->goBack(2);
                     else:                    
                         $activitesreelles = $this->request->data['Activitesreelle'];  
                         foreach($activitesreelles as $activitesreelle):
@@ -353,7 +355,7 @@ class ActivitesreellesController extends AppController {
                                 endif; 
                             endif;
                         endforeach; 
-                        $this->History->goBack(1); 
+                        $this->History->goBack(2); 
                    endif;
 		} else {
                     $date = $this->Activitesreelle->find('first',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'conditions'=>array('Activitesreelle.id'=>$id),'recursive'=>-1));
@@ -425,9 +427,11 @@ class ActivitesreellesController extends AppController {
                 unset($record['Activitesreelle']['DATE']);
                 unset($record['Activitesreelle']['created']);                
                 unset($record['Activitesreelle']['modified']);
+                unset($record['Activitesreelle']['VEROUILLE']);
                 $date = new DateTime($this->Activitesreelle->CUSDate($date));
                 $date->add(new DateInterval('P7D'));                
                 $record['Activitesreelle']['DATE'] = $date->format('d/m/Y');
+                $record['Activitesreelle']['VEROUILLE'] = '1';
                 if ($this->ActiviteExists($record['Activitesreelle']['utilisateur_id'], $record['Activitesreelle']['DATE'], $record['Activitesreelle']['activite_id']) > 0){
                     $this->Session->setFlash(__('Feuille de temps existante'),'default',array('class'=>'alert alert-info'));
                     $this->redirect(array('action' => 'edit',$this->ActiviteExists($record['Activitesreelle']['utilisateur_id'], $record['Activitesreelle']['DATE'], $record['Activitesreelle']['activite_id'])));
@@ -467,9 +471,11 @@ class ActivitesreellesController extends AppController {
                 unset($record['Activitesreelle']['DATE']);
                 unset($record['Activitesreelle']['created']);                
                 unset($record['Activitesreelle']['modified']);
+                unset($record['Activitesreelle']['VEROUILLE']);
                 $date = new DateTime($this->Activitesreelle->CUSDate($date));
                 $date->add(new DateInterval('P7D'));                
                 $record['Activitesreelle']['DATE'] = $date->format('d/m/Y');
+                $record['Activitesreelle']['VEROUILLE'] = '1';
                 if ($this->ActiviteExists($record['Activitesreelle']['utilisateur_id'], $record['Activitesreelle']['DATE'], $record['Activitesreelle']['activite_id']) > 0){
                     $this->Session->setFlash(__('Feuille de temps existante'),'default',array('class'=>'alert alert-info'));
                     $this->History->goBack(1);
@@ -622,7 +628,7 @@ class ActivitesreellesController extends AppController {
                             Activitesreelle.DATE,
                             Activitesreelle.LU, Activitesreelle.MA, Activitesreelle.ME,  Activitesreelle.JE, Activitesreelle.VE, Activitesreelle.SA, Activitesreelle.DI,
                             Activitesreelle.LU_TYPE, Activitesreelle.MA_TYPE, Activitesreelle.ME_TYPE,  Activitesreelle.JE_TYPE, Activitesreelle.VE_TYPE, Activitesreelle.SA_TYPE, Activitesreelle.DI_TYPE,
-                            Activitesreelle.utilisateur_id
+                            Activitesreelle.utilisateur_id,Activitesreelle.demandeabsence_id
                             FROM activitesreelles AS Activitesreelle 
                             LEFT JOIN activites AS Activite ON (Activitesreelle.activite_id = Activite.id) 
                             WHERE Activite.projet_id = 1 
@@ -633,7 +639,7 @@ class ActivitesreellesController extends AppController {
                             Activitesreelle.DATE,
                             Activitesreelle.LU, Activitesreelle.MA, Activitesreelle.ME,  Activitesreelle.JE, Activitesreelle.VE, Activitesreelle.SA, Activitesreelle.DI,
                             Activitesreelle.LU_TYPE, Activitesreelle.MA_TYPE, Activitesreelle.ME_TYPE,  Activitesreelle.JE_TYPE, Activitesreelle.VE_TYPE, Activitesreelle.SA_TYPE, Activitesreelle.DI_TYPE,
-                            Activitesreelle.utilisateur_id
+                            Activitesreelle.utilisateur_id,Activitesreelle.demandeabsence_id
                             FROM activitesreelles AS Activitesreelle 
                             LEFT JOIN activites AS Activite ON (Activitesreelle.activite_id = Activite.id)
                             WHERE Activite.projet_id = 1 
@@ -1071,7 +1077,8 @@ class ActivitesreellesController extends AppController {
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
                     $this->updatefacturation($id,true);
-                endforeach;    
+                endforeach; 
+                sleep(3);
                 $this->History->goBack(1);
             endif;
             exit();
@@ -1088,17 +1095,43 @@ class ActivitesreellesController extends AppController {
             exit();
         }     
         
-        public function icsImport($utilisateur_id,$activite_id,$date,$day,$type=null,$duree=null){
-            $datetime = new DateTime($date);
-            $type = $type==null ? 1 : isFerie($datetime) ? 1 :$type;
-            $duree = $duree==null ? 0 : isFerie($datetime) ? 0 : $duree;
-            //$type = $type==null ? 1 : $type;
-            //$duree = $duree==null ? 0 : $duree;            
+        public function icsImport($utilisateur_id,$activite_id,$date,$day,$type=null,$duree=null,$id_demande=null,$datereelle=null){
+            $datetime = !is_object($date) ? new DateTime($date) : $date;
+            if($datereelle != null):
+                $datereelle = new DateTime($datereelle);
+            else:
+            switch($day):
+                case 'LU':
+                    $datereelle = $datetime;
+                    break;
+                case 'MA':
+                    $datereelle = $datetime->add(new DateInterval('P1D'));
+                    break;
+                case 'ME':
+                    $datereelle = $datetime->add(new DateInterval('P2D'));
+                    break;
+                case 'JE':
+                    $datereelle = $datetime->add(new DateInterval('P3D'));
+                    break;
+                case 'VE':
+                    $datereelle = $datetime->add(new DateInterval('P4D'));
+                    break;
+                case 'SA':
+                    $datereelle = $datetime->add(new DateInterval('P5D'));
+                    break;
+                case 'DI':
+                    $datereelle = $datetime->add(new DateInterval('P6D'));
+                    break;                
+            endswitch;
+            endif;
+            $type = $type==null ? 1 : isFerie($datereelle) ? 1 :$type;
+            $duree = $duree==null ? 0 : isFerie($datereelle) ? 0 : $duree;           
             $activitesreelle = $this->isExist($utilisateur_id, $activite_id, $date);
             $record['Activitesreelle']['TOTAL']=0;
             $record['Activitesreelle']['utilisateur_id'] = $utilisateur_id;
             $record['Activitesreelle']['activite_id'] = $activite_id;
             $record['Activitesreelle']['DATE'] = CFRDate($date);
+            $record['Activitesreelle']['demandeabsence_id'] = $id_demande;
             $record['Activitesreelle']['created'] = date('Y-m-d'); 
             $record['Activitesreelle']['modified'] = date('Y-m-d'); 
             if ($activitesreelle!=false):
@@ -1151,6 +1184,89 @@ class ActivitesreellesController extends AppController {
             $record['Activitesreelle']['TOTAL'] = !isset($total[0]['TOTAL']) || $total[0]['TOTAL']==null ? 0 : $total[0]['TOTAL'];
             $this->Activitesreelle->save($record);
         }
+        
+        public function addDemandes($utilisateur_id,$activite_id,$date,$day,$type=null,$duree=null,$id_demande=null,$datereelle=null){
+            $datetime = new DateTime($date);
+            if($datereelle != null):
+                $datereelle = new DateTime($datereelle);
+            else:
+            switch($day):
+                case 'LU':
+                    $datereelle = $datetime;
+                    break;
+                case 'MA':
+                    $datereelle = $datetime->add('P1D');
+                    break;
+                case 'ME':
+                    $datereelle = $datetime->add('P2D');
+                    break;
+                case 'JE':
+                    $datereelle = $datetime->add('P3D');
+                    break;
+                case 'VE':
+                    $datereelle = $datetime->add('P4D');
+                    break;
+                case 'SA':
+                    $datereelle = $datetime->add('P5D');
+                    break;
+                case 'DI':
+                    $datereelle = $datetime->add('P6D');
+                    break;                
+            endswitch;
+            endif;
+            $type = $type==null ? 1 : isFerie($datereelle) ? 1 :$type;
+            $duree = $duree==null ? 0 : isFerie($datereelle) ? 0 : $duree;           
+            $record['Activitesreelle']['TOTAL']=0;
+            $record['Activitesreelle']['utilisateur_id'] = $utilisateur_id;
+            $record['Activitesreelle']['activite_id'] = $activite_id;
+            $record['Activitesreelle']['DATE'] = CFRDate($date);
+            $record['Activitesreelle']['demandeabsence_id'] = $id_demande;
+            $record['Activitesreelle']['created'] = date('Y-m-d'); 
+            $record['Activitesreelle']['modified'] = date('Y-m-d'); 
+            $this->Activitesreelle->create();
+            switch($day):
+                case 'LU':
+                    $record['Activitesreelle']['LU']=$duree;
+                    $record['Activitesreelle']['LU_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;
+                case 'MA':
+                    $record['Activitesreelle']['MA']=$duree;
+                    $record['Activitesreelle']['MA_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;
+                case 'ME':                
+                    $record['Activitesreelle']['ME']=$duree;
+                    $record['Activitesreelle']['ME_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;
+                case 'JE':
+                    $record['Activitesreelle']['JE']=$duree;
+                    $record['Activitesreelle']['JE_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;
+                case 'VE':
+                    $record['Activitesreelle']['VE']=$duree;
+                    $record['Activitesreelle']['VE_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;
+                //JLR :: pas necessaire d'importer les samedi et dimanche
+                /*case 'SA':
+                    $record['Activitesreelle']['SA']=$duree;
+                    $record['Activitesreelle']['SA_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;
+                case 'DI':
+                    $record['Activitesreelle']['DI']=$duree;
+                    $record['Activitesreelle']['DI_TYPE']=$type;
+                    $this->Activitesreelle->save($record);
+                    break;   */             
+            endswitch;
+            //JLR :: retirer les samedi et dimanche du total
+            $total = $this->Activitesreelle->find('first',array('fields'=>array('(LU+MA+ME+JE+VE) AS TOTAL','DATE','VEROUILLE'),'conditions'=>array('Activitesreelle.utilisateur_id'=>$utilisateur_id,'Activitesreelle.activite_id'=>$activite_id,'Activitesreelle.DATE'=>$date),'recursive'=>-1));
+            $record['Activitesreelle']['TOTAL'] = !isset($total[0]['TOTAL']) || $total[0]['TOTAL']==null ? 0 : $total[0]['TOTAL'];
+            $this->Activitesreelle->save($record);
+        }        
         
         public function sendmailabsences($activitesreelle){
             $activite = $this->Activitesreelle->Activite->find('first',array('conditions'=>array('Activite.id'=>$activitesreelle['activite_id'])));
@@ -1249,5 +1365,13 @@ class ActivitesreellesController extends AppController {
                 }  
             endif;
             $this->History->notmove();
-        }         
+        }    
+        
+        public function setvalid($demande_id){
+            $activitesreelles = $this->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.demandeabsence_id'=>$demande_id),'recursive'=>0));
+            foreach ($activitesreelles as $obj):
+                $this->Activitesreelle->id = $obj['Activitesreelle']['id'];
+                $this->Activitesreelle->saveField('demandeabsence_id', NULL);
+            endforeach;
+        }
 }

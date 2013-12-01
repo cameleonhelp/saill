@@ -112,6 +112,28 @@ class UnauthorizedException extends HttpException {
 }
 
 /**
+ * Represents an HTTP 401 error.
+ *
+ * @package       Cake.Error
+ */
+class NotAuthorizedException extends HttpException {
+
+/**
+ * Constructor
+ *
+ * @param string $message If no message is given 'Unauthorized' will be the message
+ * @param integer $code Status code, defaults to 401
+ */
+	public function __construct($message = null, $code = 401) {
+		if (empty($message)) {
+			$message = 'Vous n\'êtes pas autorisé à utiliser cette fonctionnalité de l\'outil';
+		}
+		parent::__construct($message, $code);
+	}
+
+}
+
+/**
  * Represents an HTTP 403 error.
  *
  * @package       Cake.Error

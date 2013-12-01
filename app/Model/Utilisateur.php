@@ -483,7 +483,10 @@ class Utilisateur extends AppModel {
                 } 
                 if (isset($val['Utilisateur']['societe_id'])) {
                     $results[$key]['Utilisateur']['societe_NOM'] = $this->getSocieteForUser($val['Utilisateur']['societe_id']);
-                }                   
+                }     
+                if (isset($val['Utilisateur']['FINMISSION']) && ($val['Utilisateur']['FINMISSION']!=null || $val['Utilisateur']['FINMISSION']!= '0000-00-00') && isset($val['Utilisateur']['ACTIF'])) {
+                    $this->autoend($val['Utilisateur']['id'],$val['Utilisateur']['FINMISSION'],$val['Utilisateur']['ACTIF']);
+                } 
             }
             return $results;
         }   
@@ -492,5 +495,16 @@ class Utilisateur extends AppModel {
             $sql = "SELECT NOM FROM societes WHERE id='".$id."'";
             $result = $this->query($sql);
             return  !empty($result) ? $result[0]['societes']['NOM'] : "";
-        }           
+        }   
+        
+        public function autoend($id,$date,$actif){
+            $today = new DateTime();
+            $today->format('Y-m-d');
+            $date = new DateTime($date);
+            $diff = $today->diff($date);
+            if($diff->invert ==1 && $actif==1):
+                $sql = "UPDATE utilisateurs SET ACTIF=0,FINMISSION='".$today->format('Y-m-d')."',modified='".$today->format('Y-m-d')."' WHERE id='".$id."'";
+                $result = $this->query($sql);
+            endif;
+        }        
 }

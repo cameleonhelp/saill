@@ -136,7 +136,7 @@
                     <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange" rel="tooltip" data-title="Modification"></span>', array('action' => 'edit', $action['Action']['id']),array('escape' => false,'class'=>'showoverlay')); ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'delete')) : ?>
-                    <?php echo $this->Form->postLink('<span class="glyphicons showoverlay bin notchange" rel="tooltip" data-title="Suppression"></span>', array('action' => 'delete', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette action ?')); ?>                    
+                    <?php echo $this->Form->postLink('<span class="glyphicons bin notchange" rel="tooltip" data-title="Suppression"></span>', array('action' => 'delete', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette action ?')); ?>                    
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'duplicate')) : ?>
                     <?php echo $this->Form->postLink('<span class="glyphicons showoverlay retweet notchange" rel="tooltip" data-title="Duplication"></span>', array('action' => 'dupliquer', $action['Action']['id']),array('escape' => false), __('Etes-vous certain de vouloir dupliquer cette action ? Cette action vous sera attribuée.')); ?>
@@ -164,7 +164,6 @@
         </div>
         <div id="content-timeline">
         <?php if(count($actions) >0): ?>
-        <div style="width:98%;text-align:center;"><?php echo $this->Html->link('Aujourd\'hui ⇣',"",array('id'=>"to-today",'class'=>'btn btn-sm btn-default')); ?></div>
         <br>
         <?php $events = $this->requestAction('actions/timelinedata'); ?>
         <?php $myTeam = $this->requestAction('equipes/allMyTeam/'.userAuth('id')); ?>
@@ -191,6 +190,7 @@
         </script>
         <div id="chronotime" class="timeline-tgt marginright20"></div>
         <?php endif; ?>
+        <div style="width:98%;text-align:center;"><?php echo $this->Html->link('⇡ Aujourd\'hui ⇡',"",array('id'=>"to-today",'class'=>'btn btn-sm btn-default')); ?></div>        
         </div>
 </div>
 <script>
@@ -250,7 +250,7 @@ $(document).ready(function () {
             dataType: "html",
             type: "POST",
             url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'incra')); ?>/",
-            data: ({id:id})
+            data: ({all_ids:id})
         }).done(function ( data ) {
             location.reload();
         });
@@ -320,18 +320,14 @@ $(document).ready(function () {
         $(document).on('click','#deletelink',function(e){
             if(confirm("Voulez-vous supprimer toutes les actions sélectionnées ?")){
                 var ids = $("#all_ids").val();
-                var myarr = ids.split("-");
-                var length = myarr.length;
                 var overlay = $('#overlay');
                 overlay.show(); 
-                for(var i = 0; i < length; i++){
-                    $.ajax({
-                        dataType: "html",
-                        type: "POST",
-                        url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'deleteall')); ?>/"+myarr[i],
-                        data: ({id:myarr[i]})     
-                    });
-                }
+                $.ajax({
+                    dataType: "html",
+                    type: "POST",
+                    url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'deleteall')); ?>/",
+                    data: ({all_ids:ids})     
+                });
             }
             location.reload();
             overlay.hide();   
@@ -342,18 +338,14 @@ $(document).ready(function () {
         $(document).on('click','#closelink',function(e){
             if(confirm("Voulez-vous clore toutes les actions sélectionnées ?")){
                 var ids = $("#all_ids").val();
-                var myarr = ids.split("-");
-                var length = myarr.length;
                 var overlay = $('#overlay');
                 overlay.show(); 
-                for(var i = 0; i < length; i++){
-                    $.ajax({
-                        dataType: "html",
-                        type: "POST",
-                        url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'closeall')); ?>/"+myarr[i],
-                        data: ({id:myarr[i]})     
-                    });
-                }
+                $.ajax({
+                    dataType: "html",
+                    type: "POST",
+                    url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'closeall')); ?>/",
+                    data: ({all_ids:ids})     
+                });
             }
             location.reload();
             overlay.hide();
@@ -364,18 +356,14 @@ $(document).ready(function () {
         $(document).on('click','#cralink',function(e){
             if(confirm("Voulez-vous modifier ces actions en ce qui concerne leur apparition dans le CRA ?")){
                 var ids = $("#all_ids").val();
-                var myarr = ids.split("-");
-                var length = myarr.length;
                 var overlay = $('#overlay');
                 overlay.show(); 
-                for(var i = 0; i < length; i++){
-                    $.ajax({
-                        dataType: "html",
-                        type: "POST",
-                        url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'incra')); ?>/",
-                        data: ({id:myarr[i]})    
-                    });
-                }
+                $.ajax({
+                    dataType: "html",
+                    type: "POST",
+                    url: "<?php echo $this->Html->url(array('controller'=>'actions','action'=>'incra')); ?>/",
+                    data: ({all_ids:ids})     
+                });
             }
             location.reload();
             overlay.hide();

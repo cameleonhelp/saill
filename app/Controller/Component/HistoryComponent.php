@@ -23,13 +23,13 @@ class HistoryComponent extends Component {
      * Ajouter toutes les méthode dont on fait $this->History->goBack()
      * @var type 
      */
-    var $exception = array('delete','openmaintenance','closemaintenance','ajax_install','saveColor','pinghost','budgetisactif','ajaxedit','ajax_actif','json_get_logiciel_info','json_get_version_info','json_get_version_for','ajaxdelete','ajaxadd','notifier','addnewpc','sendmailgestannuaire','newactivite','dupliquer','search','export_doc','export_xls','incra','parseICS','progressduree','progressavancement','progressstatut','progressstate','autoduplicate','errorfacturation','deverouiller','soumettre','deleteall','autoprogressState','addIndisponibilite');
+    var $exception = array('saveColor','delete','openmaintenance','files/source','closemaintenance','json_get_info','ajax_install','saveColor','pinghost','budgetisactif','ajaxedit','ajax_actif','json_get_logiciel_info','json_get_version_info','json_get_info','json_get_version_for','ajaxdelete','ajaxadd','notifier','addnewpc','sendmailgestannuaire','newactivite','dupliquer','search','export_doc','export_xls','incra','parseICS','progressduree','progressavancement','prolonger','progressstatut','progressstate','autoduplicate','errorfacturation','setmenuvisible','deverouiller','soumettre','deleteall','autoprogressState','addIndisponibilite');
 
     /**
      * action initialisant l'historique
      * @var type 
      */
-    var $initpage = array('index','display','last7days','risques','home','profil', 'rapport','absences','login','listebackup');
+    var $initpage = array('index','changelog','display','last7days','risques','home','profil', 'rapport','absences','login','listebackup');
 
     function initialize(Controller $controller){
     }
@@ -38,6 +38,7 @@ class HistoryComponent extends Component {
      * Permet de débugguer l'historique
      */
     function beforeRender(Controller $controller){
+        $this->cleanhistory();
         //debug($this->show());   
         //debug($this->goback);
         //debug($this->lastURL());
@@ -95,7 +96,17 @@ class HistoryComponent extends Component {
     public function goBack($step = 0) {  
         //$this->urlexists($step+1); 
         //$this->params['form']['cancel']=null;
-        $pos = $this->lastIndex() - $step < 0 ? 0 : $this->lastIndex() - $step;  
+        $this->cleanhistory(); 
+        $max = count($this->data) - 1;
+        if ($max <= 0):
+            $pos = 0;
+        else:
+            if($max - $step <= 0):
+                $pos = 0;
+            else:
+                $pos = $this->lastIndex() - $step;
+            endif;
+        endif;
         $sessiongobak = $step = 0 ? '' : true;
         SessionComponent::write('User.goback', $sessiongobak);
         $this->controller->redirect($this->data[$pos]); 
@@ -193,12 +204,9 @@ class HistoryComponent extends Component {
     
     function isexception(){
         $return = false;
-        foreach($this->exception as $exception):
-            if(in_array($this->controller->params['action'],$this->exception)):
-                $return = true;
-                break;
-            endif;
-        endforeach;        
+        if(in_array($this->controller->params['action'],$this->exception)):
+            $return = true;
+        endif;
         return $return;
     }
     
@@ -225,6 +233,26 @@ class HistoryComponent extends Component {
             $this->_deleteUrl($this->lastIndex());
             SessionComponent::write('User.goback', '');
         endif;
+    }
+    
+    /**
+     * cleanhistory method
+     * permet d'enlever toutes les exceptions de l'historique à chaque post
+     */
+    function cleanhistory(){
+        $history = $this->data;
+        $newhistory = $history;
+        foreach ($history as $key => $value) {
+            foreach($this->exception as $exception):
+                if(strpos($value, $exception)!==false):
+                    unset($newhistory[$key]);
+                endif;
+            endforeach;
+        }
+        SessionComponent::delete('User.history'); 
+        SessionComponent::write('User.history', $newhistory); 
+        $this->data = $newhistory;
+        /**/
     }
 } 
 ?>

@@ -284,7 +284,7 @@ class LogicielsController extends AppController {
                         //$this->saveHistory($newid);
                         if ($newactif==0):
                             $delete = "DELETE FROM assobienlogiciels WHERE logiciel_id = ".$newid;
-                            $this->Bien->Assobienlogiciel->query($delete);   
+                            $this->Logiciel->Assobienlogiciel->query($delete);   
                         endif;                    
 			if ($id==null):
                             $this->Session->setFlash(__('Modification du statut actif pris en compte',true),'flash_success');
@@ -428,16 +428,25 @@ class LogicielsController extends AppController {
             endif;
         }
                
-        public function deleteall($id){
-            if($this->request->data('id')!==''):
-                if($this->ajax_actif($id)):
-                    $this->Session->setFlash(__('Modification du statut supprimé pris en compte pour tous les logiciels sélectionnés',true),'flash_success'); 
-                else :
-                    $this->Session->setFlash(__('Modification du statut supprimé <b>NON</b> pris en compte pour tous les logiciels sélectionnés',true),'flash_failure');
-                endif;
+        public function deleteall(){
+            $ids = explode('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):
+                foreach($ids as $id):
+                    $this->Logiciel->id = $id;
+                    $obj = $this->Logiciel->find('first',array('conditions'=>array('Logiciel.id'=>$id),'recursive'=>0));
+                    $newactif = $obj['Logiciel']['ACTIF'] == 1 ? 0 : 1;
+                    $this->Logiciel->saveField('ACTIF',$newactif);
+                    if ($newactif==0):
+                        $delete = "DELETE FROM assobienlogiciels WHERE logiciel_id = ".$id;
+                        $this->Logiciel->Assobienlogiciel->query($delete);   
+                    endif; 
+                endforeach;
+                sleep(3);
+                echo $this->Session->setFlash(__('Mises à jour du statut supprimé complétées',true),'flash_success');
             else :
                 $this->Session->setFlash(__('Aucun logiciel sélectionné',true),'flash_failure');
             endif;
+            exit();
         }      
         
 /**

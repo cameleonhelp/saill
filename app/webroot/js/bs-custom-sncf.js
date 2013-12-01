@@ -643,11 +643,12 @@ $(document).ready(function () {
     language: "fr",
     orientation: "top auto",
     autoclose: true
-});
+    });
     $('.dateyear-year').mask('9999',{placeholder:"A"});
     $('.year-only').mask('9999',{placeholder:"A"});
     $('.projet-galilei').mask('99999-9999999999',{placeholder:"0"});
     $('.activite-galilei').mask('999999999999999',{placeholder:"0"});
+    $('.changelogversion').mask('9.9.9.999',{placeholder:"0"});
     $('.dateonly').mask('99/99/9999',{placeholder:".."});
     //$('.frais').mask('9999.99',{placeholder:"0"});
 });

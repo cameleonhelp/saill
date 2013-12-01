@@ -184,12 +184,14 @@ function Chronoline(domElement, events, options) {
 
         tooltips: false,  // activates qtip tooltips. Otherwise, you just get title tooltips
         markToday: 'line',  // 'line', 'labelBox', false
-        todayAttrs: {'stroke': '#484848'},
-
+        todayAttrs: {stroke: '#ff0000'},
+        triangleAttrs: {fill: '#ff0000',stroke: '#ff0000',"stroke-width" :1},
+        addTriangles: true,
+        
         sections: null,
-        floatingSectionLabels: true,
+        floatingSectionLabels: false,
         sectionLabelAttrs: {},
-        sectionLabelsOnHover: true,
+        sectionLabelsOnHover: false,
 
         draggable: false, // requires jQuery, allows mouse dragging
 
@@ -524,6 +526,7 @@ function Chronoline(domElement, events, options) {
 
 
     t.drawLabelsHelper = function(startMs, endMs){
+        var strToday = t.today.getDate()+"-"+(t.today.getMonth()+1)+"-"+t.today.getFullYear();
         for(var curMs = startMs; curMs < endMs; curMs += DAY_IN_MILLISECONDS){
             var curDate = new Date(curMs);
             var day = curDate.getDate();
@@ -540,21 +543,23 @@ function Chronoline(domElement, events, options) {
                 var label = t.paper.text(x, t.labelY, curDate.formatDate(t.labelFormat));
                 label.attr(t.fontAttrs);
             }
-
+            var strCurDate = curDate.getDate()+"-"+(curDate.getMonth()+1)+"-"+curDate.getFullYear();
+            
             // special markers for today
-            if(t.markToday && curMs == t.today.getTime()){
+            if(t.markToday != false && strCurDate == strToday){
                 if(t.markToday == 'labelBox'){
                     label.attr({'text': label.attr('text') + '\n' + curDate.formatDate('%b').toUpperCase(),
                                 'font-size': t.fontAttrs['font-size'] + 2,
                                 'y': t.bottomHashY + t.fontAttrs['font-size'] + 5});
-                    var bbox = label.getBBox();
-                    var labelBox = t.paper.rect(bbox.x - 2, bbox.y - 2, bbox.width + 4, bbox.height + 4);
-                    labelBox.attr('fill', '90-#f4f4f4-#e8e8e8');
-                    labelBox.insertBefore(label);
+                    //label.attr(t.todayAttrs);
+                    //var bbox = label.getBBox();
+                    //var labelBox = t.paper.rect(bbox.x - 2, bbox.y - 2, bbox.width + 4, bbox.height + 4);
+                    //labelBox.attr('fill', '90-#ff0000-#ff0000');
+                    //labelBox.insertBefore(label);
                 }else if(t.markToday == 'line'){
-                    var line = t.paper.path('M' + x + ',0L' + x + ',' + dateLineY);
-                    line.attr(t.todayAttrs);
-                }
+                    var line = t.paper.path('M' + x + ',0L' + x + ',' + dateLineY).attr(t.todayAttrs).toFront();                  
+                    //line.attr(t.todayAttrs);
+                }                 
             }
 
             // sublabels. These can float
