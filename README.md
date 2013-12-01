@@ -7,9 +7,9 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 6.0.7](http://www.
 
 ## Cette version s'appuie sur :
 
-* [CakePhp 2.4.2](http://cakephp.org) - Framework PHP
+* [CakePhp 2.4.3](http://cakephp.org) - Framework PHP
 
-* [BootStrap 3.0.1](http://twitter.github.com/bootstrap/) - Style et javascript
+* [BootStrap 3.0.2](http://twitter.github.com/bootstrap/) - Style et javascript
 
 * [JQuery 1.10.2](http://jquery.com) - La dernière version de JQuery
 
@@ -17,13 +17,13 @@ SAILL2_MCD.mwb => Schéma de base de données [MySQLWorkbench 6.0.7](http://www.
 
 * [Highcharts 3.0.7](http://www.highcharts.com) - [bonne documentation](http://docs.highcharts.com)
 
-* [TinyMCE 4.0.10](http://www.tinymce.com) - Editeur WYSWYG
+* [TinyMCE 4.0.11](http://www.tinymce.com) - Editeur WYSWYG
 
 * et d'autres composants
 
 Version 2.1.0 :
 
-* gestion des environnements
+* gestion des environnements et ajout du suivi des modifications de l'application
 
 * Correction de bug
 
