@@ -90,9 +90,10 @@
     </div>       
     <div class="block-panel-33-left">
     <div class="form-group">
-        <label class="col-lg-6" for="BienPVU">PVU : </label>      
+        <label class="col-lg-6" for="BienPVU1">PVU : </label>      
         <div class="col-lg-3">
-            <?php echo $this->Form->input('PVU',array('type'=>'text','placeholder'=>'PVU','class'=>'form-control')); ?>
+            <?php echo $this->Form->input('PVU1',array('type'=>'text','placeholder'=>'PVU','class'=>'form-control','value'=>isset($this->data['Bien']['PVU']) ? $this->data['Bien']['PVU'] : '')); ?>
+            <?php echo $this->Form->input('PVU',array('type'=>'hidden','placeholder'=>'PVU','class'=>'form-control')); ?>
         </div>         
     </div>         
     </div>
@@ -115,7 +116,7 @@
     <div style="clear:both;margin-top: 10px;">
     <div class="form-group">
       <div class="btn-block-horizontal">
-            <?php echo $this->Form->button('Annuler', array('type'=>'submit','class' => 'btn btn-sm btn-default showoverlay cancel','value'=>'cancel','div' => false, 'name' => 'cancel')); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?>                
+            <?php echo $this->Form->button('Annuler', array('type'=>'submit','class' => 'btn btn-sm btn-default showoverlay cancel','value'=>'cancel','div' => false, 'name' => 'cancel')); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-sm btn-primary','type'=>'submit','formnovalidate' => true)); ?>                
       </div>
     </div>  
     </div>
@@ -131,7 +132,7 @@
           </a>
         </h3>
       </div>
-      <div id="panel_logiciel" class="panel-collapse collapse">
+      <div id="panel_logiciel" class="panel-collapse collapse in">
         <div class="panel-body">
           <?php if($this->data['Bien']['ACTIF']): ?>
           <button type="button" class='btn btn-sm btn-default pull-right' style="margin-bottom:10px;" data-toggle="modal" data-target="#addModal">Ajouter un logiciel existant</button>                    
@@ -168,8 +169,20 @@
       <?php echo $this->Form->create('Logiciel',array('controller'=>'logiciels','action'=>'ajaxadd','id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
       <div class="modal-body">
         <?php  echo $this->Form->input('bien_id',array('type'=>'hidden','value'=>$this->data['Bien']['id'])); ?>
-        <?php  echo $this->Form->input('application_id',array('type'=>'hidden','value'=>$this->data['Bien']['application_id'])); ?>
-        <?php  echo $this->Form->input('lot_id',array('type'=>'hidden','value'=>$this->data['Bien']['lot_id'])); ?>
+        <?php // echo $this->Form->input('application_id',array('type'=>'hidden','value'=>$this->data['Bien']['application_id'])); ?>
+        <?php // echo $this->Form->input('lot_id',array('type'=>'hidden','value'=>$this->data['Bien']['lot_id'])); ?>
+        <div class="form-group">
+              <label class="col-lg-4" for="LogicielApplicationId">Application : </label>
+              <div class="col-lg-7">
+                  <?php echo $this->Form->select('application_id',$applications,array('class'=>'form-control','empty'=>false,'default' => $this->data['Bien']['application_id'])); ?>                   
+              </div>
+        </div>   
+        <div class="form-group">
+              <label class="col-lg-4" for="LogicielLotId">Lot : </label>
+              <div class="col-lg-7">
+                  <?php echo $this->Form->select('lot_id',$lots,array('class'=>'form-control','empty'=>false,'default' => $this->data['Bien']['lot_id'])); ?>                   
+              </div>
+        </div>   
         <div class="form-group">
             <label class="col-lg-4 required" for="LogicielNOMDISABLED">Nom : </label>
             <div class="col-lg-7">
@@ -225,6 +238,20 @@
       <?php echo $this->Form->create('Assobienlogiciel',array('controller'=>'assobienlogiciels','action'=>'ajaxadd','id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
       <div class="modal-body">
         <?php  echo $this->Form->input('bien_id',array('type'=>'hidden','value'=>$this->data['Bien']['id'])); ?>
+        <div class="form-group">
+              <label class="col-lg-4" for="AssobienlogicielApplicationId">Application : </label>
+              <div class="col-lg-7">
+                  <?php echo $this->Form->input('application_id',array('type'=>'hidden','value'=>$this->data['Bien']['application_id'])); ?>
+                  <?php echo $this->Form->select('application_id',$applications,array('class'=>'form-control','id'=>'SelectApplicationId','empty'=>false,'default' => $this->data['Bien']['application_id'])); ?>                   
+              </div>
+        </div>     
+        <div class="form-group">
+              <label class="col-lg-4" for="LogicielLotId">Lot : </label>
+              <div class="col-lg-7">
+                  <?php echo $this->Form->input('lot_id',array('type'=>'hidden','value'=>$this->data['Bien']['lot_id'])); ?>
+                  <?php echo $this->Form->select('lot_id',$lots,array('class'=>'form-control','id'=>'SelectLotId','empty'=>false,'default' => $this->data['Bien']['lot_id'])); ?>                   
+              </div>
+        </div>             
         <div class="form-group">
               <label class="col-lg-4" for="AssobienlogicielLogicielId">Nom : </label>
               <div class="col-lg-7">
@@ -296,6 +323,126 @@ $(document).ready(function () {
         var version = $("#LogicielEnvversionId option:selected").text();
         $('#LogicielNOM').val(nom+" "+version);
         $('#LogicielNOMDISABLED').val(nom+" "+version);
-    });      
+    });  
+    
+    if($('#BienPVU').val() != ''){
+        $('#BienPVU1').prop('disabled',true);
+    } else {
+          $('#BienPVU1').prop('disabled',false).addClass('has-error');
+    }    
+    
+    $(document).on('change','#BienCpuId',function(e){
+        var id = $("#BienCpuId option:selected").val();
+        if(id != ''){
+            $.ajax({
+                type: "POST",       
+                url: "<?php echo $this->Html->url(array('controller'=>'cpuses','action'=>'json_get_info')); ?>/"+id+"/1", 
+                contentType: "application/json",
+                success : function(response) {
+                    var json = $.parseJSON(response);
+                    if (json[0]['Cpus']['PVU'] != '' && ($('#BienCOEURLICENCE').val() != '' && $('#BienCOEURLICENCE').val() != '0')){
+                        $('#BienPVU1').prop('disabled',false).removeClass('has-error').val(json[0]['Cpus']['PVU']*$('#BienCOEURLICENCE').val()).prop('disabled',true);
+                        $('#BienPVU').val(json[0]['Cpus']['PVU']*$('#BienCOEURLICENCE').val());
+                    }
+                    else
+                    {
+                        $('#BienPVU1').prop('disabled',false).val('').addClass('has-error');
+                        $('#BienPVU').val('');
+                    }
+                },
+                error :function(response, status,errorThrown) {
+                    alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                }
+             });               
+         } else {
+               $('#BienPVU1').prop('disabled',false).val('').addClass('has-error');
+         }
+    });    
+    
+    $(document).on('change','#BienCOEURLICENCE',function(e){
+        var id = $("#BienCpuId option:selected").val();
+        if($('#BienCOEURLICENCE').val() != '' && $('#BienCOEURLICENCE').val() != '0'){
+            $.ajax({
+                type: "POST",       
+                url: "<?php echo $this->Html->url(array('controller'=>'cpuses','action'=>'json_get_info')); ?>/"+id+"/1", 
+                contentType: "application/json",
+                success : function(response) {
+                    var json = $.parseJSON(response);
+                    if (json[0]['Cpus']['PVU'] != ''){
+                        $('#BienPVU1').prop('disabled',false).removeClass('has-error').val(json[0]['Cpus']['PVU']*$('#BienCOEURLICENCE').val()).prop('disabled',true);
+                        $('#BienPVU').val(json[0]['Cpus']['PVU']*$('#BienCOEURLICENCE').val());
+                    }
+                    else
+                    {
+                        $('#BienPVU1').prop('disabled',false).val('').addClass('has-error');
+                        $('#BienPVU').val('');
+                    }
+                },
+                error :function(response, status,errorThrown) {
+                    alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                }
+             });               
+         } else {
+               $('#BienPVU1').prop('disabled',false).val('').addClass('has-error');
+         }
+    });
+      
+    $(document).on('change','#addModal #SelectApplicationId',function(e){
+        var nom = $("#addModal #SelectApplicationId option:selected").text();
+        var id = $("#addModal #SelectApplicationId option:selected").val();
+        $("#addModal #AssobienlogicielApplicationId").val(id);
+        var lotid = $("#addModal #AssobienlogicielLotId").val();
+        if(lotid != '') {
+            $("#addModal #AssobienlogicielLogicielId").find('option:not(:first)').remove();
+            if(id!=''){
+            $.ajax({
+                type: "POST",       
+                url: "<?php echo $this->Html->url(array('controller'=>'logiciels','action'=>'json_get_select_compatible')); ?>/"+ lotid +"/"+id, 
+                contentType: "application/json",
+                success : function(response) {
+                    var json = $.parseJSON(response);
+                    var options = $("#addModal #AssobienlogicielLogicielId");
+                    $.each(json, function (index, value) {
+                        if(index != undefined) {
+                            options.append($("<option />").val(value).text(index));
+                        }
+                    });                       
+                },
+                error :function(response, status,errorThrown) {
+                    alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                }
+             }); 
+           }
+       }
+    });    
+    
+    $(document).on('change','#addModal #SelectLotId',function(e){
+        var nom = $("#addModal #SelectLotId option:selected").text();
+        var id = $("#addModal #SelectLotId option:selected").val();
+        $("#addModal #AssobienlogicielLotId").val(id);
+        var appid = $("#addModal #AssobienlogicielApplicationId").val();
+        if(appid != '') {
+            $("#addModal #AssobienlogicielLogicielId").find('option:not(:first)').remove();
+            if(id!=''){
+            $.ajax({
+                type: "POST",       
+                url: "<?php echo $this->Html->url(array('controller'=>'logiciels','action'=>'json_get_select_compatible')); ?>/"+ id +"/"+appid, 
+                contentType: "application/json",
+                success : function(response) {
+                    var json = $.parseJSON(response);
+                    var options = $("#addModal #AssobienlogicielLogicielId");
+                    $.each(json, function (index, value) {
+                        if(index != undefined) {
+                            options.append($("<option />").val(value).text(index));
+                        }
+                    });                       
+                },
+                error :function(response, status,errorThrown) {
+                    alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                }
+             }); 
+           }
+       }
+    });       
 });
 </script>

@@ -124,7 +124,7 @@ class Intergrationapplicative extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Intergrationapplicative']['created'])) {
                     $results[$key]['Intergrationapplicative']['created'] = $this->dateFormatAfterFind($val['Intergrationapplicative']['created']);
@@ -142,5 +142,19 @@ class Intergrationapplicative extends AppModel {
             return $results;
         } 
         
-          
+ /**
+ * beforeSave method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function beforeSave($options = array()) {
+            if (!empty($this->data['Intergrationapplicative']['DATEINSTALL'])) {
+                $this->data['Intergrationapplicative']['DATEINSTALL'] = $this->dateToDatetimeBeforeSave($this->data['Intergrationapplicative']['DATEINSTALL']);
+            }
+            parent::beforeSave();
+            return true;
+        } 
 }

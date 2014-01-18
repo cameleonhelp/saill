@@ -38,6 +38,8 @@
                         <td class="tableTd">Début</td>
                         <td class="tableTd">Fin</td>
                         <td class="tableTd">Etat</td>
+                        <td class="tableTd">Budget initial</td>
+                        <td class="tableTd">Budget revu</td>                        
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
@@ -47,9 +49,12 @@
 			echo '<td class="tableTdContent">'.$row['Activite']['DATEDEBUT'].'</td>';
 			echo '<td class="tableTdContent">'.$row['Activite']['DATEFIN'].'</td>';
                         $etat = $row['Activite']['ACTIVE']==1 ? 'Active' : "Inactive";
-			echo '<td class="tableTdContent">'.$etat.'</td>';                        
+			echo '<td class="tableTdContent">'.$etat.'</td>'; 
+                        $budget = isset($row['Activite']['BUDJETRA']) ? $row['Activite']['BUDJETRA'] : '0';
+                        echo '<td class="tableTdContent">'.$budget.' k€</td>';
+                        $revu = isset($row['Activite']['BUDGETREVU']) ? $row['Activite']['BUDGETREVU'] : '0';
+                        echo '<td class="tableTdContent">'.$revu.' k€</td>';                      
 			echo '</tr>';
-			endforeach;
-		?>
+                endforeach; ?>
 </table>
 

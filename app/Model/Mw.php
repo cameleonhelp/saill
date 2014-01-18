@@ -50,7 +50,7 @@ class Mw extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Mw']['created'])) {
                     $results[$key]['Mw']['created'] = $this->dateFormatAfterFind($val['Mw']['created']);
@@ -70,7 +70,7 @@ class Mw extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Mw']['NOM'])) {
                 $this->data['Mw']['NOM'] = mb_strtoupper($this->data['Mw']['NOM'],'UTF-8');
             }                

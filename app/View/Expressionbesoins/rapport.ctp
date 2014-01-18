@@ -80,9 +80,40 @@
         </tbody>        
     </table>
 <br>
+    <div id="chartcumulcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
+<!-- rapport avec le graphique et le tableau -->
+    <?php $lots = array_uniquecolumn($chartcumulenvresults,'lots','LOT'); ?>
+    <?php $perimetres = array_uniquecolumn($chartcumulenvresults,'perimetres','PERIMETRE'); ?>
+    <table id="datatablecumul" style="display:none;">
+        <thead>
+            <tr>
+                <th></th>
+                <?php foreach($perimetres as $key=>$value): ?>
+                <th><?php echo $value; ?></th>
+                <?php endforeach; ?>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($lots as $key=>$vallot): ?>
+            <tr>
+                <td><?php echo "Lot ".$vallot; ?></td>
+                <?php foreach($perimetres as $key=>$valapp): ?>
+                    <?php foreach($chartcumulenvresults as $chartresult): ?>
+                        <?php if($chartresult['lots']['LOT']== $vallot): ?>
+                            <?php if($chartresult['perimetres']['PERIMETRE']== $valapp): ?>
+                            <td><?php echo $chartresult[0]['NB']; ?></td>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
+            </tr>           
+            <?php endforeach; ?>
+        </tbody>        
+    </table>
+<br>
    <div id="charthistocontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br>
-    <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'expression du besoin par mois, lot, application et environnement</div><br>
+    <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'environnements par mois, lot, application, périmètre et état</div><br>
     <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped sizemax" id="datatable">
         <thead>
             <tr>
@@ -158,7 +189,7 @@ $(document).ready(function (){
         },
         title: {
             useHTML: true,
-            text: 'Nombre de demandes d\'environnement par lot et périmètre pour '+mois+' '+annee
+            text: 'Nombre d\'environnements par lot et périmètre pour '+mois+' '+annee
         },
         data: {
             table: document.getElementById('datatable')
@@ -166,7 +197,7 @@ $(document).ready(function (){
         yAxis: {
             allowDecimals: false,
             title: {
-                       text: 'Nombre d\'intérgation'
+                       text: 'Nombre d\'environnements'
                    }
         },
         xAxis: {
@@ -182,6 +213,43 @@ $(document).ready(function (){
                 }
             }        
         });
+    var today = new Date();
+    var month = (today.getMonth()+1) < 10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1);
+    $('#chartcumulcontainer').highcharts({
+        colors: ['#A1006B','#E05206','#CCDC00','#009AA6','#CB0044','#FFB612','#7ABB00','#00BBCE','#6E267B'], 
+        credits:{
+            enabled:false
+        },
+        chart: {
+            renderTo: 'container',
+            type: 'column'
+        },
+        title: {
+            useHTML: true,
+            text: 'Nombre d\'environnements opérationnels au : '+today.getDate()+'/'+ month +'/'+today.getFullYear()
+        },
+        data: {
+            table: document.getElementById('datatablecumul')
+        },
+        yAxis: {
+            allowDecimals: false,
+            title: {
+                       text: 'Nombre d\'environnements'
+                   }
+        },
+        xAxis: {
+            categories: [<?php echo implode(",", $lots); ?>],
+            
+        },
+        plotOptions: {
+                column: {
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'grey'
+                    }
+                }
+            }        
+        });        
         
     <?php 
     $data = array();
@@ -201,7 +269,7 @@ $(document).ready(function (){
         },
         title: {
             useHTML: true,
-            text: 'Progression du nombre de demandes d\'environnement pour '+annee
+            text: 'Progression du nombre d\'environnements pour '+annee
         },
         subtitle:{
                text:'(en fonction des critères sélectionnés)'
@@ -227,7 +295,7 @@ $(document).ready(function (){
         yAxis: {
             allowDecimals: false,
             title: {
-                       text: 'Nombre d\'intérgation'
+                       text: 'Nombre d\'environnements'
                    }
         },   
         tooltip: {

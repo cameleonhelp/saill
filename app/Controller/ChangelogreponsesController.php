@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('CakeEmail', 'Network/Email');
 /**
  * Changelogreponses Controller
  *
@@ -67,6 +68,8 @@ class ChangelogreponsesController extends AppController {
                             $this->Changelogreponse->create();
                             if ($this->Changelogreponse->save($this->request->data)) {
                                     //edit changelogdemande pour mettre à jour les champs ETAT, TYPE et CRITICITE
+                                    $demande = $this->requestAction('Cchangelogdemande/get_info/'+$id);
+                                    if(in_array($this->request->data['Changelogreponse']['ETAT'],array('0','2','4'))) : $this->sendmail($demande); endif;
                                     $this->Session->setFlash(__('Réponse sauvegardée',true),'flash_success');
                             } else {
                                     $this->Session->setFlash(__('Réponse incorrecte, veuillez corriger la réponse',true),'flash_failure');
@@ -81,6 +84,8 @@ class ChangelogreponsesController extends AppController {
                         endif;
                         if($this->request->data['Changelogreponse']['DATEPREVUE']!= ''):
                             $this->Changelogreponse->Changelogdemande->saveField('DATEPREVUE', $this->request->data['Changelogreponse']['DATEPREVUE']);
+                        else:
+                            $this->Changelogreponse->Changelogdemande->saveField('DATEPREVUE', NULL);
                         endif;                        
                         if($this->request->data['Changelogreponse']['CRITICITE']!=''):
                             $this->Changelogreponse->Changelogdemande->saveField('changelogversion_id', $this->request->data['Changelogreponse']['version_id']);
@@ -167,5 +172,44 @@ class ChangelogreponsesController extends AppController {
             } else {
                     $this->Session->setFlash(__('Réponse incorrecte, veuillez corriger la réponse',true),'flash_failure');
             }
-}
+        }
+        
+        public function updateresponses ($version_id,$date){
+            $conditions=array('Changelogdemande.changelogversion_id'=>$version_id,'Changelogdemande.OPEN'=>1);
+            $reponses = $this->Changelogreponse->Changelogdemande->find('all',array('conditions'=>$conditions,'recursive'=>-1));
+            foreach($reponses as $reponse):
+                $this->Changelogreponse->Changelogdemande->id = $reponse['Changelogdemande']['id'];
+                $this->Changelogreponse->Changelogdemande->saveField('DATEPREVUE', $date);
+            endforeach;
+        }
+        
+        public function sendmail($obj){
+            $tmpreponses = $this->requestAction('changelogreponses/get_all_reponses/'+$obj['Changelogdemande']['id']);
+            foreach($tmpreponses as $tmpreponse):
+                $reponses .= '<li>'.$tmpreponse['Changelogreponse']['REPONSE'].'</li>';
+            endforeach;
+            $demandeur = $this->requestAction('utilisateurs/get_mail/'+$obj['Changelogdemande']['utilisateur_id']);
+            $to =$demandeur[0]['Utilisateur']['MAIL'];
+            $from = userAuth('MAIL');
+            $objet = 'SAILL : Réponse à la demande de changement n°'.' [C-'.  strYear($obj['Changelogdemande']['created']).'-'.$obj['Changelogdemande']['id'].']';
+            $message = "Voici la réposne à la demande : ".
+                    '<ul>
+                    <li>Demande : '.$obj['Changelogdemande']['DEMANDE'].'</li>  
+                    <li>Réponses : <ul>'.$reponses.'</ul></li>
+                    </ul>';
+            if(count($to) > 0):
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+                }
+                catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
+                }  
+            endif;
+        }        
 }

@@ -1120,7 +1120,7 @@ class CakeEmail {
 		$this->_message = $this->_render($this->_wrap($content));
 
 		$contents = $this->transportClass()->send($this);
-		if (!empty($this->_config['log'])) {
+		/*if (!empty($this->_config['log'])) {
 			$config = array(
 				'level' => LOG_DEBUG,
 				'scope' => 'email'
@@ -1136,7 +1136,7 @@ class CakeEmail {
 				PHP_EOL . $contents['headers'] . PHP_EOL . $contents['message'],
 				$config['scope']
 			);
-		}
+		}*/
 		return $contents;
 	}
 

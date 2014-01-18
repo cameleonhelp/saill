@@ -164,7 +164,7 @@ class Action extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Action']['ECHEANCE'])) {
                 $this->data['Action']['ECHEANCE'] = $this->dateFormatBeforeSave($this->data['Action']['ECHEANCE']);
             } else {
@@ -196,7 +196,7 @@ class Action extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Action']['created'])) {
                     $results[$key]['Action']['created'] = $this->dateFormatAfterFind($val['Action']['created']);

@@ -1,84 +1,236 @@
 <div class="entites index">
-	<h2><?php echo __('Entites'); ?></h2>
-	<table cellpadding="0" cellspacing="0">
+        <nav class="navbar toolbar marginright20">
+                <ul class="nav navbar-nav toolbar">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('entites', 'add')) : ?>
+                <li><?php echo $this->Html->link('<span class="glyphicons plus size14 margintop4"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
+                <?php endif; ?>                 
+                </ul> 
+                <?php echo $this->Form->create("Entites",array('action' => 'search', 'class'=>'toolbar-form pull-right','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+                    <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche ...','style'=>"width: 200px;",'class'=>"form-control")); ?>
+                    <button type="submit" class="btn form-btn showoverlay">Rechercher</button>
+                <?php echo $this->Form->end(); ?> 
+        </nav>
+        <div class="marginright10">
+	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
 	<tr>
-			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('admin_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('NOM'); ?></th>
-			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('modified'); ?></th>
-			<th><?php echo $this->Paginator->sort('MAILVALIDEUR'); ?></th>
-			<th><?php echo $this->Paginator->sort('MAILGESTANNUAIRE'); ?></th>
-			<th><?php echo $this->Paginator->sort('MAILGESTENV'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
+            <th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
+            <th><?php echo $this->Paginator->sort('COMMENTAIRE','Commentaire'); ?></th>
+            <th><?php echo $this->Paginator->sort('MAILVALIDEUR','Valideur'); ?></th>
+            <th><?php echo $this->Paginator->sort('MAILGESTANNUAIRE','Gestionnaire d\'annuaire'); ?></th>
+            <th><?php echo $this->Paginator->sort('MAILGESTENV','Gestionnaire des environnements'); ?></th>
+            <th class="actions"><?php echo __('Périmètre'); ?></th>
+            <th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
 	<?php foreach ($entites as $entite): ?>
 	<tr>
-		<td><?php echo h($entite['Entite']['id']); ?>&nbsp;</td>
-		<td>
-			<?php echo $this->Html->link($entite['Utilisateur']['id'], array('controller' => 'utilisateurs', 'action' => 'view', $entite['Utilisateur']['id'])); ?>
-		</td>
-		<td><?php echo h($entite['Entite']['NOM']); ?>&nbsp;</td>
-		<td><?php echo h($entite['Entite']['created']); ?>&nbsp;</td>
-		<td><?php echo h($entite['Entite']['modified']); ?>&nbsp;</td>
-		<td><?php echo h($entite['Entite']['MAILVALIDEUR']); ?>&nbsp;</td>
-		<td><?php echo h($entite['Entite']['MAILGESTANNUAIRE']); ?>&nbsp;</td>
-		<td><?php echo h($entite['Entite']['MAILGESTENV']); ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $entite['Entite']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $entite['Entite']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $entite['Entite']['id']), null, __('Are you sure you want to delete # %s?', $entite['Entite']['id'])); ?>
-		</td>
+            <td><?php echo h($entite['Entite']['NOM']); ?>&nbsp;</td>
+            <td><?php echo h($entite['Entite']['COMMENTAIRE']); ?>&nbsp;</td>
+            <td><?php echo h($entite['Entite']['MAILVALIDEUR']); ?>&nbsp;</td>
+            <td><?php echo h($entite['Entite']['MAILGESTANNUAIRE']); ?>&nbsp;</td>
+            <td><?php echo h($entite['Entite']['MAILGESTENV']); ?>&nbsp;</td>
+            <td class="actions">
+                <?php echo $this->Html->link('<span class="badge badgeaction green"><span class="glyphicons group white notchange"></span>&nbsp;150</span>', array('action' => '#'),array('escape' => false,'data-toggle'=>"modal",'data-target'=>"#modalusers")); ?>
+                <?php echo $this->Html->link('<span class="badge badgeaction green"><span class="glyphicons share_alt white notchange"></span>&nbsp;10</span>', array('action' => '#'),array('escape' => false,'data-toggle'=>"modal",'data-target'=>"#modalprojets")); ?>
+            </td>
+            <td class="actions">
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('entites', 'view')) : ?>
+                <?php echo '<span class="glyphicons eye_open" data-rel="popover" data-title="<h3>Cercle de visibilité :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($entite['Entite']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($entite['Entite']['modified']).'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
+                <?php endif; ?>
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('entites', 'edit')) : ?>
+                <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit', $entite['Entite']['id']),array('escape' => false)); ?>
+                <?php endif; ?>
+                <?php if (userAuth('profil_id')!='2' && isAuthorized('entites', 'delete')) : ?>
+                <?php echo $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete', $entite['Entite']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce cercle de visibilité et ces dépendances ?')); ?>                    
+                <?php endif; ?>                    
+            </td>
 	</tr>
 <?php endforeach; ?>
 	</table>
-	<p>
+        </div>
+	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
+	<div class="pull-right marginright20"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>  
+        <div class='text-center'>
+        <ul class="pagination pagination-sm">
 	<?php
-	echo $this->Paginator->counter(array(
-	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
-	));
-	?>	</p>
-	<div class="paging">
-	<?php
-		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-		echo $this->Paginator->numbers(array('separator' => ''));
-		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
+                echo "<li>".$this->Paginator->first('<<', true, null, array('class' => 'disabled showoverlay','escape'=>false))."</li>";
+		echo "<li>".$this->Paginator->prev('<', array(), null, array('class' => 'prev disabled showoverlay','escape'=>false))."</li>";
+		echo "<li>".$this->Paginator->numbers(array('separator' => '','class'=>'showoverlay'))."</li>";
+		echo "<li>".$this->Paginator->next('>', array(), null, array('class' => 'disabled showoverlay','escape'=>false))."</li>";
+                echo "<li>".$this->Paginator->last('>>', true, null, array('class' => 'disabled showoverlay','escape'=>false))."</li>";
 	?>
-	</div>
+        </ul>
+        </div>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New Entite'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Utilisateurs'), array('controller' => 'utilisateurs', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Utilisateur'), array('controller' => 'utilisateurs', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Applications'), array('controller' => 'applications', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Application'), array('controller' => 'applications', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Biens'), array('controller' => 'biens', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Bien'), array('controller' => 'biens', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Contrats'), array('controller' => 'contrats', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Contrat'), array('controller' => 'contrats', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Domaines'), array('controller' => 'domaines', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Domaine'), array('controller' => 'domaines', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Dossierpartages'), array('controller' => 'dossierpartages', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Dossierpartage'), array('controller' => 'dossierpartages', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Expressionbesoins'), array('controller' => 'expressionbesoins', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Expressionbesoin'), array('controller' => 'expressionbesoins', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Intergrationapplicatives'), array('controller' => 'intergrationapplicatives', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Intergrationapplicative'), array('controller' => 'intergrationapplicatives', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Listediffusions'), array('controller' => 'listediffusions', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Listediffusion'), array('controller' => 'listediffusions', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Logiciels'), array('controller' => 'logiciels', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Logiciel'), array('controller' => 'logiciels', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Lots'), array('controller' => 'lots', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Lot'), array('controller' => 'lots', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Messages'), array('controller' => 'messages', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Message'), array('controller' => 'messages', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Plancharges'), array('controller' => 'plancharges', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Plancharge'), array('controller' => 'plancharges', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Sections'), array('controller' => 'sections', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Section'), array('controller' => 'sections', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Types'), array('controller' => 'types', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Type'), array('controller' => 'types', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
+<div class="modal fade" id="modalusers" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title"><?php echo 'Liste des agents'; ?></h4>
+      </div>
+      <div class="modal-body">
+        <div class="block-content">
+            <!-- contenu de la fenêtre modale //-->
+            <div class="form-group">
+                    <?php echo $this->Form->input('filtreuser',array('class'=>'form-control','type'=>'text','id'=>'filtreuser','placeholder'=>'Filtre')); ?>
+            </div>            
+            <?php echo $this->Form->create('Assoentiteutilisateur',array('action'=>'save','id'=>'formValidate','class'=>'form-horizontal','type' => 'file','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+            <div id="AssoentiteutilisateurCounter" class="pull-right"></div>
+            <br>
+            <ul class="list-group overflow" id="listuser">
+              <?php foreach($all_utilisateurs as $obj): ?>
+                <li class="list-group-item list-user-item" data-id="<?php echo $obj['Utilisateur']['id']; ?>"><?php echo $obj['Utilisateur']['NOMLONG']; ?></li>
+              <?php endforeach; ?>
+            </ul>
+            <div style='text-align:center;margin-top:20px !important;'>
+            <button  type="button" class="btn btn-small btn-default selectalluser">Tout sélectionner</button>&nbsp;<button  type="button" class="btn btn-small btn-default unselectalluser">Tout désélectionner</button>
+            </div>
+            <input type="hidden" id="AssoentiteutilisateurUtilisateursId" name="data[Assoentiteutilisateur][utilisateurs_id]"> 
+            <?php echo $this->Form->input('entite_id',array('type'=>'hidden')); ?> 
+            <!-- fin du contenu de la fenêtre modale //-->
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-sm btn-default" id="closemodaladdfiles">Annuler</button><button type="submit" class="btn btn-sm btn-default" id="savemodaladdfiles">Enregistrer</button>
+    </div>
+    <?php echo $this->Form->end(); ?>          
+  </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="modal fade" id="modalprojets" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title"><?php echo 'Liste des projets'; ?></h4>
+      </div>
+      <div class="modal-body">
+        <div class="block-content">
+            <!-- contenu de la fenêtre modale //-->
+            <div class="form-group">
+                    <?php echo $this->Form->input('filtreprojet',array('class'=>'form-control','type'=>'text','id'=>'filtreprojet','placeholder'=>'Filtre')); ?>
+            </div>
+            <?php echo $this->Form->create('Assoprojetentite',array('action'=>'save','id'=>'formValidate','class'=>'form-horizontal','type' => 'file','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+            <div id="AssoprojetentiteCounter" class="pull-right"></div>
+            <br>
+            <ul class="list-group overflow" id="listprojet">
+              <?php foreach($all_projets as $obj): ?>
+                <li class="list-group-item list-projet-item" data-id="<?php echo $obj['Projet']['id']; ?>"><?php echo $obj['Projet']['NOM']; ?></li>
+              <?php endforeach; ?>
+            </ul>
+            <div style='text-align:center;margin-top:20px !important;'>
+            <button  type="button" class="btn btn-small btn-default selectallprojet">Tout sélectionner</button>&nbsp;<button  type="button" class="btn btn-small btn-default unselectallprojet">Tout désélectionner</button>
+            </div>
+            <input type="hidden" id="AssoprojetentiteProjetsId" name="data[Assoprojetentite][projets_id]"> 
+            <?php echo $this->Form->input('entite_id',array('type'=>'hidden')); ?> 
+            <!-- fin du contenu de la fenêtre modale //-->
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-sm btn-default" id="closemodaladdfiles">Annuler</button><button type="submit" class="btn btn-sm btn-default" id="savemodaladdfiles">Enregistrer</button>
+    </div>
+    <?php echo $this->Form->end(); ?>          
+  </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script>
+$(document).ready(function () {
+    var listuser = [];
+    var listprojet = [];
+
+    $("#AssoentiteutilisateurCounter").text(listuser.length + " élément sélectionné");
+    $("#AssoprojetentiteCounter").text(listprojet.length + " élément sélectionné");
+
+    $(document).on("click",".list-user-item",function() {
+        if($(this).hasClass('active')){
+          listuser.splice($.inArray($(this).attr("data-id"), listuser),1);
+          $(this).removeClass('active');
+        } else {
+          listuser.push($(this).attr("data-id"));
+          $(this).addClass('active');
+        }
+        $("#AssoentiteutilisateurUtilisateursId").val(listuser.sort().join());
+        $("#AssoentiteutilisateurCounter").text(listuser.length + " éléments sélectionnés");
+    });
+
+    $(document).on("click",".selectalluser",function() {
+        //listuser = [];
+        $( ".list-user-item" ).each(function( index ) {
+          if($(this).is(':visible') && !$(this).hasClass('active')){
+            listuser.push($(this).attr("data-id"));
+            $(this).addClass('active');
+          }
+        });
+        $("#AssoentiteutilisateurUtilisateursId").val(listuser.sort().join());
+        $("#AssoentiteutilisateurCounter").text(listuser.length + " éléments sélectionnés");
+    });
+
+    $(document).on("click",".unselectalluser",function() {
+        listuser = [];
+        $( ".list-user-item" ).each(function( index ) {
+          $(this).removeClass('active');
+        $("#AssoentiteutilisateurUtilisateursId").val(listuser.sort().join());
+        $("#AssoentiteutilisateurCounter").text(listuser.length + " élément sélectionné");
+        });
+    });
+    
+    $(document).on("click",".list-projet-item",function() {
+        if($(this).hasClass('active')){
+          listprojet.splice($.inArray($(this).attr("data-id"), listprojet),1);
+          $(this).removeClass('active');
+        } else {
+          listprojet.push($(this).attr("data-id"));
+          $(this).addClass('active');
+        }
+        $("#AssoprojetentiteProjetsId").val(listprojet.sort().join());
+        $("#AssoprojetentiteCounter").text(listprojet.length + " éléments sélectionnés");
+    });
+
+    $(document).on("click",".selectallprojet",function() {
+        //listprojet = [];
+        $( ".list-projet-item" ).each(function( index ) {
+          if($(this).is(':visible') && !$(this).hasClass('active')){
+            listprojet.push($(this).attr("data-id"));
+            $(this).addClass('active');
+          }
+        });
+        $("#AssoprojetentiteProjetsId").val(listprojet.sort().join());
+        $("#AssoprojetentiteCounter").text(listprojet.length + " éléments sélectionnés");
+    });
+
+    $(document).on("click",".unselectallprojet",function() {
+        listprojet = [];
+        $( ".list-projet-item" ).each(function( index ) {
+          $(this).removeClass('active');
+        $("#AssoprojetentiteProjetsId").val(listprojet.sort().join());
+        $("#AssoprojetentiteCounter").text(listprojet.length + " élément sélectionné");
+        });
+    });   
+    
+    jQuery.expr[':'].Contains = function(a,i,m){
+        return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase())>=0;
+    };
+     
+    $(document).on("keyup change",'#filtreuser', function() {
+        var filter = $(this).val();
+        var list = $('#listuser');
+        if (filter) {
+          $(list).find("li:not(:Contains(" + filter + "))").slideUp();
+          $(list).find("li:Contains(" + filter + ")").slideDown();
+        } else {
+          $(list).find("li").slideDown();
+        }
+    });
+  
+    $(document).on("keyup change",'#filtreprojet', function() {
+        var filter = $(this).val();
+        var list = $('#listprojet');
+        if (filter) {
+          $(list).find("li:not(:Contains(" + filter + "))").slideUp();
+          $(list).find("li:Contains(" + filter + ")").slideDown();
+        } else {
+          $(list).find("li").slideDown();
+        }
+    });  
+});
+</script>

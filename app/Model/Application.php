@@ -84,7 +84,7 @@ class Application extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Application']['created'])) {
                     $results[$key]['Application']['created'] = $this->dateFormatAfterFind($val['Application']['created']);
@@ -105,7 +105,7 @@ class Application extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Application']['NOM'])) {
                 $this->data['Application']['NOM'] = mb_strtoupper($this->data['Application']['NOM'],'UTF-8');
             }                

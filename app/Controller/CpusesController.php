@@ -109,6 +109,10 @@ class CpusesController extends AppController {
                     else:                    
 			if ($this->Cpus->save($this->request->data)) {
 				$this->Session->setFlash(__('Cpu sauvegardé',true),'flash_success');
+                                //mise à jour de tous les biens ayant le même CPU
+                                $options = array('pass'=>array($id,$this->request->data['Cpus']['PVU']));
+                                $this->requestAction('biens/ajax_update_cpu/', $options);
+                                //fin mise à jour
 				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Cpu incorrect, veuillez corriger l\'application',true),'flash_failure');
@@ -181,7 +185,7 @@ class CpusesController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Cpus->find('list',array('fields'=>array('Cpus.id','Cpus.NOM'),'conditions'=>array('Cpus.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Cpus->find('list',array('fields'=>array('Cpus.id','Cpus.NOM'),'conditions'=>array('Cpus.ACTIF'=>$actif),'order'=>array('Cpus.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }     
         
@@ -189,5 +193,13 @@ class CpusesController extends AppController {
             $this->Cpus->recursive = 0;
             $obj = $this->Cpus->findByNom($nom);
             return $obj;
-        }          
+        }  
+        
+        public function json_get_info($id=null){
+            $this->autoRender = false;
+            $conditions[] = 'Cpus.id='.$id;
+            $obj = $this->Cpus->find('all',array('conditions'=>$conditions,'recursive'=>0));
+            $result = json_encode($obj);
+            return $result;
+        }       
 }

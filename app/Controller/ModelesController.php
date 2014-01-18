@@ -180,7 +180,7 @@ class ModelesController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Modele->find('list',array('fields'=>array('Modele.id','Modele.NOM'),'conditions'=>array('Modele.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Modele->find('list',array('fields'=>array('Modele.id','Modele.NOM'),'conditions'=>array('Modele.ACTIF'=>$actif),'order'=>array('Modele.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }     
         

@@ -56,7 +56,7 @@ class Localite extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Localite']['created'])) {
                     $results[$key]['Localite']['created'] = $this->dateFormatAfterFind($val['Localite']['created']);
@@ -76,7 +76,7 @@ class Localite extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Localite']['NOM'])) {
                 $this->data['Localite']['NOM'] = mb_strtoupper($this->data['Localite']['NOM'],'UTF-8');
             }                

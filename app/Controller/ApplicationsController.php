@@ -173,14 +173,14 @@ class ApplicationsController extends AppController {
         }
         
         public function get_select($actif=1,$all=0){
-            $list = $this->Application->find('list',array('fields'=>array('Application.id','Application.NOM'),'conditions'=>array('Application.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Application->find('list',array('fields'=>array('Application.id','Application.NOM'),'conditions'=>array('Application.ACTIF'=>$actif),'order'=>array('Application.NOM'=>'asc'),'recursive'=>0));
             if ($all==1) $list = array_merge(array(0=>"Toutes les applications"),$list);
             return $list;
         }    
         
         public function get_list($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Application.ACTIF='.$actif;
-            $list = $this->Application->find('all',array('fields'=>array('Application.id','Application.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Application->find('all',array('fields'=>array('Application.id','Application.NOM'),'order'=>array('Application.NOM'=>'asc'),'conditions'=>$conditions,'recursive'=>0));
             return $list;
         }        
         

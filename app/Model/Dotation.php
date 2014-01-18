@@ -108,7 +108,7 @@ class Dotation extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Dotation']['DATERECEPTION'])) {
                 $this->data['Dotation']['DATERECEPTION'] = $this->dateFormatBeforeSave($this->data['Dotation']['DATERECEPTION']);
             }
@@ -127,7 +127,7 @@ class Dotation extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Dotation']['DATERECEPTION'])) {
                     $results[$key]['Dotation']['DATERECEPTION'] = $this->dateFormatAfterFind($val['Dotation']['DATERECEPTION']);

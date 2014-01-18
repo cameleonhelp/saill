@@ -193,7 +193,7 @@ Configure::write(
 );
 
 Configure::write(
-    'etatMaterielInformatique',array('En stock'=>'En stock','En dotation'=>'En dotation','En réparation'=>'En réparation','Au rebut'=>'Au rebut','Non localisé'=>'Non localisé')
+    'etatMaterielInformatique',array('En stock'=>'En stock','En dotation'=>'En dotation','En réparation'=>'En réparation','Au rebut'=>'Au rebut','Non localisé'=>'Non localisé','En prêt'=>'En prêt')
 );
 
 Configure::write(
@@ -240,8 +240,12 @@ Configure::write(
     'changelogCriticite',array('0'=>'Sans contrainte','1'=>'Normale','2'=>'Urgente','3'=>'Bloquante') 
 );
 
+Configure::write(
+    'planprojetPublic',array('0'=>'Moi uniquement','1'=>'Mon équipe','2'=>'Public') 
+);
+
+Configure::write(
+    'engagementConf',array('0'=>'Non remis','1'=>'Agent','2'=>'SNCF','3'=>'Sécutité et Risques SO') 
+);
+
 Configure::write('Config.language', 'fra');
-/**
- * Gestion d'exception personnalisée
- */
-//App::uses('AppExceptionHandler', 'Lib');

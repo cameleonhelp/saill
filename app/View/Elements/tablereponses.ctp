@@ -1,3 +1,4 @@
+<div class="changelogdemandes form tablemarginright"> 
 <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" style="width:100%;">
 <tr>
                 <th><?php echo 'Attribué à'; ?></th>
@@ -20,6 +21,7 @@
 </tr>
 <?php endforeach; ?>
 </table> 
+</div>
 <!--test modal //-->
         <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog">

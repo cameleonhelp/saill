@@ -2,7 +2,7 @@
         <?php //filtres par défaut
         $pass0 = isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous';
         $pass1 = isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous';
-        $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous';
+        $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : '1'; //actif :'tous';
         $pass3 = isset($this->params->pass[3]) ? $this->params->pass[3] : 'tous';
         $pass4 = isset($this->params->pass[4]) ? $this->params->pass[4] : 'tous';
         ?>     
@@ -50,11 +50,11 @@
                                 break;
                             case '0':
                                 $inverse_actif = 1;
-                                $img_actif = "check bottom2";
+                                $img_actif = "unchecked bottom2";
                                 break; 
                             case '1':
                                 $inverse_actif = 0;
-                                $img_actif = "unchecked bottom2";
+                                $img_actif = "check bottom2";
                                 break;                                 
                         endswitch;                        
                      ?>                           
@@ -128,7 +128,7 @@
                 <td><?php echo h($logiciel['Logiciel']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($logiciel['Envoutil']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($logiciel['Application']['NOM']); ?>&nbsp;</td>
-                <!--<td><?php echo h($logiciel['Type']['NOM']); ?>&nbsp;</td>-->
+                <!--<td><?php echo h(isset($logiciel['Type']) ? $logiciel['Type']['NOM'] : ""); ?>&nbsp;</td>-->
                 <td style="text-align:right;"><?php echo h($logiciel['Lot']['NOM']); ?>&nbsp;</td>  
 		<td class="actions">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('logiciels', 'view')) : ?>

@@ -205,6 +205,39 @@
         </tfooter>
     </table>
     <br />
+    <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Répartition charge réelle par domaine</div><br>    
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
+        <thead>
+            <tr>
+            <th rowspan="2" style="vertical-align: middle;">Projet</th>
+            <th rowspan="2" style="vertical-align: middle;">Domaine</th>
+            <th colspan="2">Consommation estimée</th>
+            </tr>
+            <tr>
+            <th width="70px">Budget (k€)</th>
+            <th width="70px">Charge (j)</th>        
+            </tr>            
+        </thead>
+        <tbody>
+            <?php foreach($resultsdom as $result): ?>
+            <tr>
+                <td><?php echo $result['CONTRAT']['NOM']; ?></td>
+                <td><?php echo $result['domaines']['DOMAINE'] == null ? 'Non défini' : $result['domaines']['DOMAINE']; ?></td>            
+                <td style="text-align: right;" class="dombudgetID"><?php echo $result[0]['DOMBUDGETREEL']; ?></td>
+                <td style="text-align: right;" class="domchargeID"><?php echo $result[0]['TOTALDOMCHARGEREELLE']; ?></td>  
+            </tr>           
+            <?php endforeach; ?>
+        </tbody>
+        <tfooter>
+	<tr>
+            <td class="footer nowrap"></td>
+            <td class="footer nowrap" style="text-align:right;">Total :</td>
+            <td class="footer nowrap" id="totaldombudgetID" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totaldomchargeID" style="text-align:right;"></td>        
+	</tr> 
+        </tfooter>
+    </table>        
+    <br />
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Indicateurs département</div><br>    
     <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
         <thead>
@@ -369,6 +402,9 @@ $(document).ready(function (){
     $("#totalrafID").html(sumOfColumns('rafID','j'));
     $("#moyenneavancebudgetID").html(avancementBudget('1'));
     $("#moyenneavancechargeID").html(avancementCharge('1'));
+    $("#totaldombudgetID").html(sumOfColumns('dombudgetID','k€'));
+    $("#totaldomchargeID").html(sumOfColumns('domchargeID','j'));
+    
     <?php if($israpport >0) : ?>
     $('#chartcontainer').highcharts({
         data: {

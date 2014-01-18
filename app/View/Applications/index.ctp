@@ -67,7 +67,7 @@
 </div>
 <script>
 $(document).ready(function () {
-    $(document).on('click','.actif',function(e){
+    $(document).on('click','.appactif',function(e){
         var id = $(this).attr('data-id');
             $.ajax({
                 dataType: "html",

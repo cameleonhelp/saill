@@ -60,7 +60,7 @@ class UtilisateursController extends AppController {
                         $futilisateur = "tous les utilisateurs actifs, dont la date de fin de mission est proche de son terme";
                         break;  
                     case 'nouveau':
-                        $newconditions[]="Utilisateur.profil_id = 0 AND Utilisateur.FINMISSION IS NULL AND Utilisateur.username IS NULL";
+                        $newconditions[]="Utilisateur.MAIL is null AND Utilisateur.FINMISSION IS NULL AND Utilisateur.username IS NULL AND Utilisateur.profil_id > -1";
                         $futilisateur = "tous les nouveaux utilisateurs dont le compte est en cours de création";
                         break;                     
                 }
@@ -283,7 +283,7 @@ class UtilisateursController extends AppController {
                         $tabRQ = $this->calculRQ($id);
                         $this->set('tabRQ',$tabRQ);
                         $tabVT = $this->calculVT($id);
-                        $this->set('tabVT',$tabVT);                        
+                        $this->set('tabVT',$tabVT);                           
                 }
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -438,6 +438,9 @@ class UtilisateursController extends AppController {
  * @return void
  */        
         public function login() {
+          if(userAuth('id')!=''):
+              $this->redirect(array('controller'=>'pages', 'action'=>'home'));
+          else:
             $this->Session->delete('history');
             $this->set('title_for_layout',"Connexion");
             if ($this->request->is('post')) {
@@ -507,6 +510,7 @@ class UtilisateursController extends AppController {
                     }
                 }
             }
+            endif;
         }
       
 /**
@@ -744,6 +748,8 @@ class UtilisateursController extends AppController {
  * 
  */       
 	function export_xls() {
+                $engagementconfs = Configure::read('engagementConf');
+                $this->set('engagementconfs',$engagementconfs);
 		$data = $this->Session->read('xls_export');
                 //$this->Session->delete('xls_export');                
 		$this->set('rows',$data);
@@ -908,7 +914,8 @@ class UtilisateursController extends AppController {
         public function sendmailnewutilisateur($utilisateur){
             $mailtoGestannuaire = $this->requestAction('parameters/get_gestionnaireannuaire');
             $mailto[] = $mailtoGestannuaire['Parameter']['param'];
-            $finmission = $utilisateur['Utilisateur']['FINMISSION'] = '' ? "05/01".(date('Y')+1) : $utilisateur['Utilisateur']['FINMISSION'];
+            $i = date('m') > 10 ? 2 : 1;
+            $finmission = $utilisateur['Utilisateur']['FINMISSION'] = '' ? "05/01".(date('Y')+$i) : $utilisateur['Utilisateur']['FINMISSION'];
             $to=$mailto;
             $from = userAuth('MAIL');
             $objet = "SAILL : Ajout d'un nouvel utilisateur [".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].']';
@@ -930,7 +937,7 @@ class UtilisateursController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
         }       
@@ -939,7 +946,8 @@ class UtilisateursController extends AppController {
             $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$id),'recursive'=>0));
             $mailtoGestannuaire = $this->requestAction('parameters/get_gestionnaireannuaire');
             $mailto[] = $mailtoGestannuaire['Parameter']['param'];
-            $finmission = $utilisateur['Utilisateur']['FINMISSION'] = '' ? "05/01".(date('Y')+1) : $utilisateur['Utilisateur']['FINMISSION'];
+            $i = date('m') > 10 ? 2 : 1;
+            $finmission = $utilisateur['Utilisateur']['FINMISSION'] = '' ? "05/01".(date('Y')+$i) : $utilisateur['Utilisateur']['FINMISSION'];
             $to=$mailto;
             $from = userAuth('MAIL');
             $objet = "SAILL : Ajout d'un nouvel utilisateur [".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].']';
@@ -962,7 +970,7 @@ class UtilisateursController extends AppController {
                 $this->Session->setFlash(__('Mail envoyé avec succès',true),'flash_success');
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
             $this->History->goBack(1);
@@ -990,7 +998,7 @@ class UtilisateursController extends AppController {
                 $this->Session->setFlash(__('Mail avec le mot de passe envoyé avec succès',true),'flash_success');
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
         }
@@ -1008,6 +1016,7 @@ class UtilisateursController extends AppController {
                     <li>Fin de mission :'.$utilisateur['Utilisateur']['FINMISSION'].'</li>
                     <li>Commentaire :'.$utilisateur['Utilisateur']['COMMENTAIRE'].'</li>                      
                     </ul>';
+            //TODO: a faire
             if($to!=''):
                 try{
                 $email = new CakeEmail();
@@ -1019,7 +1028,7 @@ class UtilisateursController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
         }  
@@ -1047,8 +1056,11 @@ class UtilisateursController extends AppController {
             if($etat==0):
                 $this->Utilisateur->saveField("GESTIONABSENCES",0);
                 $this->Utilisateur->saveField("FINMISSION",date('Y-m-d'));
+                $this->Utilisateur->saveField("ENGCONF",null);
+                $this->Utilisateur->saveField("DATEENGCONF",null);
             else :
-                $annee = date('Y')+1;
+                $i = date('m') > 10 ? 2 : 1;
+                $annee = date('Y')+$i;
                 $this->Utilisateur->saveField("FINMISSION",$annee.'-1-5');
             endif;
             $history['Historyutilisateur']['utilisateur_id']=$id;
@@ -1080,4 +1092,117 @@ class UtilisateursController extends AppController {
             $this->Session->write('userMenu', $value);
             exit();
         }
+        
+	public function progressengconf($id = null,$loop=false) {
+                $newetat = '';
+                $newmsg = '';
+                $id = $id==null ? $this->request->data('id') : $id;
+                $valideur = null;
+                $this->Utilisateur->id = $id;
+                $record = $this->Utilisateur->read();
+                $engagementconfs = Configure::read('engagementConf');                 
+                switch ($record['Utilisateur']['ENGCONF']) {
+                    case NULL:
+                    case '0':
+                       $newetat = 1;
+                        $newmsg = "remis à ".$engagementconfs[$newetat];
+                       break;
+                    case '1':
+                       $newetat = 2;  
+                        $newmsg = "remis à ".$engagementconfs[$newetat];
+                       break;                
+                    case '2':
+                       $newetat = 3;
+                        $newmsg = "remis à ".$engagementconfs[$newetat];
+                       break;          
+                    case '3':
+                       $newetat = 0;
+                        $newmsg = "non remis ";
+                       break;
+                }
+                $record['Utilisateur']['ENGCONF'] = $newetat;
+                $record['Utilisateur']['DATEENGCONF'] = date('Y-m-d');
+                $record['Utilisateur']['created'] = $this->Utilisateur->read('created');
+                $record['Utilisateur']['modified'] = date('Y-m-d');
+		if (!$this->Utilisateur->exists()) {
+			throw new NotFoundException(__('Utilisateur incorrect'));
+		}
+                if ($this->Utilisateur->save($record)) { 
+                    $history['Historyutilisateur']['utilisateur_id']=$id;
+                    $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - Engagement de confidentialité ".$newmsg.' par '.userAuth('NOMLONG');
+                    $this->Utilisateur->Historyutilisateur->save($history);   
+                    if(!$loop):
+                        $this->Session->setFlash(__('Engagement de confidentialité mis à jour',true),'flash_success');
+                        exit();
+                    endif;
+                }
+                if(!$loop):
+                    $this->Session->setFlash(__('Engagement de confidentialité <b>NON</b> mis à jour',true),'flash_failure');
+                    exit(); 
+                endif;
+	}   
+        
+        public function changeallconf(){
+            $ids = explode('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):
+                foreach($ids as $id):
+                    $this->progressengconf($id, true);
+                endforeach;
+                sleep(3);
+                $this->Session->setFlash(__('Engagements de confidentialité mis à jour',true),'flash_success');
+            else:
+                echo $this->Session->setFlash(__('Aucun utilisateur sélectionné',true),'flash_failure');
+            endif;
+            exit();
+        }
+        
+	function export_fm($id) {
+                $this->Utilisateur->recursive = 0;
+                $options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));           
+		$data = $this->Utilisateur->find('first', $options);              
+		$this->set('rows',$data);
+		$this->render('export_fm','export_xls');
+	}   
+        
+        public function get_select_actif($admin =false,$generique = false){
+            $conditions[] = array('Utilisateur.ACTIF'=>1);
+            if (!$admin) : $conditions[] = array('Utilisateur.id > 1'); endif;
+            if (!$generique) : $conditions[] = array('Utilisateur.profil_id > 0'); endif;
+            $list = $this->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>$conditions,'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>0));
+            return $list;
+        }        
+        
+        public function get_list_actif($admin =false,$generique = false){
+            $conditions[] = array('Utilisateur.ACTIF'=>1);
+            if (!$admin) : $conditions[] = array('Utilisateur.id > 1'); endif;
+            if (!$generique) : $conditions[] = array('Utilisateur.profil_id > 0'); endif;
+            $list = $this->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.section_id','Utilisateur.NOMLONG'),'conditions'=>$conditions,'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>0));
+            return $list;
+        }      
+        
+        public function get_mail($list){
+            if($list != ''):
+                $values = array();
+                $utilisateurs = $this->Utilisateur->find('all',array('fields'=>array('Utilisateur.MAIL'),'conditions'=>array('Utilisateur.id IN ('.$list.')'),'recursive'=>0));
+                foreach($utilisateurs as $obj):
+                    $values[] = $obj['Utilisateur']['MAIL'];
+                endforeach;
+                return $values;
+            else:
+                return array();
+            endif;
+        }
+        
+        public function get_nom($list){
+            if($list != ''):
+                $values = array();
+                $utilisateurs = $this->Utilisateur->find('all',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id IN ('.$list.')'),'recursive'=>0));
+                foreach($utilisateurs as $obj):
+                    $values[] = $obj['Utilisateur']['NOMLONG'];
+                endforeach;
+                return implode(';',$values);
+            else:
+                return 'Aucun contributeur';
+            endif;                
+        }        
 }

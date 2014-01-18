@@ -200,9 +200,14 @@ class VersionsController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Version->find('list',array('fields'=>array('Version.id','Version.NOM'),'conditions'=>array('Version.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Version->find('list',array('fields'=>array('Version.id','Version.NOM'),'conditions'=>array('Version.ACTIF'=>$actif),'order'=>array('Version.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }
+        
+        public function get_list($actif=1){
+            $list = $this->Version->find('all',array('fields'=>array('Version.id','Version.NOM'),'conditions'=>array('Version.ACTIF'=>$actif),'order'=>array('Version.NOM'=>'asc'),'recursive'=>0));
+            return $list;
+        }        
         
         public function get_version_for($id=null,$actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Version.ACTIF='.$actif;
@@ -226,7 +231,7 @@ class VersionsController extends AppController {
         public function json_get_version_info($id=null){
             $this->autoRender = false;
             $conditions[] = 'Version.id='.$id;
-            $version = $this->Version->find('all',array('conditions'=>$conditions,'recursive'=>-1,'order'=>array('Version.NON'=>'asc')));
+            $version = $this->Version->find('all',array('conditions'=>$conditions,'recursive'=>0,'order'=>array('Version.NOM'=>'asc')));
             $result = json_encode($version);
             return $result;
         }

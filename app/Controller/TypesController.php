@@ -180,13 +180,13 @@ class TypesController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Type->find('list',array('fields'=>array('Type.id','Type.NOM'),'conditions'=>array('Type.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Type->find('list',array('fields'=>array('Type.id','Type.NOM'),'conditions'=>array('Type.ACTIF'=>$actif),'order'=>array('Type.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }        
         
         public function get_list($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Type.ACTIF='.$actif;
-            $list = $this->Type->find('all',array('fields'=>array('Type.id','Type.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Type->find('all',array('fields'=>array('Type.id','Type.NOM'),'conditions'=>$conditions,'order'=>array('Type.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }    
         

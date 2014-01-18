@@ -71,7 +71,7 @@ class Envoutil extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Envoutil']['NOM'])) {
                 $this->data['Envoutil']['NOM'] = mb_strtoupper($this->data['Envoutil']['NOM'],'UTF-8');
             }                
@@ -87,7 +87,7 @@ class Envoutil extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Envoutil']['created'])) {
                     $results[$key]['Envoutil']['created'] = $this->dateFormatAfterFind($val['Envoutil']['created']);

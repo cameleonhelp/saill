@@ -51,7 +51,7 @@ class Demandeabsence extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Demandeabsence']['DATEDU'])) {
                 $this->data['Demandeabsence']['DATEDU'] = $this->dateFormatBeforeSave($this->data['Demandeabsence']['DATEDU']);
             }
@@ -76,7 +76,7 @@ class Demandeabsence extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Demandeabsence']['created'])) {
                     $results[$key]['Demandeabsence']['created'] = $this->datetimeFormatAfterFind($val['Demandeabsence']['created']);

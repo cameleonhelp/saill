@@ -49,6 +49,12 @@
                         ?></div></div>             
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-lg-4" for="DemandeabsenceMOTIF">Motif : </label>
+                    <div class="col-lg-8">
+                        <?php echo $this->Form->input('MOTIF',array('class'=>'form-control mceNoEditor','type'=>'textarea',"style"=>"min-height:150px;")); ?>
+                    </div>
+                </div>            
             <!-- fin du contenu de la fenêtre modale //-->
         </div>
     </div>

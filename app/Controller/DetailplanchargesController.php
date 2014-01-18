@@ -58,9 +58,9 @@ class DetailplanchargesController extends AppController {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Detailplancharge->validate = array();
                         $this->redirect(array('controller'=>'plancharges','action' => 'index'));
-                    else:                    
-                        if(isset($this->request->data['Detailplancharge'][0]['TODELETE'])):
+                    else:    
                         $detailplancharges = $this->request->data['Detailplancharge'];
+                        if(isset($this->request->data['Detailplancharge'][0]['TODELETE'])):
                         /** recherche si lignes à supprimer **/
                         $ids = $this->request->data['Detailplancharge'][0]['TODELETE'];
                         $idarr = explode(',',$ids);
@@ -70,6 +70,7 @@ class DetailplanchargesController extends AppController {
                                 $this->Detailplancharge->delete();
                             endif;
                         endforeach;
+                        endif;
                         foreach($detailplancharges as $detailplancharge): 
                             if (is_array($detailplancharge) && $detailplancharge['utilisateur_id']!=''):
                             $this->Detailplancharge->create();
@@ -84,7 +85,6 @@ class DetailplanchargesController extends AppController {
                         $this->Detailplancharge->Plancharge->id = $detailplancharges[0]['plancharge_id'];
                         $this->Detailplancharge->Plancharge->saveField('ETP', $detailplancharges[0]['TOTALETP']);
                         $this->Detailplancharge->Plancharge->saveField('CHARGES', $detailplancharges[0]['TOTALCHARGE']);  
-                        endif;
                     endif;
 		endif; 
                 $this->redirect(array('controller'=>'plancharges','action' => 'index'));              

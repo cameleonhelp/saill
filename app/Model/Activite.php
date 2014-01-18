@@ -186,7 +186,7 @@ class Activite extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {      
+        public function beforeSave($options = array()) {      
             if (!empty($this->data['Activite']['DATEDEBUT'])) {
                 $this->data['Activite']['DATEDEBUT'] = $this->dateFormatBeforeSave($this->data['Activite']['DATEDEBUT']);
             }
@@ -205,7 +205,7 @@ class Activite extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Activite']['created'])) {
                     $results[$key]['Activite']['created'] = $this->dateFormatAfterFind($val['Activite']['created']);

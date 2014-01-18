@@ -56,7 +56,7 @@ class Perimetre extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Perimetre']['NOM'])) {
                 $this->data['Perimetre']['NOM'] = mb_strtoupper($this->data['Perimetre']['NOM'],'UTF-8');
             }                
@@ -72,7 +72,7 @@ class Perimetre extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Perimetre']['created'])) {
                     $results[$key]['Perimetre']['created'] = $this->dateFormatAfterFind($val['Perimetre']['created']);

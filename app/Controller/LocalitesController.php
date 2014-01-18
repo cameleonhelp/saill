@@ -178,7 +178,7 @@ class LocalitesController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Localite->find('list',array('fields'=>array('Localite.id','Localite.NOM'),'conditions'=>array('Localite.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Localite->find('list',array('fields'=>array('Localite.id','Localite.NOM'),'conditions'=>array('Localite.ACTIF'=>$actif),'order'=>array('Localite.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }      
         

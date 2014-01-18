@@ -45,6 +45,7 @@ class AchatsController extends AppController {
                 foreach($listeActivites as $liste):
                     $listein .= $liste['Achat']['activite_id'].',';
                 endforeach;
+                $this->Achat->Activite->recursive = 0;
                 $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>"asc",'Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1','Activite.id IN ('.substr_replace($listein ,"",-1).')')));
                 $this->set('activites',$activites); 
             else :
@@ -92,7 +93,7 @@ class AchatsController extends AppController {
  */
 	public function edit($id = null) {
             if (isAuthorized('achats', 'edit')) : 
-                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
+                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1'),'recursive'=>0));
                 $this->set('activites',$activites);                
 		if (!$this->Achat->exists($id)) {
 			throw new NotFoundException(__('Achat incorrect'));
@@ -110,7 +111,7 @@ class AchatsController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Achat.' . $this->Achat->primaryKey => $id));
+			$options = array('conditions' => array('Achat.' . $this->Achat->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Achat->find('first', $options);
 		}
             else :

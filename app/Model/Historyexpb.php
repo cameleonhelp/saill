@@ -68,7 +68,7 @@ class Historyexpb extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Historyexpb']['created'])) {
                     $results[$key]['Historyexpb']['created'] = $this->dateFormatAfterFind($val['Historyexpb']['created']);
@@ -97,7 +97,7 @@ class Historyexpb extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Historyexpb']['DATELIVRAISON'])) {
                 $this->data['Historyexpb']['DATELIVRAISON'] = $this->dateFormatBeforeSave($this->data['Historyexpb']['DATELIVRAISON']);
             }

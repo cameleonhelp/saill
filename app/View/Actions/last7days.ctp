@@ -49,7 +49,7 @@
             <td><?php echo $result['Action']['modified']; ?></td>
             <td><?php echo $result['Action']['destinataire_nom']; ?></td>
             <td><?php echo $result['Domaine']['NOM']; ?></td>
-            <td><?php echo $result['Action']['OBJET'].'<br>'.$result['Action']['COMMENTAIRE']; ?></td> 
+            <td>Objet:<p><?php echo $result['Action']['OBJET'].'</p><hr>Commentaire :<p>'.$result['Action']['COMMENTAIRE']; ?></p><hr>Retour :<p><?php echo $result['Action']['BILAN']; ?></p></td> 
             <td style="text-align:center"><?php echo ucfirst_utf8($result['Action']['STATUT']); ?></td> 
         </tr>           
         <?php endforeach; ?>

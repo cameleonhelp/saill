@@ -56,7 +56,7 @@ class Historylogiciel extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Historylogiciel']['created'])) {
                     $results[$key]['Historylogiciel']['created'] = $this->dateFormatAfterFind($val['Historylogiciel']['created']);
@@ -85,7 +85,7 @@ class Historylogiciel extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Historylogiciel']['DATEINSTALL'])) {
                 $this->data['Historylogiciel']['DATEINSTALL'] = $this->datetimeFormatBeforeSave($this->data['Historylogiciel']['DATEINSTALL']);
             }                

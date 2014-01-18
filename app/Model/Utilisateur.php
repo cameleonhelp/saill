@@ -433,7 +433,7 @@ class Utilisateur extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Utilisateur']['password'])) {
                 $this->data['Utilisateur']['password'] = Security::hash($this->data['Utilisateur']['password'],'md5',false); 
             }
@@ -464,7 +464,7 @@ class Utilisateur extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Utilisateur']['created'])) {
                     $results[$key]['Utilisateur']['created'] = $this->dateFormatAfterFind($val['Utilisateur']['created']);
@@ -481,6 +481,9 @@ class Utilisateur extends AppModel {
                 if (isset($val['Utilisateur']['DATEDEBUTACTIF'])) {
                     $results[$key]['Utilisateur']['DATEDEBUTACTIF'] = $this->dateFormatAfterFind($val['Utilisateur']['DATEDEBUTACTIF']);
                 } 
+                if (isset($val['Utilisateur']['DATEENGCONF'])) {
+                    $results[$key]['Utilisateur']['DATEENGCONF'] = $this->dateFormatAfterFind($val['Utilisateur']['DATEENGCONF']);
+                }                 
                 if (isset($val['Utilisateur']['societe_id'])) {
                     $results[$key]['Utilisateur']['societe_NOM'] = $this->getSocieteForUser($val['Utilisateur']['societe_id']);
                 }     

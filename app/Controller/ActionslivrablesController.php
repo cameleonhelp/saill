@@ -65,6 +65,10 @@ class ActionslivrablesController extends AppController {
 		$this->set(compact('livrables'));
 	}
 
+        public function get_list_livrables(){
+            $livrables = $this->Actionslivrable->Livrable->find('list',array('fields'=>array('Livrable.id','Livrable.NOM'),'order'=>array('Livrable.NOM'=>'asc'))); //,'conditions'=>array('Actionslivrable.action_id'=>$id)
+            return $livrables;            
+        }
 /**
  * edit method
  *

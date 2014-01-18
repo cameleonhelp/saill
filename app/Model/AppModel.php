@@ -32,6 +32,8 @@ App::uses('Model', 'Model');
  */
 class AppModel extends Model {
     
+        public $recursive = -1;
+        
  /**
  * dateFormatAfterFind method
  *
@@ -77,6 +79,26 @@ class AppModel extends Model {
  * @return date au format français pour affichage
  */  
         public function dateToDatetimeBeforeSave($dateString) {
+            $hour = date('H');
+            $minute = date('i');
+            $seconde = date('s');
+            $d = explode('/',$dateString);
+            if(isset($d[1])):
+                return date('Y-m-d H:i:s', mktime($hour, $minute, $seconde, $d[1], $d[0], $d[2]));
+            else:
+                return $dateString;
+            endif;
+        }
+       
+ /**
+ * dateFormatAfterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $dateString
+ * @return date au format français pour affichage
+ */  
+        public function frDateToDatetimeBeforeSave($dateString) {
             $hour = date('H');
             $minute = date('i');
             $seconde = date('s');

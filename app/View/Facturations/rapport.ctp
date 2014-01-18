@@ -15,9 +15,9 @@
               <div class="input-group">
               <?php $today = new dateTime(); ?>
               <?php echo $this->Form->input('START',array('type'=>'text','placeholder'=>'ex.: '.$today->format('d/m/Y'),'data-rule-required'=>'true','class'=>"form-control dateall",'data-msg-required'=>"La date de début de Début de période est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
-              <span class="input-group-addon addon-middle date-addon-clean btn-addon" data-target="#ActivitesreelleSTART"><span class="glyphicons circle_remove grey"></span></span>
-              <span class="input-group-addon addon-middle date-addon-default btn-addon" data-target="#ActivitesreelleSTART" data-default="<?php echo date('d/m/Y'); ?>"><span class="glyphicons clock"></span></span>
-              <span class="input-group-addon date-addon-calendar btn-addon" data-target="#ActivitesreelleSTART"><span class="glyphicons calendar"></span></span>
+              <span class="input-group-addon addon-middle date-addon-clean btn-addon" data-target="#FacturationSTART"><span class="glyphicons circle_remove grey"></span></span>
+              <span class="input-group-addon addon-middle date-addon-default btn-addon" data-target="#FacturationSTART" data-default="<?php echo date('01/m/Y'); ?>"><span class="glyphicons clock"></span></span>
+              <span class="input-group-addon date-addon-calendar btn-addon" data-target="#FacturationSTART"><span class="glyphicons calendar"></span></span>
               </div>
             </div>  
         </div>  
@@ -42,9 +42,9 @@
               <div class="input-group">
               <?php $today = new dateTime(); ?>
               <?php echo $this->Form->input('END',array('type'=>'text','placeholder'=>'ex.: '.$today->format('d/m/Y'),'data-rule-required'=>'true','class'=>"form-control dateall",'data-msg-required'=>"La date de fin de Début de période est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
-              <span class="input-group-addon addon-middle date-addon-clean btn-addon" data-target="#ActivitesreelleEND"><span class="glyphicons circle_remove grey"></span></span>
-              <span class="input-group-addon addon-middle date-addon-default btn-addon" data-target="#ActivitesreelleEND" data-default="<?php echo date('d/m/Y'); ?>"><span class="glyphicons clock"></span></span>
-              <span class="input-group-addon date-addon-calendar btn-addon" data-target="#ActivitesreelleEND"><span class="glyphicons calendar"></span></span>
+              <span class="input-group-addon addon-middle date-addon-clean btn-addon" data-target="#FacturationEND"><span class="glyphicons circle_remove grey"></span></span>
+              <span class="input-group-addon addon-middle date-addon-default btn-addon" data-target="#FacturationEND" data-default="<?php echo date('t/m/Y'); ?>"><span class="glyphicons clock"></span></span>
+              <span class="input-group-addon date-addon-calendar btn-addon" data-target="#FacturationEND"><span class="glyphicons calendar"></span></span>
               </div>
             </div>             
         </div>        

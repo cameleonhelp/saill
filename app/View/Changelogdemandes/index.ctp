@@ -1,8 +1,10 @@
 <div class="marginright20">
     <?php echo $this->element('changelogsubmenu'); ?>
-    <div class="changelogdemandes index">
+    <?php echo $this->element('changelognextversion'); ?>
+    <div class="changelogdemandes index tablemarginright">
 	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" style="width:100%;">
 	<tr>
+                        <th style="border-bottom: 0px solid #000000 !important;width:80px;"><?php echo $this->Paginator->sort('id','Identifiant'); ?></th>
 			<th style="border-bottom: 0px solid #000000 !important;"><?php echo $this->Paginator->sort('Changelogversion.VERSION','Version'); ?></th>
                         <th style="border-bottom: 0px solid #000000 !important;"><?php echo $this->Paginator->sort('DATEPREVUE','Prévue le'); ?></th>
                         <th style="border-bottom: 0px solid #000000 !important;"><?php echo $this->Paginator->sort('CRITICITE','Criticité'); ?></th>
@@ -21,6 +23,7 @@
         $pass4 = isset($this->params->pass[4]) ? $this->params->pass[4] : 'tous';     
         ?>           
         <tr>
+                        <th style="border-top: 0px solid #000000 !important;"></th>
 			<th style="border-top: 0px solid #000000 !important;"></th>
                         <th style="border-top: 0px solid #000000 !important;"></th>
                         <th style="text-align:center;border-top: 0px solid #000000 !important;">
@@ -69,6 +72,7 @@
 	</tr>
 	<?php foreach ($changelogdemandes as $changelogdemande): ?>
 	<tr>
+                <td><?php echo "C-".strYear($changelogdemande['Changelogdemande']['created'])."-".$changelogdemande['Changelogdemande']['id']; ?></td>
 		<td>
 			<?php echo $changelogdemande['Changelogversion']['VERSION']; ?>
 		</td>
@@ -96,7 +100,7 @@
 			<?php echo $this->Html->link('<span class="glyphicons showoverlay conversation notchange"></span>', array('controller'=>'changelogreponses','action' => 'add', $changelogdemande['Changelogdemande']['id']),array('escape' => false,'class'=>'showoverlay')); ?>
                     <?php endif; ?>
                         <?php echo $this->Html->link('<span class="glyphicons showoverlay pencil notchange"></span>', array('action' => 'edit', $changelogdemande['Changelogdemande']['id']),array('escape' => false,'class'=>'showoverlay')); ?>
-                    <?php if($changelogdemande['Changelogdemande']['changelogversion_id']==0 || $changelogdemande['Changelogdemande']['changelogversion_id']==null ): ?>
+                    <?php if($changelogdemande['Changelogdemande']['changelogversion_id'] < 1 || $changelogdemande['Changelogdemande']['changelogversion_id']==null ): ?>
                         <?php echo $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete', $changelogdemande['Changelogdemande']['id']), array('escape' => false), __('Voulez vous vraiment supprimer cette demande ?')); ?>
                     <?php endif; ?>
                     <?php endif; ?>
@@ -105,7 +109,7 @@
 <?php endforeach; ?>
 	</table>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
-	<div class="pull-right"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>   
+        <div class="pull-right inverttablemarginright"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>   
         <div class='text-center'>
         <ul class="pagination pagination-sm">
 	<?php

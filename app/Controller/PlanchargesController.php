@@ -309,7 +309,7 @@ class PlanchargesController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
             $this->History->goBack(1);

@@ -32,7 +32,8 @@
         <label class="col-lg-2 required" for="LogicielApplicationId">Application : </label>
         <div class="col-lg-5">
             <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->data['Application']['NOM']; ?>
+                <?php echo isset($this->data['Application']['NOM']) ? $this->data['Application']['NOM'] : ''; ?>
+                <?php echo $this->Form->input('application_id',array('type'=>'hidden')); ?> 
             <?php } else { ?>
                 <?php echo $this->Form->select('application_id',$applications,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>"L'application est obligatoire", 'empty' => 'Choisir une application')); ?>
             <?php } ?>        
@@ -52,7 +53,8 @@
         <label class="col-lg-2 required" for="LogicielLotId">Lot : </label>
         <div class="col-lg-5">
             <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->data['Lot']['NOM']; ?>
+                <?php echo isset($this->data['Lot']['NOM']) ? $this->data['Lot']['NOM'] : ''; ?>
+                <?php echo $this->Form->input('lot_id',array('type'=>'hidden')); ?> 
             <?php } else { ?>
                 <?php echo $this->Form->select('lot_id',$lots,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>"Le lot est obligatoire", 'empty' => 'Choisir un lot')); ?>
             <?php } ?>        
@@ -77,10 +79,11 @@
           </a>
         </h3>
       </div>
-      <div id="panel_bien" class="panel-collapse collapse">
+      <div id="panel_bien" class="panel-collapse collapse in">
         <div class="panel-body">
-          <?php if($this->data['Logiciel']['ACTIF']): ?>
+          <?php if($this->data['Logiciel']['ACTIF']): ?> 
           <button type="button" class='btn btn-sm btn-default pull-right' style="margin-bottom:10px;" data-toggle="modal" data-target="#addModal">Ajouter à un bien existant</button> 
+          <button type="button" class='btn btn-sm btn-default pull-right' style="margin-bottom:10px;margin-right: 10px;" data-toggle="modal" data-target="#updateModal">Migrer le logiciel de tous les biens</button>
           <?php endif; ?>
           <?php echo $this->element('tableBiens'); ?>
         </div>
@@ -187,3 +190,47 @@ $(document).ready(function () {
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <!-- /test modal //-->
+<!--test modal //-->
+<?php if($this->params['action'] == 'edit'): ?>
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Ajout d'un logiciel existant</h4>
+      </div>
+      <?php echo $this->Form->create('Assobienlogiciel',array('controller'=>'assobienlogiciels','action'=>'ajaxupdate','id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+      <div class="modal-body">
+        <?php $list_id_biens= $this->requestAction('assobienlogiciels/get_id_for_outil/'.$this->data['Logiciel']['id']); ?>
+        <?php  echo $this->Form->input('id',array('type'=>'hidden','value'=>$list_id_biens)); ?>
+        <?php  echo $this->Form->input('old_logiciel_id',array('type'=>'hidden','value'=>$this->data['Logiciel']['id'])); ?>
+        <div class="form-group">
+              <label class="col-lg-4" for="AssobienlogicielLogicielId">Nom : </label>
+              <div class="col-lg-7">
+                  <?php echo $this->Form->select('logiciel_id',$listlogiciels,array('class'=>'form-control','empty' => 'Choisir un logiciel')); ?>                   
+              </div>
+        </div>  
+        <!--<div class="form-group">
+            <label class="col-lg-4" for="AssobienlogicielENVDSIT">Nom environnement DSI-T : </label>      
+            <div class="col-lg-7">
+                <?php echo $this->Form->input('ENVDSIT',array('type'=>'text','placeholder'=>'Nom environnement DSI-T','class'=>'form-control')); ?>
+            </div>         
+        </div>  
+        <div class="form-group">
+            <label class="col-lg-4" for="AssobienlogicielINSTALL">Installé : </label>      
+            <div class="col-lg-7">
+                <?php echo $this->Form->input('INSTALL',array('class'=>'yesno')); ?>
+                &nbsp;<label for="AssobienlogicielINSTALL" class='labelAfter'></label>
+            </div>
+        </div> -->                   
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Annuler</button>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+      <?php echo $this->Form->end(); ?>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- /test modal //-->
+<?php endif; ?>

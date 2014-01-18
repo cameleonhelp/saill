@@ -1,6 +1,8 @@
 	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax">
 	<tr>
             <th><?php echo 'Logiciel'; ?></th>
+            <th><?php echo 'Application'; ?></th>
+            <th><?php echo 'Lot'; ?></th>
             <th><?php echo 'Type Env. DSIT'; ?></th>
             <th><?php echo 'Installé'; ?></th>
             <th class="actions"><?php echo __('Actions'); ?></th>
@@ -8,6 +10,8 @@
 	<?php foreach ($assobienlogiciels as $logiciel): ?>
 	<tr>
 		<td><?php echo $logiciel['Logiciel']['NOM']; ?></td>
+                <td><?php echo $logiciel['Logiciel']['APPNOM']; ?></td>
+                <td><?php echo $logiciel['Logiciel']['LOTNOM']; ?></td>
 		<td><?php echo h($logiciel['Assobienlogiciel']['ENVDSIT']); ?>&nbsp;</td>
 		<td style="text-align:center;">
                     <?php $image = (isset($logiciel['Assobienlogiciel']['INSTALL']) && $logiciel['Assobienlogiciel']['INSTALL']==true) ? 'ok_2' : 'ok_2 disabled' ; ?>
@@ -16,7 +20,7 @@
 		<td class="actions">
                 <!-- à mettre en ajax --> 
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('logiciels', 'edit')) : ?>
-                <?php echo $this->Html->link('<span class="glyphicons pencil notchange"></span>', '#',array('escape' => false,'data-id'=> $logiciel['Assobienlogiciel']['id'])); ?>&nbsp;
+                <?php echo $this->Html->link('<span class="glyphicons pencil notchange"></span>', '#',array('escape' => false,'data-id'=> $logiciel['Assobienlogiciel']['id'],'data-appid'=> $logiciel['Logiciel']['application_id'],'data-lotid'=> $logiciel['Logiciel']['lot_id'])); ?>&nbsp;
                 <?php endif; ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('logiciels', 'delete')) : ?>
                 <!-- à mettre en ajax -->                
@@ -41,6 +45,20 @@
       <div class="modal-body">
         <?php  echo $this->Form->input('bien_id',array('type'=>'hidden','value'=>$this->data['Bien']['id'])); ?>
         <?php  echo $this->Form->input('id',array('type'=>'hidden')); ?>
+        <div class="form-group">
+              <label class="col-lg-4" for="AssobienlogicielApplicationId">Application : </label>
+              <div class="col-lg-7">
+                  <?php echo $this->Form->input('application_id',array('type'=>'hidden','value'=>$this->data['Bien']['application_id'])); ?>
+                  <?php echo $this->Form->select('application_id',$applications,array('class'=>'form-control','id'=>'SelectApplicationId','empty'=>false,'selected' => $this->data['Bien']['application_id'])); ?>                   
+              </div>
+        </div>     
+        <div class="form-group">
+              <label class="col-lg-4" for="AssobienlogicielLotId">Lot : </label>
+              <div class="col-lg-7">
+                  <?php echo $this->Form->input('lot_id',array('type'=>'hidden','value'=>$this->data['Bien']['lot_id'])); ?>
+                  <?php echo $this->Form->select('lot_id',$lots,array('class'=>'form-control','id'=>'SelectLotId','empty'=>false,'selected' => $this->data['Bien']['lot_id'])); ?>                   
+              </div>
+        </div>             
         <div class="form-group">
               <label class="col-lg-4" for="AssobienlogicielLogicielId">Nom : </label>
               <div class="col-lg-7">
@@ -75,26 +93,61 @@
 $(document).ready(function () {
     $(document).on('click','.pencil',function(e){
         var id = $(this).parent('a').attr('data-id');
+        var appid = $(this).parent('a').attr('data-appid');
+        var lotid = $(this).parent('a').attr('data-lotid');;
+        $("#editModal #AssobienlogicielLogicielId").find('option:not(:first)').remove();
+        //remplir select logiciel_id avec bon liste
+        $.ajax({
+            type: "POST",       
+            url: "<?php echo $this->Html->url(array('controller'=>'logiciels','action'=>'json_get_select_compatible')); ?>/"+ lotid +"/"+appid, 
+            contentType: "application/json",
+            success : function(response) {
+                var json = $.parseJSON(response);
+                var options = $("#editModal #AssobienlogicielLogicielId");
+                $.each(json, function (index, value) {
+                    if(index != undefined) {
+                        options.append($("<option />").val(value).text(index));
+                    }
+                });                        
+            },
+            error :function(response, status,errorThrown) {
+                alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+            }
+        }); 
+        $(this).delay(500);
         $.ajax({
             type: "POST",       
             url: "<?php echo $this->Html->url(array('controller'=>'assobienlogiciels','action'=>'json_get_logiciel_info')); ?>/" + id,
             contentType: "application/json",
             success : function(response) {
                 var json = $.parseJSON(response);
-                $('#AssobienlogicielId').val(json[0]['Assobienlogiciel']['id']);
-                $('#AssobienlogicielBienId').val(json[0]['Assobienlogiciel']['bien_id']);
-                $('#AssobienlogicielLogicielId').val(json[0]['Assobienlogiciel']['logiciel_id']);
-                $('#AssobienlogicielENVDSIT').val(json[0]['Assobienlogiciel']['ENVDSIT']);
+                console.log(json);
+                $('#editModal #AssobienlogicielId').val(json[0]['Assobienlogiciel']['id']);
+                $('#editModal #AssobienlogicielBienId').val(json[0]['Assobienlogiciel']['bien_id']);
+                $("#editModal #AssobienlogicielLotId").val(json[0]['Logiciel']['lot_id']);
+                $("#editModal #SelectLotId").attr('data-lotid',json[0]['Logiciel']['lot_id']);
+                $("#editModal #AssobienlogicielApplicationId").val(json[0]['Logiciel']['application_id']);
+                $("#editModal #SelectApplicationId").attr('data-appid',json[0]['Logiciel']['application_id']);
+                $('#editModal #AssobienlogicielLogicielId').attr('data-logid',json[0]['Assobienlogiciel']['logiciel_id']);                
+                $('#editModal #AssobienlogicielENVDSIT').val(json[0]['Assobienlogiciel']['ENVDSIT']);
                 $checked = json[0]['Assobienlogiciel']['INSTALL'] == 1 ? true : false;
-                $('#AssobienlogicielINSTALL').prop('checked', $checked);
+                $('#editModal #AssobienlogicielINSTALL').prop('checked', $checked);
                 $labelchecked = json[0]['Assobienlogiciel']['INSTALL'] == 1 ? 'Oui' : 'Non';
-                $('#AssobienlogicielINSTALL').next('label').text($labelchecked);
+                $('#editModal #AssobienlogicielINSTALL').next('label').text($labelchecked);
                 $('#editModal').modal('show');
             },
             error :function(response,status,errorThrown) {
                 alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
             }
          });
+    });
+    
+            
+    $('#editModal').on('shown.bs.modal', function (e) {
+        $('#editModal #AssobienlogicielLogicielId').val($('#editModal #AssobienlogicielLogicielId').attr('data-logid'));
+        //$('#editModal #SelectApplicationId option:selected').attr("selected",false);
+        $('#editModal #SelectApplicationId').val($('#editModal #SelectApplicationId').attr('data-appid'));
+        $('#editModal #SelectLotId').val($('#editModal #SelectLotId').attr('data-lotid'));
     });
     
     $(document).on('click','.installed',function(e){
@@ -112,6 +165,64 @@ $(document).ready(function () {
                     alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
                 }
             });
+    });   
+    
+    $(document).on('change','#editModal #SelectApplicationId',function(e){
+        var nom = $("#editModal #SelectApplicationId option:selected").text();
+        var id = $("#editModal #SelectApplicationId option:selected").val();
+        $("#editModal #AssobienlogicielApplicationId").val(id);
+        var lotid = $("#editModal #AssobienlogicielLotId").val();
+        if(lotid != '') {
+            $("#editModal #AssobienlogicielLogicielId").find('option:not(:first)').remove();
+            if(id!=''){
+            $.ajax({
+                type: "POST",       
+                url: "<?php echo $this->Html->url(array('controller'=>'logiciels','action'=>'json_get_select_compatible')); ?>/"+ lotid +"/"+id, 
+                contentType: "application/json",
+                success : function(response) {
+                    var json = $.parseJSON(response);
+                    var options = $("#editModal #AssobienlogicielLogicielId");
+                    $.each(json, function (index, value) {
+                        if(index != undefined) {
+                            options.append($("<option />").val(value).text(index));
+                        }
+                    });                       
+                },
+                error :function(response, status,errorThrown) {
+                    alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                }
+             }); 
+           }
+       }
+    });    
+    
+    $(document).on('change','#editModal #SelectLotId',function(e){
+        var nom = $("#editModal #SelectLotId option:selected").text();
+        var id = $("#editModal #SelectLotId option:selected").val();
+        $("#editModal #AssobienlogicielLotId").val(id);
+        var appid = $("#editModal #AssobienlogicielApplicationId").val();
+        if(appid != '') {
+            $("#editModal #AssobienlogicielLogicielId").find('option:not(:first)').remove();
+            if(id!=''){
+            $.ajax({
+                type: "POST",       
+                url: "<?php echo $this->Html->url(array('controller'=>'logiciels','action'=>'json_get_select_compatible')); ?>/"+ id +"/"+appid, 
+                contentType: "application/json",
+                success : function(response) {
+                    var json = $.parseJSON(response);
+                    var options = $("#editModal #AssobienlogicielLogicielId");
+                    $.each(json, function (index, value) {
+                        if(index != undefined) {
+                            options.append($("<option />").val(value).text(index));
+                        }
+                    });                       
+                },
+                error :function(response, status,errorThrown) {
+                    alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                }
+             }); 
+           }
+       }
     });    
 });
 </script>

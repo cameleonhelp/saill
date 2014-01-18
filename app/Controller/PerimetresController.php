@@ -180,13 +180,13 @@ class PerimetresController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Perimetre->find('list',array('fields'=>array('Perimetre.id','Perimetre.NOM'),'conditions'=>array('Perimetre.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Perimetre->find('list',array('fields'=>array('Perimetre.id','Perimetre.NOM'),'conditions'=>array('Perimetre.ACTIF'=>$actif),'order'=>array('Perimetre.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }   
                
         public function get_list($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Perimetre.ACTIF='.$actif;
-            $list = $this->Perimetre->find('all',array('fields'=>array('Perimetre.id','Perimetre.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Perimetre->find('all',array('fields'=>array('Perimetre.id','Perimetre.NOM'),'conditions'=>$conditions,'order'=>array('Perimetre.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }      
         

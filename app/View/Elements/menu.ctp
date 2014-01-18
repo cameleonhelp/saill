@@ -34,13 +34,14 @@
   <?php $classCpus = in_array($controller,array('cpuses_index','cpuses_add','cpuses_edit','cpuses_delete','cpuses_search')) ? $active : ''; ?>
   <?php $classCoutsuos = in_array($controller,array('coutuos_index','coutuos_add','coutuos_edit','coutuos_delete','coutuos_search')) ? $active : ''; ?>
   <?php $classEtats = in_array($controller,array('etats_index','etats_add','etats_edit','etats_delete','etats_search')) ? $active : ''; ?>
+  <?php $classEnvSNCF = in_array($controller,array('etats_index','etats_add','etats_edit','etats_delete','etats_search')) ? $active : ''; ?>
   <?php $classLocalites = in_array($controller,array('localites_index','localites_add','localites_edit','localites_delete','localites_search')) ? $active : ''; ?>
   <?php $classLots = in_array($controller,array('lots_index','lots_add','lots_edit','lots_delete','lots_search')) ? $active : ''; ?>
   <?php $classModeles = in_array($controller,array('modeles_index','modeles_add','modeles_edit','modeles_delete','modeles_search')) ? $active : ''; ?>
   <?php $classMWS = in_array($controller,array('mws_index','mws_add','mws_edit','mws_delete','mws_search')) ? $active : ''; ?>
   <?php $classNFS = in_array($controller,array('nfs_index','nfs_add','nfs_edit','nfs_delete','nfs_search')) ? $active : ''; ?>
   <?php $classPerimetres = in_array($controller,array('perimetres_index','perimetres_add','perimetres_edit','perimetres_delete','perimetres_search')) ? $active : ''; ?>
-  <?php $classPhases = in_array($controller,array('phases_index','phases_add','phasess_edit','phases_delete','phases_search')) ? $active : ''; ?>
+  <?php $classPhases = in_array($controller,array('phases_index','phases_add','phases_edit','phases_delete','phases_search')) ? $active : ''; ?>
   <?php $classPuissances = in_array($controller,array('puissances_index','puissances_add','puissances_edit','puissances_delete','puissancess_search')) ? $active : ''; ?>
   <?php $classTypes = in_array($controller,array('types_index','types_add','types_edit','types_delete','types_search')) ? $active : ''; ?>
   <?php $classUsages = in_array($controller,array('usages_index','usages_add','usages_edit','usages_delete','usages_search')) ? $active : ''; ?>
@@ -48,8 +49,9 @@
   <?php $classVolumetries = in_array($controller,array('volumetries_index','volumetries_add','volumetries_edit','volumetries_delete','volumetries_search')) ? $active : ''; ?>
   <?php $classEnvOutils = in_array($controller,array('envoutils_index','envoutils_add','envoutils_edit','envoutils_delete','envoutils_search')) ? $active : ''; ?>
   <?php $classEnvVersions = in_array($controller,array('envversions_index','envversions_add','envversions_edit','envversions_delete','envversions_search')) ? $active : ''; ?>
-  <?php $classAdministration = in_array($active,array($classParametersRestore,$classParametersSave,$classParameters,$classSections,$classSocietes,$classSites,$classDossierPartages,$classAutorisations,$classDomaines,$classOutils,$classAssistances,$classProfils,$classListeDiffusions,$classTypeMateriels,$classMessages)) ? $divactive : ''; ?>               
-  <?php $classAdminEnv = in_array($active,array($classEnvVersions,$classEnvOutils,$classVolumetries,$classVersions,$classUsages,$classTypes,$classPuissances,$classPhases,$classPerimetres,$classEtats,$classNFS,$classMWS,$classModeles,$classLots,$classLocalites,$classCoutsuos,$classCpus,$classComposants,$classChassis,$classArchitectures,$classApplications)) ? $divactive : ''; ?>              
+  <?php $classEntites = in_array($controller,array('entites_index','entites_add','entites_edit','entites_delete','entites_search')) ? $active : ''; ?>
+  <?php $classAdministration = in_array($active,array($classParametersRestore,$classEntites,$classParametersSave,$classParameters,$classSections,$classSocietes,$classSites,$classDossierPartages,$classAutorisations,$classDomaines,$classOutils,$classAssistances,$classProfils,$classListeDiffusions,$classTypeMateriels,$classMessages)) ? $divactive : ''; ?>               
+  <?php $classAdminEnv = in_array($active,array($classEnvVersions,$classEnvOutils,$classEnvSNCF,$classVolumetries,$classVersions,$classUsages,$classTypes,$classPuissances,$classPhases,$classPerimetres,$classEtats,$classNFS,$classMWS,$classModeles,$classLots,$classLocalites,$classCoutsuos,$classCpus,$classComposants,$classChassis,$classArchitectures,$classApplications)) ? $divactive : ''; ?>              
   <?php $classContrats = in_array($controller,array('contrats_index','contrats_add','contrats_edit','contrats_delete','contrats_search')) ? $active : ''; ?> 
   <?php $classProjets = in_array($controller,array('projets_index','projets_add','projets_edit','projets_delete','projets_search')) ? $active : ''; ?> 
   <?php $classActivites = in_array($controller,array('activites_index','activites_add','activites_edit','activites_delete','activites_search','historybudgets_add','historybudgets_edit','historybudgets_delete')) ? $active : ''; ?>               
@@ -72,6 +74,7 @@
   <?php $classCRALogistique = in_array($controller,array('rapports_logistique')) ? $active : ''; ?>
   <?php $classCRASaisie = in_array($controller,array('rapports_etatsaisie')) ? $active : ''; ?>  
   <?php $classCRASS2I = in_array($controller,array('rapports_ss2i')) ? $active : ''; ?>  
+  <?php $classFACTSNCF = in_array($controller,array('rapports_ss2i')) ? $active : ''; ?>  
   <?php $classCRAExpBesoin = in_array($controller,array('expressionbesoins_rapport')) ? $active : ''; ?> 
   <?php $classCRAIntApp = in_array($controller,array('intergrationapplicatives_rapport')) ? $active : ''; ?>  
   <?php $classCRAActivites = in_array($controller,array('activitesreelles_rapport','activitesreelles_export_doc')) ? $active : ''; ?>    
@@ -79,7 +82,7 @@
   <?php $classCRAPlancharges = in_array($controller,array('plancharges_rapport','plancharges_export_doc')) ? $active : ''; ?>  
   <?php $classCRAPlanchargesAgents = in_array($controller,array('plancharges_rapportagent')) ? $active : ''; ?> 
   <?php $classCRADashboard = in_array($controller,array('dashboards_index','dashboards_export_doc')) ? $active : ''; ?> 
-  <?php $classRapports = in_array($active,array($classCRAExpBesoin,$classCRAIntApp,$classCRAPlanchargesAgents,$classCRAActions,$classCRARisques,$classCRAActivites,$classCRASaisie,$classCRASS2I,$classCRAFacturations,$classCRAPlancharges,$classCRADashboard,$classCRAActions7,$classCRALogistique)) ? $divactive : ''; ?> 
+  <?php $classRapports = in_array($active,array($classCRAExpBesoin,$classCRAIntApp,$classFACTSNCF,$classCRAPlanchargesAgents,$classCRAActions,$classCRARisques,$classCRAActivites,$classCRASaisie,$classCRASS2I,$classCRAFacturations,$classCRAPlancharges,$classCRADashboard,$classCRAActions7,$classCRALogistique)) ? $divactive : ''; ?> 
   <?php $classContactUs = in_array($controller,array('contacts_add')) ? $active : ''; ?>  
   <?php $classChangelog = in_array($controller,array('changelogdemandes_add','changelogdemandes_changelog','changelogdemandes_listetodo','changelogreponses_add','changelogreponses_view','changelogdemandes_edit','changelogdemandes_index','changelogversions_index')) ? $active : ''; ?> 
   <?php $classAddFavorites = 'notactive'; ?>  
@@ -158,6 +161,9 @@
             <?php if (userAuth('profil_id')!='2' && isAuthorized('autorisations', 'index')) : ?>            
             <li class="<?php echo $classAutorisations; ?>"><?php echo $this->Html->link('Autorisations',array('controller'=>'autorisations','action'=>'index','tous'),array('class'=>'showoverlay','escape' => false)); ?></li>
             <?php endif; ?>
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('entites', 'index')) : ?>            
+            <li class="<?php echo $classEntites; ?>"><?php echo $this->Html->link('Cercles de visibilité',array('controller'=>'entites','action'=>'index','tous'),array('class'=>'showoverlay','escape' => false)); ?></li>
+            <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && (isAuthorized('assistances', 'index') || isAuthorized('domaines', 'index') || isAuthorized('listediffusions', 'index') || isAuthorized('outils', 'index') || isAuthorized('dossierpartages', 'index') || isAuthorized('sections', 'index') || isAuthorized('sites', 'index') || isAuthorized('societes', 'index') || isAuthorized('typemateriels', 'index'))) : ?> 
             <li class="divider"></li>
             <?php endif; ?>
@@ -221,6 +227,9 @@
             <?php endif; ?>             
             <?php if (userAuth('profil_id')!='2' && isAuthorized('etats', 'index')) : ?>
             <li class="<?php echo $classEtats; ?>"><?php echo $this->Html->link('Etats',array('controller'=>'etats','action'=>'index'),array('class'=>'showoverlay','escape' => false)); ?></li>
+            <?php endif; ?>
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('etats', 'index')) : ?>
+            <li class="<?php echo $classEnvSNCF; ?>"><?php echo $this->Html->link('Environnements SNCF',array('controller'=>'etats','action'=>'index'),array('class'=>'showoverlay','escape' => false)); ?></li>
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('localites', 'index')) : ?>
             <li class="<?php echo $classLocalites; ?>"><?php echo $this->Html->link('Localités',array('controller'=>'localites','action'=>'index'),array('class'=>'showoverlay','escape' => false)); ?></li>
@@ -416,8 +425,8 @@
         <div class="panel-body">
           <ul>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'rapports')) : ?>
-            <li class="<?php echo $classCRAActions; ?>"><?php echo $this->Html->link('Actions',array('controller'=>'actions','action'=>'rapport'),array('class'=>'showoverlay','escape' => false)); ?></li>
-            <li class="<?php echo $classCRAActions7; ?>"><?php echo $this->Html->link('7 derniers jours',array('controller'=>'actions','action'=>'last7days'),array('class'=>'showoverlay','escape' => false)); ?></li>
+            <li class="<?php echo $classCRAActions; ?>"><?php echo $this->Html->link('CRA Actions',array('controller'=>'actions','action'=>'rapport'),array('class'=>'showoverlay','escape' => false)); ?></li>
+            <li class="<?php echo $classCRAActions7; ?>"><?php echo $this->Html->link('Actions 7 derniers jours',array('controller'=>'actions','action'=>'last7days'),array('class'=>'showoverlay','escape' => false)); ?></li>
             <li class="<?php echo $classCRARisques; ?>"><?php echo $this->Html->link('Risques',array('controller'=>'actions','action'=>'risques'),array('class'=>'showoverlay','escape' => false)); ?></li>
             <li class="divider"></li>
             <li class="<?php echo $classCRALogistique; ?>"><?php echo $this->Html->link('Logistique',array('controller'=>'rapports','action'=>'logistique'),array('class'=>'showoverlay','escape' => false)); ?></li>
@@ -431,6 +440,7 @@
             <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'rapports')) : ?>
             <li class="<?php echo $classCRAFacturations; ?>"><?php echo $this->Html->link('Facturations estimées',array('controller'=>'facturations','action'=>'rapport'),array('class'=>'showoverlay','escape' => false)); ?></li>            
             <li class="<?php echo $classCRASS2I; ?>"><?php echo $this->Html->link('Facturation SS2I',array('controller'=>'rapports','action'=>'ss2i'),array('class'=>'showoverlay','escape' => false)); ?></li>
+            <li class="<?php echo $classFACTSNCF; ?>"><?php echo $this->Html->link('Facturation agents SNCF',array('controller'=>'rapports','action'=>'factscnf'),array('class'=>'showoverlay','escape' => false)); ?></li>
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'rapports')) : ?>
             <li class="<?php echo $classCRAPlancharges; ?>"><?php echo $this->Html->link('Plan de charges projet',array('controller'=>'plancharges','action'=>'rapport'),array('class'=>'showoverlay','escape' => false)); ?></li>            

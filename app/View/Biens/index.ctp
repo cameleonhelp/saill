@@ -3,7 +3,7 @@
         $pass0 = isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous';
         $pass1 = isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous';
         $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous';
-        $pass3 = isset($this->params->pass[3]) ? $this->params->pass[3] : 'tous';        
+        $pass3 = isset($this->params->pass[3]) ? $this->params->pass[3] : '0';        //actif
         $pass4 = isset($this->params->pass[4]) ? $this->params->pass[4] : 'tous';
         $pass5 = isset($this->params->pass[5]) ? $this->params->pass[5] : 'tous';
         // si inactif $pass3==1 alors les autres sont = 0 et image uncheked
@@ -35,12 +35,12 @@
                      <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,'tous','tous','tous',$pass4,$pass5),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif(array($pass1,$pass2,$pass3),array('tous','tous','tous')))); ?></li>
                      <li class="divider"></li>
                      <?php
-                       $inverse_install = $pass1 == 1  ? 0 : $pass1 != 'tous' ? 1 : 0;
-                       $img_install = $pass1 == 1  ? "unchecked bottom2" :  $pass1 != 'tous' ? "check bottom2" : "unchecked bottom2" ;
-                       $inverse_valide = $pass2 == 1  ? 0 : $pass2 != 'tous' ? 1 : 0;
-                       $img_valide = $pass2 == 1 ?  "unchecked bottom2" : $pass2 != 'tous' ? "check bottom2" : "unchecked bottom2" ;
-                       $inverse_actif = $pass3 ==1  ? 0 : $pass3 != 'tous' ? 1 : 0;
-                       $img_actif = $pass3 == 1 ?  "unchecked bottom2" : $pass3 != 'tous' ? "check bottom2" : "unchecked bottom2" ;
+                       $inverse_install = get_pass_value($pass1); // == 1  ? 0 : $pass1 != 'tous' ? 1 : 0;
+                       $img_install = get_pass_check($pass1)." bottom2"; // == 1  ? "unchecked bottom2" :  $pass1 != 'tous' ? "check bottom2" : "unchecked bottom2" ;
+                       $inverse_valide = get_pass_value($pass2);
+                       $img_valide = get_pass_check($pass2)." bottom2";
+                       $inverse_actif = get_pass_value($pass3);
+                       $img_actif = get_pass_check($pass3)." bottom2";
                      ?>                           
                      <li><?php echo $this->Html->link('<span class="glyphicons '.$img_install.'"></span> Installés', array('action' => 'index',$pass0,$inverse_install,$pass2,$pass3,$pass4,$pass5),array('escape' => false,'class'=>'showoverlay')); ?></li>
                      <li><?php echo $this->Html->link('<span class="glyphicons '.$img_valide.'"></span> Validés', array('action' => 'index',$pass0,$pass1,$inverse_valide,$pass3,$pass4,$pass5),array('escape' => false,'class'=>'showoverlay')); ?></li>                     

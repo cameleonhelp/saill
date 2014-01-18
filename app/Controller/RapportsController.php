@@ -94,10 +94,10 @@ class RapportsController extends AppController {
             }
 
             catch(Exception $e){
-                $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
             }  
         endif;
-        $this->History->notmove();
+        $this->History->goBack(1);
     }     
     
     public function ss2i(){

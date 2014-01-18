@@ -72,12 +72,19 @@ class ChangelogdemandesController extends AppController {
                 endswitch;                
 		$this->Changelogdemande->recursive = 1;
                 $this->paginate = isset($conditions) ? array_merge_recursive($this->paginate,array('conditions'=>$conditions)) : $this->paginate;
-		$this->set('changelogdemandes', $this->paginate());
+		if($changelog==1):
+                    $this->paginate = array('limit'=>$this->Changelogdemande->find('count'));
+                endif;
+                $this->set('changelogdemandes', $this->paginate());
                 $this->set('datereelle', $this->paginate());
                 $changelogetats = Configure::read('changelogEtatDemande');  
                 $changelogtypes = Configure::read('changelogType');  
-                $changelogcriticites = Configure::read('changelogCriticite');  
-		$this->set(compact('changelogetats','changelogtypes','changelogcriticites'));   
+                $changelogcriticites = Configure::read('changelogCriticite'); 
+                $nextversion = $this->Changelogdemande->requestAction('changelogversions/getnextversion');
+		$this->set(compact('changelogetats','changelogtypes','changelogcriticites','nextversion')); 
+                $export = $this->Changelogdemande->find('all',array('conditions'=>$conditions,'order'=>array('Changelogversion.VERSION'=>'asc','Changelogdemande.id'=>'desc'),'recursive'=>0));
+                $this->Session->delete('xls_export');
+                $this->Session->write('xls_export',$export);  
 	}
         
         public function changelog(){
@@ -229,7 +236,7 @@ class ChangelogdemandesController extends AppController {
             $valideurs = $this->requestAction('parameters/get_developpeur');
             $to = explode(';', $valideurs['Parameter']['param']);
             $from = userAuth('MAIL');
-            $objet = 'SAILL : Ajout d\'une demande de changement';
+            $objet = 'SAILL : Ajout de la demande de changement n°'.' [C-'.  strYear($obj['Changelogdemande']['created']).'-'.$obj['Changelogdemande']['id'].']';
             $message = "Merci de traiter la demande suivante: ".
                     '<ul>
                     <li>Demande :'.$obj['Changelogdemande']['DEMANDE'].'</li>     
@@ -245,7 +252,7 @@ class ChangelogdemandesController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
         }
@@ -258,5 +265,15 @@ class ChangelogdemandesController extends AppController {
         public function open($id){
             $sql = "UPDATE changelogdemandes SET DATEREELLE=NULL WHERE changelogversion_id=".$id;
             $this->Changelogdemande->query($sql);
-        }        
+        }     
+        
+	function export_xls() {
+                $changelogetats = Configure::read('changelogEtatDemande');  
+                $changelogtypes = Configure::read('changelogType');  
+                $changelogcriticites = Configure::read('changelogCriticite'); 
+		$this->set(compact('changelogetats','changelogtypes','changelogcriticites')); 
+		$data = $this->Session->read('xls_export');               
+		$this->set('rows',$data);
+		$this->render('export_xls','export_xls');
+	}          
 }

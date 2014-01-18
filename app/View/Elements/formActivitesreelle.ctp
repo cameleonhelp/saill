@@ -68,7 +68,7 @@
     <?php $i=0; $j=0;?>
     <?php foreach($activitesreelles as $activitesreelle): ?>          
     <tr>
-        <td>
+        <td style="vertical-align: top !important;padding-top:5px !important;">
             <div class="col-lg-12 form-horizontal">
             <select name="data[Activitesreelle][<?php echo $i; ?>][activite_id]" class="form-control" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Activitesreelle<?php echo $i; ?>ActiviteId"> 
                 <option value="">Choisir une activité</option>
@@ -80,7 +80,7 @@
             </select>  
             <div>Commence le matin</div></div>
         </td>
-        <td>
+        <td style="vertical-align: top !important;padding-top:5px !important;">
             <div class="col-lg-12">
             <?php if ($this->params->action == 'edit') { ?>
                 <?php $selected = isset($activitesreelle['Activitesreelle']['domaine_id']) ? $activitesreelle['Activitesreelle']['domaine_id'] : ''; ?>
@@ -133,7 +133,7 @@
             <div class="form-horizontal"><div class="form-inline">
                 <?php echo $this->Form->input('Activitesreelle.'.$i.'.FRAIS',array('type'=>'text','style'=>"width:45px",'class'=>'form-control text-right frais','for'=>'Activitesreelle'.$i.'FRAIS','value'=>isset($activitesreelle['Activitesreelle']['FRAIS']) ? $activitesreelle['Activitesreelle']['FRAIS'] : '' )); ?><div class="nomargin nopadding pull-right"> €</div></div>
         </td>         
-        <td> 
+        <td style="vertical-align: top !important;padding-top:5px !important;"> 
             <?php if ($i==0) : ?>
             <span class="glyphicons blank"></span>
             <?php else : ?>
@@ -152,7 +152,7 @@
     <?php endforeach; ?>  
     <?php else : ?>
     <tr>
-        <td>
+        <td style="vertical-align: top !important;padding-top:5px !important;">
             <div class="col-lg-12 form-horizontal">
             <select name="data[Activitesreelle][0][activite_id]" class="form-control" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Activitesreelle0ActiviteId"> 
                 <option value="">Choisir une activité</option>
@@ -164,7 +164,7 @@
             </select>        
             <div>Commence le matin</div></div>
         </td>
-        <td>
+        <td style="vertical-align: top !important;padding-top:5px !important;">
             <div class="col-lg-12">
                 <?php echo $this->Form->select('Activitesreelle.0.domaine_id',$domaines,array('class'=>'form-control','empty' => 'Choisir un domaine')); ?>
             </div>              
@@ -196,7 +196,7 @@
             <div class="form-horizontal"><div class="form-inline">
                 <?php echo $this->Form->input('Activitesreelle.0.FRAIS',array('style'=>"width:45px",'class'=>'form-control text-right frais','for'=>'Activitesreelle0FRAIS','value'=>$this->params->action == 'edit' ? $activitesreelle['Activitesreelle']['FRAIS'] : '0.00')); ?><div class="nomargin nopadding pull-right"> €</div></div>
         </td>            
-            <td>    
+            <td style="vertical-align: top !important;padding-top:5px !important;">    
             <span class="glyphicons blank"></span>
             <span class="glyphicons plus cursor" id="addRow"></span>             
             <?php echo $this->Form->input('Activitesreelle.0.DATE',array('type'=>'hidden','value'=>$datedebut)); ?>
@@ -208,7 +208,7 @@
     </tr> 
     <?php endif; ?>    
     <tr  id="templateRow">
-        <td>
+        <td style="vertical-align: top !important;padding-top:5px !important;">
             <div class="col-lg-12 form-horizontal">
             <select name="data[Activitesreelle][¤][activite_id]" class="form-control" id="Activitesreelle¤ActiviteId" class="selectActivite"> 
                 <option value="">Choisir une activité</option>
@@ -218,7 +218,7 @@
             </select>        
             <div>Commence le matin</div></div>
         </td>
-        <td>            
+        <td style="vertical-align: top !important;padding-top:5px !important;">            
             <div class="col-lg-12">
             <?php echo $this->Form->select('Activitesreelle.¤.domaine_id',$domaines,array('class'=>'form-control','empty' => 'Choisir un domaine')); ?>  
             </div>              
@@ -250,7 +250,7 @@
             <div class="form-horizontal"><div class="form-inline">
                 <?php echo $this->Form->input('Activitesreelle.¤.FRAIS',array('style'=>"width:45px",'class'=>'form-control text-right frais','for'=>'Activitesreelle¤FRAIS','value'=>'0.00')); ?><div class="nomargin nopadding pull-right"> €</div></div>
         </td>            
-            <td>    
+            <td style="vertical-align: top !important;padding-top:5px !important;">    
             <span class="glyphicons minus cursor" id="deleteRow"></span>
             <span class="glyphicons plus cursor" id="addRow"></span>            
             <?php echo $this->Form->input('Activitesreelle.¤.DATE',array('type'=>'hidden','value'=>$datedebut)); ?>

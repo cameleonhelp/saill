@@ -148,7 +148,7 @@ class Logiciel extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Logiciel']['created'])) {
                     $results[$key]['Logiciel']['created'] = $this->dateFormatAfterFind($val['Logiciel']['created']);

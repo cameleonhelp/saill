@@ -50,7 +50,7 @@ class Historybien extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Historybien']['created'])) {
                     $results[$key]['Historybien']['created'] = $this->datetimeFormatAfterFind($val['Historybien']['created']);
@@ -79,7 +79,7 @@ class Historybien extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Historybien']['DATEINSTALL'])) {
                 $this->data['Historybien']['DATEINSTALL'] = $this->datetimeFormatBeforeSave($this->data['Historybien']['DATEINSTALL']);
             }   

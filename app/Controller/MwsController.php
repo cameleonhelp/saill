@@ -224,7 +224,7 @@ class MwsController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Mw->find('list',array('fields'=>array('Mw.id','Mw.NOM'),'conditions'=>array('Mw.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Mw->find('list',array('fields'=>array('Mw.id','Mw.NOM'),'conditions'=>array('Mw.ACTIF'=>$actif),'order'=>array('Mw.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }         
 }

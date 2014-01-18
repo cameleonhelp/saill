@@ -48,8 +48,8 @@ class Entite extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Admin' => array(
-			'className' => 'Admin',
+		'Utilisateur' => array(
+			'className' => 'Utilisateur',
 			'foreignKey' => 'admin_id',
 			'conditions' => '',
 			'fields' => '',

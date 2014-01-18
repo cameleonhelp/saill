@@ -50,7 +50,7 @@
     <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <!-- rapport avec le graphique et le tableau -->
     <?php $lots = array_uniquecolumn($chartresults,'lots','LOT'); ?>
-    <?php $applications = array_uniquecolumn($chartresults,'applications','APPLICATION'); ?>
+    <?php $applications = array_uniquecolumn($chartresults,'applications','APPLICATION');?>
     <table id="datatable" style="display:none;">
         <thead>
             <tr>
@@ -65,13 +65,13 @@
             <tr>
                 <td><?php echo "Lot ".$vallot; ?></td>
                 <?php foreach($applications as $key=>$valapp): ?>
-                    <?php foreach($chartresults as $chartresult): ?>
-                        <?php if($chartresult['lots']['LOT']== $vallot): ?>
-                            <?php if($chartresult['applications']['APPLICATION']== $valapp): ?>
+                     <?php foreach($chartresults as $chartresult): ?> 
+                         <?php if($chartresult['lots']['LOT']== $vallot): ?>
+                            <?php if($chartresult['applications']['APPLICATION']=== $valapp): ?>
                             <td><?php echo $chartresult[0]['NB']; ?></td>
                             <?php endif; ?>
                         <?php endif; ?>
-                    <?php endforeach; ?>
+                     <?php endforeach; ?>
                 <?php endforeach; ?>
             </tr>           
             <?php endforeach; ?>
@@ -140,8 +140,16 @@ $(document).ready(function (){
      
     <?php if(isset($chartresults)) : ?>   
     
+    var env = $("#IntergrationapplicativeEnvironnementId option:selected").text();
     var mois = $("#IntergrationapplicativeMois option:selected").text();
-    var annee = $("#IntergrationapplicativeAnnee option:selected").text();   
+    var annee = $("#IntergrationapplicativeAnnee option:selected").text(); 
+    var title = '';
+    if(env=='Tous' || env=='TOUS'){
+        title = 'Nombre d\'intégration par lot et application pour';
+        title2 = 'Progression du nombre d\'intégration pour ';}
+    else{
+        title = 'Nombre d\'intégration par lot et application en '+env+' pour';
+        title2 = 'Progression du nombre d\'intégration en '+env+' pour ';}
 
     $('#chartcontainer').highcharts({
         colors: ['#A1006B','#E05206','#CCDC00','#009AA6','#CB0044','#FFB612','#7ABB00','#00BBCE','#6E267B'], 
@@ -154,7 +162,7 @@ $(document).ready(function (){
         },
         title: {
             useHTML: true,
-            text: 'Nombre d\'intégration par lot et application pour '+mois+' '+annee
+            text: title +' '+mois+' '+annee
         },
         data: {
             table: document.getElementById('datatable')
@@ -197,7 +205,7 @@ $(document).ready(function (){
         },
         title: {
             useHTML: true,
-            text: 'Progression du nombre d\'intégration pour '+annee
+            text: title2+annee
         },
         subtitle:{
                text:'(en fonction des critères sélectionnés)'

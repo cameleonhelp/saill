@@ -32,9 +32,12 @@ class DashboardsController extends AppController {
                                     LEFT JOIN activites ON activites.projet_id = projets.id
                                     LEFT JOIN contrats ON contrats.id = projets.contrat_id
                                     LEFT JOIN tjmcontrats ON tjmcontrats.id = contrats.tjmcontrat_id
+                                    LEFT JOIN historybudgets ON historybudgets.activite_id = activites.id
                                     WHERE ".$projets."
                                     AND activites.DELETABLE = 1
-                                    GROUP BY projets.id
+                                    AND historybudgets.ANNEE = ".$annee.
+                                    " AND historybudgets.ACTIF = 1".
+                                    " GROUP BY projets.id
                                     ORDER BY projets.NOM;";
                     $viewprevu =   "CREATE VIEW PREVISION AS
                                     SELECT activites.projet_id AS id,SUM(detailplancharges.TOTAL) AS BUDGETPREVU,SUM(detailplancharges.TOTAL) AS CHARGEPREVUE
@@ -69,6 +72,15 @@ class DashboardsController extends AppController {
                                     LEFT JOIN tjmcontrats ON tjmcontrats.id = contrats.tjmcontrat_id
                                     WHERE YEAR(achats.DATE) = ".$annee
                                     ." GROUP BY activites.projet_id;";
+                    
+                    $viewdomainereel = "CREATE VIEW REELBYDOMAINE AS "
+                                    . "SELECT activites.projet_id AS id, activitesreelles.domaine_id as domaine_id,SUM(activitesreelles.TOTAL) AS DOMBUDGETREEL,SUM(activitesreelles.TOTAL) AS DOMCHARGEREELLE
+                                    FROM activites
+                                    LEFT JOIN activitesreelles ON activites.id = activitesreelles.activite_id
+                                    WHERE ".$projets."
+                                    AND activitesreelles.VEROUILLE = 0
+                                    AND YEAR(activitesreelles.DATE) = ".$annee
+                                    ." GROUP BY activites.projet_id,activitesreelles.domaine_id;";
 
                     $select =  "SELECT DISTINCT(CONTRAT.id),NOM,TJM,
                                 BUDGET,TRUNCATE(((BUDGETFACTURE*(TJM/1000))/BUDGET)*100,2) AS AVANCEMENTBUDGET,TRUNCATE(BUDGETPREVU*(TJM/1000),2) AS BUDGETPREVU,(TRUNCATE(BUDGETREEL*(TJM/1000),2)+ROUND(IF(COUTACHAT IS NULL,0,(COUTACHAT/1000)),2)) AS BUDGETREEL,(TRUNCATE(BUDGETFACTURE*(TJM/1000),2)+ROUND(IF(COUTACHAT IS NULL,0,(COUTACHAT/1000)),2)) AS BUDGETFACTURE,
@@ -80,24 +92,41 @@ class DashboardsController extends AppController {
                                 LEFT JOIN FACTURATION ON FACTURATION.id = CONTRAT.id
                                 LEFT JOIN ACHAT ON CONTRAT.id = ACHAT.id
                                 ORDER BY NOM asc;";
+                    
+                    $selectdom =  "SELECT DISTINCT(CONTRAT.id),CONTRAT.NOM AS NOM,domaines.NOM AS DOMAINE,TJM,
+                                BUDGET,TRUNCATE(((BUDGETFACTURE*(TJM/1000))/BUDGET)*100,2) AS AVANCEMENTBUDGET,TRUNCATE(BUDGETPREVU*(TJM/1000),2) AS BUDGETPREVU,(TRUNCATE(DOMBUDGETREEL*(TJM/1000),2)+ROUND(IF(COUTACHAT IS NULL,0,(COUTACHAT/1000)),2)) AS DOMBUDGETREEL,(TRUNCATE(BUDGETFACTURE*(TJM/1000),2)+ROUND(IF(COUTACHAT IS NULL,0,(COUTACHAT/1000)),2)) AS BUDGETFACTURE,
+                                CHARGE,TRUNCATE(((CHARGEFACTUREE/CHARGE)*100),2) AS AVANCEMENTCHARGE,CHARGEPREVUE,(DOMCHARGEREELLE+IF(CHARGEACHAT IS NULL,0,CHARGEACHAT)) AS TOTALDOMCHARGEREELLE,((DOMCHARGEREELLE+IF(CHARGEACHAT IS NULL,0,CHARGEACHAT))-CHARGEFACTUREE) AS ECART,(CHARGEFACTUREE+IF(CHARGEACHAT IS NULL,0,CHARGEACHAT)) AS TOTALCHARGEFACTUREE,
+                                (CHARGEPREVUE-(DOMCHARGEREELLE+IF(CHARGEACHAT IS NULL,0,CHARGEACHAT))) AS RAC,(CHARGE-(CHARGEFACTUREE+IF(CHARGEACHAT IS NULL,0,CHARGEACHAT))) AS RAF,COUTACHAT,CHARGEACHAT
+                                FROM CONTRAT
+                                LEFT JOIN PREVISION ON PREVISION.id = CONTRAT.id
+                                LEFT JOIN REELBYDOMAINE ON REELBYDOMAINE.id = CONTRAT.id
+                                LEFT JOIN FACTURATION ON FACTURATION.id = CONTRAT.id
+                                LEFT JOIN ACHAT ON CONTRAT.id = ACHAT.id
+                                LEFT JOIN domaines on REELBYDOMAINE.domaine_id = domaines.id
+                                GROUP BY CONTRAT.NOM, domaines.NOM
+                                ORDER BY CONTRAT.NOM asc;";                    
 
                     $this->Dashboard->query("DROP VIEW IF EXISTS CONTRAT;");
                     $this->Dashboard->query("DROP VIEW IF EXISTS PREVISION;");
                     $this->Dashboard->query("DROP VIEW IF EXISTS CONSOMMATION;");
                     $this->Dashboard->query("DROP VIEW IF EXISTS FACTURATION;");
                     $this->Dashboard->query("DROP VIEW IF EXISTS ACHAT;");
+                    $this->Dashboard->query("DROP VIEW IF EXISTS REELBYDOMAINE;");
                     $this->Dashboard->query($viewcontrat);
                     $this->Dashboard->query($viewprevu);
                     $this->Dashboard->query($viewreel);
                     $this->Dashboard->query($viewfacture);
                     $this->Dashboard->query($viewachats);
+                    $this->Dashboard->query($viewdomainereel);
                     $results = $this->Dashboard->query($select);
-                    $this->set('results',$results);
+                    $resultsdom = $this->Dashboard->query($selectdom);
+                    $this->set(compact('results','resultsdom'));
                     $this->Dashboard->query("DROP VIEW IF EXISTS CONTRAT;");
                     $this->Dashboard->query("DROP VIEW IF EXISTS PREVISION;");
                     $this->Dashboard->query("DROP VIEW IF EXISTS CONSOMMATION;");
                     $this->Dashboard->query("DROP VIEW IF EXISTS FACTURATION;");
                     $this->Dashboard->query("DROP VIEW IF EXISTS ACHAT;");
+                    $this->Dashboard->query("DROP VIEW IF EXISTS REELBYDOMAINE;");
                     
                     $this->Session->delete('rapportresults');  
                     $this->Session->write('rapportresults',$results);

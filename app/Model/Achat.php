@@ -70,7 +70,7 @@ class Achat extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {      
+        public function beforeSave($options = array()) {      
             if (!empty($this->data['Achat']['DATE'])) {
                 $this->data['Achat']['DATE'] = $this->dateFormatBeforeSave($this->data['Achat']['DATE']);
             }
@@ -86,7 +86,7 @@ class Achat extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Achat']['created'])) {
                     $results[$key]['Achat']['created'] = $this->dateFormatAfterFind($val['Achat']['created']);

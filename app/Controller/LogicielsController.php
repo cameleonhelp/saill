@@ -61,12 +61,12 @@ class LogicielsController extends AppController {
                         $newconditions[]="1=1";
                         $strfilter .= '';
                         break;                          
-                    case '0':
+                    case '1':
                         $conditionexport[] = "logiciels.ACTIF=1";
                         $newconditions[]="Logiciel.ACTIF=1";
                         $strfilter .= ', actifs';
                         break;
-                    case '1':
+                    case '0':
                         $conditionexport[] = "logiciels.ACTIF=0";
                         $newconditions[]="Logiciel.ACTIF=0";
                         $strfilter .= ', inactifs';
@@ -121,12 +121,12 @@ class LogicielsController extends AppController {
                         types.NOM as type,
                         assobienlogiciels.ENVDSIT,
                         logiciels.ACTIF
-                        FROM logiciels
+                        FROM assobienlogiciels
+                        LEFT JOIN logiciels ON logiciels.id = assobienlogiciels.logiciel_id                        
                         LEFT JOIN envoutils ON logiciels.envoutil_id = envoutils.id
                         LEFT JOIN envversions ON logiciels.envversion_id = envversions.id
                         LEFT JOIN lots ON logiciels.lot_id = lots.id
                         LEFT JOIN applications ON logiciels.application_id = applications.id
-                        LEFT JOIN assobienlogiciels ON logiciels.id = assobienlogiciels.logiciel_id
                         LEFT JOIN biens ON biens.id = assobienlogiciels.bien_id
                         LEFT JOIN usages ON usages.id = biens.usage_id
                         LEFT JOIN cpuses ON cpuses.id = biens.cpu_id
@@ -173,12 +173,16 @@ class LogicielsController extends AppController {
                         $this->History->goBack(1);
                     else:                    
 			$this->Logiciel->create();
-			if ($this->Logiciel->save($this->request->data)) {
-				$this->Session->setFlash(__('Logiciel sauvegardé',true),'flash_success');
-				$this->History->goBack(1);
-			} else {
-				$this->Session->setFlash(__('Logiciel incorrect, veuillez corriger le logiciel',true),'flash_failure');
-			}
+                        if(!$this->isExist($this->request->data['Logiciel']['envoutil_id'], $this->request->data['Logiciel']['envversion_id'], $this->request->data['Logiciel']['application_id'], $this->request->data['Logiciel']['lot_id'])){
+                            if ($this->Logiciel->save($this->request->data)) {
+                                    $this->Session->setFlash(__('Logiciel sauvegardé',true),'flash_success');
+                                    $this->History->goFirst();
+                            } else {
+                                    $this->Session->setFlash(__('Logiciel incorrect, veuillez corriger le logiciel',true),'flash_failure');
+                            }
+                        } else {
+                            $this->Session->setFlash(__('Logiciel existant avec ce nom, version, application et lot, veuillez corriger le logiciel',true),'flash_failure');
+                        }
                     endif;
 		endif;
 		$outils = $this->requestAction('envoutils/get_select/1');
@@ -193,6 +197,24 @@ class LogicielsController extends AppController {
             endif;                 
 	}
 
+        /**
+         * isExist method
+         * Test si un logiciel avec entite_id,envoutil_id,envversion_id,application_id,lot_id exist en base
+         * 
+         * @param type $entite_id
+         * @return boolean
+         */
+        public function isExist($envoutil_id,$envversion_id,$application_id,$lot_id,$entite_id=null){
+            $bExist = false;
+            $conditions[]='Logiciel.envoutil_id='.$envoutil_id; 
+            $conditions[]='Logiciel.envversion_id='.$envversion_id;
+            $conditions[]='Logiciel.application_id='.$application_id;
+            $conditions[]='Logiciel.lot_id='.$lot_id;
+            if ($entite_id!= null): $conditions[]='Logiciel.entite_id='.$entite_id; endif;
+            $logiciel = $this->Logiciel->find('first',array('conditions'=>$conditions,'recursive'=>0));
+            $bExist = count($logiciel)>0 ? true : false;
+            return $bExist;
+        }
 /**
  * edit method
  *
@@ -209,15 +231,21 @@ class LogicielsController extends AppController {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Logiciel->validate = array();
                         $this->History->goBack(1);
-                    else:                    
-			if ($this->Logiciel->save($this->request->data)) {
-				$this->Session->setFlash(__('Logiciel sauvegardé',true),'flash_success');
-				$this->History->goBack(1);
-			} else {
-				$this->Session->setFlash(__('Logiciel incorrect, veuillez corriger le logiciel',true),'flash_failure');
-			}
+                    else:     
+                        if(!$this->isExist($this->request->data['Logiciel']['envoutil_id'], $this->request->data['Logiciel']['envversion_id'], $this->request->data['Logiciel']['application_id'], $this->request->data['Logiciel']['lot_id'])){
+                            if ($this->Logiciel->save($this->request->data)) {
+                                    $this->Session->setFlash(__('Logiciel sauvegardé',true),'flash_success');
+                                    $this->History->goBack(1);
+                            } else {
+                                    $this->Session->setFlash(__('Logiciel incorrect, veuillez corriger le logiciel',true),'flash_failure');
+                            }
+                        } else {
+                            $this->Session->setFlash(__('Logiciel existant avec ce nom, version, application et lot, veuillez corriger le logiciel',true),'flash_failure');
+                            $this->History->goBack(1);
+                        }
                     endif;
 		} else {
+                        $this->Logiciel->recursive = 0;
 			$options = array('conditions' => array('Logiciel.' . $this->Logiciel->primaryKey => $id));
 			$this->request->data = $this->Logiciel->find('first', $options);
 		}
@@ -230,9 +258,10 @@ class LogicielsController extends AppController {
 		$types = $this->requestAction('types/get_select/1');
 		$lots = $this->requestAction('lots/get_select/1');
                 $biens = $this->requestAction('assobienlogiciels/get_biens_for_outil/'.$id);
+                $listlogiciels = $this->requestAction('logiciels/get_select_compatible/'.$logiciel['Logiciel']['lot_id'].'/'.$logiciel['Logiciel']['application_id']);
                 $listbiens = $this->requestAction('biens/get_select_compatible/'.$logiciel['Logiciel']['lot_id'].'/'.$logiciel['Logiciel']['application_id']);
                 $histories = $this->requestAction('historylogiciels/get_list_for_logiciel/'.$id);
-		$this->set(compact('versions','outils', 'applications', 'types', 'lots','envoutil','biens','listbiens','histories'));
+		$this->set(compact('versions','outils', 'applications', 'types', 'lots','envoutil','biens','listbiens','histories','listlogiciels'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -246,27 +275,48 @@ class LogicielsController extends AppController {
  * @param string $id
  * @return void
  */
-	public function delete($id = null) {
+	public function delete($id = null, $loop = false) {
            if (isAuthorized('logiciels', 'delete')) :             
 		$this->Logiciel->id = $id;
 		if (!$this->Logiciel->exists()) {
 			throw new NotFoundException(__('Invalid logiciel'));
 		}
-                $logiciel = $this->Logiciel->read('ACTIF');
-                $newactif = $logiciel['Logiciel']['ACTIF'] == 1 ? 0 : 1;
-		if ($this->Logiciel->saveField('ACTIF',$newactif)) {
+                $obj = $this->Logiciel->find('first',array('conditions'=>array('Logiciel.id'=>$id),'recursive'=>0));
+                if($obj['Logiciel']['ACTIF']==1):
+                    $newactif = $obj['Logiciel']['ACTIF'] == 1 ? 0 : 1;
+                    if ($this->Logiciel->saveField('ACTIF',$newactif)) {
                         //$this->saveHistory($id);
                         if ($newactif==0):
                             $delete = "DELETE FROM assobienlogiciels WHERE logiciel_id = ".$id;
                             $this->Logiciel->Assobienlogiciel->query($delete);   
                             $this->Session->setFlash(__('Logiciel supprimé',true),'flash_success');
+                            if($loop) : return true; endif;
                         else:
                             $this->Session->setFlash(__('Logiciel activé',true),'flash_success');
+                            if($loop) : return true; endif;
                         endif;
-		} else {
-			$this->Session->setFlash(__('Logiciel <b>NON</b> supprimé',true),'flash_failure');
-		}
-		$this->History->notmove();
+                    } else {
+                            $this->Session->setFlash(__('Logiciel <b>NON</b> supprimé',true),'flash_failure');
+                            if($loop) : return false; endif;
+                    }
+                    if(!$loop) : $this->History->notmove();  
+                    else:
+                        return true;
+                    endif;
+                else:
+                    if($this->Logiciel->delete()):
+                        $delete = "DELETE FROM assobienlogiciels WHERE logiciel_id = ".$id;
+                        $this->Logiciel->Assobienlogiciel->query($delete);   
+                        $this->Session->setFlash(__('Logiciel supprimé',true),'flash_success');
+                        if(!$loop) : $this->History->goBack(1); 
+                        else:
+                            return true;
+                        endif;
+                    else:
+                        $this->Session->setFlash(__('Bien <b>NON</b> supprimé',true),'flash_failure');
+                        if($loop) : return false; endif;
+                    endif;
+                endif;                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -357,10 +407,10 @@ class LogicielsController extends AppController {
                 $this->Logiciel->create();
                 if ($this->Logiciel->save($record)) {
                         $this->Session->setFlash(__('Logiciel dupliqué',true),'flash_success');
+                        $this->redirect(array('action'=>'edit',$this->Logiciel->getLastInsertID()));
                 } else {
                         $this->Session->setFlash(__('Logiciel incorrect, veuillez corriger le logiciel',true),'flash_failure');
-                }
-                $this->History->notmove();                
+                }              
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -369,9 +419,25 @@ class LogicielsController extends AppController {
         
         public function get_select($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Logiciel.ACTIF='.$actif;
-            $list = $this->Logiciel->find('list',array('fields'=>array('Logiciel.id','Logiciel.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Logiciel->find('list',array('fields'=>array('Logiciel.id','Logiciel.NOM'),'conditions'=>$conditions,'order'=>array('Logiciel.NOM'=>'asc'),'group'=>array('Logiciel.NOM'),'recursive'=>0));
             return $list;
         }    
+        
+        public function get_info($id){
+            $conditions[] = 'Logiciel.id='.$id;
+            $list = $this->Logiciel->find('first',array('conditions'=>$conditions,'recursive'=>0));
+            return $list;
+        }   
+        
+        public function get_id_exist($envoutil_id,$envversion_id,$application_id,$lot_id,$entite_id=null){
+            $conditions[]='Logiciel.envoutil_id='.$envoutil_id; 
+            $conditions[]='Logiciel.envversion_id='.$envversion_id;
+            $conditions[]='Logiciel.application_id='.$application_id;
+            $conditions[]='Logiciel.lot_id='.$lot_id;
+            if ($entite_id!= null): $conditions[]='Logiciel.entite_id='.$entite_id; endif;
+            $logiciel = $this->Logiciel->find('first',array('conditions'=>$conditions,'recursive'=>0));
+            return $logiciel['Logiciel']['id'];
+        }          
         
         public function saveHistory($logiciel_id=null){
             /**
@@ -404,11 +470,15 @@ class LogicielsController extends AppController {
         public function search(){
             if (isAuthorized('logiciels', 'index')) :
                 $keyword=isset($this->params->data['Logiciel']['SEARCH']) ? $this->params->data['Logiciel']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Logiciel.NOM LIKE '%".$keyword."%'","Modele.NOM LIKE '%".$keyword."%'"));
+                $newconditions = array('OR'=>array("Logiciel.NOM LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;
                 $this->Logiciel->recursive = 0;
-                $this->set('logiciels', $this->paginate());                  
+                $this->set('logiciels', $this->paginate());  
+                $applications = $this->requestAction('applications/get_list/1');
+                $types = $this->requestAction('types/get_list/1');
+                $outils = $this->requestAction('envoutils/get_list/1');
+                $this->set(compact('applications','types','outils'));                 
                 $this->render('index');
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -432,17 +502,14 @@ class LogicielsController extends AppController {
             $ids = explode('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
-                    $this->Logiciel->id = $id;
-                    $obj = $this->Logiciel->find('first',array('conditions'=>array('Logiciel.id'=>$id),'recursive'=>0));
-                    $newactif = $obj['Logiciel']['ACTIF'] == 1 ? 0 : 1;
-                    $this->Logiciel->saveField('ACTIF',$newactif);
-                    if ($newactif==0):
-                        $delete = "DELETE FROM assobienlogiciels WHERE logiciel_id = ".$id;
-                        $this->Logiciel->Assobienlogiciel->query($delete);   
-                    endif; 
+                    if($this->delete($id,true)):
+                        $this->Session->setFlash(__('Modification du statut supprimé pris en compte pour tous les logiciels sélectionnés',true),'flash_success'); 
+                    else :
+                        $this->Session->setFlash(__('Modification du statut supprimé <b>NON</b> pris en compte pour tous les logiciels sélectionnés',true),'flash_failure');
+                    endif;
                 endforeach;
                 sleep(3);
-                echo $this->Session->setFlash(__('Mises à jour du statut supprimé complétées',true),'flash_success');
+                echo $this->Session->setFlash(__('Mises à jour du statut supprimé complétés',true),'flash_success');
             else :
                 $this->Session->setFlash(__('Aucun logiciel sélectionné',true),'flash_failure');
             endif;
@@ -460,14 +527,21 @@ class LogicielsController extends AppController {
 	}                 
         
         public function get_select_compatible($lot_id,$application_id){
-            $list = $this->Logiciel->find('list',array('fields'=>array('Logiciel.id','Logiciel.NOM'),'conditions'=>array('Logiciel.lot_id'=>$lot_id,'Logiciel.application_id'=>$application_id),'recursive'=>0));
+            $list = $this->Logiciel->find('list',array('fields'=>array('Logiciel.id','Logiciel.NOM'),'conditions'=>array('Logiciel.lot_id'=>$lot_id,'Logiciel.application_id'=>$application_id),'order'=>array('Logiciel.NOM'=>'asc'),'group'=>array('Logiciel.NOM'),'recursive'=>0));
             return $list;
-        }      
+        }   
+        
+        public function json_get_select_compatible($lot_id,$application_id){
+            $this->autoRender = false;
+            $list = $this->Logiciel->find('list',array('fields'=>array('Logiciel.NOM','Logiciel.id'),'conditions'=>array('Logiciel.lot_id'=>$lot_id,'Logiciel.application_id'=>$application_id),'order'=>array('Logiciel.NOM'=>'asc'),'group'=>array('Logiciel.NOM'),'recursive'=>0));
+            return json_encode($list);
+        }
         
 	public function ajaxadd() {
             $this->autoRender = false;
             if (isAuthorized('logiciels', 'add')) :
 		if ($this->request->is('post')) :
+                    if(!$this->isExist($this->request->data['Logiciel']['envoutil_id'], $this->request->data['Logiciel']['envversion_id'], $this->request->data['Logiciel']['application_id'], $this->request->data['Logiciel']['lot_id'])){
 			$this->Logiciel->create();
 			if ($this->Logiciel->save($this->request->data)) {
                                 $record['Assobienlogiciel']['bien_id']=$this->request->data['Logiciel']['bien_id'];
@@ -485,7 +559,11 @@ class LogicielsController extends AppController {
                         } else {
 				$this->Session->setFlash(__('Logiciel incorrect, veuillez corriger le logiciel',true),'flash_failure');
 			}
-			$this->History->notmove();                       
+			$this->History->goBack(0); 
+                    } else {
+                        $this->Session->setFlash(__('Logiciel existant avec ce nom, version, application et lot, veuillez corriger le logiciel',true),'flash_failure');
+                        $this->History->goBack(0);
+                    }
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -516,5 +594,11 @@ class LogicielsController extends AppController {
                 $this->Session->setFlash(__('Fichier <b>NON</b> reconnu',true),'flash_failure');
             endif;            
             $this->History->goBack(0);
+        }
+        
+        public function erase($id){
+            $this->autoRender = false;
+            $this->Logiciel->id = $id;
+            $this->Logiciel->delete();
         }
 }

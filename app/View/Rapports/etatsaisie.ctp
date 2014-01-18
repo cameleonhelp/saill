@@ -40,9 +40,11 @@
         <tr>
             <td><?php echo $result['SAISIE']['NOMLONG']; ?></td>
             <?php
-            if(($result['SAISIE']['TOTAL']-intval($nbmaxopen))!=0):
+            if(($result['SAISIE']['TOTAL']-intval($nbmaxopen)) < 0):
                 $badge = 'badge-important showoverlay';
             elseif(($result['SAISIE']['TOTAL']-intval($nbmaxopen))==0 && $result['SAISIE']['VEROUILLE']!=0):
+                $badge = 'badge-warning showoverlay';
+            elseif($result['SAISIE']['VEROUILLE']!=0):
                 $badge = 'badge-warning showoverlay';
             else:
                 $badge = 'badge-success';

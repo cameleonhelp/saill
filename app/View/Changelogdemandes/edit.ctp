@@ -1,6 +1,6 @@
 <div class="marginright20">
     <?php echo $this->element('changelogsubmenu'); ?>
-    <div class="changelogdemandes form">      
+    <div class="changelogdemandes form tablemarginright">      
 <?php echo $this->Form->create('Changelogdemande',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
         Expliquez en quelques lignes votre demande de changement (évolution ou anomalies) :
 	<?php
@@ -16,10 +16,11 @@
     </div>  
     </div>   
 <?php echo $this->Form->end(); ?>
-    </div>
+    
     <?php //Ajouter toutes les réponses de cette demandes// ?>
     <?php if(!isset($reponses)): ?>
     <h6>Voici les réponses apportées à cette demande :</h6>
     <?php echo $this->element('tablereponses'); ?>   
     <?php endif; ?>
+    </div>
 </div>

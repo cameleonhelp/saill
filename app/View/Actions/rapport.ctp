@@ -16,7 +16,7 @@
               <?php $today = new dateTime(); ?>
               <?php echo $this->Form->input('START',array('type'=>'text','placeholder'=>'ex.: '.$today->format('d/m/Y'),'data-rule-required'=>'true','class'=>"form-control dateall",'data-msg-required'=>"La date de début de période est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
               <span class="input-group-addon addon-middle date-addon-clean btn-addon" data-target="#ActionSTART"><span class="glyphicons circle_remove grey"></span></span>
-              <span class="input-group-addon addon-middle date-addon-default btn-addon" data-target="#ActionSTART" data-default="<?php echo date('d/m/Y'); ?>"><span class="glyphicons clock"></span></span>
+              <span class="input-group-addon addon-middle date-addon-default btn-addon" data-target="#ActionSTART" data-default="<?php echo date('01/m/Y'); ?>"><span class="glyphicons clock"></span></span>
               <span class="input-group-addon date-addon-calendar btn-addon" data-target="#ActionSTART"><span class="glyphicons calendar"></span></span>
               </div>
             </div>  
@@ -41,7 +41,7 @@
               <?php $today = new dateTime(); ?>
               <?php echo $this->Form->input('END',array('type'=>'text','placeholder'=>'ex.: '.$today->format('d/m/Y'),'data-rule-required'=>'true','class'=>"form-control dateall",'data-msg-required'=>"La date de fin de période est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
               <span class="input-group-addon addon-middle date-addon-clean btn-addon" data-target="#ActionEND"><span class="glyphicons circle_remove grey"></span></span>
-              <span class="input-group-addon addon-middle date-addon-default btn-addon" data-target="#ActionEND" data-default="<?php echo date('d/m/Y'); ?>"><span class="glyphicons clock"></span></span>
+              <span class="input-group-addon addon-middle date-addon-default btn-addon" data-target="#ActionEND" data-default="<?php echo date('t/m/Y'); ?>"><span class="glyphicons clock"></span></span>
               <span class="input-group-addon date-addon-calendar btn-addon" data-target="#ActionEND"><span class="glyphicons calendar"></span></span>
               </div>
             </div>             

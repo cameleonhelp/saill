@@ -70,6 +70,14 @@ class Bien extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
+			'isUnique' => array(
+				'rule' => array('isUnique'),
+				'message' => 'Le nom du bien doit être unique, ce nom existe déjà.',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),                    
 		),
 	);
 
@@ -187,7 +195,7 @@ class Bien extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Bien']['created'])) {
                     $results[$key]['Bien']['created'] = $this->dateFormatAfterFind($val['Bien']['created']);
@@ -203,7 +211,10 @@ class Bien extends AppModel {
                 }                   
                 if (isset($val['Bien']['CHECKBY'])) {
                     $results[$key]['Bien']['CHECKBY_NOM'] = $this->getValideur($val['Bien']['CHECKBY']);
-                }                  
+                }       
+                if (isset($val['Bien']['chassis_id'])) {
+                    $results[$key]['Localite']['NOM'] = $this->getLocalite($val['Bien']['chassis_id']);
+                }                 
             }
             return $results;
         } 
@@ -218,6 +229,16 @@ class Bien extends AppModel {
             return $value;
         }
         
+        public function getLocalite($id){
+            $value = false;
+            if ($id != 0):
+            $sql = 'SELECT localites.NOM FROM chassis LEFT JOIN localites on chassis.localite_id = localites.id WHERE chassis.id="'.$id.'"';
+            $result = $this->query($sql);
+            $value =  isset($result[0]['localites']['NOM']) ? $result[0]['localites']['NOM'] : '';
+            endif;
+            return $value;
+        }        
+        
  /**
  * beforeSave method
  *
@@ -226,7 +247,7 @@ class Bien extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Bien']['NOM'])) {
                 $this->data['Bien']['NOM'] = mb_strtoupper($this->data['Bien']['NOM'],'UTF-8');
             }                   

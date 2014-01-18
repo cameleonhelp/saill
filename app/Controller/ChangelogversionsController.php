@@ -77,6 +77,8 @@ class ChangelogversionsController extends AppController {
                 $this->Changelogversion->id = $this->request->data['Changelogversion']['id'];
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Changelogversion->saveField('DATEPREVUE', $this->request->data['Changelogversion']['DATE'])) {
+                                $options = array('pass'=>array($this->request->data['Changelogversion']['id'],$this->request->data['Changelogversion']['DATE']));
+                                $this->Changelogversion->requestAction('changelogreponses/updateresponses/',$options);
 				$this->Session->setFlash(__('Version sauvegardée',true),'flash_success');
 			} else {
 				$this->Session->setFlash(__('Version incorrecte, veuillez corriger la version',true),'flash_failure');
@@ -142,13 +144,13 @@ class ChangelogversionsController extends AppController {
         }          
 
         public function get_select_all(){
-            $list = $this->Changelogversion->find('list',array('fields'=>array('Changelogversion.id','Changelogversion.VERSION'),'recursive'=>0));
+            $list = $this->Changelogversion->find('list',array('fields'=>array('Changelogversion.id','Changelogversion.VERSION'),'order'=>array('Changelogversion.VERSION'=>'asc'),'recursive'=>0));
             return $list;
         }           
         
         public function get_select_open(){
             $conditions[] = 'Changelogversion.ETAT=0';
-            $list = $this->Changelogversion->find('list',array('fields'=>array('Changelogversion.id','Changelogversion.VERSION'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Changelogversion->find('list',array('fields'=>array('Changelogversion.id','Changelogversion.VERSION'),'conditions'=>$conditions,'order'=>array('Changelogversion.VERSION'=>'asc'),'recursive'=>0));
             return $list;
         }     
         
@@ -164,5 +166,11 @@ class ChangelogversionsController extends AppController {
             $obj = $this->Changelogversion->find('first',array('conditions'=>$conditions,'recursive'=>-1));
             $result = json_encode($obj);
             return $result;
+        }
+        
+        public function getnextversion(){
+            $conditions[] = 'Changelogversion.ETAT=0';
+            $list = $this->Changelogversion->find('all',array('conditions'=>$conditions,'order'=>array('Changelogversion.VERSION'=>'asc'),'recursive'=>0));
+            return $list;
         }
 }

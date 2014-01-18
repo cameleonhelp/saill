@@ -111,7 +111,7 @@ class Facturation extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Facturation']['DATE'])) {
                 $this->data['Facturation']['DATE'] = $this->dateFormatBeforeSave($this->data['Facturation']['DATE']);
             }
@@ -127,7 +127,7 @@ class Facturation extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Facturation']['created'])) {
                     $results[$key]['Facturation']['created'] = $this->dateFormatAfterFind($val['Facturation']['created']);

@@ -213,6 +213,7 @@ class UtiliseoutilsController extends AppController {
             $this->Utiliseoutil->create();
             if ($this->Utiliseoutil->save($record)) {
                 $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$this->Utiliseoutil->getLastInsertID())));
+                
                 $this->sendmailutiliseoutil($utiliseoutil);
                 $history['Historyutilisateur']['utilisateur_id']=$utilisateur_id;
                 $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit".' par '.userAuth('NOMLONG');
@@ -276,7 +277,7 @@ class UtiliseoutilsController extends AppController {
                                 $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$id)));
                                 $newetat = $utiliseoutil['Utiliseoutil']['STATUT'];
                                 if($newetat=='Demande transférée' || $newetat=='A supprimer' || $newetat = 'En validation'):
-                                    $this->sendmailutiliseoutil($utiliseoutil,$valideur);  
+                                    $this->sendmailutiliseoutil($utiliseoutil);  
                                 endif;
                                 $this->addnewaction($id,$nomoutil);
                                 $history['Historyutilisateur']['utilisateur_id']=$this->request->data['Utiliseoutil']['utilisateur_id'];
@@ -287,7 +288,7 @@ class UtiliseoutilsController extends AppController {
                         }  
                     endif;
 		} else {
-			$options = array('conditions' => array('Utiliseoutil.' . $this->Utiliseoutil->primaryKey => $id));
+			$options = array('conditions' => array('Utiliseoutil.' . $this->Utiliseoutil->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Utiliseoutil->find('first', $options);
                         $this->set('utiliseoutil', $this->Utiliseoutil->find('first', $options));
 		}
@@ -458,7 +459,7 @@ class UtiliseoutilsController extends AppController {
                 $this->Utiliseoutil->id = $id;
                 $record = $this->Utiliseoutil->read();
                 $valideur = null;
-                if($record['Outil']['VALIDATION']==0 && $record['Utiliseoutil']['STATUT']=='Pris en compte') $record['Utiliseoutil']['STATUT']='Validé';
+                if(isset($record) && $record['Outil']['VALIDATION']==0 && $record['Utiliseoutil']['STATUT']=='Pris en compte') $record['Utiliseoutil']['STATUT']='Validé';
                 switch ($record['Utiliseoutil']['STATUT']) {
                     case 'Demandé':
                        $newetat = 'Pris en compte';
@@ -563,6 +564,7 @@ class UtiliseoutilsController extends AppController {
         }
         
         public function sendmailutiliseoutil($utiliseoutil,$valideur=null){
+            $utilisateur = $this->Utiliseoutil->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$utiliseoutil['Utiliseoutil']['utilisateur_id']),'recursive'=>0));
             $to = '';
             if(!empty($utiliseoutil['Utiliseoutil']['outil_id']) && $utiliseoutil['Utiliseoutil']['outil_id']!=null):
                 $outil = $this->Utiliseoutil->Outil->find('first',array('conditions'=>array('Outil.id'=>$utiliseoutil['Utiliseoutil']['outil_id']),'recursive'=>0));
@@ -608,20 +610,20 @@ class UtiliseoutilsController extends AppController {
             $groupcaliber = "";
             switch(strtolower($section['Section']['NOM'])){
                 case 'groupement':
-                    $groupcaliber = "OSMOSE - Intégrateur ou PANAM - Intégrateur ou OSMOSE - Négociateur";
+                    $groupcaliber = "<ul><li>[ ] OSMOSE - Intégrateur</li><li>[ ] PANAM - Intégrateur</li><li>[ ] OSMOSE - Négociateur</li></ul>";
                     break;
                 case 'moa':
-                    $groupcaliber = "OSMOSE - MOA SI ou PANAM - MOA SI ou OSMOSE Existant (devt) - MOE";
+                    $groupcaliber = "<ul><li>[ ] OSMOSE - MOA SI</li><li>[ ] PANAM - MOA SI</li><li>[ ] OSMOSE Existant (devt) - MOE</li></ul>";
                     break;
                 default:
-                    $groupcaliber = "OSMOSE - MOE ou PANAM - MOE ou OSMOSE Existant (devt) - MOA";
+                    $groupcaliber = "<ul><li>[ ] OSMOSE - MOE</li><li>[ ] PANAM - MOE</li><li>[ ] OSMOSE Existant (devt) - MOA</li></ul>";
                     break;                    
             }
             $message .= '<ul>
                     <li>Outil :'.$nom.'</li>
                     <li>Etat :'.$etat.'</li>
-                    <li>Agent :'.$utiliseoutil['Utilisateur']['NOMLONG'].'</li>
-                    <li>Identifiant :'.$utiliseoutil['Utilisateur']['username'].'</li>
+                    <li>Agent :'.$utilisateur['Utilisateur']['NOMLONG'].'</li>
+                    <li>Identifiant :'.$utilisateur['Utilisateur']['username'].'</li>
                     <li>Email :'.$email.'</li>
                     <li>Domaine :'.$domaine.'</li>
                     <li>Section :'.$section['Section']['NOM'].'</li>
@@ -640,7 +642,7 @@ class UtiliseoutilsController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
         }        
@@ -704,7 +706,7 @@ class UtiliseoutilsController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
             $this->History->notmove();

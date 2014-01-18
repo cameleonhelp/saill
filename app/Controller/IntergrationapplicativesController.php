@@ -21,7 +21,7 @@ class IntergrationapplicativesController extends AppController {
  *
  * @return void
  */
-	public function index($aplication=null,$installe=null,$valide=null,$actif=null,$type=null) {
+	public function index($aplication=null,$installe=null,$valide=null,$actif=null,$type=null,$version = null) {
             $this->set('title_for_layout','Intégration applicative');
             if (isAuthorized('intergrationapplicatives', 'index')) :
                 switch($aplication):
@@ -72,11 +72,11 @@ class IntergrationapplicativesController extends AppController {
                         $newconditions[]="1=1";
                         $strfilter .= '';
                         break;                          
-                    case '0':
+                    case '1':
                         $newconditions[]="Intergrationapplicative.ACTIF=1";
                         $strfilter .= ', actifs';
                         break;
-                    case '1':
+                    case '0':
                         $newconditions[]="Intergrationapplicative.ACTIF=0";
                         $strfilter .= ', inactifs';
                         break;                   
@@ -93,7 +93,19 @@ class IntergrationapplicativesController extends AppController {
                         $nom = $this->Intergrationapplicative->Type->findById($type);
                         $strfilter .= ', pour l\'environnement '.$nom['Type']['NOM'];
                         break;
-                endswitch;                   
+                endswitch;    
+                switch($version):
+                    case null:
+                    case 'tous':
+                        $newconditions[]="1=1";
+                        $strfilter = ', pour toutes les versions';
+                        break;
+                    default:
+                        $newconditions[]="Intergrationapplicative.version_id=".$version;
+                        $nom = $this->Intergrationapplicative->Version->findById($version);
+                        $strfilter = ', pour la version '.$nom['Version']['NOM'];
+                        break;
+                endswitch;                
                 $this->set('strfilter',$strfilter);
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->Intergrationapplicative->recursive = 0;
@@ -104,7 +116,8 @@ class IntergrationapplicativesController extends AppController {
                 $applications = $this->requestAction('applications/get_list/1');
                 $etats = $this->requestAction('etats/get_list/1');
                 $types = $this->requestAction('types/get_list/1');
-		$this->set(compact('applications','etats','types'));  
+                $versions = $this->requestAction('versions/get_list/1');
+		$this->set(compact('applications','etats','types','versions'));  
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -141,6 +154,11 @@ class IntergrationapplicativesController extends AppController {
                         $this->History->goBack(1);
                     else:                    
 			$this->Intergrationapplicative->create();
+                        if($this->request->data['Intergrationapplicative']['DATEINSTALL'] != ''):
+                            $this->request->data['Intergrationapplicative']['INSTALL'] = 1;
+                        else:
+                            $this->request->data['Intergrationapplicative']['INSTALL'] = 0;
+                        endif;
 			if ($this->Intergrationapplicative->save($this->request->data)) {
 				$this->Session->setFlash(__('Intégration sauvegardée',true),'flash_success');
 				$this->History->goBack(1);
@@ -177,7 +195,12 @@ class IntergrationapplicativesController extends AppController {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Intergrationapplicative->validate = array();
                         $this->History->goBack(1);
-                    else:                    
+                    else:  
+                        if($this->request->data['Intergrationapplicative']['DATEINSTALL'] != ''):
+                            $this->request->data['Intergrationapplicative']['INSTALL'] = 1;
+                        else:
+                            $this->request->data['Intergrationapplicative']['INSTALL'] = 0;
+                        endif;                        
 			if ($this->Intergrationapplicative->save($this->request->data)) {
 				$this->Session->setFlash(__('Intégration modifiée',true),'flash_success');
 				$this->History->goBack(1);
@@ -208,32 +231,51 @@ class IntergrationapplicativesController extends AppController {
  * @param string $id
  * @return void
  */
-	public function delete($id = null) {
+	public function delete($id = null,$loop = false) {
             $this->set('title_for_layout','Intégration applicative');            
             if (isAuthorized('intergrationapplicatives', 'delete')) : 
 		$this->Intergrationapplicative->id = $id;
 		if (!$this->Intergrationapplicative->exists()) {
 			throw new NotFoundException(__('Intégration incorrect'));
 		}
-                $this->saveHistory($id);
                 $obj = $this->Intergrationapplicative->find('first',array('conditions'=>array('Intergrationapplicative.id'=>$id),'recursive'=>0));
-                $newactif = $obj['Intergrationapplicative']['ACTIF'] == 1 ? 0 : 1;
-                if($newactif == 0):
-                    $this->Intergrationapplicative->saveField('INSTALL',0);
-                    $this->Intergrationapplicative->saveField('DATEINSTALL',NULL);
-                    $this->Intergrationapplicative->saveField('CHECK',0);
-                    $this->Intergrationapplicative->saveField('DATECHECK',NULL);
-                endif;
-		if ($this->Intergrationapplicative->saveField('ACTIF',$newactif)) {
-                        if ($newactif==0): 
-                            $this->Session->setFlash(__('Intégration supprimé',true),'flash_success');
+                if($obj['Intergrationapplicative']['ACTIF']==1):
+                    $this->saveHistory($id);
+                    $newactif = $obj['Intergrationapplicative']['ACTIF'] == 1 ? 0 : 1;
+                    if($newactif == 0):
+                        $this->Intergrationapplicative->saveField('INSTALL',0);
+                        $this->Intergrationapplicative->saveField('DATEINSTALL',NULL);
+                        $this->Intergrationapplicative->saveField('CHECK',0);
+                        $this->Intergrationapplicative->saveField('DATECHECK',NULL);
+                    endif;
+                    if ($this->Intergrationapplicative->saveField('ACTIF',$newactif)) {
+                            if ($newactif==0): 
+                                $this->Session->setFlash(__('Intégration supprimée',true),'flash_success');
+                                if($loop) : return true; endif;
+                            else:
+                                $this->Session->setFlash(__('Intégration activée',true),'flash_success');
+                                if($loop) : return true; endif;
+                            endif;
+                    } else {
+                            $this->Session->setFlash(__('Intégration <b>NON</b> supprimée',true),'flash_failure');
+                            if($loop) : return false; endif;
+                    }
+                    if(!$loop) : $this->History->notmove();  
+                    else:
+                        return true;
+                    endif;
+                else:
+                    if($this->Intergrationapplicative->delete()):                       
+                        $this->Session->setFlash(__('Intégration supprimée',true),'flash_success');
+                        if(!$loop) : $this->History->goBack(1); 
                         else:
-                            $this->Session->setFlash(__('Intégration activé',true),'flash_success');
+                            return true;
                         endif;
-		} else {
-			$this->Session->setFlash(__('Intégration <b>NON</b> supprimé',true),'flash_failure');
-		}
-		$this->History->notmove();
+                    else:
+                        $this->Session->setFlash(__('Intégration <b>NON</b> supprimée',true),'flash_failure');
+                        if($loop) : return false; endif;
+                    endif;
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -361,10 +403,10 @@ class IntergrationapplicativesController extends AppController {
                 $this->Intergrationapplicative->create();
                 if ($this->Intergrationapplicative->save($record)) {
                         $this->Session->setFlash(__('Intégration dupliquée',true),'flash_success');
+                        $this->redirect(array('action'=>'edit',$this->Intergrationapplicative->getLastInsertID()));
                 } else {
                         $this->Session->setFlash(__('Intégration incorrecte, veuillez corriger l\'Intégration',true),'flash_failure');
-                }
-                $this->History->notmove();                
+                }                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -403,7 +445,11 @@ class IntergrationapplicativesController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;
                 $this->Intergrationapplicative->recursive = 0;
-                $this->set('intergrationapplicatives', $this->paginate());                  
+                $this->set('intergrationapplicatives', $this->paginate());  
+                $applications = $this->requestAction('applications/get_list/1');
+                $etats = $this->requestAction('etats/get_list/1');
+                $types = $this->requestAction('types/get_list/1');
+		$this->set(compact('applications','etats','types'));                 
                 $this->render('index');
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -451,7 +497,7 @@ class IntergrationapplicativesController extends AppController {
             $ids = explode('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
-                    if($this->ajax_actif($id)):
+                    if($this->delete($id,true)):
                         echo $this->Session->setFlash(__('Modification du statut supprimé pris en compte pour toutes les Intégration sélectionnées',true),'flash_success'); 
                     else :
                         $this->Session->setFlash(__('Modification du statut supprimé <b>NON</b> pris en compte pour toutes les Intégration sélectionnées',true),'flash_failure');
@@ -505,10 +551,52 @@ class IntergrationapplicativesController extends AppController {
                             LEFT JOIN lots on intergrationapplicatives.lot_id = lots.id
                             LEFT JOIN applications on intergrationapplicatives.application_id = applications.id
                             WHERE MONTH(DATEINSTALL) = ".$mois.
-                            " AND YEAR(DATEINSTALL) = ".$annee." ".$selectapplications.$selectlot.
+                            " AND YEAR(DATEINSTALL) = ".$annee." ".$selectapplications.$selectlot.$selecttype.
                             " group by lot_id, application_id
                             order by lot_id asc, application_id asc;";
                     $chartresults = $this->Intergrationapplicative->query($chartsql);
+                    /**
+                     * retravailler le résultat pour mettre des zéro si plusieurs lots et applications différentes
+                     */
+                    $appresultsql= "select applications.NOM
+                            from intergrationapplicatives
+                            LEFT JOIN applications on intergrationapplicatives.application_id = applications.id
+                            WHERE MONTH(DATEINSTALL) = ".$mois.
+                            " AND YEAR(DATEINSTALL) = ".$annee." ".$selectapplications.$selectlot.$selecttype.
+                            " group by  application_id
+                            order by application_id asc;";
+                    $appresult = $this->Intergrationapplicative->query($appresultsql);
+                    $lotresultsql= "select lots.NOM
+                            from intergrationapplicatives
+                            LEFT JOIN lots on intergrationapplicatives.lot_id = lots.id
+                            LEFT JOIN applications on intergrationapplicatives.application_id = applications.id
+                            WHERE MONTH(DATEINSTALL) = ".$mois.
+                            " AND YEAR(DATEINSTALL) = ".$annee." ".$selectapplications.$selectlot.$selecttype.
+                            " group by lot_id
+                            order by lot_id asc;";
+                    $lotresult = $this->Intergrationapplicative->query($lotresultsql);                    
+                    if(count($lotresult)>1):
+                        $i = 0;
+                        $array = array();
+                        foreach($chartresults as $result):
+                                $array[]=array($result['lots']['LOT'],$result['applications']['APPLICATION']);
+                        endforeach;
+                        foreach($lotresult as $lot):
+                            foreach($appresult as $app):
+                                $completearray[]=array($lot['lots']['NOM'],$app['applications']['NOM']);
+                            endforeach;
+                            $i++;
+                        endforeach;
+                    $diff = narray_diff ($array,$completearray);
+                    foreach($diff as $result):
+                        $add[]=array(array('NB' => '0'),'lots' => array('LOT' => $result[0]),'applications' => array('APPLICATION' => $result[1]));
+                    endforeach;
+                    if(isset($add) && is_array($add)):
+                    $chartresults = array_merge($chartresults,$add);
+                    else:
+                        $chartresults = $chartresults;
+                    endif;
+                    endif;
                     $this->set('chartresults',$chartresults);   
                     $charthistosql = "select count(intergrationapplicatives.id) as NB,lots.NOM as LOT,MONTH(DATEINSTALL) as MOIS
                             from intergrationapplicatives

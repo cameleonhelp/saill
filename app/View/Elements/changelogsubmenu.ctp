@@ -1,4 +1,4 @@
-<nav class="navbar toolbar">
+<nav class="navbar toolbar tablemarginright">
         <ul class="nav navbar-nav toolbar">
         <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Demandes <b class="caret"></b></a>
@@ -20,6 +20,10 @@
         <?php if (userAuth('profil_id')=='1') : ?>
         <li class="divider-vertical-only"></li>
         <li><?php echo $this->Html->link('Versions', array('controller'=>'changelogversions','action' => 'index'),array('class'=>'paddingtop3 showoverlay')); ?></li>
+        <?php if($this->params->controller=='changelogdemandes' && $this->params->action == "index"): ?>
+        <li class="divider-vertical-only"></li>
+        <li><?php echo $this->Html->link('<span class="ico-xls" rel="tooltip" data-container="body" data-title="Export Excel"></span>', array('action' => 'export_xls'),array('escape' => false)); ?></li>        
+        <?php endif; ?>
         <?php endif; ?>
         </ul> 
         

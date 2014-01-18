@@ -32,7 +32,7 @@ class Volumetry extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Volumetry']['created'])) {
                     $results[$key]['Volumetry']['created'] = $this->dateFormatAfterFind($val['Volumetry']['created']);
@@ -52,7 +52,7 @@ class Volumetry extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Volumetry']['NOM'])) {
                 $this->data['Volumetry']['NOM'] = mb_strtoupper($this->data['Volumetry']['NOM'],'UTF-8');
             }                

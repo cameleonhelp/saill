@@ -42,7 +42,7 @@ class Message extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Message']['DATELIMITE'])) {
                 $this->data['Message']['DATELIMITE'] = $this->dateFormatBeforeSave($this->data['Message']['DATELIMITE']);
             }
@@ -58,7 +58,7 @@ class Message extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Message']['DATELIMITE'])) {
                     $results[$key]['Message']['DATELIMITE'] = $this->dateFormatAfterFind($val['Message']['DATELIMITE']);

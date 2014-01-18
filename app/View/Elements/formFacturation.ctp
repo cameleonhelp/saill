@@ -64,7 +64,7 @@
     ?>
     <?php foreach($activitesreelles as $activitesreelle): ?>        
     <tr>
-        <td><div class="row form-inline"><div class="col-lg-10">
+        <td><div class="row form-inline"><div class="col-lg-8">
             <select name="data[Facturation][<?php echo $i; ?>][activite_id]" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Facturation<?php echo $i; ?>ActiviteId" class='form-control'> 
                 <option value="">Choisir une activité</option>
                 <?php foreach ($activites as $activite) : ?>
@@ -73,7 +73,7 @@
                 <?php if ($this->params->action == 'add') $selected = $activite['Activite']['id']==$activitesreelle['Activitesreelle']['activite_id'] ? 'selected="selected"' :''; ?>
                     <option value="<?php echo $activite['Activite']['id']; ?>" <?php echo $selected; ?>><?php echo $activite['Projet']['NOM']; ?> - <?php echo $activite['Activite']['NOM']; ?></option>
                 <?php endforeach; ?>
-            </select></div>&nbsp;<span class="glyphicons bin cursor" id="deleteRow"></span></div>  
+            </select></div><div style="margin-right:13px;margin-top:4px;">&nbsp;<span class="glyphicons bin cursor pull-right" id="deleteRow"></span></div></div>  
         </td>
         <?php if ($this->params->action == 'add') $lu_value = $activitesreelle['Activitesreelle']['LU']; ?>
         <?php if ($this->params->action == 'edit') $lu_value = $activitesreelle['Facturation']['LU']; ?>
@@ -98,6 +98,7 @@
         <td class='week <?php echo $classDI; ?>' width='15px' style="text-align: center;"><div class="form-inline"><?php echo $this->Form->input('Facturation.'.$i.'.DI',array('style'=>"width:45px",'class'=>'form-control text-right day','data-rule-isAuthorize'=>true,'data-msg-isAuthorize'=>"Seul est autorisé 0, 0.5 ou 1 sur la journée du dimanche",'value'=>$di_value)); ?> j</div></td>
         <?php if ($this->params->action == 'add') $total_value = $activitesreelle['Activitesreelle']['TOTAL']; ?>
         <?php if ($this->params->action == 'edit') $total_value = $activitesreelle['Facturation']['TOTAL']; ?>
+        <?php $total_value = str_replace(',','.',$total_value); ?>
         <td width='15px' style="text-align: center;"><div class="form-inline">
         <?php echo $this->Form->input('Facturation.'.$i.'.TOTAL',array('type'=>'hidden','value'=>$total_value)); ?>
         <?php echo $this->Form->input('Facturation.'.$i.'.TotalDisabled',array('style'=>"width:45px",'class'=>'form-control text-right','value'=>$total_value,'disabled'=>'disabled')); ?> j</div></td> 
@@ -204,7 +205,8 @@ $(document).ready(function () {
         parseFloat($(this).val()) > 1 ? $(this).addClass('invalid') : $(this).removeClass('invalid');
         parseFloat($(this).val()) > 1 ? $(this).focus() : '';
         $('#'+id+'TOTAL').val(parseFloat($('#'+id+'LU').val())+parseFloat($('#'+id+'MA').val())+parseFloat($('#'+id+'ME').val())+parseFloat($('#'+id+'JE').val())+parseFloat($('#'+id+'VE').val())+parseFloat($('#'+id+'SA').val())+parseFloat($('#'+id+'DI').val()));
-           $('#'+id+'TotalDisabled').val($('#'+id+'TOTAL').val());
+        $('#'+id+'TOTAL').val($('#'+id+'TOTAL').val().replace(',', '.'));
+        $('#'+id+'TotalDisabled').val($('#'+id+'TOTAL').val());
     });
     $(document).on('change','#FacturationVERSION',function(e){
         e.preventDefault;
@@ -216,7 +218,7 @@ $(document).ready(function () {
     });
     $(document).on('click','#deleteRow',function(e){
         e.preventDefault;
-        $(this).parent().parent('tr').remove();
+        $(this).parents().parent('tr').remove();
     });    
     $(document).on('click','#FacturationAddRow',function(e){
         e.preventDefault;

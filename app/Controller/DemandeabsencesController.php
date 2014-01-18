@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::import('Vendor', 'ical', array('file'=>'class.iCalReader.php'));
+App::uses('CakeEmail', 'Network/Email');
 /**
  * Demandeabsences Controller
  *
@@ -32,7 +33,8 @@ class DemandeabsencesController extends AppController {
                 switch($filtreDemandeur):
                     case null:
                     case 'tous':
-                        $newconditions[]="1=1";
+                        $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
+                        $newconditions[] = 'Utilisateur.id IN ('.$monequipe.')';
                         $strfilter = ', pour toute mon équipe';
                         break;
                     default:
@@ -134,7 +136,7 @@ class DemandeabsencesController extends AppController {
                             $this->Session->setFlash(__('Demande d\'absences <b>NON</b> sauvegardée',true),'flash_failure');
                         }
                     endif;
-                    $this->History->notmove();
+                    $this->History->goBack(1);
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -296,7 +298,7 @@ class DemandeabsencesController extends AppController {
             return array('start'=>$typeStart,'dureestart'=>$dureestart,'end'=>$typeEnd,'dureeend'=>$dureeend);
     }  
     
-        public function sendmaildemandeabsences($demande){
+        public function sendmaildemandeabsences($demande,$relance=false){
             $heuredeb = $demande['Demandeabsence']['DATEDUTYPE']=='8' ? '08:00' : '13:00'; 
             $heurefin = $demande['Demandeabsence']['DATEAUTYPE']=='16' ? '17:00' : '12:00';
             $valideurs = $this->Demandeabsence->Utilisateur->Equipe->find('all',array('conditions'=>array('Equipe.agent'=>userAuth('id'))));
@@ -307,9 +309,44 @@ class DemandeabsencesController extends AppController {
             $mailto[]=userAuth('MAIL');
             $to=$mailto;
             $from = userAuth('MAIL');
-            $objet = 'SAILL : Demande d\'absences';
+            $objrelance = $relance ? '[RELANCE] ' : '';
+            $subrelance = $relance ? '<p style="color:red">Message de relance car la demande ne semble pas être traitée</p>' : '';
+            $motif = $demande['Demandeabsence']['MOTIF']!='' ? '<span style="color:blue;">'.$demande['Demandeabsence']['MOTIF'].'</span>' : 'sans motif particulier';       
+            $objet = 'SAILL : '.$objrelance.'Demande d\'absences';
             $message = "Demande d'absences de la part de <b>".userAuth('NOMLONG')."</b> pour la période du ".CFRDate($demande['Demandeabsence']['DATEDU']).' à '.$heuredeb.' (inclus) jusqu\'au '.CFRDate($demande['Demandeabsence']['DATEAU']).' à '.$heurefin.' (inclus)'.
-                    '<br>Cette demande reste en attente de validation de votre part.';
+                    '<br><br>Motif : '.$motif.
+                    '<br><p style="background-color:yellow;color:red;">Cette demande reste en attente de validation de votre part.'.$subrelance.'</p>';
+            if($to!=''):
+                try{
+                $email = new CakeEmail();
+                $email->config('smtp')
+                        ->emailFormat('html')
+                        ->from($from)
+                        ->to($to)
+                        ->subject($objet)
+                        ->send($message);
+                $this->sendmailconfirmation($demande, $relance);
+                $this->Session->setFlash(__('Mail envoyé à votre (ou vos) valideur(s)',true),'flash_success');
+                }
+                catch(Exception $e){
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
+                }  
+            endif;
+        }    
+        
+        public function sendmailconfirmation($demande,$relance=false){
+            $heuredeb = $demande['Demandeabsence']['DATEDUTYPE']=='8' ? '08:00' : '13:00'; 
+            $heurefin = $demande['Demandeabsence']['DATEAUTYPE']=='16' ? '17:00' : '12:00';
+            $mailto[]=userAuth('MAIL');
+            $to=$mailto;
+            $from = 'saill.nepasrepondre@sncf.fr';
+            $objrelance = $relance ? '[RELANCE] ' : '';
+            $subrelance = $relance ? '<p style="color:red">Message de relance car la demande ne semble pas être traitée</p>' : '';
+            $motif = $demande['Demandeabsence']['MOTIF']!='' ? '<span style="color:blue;">'.$demande['Demandeabsence']['MOTIF'].'</span>' : 'sans motif particulier';
+            $objet = 'SAILL : '.$objrelance.'Confirmation d\'envois de votre demande d\'absences';
+            $message = "Votre demande d'absences pour la période du ".CFRDate($demande['Demandeabsence']['DATEDU']).' à '.$heuredeb.' (inclus) jusqu\'au '.CFRDate($demande['Demandeabsence']['DATEAU']).' à '.$heurefin.' (inclus)'.
+                    '<br><br>Motif : '.$motif.
+                    '<br>a été transmise à votre (ou vos) valideur(s).'.$subrelance;
             if($to!=''):
                 try{
                 $email = new CakeEmail();
@@ -321,11 +358,20 @@ class DemandeabsencesController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail de confirmation - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
-        }    
+        }          
        
+        public function sendmailrelancedemande($id){
+            $this->autoRender = false;
+            $conditions[]= 'Demandeabsence.id='.$id;
+            $demande = $this->Demandeabsence->find('first',array('conditions'=>$conditions,'recursive'=>0));
+            $this->sendmaildemandeabsences($demande,true);
+            $this->History->goback(1);
+            
+        }            
+        
         public function sendmailreponseabsences($demande,$etat){
             $reponse = $etat == 1 ? '<b>VALIDEE</b>' : '<b style="color:red;">REFUSEE</b>';
             $heuredeb = $demande['Demandeabsence']['DATEDUTYPE']=='8' ? '08:00' : '13:00'; 
@@ -354,7 +400,7 @@ class DemandeabsencesController extends AppController {
                 $this->Session->setFlash(__('Mail envoyé à tous les valideurs et au demandeur',true),'flash_success');
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
         }           

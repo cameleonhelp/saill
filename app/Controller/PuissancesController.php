@@ -223,13 +223,13 @@ class PuissancesController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Puissance->find('list',array('fields'=>array('Puissance.id','Puissance.NOM'),'conditions'=>array('Puissance.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Puissance->find('list',array('fields'=>array('Puissance.id','Puissance.NOM'),'conditions'=>array('Puissance.ACTIF'=>$actif),'order'=>array('Puissance.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }    
         
         public function get_list($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Puissance.ACTIF='.$actif;
-            $list = $this->Puissance->find('all',array('fields'=>array('Puissance.id','Puissance.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Puissance->find('all',array('fields'=>array('Puissance.id','Puissance.NOM'),'conditions'=>$conditions,'order'=>array('Puissance.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }     
         

@@ -108,7 +108,7 @@ class Materielinformatique extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             parent::beforeSave();
             return true;
         }
@@ -121,7 +121,7 @@ class Materielinformatique extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Materielinformatique']['created'])) {
                     $results[$key]['Materielinformatique']['created'] = $this->dateFormatAfterFind($val['Materielinformatique']['created']);

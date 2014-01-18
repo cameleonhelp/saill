@@ -68,9 +68,9 @@
                         echo '<td class="tableTdCourrier">'.$row['biens']['bien'].'</td>';
                         echo '<td class="tableTdContent">'.$row['types']['type'].'</td>';
                         echo '<td class="tableTdCourrier">'.$row['assobienlogiciels']['ENVDSIT'].'</td>';
-                        echo '<td class="tableTdCourrier">'.$row['biens']['COEUR'].'</td>';
-                        echo '<td class="tableTdCourrier">'.$row['biens']['COEURLICENCE'].'</td>';
-                        echo '<td class="tableTdCourrier">'.$row['biens']['PVU'].'</td>';
+                        echo '<td class="tableTdCourrier">'.convertDecimal($row['biens']['COEUR']).'</td>';
+                        echo '<td class="tableTdCourrier">'.convertDecimal($row['biens']['COEURLICENCE']).'</td>';
+                        echo '<td class="tableTdCourrier">'.convertDecimal($row['biens']['PVU']).'</td>';
                         echo '<td class="tableTdCourrier">'.$row['biens']['RAM'].'</td>';
                         echo '<td class="tableTdCourrier">'.$row['biens']['COUT'].'</td>';
                         echo '<td class="tableTdCourrier">'.$row['usages']['usages'].'</td>';
@@ -78,3 +78,7 @@
                         echo '</tr>';
                 endforeach; ?>
 </table>
+
+<?php function convertDecimal($value){
+        return str_replace(".", ",", $value);
+}; ?>

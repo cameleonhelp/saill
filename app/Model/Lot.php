@@ -98,7 +98,7 @@ class Lot extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Lot']['created'])) {
                     $results[$key]['Lot']['created'] = $this->dateFormatAfterFind($val['Lot']['created']);

@@ -173,13 +173,13 @@ class ArchitecturesController extends AppController {
         }    
         
         public function get_select($actif=1){
-            $list = $this->Architecture->find('list',array('fields'=>array('Architecture.id','Architecture.NOM'),'conditions'=>array('Architecture.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Architecture->find('list',array('fields'=>array('Architecture.id','Architecture.NOM'),'conditions'=>array('Architecture.ACTIF'=>$actif),'order'=>array('Architecture.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }    
         
         public function get_list($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Architecture.ACTIF='.$actif;
-            $list = $this->Architecture->find('all',array('fields'=>array('Architecture.id','Architecture.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Architecture->find('all',array('fields'=>array('Architecture.id','Architecture.NOM'),'order'=>array('Architecture.NOM'=>'asc'),'conditions'=>$conditions,'recursive'=>0));
             return $list;
         }       
         

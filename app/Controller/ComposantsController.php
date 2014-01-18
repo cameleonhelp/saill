@@ -173,13 +173,13 @@ class ComposantsController extends AppController {
         }   
         
         public function get_select($actif=1){
-            $list = $this->Composant->find('list',array('fields'=>array('Composant.id','Composant.NOM'),'conditions'=>array('Composant.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Composant->find('list',array('fields'=>array('Composant.id','Composant.NOM'),'conditions'=>array('Composant.ACTIF'=>$actif),'order'=>array('Composant.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }  
         
         public function get_list($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Composant.ACTIF='.$actif;
-            $list = $this->Composant->find('all',array('fields'=>array('Composant.id','Composant.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Composant->find('all',array('fields'=>array('Composant.id','Composant.NOM'),'order'=>array('Composant.NOM'=>'asc'),'conditions'=>$conditions,'recursive'=>0));
             return $list;
         }  
         

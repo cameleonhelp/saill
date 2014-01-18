@@ -121,7 +121,7 @@ class EnvoutilsController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Envoutil->validate = array();
-                        $this->History->goBack(1);
+                        $this->History->goBack(2);
                     else:                    
 			if ($this->Envoutil->save($this->request->data)) {
 				$this->Session->setFlash(__('Outils sauvegardé',true),'flash_success');
@@ -219,12 +219,12 @@ class EnvoutilsController extends AppController {
         }
         
         public function get_select_os($actif=1){
-            $list = $this->Envoutil->find('list',array('fields'=>array('Envoutil.id','Envoutil.NOM'),'conditions'=>array('Envoutil.ACTIF'=>$actif,'Envoutil.OS'=>1),'recursive'=>0));
+            $list = $this->Envoutil->find('list',array('fields'=>array('Envoutil.id','Envoutil.NOM'),'conditions'=>array('Envoutil.ACTIF'=>$actif,'Envoutil.OS'=>1),'order'=>array('Envoutil.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }
         
         public function get_select_software($actif=1){
-            $list = $this->Envoutil->find('list',array('fields'=>array('Envoutil.id','Envoutil.NOM'),'conditions'=>array('Envoutil.ACTIF'=>$actif,'Envoutil.OS'=>0),'recursive'=>0));
+            $list = $this->Envoutil->find('list',array('fields'=>array('Envoutil.id','Envoutil.NOM'),'conditions'=>array('Envoutil.ACTIF'=>$actif,'Envoutil.OS'=>0),'order'=>array('Envoutil.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }  
 

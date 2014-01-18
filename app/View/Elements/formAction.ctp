@@ -8,7 +8,7 @@
     </div>
     <div class="block-panel-50-left">
         <div class="form-group">
-            <label class="col-lg-4 required" for="ActionDestinataire">Destinataire: </label>
+            <label class="col-lg-4 required" for="ActionDestinataire">Responsable: </label>
             <div  class="col-lg-6">
                 <?php if ($this->params->action == 'edit') { ?>
                     <?php if (userAuth('WIDEAREA')==1): ?>
@@ -28,12 +28,15 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-lg-4" for="ActionCRA">CRA : </label>
-            <div class="col-lg-offset-4" style="margin-left:36.5%;">
-                    <?php echo $this->Form->input('CRA',array('class'=>'yesno')); ?>
-                    &nbsp;<label class='labelAfter' for="ActionCRA"></label> 
+            <label class="col-lg-4 required" for="ActionDomaineId">Domaine : </label>
+            <div class="col-lg-6">
+                <?php if ($this->params->action == 'edit') { ?>
+                    <?php echo $this->Form->select('domaine_id',$domaines,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>"Le domaine est obligatoire dans l'onglet Destinataire", 'selected' => $this->data['Action']['domaine_id'],'empty' => 'Choisir un domaine')); ?>
+                <?php } else { ?>
+                    <?php echo $this->Form->select('domaine_id',$domaines,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>"Le domaine est obligatoire dans l'onglet Destinataire", 'empty' => 'Choisir un domaine')); ?>
+                <?php } ?>   
             </div>
-        </div>   
+        </div>          
         <div class="form-group">
             <label class="col-lg-4" for="ActionDEBUT">Début de l'Action : </label>
             <div class="col-lg-5">
@@ -61,17 +64,42 @@
                 <?php $value = isset($this->data['Action']['DUREEPREVUE']) ? $this->data['Action']['DUREEPREVUE'] : 0; ?>
                 <?php echo $this->Form->input('DUREEPREVUE',array('type'=>"number",'style'=>'width:55px;', 'min'=>"0", 'step'=>"2",'maxlength'=>'3','class' => 'form-control text-right', 'value'=>$value)); ?> heures soit : <label id="ActionLblDUREEPREVUE"></label>              
             </div>
-        </div>        
+        </div> 
+        <div class="form-group">
+            <?php echo $this->Form->input('periodicite_id', array('type'=>'hidden','value'=>isset($this->data['Action']['periodicite_id']) ? $this->data['Action']['periodicite_id'] : '')); ?>
+            <label class="col-lg-4" for="ActionREPETITIONQ">Périodicité de l'échéance</label>
+            <div class="col-lg-5 inline_labels" >
+                 <?php
+                    echo $this->Form->input('FREQUENCE',array('type'=>'hidden','value'=>isset($this->data['Action']['FREQUENCE']) ? $this->data['Action']['FREQUENCE'] : 'Q'));
+                    echo $this->Form->input('REPETITION',array('type'=>'hidden','value'=>isset($periodicite['Periodicite']['PERIODE']) ? $periodicite['Periodicite']['PERIODE'] : 'Q')); 
+                 ?>
+                <div class="btn-group btn-group-sm" data-toggle="buttons">
+                  <label class="btn btn-default nomargin <?php echo !isset($periodicite['Periodicite']['PERIODE']) || $periodicite['Periodicite']['PERIODE']=='Q' ? 'active' : ''; ?>" for="ActionREPETITIONQ">
+                    <input type="radio" name="data[Action][REPETITION1]" id="ActionREPETITIONQ"> Quotidien
+                  </label>
+                  <label class="btn btn-default nomargin <?php echo isset($periodicite['Periodicite']['PERIODE']) && $periodicite['Periodicite']['PERIODE']=='H' ? 'active' : ''; ?>" for="ActionREPETITIONH">
+                    <input type="radio" name="data[Action][REPETITION1]"  data-toggle="modal" data-target="#HebdoModal" id="ActionREPETITIONH"> Hebdomadaire
+                  </label>
+                  <label class="btn btn-default nomargin <?php echo isset($periodicite['Periodicite']['PERIODE']) && $periodicite['Periodicite']['PERIODE']=='M' ? 'active' : ''; ?>" for="ActionREPETITIONM">
+                    <input type="radio" name="data[Action][REPETITION1]"  data-toggle="modal" data-target="#MoisModal" id="ActionREPETITIONM"> Mensuel
+                  </label>
+                </div>            
+                <?php echo $this->element('modalperiodicite'); ?>
+                <?php if(isset($this->data['Action']['id']) && !empty($this->data['Action']['periodicite_id'])): ?>
+                <div class='delete margintop15'>
+                <?php echo $this->Html->link('<span class="glyphicons remove_2 red notchange"></span> Supprimer la périodicité de l\'action', array('action' => 'deleteThisPeriodicite', $this->data['Action']['id']), array('class'=>'btn btn-sm btn-default','escape' => false), __('Etes-vous certain de vouloir supprimer la périodicité de cette action ?')); ?>
+                &nbsp;<?php echo $this->Html->link('<span class="glyphicons remove red notchange"></span> Supprimer la périodicité de toutes les mêmes actions',  array('action' => 'deleteAllPeriodicite', $this->data['Action']['id']), array('class'=>'btn btn-sm btn-default','escape' => false), __('Etes-vous certain de vouloir supprimer la périodicité de toutes les actions dépendantes ?')); ?>          
+                </div>
+                <?php endif; ?>      
+            </div>
+        </div>         
     </div>
     <div class="block-panel-50-right">
         <div class="form-group">
-            <label class="col-lg-4 required" for="ActionDomaineId">Domaine : </label>
+            <label class="col-lg-4" for="ActionCONTRIBUTEURS">Contributeurs : </label>
             <div class="col-lg-6">
-                <?php if ($this->params->action == 'edit') { ?>
-                    <?php echo $this->Form->select('domaine_id',$domaines,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>"Le domaine est obligatoire dans l'onglet Destinataire", 'selected' => $this->data['Action']['domaine_id'],'empty' => 'Choisir un domaine')); ?>
-                <?php } else { ?>
-                    <?php echo $this->Form->select('domaine_id',$domaines,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>"Le domaine est obligatoire dans l'onglet Destinataire", 'empty' => 'Choisir un domaine')); ?>
-                <?php } ?>   
+                    <?php $nbcontributeurs = isset($contributeurs) && $contributeurs[0]!='' ? count($contributeurs) : 0; ?>
+                    <?php echo $this->Html->link('<span class="glyphicons notchange group"></span>&nbsp; <span id="NBCONTRIBUTEURS" name="NBCONTRIBUTEURS">'.$nbcontributeurs.'</span>','#',array('data-toggle'=>"modal",'id'=>'btnCONTRIBUTEURS','data-target'=>"#modaladdcontributeurs","rel"=>"tooltip","data-title"=>"$contributeurs_nom",'class'=>'btn  btn-sm btn-default','escape' => false)); ?> 
             </div>
         </div>
         <div class="form-group">
@@ -120,35 +148,14 @@
                     <?php echo $this->Form->input('AVANCEMENT',array('maxlength'=>'3','style'=>'width:55px;','class' => 'form-control text-right','min'=>"0", 'step'=>"10",'max'=>'100')); ?> %
                 <?php } ?>   
             </div>
-        </div>        
-    </div> 
-    <div class="form-group">
-        <?php echo $this->Form->input('periodicite_id', array('type'=>'hidden','value'=>isset($this->data['Action']['periodicite_id']) ? $this->data['Action']['periodicite_id'] : '')); ?>
-        <label class="col-lg-2" for="ActionREPETITIONQ">Périodicité de l'échéance</label>
-        <div class="inline_labels" style="margin-left:18%;">
-             <?php
-                echo $this->Form->input('FREQUENCE',array('type'=>'hidden','value'=>isset($this->data['Action']['FREQUENCE']) ? $this->data['Action']['FREQUENCE'] : 'Q'));
-                echo $this->Form->input('REPETITION',array('type'=>'hidden','value'=>isset($periodicite['Periodicite']['PERIODE']) ? $periodicite['Periodicite']['PERIODE'] : 'Q')); 
-             ?>
-            <div class="btn-group btn-group-sm" data-toggle="buttons">
-              <label class="btn btn-default nomargin <?php echo !isset($periodicite['Periodicite']['PERIODE']) || $periodicite['Periodicite']['PERIODE']=='Q' ? 'active' : ''; ?>" for="ActionREPETITIONQ">
-                <input type="radio" name="data[Action][REPETITION1]" id="ActionREPETITIONQ"> Quotidien
-              </label>
-              <label class="btn btn-default nomargin <?php echo isset($periodicite['Periodicite']['PERIODE']) && $periodicite['Periodicite']['PERIODE']=='H' ? 'active' : ''; ?>" for="ActionREPETITIONH">
-                <input type="radio" name="data[Action][REPETITION1]"  data-toggle="modal" data-target="#HebdoModal" id="ActionREPETITIONH"> Hebdomadaire
-              </label>
-              <label class="btn btn-default nomargin <?php echo isset($periodicite['Periodicite']['PERIODE']) && $periodicite['Periodicite']['PERIODE']=='M' ? 'active' : ''; ?>" for="ActionREPETITIONM">
-                <input type="radio" name="data[Action][REPETITION1]"  data-toggle="modal" data-target="#MoisModal" id="ActionREPETITIONM"> Mensuel
-              </label>
-            </div>            
-            <?php echo $this->element('modalperiodicite'); ?>
-            <?php if(!empty($this->data['Action']['periodicite_id'])): ?>
-            <div class='delete margintop15'>
-            <?php echo $this->Html->link('<span class="glyphicons remove_2 red notchange"></span> Supprimer la périodicité de l\'action', array('action' => 'deleteThisPeriodicite', $this->data['Action']['id']), array('class'=>'btn btn-sm btn-default','escape' => false), __('Etes-vous certain de vouloir supprimer la périodicité de cette action ?')); ?>
-            &nbsp;<?php echo $this->Html->link('<span class="glyphicons remove red notchange"></span> Supprimer la périodicité de toutes les mêmes actions',  array('action' => 'deleteAllPeriodicite', $this->data['Action']['id']), array('class'=>'btn btn-sm btn-default','escape' => false), __('Etes-vous certain de vouloir supprimer la périodicité de toutes les actions dépendantes ?')); ?>          
+        </div>  
+        <div class="form-group">
+            <label class="col-lg-4" for="ActionCRA">CRA : </label>
+            <div class="col-lg-offset-4" style="margin-left:36.5%;">
+                    <?php echo $this->Form->input('CRA',array('class'=>'yesno')); ?>
+                    &nbsp;<label class='labelAfter' for="ActionCRA"></label> 
             </div>
-            <?php endif; ?>      
-        </div>
+        </div>         
     </div> 
     <div style="clear:both;">
     <div class="form-group">
@@ -225,16 +232,36 @@
         <div class="col-lg-10">
             <?php echo $this->Form->input('RESUME', array('class'=>'form-control')); ?>   
         </div>
-    </div>     
-    <div class="form-group">
-        <label class="col-lg-2" for="ActionCOMMENTAIRE">Commentaire : </label>
-        <div class="col-lg-10">
-            <?php echo $this->Form->input('COMMENTAIRE'); ?>   
+    </div>   
+    <div class="panel-group" id="panelcommentaire" style="margin-bottom:15px;">
+    <div class="panel panel-default">
+        <div class="panel-heading"><a data-toggle="collapse" data-parent="#panelcommentaire" href="#collapsecommentaire">Commentaire
+                <span class="pull-right badge badge-default"><span class="glyphicons notchange <?php echo $this->data['Action']['COMMENTAIRE']!='' ? "edit" : "unchecked"; ?>"></span></span></a></div>
+        <div id="collapsecommentaire" class="panel-collapse collapse<?php echo $this->data['Action']['utilisateur_id'] == userAuth('id') ? ' in' : ''; ?>">
+        <div class="panel-body">
+          <?php echo $this->Form->input('COMMENTAIRE'); ?> 
         </div>
-    </div>  
+        </div>
+    </div>
+    </div>
+    <?php if ($this->params->action == 'edit'): ?>
+    <div class="panel-group" id="panelbilan" style="margin-bottom:15px;">
+    <div class="panel panel-default">
+        <div class="panel-heading"><a data-toggle="collapse" data-parent="#panelbilan" href="#collapsebilan">Bilan / Résultat : 
+                <span class="pull-right badge badge-default"><span class="glyphicons notchange <?php echo $this->data['Action']['BILAN']!='' ? "edit" : "unchecked"; ?>"></span></span></a></div>
+        <?php $destinataires = explode(",",$this->data['Action']['CONTRIBUTEURS']); ?>
+        <?php $destinataires[] = $this->data['Action']['destinataire']; ?>
+        <div id="collapsebilan" class="panel-collapse collapse<?php echo in_array(userAuth('id'),$destinataires) ? ' in' : ''; ?>">
+        <div class="panel-body">
+          <?php echo $this->Form->input('BILAN',array('type'=>'textarea')); ?>  
+        </div>
+        </div>
+    </div>
+    </div>      
+    <?php endif; ?>
     <!-- ajout de la liste des livrables pouvant être associés //-->
     <?php if ($this->params->action == 'edit') : ?>
-    <button type="button" class='btn btn-sm btn-default pull-right showoverlay' style="margin-bottom:10px;" onclick="location.href='<?php echo $this->Html->url('/actionslivrables/add/'.$this->data['Action']['id']); ?>';">Ajouter un livrable</button>                    
+    <button type="submit" data-toggle="modal" data-target="#modaladdlivrable" class="btn btn-default btn-sm pull-right addlivrable">Ajouter un livrable</button><br>
     <label class="sstitre">Liste des livrables associés</label>
     <?php echo $this->element('tableLivrables'); ?>
     <?php endif; ?>
@@ -251,12 +278,16 @@
     </div>
 <?php if ($this->params->action == 'add') echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>userAuth('id'))); ?> 
 <?php if ($this->params->action == 'edit') echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>$this->data['Action']['utilisateur_id'])); ?> 
+<?php echo $this->Form->input('CONTRIBUTEURS',array('type'=>'hidden','value'=>isset($this->data['Action']['CONTRIBUTEURS']) ? $this->data['Action']['CONTRIBUTEURS'] : '')); ?> 
 <?php if ($this->params->action == 'edit') echo $this->Form->input('id',array('type'=>'hidden')); ?>    
 <?php echo $this->Form->end(); ?>   
 <?php if ($this->params->action == 'edit') echo $this->element('tableHistoryAction'); ?>
+<?php if ($this->params->action == 'edit') echo $this->element('modaladdlivrable'); ?>
+<?php echo $this->element('modaladdcontributeurs'); ?>
 </div>
 <script>
 $(document).ready(function () {
+<?php if ($this->params->action == 'edit') : ?>    
     updateViewRisque($('#ActionNIVEAU').val());
     
     if ($('#ActionNIVEAU').val() != '' || $('#ActionNIVEAU').val() > 0){
@@ -264,6 +295,11 @@ $(document).ready(function () {
     } else {
         $('.info-risque').hide();
     }
+ <?php endif; ?>
+     
+<?php if ($this->params->action == 'add') : ?> 
+    $('.info-risque').hide();
+<?php endif; ?>
         
     $(document).on('click','.checkrisk',function(e){
         $('#ActionRISQUE').val($(this).val());
@@ -298,7 +334,7 @@ $(document).ready(function () {
     });
     
     $(document).on('click','#closeRisqueModal',function(e){
-        $('#RiskModal').modal('toggle');
+        $('#RiskModal').modal('hide');
     });
     
     $(document).on('click','#cleanRisque',function(e){
@@ -308,7 +344,7 @@ $(document).ready(function () {
         $('input:radio[class=checkrisk]').attr('checked', false);
         $("#squareRisque").css("background-color","").css("background-color","none");
         $("#commentRisque").text('Risque non évalué');
-        $('#RiskModal').modal('toggle');
+        $('#RiskModal').modal('hide');
     });
     
     function updateViewRisque(niveau){
@@ -346,6 +382,12 @@ $(document).ready(function () {
     
     $(document).on('click','[for=ActionREPETITIONM]',function(){
         $('#MoisModal').modal('toggle');
-    });     
+    });  
+<?php if ($this->params->action == 'edit') : ?>      
+    $(document).on('click','.addlivrable',function(e){
+        $('#ActionslivrableActionId').val(<?php echo $this->params->pass[0]; ?>);
+        $('#modaladdlivrable').modal('show');
+    });   
+<?php endif; ?>    
 });
 </script>

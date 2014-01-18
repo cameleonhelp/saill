@@ -187,7 +187,7 @@ class MaterielinformatiquesController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Materielinformatique.' . $this->Materielinformatique->primaryKey => $id));
+			$options = array('conditions' => array('Materielinformatique.' . $this->Materielinformatique->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Materielinformatique->find('first', $options);
                         $this->set('materielinformatique',$this->request->data);
 		}

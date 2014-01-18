@@ -66,11 +66,11 @@ class BiensController extends AppController {
                         break;                   
                 endswitch;   
                 switch($actif):
-                    case null:
                     case 'tous':
                         $newconditions[]="1=1";
                         $strfilter .= '';
-                        break;                          
+                        break; 
+                    case null:                    
                     case '0':
                         $newconditions[]="Bien.ACTIF=1";
                         $strfilter .= ', actifs';
@@ -109,7 +109,8 @@ class BiensController extends AppController {
 		$this->Bien->recursive = 0;
                 $export = $this->Bien->find('all',array('conditions'=>$newconditions,'order' => array('Bien.DATEINSTALL' => 'desc'),'recursive'=>0));
                 $this->Session->delete('xls_export');
-                $this->Session->write('xls_export',$export);                 
+                $this->Session->write('xls_export',$export);  
+                $this->set(compact('export'));
 		$this->set('biens', $this->paginate());
                 $applications = $this->requestAction('applications/get_list/1');
                 $types = $this->requestAction('types/get_list/1');
@@ -153,7 +154,11 @@ class BiensController extends AppController {
 				$this->Session->setFlash(__('Bien sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
-				$this->Session->setFlash(__('Bien incorrect, veuillez corriger le bien',true),'flash_failure');
+                            if (!$this->isUnique($this->request->data['Bien']['NOM'])):
+                                $this->Session->setFlash(__('Le nom '.$this->request->data['Bien']['NOM'].' du bien doit être unique, ce nom existe déjà.',true),'flash_failure');
+                            else:
+                                $this->Session->setFlash(__('Bien incorrect, veuillez corriger le bien',true),'flash_failure');
+                            endif;
 			}                        
                     endif;
 		endif;
@@ -164,13 +169,22 @@ class BiensController extends AppController {
 		$lots = $this->requestAction('lots/get_select');
                 $applications = $this->requestAction('applications/get_select');
                 $cpuses = $this->requestAction('cpuses/get_select');
-		$this->set(compact('modeles', 'chassis', 'types', 'usages', 'lots','applications','cpuses'));
+                $listbiens = array();
+		$this->set(compact('modeles', 'chassis', 'types', 'usages', 'lots','applications','cpuses','listbiens'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                 
 	}
 
+        public function isUnique($nom){
+            $obj = $this->Bien->find('first',array('conditions'=>array('Bien.NOM'=>$nom)));
+            if(count($obj) > 0) :
+                return false;
+            else:
+                return true;
+            endif;
+        }
 /**
  * edit method
  *
@@ -186,13 +200,17 @@ class BiensController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Bien->validate = array();
-                        $this->History->goBack(1);
+                        $this->History->goBack(3);
                     else:                    
 			if ($this->Bien->save($this->request->data)) {
 				$this->Session->setFlash(__('Bien sauvegardé',true),'flash_success');
-				$this->History->goBack(1);
+				$this->History->goBack(2);
 			} else {
-				$this->Session->setFlash(__('Bien incorrect, veuillez corriger le bien',true),'flash_failure');
+                            if (!$this->isUnique($this->request->data['Bien']['NOM'])):
+                                $this->Session->setFlash(__('Le nom '.$this->request->data['Bien']['NOM'].' du bien doit être unique, ce nom existe déjà.',true),'flash_failure');
+                            else:
+                                $this->Session->setFlash(__('Bien incorrect, veuillez corriger le bien',true),'flash_failure');
+                            endif;
 			}
                     endif;
 		} else {
@@ -228,34 +246,55 @@ class BiensController extends AppController {
  * @param string $id
  * @return void
  */
-	public function delete($id = null) {
+	public function delete($id = null,$loop = false) {
             if (isAuthorized('biens', 'delete')) : 
 		$this->Bien->id = $id;
 		if (!$this->Bien->exists()) {
 			throw new NotFoundException(__('Bien incorrect'));
 		}
-                $this->saveHistory($id);
                 $obj = $this->Bien->find('first',array('conditions'=>array('Bien.id'=>$id),'recursive'=>0));
-                $newactif = $obj['Bien']['ACTIF'] == 1 ? 0 : 1;
-                if($newactif == 0):
-                    $this->Bien->saveField('INSTALL',0);
-                    $this->Bien->saveField('DATEINSTALL',NULL);
-                    $this->Bien->saveField('CHECK',0);
-                    $this->Bien->saveField('CHECKBY',  NULL); 
-                    $this->Bien->saveField('DATECHECKINSTALL',NULL);
-                endif;
-		if ($this->Bien->saveField('ACTIF',$newactif)) {
-                        if ($newactif==0):
-                            $delete = "DELETE FROM assobienlogiciels WHERE bien_id = ".$id;
-                            $this->Bien->Assobienlogiciel->query($delete);   
-                            $this->Session->setFlash(__('Bien supprimé',true),'flash_success');
+                if($obj['Bien']['ACTIF']==1):
+                    $this->saveHistory($id);
+                    $newactif = $obj['Bien']['ACTIF'] == 1 ? 0 : 1;
+                    if($newactif == 0):
+                        $this->Bien->saveField('INSTALL',0);
+                        $this->Bien->saveField('DATEINSTALL',NULL);
+                        $this->Bien->saveField('CHECK',0);
+                        $this->Bien->saveField('CHECKBY',  NULL); 
+                        $this->Bien->saveField('DATECHECKINSTALL',NULL);
+                    endif;
+                    if ($this->Bien->saveField('ACTIF',$newactif)) {
+                            if ($newactif==0):
+                                $delete = "DELETE FROM assobienlogiciels WHERE bien_id = ".$id;
+                                $this->Bien->Assobienlogiciel->query($delete);   
+                                $this->Session->setFlash(__('Bien supprimé',true),'flash_success');
+                                if($loop) : return true; endif;
+                            else:
+                                $this->Session->setFlash(__('Bien activé',true),'flash_success');
+                                if($loop) : return true; endif;
+                            endif;
+                    } else {
+                            $this->Session->setFlash(__('Bien <b>NON</b> supprimé',true),'flash_failure');
+                            if($loop) : return false; endif;
+                    }
+                    if(!$loop) : $this->History->notmove();  
+                    else:
+                        return true;
+                    endif;
+                else:
+                    if($this->Bien->delete()):
+                        $delete = "DELETE FROM assobienlogiciels WHERE bien_id = ".$id;
+                        $this->Bien->Assobienlogiciel->query($delete);                        
+                        $this->Session->setFlash(__('Bien supprimé',true),'flash_success');
+                        if(!$loop) : $this->History->goBack(1); 
                         else:
-                            $this->Session->setFlash(__('Bien activé',true),'flash_success');
+                            return true;
                         endif;
-		} else {
-			$this->Session->setFlash(__('Bien <b>NON</b> supprimé',true),'flash_failure');
-		}
-		$this->History->notmove();
+                    else:
+                        $this->Session->setFlash(__('Bien <b>NON</b> supprimé',true),'flash_failure');
+                        if($loop) : return false; endif;
+                    endif;
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -264,6 +303,7 @@ class BiensController extends AppController {
         
         
         public function ajax_actif($id=null){
+                $this->autoRender = false;
                 $newid = $id == null ? $this->request->data('id') : $id;
                 $result = false;                
                 $this->Bien->id = $newid;
@@ -273,6 +313,7 @@ class BiensController extends AppController {
                         $this->saveHistory($newid);                    
                         if ($newactif==0):
                             $delete = "DELETE FROM assobienlogiciels WHERE bien_id = ".$newid;
+
                             $this->Bien->Assobienlogiciel->query($delete);                            
                         endif;
 			if ($id==null):
@@ -295,6 +336,7 @@ class BiensController extends AppController {
         }   
         
         public function ajax_install($id=null){
+                $this->autoRender = false;
                 $newid = $id == null ? $this->request->data('id') : $id;
                 $result = false;                
                 $this->Bien->id = $newid;
@@ -327,6 +369,7 @@ class BiensController extends AppController {
         }  
         
         public function ajax_check($id=null){
+                $this->autoRender = false;
                 $newid = $id == null ? $this->request->data('id') : $id;
                 $result = false;
                 $this->Bien->id = $newid;
@@ -350,7 +393,7 @@ class BiensController extends AppController {
                         endif;
 		}
                 else :
-                    $this->Session->setFlash(__('Pour faire la modification du statut validé le bien doit être installé.',true),'flash_failure');
+                    $this->Session->setFlash(__('Pour faire la modification du statut validé le bien doit Ãªtre installé.',true),'flash_failure');
                 endif;
 		if ($id==null):
                     exit();
@@ -387,10 +430,10 @@ class BiensController extends AppController {
                 $this->Bien->create();
                 if ($this->Bien->save($record)) {
                         $this->Session->setFlash(__('Bien dupliqué',true),'flash_success');
+                        $this->redirect(array('action'=>'edit',$this->Bien->getLastInsertID()));
                 } else {
                         $this->Session->setFlash(__('Bien incorrect, veuillez corriger le bien',true),'flash_failure');
-                }
-                $this->History->notmove();                
+                }                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -399,7 +442,7 @@ class BiensController extends AppController {
         
         public function get_select($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Bien.ACTIF='.$actif;
-            $list = $this->Bien->find('list',array('fields'=>array('Bien.id','Bien.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Bien->find('list',array('fields'=>array('Bien.id','Bien.NOM'),'conditions'=>$conditions,'order'=>array('Bien.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }    
         
@@ -435,7 +478,11 @@ class BiensController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;
                 $this->Bien->recursive = 0;
-                $this->set('biens', $this->paginate());                  
+                $this->set('biens', $this->paginate()); 
+                $applications = $this->requestAction('applications/get_list/1');
+                $types = $this->requestAction('types/get_list/1');
+                $usages = $this->requestAction('usages/get_list/1');
+		$this->set(compact('applications','types','usages'));                
                 $this->render('index');
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -444,7 +491,9 @@ class BiensController extends AppController {
         }  
         
         public function installall(){
+            $this->autoRender = false;
             $ids = explode('-', $this->request->data('id'));
+            $i=count($ids)+2;
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
                 if($this->ajax_install($id)):
@@ -453,14 +502,16 @@ class BiensController extends AppController {
                     $this->Session->setFlash(__('Modification du statut installé <b>NON</b> pris en compte pour tous les biens sélectionnés',true),'flash_failure');
                 endif;
                 endforeach;
-                sleep(3);
+                sleep($i);
             else :
                 $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
             endif;
         }
         
         public function checkall(){
+            $this->autoRender = false;
             $ids = explode('-', $this->request->data('id'));
+            $i=count($ids)+2;
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
                 if($this->ajax_check($id)):
@@ -469,30 +520,33 @@ class BiensController extends AppController {
                     $this->Session->setFlash(__('Modification du statut validé <b>NON</b> pris en compte pour tous les biens sélectionnés',true),'flash_failure');
                 endif;
                 endforeach;
-                sleep(3);
+                sleep($i);
             else :
                 $this->Session->setFlash(__('Aucun bien sélectionné',true),'flash_failure');
             endif;
         }
         
         public function deleteall(){
+            $this->autoRender = false;
             $ids = explode('-', $this->request->data('id'));
+            $i=count($ids)+2;
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
-                    if($this->ajax_actif($id)):
+                    if($this->delete($id,true)):
                         $this->Session->setFlash(__('Modification du statut supprimé pris en compte pour tous les biens sélectionnés',true),'flash_success'); 
                     else :
                         $this->Session->setFlash(__('Modification du statut supprimé <b>NON</b> pris en compte pour tous les biens sélectionnés',true),'flash_failure');
                     endif;
                 endforeach;
-                sleep(3);
+                sleep($i);
             else :
                 $this->Session->setFlash(__('Aucun bien sélectionné',true),'flash_failure');
             endif;
         }   
         
         public function get_select_compatible($lot_id,$application_id){
-            $list = $this->Bien->find('list',array('fields'=>array('Bien.id','Bien.NOM'),'conditions'=>array('Bien.lot_id'=>$lot_id,'Bien.application_id'=>$application_id),'recursive'=>0));
+            //retrait de la condition sur l'application ,'Bien.application_id'=>$application_id
+            $list = $this->Bien->find('list',array('fields'=>array('Bien.id','Bien.NOM'),'conditions'=>array('Bien.lot_id'=>$lot_id),'order'=>array('Bien.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }           
         
@@ -504,11 +558,22 @@ class BiensController extends AppController {
 		$data = $this->Session->read('xls_export');             
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
+                //$this->render('xls_facture','export_xls');
 	}          
         
         public function getbynom($nom){
             $this->Bien->recursive = 0;
             $obj = $this->Bien->findByNom($nom);
             return $obj;
-        }        
+        }    
+        
+        public function ajax_update_cpu($id_cpu,$pvu_cpu){
+                $this->autoRender = false;
+                $biens = $this->Bien->find('all',array('condition'=>array('Bien.cpu_id'=>$id_cpu),'recursive'=>0));
+                foreach($biens as $bien):
+                    $this->Bien->id = $bien['Bien']['id'];
+                    $newpvu = $bien['Bien']['COEURLICENCE']*$pvu_cpu;
+                    $this->Bien->saveField('PVU',$newpvu);
+                endforeach;
+        }
 }

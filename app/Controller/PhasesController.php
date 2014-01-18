@@ -178,13 +178,13 @@ class PhasesController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Phase->find('list',array('fields'=>array('Phase.id','Phase.NOM'),'conditions'=>array('Phase.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Phase->find('list',array('fields'=>array('Phase.id','Phase.NOM'),'conditions'=>array('Phase.ACTIF'=>$actif),'order'=>array('Phase.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }       
         
         public function get_list($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Phase.ACTIF='.$actif;
-            $list = $this->Phase->find('all',array('fields'=>array('Phase.id','Phase.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Phase->find('all',array('fields'=>array('Phase.id','Phase.NOM'),'conditions'=>$conditions,'order'=>array('Phase.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }     
         

@@ -24,9 +24,9 @@ App::uses('ConnectionManager', 'Model');
         $paques = easter_date($an);
         // le coefficient n'est aps identique s'il s'agit d'un serveur sous Windows ou sous Unix
         
-        $i = 2;
-        $j = 40;
-        $k = 51;       
+        $i = 1;
+        $j = 39;
+        $k = 50;       
         $tab_feries[] = date($an.'-m-d', $paques + (86400*$i)); // Paques
         $tab_feries[] = date($an.'-m-d', $paques + (86400*$j)); // Ascension
         $tab_feries[] = date($an.'-m-d', $paques + (86400*$k)); // Pentecote        
@@ -63,6 +63,25 @@ App::uses('ConnectionManager', 'Model');
     endif;
     return $result;
     }
+    
+    function CUSDatetime($frdate){
+    $result = $frdate;
+    if(strstr($frdate, '/')==!false):
+        $frdate = explode(' ',$frdate);
+        $date = explode('/',$frdate[0]);
+        if(count($frdate) > 1):
+            $time = explode(':',$frdate[1]);
+        else : 
+            $time = array();
+        endif;
+        if(count($time) > 0) :
+            $result = date('Y-m-d H:i:s', mktime($time[0], $time[1], $time[2], $date[1], $date[0], $date[2]));
+        else :
+            $result = date('Y-m-d H:i:s', mktime('0', '0', '0', $date[1], $date[0], $date[2]));
+        endif;
+    endif;
+    return $result;
+    }    
 /**
  * CIntDateDeb
  * 
@@ -818,6 +837,13 @@ function styleBarreInd($avancement){
         return $moisentier[(int)$month];
     }
     
+    function strYear($date){
+        if (strpos($date, "/")!==false) $date = CUSDatetime($date);
+        $date = !is_object($date) ? new DateTime($date) : $date;
+        $an = $date->format('Y');
+        return $an;
+    }    
+    
     function ucfirst_utf8($stri){ 
         if($stri{0}>="\xc3") 
             return (($stri{1}>="\xa0")? 
@@ -1133,4 +1159,105 @@ function simple_array_unique($array,$key){
         $result[]=$value[$key];
     endforeach;
     return array_unique($result);
+}
+
+function narray_diff( $ary_1, $ary_2 ) {
+  // compare the value of 2 array
+  // get differences that in ary_1 but not in ary_2
+  // get difference that in ary_2 but not in ary_1
+  // return the unique difference between value of 2 array
+  $diff = array();
+
+  // get differences that in ary_1 but not in ary_2
+  foreach ( $ary_1 as $v1 ) {
+    $flag = 0;
+    foreach ( $ary_2 as $v2 ) {
+      $flag |= ( $v1 == $v2 );
+      if ( $flag ) break;
+    }
+    if ( !$flag ) array_push( $diff, $v1 );
+  }
+
+  // get difference that in ary_2 but not in ary_1
+  foreach ( $ary_2 as $v2 ) {
+    $flag = 0;
+    foreach ( $ary_1 as $v1 ) {
+      $flag |= ( $v1 == $v2 );
+      if ( $flag ) break;
+    }
+    if ( !$flag && !in_array( $v2, $diff ) ) array_push( $diff, $v2 );
+  }
+
+  return $diff;
+}
+
+function glyphconf($etat){
+    switch ($etat) {
+        case '0':
+            return 'inbox';
+            break;
+        case '1':
+            return 'message_out';
+            break;
+        case '2':
+            return 'inbox_in';
+            break; 
+        case '3':
+            return 'certificate';
+            break;  
+        default:
+            return 'inbox grey';
+    }
+}
+
+
+function tooltipconf($etat){
+    switch ($etat) {
+        case '0':
+            return 'Non remis';
+            break;
+        case '1':
+            return 'Remis à l\'agent';
+            break;
+        case '2':
+            return 'Remis au responsable SNCF';
+            break; 
+        case '3':
+            return 'Remis à Sécurité et Risque SO';
+            break;  
+        default:
+            return 'Non remis';
+    }
+}
+
+function get_pass_value($pass){
+    $value = 0;
+    switch($pass):
+        case 'tous':
+            $value = 0;
+            break;
+        case '1':
+            $value = 0;
+            break;
+        case '0';
+            $value = 1;
+            break;
+    endswitch;
+    return $value;
+}
+
+function get_pass_check($pass){
+    $value = 0;
+    switch($pass):
+        case 'tous':
+            $value = 'unchecked';
+            break;
+        case '1':
+            $value = 'unchecked';
+            break;
+        case '0';
+            $value = 'check';
+            break;
+    endswitch;
+    return $value;
 }

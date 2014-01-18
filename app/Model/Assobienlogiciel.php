@@ -90,7 +90,7 @@ class Assobienlogiciel extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Assobienlogiciel']['created'])) {
                     $results[$key]['Assobienlogiciel']['created'] = $this->dateFormatAfterFind($val['Assobienlogiciel']['created']);
@@ -100,7 +100,19 @@ class Assobienlogiciel extends AppModel {
                 } 
                 if (isset($val['Assobienlogiciel']['DATEINSTALL'])) {
                     $results[$key]['Assobienlogiciel']['DATEINSTALL'] = $this->datetimeFormatAfterFind($val['Assobienlogiciel']['DATEINSTALL']);
+                }  
+                if (isset($val['Assobienlogiciel']['logiciel_id'])) {
+                    $results[$key]['Logiciel']['APPNOM'] = $this->getApplicationName($val['Assobienlogiciel']['logiciel_id']); //$this->datetimeFormatAfterFind($val['Assobienlogiciel']['DATEINSTALL']);
+                } 
+                if (isset($val['Assobienlogiciel']['logiciel_id'])) {
+                    $results[$key]['Logiciel']['LOTNOM'] = $this->getLotName($val['Assobienlogiciel']['logiciel_id']); //$this->datetimeFormatAfterFind($val['Assobienlogiciel']['DATEINSTALL']);
                 }                 
+                if (isset($val['Assobienlogiciel']['logiciel_id'])) {
+                    $results[$key]['Logiciel']['application_id'] = $this->getApplicationId($val['Assobienlogiciel']['logiciel_id']); //$this->datetimeFormatAfterFind($val['Assobienlogiciel']['DATEINSTALL']);
+                }   
+                if (isset($val['Assobienlogiciel']['logiciel_id'])) {
+                    $results[$key]['Logiciel']['lot_id'] = $this->getLotId($val['Assobienlogiciel']['logiciel_id']); //$this->datetimeFormatAfterFind($val['Assobienlogiciel']['DATEINSTALL']);
+                }                   
             }
             return $results;
         }   
@@ -114,11 +126,39 @@ class Assobienlogiciel extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Assobienlogiciel']['ENVDSIT'])) {
                 $this->data['Assobienlogiciel']['ENVDSIT'] = mb_strtoupper($this->data['Assobienlogiciel']['ENVDSIT'],'UTF-8');
             }                
             parent::beforeSave();
             return true;
+        }       
+        
+        public function getApplicationName($id){
+            $sql = "SELECT applications.NOM FROM applications
+                    LEFT JOIN logiciels ON logiciels.application_id = applications.id
+                    WHERE logiciels.id = ".$id;
+            $obj = $this->query($sql);
+            return $obj[0]['applications']['NOM'];
+        }
+
+        public function getLotName($id){
+            $sql = "SELECT lots.NOM FROM lots
+                    LEFT JOIN logiciels ON logiciels.lot_id = lots.id
+                    WHERE logiciels.id = ".$id;
+            $obj = $this->query($sql);
+            return $obj[0]['lots']['NOM'];
+        }
+        
+        public function getApplicationId($id){
+            $sql = "SELECT logiciels.application_id FROM logiciels WHERE logiciels.id = ".$id;
+            $obj = $this->query($sql);
+            return $obj[0]['logiciels']['application_id'];
+        }  
+        
+        public function getLotId($id){
+            $sql = "SELECT logiciels.lot_id FROM logiciels WHERE logiciels.id = ".$id;
+            $obj = $this->query($sql);
+            return $obj[0]['logiciels']['lot_id'];
         }           
 }

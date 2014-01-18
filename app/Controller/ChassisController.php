@@ -198,7 +198,7 @@ class ChassisController extends AppController {
         
         public function get_select($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Chassis.ACTIF='.$actif;
-            $list = $this->Chassis->find('list',array('fields'=>array('Chassis.id','Chassis.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Chassis->find('list',array('fields'=>array('Chassis.id','Chassis.NOM'),'conditions'=>$conditions,'order'=>array('Chassis.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }    
         

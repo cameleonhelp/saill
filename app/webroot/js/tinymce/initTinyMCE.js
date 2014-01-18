@@ -27,5 +27,6 @@ tinymce.init({
    external_filemanager_path:baseurl+"/js/tinymce/plugins/filemanager/",
    filemanager_title:"Gestionnaire de fichier",
    external_plugins: { "filemanager" : baseurl+"/js/tinymce/plugins/responsivefilemanager/plugin.min.js"},
-   width : "100%"
+   width : "100%",
+   editor_deselector : "mceNoEditor"
     }); 

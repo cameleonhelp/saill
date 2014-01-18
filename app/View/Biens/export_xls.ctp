@@ -38,6 +38,11 @@
 	</tr>
 		<tr id="titles">
 			<td class="tableTd">Nom</td>
+                        <td class="tableTd">Modèle</td>
+                        <td class="tableTd">Site</td>
+                        <td class="tableTd">Niveau</td>
+                        <td class="tableTd">Armoire</td>
+                        <td class="tableTd">Châssis/Px70</td>
 			<td class="tableTd">Usage</td>
                         <td class="tableTd">PVU</td>
                         <td class="tableTd">Application</td>
@@ -45,7 +50,7 @@
                         <td class="tableTd">Lot</td>
                         <td class="tableTd">Coeur licence</td>
                         <td class="tableTd">Coeur</td>
-                        <td class="tableTd">Mémoire</td>
+                        <td class="tableTd">Mémoire (RAM)</td>
                         <td class="tableTd">Coût</td>
                         <td class="tableTd">Installé le</td>
                         <td class="tableTd">Validé le</td>
@@ -56,13 +61,18 @@
 		<?php foreach($rows as $row):
 			echo '<tr>';
 			echo '<td class="tableTdCourrier">'.$row['Bien']['NOM'].'</td>';
+                        echo '<td class="tableTdContent">'.$row['Modele']['NOM'].'</td>';
+                        echo '<td class="tableTdContent">'.$row['Localite']['NOM'].'</td>';
+                        echo '<td class="tableTdContent">'.$row['Chassis']['NIVEAU'].'</td>';
+                        echo '<td class="tableTdContent">'.$row['Chassis']['ARMOIRE'].'</td>';
+                        echo '<td class="tableTdContent">'.$row['Chassis']['NOM'].'</td>';
 			echo '<td class="tableTdContent">'.$row['Usage']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Bien']['PVU'].'</td>';                        
+			echo '<td class="tableTdContent">'.convertDecimal($row['Bien']['PVU']).'</td>';                        
 			echo '<td class="tableTdContent">'.$row['Application']['NOM'].'</td>';
                         echo '<td class="tableTdContent">'.$row['Type']['NOM'].'</td>'; 
 			echo '<td class="tableTdContent">'.$row['Lot']['NOM'].'</td>'; 
-                        echo '<td class="tableTdContent">'.$row['Bien']['COEURLICENCE'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['Bien']['COEUR'].'</td>';
+                        echo '<td class="tableTdContent">'.convertDecimal($row['Bien']['COEURLICENCE']).'</td>';
+                        echo '<td class="tableTdContent">'.convertDecimal($row['Bien']['COEUR']).'</td>';
                         echo '<td class="tableTdContent">'.$row['Bien']['RAM'].'</td>';
                         echo '<td class="tableTdContent">'.$row['Bien']['COUT'].' €</td>';
                         $dateinstall = !empty($row['Bien']['DATEINSTALL']) ? $row['Bien']['DATEINSTALL'] : '';
@@ -76,3 +86,7 @@
                         echo '</tr>';
                 endforeach; ?>
 </table>
+
+<?php function convertDecimal($value){
+        return str_replace(".", ",", $value);
+}; ?>

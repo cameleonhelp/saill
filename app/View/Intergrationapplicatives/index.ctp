@@ -3,8 +3,9 @@
         $pass0 = isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous';
         $pass1 = isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous';
         $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous';
-        $pass3 = isset($this->params->pass[3]) ? $this->params->pass[3] : 'tous';        
+        $pass3 = isset($this->params->pass[3]) ? $this->params->pass[3] : '1'; //actif :'tous';        
         $pass4 = isset($this->params->pass[4]) ? $this->params->pass[4] : 'tous';
+        $pass5 = isset($this->params->pass[5]) ? $this->params->pass[5] : 'tous';
         ?>     
         <nav class="navbar toolbar marginright20">
                 <ul class="nav navbar-nav toolbar">
@@ -16,17 +17,17 @@
                 <li class="dropdown <?php echo filtre_is_actif($pass0,'tous'); ?>">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Applications <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index','tous',$pass1,$pass2,$pass3,$pass4),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass0,'tous'))); ?></li>
+                     <li><?php echo $this->Html->link('Toutes', array('action' => 'index','tous',$pass1,$pass2,$pass3,$pass4,$pass5),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass0,'tous'))); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($applications as $application): ?>
-                            <li><?php echo $this->Html->link($application['Application']['NOM'], array('action' => 'index',$application['Application']['id'],$pass1,$pass2,$pass3,$pass4),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass0,$application['Application']['id']))); ?></li>
+                            <li><?php echo $this->Html->link($application['Application']['NOM'], array('action' => 'index',$application['Application']['id'],$pass1,$pass2,$pass3,$pass4,$pass5),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass0,$application['Application']['id']))); ?></li>
                          <?php endforeach; ?>
                       </ul>
                  </li>
                 <li class="dropdown <?php echo filtre_is_actif(array($pass1,$pass2,$pass3),array('tous','tous','tous')); ?>">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,'tous','tous','tous',$pass4),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif(array($pass1,$pass2,$pass3),array('tous','tous','tous')))); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,'tous','tous','tous',$pass4,$pass5),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif(array($pass1,$pass2,$pass3),array('tous','tous','tous')))); ?></li>
                      <li class="divider"></li>
                      <?php
                        $inverse_install = 0;
@@ -41,28 +42,46 @@
                            $img_valide = 'check bottom2';
                            $inverse_valide = 1;
                        endif;                       
-                       $inverse_actif = 0;
-                       $img_actif = 'unchecked bottom2';
-                       if ($pass3==='0'):
-                           $img_actif = 'check bottom2';
-                           $inverse_actif = 1;
-                       endif;  
+                        switch ($pass3):
+                            case 'tous':
+                                $inverse_actif = 0;
+                                $img_actif = "unchecked bottom2";
+                                break;
+                            case '0':
+                                $inverse_actif = 1;
+                                $img_actif = "unchecked bottom2";
+                                break; 
+                            case '1':
+                                $inverse_actif = 0;
+                                $img_actif = "check bottom2";
+                                break;                                 
+                        endswitch;  
                      ?>                           
-                     <li><?php echo $this->Html->link('<span class="glyphicons '.$img_install.'"></span> Installés', array('action' => 'index',$pass0,$inverse_install,$pass2,$pass3,$pass4),array('escape' => false,'class'=>'showoverlay')); ?></li>
-                     <li><?php echo $this->Html->link('<span class="glyphicons '.$img_valide.'"></span> Validés', array('action' => 'index',$pass0,$pass1,$inverse_valide,$pass3,$pass4),array('escape' => false,'class'=>'showoverlay')); ?></li>                     
-                     <li><?php echo $this->Html->link('<span class="glyphicons '.$img_actif.'"></span> Actif', array('action' => 'index',$pass0,$pass1,$pass2,$inverse_actif,$pass4),array('escape' => false,'class'=>'showoverlay')); ?></li>                     
+                     <li><?php echo $this->Html->link('<span class="glyphicons '.$img_install.'"></span> Installés', array('action' => 'index',$pass0,$inverse_install,$pass2,$pass3,$pass4,$pass5),array('escape' => false,'class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('<span class="glyphicons '.$img_valide.'"></span> Validés', array('action' => 'index',$pass0,$pass1,$inverse_valide,$pass3,$pass4,$pass5),array('escape' => false,'class'=>'showoverlay')); ?></li>                     
+                     <li><?php echo $this->Html->link('<span class="glyphicons '.$img_actif.'"></span> Actif', array('action' => 'index',$pass0,$pass1,$pass2,$inverse_actif,$pass4,$pass5),array('escape' => false,'class'=>'showoverlay')); ?></li>                     
                      </ul>
                  </li>
                 <li class="dropdown <?php echo filtre_is_actif($pass4,'tous'); ?>">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Env. <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,$pass1,$pass2,$pass3,'tous'),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass4,'tous'))); ?></li>
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,$pass1,$pass2,$pass3,'tous',$pass5),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass4,'tous'))); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($types as $type): ?>
-                            <li><?php echo $this->Html->link($type['Type']['NOM'], array('action' => 'index',$pass0,$pass1,$pass2,$pass3,$type['Type']['id']),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass4,$type['Type']['id']))); ?></li>
+                            <li><?php echo $this->Html->link($type['Type']['NOM'], array('action' => 'index',$pass0,$pass1,$pass2,$pass3,$type['Type']['id'],$pass5),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass4,$type['Type']['id']))); ?></li>
                          <?php endforeach; ?>
                       </ul>
-                 </li>                
+                 </li>     
+                <li class="dropdown <?php echo filtre_is_actif($pass5,'tous'); ?>">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Version <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                     <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,$pass1,$pass2,$pass3,$pass4,'tous'),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass5,'tous'))); ?></li>
+                     <li class="divider"></li>
+                         <?php foreach ($versions as $version): ?>
+                            <li><?php echo $this->Html->link($version['Version']['NOM'], array('action' => 'index',$pass0,$pass1,$pass2,$pass3,$pass4,$version['Version']['id']),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass5,$version['Version']['id']))); ?></li>
+                         <?php endforeach; ?>
+                      </ul>
+                 </li>                  
                 <li class="divider-vertical-only"></li>
                 <!-- Actions groupées -->  
                 <li class="dropdown">
@@ -118,7 +137,7 @@
                     <?php echo $intergrationapplicative['Version']['NOM']; ?>
             </td>
             <td style='text-align: center;'><?php $image = (isset($intergrationapplicative['Intergrationapplicative']['INSTALL']) && $intergrationapplicative['Intergrationapplicative']['INSTALL']==true) ? 'ok_2' : 'ok_2 disabled' ; ?>
-                <a href="#" class="installed cursor showoverlay" data-id="<?php echo $intergrationapplicative['Intergrationapplicative']['id']; ?>"  rel='tooltip'  data-container="body" data-title="Installé le <?php echo $intergrationapplicative['Intergrationapplicative']['DATEINSTALL']; ?>"><span class="glyphicons <?php echo $image; ?> notchange"></span></a></td>           
+                <a href="#"  data-id="<?php echo $intergrationapplicative['Intergrationapplicative']['id']; ?>"  rel='tooltip'  data-container="body" data-title="Installé le <?php echo $intergrationapplicative['Intergrationapplicative']['DATEINSTALL']; ?>"><span class="glyphicons <?php echo $image; ?> notchange"></span></a></td>           
             <td style='text-align: center;'><?php $image = (isset($intergrationapplicative['Intergrationapplicative']['CHECK']) && $intergrationapplicative['Intergrationapplicative']['CHECK']==true) ? 'ok_2' : 'ok_2 disabled' ; ?>
                 <a href="#" class="valided cursor showoverlay" data-id="<?php echo $intergrationapplicative['Intergrationapplicative']['id']; ?>"  rel='tooltip'  data-container="body" data-title="Validé le <?php echo $intergrationapplicative['Intergrationapplicative']['DATECHECK']; ?>"><span class="glyphicons <?php echo $image; ?> notchange"></span></a></td>   
             <td class="actions">
@@ -157,7 +176,7 @@
 </div>
 <script>
 $(document).ready(function () {
-    $(document).on('click','.installed',function(e){
+    /*$(document).on('click','.installed',function(e){
         var id = $(this).attr('data-id');
             $.ajax({
                 dataType: "html",
@@ -167,7 +186,7 @@ $(document).ready(function () {
             }).done(function ( data ) {
                 location.reload();
             });
-    });
+    });*/
     $(document).on('click','.valided',function(e){
         var id = $(this).attr('data-id');
             $.ajax({

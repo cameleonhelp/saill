@@ -92,7 +92,7 @@ class Projet extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {      
+        public function beforeSave($options = array()) {      
             if (!empty($this->data['Projet']['DEBUT'])) {
                 $this->data['Projet']['DEBUT'] = $this->dateFormatBeforeSave($this->data['Projet']['DEBUT']);
             }
@@ -111,7 +111,7 @@ class Projet extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Projet']['created'])) {
                     $results[$key]['Projet']['created'] = $this->dateFormatAfterFind($val['Projet']['created']);

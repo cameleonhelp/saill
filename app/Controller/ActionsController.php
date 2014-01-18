@@ -23,7 +23,7 @@ class ActionsController extends AppController {
  *
  * @return void
  */
-	public function index($filtrePriorite=null,$filtreEtat=null,$filtreResponsable=null) {
+	public function index($filtrePriorite=null,$filtreEtat=null,$filtreResponsable=null,$filtreEmetteur=null) {
             //$this->Session->delete('history');
             if (isAuthorized('actions', 'index')) :
                 switch ($filtrePriorite){
@@ -53,7 +53,7 @@ class ActionsController extends AppController {
                         $fetat = "tous les états";
                         break;                 
                     case 'news':    
-                        $newconditions[]="Action.NEW=1";
+                        $newconditions[]="Action.NEW=1 AND Action.AVANCEMENT < 10 AND Action.STATUT <> 'terminée'";
                         $fetat = "nouvellement créées";
                         break; 
                     case '1':
@@ -91,18 +91,18 @@ class ActionsController extends AppController {
                         break; 
                     case 'equipe':   
                         $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
-                        $newconditions[]="Action.destinataire in (".$monequipe.") AND Utilisateur.GESTIONABSENCES=1";
+                        $newconditions[]="Action.destinataire in (".$monequipe.")";
                         $fresponsable = "de mon équipe";
                         break;                     
                     case null :
-                        $newconditions[]="Action.destinataire='".userAuth('id')."'AND Utilisateur.GESTIONABSENCES=1";
+                        $newconditions[]="Action.destinataire='".userAuth('id')."'OR (`CONTRIBUTEURS` LIKE '%".userAuth('id').",%' OR `CONTRIBUTEURS` LIKE '%,".userAuth('id')."%' OR `CONTRIBUTEURS` = '".userAuth('id')."')";
                         $nomlong = $this->Action->Utilisateur->recursive = -1;
                         $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>userAuth('id'))));
                         $fresponsable = "dont le responsable est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
                         $this->set('nomlong',isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG']);
                         break;                      
                     default :
-                        $newconditions[]="Action.destinataire='".$filtreResponsable."'AND Utilisateur.GESTIONABSENCES=1";
+                        $newconditions[]="Action.destinataire='".$filtreResponsable."'OR (`CONTRIBUTEURS` LIKE '%".$filtreResponsable.",%' OR `CONTRIBUTEURS` LIKE '%,".$filtreResponsable."%' OR `CONTRIBUTEURS` = '".$filtreResponsable."')";
                         $nomlong = $this->Action->Utilisateur->recursive = -1;
                         $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>$filtreResponsable)));
                         $fresponsable = "dont le responsable est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
@@ -114,7 +114,28 @@ class ActionsController extends AppController {
                     $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>userAuth('id'))));
                     $fresponsable = "dont le responsable est ".$nomlong['Utilisateur']['NOMLONG'];
                 endif;
-                $this->set('fresponsable',$fresponsable); 
+                $this->set('fresponsable',$fresponsable);
+                switch ($filtreEmetteur){                   
+                    case null :
+                        /*$newconditions[]="Action.utilisateur_id='".userAuth('id')."'";
+                        $nomlong = $this->Action->Utilisateur->recursive = -1;
+                        $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>userAuth('id'))));
+                        $femetteur = "dont l'émetteur est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
+                        $this->set('nomlonge',isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG']);
+                        break;  */ 
+                    case 'tous':
+                        $newconditions[]="1=1";
+                        $femetteur = "tous les émetteurs " ;                        
+                        break;
+                    default :
+                        $newconditions[]="Action.utilisateur_id='".$filtreEmetteur."'";
+                        $nomlong = $this->Action->Utilisateur->recursive = -1;
+                        $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>$filtreEmetteur)));
+                        $femetteur = "dont l'émetteur est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
+                        $this->set('nomlonge',isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG']);
+                        break;                      
+                }                  
+                $this->set('femetteur',$femetteur); 
                 $listeprofilsautorises = $this->Action->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.MODEL'=>'actions','OR'=>array('Autorisation.ADD'=>1,'Autorisation.EDIT'=>1,'Autorisation.DELETE'=>1))));
                 $profilin = '';
                 foreach($listeprofilsautorises as $liste):
@@ -131,6 +152,7 @@ class ActionsController extends AppController {
                 $this->Session->delete('xls_export');
                 $this->Session->write('xls_export',$export);                 
                 $this->set('actions', $this->paginate());
+                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -339,7 +361,13 @@ class ActionsController extends AppController {
                 $this->set('domaines',$domaines); 
                 $this->Action->Utilisateur->recursive = -1;
 		$nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
-		$this->set('nomlong', $nomlong);                 
+		$this->set('nomlong', $nomlong);   
+                $all_utilisateurs = $this->requestAction(('utilisateurs/get_list_actif'));
+                $this->set(compact('all_utilisateurs'));  
+                $list_sections = $this->Action->requestAction('sections/getList');
+                $this->set('list_sections',$list_sections);   
+                $contributeurs = array();
+                $this->set(compact('contributeurs'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();      
@@ -383,7 +411,7 @@ class ActionsController extends AppController {
 			if ($this->Action->save($this->request->data)) {
                                 $this->saveHistory($id);                                
 				$this->Session->setFlash(__('Action sauvegardée',true),'flash_success');
-                                //$this->sendmailactions($this->Action->find('first',array('conditions'=>array('Action.id'=>$id))));                                
+                                //$this->sendmailactions($this->Action->find('first',array('conditions'=>array('Action.id'=>$id)))); 
 				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Action incorrecte, veuilelz corriger l\'action',true),'flash_failure');
@@ -392,6 +420,9 @@ class ActionsController extends AppController {
 		} else {
 			$options = array('conditions' => array('Action.' . $this->Action->primaryKey => $id));
 			$this->request->data = $this->Action->find('first', $options);
+                        $contributeurs = explode(",",$this->request->data['Action']['CONTRIBUTEURS']);
+                        $contributeurs_nom = $this->requestAction('utilisateurs/get_nom',array('pass'=>array($this->request->data['Action']['CONTRIBUTEURS'])));
+                        $this->set(compact('contributeurs','contributeurs_nom'));                        
 		}
                 $nbActivite = $this->ActiviteExists($id);
                 $this->set('nbActivite',$nbActivite);
@@ -399,7 +430,7 @@ class ActionsController extends AppController {
                 if ($nbActivite < 2)  {
                     $this->Action->Activitesreelle->recursive = -1;
                     $activite = $this->Action->Activitesreelle->find('first',array('conditions'=>array('Activitesreelle.action_id'=>$id),'fields'=>array('id')));
-                    $this->set('activiteId',$activite);                    
+                    $this->set('activiteId',$activite);  
                 }
                 $this->Action->recursive = -1;
                 $utilisateurId = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id),'fields'=>array('utilisateur_id')));
@@ -433,6 +464,11 @@ class ActionsController extends AppController {
 		$this->set('nomlong', $nomlong);  
                 $periodicite = $this->Action->Periodicite->find('first',array('conditions'=>array('Periodicite.id'=>$this->request->data['Action']['periodicite_id']),'recursive'=>0));
                 $this->set('periodicite',$periodicite);
+                $addlivrables = $this->requestAction('actionslivrables/get_list_livrables');
+                $all_utilisateurs = $this->requestAction(('utilisateurs/get_list_actif'));
+                $this->set(compact('addlivrables','all_utilisateurs'));     
+                $list_sections = $this->Action->requestAction('sections/getList');
+                $this->set('list_sections',$list_sections);                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
@@ -454,16 +490,23 @@ class ActionsController extends AppController {
 			throw new NotFoundException(__('Action incorrecte'));
 		}
                 $action = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id),'recursive'=>0));
-		if ($this->Action->delete()) {
-			if($msg) :
-                            $this->sendmailactiondelete($action);
-                            $this->Session->setFlash(__('Action supprimée',true),'flash_success');
-                            $this->History->goBack(1);
-                        endif;
-		}
-		if($msg) :
-                    $this->Session->setFlash(__('Action <b>NON</b> supprimée',true),'flash_failure');
-                    $this->History->goBack(1);
+                if($action['Action']['utilisateur_id'] ==  userAuth('id')):
+                    if ($this->Action->delete()) {
+                            if($msg) :
+                                $this->sendmailactiondelete($action);
+                                $this->Session->setFlash(__('Action supprimée',true),'flash_success');
+                                $this->History->goBack(1);
+                            endif;
+                    }
+                    if($msg) :
+                        $this->Session->setFlash(__('Action <b>NON</b> supprimée',true),'flash_failure');
+                        $this->History->goBack(1);
+                    endif;
+                else:
+                    if($msg) :
+                        $this->Session->setFlash(__('Action <b>NON</b> supprimée car vous n\'êtes pas l\'émetteur de cette action',true),'flash_failure');
+                        $this->History->goBack(1);
+                    endif;  
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -614,12 +657,14 @@ class ActionsController extends AppController {
                         $this->Session->write('details',$details);
                     endif;                      
                 endif;
-                $profils = $this->Action->Utilisateur->Profil->Autorisation->find('all',array('fields'=>array('Autorisation.profil_id'),'conditions'=>array('Autorisation.MODEL'=>'actions','Autorisation.RAPPORTS'=>1),'recursive'=>0));
+                /*$profils = $this->Action->Utilisateur->Profil->Autorisation->find('all',array('fields'=>array('Autorisation.profil_id'),'conditions'=>array('Autorisation.MODEL'=>'actions','Autorisation.RAPPORTS'=>1),'recursive'=>0));
                 $profilin = '';
                 foreach($profils as $profil):
                     $profilin .= $profil['Autorisation']['profil_id'].',';
                 endforeach;
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.substr_replace($profilin ,"",-1).')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $this->set('profil',$profilin);  */
+                //$destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.substr_replace($profilin ,"",-1).')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
                 $this->set('destinataires',$destinataires);  
                 $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
@@ -644,7 +689,7 @@ class ActionsController extends AppController {
                     $today = new DateTime();
                     $daylastweek = $today->sub(new DateInterval('P7D'));
                     $periode = 'Action.modified BETWEEN "'.  startWeek($daylastweek->format('Y-m-d')).'" AND "'.  endWeek($daylastweek->format('Y-m-d')).'"';
-                    $details = $this->Action->find('all',array('fields'=>array('Utilisateur.NOM','Utilisateur.PRENOM','Domaine.NOM','Action.destinataire','Action.NIVEAU','Action.OBJET','Action.COMMENTAIRE','Action.STATUT','Action.modified'),'conditions'=>array($destinataire,$domaine,$periode),'order'=>array('Action.modified'=>'asc','Action.destinataire'=>'asc'),'recursive'=>0));
+                    $details = $this->Action->find('all',array('fields'=>array('Utilisateur.NOM','Utilisateur.PRENOM','Domaine.NOM','Action.destinataire','Action.NIVEAU','Action.OBJET','Action.COMMENTAIRE','Action.BILAN','Action.STATUT','Action.modified'),'conditions'=>array($destinataire,$domaine,$periode,'Action.STATUT NOT IN ("à faire","annulée")'),'order'=>array('Action.modified'=>'asc','Action.destinataire'=>'asc'),'recursive'=>0));
                     $this->set('details',$details);
                     $this->Session->delete('details');
                     $this->Session->write('details',$details);                
@@ -841,16 +886,18 @@ class ActionsController extends AppController {
         }     
         
         public function sendmailactiondelete($action){
-            $valideurs = $this->Action->Utilisateur->find('all',array('conditions'=>array('Utilisateur.id'=>$action['Action']['destinataire'])));
+            $valideurs = $this->Action->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$action['Action']['destinataire'])));
             $mailto = array();
-            foreach($valideurs as $valideur):
-                $mailto[]=$valideur['Utilisateur']['MAIL'];
-            endforeach;
+            $mailto[]=$valideurs['Utilisateur']['MAIL'];
             $to=$mailto;
             $from = userAuth('MAIL');
-            $objet = 'SAILL : Action supprimée ['.$action['Action']['OBJET'].']';
+            $cc=$this->requestAction('utilisateurs/get_mail',array('pass'=>array($action['Action']['CONTRIBUTEURS'])));
+            $cc = $cc != '' ? $cc : array();            
+            $objet = 'SAILL : Action n°'.' [A-'.  strYear($action['Action']['created']).'-'.$action['Action']['id'].'] supprimée';
             $message = "L'action ".$action['Action']['OBJET']." est supprimée.".
                     '<ul>
+                    <li>Responsable :'.$valideurs['Utilisateur']['NOMLONG'].'</li>
+                    <li>Contributeurs :'.$contributeurs.'</li>                        
                     <li>Echéance :'.$action['Action']['ECHEANCE'].'</li>
                     <li>Priorité :'.$action['Action']['PRIORITE'].'</li>
                     <li>Résumé :'.$action['Action']['RESUME'].'</li> 
@@ -863,26 +910,30 @@ class ActionsController extends AppController {
                         ->emailFormat('html')
                         ->from($from)
                         ->to($to)
+                        ->cc($cc)
                         ->subject($objet)
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;  
         }
         
         public function sendmailactions($action){
-            $valideurs = $this->Action->Utilisateur->find('all',array('conditions'=>array('Utilisateur.id'=>$action['Action']['destinataire'])));
+            $valideurs = $this->Action->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$action['Action']['destinataire'])));
+            $contributeurs = $this->requestAction('utilisateurs/get_nom',array('pass'=>array($action['Action']['CONTRIBUTEURS'])));
             $mailto = array();
-            foreach($valideurs as $valideur):
-                $mailto[]=$valideur['Utilisateur']['MAIL'];
-            endforeach;
+            $mailto[]=$valideurs['Utilisateur']['MAIL'];
             $to=$mailto;
+            $cc=$this->requestAction('utilisateurs/get_mail',array('pass'=>array($action['Action']['CONTRIBUTEURS'])));
+            $cc = $cc != '' ? $cc : array();
             $from = userAuth('MAIL');
-            $objet = 'SAILL : Demande d\'action ['.$action['Action']['OBJET'].']';
+            $objet = 'SAILL : Demande d\'action ['.$action['Action']['OBJET'].'] n°'.' [A-'.  strYear($action['Action']['created']).'-'.$action['Action']['id'].']';
             $message = "Merci de traiter l'action ".$action['Action']['OBJET'].
                     '<ul>
+                    <li>Responsable :'.$valideurs['Utilisateur']['NOMLONG'].'</li>
+                    <li>Contributeurs :'.$contributeurs.'</li>
                     <li>Echéance :'.$action['Action']['ECHEANCE'].'</li>
                     <li>Priorité :'.$action['Action']['PRIORITE'].'</li>
                     <li>Résumé :'.$action['Action']['RESUME'].'</li> 
@@ -895,32 +946,36 @@ class ActionsController extends AppController {
                         ->emailFormat('html')
                         ->from($from)
                         ->to($to)
+                        ->cc($cc)
                         ->subject($objet)
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
         } 
         
         public function notifier($id){
             $action = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id),'recursive'=>0));
-            $valideurs = $this->Action->Utilisateur->find('all',array('conditions'=>array('Utilisateur.id'=>$action['Action']['destinataire'])));
+            $valideurs = $this->Action->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$action['Action']['destinataire'])));
+            $contributeurs = $this->requestAction('utilisateurs/get_nom',array('pass'=>array($action['Action']['CONTRIBUTEURS'])));            
             $mailto = array();
-            foreach($valideurs as $valideur):
-                $mailto[]=$valideur['Utilisateur']['MAIL'];
-            endforeach;
+            $mailto[]=$valideurs['Utilisateur']['MAIL'];
             $to=$mailto;
+            $cc=$this->requestAction('utilisateurs/get_mail',array('pass'=>array($action['Action']['CONTRIBUTEURS'])));
             $from = userAuth('MAIL');
-            $objet = 'SAILL : Demande d\'action ['.$action['Action']['OBJET'].']';
+            $objet = 'SAILL : Demande d\'action ['.$action['Action']['OBJET'].'] n°'.' [A-'.  strYear($action['Action']['created']).'-'.$action['Action']['id'].']';
             $message = "Merci de traiter l'action ".$action['Action']['OBJET'].
                     '<ul>
+                    <li>Responsable :'.$valideurs['Utilisateur']['NOMLONG'].'</li>
+                    <li>Contributeurs :'.$contributeurs.'</li>                        
                     <li>Echéance :'.$action['Action']['ECHEANCE'].'</li>
                     <li>Priorité :'.$action['Action']['PRIORITE'].'</li>
                     <li>Résumé :'.$action['Action']['RESUME'].'</li> 
                     <li>Commentaire :'.$action['Action']['COMMENTAIRE'].'</li>                      
                     </ul>';
+            $cc = $cc != '' ? $cc : array();
             if($to!=''):
                 try{
                 $email = new CakeEmail();
@@ -928,12 +983,13 @@ class ActionsController extends AppController {
                         ->emailFormat('html')
                         ->from($from)
                         ->to($to)
+                        ->cc($cc)
                         ->subject($objet)
                         ->send($message);
-                $this->Session->setFlash(__('Mail envoyé à '.$action['Utilisateur']['NOMLONG'],true),'flash_success');
+                $this->Session->setFlash(__('Mail envoyé aux destinataires (responsable et contributeurs)',true),'flash_success');
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
             $this->History->notmove();
@@ -947,7 +1003,11 @@ class ActionsController extends AppController {
                 $date =  CDateTimeline($data['Action']['DEBUT']);
                 $resume = $data['Action']['RESUME'];
                 $phpmakedate = $date;
-                $description = '['.$destinataire['Utilisateur']['NOMLONG'].'] - '.$data['Action']['OBJET'];
+                if (isset($destinataire['Utilisateur'])):
+                    $description = '['.$destinataire['Utilisateur']['NOMLONG'].'] - '.$data['Action']['OBJET'];
+                else:
+                    $description = '[destinataire inconnu] - '.$data['Action']['OBJET'];
+                endif;
                 if($data['Action']['DUREEPREVUE'] > 0){
                     $phpenddate = CDateTimeline($data['Action']['ECHEANCE']);
                     $durationEvent = false;
@@ -993,14 +1053,17 @@ class ActionsController extends AppController {
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
                     $this->Action->id = $id;
-                    if($this->Action->delete()):
-                        echo $this->Session->setFlash(__('Actions supprimées',true),'flash_success'); 
-                    else :
-                        $this->Session->setFlash(__('Actions <b>NON</b> supprimées',true),'flash_failure');
+                    $action = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id),'recursive'=>0));
+                    if($action['Action']['utilisateur_id'] ==  userAuth('id')):            
+                        if($this->Action->delete()):
+                            echo $this->Session->setFlash(__('Actions supprimées',true),'flash_success'); 
+                        else :
+                            $this->Session->setFlash(__('Actions <b>NON</b> supprimées',true),'flash_failure');
+                        endif;
                     endif;
                 endforeach;
                 sleep(3);
-                echo $this->Session->setFlash(__('Suppressions réalisées',true),'flash_success');
+                echo $this->Session->setFlash(__('Suppressions réalisées si vous en êtes l\émetteur uniquement',true),'flash_success');
             else:
                 echo $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
             endif;

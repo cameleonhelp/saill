@@ -22,7 +22,7 @@ class ExpressionbesoinsController extends AppController {
  * @return void
  */
 	public function index($application=null,$etat=null,$type=null,$perimetre=null) {
-            $this->set('title_for_layout','Expression des besoins'); 
+            $this->set('title_for_layout','Environnements'); 
             if (isAuthorized('expressionbesoins', 'index')) :  
                 switch($application):
                     case null:
@@ -38,6 +38,10 @@ class ExpressionbesoinsController extends AppController {
                 endswitch;
                 switch($etat):
                     case null:
+                    case 'actif':
+                        $newconditions[]="Expressionbesoin.etat_id < 4";
+                        $strfilter .= ', avec un état actif';
+                        break;                          
                     case 'tous':
                         $newconditions[]="1=1";
                         $strfilter .= '';
@@ -203,7 +207,7 @@ class ExpressionbesoinsController extends AppController {
  * @param string $id
  * @return void
  */
-	public function delete($id = null) {
+	public function delete($id = null,$loop=false) {
             $this->set('title_for_layout','Expression des besoins');            
             if (isAuthorized('expressionbesoins', 'delete')) : 
 		$this->Expressionbesoin->id = $id;
@@ -211,23 +215,43 @@ class ExpressionbesoinsController extends AppController {
 			throw new NotFoundException(__('Expression du besoin incorrecte'));
 		}
                 $obj = $this->Expressionbesoin->find('first',array('conditions'=>array('Expressionbesoin.id'=>$id),'recursive'=>0));
-                $newactif = $obj['Expressionbesoin']['ACTIF'] == 1 ? 0 : 1;
-                $newetat = $newactif == 0 ? 4 : 1; //mise à jour du statut état qui est une donnée référentielle et qui peut donc être modifié !!!! pas top
-		if ($this->Expressionbesoin->saveField('ACTIF',$newactif) && $this->Expressionbesoin->saveField('etat_id',$newetat)) {
-                        $this->saveHistory($id);
-                        if ($newactif==0):
-                            $this->Session->setFlash(__('Expression du besoin suppriméee',true),'flash_success');
+                if($obj['Expressionbesoin']['ACTIF']==1):
+                    $newactif = $obj['Expressionbesoin']['ACTIF'] == 1 ? 0 : 1;
+                    $newetat = $newactif == 0 ? 4 : 1; //mise à jour du statut état qui est une donnée référentielle et qui peut donc être modifié !!!! pas top
+                    if ($this->Expressionbesoin->saveField('ACTIF',$newactif) && $this->Expressionbesoin->saveField('etat_id',$newetat)) {
+                            $this->saveHistory($id);
+                            if ($newactif==0):
+                                $this->Session->setFlash(__('Expression du besoin suppriméee',true),'flash_success');
+                                if($loop) : return true; endif;
+                            else:
+                                $this->Session->setFlash(__('Expression du besoin activée',true),'flash_success');
+                                if($loop) : return true; endif;
+                            endif;
+                    } else {
+                            if ($newactif==0):
+                                $this->Session->setFlash(__('Expression du besoin <b>NON</b> suppriméee',true),'flash_success');
+                                if($loop) : return true; endif;
+                            else:
+                                $this->Session->setFlash(__('Expression du besoin <b>NON</b> activée',true),'flash_success');
+                                if($loop) : return true; endif;
+                            endif;                    
+                    }
+                    if(!$loop) : $this->History->notmove();  
+                    else:
+                        return true;
+                    endif;
+                else:
+                    if($this->Expressionbesoin->delete()):                      
+                        $this->Session->setFlash(__('Expression du besoin suppriméee',true),'flash_success');
+                        if(!$loop) : $this->History->goBack(1); 
                         else:
-                            $this->Session->setFlash(__('Expression du besoin activée',true),'flash_success');
+                            return true;
                         endif;
-		} else {
-                        if ($newactif==0):
-                            $this->Session->setFlash(__('Expression du besoin <b>NON</b> suppriméee',true),'flash_success');
-                        else:
-                            $this->Session->setFlash(__('Expression du besoin <b>NON</b> activée',true),'flash_success');
-                        endif;                    
-		}
-		$this->History->notmove();
+                    else:
+                        $this->Session->setFlash(__('Expression du besoin <b>NON</b> suppriméee',true),'flash_failure');
+                        if($loop) : return false; endif;
+                    endif;
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -267,7 +291,7 @@ class ExpressionbesoinsController extends AppController {
                 $ids = explode('-', $this->request->data('id'));
                 if(count($ids)>0 && $ids[0]!=""):
                     foreach($ids as $newid):
-                        if($this->ajax_actif($newid)):
+                        if($this->delete($newid,true)):
                             echo $this->Session->setFlash(__('Modification du statut supprimé pris en compte pour toutes les expressions de besoin sélectionnées',true),'flash_success'); 
                         else :
                             $this->Session->setFlash(__('Modification du statut supprimé <b>NON</b> pris en compte pouter toutes les expressions de besoin sélectionnées',true),'flash_failure');
@@ -310,10 +334,10 @@ class ExpressionbesoinsController extends AppController {
                 $this->Expressionbesoin->create();
                 if ($this->Expressionbesoin->save($record)) {
                         $this->Session->setFlash(__('Expression du besoin dupliquée',true),'flash_success');
+                        $this->redirect(array('action'=>'edit',$this->Expressionbesoin->getLastInsertID()));
                 } else {
                         $this->Session->setFlash(__('Expression du besoin incorrecte, veuillez corriger l\'expression du besoin',true),'flash_failure');
-                }
-                $this->History->notmove();                
+                }               
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -321,7 +345,7 @@ class ExpressionbesoinsController extends AppController {
 	} 
         
         public function rapport(){
-            $this->set('title_for_layout','Rapport expression des besoins');
+            $this->set('title_for_layout','Rapport environnements');
             if (isAuthorized('expressionbesoins', 'delete')) :               
                 $etats = $this->requestAction('etats/get_select/1');                
 		$lots = $this->requestAction('lots/get_select/1'); 
@@ -365,7 +389,60 @@ class ExpressionbesoinsController extends AppController {
                             " group by lot_id, perimetre_id
                             order by lot_id asc, perimetre_id asc;";
                     $chartresults = $this->Expressionbesoin->query($chartsql);
-                    $this->set('chartresults',$chartresults);   
+                    /**
+                     * retravailler le résultat pour mettre des zéro si plusieurs lots et applications différentes
+                     */
+                    $appresultsql= "select perimetres.NOM
+                            from expressionbesoins
+                            LEFT JOIN perimetres on expressionbesoins.perimetre_id = perimetres.id
+                            WHERE (DATELIVRAISON IS NOT NULL AND  DATELIVRAISON <> '0000-00-00' AND MONTH(DATELIVRAISON) = ".$mois.
+                            ") AND YEAR(DATELIVRAISON) = ".$annee." ".$selectlot.$selectperimetre.$selectetat.
+                            " group by perimetre_id
+                            order by perimetre_id asc;";
+                    $appresult = $this->Expressionbesoin->query($appresultsql);
+                    $lotresultsql= "select lots.NOM
+                            from expressionbesoins
+                            LEFT JOIN lots on expressionbesoins.lot_id = lots.id
+                            WHERE (DATELIVRAISON IS NOT NULL AND  DATELIVRAISON <> '0000-00-00' AND MONTH(DATELIVRAISON) = ".$mois.
+                            ") AND YEAR(DATELIVRAISON) = ".$annee." ".$selectlot.$selectperimetre.$selectetat.
+                            " group by lot_id
+                            order by lot_id asc;";
+                    $lotresult = $this->Expressionbesoin->query($lotresultsql);                    
+                    if(count($lotresult)>1):
+                        $i = 0;
+                        $array = array();
+                        foreach($chartresults as $result):
+                                $array[]=array($result['lots']['LOT'],$result['perimetres']['PERIMETRE']);
+                        endforeach;
+                        foreach($lotresult as $lot):
+                            foreach($appresult as $app):
+                                $completearray[]=array($lot['lots']['NOM'],$app['perimetres']['NOM']);
+                            endforeach;
+                            $i++;
+                        endforeach;
+                        $diff = narray_diff ($array,$completearray);
+                        foreach($diff as $result):
+                            $add[]=array(array('NB' => '0'),'lots' => array('LOT' => $result[0]),'perimetres' => array('PERIMETRE' => $result[1]));
+                        endforeach;
+                        if(isset($add) && is_array($add)):
+                        $chartresults = array_merge($chartresults,$add);
+                        else:
+                            $chartresults = $chartresults;
+                        endif;
+                    endif;                    
+                    $this->set('chartresults',$chartresults); 
+                    /**
+                     * Calcul du nombre d'environnements dans un état a valider, validé et livré sur tous les environnements
+                     */
+                    $chartcumulenv = "SELECT COUNT(expressionbesoins.id) AS NB, lots.NOM AS LOT, perimetres.NOM AS PERIMETRE
+                                      FROM expressionbesoins
+                                      LEFT JOIN lots ON expressionbesoins.lot_id = lots.id
+                                      LEFT JOIN perimetres ON expressionbesoins.`perimetre_id` = perimetres.id
+                                      WHERE `etat_id` IN (3) 
+                                      GROUP BY perimetres.NOM,lots.NOM
+                                      order by perimetre_id asc;"; //retiré les états 1 et 2 pour ne prendre que les livrés
+                    $chartcumulenvresults = $this->Expressionbesoin->query($chartcumulenv);
+                    $this->set('chartcumulenvresults',$chartcumulenvresults);
                     $charthistosql = "select count(expressionbesoins.id) as NB,MONTH(DATELIVRAISON) as MOIS, lots.NOM as LOT
                             from expressionbesoins
                             LEFT JOIN lots on expressionbesoins.lot_id = lots.id
@@ -389,7 +466,12 @@ class ExpressionbesoinsController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;
                 $this->Expressionbesoin->recursive = 0;
-                $this->set('expressionbesoins', $this->paginate());                  
+                $this->set('expressionbesoins', $this->paginate());    
+                $applications = $this->requestAction('applications/get_list/1');
+                $types = $this->requestAction('types/get_list/1');
+                $perimetres = $this->requestAction('perimetres/get_list/1');
+                $etats = $this->requestAction('etats/get_list/1');
+		$this->set(compact('applications','types','perimetres','etats'));                 
                 $this->render('index');
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -479,7 +561,7 @@ class ExpressionbesoinsController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
         }         

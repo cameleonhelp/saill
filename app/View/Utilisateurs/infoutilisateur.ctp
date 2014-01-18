@@ -1,2 +1,2 @@
-<?php debug($etp); ?>
-<?php debug($id); ?>
+<?php //debug($etp); ?>
+<?php //debug($id); ?>

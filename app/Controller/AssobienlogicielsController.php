@@ -116,21 +116,44 @@ class AssobienlogicielsController extends AppController {
         
         public function get_biens_for_outil($id=null){
             if($id!=null):
-                $list = $this->Assobienlogiciel->find('all',array('conditions'=>array('Assobienlogiciel.logiciel_id'=>$id),'recursive'=>0));
+                $list = $this->Assobienlogiciel->find('all',array('conditions'=>array('Assobienlogiciel.logiciel_id'=>$id),'order'=>array('Bien.NOM'=>'asc'),'recursive'=>0));
                 return $list;
             else:
                 return array();
             endif;
         }
         
-        public function get_outils_for_bien($id=null){
+        public function get_id_for_outil($id=null){
             if($id!=null):
-                $list = $this->Assobienlogiciel->find('all',array('conditions'=>array('Assobienlogiciel.bien_id'=>$id),'recursive'=>0));
-                return $list;
+                $list = $this->Assobienlogiciel->find('all',array('fields'=>array('Assobienlogiciel.id'),'conditions'=>array('Assobienlogiciel.logiciel_id'=>$id),'order'=>array('Bien.NOM'=>'asc'),'recursive'=>0));
+                $result = "";
+                foreach($list as $obj):
+                    if ($result == ""):
+                        $result = $obj['Assobienlogiciel']['id'];
+                    else :
+                        $result .= ','.$obj['Assobienlogiciel']['id'];
+                    endif;
+                endforeach;
+                return $result;
             else:
                 return array();
             endif;
         }        
+        
+        public function get_outils_for_bien($id=null){
+            if($id!=null):
+                $list = $this->Assobienlogiciel->find('all',array('conditions'=>array('Assobienlogiciel.bien_id'=>$id),'order'=>array('Logiciel.NOM'=>'asc'),'recursive'=>2));
+                return $list;
+            else:
+                return array();
+            endif;
+        }  
+        
+        public function save_logiciel_applicationid($id,$application_id){
+            $this->Assobienlogiciel->Logiciel->id = $id;
+            //tester si le logiciel exist
+            $this->Assobienlogiciel->Logiciel->saveField('application_id', $application_id);
+        }
                 
 	public function ajaxadd() {
             $this->autoRender = false;
@@ -138,12 +161,14 @@ class AssobienlogicielsController extends AppController {
 		if ($this->request->is('post')) :
 			$this->Assobienlogiciel->create();
 			if ($this->Assobienlogiciel->save($this->request->data)) {
-                                $this->add_date_install($this->Assobienlogiciel->getLastInsertID());
+                                $id = $this->Assobienlogiciel->getLastInsertID();
+                                $this->add_date_install($id);
+                                $this->save_logiciel_applicationid($this->request->data['Assobienlogiciel']['logiciel_id'], $this->request->data['Assobienlogiciel']['application_id']);
 				$this->Session->setFlash(__('Ajout sauvegardé',true),'flash_success');
                         } else {
 				$this->Session->setFlash(__('Objet incorrect, veuillez corriger l\'objet',true),'flash_failure');
 			}
-			$this->History->notmove();                       
+			$this->History->goBack(0);                       
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -151,18 +176,67 @@ class AssobienlogicielsController extends AppController {
             endif;                 
 	}   
         
+	public function ajaxupdate() {
+            $this->autoRender = false;
+            if (isAuthorized('biens', 'add') || isAuthorized('logiciels', 'add')) :
+		if ($this->request->is('post')) :
+                    $lists = explode(',',$this->request->data['Assobienlogiciel']['id']);
+                    foreach($lists as $id):
+			$this->Assobienlogiciel->id = $id;
+                        if ($this->Assobienlogiciel->saveField("logiciel_id",$this->request->data['Assobienlogiciel']['logiciel_id'])&& $this->Assobienlogiciel->saveField("INSTALL",1) && $this->Assobienlogiciel->saveField("DATEINSTALL",date('Y-m-d H:i:s'))) { // && $this->Assobienlogiciel->saveField("ENVDSIT",$this->request->data['Assobienlogiciel']['ENVDSIT']) && $this->Assobienlogiciel->saveField("INSTALL",$this->request->data['Assobienlogiciel']['INSTALL'])) {
+                                //D$this->add_date_install($list['Assobienlogiciel']['id']);
+				$this->Session->setFlash(__('Migration sauvegardée',true),'flash_success');
+                        } else {
+				$this->Session->setFlash(__('Objet incorrect, veuillez corriger l\'objet',true),'flash_failure');
+			}
+                     endforeach;
+                     //delete du logiciel
+                     $this->requestAction('logiciels/erase/'.$this->request->data['Assobienlogiciel']['old_logiciel_id']);
+                     $this->History->goFirst();                       
+		endif;
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
+                throw new NotAuthorizedException();
+            endif;                 
+	}  
+        
 	public function ajaxedit() {
             $this->autoRender = false;
             if (isAuthorized('biens', 'edit') || isAuthorized('logiciels', 'edit')) :
 		if ($this->request->is('post') || $this->request->is('put')) :
                         $id = $this->request->data['Assobienlogiciel']['id'];
-			if ($this->Assobienlogiciel->save($this->request->data)) {
-                                $this->add_date_install($id);
-				$this->Session->setFlash(__('Modification sauvegardée',true),'flash_success');
-			} else {
-				$this->Session->setFlash(__('Objet incorrect, veuillez corriger l\'objet',true),'flash_failure');
-			}
-                        $this->History->notmove();                        
+                        if ($this->Assobienlogiciel->exists($id)) {
+                            $this->Assobienlogiciel->id = $id;
+                            if ($this->Assobienlogiciel->save($this->request->data)) {
+                                    $this->add_date_install($id);
+                                    //tester si logiciel exist
+                                    $logiciel = $this->requestAction('logiciels/get_info/'.$this->request->data['Assobienlogiciel']['logiciel_id']);
+                                    if($logiciel['Logiciel']['application_id'] != $this->request->data['Assobienlogiciel']['application_id']):
+                                        App::import('Controller', 'Logiciels');
+                                        $thislogiciel = new LogicielsController();
+                                        $envoutil_id = $logiciel['Logiciel']['envoutil_id'];
+                                        $envversion_id = $logiciel['Logiciel']['envversion_id'];
+                                        $application_id = $this->request->data['Assobienlogiciel']['application_id'];
+                                        $lot_id = $logiciel['Logiciel']['lot_id'];
+                                        if(!$thislogiciel->isExist($envoutil_id, $envversion_id, $application_id, $lot_id)):
+                                            $this->save_logiciel_applicationid($this->request->data['Assobienlogiciel']['logiciel_id'], $this->request->data['Assobienlogiciel']['application_id']);
+                                            $this->Session->setFlash(__('Modification sauvegardée',true),'flash_success');
+                                        // si exist message erreur ou changer l'association ? opter pour changer l'association
+                                        else:
+                                            $logiciel_id = $thislogiciel->get_id_exist($envoutil_id, $envversion_id, $application_id, $lot_id);
+                                            $this->Assobienlogiciel->id = $id;
+                                            if($this->Assobienlogiciel->saveField('logiciel_id', $logiciel_id)):
+                                                $this->Session->setFlash(__('Remplacement du logiciel dans l\'association sauvegardé',true),'flash_success');
+                                            else:
+                                                $this->Session->setFlash(__('Remplacement du logiciel impossible dans l\'association',true),'flash_failure');
+                                            endif;
+                                        endif;
+                                    endif;
+                            } else {
+                                    $this->Session->setFlash(__('Objet incorrect, veuillez corriger l\'objet',true),'flash_failure');
+                            }
+                        }
+                        $this->History->goBack(1);                        
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');

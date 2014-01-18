@@ -181,13 +181,13 @@ class VolumetriesController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Volumetry->find('list',array('fields'=>array('Volumetry.id','Volumetry.NOM'),'conditions'=>array('Volumetry.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Volumetry->find('list',array('fields'=>array('Volumetry.id','Volumetry.NOM'),'conditions'=>array('Volumetry.ACTIF'=>$actif),'order'=>array('Volumetry.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }      
         
         public function get_list($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Volumetry.ACTIF='.$actif;
-            $list = $this->Volumetry->find('all',array('fields'=>array('Volumetry.id','Volumetry.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Volumetry->find('all',array('fields'=>array('Volumetry.id','Volumetry.NOM'),'conditions'=>$conditions,'order'=>array('Volumetry.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }   
         

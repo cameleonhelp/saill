@@ -1,7 +1,7 @@
 <div class="expressionbesoins index">
         <?php //filtres par défaut
         $pass0 = isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous';
-        $pass1 = isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous';
+        $pass1 = isset($this->params->pass[1]) ? $this->params->pass[1] : 'actif';//actif:'tous';
         $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous';
         $pass3 = isset($this->params->pass[3]) ? $this->params->pass[3] : 'tous';
         $pass4 = isset($this->params->pass[4]) ? $this->params->pass[4] : 'tous';
@@ -28,6 +28,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
                      <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,'tous',$pass2,$pass3),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass1,'tous'))); ?></li>
+                     <li><?php echo $this->Html->link('Tous sauf invalidé, désactivé', array('action' => 'index',$pass0,'actif',$pass2,$pass3),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass1,'actif'))); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($etats as $etat): ?>
                             <li><?php echo $this->Html->link($etat['Etat']['NOM'], array('action' => 'index',$pass0,$etat['Etat']['id'],$pass2,$pass3),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass1,$etat['Etat']['id']))); ?></li>

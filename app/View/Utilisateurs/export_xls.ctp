@@ -40,7 +40,9 @@
                         <td class="tableTd">Assistance</td>
                         <td class="tableTd">Email</td>
                         <td class="tableTd">Téléphone</td>
-                        <td class="tableTd">Fin de mission</td>                        
+                        <td class="tableTd">Fin de mission</td>   
+                        <td class="tableTd">Eng. de confidentialité</td>  
+                        <td class="tableTd">Date remise eng. conf.</td>  
                         <td class="tableTd">Commentaire</td>
 		</tr>		
 		<?php foreach($rows as $row):
@@ -54,6 +56,8 @@
                         echo '<td class="tableTdContent">'.$row['Utilisateur']['MAIL'].'</td>';
                         echo '<td class="tableTdContent">'.$row['Utilisateur']['TELEPHONE'].'</td>';
 			echo '<td class="tableTdContent">'.$row['Utilisateur']['FINMISSION'].'</td>';
+                        echo '<td class="tableTdContent">'.tooltipconf($row['Utilisateur']['ENGCONF']).'</td>';
+			echo '<td class="tableTdContent">'.$row['Utilisateur']['DATEENGCONF'].'</td>';
 			echo '<td class="tableTdContent">'.$row['Utilisateur']['COMMENTAIRE'].'</td>';
                         echo '</tr>';
                 endforeach; ?>

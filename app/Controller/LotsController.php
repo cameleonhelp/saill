@@ -176,13 +176,13 @@ class LotsController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Lot->find('list',array('fields'=>array('Lot.id','Lot.NOM'),'conditions'=>array('Lot.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Lot->find('list',array('fields'=>array('Lot.id','Lot.NOM'),'conditions'=>array('Lot.ACTIF'=>$actif),'order'=>array('Lot.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }       
              
         public function get_list($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Lot.ACTIF='.$actif;
-            $list = $this->Lot->find('all',array('fields'=>array('Lot.id','Lot.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Lot->find('all',array('fields'=>array('Lot.id','Lot.NOM'),'conditions'=>$conditions,'order'=>array('Lot.NOM'=>'asc'),'recursive'=>0));
             return $list;
         } 
         

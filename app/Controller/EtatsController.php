@@ -180,7 +180,7 @@ class EtatsController extends AppController {
         
         public function get_list($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Etat.ACTIF='.$actif;
-            $list = $this->Etat->find('all',array('fields'=>array('Etat.id','Etat.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Etat->find('all',array('fields'=>array('Etat.id','Etat.NOM'),'conditions'=>$conditions,'order'=>array('Etat.ORDER'=>'asc'),'recursive'=>0));
             return $list;
         }    
         

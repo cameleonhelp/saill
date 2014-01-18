@@ -52,7 +52,7 @@
                     <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit', $contrat['Contrat']['id']),array('escape' => false,'class'=>'showoverlay')); ?>&nbsp;
 		    <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('contrats', 'delete')) : ?>
-                    <?php echo $contrat['Tjmcontrat']['id']>1 ? $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete', $contrat['Contrat']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce contrat ?')):''; ?>
+                    <?php echo $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete', $contrat['Contrat']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce contrat ?')); ?>
                     <?php endif; ?>
                 </td>
 	</tr>

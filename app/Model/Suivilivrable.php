@@ -50,7 +50,7 @@ class Suivilivrable extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Suivilivrable']['ECHEANCE'])) {
                 $this->data['Suivilivrable']['ECHEANCE'] = $this->dateFormatBeforeSave($this->data['Suivilivrable']['ECHEANCE']);
             }
@@ -72,7 +72,7 @@ class Suivilivrable extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Suivilivrable']['created'])) {
                     $results[$key]['Suivilivrable']['created'] = $this->dateFormatAfterFind($val['Suivilivrable']['created']);

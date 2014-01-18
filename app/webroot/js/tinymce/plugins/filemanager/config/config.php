@@ -41,6 +41,7 @@ $icon_theme="ico"; //ico or ico_dark you can cusatomize just putting a folder in
 $show_folder_size=true; //Show or not show folder size in list view feature in filemanager (is possible, if there is a large folder, to greatly increase the calculations)
 $show_sorting_bar=true; //Show or not show sorting feature in filemanager
 $loading_bar=true; //Show or not show loading bar
+$transliteration=true;
 
 //*******************************************
 //Images limit and resizing configuration

@@ -94,12 +94,15 @@
                 <td><?php echo h($demandeabsence['Demandeabsence']['DATEREPONSE']); ?>&nbsp;</td>
 		<td><?php echo h($demandeabsence['Demandeabsence']['REPONSEBY_NOM']); ?>&nbsp;</td>
 		<td class="actions">
+                    <?php echo '<span class="glyphicons eye_open" data-rel="popover" data-title="<h3>Détail de la demande :</h3>" data-content="<contenttitle>Motif: </contenttitle>'.$demandeabsence['Demandeabsence']['MOTIF'].'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('demandeabsences', 'edit')) : ?>
                     <?php //echo $this->Html->link('<span class="glyphicons pencil notchange"></span>', "#",array('escape' => false,'data-id'=>$demandeabsence['Demandeabsence']['id'])); ?>&nbsp;
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('demandeabsences', 'delete') && $demandeabsence['Demandeabsence']['REPONSE']==NULL) : ?>
                     <?php echo $this->Html->link('<span class="glyphicons bin notchange"></span>', "#",array('escape' => false,'data-id'=>$demandeabsence['Demandeabsence']['id'])); ?>
-                    <?php endif; ?>                    
+                    <?php echo $this->Html->link('<span class="glyphicons envelope notchange"></span>', array('action' => 'sendmailrelancedemande',$demandeabsence['Demandeabsence']['id']),array('escape' => false),'Confirmez vous l\'envois de ce mail de relance ?'); ?>
+                    <?php endif; ?>      
+                    
 		</td>
 	</tr>
         <?php endforeach; ?>

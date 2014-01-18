@@ -1,50 +1,67 @@
 <div class="actions index" id="ActionsRefresh">
+        <?php //filtres par défaut
+        $pass0 = isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous';
+        $pass1 = isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous';
+        $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous';
+        $pass3 = isset($this->params->pass[3]) ? $this->params->pass[3] : 'tous'; //userAuth('id');
+        ?>       
         <nav class="navbar toolbar marginright20">
                 <ul class="nav navbar-nav toolbar">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'add')) : ?>
                 <li><?php echo $this->Html->link('<span class="glyphicons plus size14 margintop4" rel="tooltip" data-container="body" data-title="Ajoutez une action"></span>', array('action' => 'add'),array('escape' => false,'class'=>'showoverlay')); ?></li>
                 <li class="divider-vertical-only"></li>
                 <?php endif; ?>
-                <li class="dropdown <?php echo filtre_is_actif(isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous'); ?>">
+                <li class="dropdown <?php echo filtre_is_actif(isset($pass0) ? $pass0 : 'tous','tous'); ?>">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Priorité <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous'))); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($pass1) ? $pass1 : 'tous',isset($pass2) ? $pass2 : 'tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass0) ? $pass0 : 'tous','tous'))); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Normale', array('action' => 'index','1',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','1'))); ?></li>
-                         <li><?php echo $this->Html->link('Moyenne', array('action' => 'index','2',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','2'))); ?></li>
-                         <li><?php echo $this->Html->link('Haute', array('action' => 'index','3',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','3'))); ?></li>
+                         <li><?php echo $this->Html->link('Normale', array('action' => 'index','1',isset($pass1) ? $pass1 : 'tous',isset($pass2) ? $pass2 : 'tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass0) ? $pass0 : 'tous','1'))); ?></li>
+                         <li><?php echo $this->Html->link('Moyenne', array('action' => 'index','2',isset($pass1) ? $pass1 : 'tous',isset($pass2) ? $pass2 : 'tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass0) ? $pass0 : 'tous','2'))); ?></li>
+                         <li><?php echo $this->Html->link('Haute', array('action' => 'index','3',isset($pass1) ? $pass1 : 'tous',isset($pass2) ? $pass2 : 'tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass0) ? $pass0 : 'tous','3'))); ?></li>
                      </ul>
                 </li>
-                <li class="dropdown <?php echo filtre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous'); ?>">
+                <li class="dropdown <?php echo filtre_is_actif(isset($pass1) ? $pass1 : 'tous','tous'); ?>">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
                      <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous'))); ?></li>
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($pass0) ? $pass0 : 'tous','tous',isset($pass2) ? $pass2 : 'tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass1) ? $pass1 : 'tous','tous'))); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Nouvelles', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','news',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','news'))); ?></li>
+                         <li><?php echo $this->Html->link('Nouvelles', array('action' => 'index',isset($pass0) ? $pass0 : 'tous','news',isset($pass2) ? $pass2 : 'tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass1) ? $pass1 : 'tous','news'))); ?></li>
                          <li class="divider"></li>                         
-                         <li><?php echo $this->Html->link('A faire', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','1',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','1'))); ?></li>
-                         <li><?php echo $this->Html->link('En cours', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','2',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','2'))); ?></li>
-                         <li><?php echo $this->Html->link('Terminée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','3',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','3'))); ?></li>
-                         <li><?php echo $this->Html->link('Livrée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','4',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','4'))); ?></li>
-                         <li><?php echo $this->Html->link('Annulée', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','5',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','5'))); ?></li>
+                         <li><?php echo $this->Html->link('A faire', array('action' => 'index',isset($pass0) ? $pass0 : 'tous','1',isset($pass2) ? $pass2 : 'tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass1) ? $pass1 : 'tous','1'))); ?></li>
+                         <li><?php echo $this->Html->link('En cours', array('action' => 'index',isset($pass0) ? $pass0 : 'tous','2',isset($pass2) ? $pass2 : 'tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass1) ? $pass1 : 'tous','2'))); ?></li>
+                         <li><?php echo $this->Html->link('Terminée', array('action' => 'index',isset($pass0) ? $pass0 : 'tous','3',isset($pass2) ? $pass2 : 'tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass1) ? $pass1 : 'tous','3'))); ?></li>
+                         <li><?php echo $this->Html->link('Livrée', array('action' => 'index',isset($pass0) ? $pass0 : 'tous','4',isset($pass2) ? $pass2 : 'tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass1) ? $pass1 : 'tous','4'))); ?></li>
+                         <li><?php echo $this->Html->link('Annulée', array('action' => 'index',isset($pass0) ? $pass0 : 'tous','5',isset($pass2) ? $pass2 : 'tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass1) ? $pass1 : 'tous','5'))); ?></li>
                          <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Todolist', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','6',isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','6'))); ?></li>
+                         <li><?php echo $this->Html->link('Todolist', array('action' => 'index',isset($pass0) ? $pass0 : 'tous','6',isset($pass2) ? $pass2 : 'tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass1) ? $pass1 : 'tous','6'))); ?></li>
                      </ul>
-                </li> 
-                <?php if (areaIsVisible()) :?>
-                <li class="dropdown <?php echo filtre_is_actif(isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',  'tous'); ?>">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Destinataire <b class="caret"></b></a>
-                     <ul class="dropdown-menu">
-                         <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous','tous'))); ?></li>
-                         <li><?php echo $this->Html->link('Moi', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',  userAuth('id')),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',userAuth('id')))); ?></li>
-                         <li class="divider"></li>
-                         <li><?php echo $this->Html->link('Mon équipe', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',  'equipe'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous','equipe'))); ?></li>
+                </li>   
+                <li class="dropdown <?php echo filtre_is_actif(isset($pass3) ? $pass3 : 'tous','tous'); ?>">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Emetteur <b class="caret"></b></a>
+                     <ul class="dropdown-menu">                         
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($pass0) ? $pass0 : 'tous',isset($pass1) ? $pass1 : 'tous',$pass2,  'tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass3) ? $pass3 : 'tous','tous'))); ?></li>
+                         <li><?php echo $this->Html->link('Moi', array('action' => 'index',isset($pass0) ? $pass0 : 'tous',isset($pass1) ? $pass1 : 'tous',$pass2,  userAuth('id')),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass3) ? $pass3 : 'tous',userAuth('id')))); ?></li>
                          <li class="divider"></li>
                          <?php foreach ($responsables as $responsable): ?>
-                            <li><?php echo $this->Html->link($responsable['Utilisateur']['NOMLONG'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$responsable['Utilisateur']['id']),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous',$responsable['Utilisateur']['id']))); ; ?></li>
+                            <li><?php echo $this->Html->link($responsable['Utilisateur']['NOMLONG'], array('action' => 'index',isset($pass0) ? $pass0 : 'tous',isset($pass1) ? $pass1 : 'tous',$pass2,$responsable['Utilisateur']['id']),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass3) ? $pass3 : 'tous',$responsable['Utilisateur']['id']))); ; ?></li>
                          <?php endforeach; ?>
                      </ul>
-                 </li> 
+                 </li>                  
+                <?php if (areaIsVisible()) :?>                
+                <li class="dropdown <?php echo filtre_is_actif(isset($pass2) ? $pass2 : 'tous',  'tous'); ?>">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Destinataire <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                         <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($pass0) ? $pass0 : 'tous',isset($pass1) ? $pass1 : 'tous','tous',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass2) ? $pass2 : 'tous','tous'))); ?></li>
+                         <li><?php echo $this->Html->link('Moi', array('action' => 'index',isset($pass0) ? $pass0 : 'tous',isset($pass1) ? $pass1 : 'tous',  userAuth('id'),$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass2) ? $pass2 : 'tous',userAuth('id')))); ?></li>
+                         <li class="divider"></li>
+                         <li><?php echo $this->Html->link('Mon équipe', array('action' => 'index',isset($pass0) ? $pass0 : 'tous',isset($pass1) ? $pass1 : 'tous',  'equipe',$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass2) ? $pass2 : 'tous','equipe'))); ?></li>
+                         <li class="divider"></li>
+                         <?php foreach ($responsables as $responsable): ?>
+                            <li><?php echo $this->Html->link($responsable['Utilisateur']['NOMLONG'], array('action' => 'index',isset($pass0) ? $pass0 : 'tous',isset($pass1) ? $pass1 : 'tous',$responsable['Utilisateur']['id'],$pass3),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass2) ? $pass2 : 'tous',$responsable['Utilisateur']['id']))); ; ?></li>
+                         <?php endforeach; ?>
+                     </ul>
+                 </li>                 
                  <?php  endif; ?>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicons check"></span> Actions groupées <b class="caret"></b></a>
@@ -67,11 +84,12 @@
                 </ul>
         </nav>
         <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 marginright20">
-            <strong>Filtre appliqué : </strong><em>Liste des actions avec <?php echo $fpriorite; ?>, <?php echo $fetat; ?> <?php echo $fresponsable; ?></em></div><?php } ?>        
+            <strong>Filtre appliqué : </strong><em>Liste des actions avec <?php echo $fpriorite; ?>, <?php echo $fetat; ?> ayant pour émetteur  <?php echo $femetteur; ?> et pour destinataire <?php echo $fresponsable; ?></em></div><?php } ?>        
     <div class="marginright10">    
     <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" style="width:99.5%;">
         <thead>
 	<tr>
+                        <th style="min-width:80px;"><?php echo $this->Paginator->sort('id','N°'); ?></th>
                         <th style="text-align:center;width:15px !important;vertical-align: middle;padding-left:5px;"><?php echo $this->Form->input('checkall',array('type'=>'checkbox','label'=>false)) ; ?>
                                 <?php echo $this->Form->input('all_ids',array('type'=>'hidden')) ; ?>
                         </th>   
@@ -94,12 +112,15 @@
         <?php if (isset($actions)): ?>
 	<?php foreach ($actions as $action): ?>
 	<tr>
+                <td style="white-space:nowrap !important;"><?php echo 'A-'.strYear($action['Action']['created']).'-'.$action['Action']['id']; ?></td>
                 <td style="text-align:center;"><?php echo $this->Form->input('id',array('type'=>'checkbox','label'=>false,'class'=>'idselect nopadding','value'=>$action['Action']['id'])) ; ?></td>  
                 <?php $tooltip = $action['Action']['NIVEAU'] != null ? 'Risque identifié de niveau '.$action['Action']['NIVEAU'].' / 5' : 'Aucun risque identifié' ; ?>
                 <td style="background-color:<?php echo colorNiveauRisque($action['Action']['NIVEAU']) ?>"><span class="cursor" style="display:block;" rel='tooltip' data-title="<?php echo $tooltip; ?>">&nbsp;</span></td>
                 <td><?php echo h($action['Domaine']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($action['Utilisateur']['NOM']." ".$action['Utilisateur']['PRENOM']); ?>&nbsp;</td>
-                <td><?php echo h($action['Action']['destinataire_nom']); ?>&nbsp;</td>
+                <?php $contributeurs = isset($action['Action']['CONTRIBUTEURS']) ? $this->requestAction('utilisateurs/get_nom',array('pass'=>array($action['Action']['CONTRIBUTEURS']))) : 'Aucun contributeur'; ?>
+                <?php $contributeurs = $contributeurs != 'Aucun contributeur' ? ';'.$contributeurs : ''; ?>
+                <td><?php echo h($action['Action']['destinataire_nom'].$contributeurs); ?>&nbsp;</td>
                 <td><?php echo h($action['Action']['OBJET']); ?>
                     <?php if($action['Action']['NEW']==1): ?>
                     <span class="pull-right"><span class="glyphicons asterisk size8 orange" rel="tooltip" data-title="Nouvelle action en date du <?php echo h($action['Action']['created']); ?>"></span></span>&nbsp;
@@ -130,7 +151,7 @@
 		<td style="text-align:center;" class="<?php echo $action['Action']['PRIORITE']; ?>"><?php echo h($action['Action']['PRIORITE']); ?>&nbsp;</td>
 		<td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'view')) : ?>
-                    <?php echo '<span class="clear"><span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><span class="glyphicons eye_open" data-rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Commentaire : </contenttitle><br>'.h($action['Action']['COMMENTAIRE']).'<br/><contenttitle>Crée le: </contenttitle>'.h($action['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($action['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></span></span></span>'; ?>
+                    <?php echo '<span class="clear"><span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><span class="glyphicons eye_open" data-rel="popover" data-title="<h3>Action :</h3>" data-content="<contenttitle>Commentaire :<br></contenttitle><br>'.h($action['Action']['COMMENTAIRE']).'<br/><contenttitle>Bilan/Résultat :<br></contenttitle><br>'.h($action['Action']['BILAN']).'<br/><contenttitle>Crée le: </contenttitle>'.h($action['Action']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($action['Action']['modified']).'" data-trigger="click" style="cursor: pointer;"></span></span></span>'; ?>
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'edit')) : ?>
                     <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange" rel="tooltip" data-title="Modification"></span>', array('action' => 'edit', $action['Action']['id']),array('escape' => false,'class'=>'showoverlay')); ?>

@@ -330,7 +330,7 @@ class ActivitesreellesController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Activitesreelle->validate = array();
-                        $this->History->goBack(2);
+                        $this->History->goFirst();
                     else:                    
                         $activitesreelles = $this->request->data['Activitesreelle'];  
                         foreach($activitesreelles as $activitesreelle):
@@ -365,7 +365,7 @@ class ActivitesreellesController extends AppController {
                     $this->set('domaines',$domaines);  
                     $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('conditions'=>array('id'=>$date['Activitesreelle']['utilisateur_id']),'recursive'=>-1));
                     $this->set('utilisateur',$utilisateur);                    
-                    $activites = $this->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc')));
+                    $activites = $this->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'recursive'=>0));
                     $this->set('activites', $activites);
 		}
             else :
@@ -563,6 +563,60 @@ class ActivitesreellesController extends AppController {
             endif;                
 	}          
         
+/**
+ * senddeverouiller method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param string $id
+ * @return void
+ */
+	public function senddeverouiller($id = null,$postback = true) {
+            if (isAuthorized('activitesreelles', 'update')) :
+                $this->set('title_for_layout','Feuilles de temps');  
+                $this->Activitesreelle->id = $id;
+                $record = $this->Activitesreelle->read();
+                unset($record['Activitesreelle']['created']);                
+                unset($record['Activitesreelle']['modified']);
+                $record['Activitesreelle']['created'] = $this->Activitesreelle->read('created');
+                $record['Activitesreelle']['modified'] = date('Y-m-d');                 
+                $record['Activitesreelle']['VEROUILLE'] = 1;
+                $this->Activitesreelle->create();
+                if ($this->Activitesreelle->save($record)) {
+                    $this->Session->setFlash(__('Feuille de temps mise à jour pour facturation',true),'flash_success');                   
+                    $utilisateur = $this->Activitesreelle->Utilisateur->find('first', array('conditions'=>array('Utilisateur.id'=>$record['Activitesreelle']['utilisateur_id']),'recursive'=>0));  
+                    $from = userAuth('MAIL');
+                    $to=$utilisateur['Utilisateur']['MAIL'];
+                    $objet = 'SAILL : //!\ URGENT : Saisie d\'activité refusée';
+                    $message = "URGENT : Bonjour ".$utilisateur['Utilisateur']['NOMLONG'].',';
+                    $message .= $message.'<br>
+                            Votre saisie ne semble pas correcte.<br>
+                            Elle est donc refusée et remise à votre disposition pour modification, aprés modification vous devrez de nouveau la soumettre pour facturation.<br><br>
+                            N\'oubliez pas que vous pouvez saisir par anticipation votre activité et la valider juste avant la date limite.<br>
+                            Merci de votre intervention.';
+                    if($to!=''):
+                        try{
+                        $email = new CakeEmail();
+                        $email->setHeaders(array('X-Priority'=>1));
+                        $email->config('smtp')
+                                ->emailFormat('html')
+                                ->from($from)
+                                ->to($to)
+                                ->subject($objet)
+                                ->send($message);
+                        }
+                        catch(Exception $e){
+                            $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
+                        }  
+                    endif;                    
+                    if($postback) : $this->History->goBack(1); endif;
+                } 
+		$this->Session->setFlash(__('Feuille de temps <b>NON</b> mise à jour pour facturation',true),'flash_failure'); 
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
+                throw new NotAuthorizedException();           
+            endif;                
+	}          
 /**
  * search method
  *
@@ -1034,6 +1088,19 @@ class ActivitesreellesController extends AppController {
             exit();
         }  
         
+        public function sendrejeter(){
+            $ids = explode ('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):            
+                foreach($ids as $id):
+                    $this->senddeverouiller($id,false);                  
+                endforeach;
+                echo $this->Session->setFlash(__('Feuilles de temps rejetées',true),'flash_success');
+            else:
+                echo $this->Session->setFlash(__('Aucune feuilles de temps sélectionnées',true),'flash_failure');                
+            endif;
+            exit();
+        }          
+        
         public function deverouiller($id){
             $this->Activitesreelle->id = $id;
             $this->Activitesreelle->saveField('VEROUILLE', 1);        
@@ -1090,7 +1157,7 @@ class ActivitesreellesController extends AppController {
                 foreach($ids as $id):
                     $this->delete($id,true);
                 endforeach;  
-                $this->History->goBack(1);
+                $this->History->goBack(0);
             endif;
             exit();
         }     
@@ -1299,7 +1366,7 @@ class ActivitesreellesController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
         }
@@ -1353,6 +1420,7 @@ class ActivitesreellesController extends AppController {
             if($to!=''):
                 try{
                 $email = new CakeEmail();
+                $email->setHeaders(array('X-Priority'=>1));
                 $email->config('smtp')
                         ->emailFormat('html')
                         ->from($from)
@@ -1361,7 +1429,7 @@ class ActivitesreellesController extends AppController {
                         ->send($message);
                 }
                 catch(Exception $e){
-                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_failure');
+                    $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
             $this->History->notmove();

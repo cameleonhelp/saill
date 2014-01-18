@@ -50,7 +50,7 @@ class Historyintegration extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Historyintegration']['created'])) {
                     $results[$key]['Historyintegration']['created'] = $this->datetimeFormatAfterFind($val['Historyintegration']['created']);
@@ -79,7 +79,7 @@ class Historyintegration extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Historyintegration']['DATEINSTALL'])) {
                 $this->data['Historyintegration']['DATEINSTALL'] = $this->datetimeFormatBeforeSave($this->data['Historyintegration']['DATEINSTALL']);
             }   

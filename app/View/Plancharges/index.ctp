@@ -200,7 +200,7 @@
                     <?php echo $this->Form->postLink('<span class="glyphicons bin notchange" rel="tooltip" data-title="Suppression"></span>', array('controller'=>'plancharges','action' => 'delete', $plancharge['Plancharge']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce plan de charge ?')); ?>
                     <?php endif; ?>                     
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('plancharges', 'view')) : ?>
-                    <?php echo $this->Html->link('<span class="ico-xls" rel="tooltip" data-title="Export Excel"></span>', array('action' => 'export_xls', $plancharge['Plancharge']['id']),array('escape' => false,'style'=>'margin-top:5px;display: inline-table;')); ?>&nbsp;
+                    <?php echo $this->Html->link('<span class="ico-xls" rel="tooltip" data-title="Export Excel"></span>', array('action' => 'export_xls', $plancharge['Plancharge']['id']),array('escape' => false,'style'=>'margin-top:1px;display: inline-table;')); ?>&nbsp;
                     <?php endif; ?>                    
 		</td>
 	</tr>

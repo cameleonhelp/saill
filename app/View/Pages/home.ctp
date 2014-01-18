@@ -1,6 +1,7 @@
 <div class='block-panel block-panel-66-left'>
 <?php
 $this->set('title_for_layout','Accueil');
+//echo $this->element('multiselect_user'); 
 ?>
 <div class="well well-small top-header-orange">
     Ce site à pour objectif de suivre les activités, livrables réalisés sur le projet.<br/><br/>

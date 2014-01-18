@@ -13,7 +13,11 @@ class EntitesController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator');
+        public $components = array('History','Common');  
+        public $paginate = array(
+        'limit' => 25,
+        'order' => array('Entite.NOM' => 'asc'),
+        );
 
 /**
  * index method
@@ -21,8 +25,16 @@ class EntitesController extends AppController {
  * @return void
  */
 	public function index() {
+                $this->set('title_for_layout','Cercles de visibilité');
 		$this->Entite->recursive = 0;
-		$this->set('entites', $this->Paginator->paginate());
+		$this->set('entites', $this->paginate());
+                $all_utilisateurs = $this->requestAction(('utilisateurs/get_list_actif'));
+                $utilisateurs_select = null;
+                $count_utilisateurs = 0;
+                $all_projets = $this->requestAction(('projets/get_list_actif'));
+                $projets_select = $this->requestAction('projets/get_list_projet');  
+                $count_projets = 0;
+                $this->set(compact('all_utilisateurs','utilisateurs_select','all_projets','projets_select','count_utilisateurs','count_projets'));
 	}
 
 /**
@@ -46,7 +58,12 @@ class EntitesController extends AppController {
  * @return void
  */
 	public function add() {
+                $this->set('title_for_layout','Cercle de visibilité');
 		if ($this->request->is('post')) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Achat->validate = array();
+                        $this->History->goBack(1);
+                    else:                      
 			$this->Entite->create();
 			if ($this->Entite->save($this->request->data)) {
 				$this->Session->setFlash(__('The entite has been saved.'));
@@ -54,9 +71,8 @@ class EntitesController extends AppController {
 			} else {
 				$this->Session->setFlash(__('The entite could not be saved. Please, try again.'));
 			}
+                    endif;
 		}
-		$utilisateurs = $this->Entite->Utilisateur->find('list');
-		$this->set(compact('utilisateurs'));
 	}
 
 /**
@@ -67,22 +83,27 @@ class EntitesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+                $this->set('title_for_layout','Cercle de visibilité');
 		if (!$this->Entite->exists($id)) {
 			throw new NotFoundException(__('Invalid entite'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
+                    if (isset($this->params['data']['cancel'])) :
+                        $this->Achat->validate = array();
+                        $this->History->goBack(1);
+                    else:                      
+                        $this->Entite->id = $id;
 			if ($this->Entite->save($this->request->data)) {
-				$this->Session->setFlash(__('The entite has been saved.'));
+				$this->Session->setFlash(__('The entite has been modified.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The entite could not be saved. Please, try again.'));
 			}
+                    endif;
 		} else {
 			$options = array('conditions' => array('Entite.' . $this->Entite->primaryKey => $id));
 			$this->request->data = $this->Entite->find('first', $options);
 		}
-		$utilisateurs = $this->Entite->Utilisateur->find('list');
-		$this->set(compact('utilisateurs'));
 	}
 
 /**
@@ -93,6 +114,7 @@ class EntitesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+                $this->set('title_for_layout','Cercle de visibilité');
 		$this->Entite->id = $id;
 		if (!$this->Entite->exists()) {
 			throw new NotFoundException(__('Invalid entite'));

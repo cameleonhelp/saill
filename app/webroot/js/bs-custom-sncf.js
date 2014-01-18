@@ -521,7 +521,7 @@ function toggleBtn(){
 /*
  * Function pour afficher Oui ou Non aprés les cases à cocher avec la class YesNo
  */
--function ($){"use strict";
++function ($){"use strict";
     /** Ajout de Oui/Non dans le label aprés la case à cocher **/
     $(".yesno").each( function() { $(this).next(".labelAfter").text(this.checked ? "Oui" : "Non"); });
     

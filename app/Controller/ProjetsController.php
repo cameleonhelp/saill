@@ -218,5 +218,23 @@ class ProjetsController extends AppController {
                 $this->Session->delete('xls_export');                
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
-	}         
+	}    
+        
+        public function get_select_actif(){
+            $conditions[] = array('Projet.ACTIF'=>1);
+            $list = $this->Projet->find('list',array('fields'=>array('Projet.id','Projet.NOM'),'conditions'=>$conditions,'order'=>array('Projet.NOM'=>'asc'),'recursive'=>0));
+            return $list;
+        }     
+        
+        public function get_list_projet(){
+            $conditions[] = "Projet.id=1";
+            $list = $this->Projet->find('list',array('fields'=>array('id'),'conditions'=>$conditions,'recursive'=>0));
+            return $list;
+        }    
+        
+        public function get_list_actif(){
+            $conditions[] = array('Projet.ACTIF'=>1);
+            $list = $this->Projet->find('all',array('fields'=>array('Projet.id','Projet.NOM'),'conditions'=>$conditions,'order'=>array('Projet.NOM'=>'asc'),'recursive'=>0));
+            return $list;
+        }          
 }

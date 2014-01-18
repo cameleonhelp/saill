@@ -81,6 +81,7 @@
                      <ul class="dropdown-menu">
                      <li><?php echo $this->Html->link('Facturer', "#",array('id'=>'facturerlink','class'=>'showoverlay')); ?></li>
                      <li><?php echo $this->Html->link('Rejeter', "#",array('id'=>'rejeterlink','class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Rejeter avec mail', "#",array('id'=>'sendrejeterlink','class'=>'showoverlay')); ?></li>
                      </ul>
                 </li>
                 <li class="divider-vertical-only"></li>
@@ -113,7 +114,7 @@
                 <?php echo $this->Form->end(); ?>                   
                 <?php elseif ($this->params->controller == "facturations") : ?>
                 <?php echo $this->Form->create("Facturation",array('action' => 'search', 'class'=>'toolbar-form pull-right','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
-                    <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche ...','style'=>"width: 200px;",'class'=>"form-control")); ?>
+                    <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche ...','style'=>"width: 160px !important;",'class'=>"form-control")); ?>
                     <button type="submit" class="btn form-btn showoverlay">Rechercher</button>
                 <?php echo $this->Form->end(); ?>                                         
                 <?php endif; ?> 
@@ -150,8 +151,8 @@
                   </div>
                   <div class="form-group">
                         <label for="FilesharedUtilisateurId" class="col-lg-4 control-label">Pour</label>
-                        <div class="col-lg-offset-4">
-                          <?php echo $this->Form->select('utilisateur_id',$icsutilisateurs,array('data-rule-required'=>'true','default'=>  userAuth('id'),'data-msg-required'=>"Le nom de l'utilisateur est obligatoire dans l'onglet Destinataire", 'empty' => 'Choisir un utilisateur')); ?>
+                        <div class="col-lg-offset-4 col-lg-6">
+                          <?php echo $this->Form->select('utilisateur_id',$icsutilisateurs,array('class'=>'form-control','data-rule-required'=>'true','default'=>  userAuth('id'),'data-msg-required'=>"Le nom de l'utilisateur est obligatoire dans l'onglet Destinataire", 'empty' => 'Choisir un utilisateur')); ?>
                         </div>
                   </div>                  
               </div>
@@ -319,7 +320,8 @@
                     <?php endif; ?>
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'update')) : ?>
                     <?php $img = 'ban'; ?>
-                    <?php echo $this->Form->postLink('<span class="glyphicons showoverlay '.$img.' notchange" rel="tooltip" data-title="Annulation (rejet)"></span>', array('action' => 'errorfacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour correction ?')); ?>                    
+                    <?php echo $this->Form->postLink('<span class="glyphicons '.$img.' notchange" rel="tooltip" data-title="Annulation (rejet)"></span>', array('action' => 'errorfacturation', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour correction ?')); ?>                    
+                    <?php echo $this->Form->postLink('<span class="glyphicons message_ban notchange" rel="tooltip" data-title="Annulation (rejet) avec envois de mail"></span>', array('action' => 'senddeverouiller', $activitesreelle['Activitesreelle']['id']),array('escape' => false), __('Etes-vous certain de vouloir mettre à jour cette feuille de temps pour correction ?')); ?>                                     
                     <?php endif; ?>
                 <?php endif; ?>
                 </td>                 
@@ -366,7 +368,7 @@
                 <table>
                     <tbody>
                         <tr><td>
-                           <textarea style='width:530px;' id="memo"><?php echo $memo['Parameter']['param']; ?></textarea>
+                           <textarea style='width:530px;' id="memo"><?php echo isset($memo) ? $memo['Parameter']['param'] : ''; ?></textarea>
                            </td></tr>
                     </tbody>
                 </table>
@@ -461,6 +463,23 @@
             $(this).parents().find(':checkbox').prop('checked', false); 
             $("#all_ids").val('');
         });  
+        
+        $(document).on('click','#sendrejeterlink',function(e){
+            var ids = $("#all_ids").val();
+            var overlay = $('#overlay');
+            overlay.show();             
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'activitesreelles','action'=>'sendrejeter')); ?>/",
+                data: ({all_ids:ids})     
+            }).done(function ( data ) {
+                location.reload();
+                overlay.hide();                
+            });
+            $(this).parents().find(':checkbox').prop('checked', false); 
+            $("#all_ids").val('');
+        });
         
         $(document).on('click','#soumettrelink',function(e){
             var ids = $("#all_ids").val();

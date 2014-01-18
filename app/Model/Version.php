@@ -82,7 +82,7 @@ class Version extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Version']['created'])) {
                     $results[$key]['Version']['created'] = $this->dateFormatAfterFind($val['Version']['created']);
@@ -103,7 +103,7 @@ class Version extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Version']['NOM'])) {
                 $this->data['Version']['NOM'] = mb_strtoupper($this->data['Version']['NOM'],'UTF-8');
             }                

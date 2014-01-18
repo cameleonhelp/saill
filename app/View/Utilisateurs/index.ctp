@@ -52,6 +52,7 @@
                      <ul class="dropdown-menu">
                      <li><?php echo $this->Html->link('Prolonger', "#",array('id'=>'prolongerlink','class'=>'')); ?></li>
                      <li><?php echo $this->Html->link('Désactiver', "#",array('id'=>'desactiverlink','class'=>'showoverlay')); ?></li>
+                     <li><?php echo $this->Html->link('Engagement de confidentialité', "#",array('id'=>'changeallconf','class'=>'showoverlay')); ?></li>
                      </ul>
                 </li>                 
                  <li class="divider-vertical-only"></li>
@@ -108,7 +109,7 @@
 			<th><?php echo $this->Paginator->sort('section_id','Section'); ?></th>
 			<th  width="100px"><?php echo $this->Paginator->sort('FINMISSION','Date de fin de mission'); ?></th>
                         <th><?php echo $this->Paginator->sort('ACTIF','Etat du compte'); ?></th>
-
+                        <th><?php echo $this->Paginator->sort('ENGCONF','Eng. confidentialité'); ?></th>
 			<th class="actions" width="111px"><?php echo __('Actions'); ?></th>
 	</tr>
 	</thead>
@@ -122,7 +123,13 @@
 		<td><?php echo h($utilisateur['Section']['NOM']); ?>&nbsp;</td>
 		<td style="text-align: center;"><?php echo h($utilisateur['Utilisateur']['FINMISSION']); ?>&nbsp;</td>
                 <td  width="80px" style="text-align: center;"><?php echo h($utilisateur['Utilisateur']['ACTIF']) == 1 ? '<span etat="0" iduser="'.$utilisateur['Utilisateur']['id'].'" class="glyphicons ok_2 cursor changeetat"></span>' : '<span etat="1" iduser="'.$utilisateur['Utilisateur']['id'].'" class="glyphicons ok_2 disabled cursor changeetat"></span>'; ?>&nbsp;</td>
-		<td class="actions">
+                <?php $date = isset($utilisateur['Utilisateur']['ENGCONF']) && $utilisateur['Utilisateur']['ENGCONF'] > 0 ? ' le '.$utilisateur['Utilisateur']['DATEENGCONF'] : '' ; ?>
+                <?php if($utilisateur['Utilisateur']['societe_id'] != 1): ?>
+                <td  width="80px" style="text-align: center;"><?php echo '<span iduser="'.$utilisateur['Utilisateur']['id'].'" class="glyphicons '.glyphconf($utilisateur['Utilisateur']['ENGCONF']).' cursor changeconf showoverlay" rel="tooltip" data-title="'.tooltipconf($utilisateur['Utilisateur']['ENGCONF']).$date.'"></span>'; ?></td>
+                <?php else : ?>
+                <td  width="80px" style="text-align: center;">&nbsp;</td>
+                <?php endif; ?>
+                <td class="actions">
                     <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'view')) : ?>
                     <?php $mail = (isset($utilisateur['Utilisateur']['MAIL']) && !empty($utilisateur['Utilisateur']['MAIL'])) ? '<a href=\'mailto:'.h($utilisateur['Utilisateur']['MAIL']).'\'>'.h($utilisateur['Utilisateur']['MAIL']).'</a>': 'Non attribué'; ?>
                     <?php echo '<span class="glyphicons eye_open" data-rel="popover" data-title="<h3>Utilisateur :</h3>" data-content="<contenttitle>Nom Prénom: </contenttitle>'.h($utilisateur['Utilisateur']['NOMLONG'])
@@ -159,6 +166,11 @@
                     <?php echo $this->Html->link('<span class="glyphicons showoverlay cargo notchange"></span>', array('controller'=>'dotations','action' => 'add', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
                     <?php endif; ?>  
                     <?php echo $this->Html->link('<span class="glyphicons showoverlay envelope notchange"></span>', array('action' => 'sendmailgestannuaire', $utilisateur['Utilisateur']['id']),array('escape' => false)); ?>&nbsp;
+                    <?php if (userAuth('profil_id')!='2' && isAuthorized('utilisateurs', 'initpassword')) : ?>
+                    <?php echo $this->Form->postLink('<span class="ico-fm" rel="tooltip" data-title="Extrait pour la fiche mouvement"></span>', array('action' => 'export_fm', $utilisateur['Utilisateur']['id']),array('escape' => false), __('Etes-vous certain de vouloir extraire les données pour la fiche mouvement de cet utilisateur ?')); ?>                                            
+                    <?php else: ?>
+                    <span class="glyphicons blank"></span>
+                    <?php endif; ?>                    
                 </td>
 	</tr>
         <?php endforeach; ?>
@@ -213,6 +225,23 @@
             $("#all_ids").val('');
         });
         
+        $(document).on('click','#changeallconf',function(e){
+            var ids = $("#all_ids").val();
+            var overlay = $('#overlay');
+            overlay.show(); 
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'utilisateurs','action'=>'changeallconf')); ?>/",
+                data: ({all_ids:ids})
+            }).done(function ( data ) {
+                location.reload();
+                overlay.hide();
+            });
+            $(this).parents().find(':checkbox').prop('checked', false);
+            $("#all_ids").val('');
+        });
+        
         $(document).on('click','#checkall',function(e){
             $(this).parents().find(':checkbox').prop('checked', this.checked);
             if ($(this).is(':checked')){
@@ -245,6 +274,20 @@
             }
         });
                
+        $(document).on('click','.changeconf',function(e){
+            if (confirm("Merci de confirmer le change d'état de l'engagement de confidentialité de cet agent.")){
+                var id = $(this).attr('iduser');
+                var etat = $(this).attr('etat');
+                $.ajax({
+                    dataType: "html",
+                    type: "POST",
+                    url: "<?php echo $this->Html->url(array('controller'=>'utilisateurs','action'=>'progressengconf')); ?>/"+id,
+                }).done(function ( data ) {
+                    location.reload();
+                });
+            }
+        });
+
         $(document).on('click','.changeetat',function(e){
             if (confirm("Merci de confirmer le change d'état de cette personne.")){
                 var id = $(this).attr('iduser');

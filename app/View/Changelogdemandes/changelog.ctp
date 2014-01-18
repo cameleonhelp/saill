@@ -1,5 +1,6 @@
 <div class="marginright20">
     <?php echo $this->element('changelogsubmenu'); ?>
+    <?php echo $this->element('changelognextversion'); ?>
     <?php foreach($versions as $version): ?>
     <div class="panel-group" id="panel_<?php echo $version['Changelogversion']['id']; ?>" style="margin-bottom:10px;">
           <div class="panel">

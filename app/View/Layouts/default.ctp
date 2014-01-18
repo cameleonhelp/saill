@@ -81,7 +81,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
     <?php if(file_exists (WWW_ROOT.'maintenance.md') && userAuth('profil_id') != 1):
             echo $this->element('maintenance'); 
           else: ?>
-    <div id="overlay" style="display:none;"><?php echo $this->Html->image("loading.gif", array('fullBase' => true)); ?> Travail en cours, veuillez patienter ...</div>
+    <div id="overlay" style="display:none;"><?php echo $this->Html->image("loading.gif", array('fullBase' => true)); ?> <span class="overlaytext">Chargement en cours, veuillez patienter ...</span></div>
     <!--insert Add red modal //-->
     <div class="modal fade" id="ieredModal" data-color="red" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -117,7 +117,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
              </div>
          </div>
          <?php if (userAuth('id') > 0): ?>
-         <div>
+           <div class="marginright20">
              <ul class="nav navbar-nav navbar-right">
                <li class="dropdown">
                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicons user size14 hard-grey marginright10"></span><?php echo userAuth('PRENOM'); ?>. <?php echo userAuth('NOM'); ?><b class="caret"></b></a>

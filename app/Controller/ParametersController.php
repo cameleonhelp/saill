@@ -283,36 +283,43 @@ class ParametersController extends AppController {
             //$messages = null;       
             $this->set('title_for_layout','Importation en masse de données');
             if ($this->request->is('post') || $this->request->is('put')):
-                //en fonction du model retourné on fait une fonction d'import CSV avec retour des messages que l'on affichera en log uniquement sur les erreurs
-                $file = isset($this->data['Parameter']['file']['name']) ? $this->data['Parameter']['file']['name'] : '';
-                $file_type = strrchr($file,'.'); 
-                $completpath = WWW_ROOT.'files/upload/';
-                if($this->data['Parameter']['file']['tmp_name']!='' && $file_type == '.csv'):
-                    $filename = $completpath.$this->data['Parameter']['file']['name'];
-                    move_uploaded_file($this->data['Parameter']['file']['tmp_name'],$filename);                              
-                    switch ($this->data['Parameter']['table']) {
-                        case 'biens':
-                            $messages = $this->importbiens($filename);
-                            $this->setLog($messages,'flash_log');
-                            break;
-                        case 'logiciels':
-                            $messages = $this->importlogiciels($filename);
-                            $this->setLog($messages,'flash_log');                            
-                            break;
-                        case 'intergrationapplicatives':
-                            $messages = $this->importintergrationapplicatives($filename);
-                            $this->setLog($messages,'flash_log');                            
-                            break;
-                        case 'expressionbesoins':
-                            $messages = $this->importexpressionbesoins($filename);
-                            $this->setLog($messages,'flash_log');                            
-                            break; 
-                        default:
-                            $this->Session->setFlash(__('Import <b>NON PRIS EN CHARGE</b> pour le modèle '.$this->data['Parameter']['table'],true),'flash_failure');
-                    }
-                    unlink(realpath($filename));
-                else :
-                    $this->Session->setFlash(__('Le fichier n\'est pas reconnu ou inexistant',true),'flash_failure');
+                if (isset($this->params['data']['cancel'])) :
+                    $this->Site->validate = array();
+                    $this->History->goBack(1);
+                else:                 
+                    //en fonction du model retourné on fait une fonction d'import CSV avec retour des messages que l'on affichera en log uniquement sur les erreurs
+                    $file = isset($this->data['Parameter']['file']['name']) ? $this->data['Parameter']['file']['name'] : '';
+                    $file_type = strrchr($file,'.'); 
+                    $completpath = WWW_ROOT.'files/upload/';
+                    if($this->data['Parameter']['file']['tmp_name']!='' && $file_type == '.csv'):
+                        $filename = $completpath.$this->data['Parameter']['file']['name'];
+                        move_uploaded_file($this->data['Parameter']['file']['tmp_name'],$filename);                              
+                        switch ($this->data['Parameter']['table']) {
+                            case 'biens':
+                                $messages = $this->importbiens($filename);
+                                $this->setLog($messages,'flash_log');
+                                break;
+                            case 'logiciels':
+                                $messages = $this->importlogiciels($filename);
+                                $this->setLog($messages,'flash_log');                            
+                                break;
+                            case 'intergrationapplicatives':
+                                $messages = $this->importintergrationapplicatives($filename);
+                                $this->setLog($messages,'flash_log');                            
+                                break;
+                            case 'expressionbesoins':
+                                $messages = $this->importexpressionbesoins($filename);
+                                $this->setLog($messages,'flash_log');                            
+                                break; 
+                            default:
+                                $messages = $this->importcsv($filename,$this->data['Parameter']['table']);
+                                $this->setLog($messages,'flash_log');                                
+                                //$this->Session->setFlash(__('Import <b>NON PRIS EN CHARGE</b> pour le modèle '.$this->data['Parameter']['table'],true),'flash_failure');
+                        }
+                        unlink(realpath($filename));
+                    else :
+                        $this->Session->setFlash(__('Le fichier n\'est pas reconnu ou inexistant',true),'flash_failure');
+                    endif;
                 endif;
                 //$this->History->notmove();
             endif;
@@ -675,7 +682,60 @@ class ParametersController extends AppController {
             fclose($handle);           
             return $return['errors'];            
         }   
-        
+
+        public function importcsv($filename,$controller){
+            $handle = fopen($filename, "r");
+            $header = fgetcsv($handle);
+            $header= explode(';',$header[0]);
+            $return = array(
+                    'messages' => array(),
+                    'errors' => array(),
+            );
+            $table = $this->tableheader($controller);
+            $controller = substr(ucfirst($controller), 0, -1);
+            $control = ClassRegistry::init($controller); 
+            //tester le header avec les champs obligatoires
+            //comparaison de deux tableaux
+            if(count(array_intersect($table, $header)) == count($table)):
+            while (($row = fgetcsv($handle)) !== FALSE) {
+                @$i++;
+                $data = array();
+                $data[$controller]['entite_id']=userAuth('entite_id');
+                $row= explode(';',$row[0]);
+                $error = false;
+                foreach ($header as $k=>$head) {
+                        if (strpos($head,'.')!==false) {
+                                $h = explode('.',$head);
+                                $data[$h[0]][$h[1]]=(isset($row[$k])) ? $row[$k] : '';
+                        } else {
+                                $data[$controller][strtoupper($head)]=(isset($row[$k])) ? trim($row[$k]) : '';
+                        }
+                }	
+                $id = isset($data[$controller]['id']) ? $data[$controller]['id'] : false;
+                if ($id) {
+                        $control->id = $id;
+                } else {
+                        $control->create();
+                }
+                $control->set($data);
+                if (!$control->validates()) {
+                        $error = true;
+                        $return['errors'][] = __(sprintf('Ligne %d non valide, données incorrectes (%s).',$i,implode("  |  ",$row)), true);
+                } else {
+                    if (!$error && !$control->save($data)) {
+                            $return['errors'][] = __(sprintf('Ligne %d impossible à sauvegarder.',$i), true);
+                    } else {
+                        $return['messages'][] = __(sprintf('Ligne %d sauvegardée.',$i), true);
+                    }
+                }
+            }
+            else:
+                $return['errors'][] = __(sprintf('Les champs obligatoires ne correspondent pas à ceux attendus'), true);
+            endif;
+            fclose($handle);           
+            return $return['errors'];
+        }
+                
         public function setLog($message, $element = 'default', $params = array(), $key = 'flash') {
             $this->Session->write('Log.' . $key, compact('message', 'element', 'params'));
         }
@@ -719,12 +779,8 @@ class ParametersController extends AppController {
         
         public function jsongetdatatabledescription($tablename){
             $this->autoRender = false;
-            $sql = 'DESCRIBE '.$tablename;
-            //$db = ConnectionManager::getDataSource('default');
-            //$table = $db->rawQuery($sql);            
+            $sql = 'DESCRIBE '.$tablename;           
             $table = $this->Bien->query($sql);
-            //debug($table);
-            //exit();
             return json_encode($table);
         }
         
@@ -741,5 +797,17 @@ class ParametersController extends AppController {
             $filename = WWW_ROOT.'maintenance.md';
             unlink(realpath($filename));
             $this->History->notmove();
-	}        
+	}   
+        
+        public function tableheader($table){
+            $sql = 'DESCRIBE '.$table;           
+            $table = $this->Bien->query($sql); 
+            foreach($table as $column):
+                if($column['COLUMNS']['Null']=='NO'):
+                    $result[] = $column['COLUMNS']['Field'];
+                endif;
+            endforeach;
+            $result = array_slice($result,1,-2);           
+            return $result;
+        }
 }

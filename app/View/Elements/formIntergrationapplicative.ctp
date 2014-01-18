@@ -40,6 +40,18 @@
             <?php } ?>        
         </div>        
     </div> 
+    <div class="form-group">
+        <label class="col-lg-2" for="IntergrationapplicativeDATEINSTALL">Date d'installation : </label>
+          <div class="col-lg-3" style="margin-left:15px;">
+              <div class="input-group">
+              <?php $today = new dateTime(); ?>
+              <?php echo $this->Form->input('DATEINSTALL',array('type'=>'text','class'=>"form-control dateall",'placeholder'=>'ex.: '.$today->format('d/m/Y'),'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
+              <span class="input-group-addon addon-middle date-addon-clean btn-addon" data-target="#IntergrationapplicativeDATEINSTALL"><span class="glyphicons circle_remove grey"></span></span>
+              <span class="input-group-addon addon-middle date-addon-default btn-addon" data-target="#IntergrationapplicativeDATEINSTALL" data-default="<?php echo date('d/m/Y'); ?>"><span class="glyphicons clock"></span></span>
+              <span class="input-group-addon date-addon-calendar btn-addon" data-target="#IntergrationapplicativeDATEINSTALL"><span class="glyphicons calendar"></span></span>
+              </div>                    
+          </div>
+    </div>     
     <div style="clear:both;margin-top: 10px;">
     <div class="form-group">
       <div class="btn-block-horizontal">

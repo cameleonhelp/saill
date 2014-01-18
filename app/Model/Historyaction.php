@@ -74,7 +74,7 @@ class Historyaction extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Historyaction']['ECHEANCE'])) {
                 $this->data['Historyaction']['ECHEANCE'] = $this->dateFormatBeforeSave($this->data['Historyaction']['ECHEANCE']);
             }
@@ -93,7 +93,7 @@ class Historyaction extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Historyaction']['created'])) {
                     $results[$key]['Historyaction']['created'] = $this->dateFormatAfterFind($val['Historyaction']['created']);

@@ -56,7 +56,7 @@ class Phase extends AppModel {
  * @param none
  * @return void
  */
-        public function afterFind($results) {
+        public function afterFind($results, $primary = false) {
             foreach ($results as $key => $val) {
                 if (isset($val['Phase']['created'])) {
                     $results[$key]['Phase']['created'] = $this->dateFormatAfterFind($val['Phase']['created']);
@@ -76,7 +76,7 @@ class Phase extends AppModel {
  * @param none
  * @return void
  */
-        public function beforeSave() {
+        public function beforeSave($options = array()) {
             if (!empty($this->data['Phase']['NOM'])) {
                 $this->data['Phase']['NOM'] = mb_strtoupper($this->data['Phase']['NOM'],'UTF-8');
             }                

@@ -174,13 +174,13 @@ class UsagesController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Usage->find('list',array('fields'=>array('Usage.id','Usage.NOM'),'conditions'=>array('Usage.ACTIF'=>$actif),'recursive'=>0));
+            $list = $this->Usage->find('list',array('fields'=>array('Usage.id','Usage.NOM'),'conditions'=>array('Usage.ACTIF'=>$actif),'order'=>array('Usage.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }  
         
         public function get_list($actif=null){
             $conditions[] = $actif == null ? '1=1' : 'Usage.ACTIF='.$actif;
-            $list = $this->Usage->find('all',array('fields'=>array('Usage.id','Usage.NOM'),'conditions'=>$conditions,'recursive'=>0));
+            $list = $this->Usage->find('all',array('fields'=>array('Usage.id','Usage.NOM'),'conditions'=>$conditions,'order'=>array('Usage.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }       
         
