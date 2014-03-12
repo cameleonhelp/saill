@@ -9,108 +9,185 @@ App::uses('CakeEmail', 'Network/Email');
 class ActivitesreellesController extends AppController {
         public $components = array('History','Common');    
         public $paginate = array(
-        'order' => array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc'),
+        'order' => array('Utilisateur.NOM' => 'asc','Activitesreelle.DATE' => 'desc'),
         );
         
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/json_get_all_users/'.userAuth('id'));
+            endif;            
+        }
+        
+        public function get_no_limit(){
+            $this->paginate = array('limit'=>$this->Activitesreelle->find('count'));
+        }
+        
+        public function get_activitesreelle_etat_filter($id){
+            $result = array();
+            switch ($id){
+                case 'tous':
+                    $result['condition'] = "1=1";
+                    $result['filter'] = "toutes les feuilles de temps";
+                    break;
+                case 'actif':  
+                case null:
+                    $result['condition'] = "Activitesreelle.VEROUILLE = 1";
+                    $result['filter'] = "toutes les feuilles de temps actives";
+                    break;                    
+                case 'facture':
+                    $result['condition'] = "Activitesreelle.VEROUILLE = 0";
+                    $result['filter'] = "toutes les feuilles de temps facturées";
+                    break;                      
+            }  
+            return $result;
+        }
+        
+        public function get_activitesreelle_utilisateur_filter($id,$visibility){
+            $result = array();            
+            if (areaIsVisible() || $utilisateur==userAuth('id')):
+            $id = $id == null ? userAuth('id') : $id;
+            switch ($id){
+                case 'tous':
+                    if($visibility == null):
+                        $result['condition']='1=1';
+                    elseif ($visibility!=''):
+                        $result['condition']="Activitesreelle.utilisateur_id IN (".$visibility.")";
+                    else:
+                        $result['condition']="Activitesreelle.utilisateur_id =".userAuth('id');
+                    endif;                     
+                    $result['filter'] = "tous les utilisateurs";
+                    break;                   
+                default:
+                    $result['condition'] = "Activitesreelle.utilisateur_id = ".$id;
+                    $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$id),'recursive'=>-1));
+                    $result['filter'] = $utilisateur['Utilisateur']['NOMLONG'];
+                    break;                      
+            }  
+            else:
+                $result['condition'] = "Activitesreelle.utilisateur_id = ".userAuth('id');
+                $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>userAuth('id')),'recursive'=>-1));
+                $result['filter'] = $utilisateur['Utilisateur']['NOMLONG'];                 
+            endif; 
+            return $result;            
+        }
+        
+        public function get_activitesreelle_chrono_filter($mois,$annee){
+            $result = array();
+            $annee = $annee==null ? date('Y') : $annee;
+            switch ($mois){
+                case 'tous':
+                case null:
+                    $datedebut = $annee."-01-01";
+                    $datefin = $annee."-12-31";
+                    $result['condition']="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
+                    $result['filter'] = "pour l'année ".$annee;
+                    break;
+                default:
+                    $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
+                    $debut = $annee."-".$mois."-01";
+                    $datedebut = startWeek($debut);
+                    $datefin = $annee."-".$mois."-".$dernierjour;
+                    $result['condition']="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
+                    $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
+                    $result['filter'] = "pour le mois de ".$moiscal[$mois]." ".$annee;
+                    break;                      
+            }  
+           return $result;             
+        }
+                
+        public function get_activitesreelle_indisponibilite_filter($id){
+            $result = array();
+            $id = $id==null ? 0 : $id;
+            switch ($id){
+                case '1':
+                    $result['condition']="Activite.projet_id!=1";
+                    break;
+                default:
+                    $result['condition']="1=1";
+                    break;                      
+            } 
+            return $result;
+        }
+        
+        public function get_all_activitesreelle_annee(){
+            $thisyear = new DateTime();
+            return $this->Activitesreelle->find('all',array('fields'=>array('YEAR(Activitesreelle.DATE) AS ANNEE'),'group'=>array('YEAR(Activitesreelle.DATE)'),'conditions'=>array('YEAR(Activitesreelle.DATE) != '=>$thisyear->format('Y')),'order'=>array('YEAR(Activitesreelle.DATE)' => 'desc'),'limit'=>3));
+        }
+        
+        public function get_all_utilisateurs($datedebut,$datefin,$visibility){
+            if($visibility == null):
+                return $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Utilisateur.DATEDEBUTACTIF','Utilisateur.FINMISSION'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0','OR' => array('AND'=>array('OR'=>array('Utilisateur.DATEDEBUTACTIF < "'.$datefin.'"','Utilisateur.DATEDEBUTACTIF IS NULL'),'Utilisateur.FINMISSION > "'.$datedebut.'"'),'Utilisateur.FINMISSION IS NULL')),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
+            elseif ($visibility!=''):
+                return $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Utilisateur.DATEDEBUTACTIF','Utilisateur.FINMISSION'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.id  IN ('.$visibility.')','Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0','OR' => array('AND'=>array('OR'=>array('Utilisateur.DATEDEBUTACTIF < "'.$datefin.'"','Utilisateur.DATEDEBUTACTIF IS NULL'),'Utilisateur.FINMISSION > "'.$datedebut.'"'),'Utilisateur.FINMISSION IS NULL')),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
+            else:
+                return $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Utilisateur.DATEDEBUTACTIF','Utilisateur.FINMISSION'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.id'=>userAuth('id'),'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0','OR' => array('AND'=>array('OR'=>array('Utilisateur.DATEDEBUTACTIF < "'.$datefin.'"','Utilisateur.DATEDEBUTACTIF IS NULL'),'Utilisateur.FINMISSION > "'.$datedebut.'"'),'Utilisateur.FINMISSION IS NULL')),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
+            endif;  
+        }
+        
+        public function get_activitesreelle_groupby_date_user($conditions){
+            return $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('CONCAT(Utilisateur.NOM," ",Utilisateur.PRENOM)' => 'asc','Activitesreelle.DATE' => 'desc' ),'conditions'=>$conditions,'recursive'=>0));
+        }
+        
+        public function get_activitesreelle_etat_a_facturer_filter($id){
+            $result = array();
+            switch ($id){                  
+                case 'facture':
+                case null:
+                    $result['condition']="Activitesreelle.VEROUILLE = 0";
+                    $result['filter'] = "toutes les feuilles de temps à facturer";
+                    break;                      
+            }  
+            return $result;
+        } 
+        
+        public function get_export($conditions){
+            $export = $this->Activitesreelle->find('all',array('conditions'=>$conditions,'order' => array('Activitesreelle.DATE' => 'asc'),'recursive' => 0));
+            $this->Session->delete('xls_export');
+            $this->Session->write('xls_export',$export);             
+        }
+        
+        public function get_activitesreelle_all_for_date($id){
+            $date = $this->Activitesreelle->find('first',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'conditions'=>array('Activitesreelle.id'=>$id),'recursive'=>-1));
+            return $this->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$date['Activitesreelle']['utilisateur_id'],'Activitesreelle.DATE'=>CUSDate($date['Activitesreelle']['DATE'])),'recursive'=>-1));            
+        }
+        
+        public function set_request_data_activitesreelle($id){
+            if ($id != null) :
+                $action = $this->Activitesreelle->Action->find('first',array('conditions'=>array('Action.id'=>$id),'recursive'=>-1));
+                $this->request->data['Activitesreelle']['utilisateur_id'] = $action['Action']['utilisateur_id'];
+                $this->request->data['Activitesreelle']['DATE'] = $action['Action']['DEBUT'];
+                $this->request->data['Activitesreelle']['activite_id'] = $action['Action']['activite_id'];  
+            endif;
+        }
 /**
  * index method
  *
  * @return void
  */
 	public function index($etat=null,$utilisateur=null,$mois=null,$annee=null,$indisponibilite=null) {
-            //$this->Session->delete('history');
+            $this->set('title_for_layout','Feuilles de temps');
             if (isAuthorized('activitesreelles', 'index')) :
-                switch ($etat){
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $fetat = "toutes les feuilles de temps";
-                        break;
-                    case 'actif':
-                    case '<':    
-                    case null:
-                        $newconditions[]="Activitesreelle.VEROUILLE = 1";
-                        $fetat = "toutes les feuilles de temps actives";
-                        break;                    
-                    case 'facture':
-                        $newconditions[]="Activitesreelle.VEROUILLE = 0";
-                        $fetat = "toutes les feuilles de temps facturées";
-                        break;                      
-                }  
-                $this->set('fetat',$fetat); 
-                if (areaIsVisible() || $utilisateur==userAuth('id')):
-                switch ($utilisateur){
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $futilisateur = "tous les utilisateurs";
-                        break;
-                    case null:
-                        $newconditions[]="Activitesreelle.utilisateur_id = ".userAuth('id');
-                        $this->Activitesreelle->Utilisateur->recursive = -1;
-                        $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>userAuth('id'))));
-                        $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];
-                        break;                     
-                    default:
-                        $newconditions[]="Activitesreelle.utilisateur_id = ".$utilisateur;
-                        $this->Activitesreelle->Utilisateur->recursive = -1;
-                        $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$utilisateur)));
-                        $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];
-                        break;                      
-                }  
-                else:
-                    $newconditions[]="Activitesreelle.utilisateur_id = ".userAuth('id');
-                    $this->Activitesreelle->Utilisateur->recursive = -1;
-                    $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>userAuth('id'))));
-                    $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];                 
-                endif;                
-                $this->set('futilisateur',$futilisateur);
-                $annee = $annee==null ? date('Y') : $annee;
-                switch ($mois){
-                    case 'tous':
-                    case null:
-                        $datedebut = $annee."-01-01";
-                        $datefin = $annee."-12-31";
-                        $newconditions[]="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
-                        $fperiode = "pour l'année ".$annee;
-                        break;
-                    default:
-                        $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
-                        $debut = $annee."-".$mois."-01";
-                        $datedebut = startWeek($debut);
-                        $datefin = $annee."-".$mois."-".$dernierjour;
-                        $newconditions[]="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
-                        $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
-                        $fperiode = "pour le mois de ".$moiscal[$mois]." ".$annee;
-                        break;                      
-                }  
-                $indisponibilite = $indisponibilite==null ? 0 : $indisponibilite;
-                switch ($indisponibilite){
-                    case '1':
-                        $newconditions[]="Activite.projet_id!=1";
-                        break;
-                    default:
-                        $newconditions[]="1=1";
-                        break;                      
-                }  
-                $this->set('fperiode',$fperiode);                
-                $this->set('title_for_layout','Feuilles de temps');
-                $this->Activitesreelle->Utilisateur->recursive = -1;
-                $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
-                $this->set('utilisateurs',$utilisateurs);
-                $icsutilisateurs = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
-                $this->set('icsutilisateurs',$icsutilisateurs); 
-                $annee = $this->Activitesreelle->find('all',array('fields'=>array('YEAR(Activitesreelle.DATE) AS ANNEE'),'group'=>array('YEAR(Activitesreelle.DATE)'),'order'=>array('YEAR(Activitesreelle.DATE)' => 'desc'),'limit'=>3));
-                $this->set('annees',$annee);                  
-                $this->Activitesreelle->recursive = 1;
-                $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc' ),'conditions'=>$newconditions));
-                $this->set('groups',$group);
-                $this->paginate = array('limit'=>$this->Activitesreelle->find('count'));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
-		$this->Activitesreelle->recursive = 0;
+                $listusers = $this->get_visibility();                
+                $getetat = $this->get_activitesreelle_etat_filter($etat);
+                $getutilisateur = $this->get_activitesreelle_utilisateur_filter($utilisateur,$listusers);
+                $getchrono = $this->get_activitesreelle_chrono_filter($mois, $annee);
+                $getindispo = $this->get_activitesreelle_indisponibilite_filter($indisponibilite);
+                $this->set('fetat',$getetat['filter']);                 
+                $this->set('futilisateur',$getutilisateur['filter']);
+                $this->set('fperiode',$getchrono['filter']);
+                $newconditions=array($getetat['condition'],$getutilisateur['condition'],$getchrono['condition'],$getindispo['condition']);
+                $utilisateurs = $this->requestAction('utilisateurs/find_all_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
+                $icsutilisateurs = $this->requestAction('utilisateurs/find_list_cercle_utilisateur',array('pass'=>array(userAuth('id'),'0','1')));
+                $newftutilisateurs = $this->requestAction('utilisateurs/find_list_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
+                $annees = $this->get_all_activitesreelle_annee();  
+                $groups = $this->get_activitesreelle_groupby_date_user($newconditions);
+                $this->set(compact('utilisateurs','icsutilisateurs','annees','groups','newftutilisateurs'));
+                $this->get_no_limit();
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'order' => array('Utilisateur.NOM' => 'asc','Activitesreelle.DATE' => 'desc'),'recursive'=>0));                 
                 $activitesreeelles = $this->Activitesreelle->find('all',$this->paginate);
-		$this->set('activitesreelles', $activitesreeelles);
-                $this->Activitesreelle->Utilisateur->recursive = -1;
-		$newftutilisateurs = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1','OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
-		$this->set('newftutilisateurs', $newftutilisateurs);                
+		$this->set('activitesreelles', $activitesreeelles);             
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
@@ -125,115 +202,35 @@ class ActivitesreellesController extends AppController {
  * @return void
  */
 	public function afacturer($etat=null,$utilisateur=null,$mois=null,$annee=null) {
-            if (isAuthorized('activitesreelles', 'index')) :
-                $newconditions[]="Activitesreelle.facturation_id IS NULL";                
-                switch ($etat){                  
-                    case 'facture':
-                    case '<':
-                    case null:
-                        $newconditions[]="Activitesreelle.VEROUILLE = 0";
-                        $fetat = "toutes les feuilles de temps à facturer";
-                        break;                      
-                }  
-                $this->set('fetat',$fetat); 
-                if (areaIsVisible() || $utilisateur==userAuth('id')):
-                switch ($utilisateur){
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $futilisateur = "tous les utilisateurs";
-                        break;
-                    case null:
-                        $newconditions[]="Activitesreelle.utilisateur_id = ".userAuth('id');
-                        $this->Activitesreelle->Utilisateur->recursive = -1;
-                        $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>userAuth('id'),'Utilisateur.GESTIONABSENCES'=>1)));
-                        $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];
-                        break;                     
-                    default:
-                        $newconditions[]="Activitesreelle.utilisateur_id = ".$utilisateur;
-                        $this->Activitesreelle->Utilisateur->recursive = -1;
-                        $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$utilisateur)));
-                        $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];
-                        break;                      
-                }  
-                else:
-                    $newconditions[]="Activitesreelle.utilisateur_id = ".userAuth('id');
-                    $this->Activitesreelle->Utilisateur->recursive = -1;
-                    $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>userAuth('id'))));
-                    $futilisateur = $utilisateur['Utilisateur']['NOMLONG'];                 
-                endif;                
-                $this->set('futilisateur',$futilisateur);
-                $annee = $annee==null ? date('Y') : $annee;
-                switch ($mois){
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $fperiode = "";
-                        break;
-                    case null:
-                        $mois=date('m');
-                        $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
-                        $datedebut = $annee."-".$mois."-01";
-                        $datefin = $annee."-".$mois."-".$dernierjour;
-                        $newconditions[]="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
-                        $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
-                        $fperiode = "pour le mois de ".$moiscal[$mois]." ".$annee;
-                        break;                        
-                    default:
-                        $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
-                        $datedebut = $annee."-".$mois."-01";
-                        $datefin = $annee."-".$mois."-".$dernierjour;
-                        $newconditions[]="Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
-                        $moiscal = array('01'=>"janvier",'02'=>"février",'03'=>"mars",'04'=>"avril",'05'=>"mai",'06'=>"juin",'07'=>"juillet",'08'=>"août",'09'=>"septembre",'10'=>"octobre",'11'=>"novembre",'12'=>"décembre",);
-                        $fperiode = "pour le mois de ".$moiscal[$mois]." ".$annee;
-                        break;                      
-                }  
-                $this->set('fperiode',$fperiode);                
-                $this->set('title_for_layout','Feuilles de temps à facturer');
-                $this->Activitesreelle->Utilisateur->recursive = -1;
-                $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
-                $this->set('utilisateurs',$utilisateurs);
-                $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id')),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));           
-                $this->set('utilisateur', $utilisateur);                
-                $this->Activitesreelle->recursive = 1;
-                $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc' ),'conditions'=>$newconditions));
-                $this->set('groups',$group); 
-                $annee = $this->Activitesreelle->find('all',array('fields'=>array('YEAR(Activitesreelle.DATE) AS ANNEE'),'group'=>array('YEAR(Activitesreelle.DATE)'),'order'=>array('YEAR(Activitesreelle.DATE)' => 'asc')));
-                $this->set('annees',$annee);                 
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                 
-		$this->Activitesreelle->recursive = 0;
+            $this->set('title_for_layout','Feuilles de temps à facturer');
+            if (isAuthorized('activitesreelles', 'index')) :         
+                $listusers = $this->get_visibility();
+                $getetat = $this->get_activitesreelle_etat_a_facturer_filter($etat) ;
+                $getutilisateur = $this->get_activitesreelle_utilisateur_filter($utilisateur,$listusers);
+                $getchrono = $this->get_activitesreelle_chrono_filter($mois, $annee);
+                $this->set('fetat',$getetat['filter']);                 
+                $this->set('futilisateur',$getutilisateur['filter']);
+                $this->set('fperiode',$getchrono['filter']);
+                $newconditions=array("Activitesreelle.facturation_id IS NULL",$getetat['condition'],$getutilisateur['condition'],$getchrono['condition']);                  
+                $utilisateurs = $this->requestAction('utilisateurs/find_all_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
+                $icsutilisateurs = $this->requestAction('utilisateurs/find_list_cercle_utilisateur',array('pass'=>array(userAuth('id'),'0','1')));
+                $newftutilisateurs = $this->requestAction('utilisateurs/find_list_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
+                $annees = $this->get_all_activitesreelle_annee();  
+                $groups = $this->get_activitesreelle_groupby_date_user($newconditions);
+                $this->set(compact('utilisateurs','icsutilisateurs','annees','groups','newftutilisateurs'));
+                $this->get_no_limit();
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'order' => array('Utilisateur.NOM' => 'asc','Activitesreelle.DATE' => 'desc'),'recursive'=>0));                 
                 $activitesreeelles = $this->Activitesreelle->find('all',$this->paginate);
-		$this->set('activitesreelles', $activitesreeelles);
-                $this->Activitesreelle->recursive = 0;
-                $export = $this->Activitesreelle->find('all',array('conditions'=>$newconditions,'order' => array('Activitesreelle.DATE' => 'asc')));
-                $this->Session->write('xls_export',$export);  
-                $this->Activitesreelle->Utilisateur->recursive = -1;
-		$newftutilisateurs = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1','OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
-		$this->set('newftutilisateurs', $newftutilisateurs);                
+		$this->set('activitesreelles', $activitesreeelles);    
+                $this->get_export($newconditions);
+
+                /*$utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id')),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));           
+                $this->set('utilisateur', $utilisateur);   */                           
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;                
         }
-        
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('activitesreelles', 'view')) :
-                $this->set('title_for_layout','Feuilles de temps');            
-		if (!$this->Activitesreelle->exists($id)) {
-			throw new NotFoundException(__('Feuille de temps incorrecte'));
-		}
-		$options = array('conditions' => array('Activitesreelle.' . $this->Activitesreelle->primaryKey => $id));
-		$this->set('activitesreelle', $this->Activitesreelle->find('first', $options));
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();          
-            endif;                
-	}
 
 /**
  * add method
@@ -246,7 +243,7 @@ class ActivitesreellesController extends AppController {
 		if ($this->request->is('post')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Activitesreelle->validate = array();
-                        $this->History->goBack(2);
+                        $this->History->goFirst();
                     else:                    
                         $activitesreelles = $this->request->data['Activitesreelle'];  
                         foreach($activitesreelles as $activitesreelle):
@@ -263,23 +260,14 @@ class ActivitesreellesController extends AppController {
                                 endif;   
                             endif;
                         endforeach; 
-                        $this->History->goBack(2); 
+                        $this->History->goFirst();
                     endif;
                 }
-                $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('conditions'=>array('id'=>$utilisateur_id),'recursive'=>-1));
-                $this->set('utilisateur',$utilisateur);
-                $this->Activitesreelle->Activite->recursive = 0;
-                $activites = $this->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc')));
-		$this->set('activites', $activites);  
-                $domaines = $this->Activitesreelle->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM')));
-                $this->set('domaines',$domaines);                 
-                if ($action_id != null && $action_id != '<') :
-                    $this->Activitesreelle->Action->recursive = -1;
-                    $action = $this->Activitesreelle->Action->find('first',array('conditions'=>array('Action.id'=>$action_id)));
-                    $this->request->data['Activitesreelle']['utilisateur_id'] = $action['Action']['utilisateur_id'];
-                    $this->request->data['Activitesreelle']['DATE'] = $action['Action']['DEBUT'];
-                    $this->request->data['Activitesreelle']['activite_id'] = $action['Action']['activite_id'];
-                endif;
+                $utilisateur = $this->requestAction('utilisateurs/find_all_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
+                $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
+                $domaines = $this->requestAction('domaines/get_list');
+                $this->set(compact('utilisateur','activites','domaines'));
+                $this->set_request_data_activitesreelle($action_id);           
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
@@ -302,12 +290,12 @@ class ActivitesreellesController extends AppController {
                         if($idft['Activitesreelle']['VEROUILLE']==1):
                             $this->redirect(array('action' => 'edit',$idft['Activitesreelle']['id']));
                         else:
-                            $this->Session->setFlash(__('La feuille de temps existe déjà et elle est soumise pour facturation, contacter l\'administrateur via le formulaire de contact pour lui demander de déverouiller cette feuille de temps.',true),'flash_info');
-                            $this->History->notmove();
+                            $this->Session->setFlash(__('La feuille de temps existe déjà et elle est soumise pour facturation, contacter l\'administrateur via le formulaire de contact pour lui demander de déverouiller cette feuille de temps.',true),'flash_warning');
+                            $this->History->goFirst();
                         endif;
                     endif;
 		}
-                $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id')),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));           
+                $utilisateur = $this->requestAction('utilisateurs/find_all_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
                 $this->set('utilisateur', $utilisateur);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -358,15 +346,11 @@ class ActivitesreellesController extends AppController {
                         $this->History->goBack(2); 
                    endif;
 		} else {
-                    $date = $this->Activitesreelle->find('first',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'conditions'=>array('Activitesreelle.id'=>$id),'recursive'=>-1));
-                    $activitesreelles = $this->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$date['Activitesreelle']['utilisateur_id'],'Activitesreelle.DATE'=>CUSDate($date['Activitesreelle']['DATE'])),'recursive'=>-1));
-                    $this->set('activitesreelles', $activitesreelles);
-                    $domaines = $this->Activitesreelle->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM')));
-                    $this->set('domaines',$domaines);  
-                    $utilisateur = $this->Activitesreelle->Utilisateur->find('first',array('conditions'=>array('id'=>$date['Activitesreelle']['utilisateur_id']),'recursive'=>-1));
-                    $this->set('utilisateur',$utilisateur);                    
-                    $activites = $this->Activitesreelle->Activite->find('all',array('fields'=>array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'recursive'=>0));
-                    $this->set('activites', $activites);
+                $utilisateur = $this->requestAction('utilisateurs/find_all_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
+                $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
+                $domaines = $this->requestAction('domaines/get_list');
+                $activitesreelles = $this->get_activitesreelle_all_for_date($id);
+                $this->set(compact('utilisateur','activites','domaines','activitesreelles'));                    
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -622,22 +606,45 @@ class ActivitesreellesController extends AppController {
  *
  * @return void
  */
-	public function search() {
-            if (isAuthorized('activitesreelles', 'index')) :
-                $this->set('title_for_layout','feuilles de temps');
-                $keyword=isset($this->params->data['Activitesreelle']['SEARCH']) ? $this->params->data['Activitesreelle']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Activite.NOM LIKE '%".$keyword."%'"));
-                $this->Activitesreelle->recursive = 0;
-                $group = $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('Activitesreelle.utilisateur_id' => 'asc','Activitesreelle.DATE' => 'desc'),'conditions'=>$newconditions));
-                $this->set('groups',$group); 
-                $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
-                $this->set('utilisateurs',$utilisateurs);                
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Activitesreelle->recursive = 0;
-                $activitesreeelles = $this->Activitesreelle->find('all',$this->paginate);
-		$this->set('activitesreelles', $activitesreeelles);             
-                $this->render('index');
+	public function search($etat=null,$utilisateur=null,$mois=null,$annee=null,$indisponibilite=null,$keywords=null) {
+            $this->set('title_for_layout','feuilles de temps');  
+            if (isAuthorized('activitesreelles', 'index')) :  
+                if(isset($this->params->data['Activitesreelle']['SEARCH'])):
+                    $keywords = $this->params->data['Activitesreelle']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords));  
+                    $listusers = $this->get_visibility();                
+                    $getetat = $this->get_activitesreelle_etat_filter($etat);
+                    $getutilisateur = $this->get_activitesreelle_utilisateur_filter($utilisateur,$listusers);
+                    $getchrono = $this->get_activitesreelle_chrono_filter($mois, $annee);
+                    $getindispo = $this->get_activitesreelle_indisponibilite_filter($indisponibilite);
+                    $this->set('fetat',$getetat['filter']);                 
+                    $this->set('futilisateur',$getutilisateur['filter']);
+                    $this->set('fperiode',$getchrono['filter']);
+                    $newconditions=array($getetat['condition'],$getutilisateur['condition'],$getchrono['condition'],$getindispo['condition']);
+                    $utilisateurs = $this->requestAction('utilisateurs/find_all_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
+                    $icsutilisateurs = $this->requestAction('utilisateurs/find_list_cercle_utilisateur',array('pass'=>array(userAuth('id'),'0','1')));
+                    $newftutilisateurs = $this->requestAction('utilisateurs/find_list_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
+                    $annees = $this->get_all_activitesreelle_annee();  
+                    $this->get_no_limit();            
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Activite.NOM LIKE '%".$value."%'","Utilisateur.NOM LIKE '%".$value."%'","Utilisateur.PRENOM LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
+                    $groups = $this->get_activitesreelle_groupby_date_user($conditions);
+                    $this->set(compact('utilisateurs','icsutilisateurs','annees','groups','newftutilisateurs'));
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'order' => array('Utilisateur.NOM' => 'asc','Activitesreelle.DATE' => 'desc'),'recursive'=>0));                                    
+                    //$activitesreeelles = $this->Activitesreelle->find('all',$this->paginate);
+                    $this->set('activitesreelles', $this->paginate());    
+               else:
+                   $this->redirect(array('action'=>'index',$etat,$utilisateur,$mois,$annee,$indisponibilite));
+               endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
@@ -668,40 +675,59 @@ class ActivitesreellesController extends AppController {
             $dernierjour = date('t', mktime(0, 0, 0, $mois, 5, $annee));
             $datedebut = absstartWeek(new DateTime($datedebut));            
             $datefin = $annee."-".$mois."-".$dernierjour;
-            $this->Activitesreelle->Utilisateur->recursive = -1;
-            if($pass == '0'):
-            $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Utilisateur.DATEDEBUTACTIF','Utilisateur.FINMISSION'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0','OR' => array('AND'=>array('OR'=>array('Utilisateur.DATEDEBUTACTIF < "'.$datefin.'"','Utilisateur.DATEDEBUTACTIF IS NULL'),'Utilisateur.FINMISSION > "'.$datedebut.'"'),'Utilisateur.FINMISSION IS NULL')),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
-            else:
-                $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
-                $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Utilisateur.DATEDEBUTACTIF','Utilisateur.FINMISSION'),'conditions'=>array('Utilisateur.id IN ('.$monequipe.')','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0','OR' => array('AND'=>array('OR'=>array('Utilisateur.DATEDEBUTACTIF < "'.$datefin.'"','Utilisateur.DATEDEBUTACTIF IS NULL'),'Utilisateur.FINMISSION > "'.$datedebut.'"'),'Utilisateur.FINMISSION IS NULL')),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
-            endif;
-            $this->set('utilisateurs',$utilisateurs);  
-            $this->Activitesreelle->recursive = 0;
-            if($pass == '0'):
-            $viewabsences = "SELECT 
-                            Activitesreelle.DATE,
-                            Activitesreelle.LU, Activitesreelle.MA, Activitesreelle.ME,  Activitesreelle.JE, Activitesreelle.VE, Activitesreelle.SA, Activitesreelle.DI,
-                            Activitesreelle.LU_TYPE, Activitesreelle.MA_TYPE, Activitesreelle.ME_TYPE,  Activitesreelle.JE_TYPE, Activitesreelle.VE_TYPE, Activitesreelle.SA_TYPE, Activitesreelle.DI_TYPE,
-                            Activitesreelle.utilisateur_id,Activitesreelle.demandeabsence_id
-                            FROM activitesreelles AS Activitesreelle 
-                            LEFT JOIN activites AS Activite ON (Activitesreelle.activite_id = Activite.id) 
-                            WHERE Activite.projet_id = 1 
-                            AND Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'
-                            ORDER BY Activitesreelle.DATE ASC;";
-            else:
-            $viewabsences = "SELECT 
-                            Activitesreelle.DATE,
-                            Activitesreelle.LU, Activitesreelle.MA, Activitesreelle.ME,  Activitesreelle.JE, Activitesreelle.VE, Activitesreelle.SA, Activitesreelle.DI,
-                            Activitesreelle.LU_TYPE, Activitesreelle.MA_TYPE, Activitesreelle.ME_TYPE,  Activitesreelle.JE_TYPE, Activitesreelle.VE_TYPE, Activitesreelle.SA_TYPE, Activitesreelle.DI_TYPE,
-                            Activitesreelle.utilisateur_id,Activitesreelle.demandeabsence_id
-                            FROM activitesreelles AS Activitesreelle 
-                            LEFT JOIN activites AS Activite ON (Activitesreelle.activite_id = Activite.id)
-                            WHERE Activite.projet_id = 1 
-                            AND Activitesreelle.utilisateur_id IN (".$monequipe.") AND Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'
-                            ORDER BY Activitesreelle.DATE ASC;";
-            endif;
+            $listuser = $this->get_visibility();
+            switch($pass):
+                    case null:
+                    case 0:
+                        $utilisateurs = $this->get_all_utilisateurs($datedebut,$datefin,$listuser);
+                        if($listuser == null):
+                            $condition = " AND Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
+                        elseif ($listuser!=''):
+                            $condition = " AND Activitesreelle.utilisateur_id IN (".$listuser.") AND Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
+                        else:
+                            $condition = " AND Activitesreelle.utilisateur_id =".userAuth('id')." AND Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'";
+                        endif;                          
+                        $viewabsences = "SELECT 
+                                        Activitesreelle.DATE,
+                                        Activitesreelle.LU, Activitesreelle.MA, Activitesreelle.ME,  Activitesreelle.JE, Activitesreelle.VE, Activitesreelle.SA, Activitesreelle.DI,
+                                        Activitesreelle.LU_TYPE, Activitesreelle.MA_TYPE, Activitesreelle.ME_TYPE,  Activitesreelle.JE_TYPE, Activitesreelle.VE_TYPE, Activitesreelle.SA_TYPE, Activitesreelle.DI_TYPE,
+                                        Activitesreelle.utilisateur_id,Activitesreelle.demandeabsence_id
+                                        FROM activitesreelles AS Activitesreelle 
+                                        LEFT JOIN activites AS Activite ON (Activitesreelle.activite_id = Activite.id) 
+                                        WHERE Activite.projet_id = 1 ".$condition." ORDER BY Activitesreelle.DATE ASC;";
+                        break;
+                    case -1:
+                       $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
+                       $utilisateurs = $this->get_all_utilisateurs($datedebut,$datefin,$monequipe);
+                       $viewabsences = "SELECT 
+                                        Activitesreelle.DATE,
+                                        Activitesreelle.LU, Activitesreelle.MA, Activitesreelle.ME,  Activitesreelle.JE, Activitesreelle.VE, Activitesreelle.SA, Activitesreelle.DI,
+                                        Activitesreelle.LU_TYPE, Activitesreelle.MA_TYPE, Activitesreelle.ME_TYPE,  Activitesreelle.JE_TYPE, Activitesreelle.VE_TYPE, Activitesreelle.SA_TYPE, Activitesreelle.DI_TYPE,
+                                        Activitesreelle.utilisateur_id,Activitesreelle.demandeabsence_id
+                                        FROM activitesreelles AS Activitesreelle 
+                                        LEFT JOIN activites AS Activite ON (Activitesreelle.activite_id = Activite.id)
+                                        WHERE Activite.projet_id = 1 
+                                        AND Activitesreelle.utilisateur_id IN (".$monequipe.") AND Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'
+                                        ORDER BY Activitesreelle.DATE ASC;";
+                        break;
+                    default:
+                        $mylistuser = $this->requestAction('assoentiteutilisateurs/json_get_all_users_entite/'.$pass);
+                        $utilisateurs = $this->get_all_utilisateurs($datedebut,$datefin,$mylistuser);
+                        $viewabsences = "SELECT 
+                                        Activitesreelle.DATE,
+                                        Activitesreelle.LU, Activitesreelle.MA, Activitesreelle.ME,  Activitesreelle.JE, Activitesreelle.VE, Activitesreelle.SA, Activitesreelle.DI,
+                                        Activitesreelle.LU_TYPE, Activitesreelle.MA_TYPE, Activitesreelle.ME_TYPE,  Activitesreelle.JE_TYPE, Activitesreelle.VE_TYPE, Activitesreelle.SA_TYPE, Activitesreelle.DI_TYPE,
+                                        Activitesreelle.utilisateur_id,Activitesreelle.demandeabsence_id
+                                        FROM activitesreelles AS Activitesreelle 
+                                        LEFT JOIN activites AS Activite ON (Activitesreelle.activite_id = Activite.id)
+                                        WHERE Activite.projet_id = 1 
+                                        AND Activitesreelle.utilisateur_id IN (".$mylistuser.") AND Activitesreelle.DATE BETWEEN '".$datedebut."' AND '".$datefin."'
+                                        ORDER BY Activitesreelle.DATE ASC;";
+                        break;
+            endswitch;
             $indisponibilites = $this->Activitesreelle->query($viewabsences);
-            $this->set('indisponibilites',$indisponibilites);
+            $cercles = $this->requestAction('entites/find_all_cercle/'.userAuth('id'));
+            $this->set(compact('indisponibilites','utilisateurs','cercles'));
         }
         
 /**
@@ -1075,6 +1101,7 @@ class ActivitesreellesController extends AppController {
         }
         
         public function rejeter(){
+            $this->autoRender = false;
             $ids = explode ('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):            
                 foreach($ids as $id):
@@ -1085,10 +1112,11 @@ class ActivitesreellesController extends AppController {
             else:
                 echo $this->Session->setFlash(__('Aucune feuilles de temps sélectionnées',true),'flash_failure');                
             endif;
-            exit();
+            return $this->request->data('all_ids');
         }  
         
         public function sendrejeter(){
+            $this->autoRender = false;
             $ids = explode ('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):            
                 foreach($ids as $id):
@@ -1098,7 +1126,7 @@ class ActivitesreellesController extends AppController {
             else:
                 echo $this->Session->setFlash(__('Aucune feuilles de temps sélectionnées',true),'flash_failure');                
             endif;
-            exit();
+            return $this->request->data('all_ids');
         }          
         
         public function deverouiller($id){
@@ -1140,26 +1168,32 @@ class ActivitesreellesController extends AppController {
         }
         
         public function soumettre(){
+            $this->autoRender = false;
             $ids = explode('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
                     $this->updatefacturation($id,true);
                 endforeach; 
                 sleep(3);
-                $this->History->goBack(1);
+                echo $this->Session->setFlash(__('Feuilles de temps soumises',true),'flash_success');
+            else:
+                echo $this->Session->setFlash(__('Aucune feuilles de temps sélectionnées',true),'flash_failure');                
             endif;
-            exit();
+            return $this->request->data('all_ids');
         }
         
         public function deleteall(){
+            $this->autoRender = false;
             $ids = explode('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
                     $this->delete($id,true);
                 endforeach;  
-                $this->History->goBack(0);
+                echo $this->Session->setFlash(__('Feuilles de temps supprimées',true),'flash_success');
+            else:
+                echo $this->Session->setFlash(__('Aucune feuilles de temps sélectionnées',true),'flash_failure');                
             endif;
-            exit();
+            return $this->request->data('all_ids');
         }     
         
         public function icsImport($utilisateur_id,$activite_id,$date,$day,$type=null,$duree=null,$id_demande=null,$datereelle=null){
@@ -1233,20 +1267,8 @@ class ActivitesreellesController extends AppController {
                     $record['Activitesreelle']['VE']=$duree;
                     $record['Activitesreelle']['VE_TYPE']=$type;
                     $this->Activitesreelle->save($record);
-                    break;
-                //JLR :: pas necessaire d'importer les samedi et dimanche
-                /*case 'SA':
-                    $record['Activitesreelle']['SA']=$duree;
-                    $record['Activitesreelle']['SA_TYPE']=$type;
-                    $this->Activitesreelle->save($record);
-                    break;
-                case 'DI':
-                    $record['Activitesreelle']['DI']=$duree;
-                    $record['Activitesreelle']['DI_TYPE']=$type;
-                    $this->Activitesreelle->save($record);
-                    break;   */             
+                    break;           
             endswitch;
-            //JLR :: retirer les samedi et dimanche du total
             $total = $this->Activitesreelle->find('first',array('fields'=>array('(LU+MA+ME+JE+VE) AS TOTAL','DATE','VEROUILLE'),'conditions'=>array('Activitesreelle.utilisateur_id'=>$utilisateur_id,'Activitesreelle.activite_id'=>$activite_id,'Activitesreelle.DATE'=>$date),'recursive'=>-1));
             $record['Activitesreelle']['TOTAL'] = !isset($total[0]['TOTAL']) || $total[0]['TOTAL']==null ? 0 : $total[0]['TOTAL'];
             $this->Activitesreelle->save($record);
@@ -1316,20 +1338,8 @@ class ActivitesreellesController extends AppController {
                     $record['Activitesreelle']['VE']=$duree;
                     $record['Activitesreelle']['VE_TYPE']=$type;
                     $this->Activitesreelle->save($record);
-                    break;
-                //JLR :: pas necessaire d'importer les samedi et dimanche
-                /*case 'SA':
-                    $record['Activitesreelle']['SA']=$duree;
-                    $record['Activitesreelle']['SA_TYPE']=$type;
-                    $this->Activitesreelle->save($record);
-                    break;
-                case 'DI':
-                    $record['Activitesreelle']['DI']=$duree;
-                    $record['Activitesreelle']['DI_TYPE']=$type;
-                    $this->Activitesreelle->save($record);
-                    break;   */             
+                    break;            
             endswitch;
-            //JLR :: retirer les samedi et dimanche du total
             $total = $this->Activitesreelle->find('first',array('fields'=>array('(LU+MA+ME+JE+VE) AS TOTAL','DATE','VEROUILLE'),'conditions'=>array('Activitesreelle.utilisateur_id'=>$utilisateur_id,'Activitesreelle.activite_id'=>$activite_id,'Activitesreelle.DATE'=>$date),'recursive'=>-1));
             $record['Activitesreelle']['TOTAL'] = !isset($total[0]['TOTAL']) || $total[0]['TOTAL']==null ? 0 : $total[0]['TOTAL'];
             $this->Activitesreelle->save($record);
@@ -1396,13 +1406,18 @@ class ActivitesreellesController extends AppController {
             foreach($utilisateurs as $utilisateur):
                 $allIdUsers[] = $utilisateur['Utilisateur']['id'];
             endforeach;
+
             $utilisateurAvecSaisie = $this->getActivitesReelles($mois, $annee);
             $userWithWork = array();
             foreach($utilisateurAvecSaisie as $utilisateur):
                 $userWithWork[] = $utilisateur['SAISIE']['USERID'];
             endforeach;            
             $result = implode(",",array_diff($allIdUsers, $userWithWork));
-            return $this->Activitesreelle->Utilisateur->find('all',array('conditions'=>array('Utilisateur.id in ('.$result.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+            if($result != ''):
+                return $this->Activitesreelle->Utilisateur->find('all',array('conditions'=>array('Utilisateur.id in ('.$result.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+            else:
+                return array();
+            endif;
         }
         
         public function sendmailrelance($utilisateur_id){
@@ -1411,8 +1426,8 @@ class ActivitesreellesController extends AppController {
             $to=$utilisateur['Utilisateur']['MAIL'];
             $email = $utilisateur['Utilisateur']['MAIL'];
             $objet = 'SAILL : //!\ URGENT RELANCE : Saisie d\'activité';
-            $message = "URGENT RELANCE : Bonjour ".$utilisateur['Utilisateur']['NOMLONG'].',';
-            $message .= $message.'<br>
+            $message = "URGENT RELANCE :<br><br>Bonjour ".$utilisateur['Utilisateur']['NOMLONG'].',';
+            $message .= '<br><br>
                     Votre saisie ne semble pas avoir été faites dans l\'outil.<br>
                     Merci de prendre quelques minutes de votre temps pour faire cette saisie sur le mois.<br><br>
                     N\'oubliez pas que vous pouvez saisir par anticipation votre activité et la valider juste avant la date limite.<br>
@@ -1432,7 +1447,7 @@ class ActivitesreellesController extends AppController {
                     $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');
                 }  
             endif;
-            $this->History->notmove();
+            $this->History->goBack(1);
         }    
         
         public function setvalid($demande_id){

@@ -20,15 +20,17 @@ class ActivitesController extends AppController {
  */
 	public function index($filtreEtat=null,$filtre=null) {
             //$this->Session->delete('history');
+            $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.userAuth('id'));
             if (isAuthorized('activites', 'index')) :
                 switch ($filtre){
                     case 'tous':
                     case null:    
-                        $newconditions[]="1=1";
+                        $newconditions[]="Activite.projet_id IN (".$listprojets.")";
                         $fprojet = "tous les projets";
                         break;
                     case 'autres':
-                        $newconditions[]="Activite.projet_id > 1";
+                        $listprojets = strlen ($listprojets) == 1 ? '0' : substr_replace($listprojets ,"",0,2);
+                        $newconditions[]="Activite.projet_id IN (".$listprojets.")";
                         $fprojet = "tous les projets autres que indisponibilité";
                         break;                    
                     default :
@@ -46,22 +48,16 @@ class ActivitesController extends AppController {
                         break;
                     case 'actif':
                     case null:                         
-                        $newconditions[]="Projet.ACTIF=1";
+                        $newconditions[]="Activite.ACTIVE=1";
                         $fetat = "toutes les activités actives";
                         break;  
                     case 'inactif':
-                        $newconditions[]="Projet.ACTIF=0";
+                        $newconditions[]="Activite.ACTIVE=0";
                         $fetat = "toutes les activités inactives";
                         break;                                         
                 }    
                 $this->set('fetat',$fetat); 
-                $this->Activite->Projet->recursive = -1;
-                $listeprojets = $this->Activite->find('all',array('fileds'=>'Activite.projet_id','group'=>'Activite.projet_id','recursive'=>-1));
-                $listein = '';
-                foreach($listeprojets as $liste):
-                    $listein .= $liste['Activite']['projet_id'].',';
-                endforeach;
-                $projets = $this->Activite->Projet->find('all',array('fields' => array('id','NOM'),'conditions'=>array('Projet.id IN ('.substr_replace($listein ,"",-1).')'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
+                $projets = $this->requestAction('projets/find_all_cercle_projet/'.userAuth('id'));
                 $this->set('projets',$projets);  
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
 		$this->Activite->recursive = 0;
@@ -102,7 +98,7 @@ class ActivitesController extends AppController {
  */
 	public function add() {
             if (isAuthorized('activites', 'add')) :
-                $projets = $this->Activite->Projet->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'recursive'=>-1));
+                $projets = $this->requestAction('projets/find_list_cercle_projet/'.userAuth('id'));
                 $this->set('projets',$projets);               
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
@@ -133,7 +129,7 @@ class ActivitesController extends AppController {
  */
 	public function edit($id = null) {
             if (isAuthorized('activites', 'edit')) :
-                $projets = $this->Activite->Projet->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'recursive'=>0));
+                $projets = $this->requestAction('projets/find_list_cercle_projet/'.userAuth('id'));
                 $this->set('projets',$projets);  
                 $historybudgets = $this->Activite->Historybudget->find('all',array('conditions'=>array('activite_id'=>$id),'recursive'=>-1,'order'=>array('ANNEE'=>'desc','Historybudget.created'=>'desc')));
                 $this->set('historybudgets', $historybudgets);                
@@ -196,9 +192,12 @@ class ActivitesController extends AppController {
  * @return void
  */
 	public function search() {
-            if (isAuthorized('activites', 'index1')) :
+            if (isAuthorized('activites', 'index')) :
                 $keyword=isset($this->params->data['Activite']['SEARCH']) ? $this->params->data['Activite']['SEARCH'] : '';
-                $newconditions = array('OR'=>array("Activite.NOM LIKE '%".$keyword."%'","Projet.NOM LIKE '%".$keyword."%'","Activite.NUMEROGALLILIE LIKE '%".$keyword."%'","Activite.DESCRIPTION LIKE '%".$keyword."%'"));
+                $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.userAuth('id'));
+                $newconditions[] = array();
+                $newconditions[] = array("Projet.id IN (".$listprojets.')');
+                $newconditions[] = array('OR'=>array("Activite.NOM LIKE '%".$keyword."%'","Projet.NOM LIKE '%".$keyword."%'","Activite.NUMEROGALLILIE LIKE '%".$keyword."%'","Activite.DESCRIPTION LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;
                 $this->Activite->recursive = 0;
@@ -240,4 +239,49 @@ class ActivitesController extends AppController {
             return $result;
             exit();
         }
+        
+        public function set_actif($projet_id=null,$actif=0){
+            $objs = $this->Activite->find('all',array('fields'=>array('Activite.id'),'conditions'=>array('Activite.projet_id'=>$projet_id),'recursive'=>0));
+            foreach($objs as $obj):
+                $this->set_this_actif($obj['Activite']['id'],intval($actif));
+            endforeach;
+        }    
+        
+        public function set_this_actif($id=null,$actif=0){
+            $this->Activite->id = $id;
+            $this->Activite->saveField('ACTIVE', intval($actif));
+        }      
+        
+        public function find_all_cercle_activite($utilisateur_id){
+            $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.$utilisateur_id);
+            $conditions = array();
+            $conditions[]= array('Activite.projet_id>1');
+            $conditions[]=array('Activite.projet_id IN ('.$listprojets.')');
+            $order = array();
+            $order[]=array('Projet.NOM'=>'asc');
+            $order[]=array('Activite.NOM'=>'asc');
+            $list = $this->Activite->find('all',array('order'=>$order,'conditions'=>$conditions,'recursive'=>1));
+            return $list;
+        }
+        
+        public function find_str_id_cercle_activite($utilisateur_id){
+            $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.$utilisateur_id);
+            if($listprojets != '0'):
+                $conditions = array();
+                $conditions[]= array('Activite.projet_id>1');
+                $conditions[]=array('Activite.projet_id IN ('.$listprojets.')');
+                $objs = $this->Activite->find('all',array('conditions'=>$conditions,'recursive'=>1));
+                $list = '';
+                if(count($objs) > 0):
+                    foreach($objs as $obj):
+                        $list .= $obj['Activite']['id'].",";
+                    endforeach;
+                    return substr_replace($list ,"",-1);
+                else:
+                    return '0';
+                endif;
+            else:
+                return '0';
+            endif;           
+        }        
 }

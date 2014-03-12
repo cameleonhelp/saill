@@ -24,10 +24,11 @@ class FacturationsController extends AppController {
             $annee = $annee==null ? date('Y') : $annee;
             if (isAuthorized('facturations', 'index')) :            
                 if (areaIsVisible() || $utilisateur==userAuth('id')):
+                $listusers = $this->requestAction('assoentiteutilisateurs/json_get_all_users/'.userAuth('id'));
                 switch ($utilisateur){
                     case 'tous':    
                     case null:
-                        $newconditions[]="1=1";
+                        $newconditions[]="Facturation.utilisateur_id IN (".$listusers.")";
                         $futilisateur = "tous les utilisateurs";
                         break;
                     default:
@@ -79,10 +80,10 @@ class FacturationsController extends AppController {
                         break;                      
                 }                  
                 $this->Facturation->Utilisateur->recursive = -1;
-                $utilisateurs = $this->Facturation->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG' => 'asc')));
+                $utilisateurs = $this->requestAction('utilisateurs/find_all_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
                 $this->set('utilisateurs',$utilisateurs);
                 $this->Facturation->recursive = 1;
-                $group = $this->Facturation->find('all',array('fields'=>array('Facturation.VERSION','Facturation.DATE','Facturation.utilisateur_id','Facturation.NUMEROFTGALILEI','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Facturation.DATE) AS NBACTIVITE'),'group'=>array('Facturation.DATE','Facturation.utilisateur_id','Facturation.VERSION'),'order'=>array('Facturation.utilisateur_id' => 'asc','Facturation.DATE' => 'desc' ),'conditions'=>$newconditions));
+                $group = $this->Facturation->find('all',array('fields'=>array('Facturation.VERSION','Facturation.DATE','Facturation.utilisateur_id','Facturation.NUMEROFTGALILEI','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Facturation.DATE) AS NBACTIVITE'),'group'=>array('Facturation.DATE','Facturation.utilisateur_id','Facturation.VERSION'),'order'=>array('CONCAT(Utilisateur.NOM," ",Utilisateur.PRENOM)' => 'asc','Facturation.DATE' => 'desc' ),'conditions'=>$newconditions));
                 $this->set('groups',$group);
                 $annee = $this->Facturation->find('all',array('fields'=>array('YEAR(Facturation.DATE) AS ANNEE'),'conditions'=>array('YEAR(Facturation.DATE) > 0'),'group'=>array('YEAR(Facturation.DATE)'),'order'=>array('YEAR(Facturation.DATE)' => 'asc')));
                 $this->set('annees',$annee);                
@@ -187,7 +188,7 @@ class FacturationsController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;
                 $this->Facturation->recursive = 0;
-                $group = $this->Facturation->find('all',array('fields'=>array('Facturation.DATE','Facturation.utilisateur_id','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Facturation.DATE) AS NBACTIVITE'),'group'=>array('Facturation.DATE','Facturation.utilisateur_id'),'order'=>array('Facturation.utilisateur_id' => 'asc','Facturation.DATE' => 'desc'),'conditions'=>$newconditions));                    
+                $group = $this->Facturation->find('all',array('fields'=>array('Facturation.DATE','Facturation.utilisateur_id','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Facturation.DATE) AS NBACTIVITE'),'group'=>array('Facturation.DATE','Facturation.utilisateur_id'),'order'=>array('CONCAT(Utilisateur.NOM," ",Utilisateur.PRENOM)' => 'asc','Facturation.DATE' => 'desc'),'conditions'=>$newconditions));                    
                 $this->set('groups',$group); 
                 $this->set('facturations', $this->paginate());              
                 $this->render('index');
@@ -216,20 +217,20 @@ class FacturationsController extends AppController {
                         $this->History->goBack(2);
                     else:                
                         $facturations = $this->request->data['Facturation'];
-                        unset($facturations['¤']);                  
+                        unset($facturations['¤']);                     
                         foreach($facturations as $facturation):
                             if (is_array($facturation)):
                                 $this->Facturation->create();
                                 if ($this->Facturation->save($facturation)) {
-                                    if (!isset($facturation['new'])):
+                                    if (!isset($facturation['new']) && isset($facturation['activitesreelle_id'])):
                                         $lastId = $this->Facturation->getLastInsertID();
                                         $this->Facturation->Activitesreelle->id = $facturation['activitesreelle_id'];
                                         $this->Facturation->Activitesreelle->saveField('facturation_id', $lastId);
                                    endif;
-                                    if (isset($facturation['VERSION']) && $facturation['VERSION'] > 0):
-                                        $version = $facturation['VERSION']-1;
+                                    if (isset($facturation['VERSION']) && intval($facturation['VERSION']) > 0):
+                                        $version = intval($facturation['VERSION'])-1;
                                         $oldFacturationId = $this->getOldFacturationId($facturation['utilisateur_id'], CUSDate($facturation['DATE']), $facturation['activite_id'], $version);
-                                        $this->Facturation->id = $oldFacturationId;
+                                        $this->Facturation->id = $oldFacturationId;                                         
                                         $this->Facturation->saveField('VISIBLE', 1);
                                     endif;
                                     $this->Session->setFlash(__('La facturation est sauvegardée',true),'flash_success');
@@ -591,7 +592,29 @@ class FacturationsController extends AppController {
             $byprojetactiviteutilisateur = $this->array_sum_merge($entrop);
             $periode = 'Facturation.DATE BETWEEN "'. startWeek($start).'" AND "'.endWeek($end).'"';
             $indisponibilite = $options['indisponibilite'] ? '1=1': 'Activite.projet_id > 1';
-            $result = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','SUM(Facturation.FRAIS) AS FRAIS','Utilisateur.id','Utilisateur.NOM','Utilisateur.PRENOM','Activite.projet_id','Utilisateur.societe_id','Activite.id','Activite.NOM','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$periode,$indisponibilite,'Facturation.VISIBLE'=>0),'order'=>array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc','Facturation.utilisateur_id'=>'asc'),'group'=>array('Facturation.utilisateur_id','Activite.projet_id','Activite.NOM'),'recursive'=>0));
+            $result = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','SUM(Facturation.FRAIS) AS FRAIS','Utilisateur.id','Utilisateur.NOM','Utilisateur.PRENOM','Activite.projet_id','Utilisateur.societe_id','Activite.id','Activite.NOM','Activite.NUMEROGALLILIE','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$periode,$indisponibilite,'Facturation.VISIBLE'=>0),'order'=>array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc','Facturation.utilisateur_id'=>'asc'),'group'=>array('Facturation.utilisateur_id','Activite.projet_id','Activite.NOM'),'recursive'=>0));
+            return array('trop'=>$byprojetactiviteutilisateur,'result'=>$result);
+            endif;
+        }
+        
+        public function forsncf(){
+            $options = $this->params->params['pass'];
+            $societes = $options['societes'];
+            $utilisateurs = $this->requestAction('utilisateurs/insociete', array('pass'=>$societes));
+            if(count($utilisateurs)>0):
+            foreach($utilisateurs as $utilisateur):
+                @$listutilisateurs .= $utilisateur['Utilisateur']['id'].',';
+            endforeach;
+            $destinataire = 'Facturation.utilisateur_id IN ('.substr_replace($listutilisateurs ,"",-1).')';
+            $start = $options['start'];
+            $end = $options['end'];
+            $activitefirstweek = $this->Facturation->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Facturation.utilisateur_id', 'SUM(Facturation.LU) AS LU', 'SUM(Facturation.MA) AS MA', 'SUM(Facturation.ME) AS ME', 'SUM(Facturation.JE) AS JE', 'SUM(Facturation.VE) AS VE', 'SUM(Facturation.SA) AS SA', 'SUM(Facturation.DI) AS DI','Facturation.DATE AS DATE'),'conditions'=>array($destinataire,'Facturation.VISIBLE'=>0,'Facturation.DATE'=>startWeek(CUSDate($start))),'group'=>array('Activite.projet_id','Activite.id','Facturation.utilisateur_id'),'recursive'=>0));  
+            $activitelastweek = $this->Facturation->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Facturation.utilisateur_id', 'SUM(Facturation.LU) AS LU', 'SUM(Facturation.MA) AS MA', 'SUM(Facturation.ME) AS ME', 'SUM(Facturation.JE) AS JE', 'SUM(Facturation.VE) AS VE', 'SUM(Facturation.SA) AS SA', 'SUM(Facturation.DI) AS DI','Facturation.DATE AS DATE'),'conditions'=>array($destinataire,'Facturation.VISIBLE'=>0,'Facturation.DATE'=>startWeek(CUSDate($end))),'group'=>array('Activite.projet_id','Activite.id','Facturation.utilisateur_id'),'recursive'=>0));  
+            $entrop = array_merge($this->getEntropFirstSNCF($activitefirstweek),$this->getEntropLastSNCF($activitelastweek));
+            $byprojetactiviteutilisateur = $this->array_sum_merge($entrop);
+            $periode = 'Facturation.DATE BETWEEN "'. startWeek($start).'" AND "'.endWeek($end).'"';
+            $indisponibilite = $options['indisponibilite'] ? '1=1': 'Activite.projet_id > 1';
+            $result = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','SUM(Facturation.FRAIS) AS FRAIS','Utilisateur.id','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Activite.projet_id','Utilisateur.societe_id','Activite.id','Activite.NOM','Activite.NUMEROGALLILIE','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$periode,$indisponibilite,'Facturation.VISIBLE'=>0),'order'=>array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc','Facturation.utilisateur_id'=>'asc'),'group'=>array('Facturation.utilisateur_id','Activite.projet_id','Activite.NOM'),'recursive'=>0));
             return array('trop'=>$byprojetactiviteutilisateur,'result'=>$result);
             endif;
         }
@@ -603,6 +626,148 @@ class FacturationsController extends AppController {
                 $annee = date('Y');
                 $datetime1 = new DateTime(CUSDate($firstweek['Facturation']['DATE']));
                 $datetime2 = new DateTime($annee.'-'.$this->request->data['Rapport']['mois'].'-01');
+                $interval = $datetime2->diff($datetime1); 
+                $entropfirst = $interval->format('%a');
+                switch ($entropfirst):
+                    case 1:
+                        $enmoins1[$i]['date']=$datetime1;
+                        $enmoins1[$i]['mois']=$datetime1->format('m');
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];
+                        $enmoins1[$i]['utilisateur_id']=$firstweek['Facturation']['utilisateur_id'];
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU'];  
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Facturation']['utilisateur_id'];                       
+                        break;
+                    case 2:
+                        $enmoins1[$i]['date']=$datetime1;
+                        $enmoins1[$i]['mois']=$datetime1->format('m');                     
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];
+                        $enmoins1[$i]['utilisateur_id']=$firstweek['Facturation']['utilisateur_id'];
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Facturation']['utilisateur_id'];                        
+                        break;
+                    case 3:
+                        $enmoins1[$i]['date']=$datetime1;
+                        $enmoins1[$i]['mois']=$datetime1->format('m');                       
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];
+                        $enmoins1[$i]['utilisateur_id']=$firstweek['Facturation']['utilisateur_id'];                        
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA']+$firstweek[0]['ME'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Facturation']['utilisateur_id'];                        
+                        break;
+                    case 4:
+                        $enmoins1[$i]['date']=$datetime1;
+                        $enmoins1[$i]['mois']=$datetime1->format('m');              
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];                        
+                        $enmoins1[$i]['utilisateur_id']=$firstweek['Facturation']['utilisateur_id'];                       
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA']+$firstweek[0]['ME']+$firstweek[0]['JE'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Facturation']['utilisateur_id'];                         
+                        break;
+                    case 5:
+                        $enmoins1[$i]['date']=$datetime1;
+                        $enmoins1[$i]['mois']=$datetime1->format('m');                  
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];                        
+                        $enmoins1[$i]['utilisateur_id']=$firstweek['Facturation']['utilisateur_id'];                        
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA']+$firstweek[0]['ME']+$firstweek[0]['JE']+$firstweek[0]['VE'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Facturation']['utilisateur_id'];                         
+                        break;
+                    case 6:
+                        $enmoins1[$i]['date']=$datetime1;
+                        $enmoins1[$i]['mois']=$datetime1->format('m');                       
+                        $enmoins1[$i]['projet_id']=$firstweek['Activite']['projet_id'];
+                        $enmoins1[$i]['activite_id']=$firstweek['Activite']['id'];                        
+                        $enmoins1[$i]['utilisateur_id']=$firstweek['Facturation']['utilisateur_id'];                        
+                        $enmoins1[$i]['aretirer']=$firstweek[0]['LU']+$firstweek[0]['MA']+$firstweek[0]['ME']+$firstweek[0]['JE']+$firstweek[0]['VE']+$firstweek[0]['SA'];
+                        $enmoins1[$i]['key']=$firstweek['Activite']['projet_id'].$firstweek['Activite']['id'].$firstweek['Facturation']['utilisateur_id'];                       
+                        break;
+                endswitch;
+                $i++;
+            endforeach;                           
+            return $enmoins1;
+        }
+        
+        public function getEntropLastSNCF($activitelastweek=null){
+            $enmoins2 = array();
+            $i=0;            
+            foreach($activitelastweek as $lastweek):
+                $annee = date('Y');
+                $dayone = new DateTime(CUSDate($this->request->data['Rapport']['DU']));
+                $lastday = $dayone->format('t');
+                $datetime1 = new DateTime(CUSDate($this->request->data['Rapport']['DU']));
+                $datetime2 = new DateTime(CUSDate($this->request->data['Rapport']['AU']));
+                $interval = $datetime1->diff($datetime2); 
+                $entropfirst = $interval->format('%a');
+                switch ($entropfirst):
+                    case 1:
+                        $enmoins2[$i]['date']=$datetime1;
+                        $enmoins2[$i]['mois']=$datetime1->format('m');
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['utilisateur_id']=$lastweek['Facturation']['utilisateur_id'];                        
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA']+$lastweek[0]['VE']+$lastweek[0]['JE']+$lastweek[0]['ME'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Facturation']['utilisateur_id'];                      
+                        break;
+                    case 2:
+                        $enmoins2[$i]['date']=$datetime1;
+                        $enmoins2[$i]['mois']=$datetime1->format('m');
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['utilisateur_id']=$lastweek['Facturation']['utilisateur_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA']+$lastweek[0]['VE']+$lastweek[0]['JE'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Facturation']['utilisateur_id'];                         
+                        break;
+                    case 3:
+                        $enmoins2[$i]['date']=$datetime1;
+                        $enmoins2[$i]['mois']=$datetime1->format('m');
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['utilisateur_id']=$lastweek['Facturation']['utilisateur_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA']+$lastweek[0]['VE'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Facturation']['utilisateur_id'];                          
+                        break;
+                    case 0:
+                        $enmoins2[$i]['date']=$datetime1;
+                        $enmoins2[$i]['mois']=$datetime1->format('m');
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['utilisateur_id']=$lastweek['Facturation']['utilisateur_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA']+$lastweek[0]['VE']+$lastweek[0]['JE']+$lastweek[0]['ME']+$lastweek[0]['MA'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Facturation']['utilisateur_id'];                         
+                        break;
+                    case 5:
+                        $enmoins2[$i]['date']=$datetime1;
+                        $enmoins2[$i]['mois']=$datetime1->format('m');
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['utilisateur_id']=$lastweek['Facturation']['utilisateur_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Facturation']['utilisateur_id'];                         
+                        break;
+                    case 4:
+                        $enmoins2[$i]['date']=$datetime1;
+                        $enmoins2[$i]['mois']=$datetime1->format('m');
+                        $enmoins2[$i]['projet_id']=$lastweek['Activite']['projet_id'];
+                        $enmoins2[$i]['activite_id']=$lastweek['Activite']['id'];                        
+                        $enmoins2[$i]['utilisateur_id']=$lastweek['Facturation']['utilisateur_id'];                           
+                        $enmoins2[$i]['aretirer']=$lastweek[0]['DI']+$lastweek[0]['SA'];
+                        $enmoins2[$i]['key']=$lastweek['Activite']['projet_id'].$lastweek['Activite']['id'].$lastweek['Facturation']['utilisateur_id'];                        
+                        break;
+                endswitch;
+                $i++;
+            endforeach;                         
+            return $enmoins2;
+        }       
+        
+        public function getEntropFirstSNCF($activitefirstweek=null){
+            $enmoins1 = array();
+            $i=0;
+            foreach($activitefirstweek as $firstweek):
+                $annee = date('Y');
+                $datetime1 = new DateTime(CUSDate($firstweek['Facturation']['DATE']));
+                $datetime2 = new DateTime(CUSDate($this->request->data['Rapport']['DU']));
                 $interval = $datetime2->diff($datetime1); 
                 $entropfirst = $interval->format('%a');
                 switch ($entropfirst):
@@ -736,7 +901,7 @@ class FacturationsController extends AppController {
                 $i++;
             endforeach;                         
             return $enmoins2;
-        }       
+        }    
         
         public function array_sum_merge_SS2I($array){
             $sortedArray = array();

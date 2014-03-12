@@ -31,26 +31,6 @@ class ProfilsController extends AppController {
 	}
 
 /**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-           if (isAuthorized('profils', 'view')) :
-		if (!$this->Profil->exists($id)) {
-			throw new NotFoundException(__('Profil incorrect'));
-		}
-		$options = array('conditions' => array('Profil.' . $this->Profil->primaryKey => $id),'recursive'=>0);
-		$this->set('profil', $this->Profil->find('first', $options));
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
  * add method
  *
  * @return void
@@ -148,16 +128,29 @@ class ProfilsController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($keywords=null) {
             if (isAuthorized('profils', 'index')) :
-                $keyword=isset($this->params->data['Profil']['SEARCH']) ? $this->params->data['Profil']['SEARCH'] : '';  
-                $newconditions = array('OR'=>array("Profil.NOM LIKE '%".$keyword."%'","Profil.COMMENTAIRE LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                //$this->set('messages',$this->Message->search($this->data['Message']['MessageSEARCH'])); 
-                $this->autoRender = false;
-                $this->Profil->recursive = 0;
-                $this->set('profils', $this->paginate());
-                $this->render('index');
+                if(isset($this->params->data['Profil']['SEARCH'])):
+                    $keywords = $this->params->data['Profil']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords));  
+                    $newconditions = array();
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Profil.NOM LIKE '%".$value."%'","Profil.COMMENTAIRE LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions));
+                    $this->Profil->recursive = 0;
+                    $this->set('profils', $this->paginate());
+                else:
+                    $this->redirect(array('action'=>'index'));
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -201,5 +194,13 @@ class ProfilsController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
-	}           
+	}          
+        
+        public function get_list(){
+            return $this->Profil->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc'),'recursive'=>0));
+        }
+        
+        public function get_all(){
+            return $this->Profil->find('all',array('order'=>array('NOM'=>'asc'),'recursive'=>0));
+        }        
 }

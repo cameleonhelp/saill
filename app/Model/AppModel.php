@@ -33,7 +33,7 @@ App::uses('Model', 'Model');
 class AppModel extends Model {
     
         public $recursive = -1;
-        
+                   
  /**
  * dateFormatAfterFind method
  *
@@ -214,5 +214,20 @@ class AppModel extends Model {
                 }            
             return $result;
         }             
-                  
+           
+/**
+ * get_entite_nom
+ * 
+ * @param type $id
+ * @return null
+ */        
+        public function get_entite_nom($id){
+            if($id != null):
+                $sql = "SELECT NOM FROM entites AS Entite WHERE id = ".$id." LIMIT 1";
+                $result = $this->query($sql);
+                return $result[0]['Entite']['NOM'];
+            else:
+                return null;
+            endif;
+        }        
 }

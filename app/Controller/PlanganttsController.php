@@ -56,8 +56,8 @@ class PlanganttsController extends AppController {
 			}
 		}
 		$planetapes = $this->Plangantt->Planetape->find('list');
-		$planprojets = $this->Plangantt->Planprojet->find('list');
-		$utilisateurs = $this->Plangantt->Utilisateur->find('list');
+		//$planprojets = $this->Plangantt->Planprojet->find('list');
+		//$utilisateurs = $this->Plangantt->Utilisateur->find('list');
 		$this->set(compact('planetapes', 'planprojets', 'utilisateurs'));
 	}
 

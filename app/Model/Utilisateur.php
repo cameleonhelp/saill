@@ -215,7 +215,15 @@ class Utilisateur extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'Assoentiteutilisateur' => array(
+			'className' => 'Assoentiteutilisateur',
+			'foreignKey' => 'utilisateur_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
+                    
 	);
 
 /**
@@ -418,7 +426,20 @@ class Utilisateur extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),              
+		),
+                'Assoentiteutilisateur' => array(
+			'className' => 'Assoentiteutilisateur',
+			'foreignKey' => 'utilisateur_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)             
 	);
 
         public $virtualFields = array(
@@ -488,8 +509,15 @@ class Utilisateur extends AppModel {
                     $results[$key]['Utilisateur']['societe_NOM'] = $this->getSocieteForUser($val['Utilisateur']['societe_id']);
                 }     
                 if (isset($val['Utilisateur']['FINMISSION']) && ($val['Utilisateur']['FINMISSION']!=null || $val['Utilisateur']['FINMISSION']!= '0000-00-00') && isset($val['Utilisateur']['ACTIF'])) {
-                    $this->autoend($val['Utilisateur']['id'],$val['Utilisateur']['FINMISSION'],$val['Utilisateur']['ACTIF']);
+                    if(isset($val['Utilisateur']['id']) && isset($val['Utilisateur']['FINMISSION'])):
+                        $this->autoend($val['Utilisateur']['id'],$val['Utilisateur']['FINMISSION'],$val['Utilisateur']['ACTIF']);
+                    endif;
                 } 
+                if (isset($val['Utilisateur']['ACTIF']) && ($val['Utilisateur']['ACTIF']!=null || $val['Utilisateur']['ACTIF']== 0)) {
+                    if(isset($val['Utilisateur']['id']) && isset($val['Utilisateur']['FINMISSION'])):
+                        $this->purge($val['Utilisateur']['id'],$val['Utilisateur']['FINMISSION'],$val['Utilisateur']['ACTIF']);
+                    endif;
+                }                 
             }
             return $results;
         }   
@@ -509,5 +537,18 @@ class Utilisateur extends AppModel {
                 $sql = "UPDATE utilisateurs SET ACTIF=0,FINMISSION='".$today->format('Y-m-d')."',modified='".$today->format('Y-m-d')."' WHERE id='".$id."'";
                 $result = $this->query($sql);
             endif;
-        }        
+        }   
+        
+        public function purge($id,$date,$actif){
+            if(isset($id) && isset($date)):
+                $today = new DateTime();
+                $today->format('Y-m-d');
+                $date = new DateTime($date);
+                $diff = $today->format('m') - $date->format('m');
+                if($diff>=1 && $actif==0):
+                    $sql = "UPDATE utilisateurs SET GESTIONABSENCES=0,modified='".$today->format('Y-m-d')."' WHERE id='".$id."'";
+                    $result = $this->query($sql);
+                endif; 
+            endif;
+        }
 }

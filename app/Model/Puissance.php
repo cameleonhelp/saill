@@ -89,7 +89,8 @@ class Puissance extends AppModel {
                 }      
                 if (isset($val['Puissance']['modified'])) {
                     $results[$key]['Puissance']['modified'] = $this->dateFormatAfterFind($val['Puissance']['modified']);
-                }            
+                }    
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Puissance']['entite_id']); 
             }
             return $results;
         }   

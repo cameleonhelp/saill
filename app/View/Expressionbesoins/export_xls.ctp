@@ -56,7 +56,7 @@
 			echo '<td class="tableTdContent">'.$row['Composant']['NOM'].'</td>';
                         echo '<td class="tableTdContent">'.$row['Perimetre']['NOM'].'</td>';
                         echo '<td class="tableTdContent">'.$row['Type']['NOM'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['Expressionbesoin']['ENVIRONNEMENT'].'</td>';
+                        echo '<td class="tableTdContent">'.$row['Expressionbesoin']['dsitenv_nom'].'</td>';
                         echo '<td class="tableTdContent">'.$row['Phase']['NOM'].'</td>';
 			echo '<td class="tableTdContent">'.$row['Expressionbesoin']['USAGE'].'</td>';                        
 			echo '<td class="tableTdContent">'.$row['Expressionbesoin']['NOMUSAGE'].'</td>';

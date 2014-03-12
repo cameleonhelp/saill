@@ -40,14 +40,14 @@
         <?php  echo $this->Form->input('envoutil_id',array('type'=>'hidden','value'=>$this->data['Envoutil']['id'])); ?>
         <?php  echo $this->Form->input('id',array('type'=>'hidden')); ?>
         <div class="form-group">
-              <label class="col-lg-4" for="EnvversionVERSION">Version : </label>
-              <div class="col-lg-7">
+              <label class="col-md-4" for="EnvversionVERSION">Version : </label>
+              <div class="col-md-7">
                   <?php echo $this->Form->input('VERSION',array('class'=>'form-control','type'=>'text','placeholder'=>'Numéro de version du logiciel '.$this->data['Envoutil']['NOM'])); ?>                     
               </div>
         </div>   
         <div class="form-group">
-              <label class="col-lg-4" for="EnvversionEDITION">Edition : </label>
-              <div class="col-lg-7">
+              <label class="col-md-4" for="EnvversionEDITION">Edition : </label>
+              <div class="col-md-7">
                   <?php echo $this->Form->input('EDITION',array('class'=>'form-control','type'=>'text','placeholder'=>'Edition')); ?> 
               </div>
         </div>           

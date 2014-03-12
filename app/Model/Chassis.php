@@ -99,7 +99,8 @@ class Chassis extends AppModel {
                 }      
                 if (isset($val['Chassis']['modified'])) {
                     $results[$key]['Chassis']['modified'] = $this->dateFormatAfterFind($val['Chassis']['modified']);
-                }            
+                }  
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Application']['entite_id']); 
             }
             return $results;
         }   

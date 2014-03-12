@@ -91,8 +91,10 @@ class Domaine extends AppModel {
                 }      
                 if (isset($val['Domaine']['modified'])) {
                     $results[$key]['Domaine']['modified'] = $this->dateFormatAfterFind($val['Domaine']['modified']);
-                }            }
-            return $results;
+                }  
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Domaine']['entite_id']); 
+            }
+        return $results;
         }         
 
 }

@@ -54,7 +54,7 @@ class EquipesController extends AppController {
                                     $this->Session->setFlash(__('Au moins un nouvel agent <b>N\'A PAS ETE</b> ajouté',true),'flash_failure');
                             }
                         }   
-                        $this->History->notmove();
+                        $this->History->goback(1);
                     endif;
 		}
                 $utilisateurs = $this->Equipe->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.ACTIF'=>1,'Utilisateur.profil_id >'=>0),'order'=>array('NOMLONG'=>'asc'),'recursive'=>-1));

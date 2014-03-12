@@ -23,6 +23,8 @@ class LogicielsController extends AppController {
  */
 	public function index($aplication=null,$installe=null,$actif=null,$type=null,$outil=null) {
             if (isAuthorized('logiciels', 'index')) : 
+                $listentite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+                $newconditions[]="Logiciel.entite_id IN (".$listentite.')';                  
                 $conditionexport = array();
                 $sql ='';
                 switch($aplication):
@@ -119,10 +121,10 @@ class LogicielsController extends AppController {
                         biens.RAM,
                         biens.COUT,
                         types.NOM as type,
-                        assobienlogiciels.ENVDSIT,
+                        assobienlogiciels.dsitenv_id,
                         logiciels.ACTIF
-                        FROM assobienlogiciels
-                        LEFT JOIN logiciels ON logiciels.id = assobienlogiciels.logiciel_id                        
+                        FROM logiciels
+                        LEFT JOIN assobienlogiciels ON logiciels.id = assobienlogiciels.logiciel_id                        
                         LEFT JOIN envoutils ON logiciels.envoutil_id = envoutils.id
                         LEFT JOIN envversions ON logiciels.envversion_id = envversions.id
                         LEFT JOIN lots ON logiciels.lot_id = lots.id
@@ -133,18 +135,39 @@ class LogicielsController extends AppController {
                         LEFT JOIN types ON types.id = biens.type_id
                         '.$strconditionexport.';';
                 $export = $this->Logiciel->query($sql);
+                $xls_export = array();
+                foreach($export as $obj):
+                    $nomenv = $this->getNomEnvDsit($obj['assobienlogiciels']['dsitenv_id']);
+                    if($nomenv != '') : $obj = array_merge($obj,array('assobienlogiciels' => array('dsitenv_nom' => $nomenv))); endif;
+                    $xls_export[]=$obj;
+                endforeach;
                 $this->Session->delete('xls_export');
-                $this->Session->write('xls_export',$export);                
+                $this->Session->write('xls_export',$xls_export);                
                 $applications = $this->requestAction('applications/get_list/1');
                 $types = $this->requestAction('types/get_list/1');
                 $outils = $this->requestAction('envoutils/get_list/1');
-                $this->set(compact('applications','types','outils','strconditionexport'));   
+                $this->set(compact('applications','types','outils','strconditionexport','xls_export'));   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
 	}
 
+        public function getNomEnvDsit($ids){
+            $list='';            
+            if($ids!=null):
+            $listid = explode(',',$ids);
+            foreach($listid as $id):
+                $sql = "SELECT dsitenvs.NOM FROM dsitenvs WHERE dsitenvs.id = ".$id;
+                $obj = $this->Logiciel->query($sql);
+                if(isset($obj[0]['dsitenvs']['NOM'])):
+                    $list .= $obj[0]['dsitenvs']['NOM'].',';
+                endif;
+            endforeach;
+            endif;
+            $list = $list != '' ? rtrim($list,',') : '';
+            return $list;
+        }          
 /**
  * view method
  *
@@ -171,7 +194,8 @@ class LogicielsController extends AppController {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Logiciel->validate = array();
                         $this->History->goBack(1);
-                    else:                    
+                    else:            
+                        $this->request->data['Logiciel']['entite_id']=userAuth('entite_id');
 			$this->Logiciel->create();
                         if(!$this->isExist($this->request->data['Logiciel']['envoutil_id'], $this->request->data['Logiciel']['envversion_id'], $this->request->data['Logiciel']['application_id'], $this->request->data['Logiciel']['lot_id'])){
                             if ($this->Logiciel->save($this->request->data)) {
@@ -261,7 +285,8 @@ class LogicielsController extends AppController {
                 $listlogiciels = $this->requestAction('logiciels/get_select_compatible/'.$logiciel['Logiciel']['lot_id'].'/'.$logiciel['Logiciel']['application_id']);
                 $listbiens = $this->requestAction('biens/get_select_compatible/'.$logiciel['Logiciel']['lot_id'].'/'.$logiciel['Logiciel']['application_id']);
                 $histories = $this->requestAction('historylogiciels/get_list_for_logiciel/'.$id);
-		$this->set(compact('versions','outils', 'applications', 'types', 'lots','envoutil','biens','listbiens','histories','listlogiciels'));
+                $all_dsitenvs = $this->requestAction('dsitenvs/get_list');
+		$this->set(compact('versions','outils', 'applications', 'types', 'lots','envoutil','biens','listbiens','histories','listlogiciels','all_dsitenvs'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

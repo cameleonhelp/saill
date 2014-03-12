@@ -57,7 +57,8 @@ class Mw extends AppModel {
                 }      
                 if (isset($val['Mw']['modified'])) {
                     $results[$key]['Mw']['modified'] = $this->dateFormatAfterFind($val['Mw']['modified']);
-                }            
+                }
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Mw']['entite_id']); 
             }
             return $results;
         }    

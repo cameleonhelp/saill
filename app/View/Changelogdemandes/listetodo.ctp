@@ -1,4 +1,4 @@
-<div class="marginright20">
+<div class="">
     <?php echo $this->element('changelogsubmenu'); ?>
     <div class="changelogdemandes index">
 	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" style="width:100%;">

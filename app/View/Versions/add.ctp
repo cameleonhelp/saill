@@ -1,3 +1,3 @@
 <div class="versions form">
-<?php echo $this->element('formVersion'); ?>
+<?php echo $this->element('form/version'); ?>
 </div>

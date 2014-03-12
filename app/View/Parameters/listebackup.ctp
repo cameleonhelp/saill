@@ -1,4 +1,4 @@
-<div class="marginright10">
+<div class="">
 <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
 <thead>
 <tr>

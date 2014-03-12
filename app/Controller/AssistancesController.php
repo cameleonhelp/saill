@@ -143,18 +143,39 @@ class AssistancesController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($keywords=null) {
             if (isAuthorized('assistances', 'index')) :
-                $keyword=isset($this->params->data['Assistance']['SEARCH']) ? $this->params->data['Assistance']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Assistance.NOM LIKE '%".$keyword."%'","Assistance.DESCRIPTION LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Assistance->recursive = 0;
-                $this->set('assistances', $this->paginate());           
-                $this->render('index');
+                if(isset($this->params->data['Assistance']['SEARCH'])):
+                    $keywords = $this->params->data['Assistance']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Assistance.NOM LIKE '%".$value."%'","Assistance.DESCRIPTION LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array('OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions));
+                    $this->Assistance->recursive = 0;
+                    $this->set('assistances', $this->paginate());           
+                else:
+                    $this->redirect(array('action'=>'index'));
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                  
-        }         
+        }       
+        
+        public function get_list(){
+            return $this->Assistance->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc'),'recursive'=>0));
+        }
+        
+        public function get_all(){
+            return $this->Assistance->find('all',array('order'=>array('NOM'=>'asc'),'recursive'=>0));
+        }        
 }

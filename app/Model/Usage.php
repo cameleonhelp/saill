@@ -63,7 +63,8 @@ class Usage extends AppModel {
                 }      
                 if (isset($val['Usage']['modified'])) {
                     $results[$key]['Usage']['modified'] = $this->dateFormatAfterFind($val['Usage']['modified']);
-                }            
+                }       
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Usage']['entite_id']); 
             }
             return $results;
         }    

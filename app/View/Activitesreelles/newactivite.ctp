@@ -1,7 +1,7 @@
 <?php echo $this->Form->create('Activitesreelle',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
 <table>
     <tr>
-        <td><label class="col-lg-4 control-label required" for="ActivitesreelleUtilisateurId">Pour : </label></td>
+        <td><label class="col-md-4 control-label required" for="ActivitesreelleUtilisateurId">Pour : </label></td>
         <td>
             <?php if (userAuth('WIDEAREA')==1): ?>
             <?php echo $this->Form->select('utilisateur_id',$utilisateurs,array('data-rule-required'=>'true','default' => userAuth('id'),'data-msg-required'=>"Le nom de l'utilisateur est obligatoire", 'empty' => 'Choisir un utilisateur')); ?>                     
@@ -9,7 +9,7 @@
             <?php echo $utilisateur['Utilisateur']['NOMLONG']; ?><?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>$utilisateur['Utilisateur']['id'])); ?>
             <?php endif; ?>
         </td>
-        <td><label class="col-lg-4 control-label required" for="ActivitesreelleDATE">Date début de semaine : </label></td>
+        <td><label class="col-md-4 control-label required" for="ActivitesreelleDATE">Date début de semaine : </label></td>
         <td>
             <div class="input-append date" data-date="<?php echo empty($this->data['Activitesreelle']['DATE']) ? date('d/m/Y') : $this->data['Activitesreelle']['DATE']; ?>" data-date-format="dd/mm/yyyy">
                 <?php $today = date('d/m/Y'); ?>

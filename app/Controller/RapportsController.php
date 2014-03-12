@@ -111,6 +111,8 @@ class RapportsController extends AppController {
                     $rapportresult = $this->requestAction('facturations/forss2i', array('pass'=>array('societes'=>$societes,'start'=>CUSDate($start),'end'=>CUSDate($end),'indisponibilite'=>$this->request->data['Rapport']['indisponibilite'])));
                     $this->set('results',$rapportresult['result']);
                     $this->set('entrops',$rapportresult['trop']);
+                    $this->Session->delete('xls_export');
+                    $this->Session->write('xls_export',$rapportresult); 
             endif;
             /** Au chargement de la page **/
             $mois = array('01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre');
@@ -128,6 +130,49 @@ class RapportsController extends AppController {
             throw new NotAuthorizedException();
         endif;  
     }
+    
+    public function factscnf(){
+        $this->set('title_for_layout','Facturations des agents SNCF');
+        if (isAuthorized('activitesreelles', 'rapports')) :
+            if ($this->request->is('post')):
+                /** Calcul du rapport aprés submit **/
+                    $societes = array('1');
+                    $start = $this->request->data['Rapport']['DU'];
+                    $end = $this->request->data['Rapport']['AU'];;//@date('t',$start).'/'.$this->request->data['Rapport']['mois'].'/'.$this->request->data['Rapport']['annee'];            
+                    $rapportresult = $this->requestAction('facturations/forsncf', array('pass'=>array('societes'=>$societes,'start'=>CUSDate($start),'end'=>CUSDate($end),'indisponibilite'=>$this->request->data['Rapport']['indisponibilite'])));
+                    $this->set('results',$rapportresult['result']);
+                    $this->set('entrops',$rapportresult['trop']);
+                    $this->Session->delete('xls_export');
+                    $this->Session->write('xls_export',$rapportresult);                     
+            endif;
+            /** Au chargement de la page **/
+            $mois = array('01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre');
+            $this->set('mois',$mois);
+            $fiveyearago = date('Y')-5;
+            for($i=0;$i<6;$i++):
+                $year = $fiveyearago + $i;
+                $annee[$year]=$year;
+            endfor;
+            $this->set('annee',$annee);
+        else :
+            $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
+            throw new NotAuthorizedException();
+        endif;  
+    }
+    
+    public function xls_sncf(){
+            $data = $this->Session->read('xls_export');
+            //$this->Session->delete('xls_export');                
+            $this->set('rows',$data);
+            $this->render('export_sncf','export_xls');
+    }
+    
+    public function xls_ss2i(){
+            $data = $this->Session->read('xls_export');
+            //$this->Session->delete('xls_export');                
+            $this->set('rows',$data);
+            $this->render('export_ss2i','export_xls');
+    }    
 }
 
 ?>

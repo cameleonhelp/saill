@@ -229,7 +229,7 @@ class Activitesreelle extends AppModel {
                 }   
                 if (isset($val['Activite']['projet_id'])) {
                     $results[$key]['Activitesreelle']['projet_NOM'] = $this->getProjetForActivite($val['Activite']['projet_id']);
-                }                 
+                }   
             }
             return $results;
         }  

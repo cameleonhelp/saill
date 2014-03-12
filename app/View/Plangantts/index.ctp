@@ -1,6 +1,6 @@
 <div class="plangantts index">
 	<h2><?php echo __('Plangantts'); ?></h2>
-	<table cellpadding="0" cellspacing="0">
+	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('planetape_id'); ?></th>
@@ -39,11 +39,19 @@
 		<td><?php echo h($plangantt['Plangantt']['created']); ?>&nbsp;</td>
 		<td><?php echo h($plangantt['Plangantt']['modified']); ?>&nbsp;</td>
 		<td class="actions">
+                    <span class="glyphicons eye_open cursor"></span>
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $plangantt['Plangantt']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $plangantt['Plangantt']['id'])); ?>
 			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $plangantt['Plangantt']['id']), null, __('Are you sure you want to delete # %s?', $plangantt['Plangantt']['id'])); ?>
 		</td>
-	</tr>
+</tr>
+    <tr class="trhidden" style="display:none;"><td colspan="14" align="center">
+            <table cellpadding="0" cellspacing="0" class="table table-hidden" style="margin-bottom:-3px;">
+                <tr><th>Crée le</th><th>Modifié le</th><th>Commentaire</th></tr>
+                <tr><td>21/01/2013</td><td>21/01/2013</td><td><?php echo h($plangantt['Plangantt']['id']); ?>. Mise en place d'une table de détail pour afficher plus d'information sur l'objet.</td></tr>
+            </table>
+    </td>
+</tr>
 <?php endforeach; ?>
 	</table>
 	<p>
@@ -72,3 +80,10 @@
 		<li><?php echo $this->Html->link(__('New Utilisateurs'), array('controller' => 'utilisateurs', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
+<script>
+$(document).ready(function () {  
+    $(document).on('click','.eye_open',function(e){
+        $(this).parents('tr').next('.trhidden').fadeToggle();
+    });
+});
+</script>

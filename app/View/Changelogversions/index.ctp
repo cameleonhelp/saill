@@ -1,5 +1,5 @@
 <div class="changelogversions index">
-    <div class="marginright20">
+    <div class="">
         <?php echo $this->element('changelogsubmenu'); ?>
         <button type="button" data-toggle="modal" data-target="#modaladdchangelogversion" class="btn btn-default btn-sm  pull-right" style="margin-bottom:10px;">Ajouter une version</button>  
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" style="width:100%;">
@@ -44,8 +44,8 @@
         </div>
     </div>
 </div>
-<?php echo $this->element('modaladdchangelogversion'); ?>
-<?php echo $this->element('modaleditchangelogversion'); ?>
+<?php echo $this->element('modals/addchangelogversion'); ?>
+<?php echo $this->element('modals/editchangelogversion'); ?>
 <script>
 $(document).ready(function () {
     $(document).on('click','.etat',function(e){

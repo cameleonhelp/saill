@@ -39,7 +39,8 @@ class Cpus extends AppModel {
                 }      
                 if (isset($val['Cpus']['modified'])) {
                     $results[$key]['Cpus']['modified'] = $this->dateFormatAfterFind($val['Cpus']['modified']);
-                }            
+                }       
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Cpus']['entite_id']); 
             }
             return $results;
         }      

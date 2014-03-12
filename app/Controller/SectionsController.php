@@ -20,30 +20,9 @@ class SectionsController extends AppController {
  * @return void
  */
 	public function index() {
-            //$this->Session->delete('history');
             if (isAuthorized('sections', 'index')) :
 		$this->Section->recursive = 0;
 		$this->set('sections', $this->paginate());
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('sections', 'view')) :
-		if (!$this->Section->exists($id)) {
-			throw new NotFoundException(__('Section incorrecte'));
-		}
-		$options = array('conditions' => array('Section.' . $this->Section->primaryKey => $id),'recursive'=>0);
-		$this->set('section', $this->Section->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -57,8 +36,6 @@ class SectionsController extends AppController {
  */
 	public function add() {
             if (isAuthorized('sections', 'add')) :
-                $responsable = $this->Section->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'conditions'=>array('id >'=>1,'HIERARCHIQUE'=>1)));
-                $this->set('responsable',$responsable);
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Section->validate = array();
@@ -73,6 +50,8 @@ class SectionsController extends AppController {
 			}
                     endif;
 		endif;
+                $responsable = $this->requestAction('utilisateurs/get_list_hierarchique');
+                $this->set(compact('responsable'));                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -87,9 +66,7 @@ class SectionsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            if (isAuthorized('sections', 'edit')) :
-                $responsable = $this->Section->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'conditions'=>array('id >'=>1,'HIERARCHIQUE'=>1)));
-                $this->set('responsable',$responsable);		
+            if (isAuthorized('sections', 'edit')) :	
                 if (!$this->Section->exists($id)) {
 			throw new NotFoundException(__('Section incorrecte'));
 		}
@@ -106,8 +83,10 @@ class SectionsController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Section.' . $this->Section->primaryKey => $id),'recursive'=>0);
-			$this->request->data = $this->Section->find('first', $options);
+                    $options = array('conditions' => array('Section.' . $this->Section->primaryKey => $id),'recursive'=>0);
+                    $this->request->data = $this->Section->find('first', $options);
+                    $responsable = $this->requestAction('utilisateurs/get_list_hierarchique');
+                    $this->set(compact('responsable'));                        
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -147,15 +126,28 @@ class SectionsController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($keywords=null) {
             if (isAuthorized('sections', 'index')) :
-                $keyword=isset($this->params->data['Section']['SEARCH']) ? $this->params->data['Section']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Section.NOM LIKE '%".$keyword."%'","Section.DESCRIPTION LIKE '%".$keyword."%'","(CONCAT(Utilisateur.NOM, ' ', Utilisateur.PRENOM)) LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Section->recursive = 0;
-                $this->set('sections', $this->paginate());              
-                $this->render('index');
+                if(isset($this->params->data['Section']['SEARCH'])):
+                    $keywords = $this->params->data['Section']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $newcondition = array();
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Section.NOM LIKE '%".$value."%'","Section.DESCRIPTION LIKE '%".$value."%'","(CONCAT(Utilisateur.NOM, ' ', Utilisateur.PRENOM)) LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newcondition,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
+                    $this->set('sections', $this->paginate());     
+                else:
+                    $this->redirect(array('action'=>'index'));
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -166,4 +158,41 @@ class SectionsController extends AppController {
             $sections = $this->Section->find('list', array('fields'=>array('id','NOM'),'order'=>array('NOM'=>'asc'),'recursive'=>-1));
             return $sections;
         }
+        
+        //TODO : ajouter des méthodes pour lister les sections de mes cercles à partir des utilisateurs
+        public function get_all($visibility=null) {
+            if($visibility==null):
+                $conditions[] = "1=1";
+            elseif ($visibility != '' && userAuth('WIDEAREA')==0):
+                $conditions[] = 'Section.id = '.userAuth('section_id');
+            elseif ($visibility != '' && userAuth('WIDEAREA')!=0):
+                $conditions[] = "Utilisateur.section_id IN (".$visibility.")";            
+            else:
+                $conditions[] = 'Section.id = '.userAuth('section_id');
+            endif;
+            return $this->Section->find('all',array('conditions'=>$conditions,'order'=>array('NOM'=>'asc'),'recursive'=>-1));
+        }
+        
+        public function get_list($visibility=null) {
+            if($visibility==null):
+                $conditions[] = "1=1";
+            elseif ($visibility != '' && userAuth('WIDEAREA')==0):
+                $conditions[] = 'Section.id = '.userAuth('section_id');
+            elseif ($visibility != '' && userAuth('WIDEAREA')!=0):
+                $conditions[] = "Utilisateur.section_id IN (".$visibility.")";            
+            else:
+                $conditions[] = 'Section.id = '.userAuth('section_id');
+            endif;
+            return $this->Section->find('list',array('fields'=>array('id','NOM'),'conditions'=>$conditions,'order'=>array('NOM'=>'asc'),'recursive'=>-1));
+        }        
+        
+        public function get_valideur($id){
+            $obj = $this->Section->find('first',array('conditions'=>array('Section.id'=>$id),'recursive'=>0));
+            return $obj['Section']['MAILVALIDEUR'];
+        }
+        
+        public function get_gestionnaire_annuaire($id){
+            $obj = $this->Section->find('first',array('conditions'=>array('Section.id'=>$id),'recursive'=>0));
+            return $obj['Section']['MAILGESTANNUAIRE'];
+        }        
 }

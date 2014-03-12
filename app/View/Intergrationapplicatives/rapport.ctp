@@ -1,10 +1,10 @@
-<div class="marginright20">
+<div class="">
 <div class="actions form">
 <?php echo $this->Form->create('Intergrationapplicative',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class='block-panel block-panel-50-left'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="IntergrationapplicativeApplicationId">Applications : </label>
-            <div class="col-lg-offset-4">
+            <label class="col-md-4 required" for="IntergrationapplicativeApplicationId">Applications : </label>
+            <div class="col-md-offset-4">
                     <?php echo $this->Form->select('application_id',$applications,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'class'=>"form-control multiselect size75",'data-msg-required'=>"L'application est obligatoire")); ?>               
                 <br><?php echo $this->Form->input('SelectAll',array('type'=>'checkbox')); ?><label class="labelAfter" for="IntergrationapplicativeSelectAll">&nbsp;Tout sélectionner</label>            
             </div>            
@@ -12,26 +12,26 @@
     </div>
     <div class='block-panel block-panel-50-right'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="IntergrationapplicativeMois">Mois :</label>
-            <div class="col-lg-4">
+            <label class="col-md-4 required" for="IntergrationapplicativeMois">Mois :</label>
+            <div class="col-md-4">
                     <?php echo $this->Form->select('mois',$mois,array('default'=>date('m'),'class'=>"form-control",'empty'=>false)); ?>           
             </div>            
         </div>
         <div class="form-group">
-            <label class="col-lg-4 required" for="IntergrationapplicativeAnnee">Année : </label>
-            <div class="col-lg-4">
+            <label class="col-md-4 required" for="IntergrationapplicativeAnnee">Année : </label>
+            <div class="col-md-4">
                     <?php echo $this->Form->select('annee',$annee,array('default'=>date('Y'),'class'=>"form-control",'empty'=>false)); ?>           
             </div>            
         </div>
         <div class="form-group">
-            <label class="col-lg-4" for="IntergrationapplicativeEnvironnementId">Environnements : </label>
-            <div class="col-lg-4">
+            <label class="col-md-4" for="IntergrationapplicativeEnvironnementId">Environnements : </label>
+            <div class="col-md-4">
                     <?php echo $this->Form->select('environnement_id',$environnements,array('class'=>"form-control",'empty'=>'Tous')); ?>                          
             </div>            
         </div>         
         <div class="form-group">
-            <label class="col-lg-4" for="IntergrationapplicativeLotId">Lots : </label>
-            <div class="col-lg-4">
+            <label class="col-md-4" for="IntergrationapplicativeLotId">Lots : </label>
+            <div class="col-md-4">
                     <?php echo $this->Form->select('lot_id',$lots,array('class'=>"form-control",'empty'=>'Tous')); ?>                          
             </div>            
         </div>         
@@ -81,10 +81,12 @@
    <div id="charthistocontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'intégration par lot, application et environnement</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped sizemax" id="datatable">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped sizemax" id="sorttable">
         <thead>
             <tr>
                 <th>Lot</th>
+                <th>Version</th>
+                <th>Date installation</th>
                 <th>Application</th>
                 <th>Environnement</th>
                 <th>Nombres</th>
@@ -94,6 +96,8 @@
             <?php foreach($results as $result): ?>
             <tr>
                 <td><?php echo $result['lots']['LOT']; ?></td>
+                <td><?php echo $result['versions']['VERSION']; ?></td>
+                <td><?php echo CUSDatetimeToFRDate($result['intergrationapplicatives']['DATEINSTALL']); ?></td>
                 <td><?php echo $result['applications']['APPLICATION']; ?></td>                
                 <td><?php echo $result['types']['TYPE']; ?></td> 
                 <td width='40px' style='text-align: center' class='totalapp'><?php echo intval($result[0]['NB']); ?></td>
@@ -102,7 +106,7 @@
         </tbody>
         <tfooter>
 	<tr>
-            <td class="footer nowrap" colspan='3' style="text-align:right;">Total :</td>
+            <td class="footer nowrap" colspan='5' style="text-align:right;">Total :</td>
             <td class="footer nowrap" id="totalall" style="text-align:center;"></td>            
 	</tr> 
         </tfooter>
@@ -114,6 +118,14 @@
 </div>
 <script>
 $(document).ready(function (){ 
+    //tri sur le tableau 
+    $("#sorttable").tablesorter({
+        headers: {
+            2: {
+                sorter: 'fr-date'
+            }
+        }
+    }); 
     
     $(document).on('click','#IntergrationapplicativeSelectAll',function() {
         if($(this).is(':checked')){
@@ -190,7 +202,8 @@ $(document).ready(function (){
     <?php 
     $data = array();
     foreach($charthistoresults as $charthistoresult):
-        $datas[$charthistoresult['lots']['LOT']][] = "[".$charthistoresult[0]['MOIS'].",".$charthistoresult[0]['NB']."]";
+        $time = explode('/',$charthistoresult[0]['MOISANNEE']);
+        $datas[$charthistoresult['lots']['LOT']][] = "[Date.UTC(".$time[1].",".($time[0]-1).",1),".$charthistoresult[0]['NB']."]";
     endforeach;
     ?>
         
@@ -211,14 +224,11 @@ $(document).ready(function (){
                text:'(en fonction des critères sélectionnés)'
         },        
         xAxis: {
-            title: {
-                text: 'Mois'
-            },            
+            type: 'datetime',   
+            dateTimeLabelFormats: { // don't display the dummy year
+                month: '%b %Y',
+                year: '%Y'   },        
             labels: {
-                formatter: function() {
-                    $mois = ['','Janv.','Fév.','Mars','Avril','Mai','Juin','Juil.','Août','Setp.','Oct.','Nov.','Déc.'];
-                    return $mois[this.value];
-                },
                 rotation: -45,
                 align: 'right',
                 style: {
@@ -226,18 +236,18 @@ $(document).ready(function (){
                     fontFamily: 'Verdana, sans-serif'
                 }                
             },
-            tickInterval: 1
         },   
         yAxis: {
             allowDecimals: false,
             title: {
-                       text: 'Nombre d\'intérgation'
-                   }
+                       text: 'Nombre d\'intégration'
+                   },
+             min:0
         },   
         tooltip: {
             formatter: function() {
-                $moisentier = ['','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Setpembre','Octobre','Novembre','Décembre'];
-                return 'Nombre d\'intégration <b>' + this.y + '</b> pour le mois de <b>' + $moisentier[this.x] + '</b>, tout confondus';
+                $moisentier = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Setpembre','Octobre','Novembre','Décembre','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Setpembre','Octobre','Novembre','Décembre'];
+                return 'Nombre d\'intégration <b>' + this.y + ' tout confondus';
             }
         },  
         plotOptions: {

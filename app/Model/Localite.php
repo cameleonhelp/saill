@@ -63,7 +63,8 @@ class Localite extends AppModel {
                 }      
                 if (isset($val['Localite']['modified'])) {
                     $results[$key]['Localite']['modified'] = $this->dateFormatAfterFind($val['Localite']['modified']);
-                }            
+                }   
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Localite']['entite_id']); 
             }
             return $results;
         } 

@@ -329,4 +329,21 @@ class AssobienlogicielsController extends AppController {
                 throw new NotAuthorizedException();
             endif;
         }
+        
+        public function ajaxupdateenv(){
+            $this->autoRender = false;
+            $this->Assobienlogiciel->id = $this->request->data('id');
+            if ($this->Assobienlogiciel->saveField('dsitenv_id',$this->request->data('dsitenvid'))) {
+                    $this->Session->setFlash(__('Liste environnements DSI-T sauvegardée',true),'flash_success');
+                    //$this->History->notmove();
+            } else {
+                    $this->Session->setFlash(__('Liste environnements DSI-T incorrecte, veuillez corriger la liste',true),'flash_failure');
+            }
+        }
+        
+        public function get_for_dsitenv($dsitenv_id,$application_id){
+            //retrait de la condition sur l'application ,'Bien.application_id'=>$application_id
+            $list = $this->Assobienlogiciel->find('all',array('conditions'=>array('OR'=>array('Assobienlogiciel.dsitenv_id'=>$dsitenv_id,'Assobienlogiciel.dsitenv_id LIKE "%'.$dsitenv_id.',%"','Assobienlogiciel.dsitenv_id LIKE "%,'.$dsitenv_id.'%"'),'Bien.application_id'=>$application_id),'order'=>array('Bien.NOM'=>'asc'),'group'=>'Bien.NOM','recursive'=>1));
+            return $list;
+        }          
 }

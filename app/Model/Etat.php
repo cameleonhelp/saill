@@ -78,8 +78,9 @@ class Etat extends AppModel {
                 }      
                 if (isset($val['Etat']['modified'])) {
                     $results[$key]['Etat']['modified'] = $this->dateFormatAfterFind($val['Etat']['modified']);
-                }            
+                }    
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Etat']['entite_id']);                  
             }
             return $results;
-        }            
+        }     
 }

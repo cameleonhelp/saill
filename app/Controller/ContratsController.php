@@ -19,19 +19,22 @@ class ContratsController extends AppController {
  */
 	public function index($filtre=null) {
             //$this->Session->delete('history');
+            $listcontrats = $this->requestAction('assoprojetentites/find_str_id_contrats/'.userAuth('id'));
             if (isAuthorized('contrats', 'index')) :
                 switch ($filtre){
                     case 'tous':    
-                        $newconditions[]="1=1";
+                        $newconditions[]="Contrat.id IN (".$listcontrats.')';
                         $fcontrat = "tous les contrats";
                         break;
                     case 'actif':
                     case '<':
                     case null:    
+                        $newconditions[]="Contrat.id IN (".$listcontrats.')';
                         $newconditions[]="Contrat.ACTIF=1";
                         $fcontrat = "tous les contrats actifs";
                         break;  
                     case 'inactif':
+                        $newconditions[]="Contrat.id IN (".$listcontrats.')';
                         $newconditions[]="Contrat.ACTIF=0";
                         $fcontrat = "tous les contrats inactifs";
                         break;                     
@@ -115,6 +118,14 @@ class ContratsController extends AppController {
                         $this->History->goBack(1);
                     else:                    
 			if ($this->Contrat->save($this->request->data)) {
+                                $this->Contrat->id = $id;
+                                $contrat = $this->Contrat->read('ACTIF');   
+                                if($contrat['Contrat']['ACTIF']==false):
+                                    $actif = 0;
+                                    App::import('Controller', 'Projets');
+                                    $thisprojet = new ProjetsController();
+                                    $thisprojet->set_actif($id, $actif);
+                                endif;                            
 				$this->Session->setFlash(__('Contrat sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
@@ -176,5 +187,6 @@ class ContratsController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
-        }         
+        }      
+        
 }

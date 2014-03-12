@@ -23,6 +23,8 @@ class BiensController extends AppController {
  */
 	public function index($aplication=null,$installe=null,$valide=null,$actif=null,$type=null,$usage=null) {
             if (isAuthorized('biens', 'index')) :
+                $listentite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+                $newconditions[]="Bien.entite_id IN (".$listentite.')';                
                 switch($aplication):
                     case null:
                     case 'tous':
@@ -149,6 +151,7 @@ class BiensController extends AppController {
                         $this->Bien->validate = array();
                         $this->History->goBack(1);
                     else:
+                        $this->request->data['Bien']['entite_id']=userAuth('entite_id');
 			$this->Bien->create();
 			if ($this->Bien->save($this->request->data)) {
 				$this->Session->setFlash(__('Bien sauvegardé',true),'flash_success');
@@ -232,7 +235,8 @@ class BiensController extends AppController {
                 $histories = $this->requestAction('historybiens/get_list/'.$id);
                 $outils = $this->requestAction('envoutils/get_select/1');
                 $versions=array();
-		$this->set(compact('modeles', 'chassis', 'types', 'usages', 'lots','applications','cpuses','histories','logiciels','listlogiciels','assobienlogiciels','outils','versions'));
+                $all_dsitenvs = $this->requestAction('dsitenvs/get_list');
+		$this->set(compact('modeles', 'chassis', 'types', 'usages', 'lots','applications','cpuses','histories','logiciels','listlogiciels','assobienlogiciels','outils','versions','all_dsitenvs'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -549,7 +553,7 @@ class BiensController extends AppController {
             $list = $this->Bien->find('list',array('fields'=>array('Bien.id','Bien.NOM'),'conditions'=>array('Bien.lot_id'=>$lot_id),'order'=>array('Bien.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }           
-        
+                 
 /**
  * export_xls
  * 

@@ -68,8 +68,10 @@ class Message extends AppModel {
                 }      
                 if (isset($val['Message']['modified'])) {
                     $results[$key]['Message']['modified'] = $this->dateFormatAfterFind($val['Message']['modified']);
-                }            }
-            return $results;
-        }
+                }            
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Message']['entite_id']); 
+            }
+        return $results;
+    }
     
 }

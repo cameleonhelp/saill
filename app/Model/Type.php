@@ -92,7 +92,8 @@ class Type extends AppModel {
                 }      
                 if (isset($val['Type']['modified'])) {
                     $results[$key]['Type']['modified'] = $this->dateFormatAfterFind($val['Type']['modified']);
-                }            
+                }         
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Type']['entite_id']); 
             }
             return $results;
         }  

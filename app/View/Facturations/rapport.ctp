@@ -1,17 +1,17 @@
-<div class="marginright20">
+<div class="">
 <div class="actions form">
 <?php echo $this->Form->create('Facturation',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class='block-panel block-panel-50-left'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="FacturationUtilisateurId">Utilisateur: </label>
-            <div class="col-lg-offset-4">
+            <label class="col-md-4 required" for="FacturationUtilisateurId">Utilisateur: </label>
+            <div class="col-md-offset-4">
                     <?php echo $this->Form->select('utilisateur_id',$destinataires,array('data-rule-required'=>'true','multiple'=>'true','class'=>"form-control multiselect size75",'size'=>"10",'data-msg-required'=>"Le nom de l'utilisateur est obligatoire",'hiddenField' => false)); ?>               
                 <br><?php echo $this->Form->input('SelectAll',array('type'=>'checkbox')); ?><label class="labelAfter" for="FacturationSelectAll">&nbsp;Tout sélectionner</label>  
             </div>
         </div>
         <div class="form-group">
-            <label class="col-lg-4 required" for="FacturationSTART">Sur la période du: </label>
-            <div class="col-lg-6">
+            <label class="col-md-4 required" for="FacturationSTART">Sur la période du: </label>
+            <div class="col-md-6">
               <div class="input-group">
               <?php $today = new dateTime(); ?>
               <?php echo $this->Form->input('START',array('type'=>'text','placeholder'=>'ex.: '.$today->format('d/m/Y'),'data-rule-required'=>'true','class'=>"form-control dateall",'data-msg-required'=>"La date de début de Début de période est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
@@ -22,23 +22,23 @@
             </div>  
         </div>  
         <div class="form-group">
-            <label class="col-lg-4 required" for="FacturationRepartitionUtilisateur">Afficher répartition activité par utilisateur : </label>
-            <div class="col-lg-offset-4">
+            <label class="col-md-4 required" for="FacturationRepartitionUtilisateur">Afficher répartition activité par utilisateur : </label>
+            <div class="col-md-offset-4">
                     <?php echo $this->Form->input('RepartitionUtilisateur',array('type'=>'checkbox','class'=>'yesno')); ?>&nbsp;<label class="labelAfter" for="FacturationRepartitionUtilisateur"></label>             
             </div>            
         </div>        
     </div>
     <div class='block-panel block-panel-50-right'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="FacturationProjetId">Projet : </label>
-            <div class="col-lg-offset-4">
+            <label class="col-md-4 required" for="FacturationProjetId">Projet : </label>
+            <div class="col-md-offset-4">
                     <?php echo $this->Form->select('projet_id',$domaines,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'class'=>"form-control multiselect size75",'data-msg-required'=>"Le projet est obligatoire")); ?>               
                 <br><?php echo $this->Form->input('SelectAllProjet',array('type'=>'checkbox')); ?><label class="labelAfter" for="FacturationSelectAllProjet">&nbsp;Tout sélectionner</label>            
             </div>            
         </div>
         <div class="form-group">
-            <label class="col-lg-4 required" for="FacturationEND">au : </label>
-            <div class="col-lg-6">
+            <label class="col-md-4 required" for="FacturationEND">au : </label>
+            <div class="col-md-6">
               <div class="input-group">
               <?php $today = new dateTime(); ?>
               <?php echo $this->Form->input('END',array('type'=>'text','placeholder'=>'ex.: '.$today->format('d/m/Y'),'data-rule-required'=>'true','class'=>"form-control dateall",'data-msg-required'=>"La date de fin de Début de période est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
@@ -61,7 +61,7 @@
 <?php $israpport = isset($rapportresults) ? count($rapportresults) : 0; ?>
 <?php $style = $israpport==0 ? 'style="display:none;"' : ''; ?>
 <div id="rapport" <?php echo $style; ?>>
-    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc" style="vertical-align: bottom;"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn btn-sm btn-default','escape' => false)); ?></div>
+    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc" style="vertical-align: baseline;"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn btn-sm btn-default','escape' => false)); ?></div>
     <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br><br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jour facturés par projet</div><br>
@@ -183,6 +183,13 @@
 </div>
 <script>
 $(document).ready(function (){ 
+   $("table").tablesorter({
+        headers: {
+            0: {
+                sorter: 'mois-annee'
+            }
+        }
+    });
     
     $(document).on('click','#FacturationSelectAll',function() {
         if($(this).is(':checked')){

@@ -1,3 +1,3 @@
 <div class="perimetres form">
-    <?php echo $this->element('formPerimetre'); ?>
+    <?php echo $this->element('form/perimetre'); ?>
 </div>

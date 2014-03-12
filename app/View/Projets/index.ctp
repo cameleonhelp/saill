@@ -1,5 +1,5 @@
 <div class="projets index">
-        <nav class="navbar toolbar marginright20">
+        <nav class="navbar toolbar ">
                 <ul class="nav navbar-nav toolbar">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('projets', 'add')) : ?>
                 <li><?php echo $this->Html->link('<span class="glyphicons plus size14 margintop4"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
@@ -20,7 +20,7 @@
                      <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous'))); ?></li>
                      <li class="divider"></li>
                          <?php foreach ($contrats as $contrat): ?>
-                            <li><?php echo $this->Html->link($contrat['Contrat']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$contrat['Contrat']['NOM']),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$contrat['Contrat']['NOM']))); ?></li>
+                            <li><?php echo $this->Html->link($contrat['Contrat']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$contrat['Contrat']['id']),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$contrat['Contrat']['NOM']))); ?></li>
                          <?php endforeach; ?>
                       </ul>
                  </li>                   
@@ -29,11 +29,11 @@
                 </ul> 
                 <?php echo $this->Form->create("Projet",array('action' => 'search', 'class'=>'toolbar-form pull-right','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche ...','style'=>"width: 200px;",'class'=>"form-control")); ?>
-                <button type="submit" class="btn form-btn showoverlay">Rechercher</button>
+                <button type="submit" class="btn form-btn showoverlay"><span class="glyphicons notchange search"></span></button>
                 <?php echo $this->Form->end(); ?> 
         </nav>
-        <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 marginright20"><strong>Filtre appliqué : </strong><em>Liste de <?php echo $fetat; ?> sur <?php echo $fcontrat; ?></em></div><?php } ?>        
-        <div class="marginright10">
+        <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 "><strong>Filtre appliqué : </strong><em>Liste de <?php echo $fetat; ?> sur <?php echo $fcontrat; ?></em></div><?php } ?>        
+        <div class="">
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
@@ -78,7 +78,7 @@
 	</table>
         </div>
         <div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
-	<div class="pull-right marginright20"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>     
+	<div class="pull-right "><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>     
         <div class='text-center'>
         <ul class="pagination pagination-sm">
 	<?php

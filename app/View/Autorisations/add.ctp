@@ -1,3 +1,3 @@
-<div class="autorisations form">
-<?php echo $this->element('formAutorisation'); ?>
+<div class="autorisations form add">
+<?php echo $this->element('form/autorisation'); ?>
 </div>

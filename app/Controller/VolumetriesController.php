@@ -16,49 +16,82 @@ class VolumetriesController extends AppController {
         public $paginate = array('limit' => 25,'order'=>array('Volumetry.NOM'=>'asc'));
 	public $components = array('History','Common');
 
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            if($visibility == null):
+                return '1=1';
+            elseif ($visibility!=''):
+                return array('OR'=>array('Volumetry.entite_id IN ('.$visibility.')','Volumetry.entite_id IS NULL'));
+            else:
+                return array('OR'=>array('Volumetry.entite_id ='.userAuth('entite_id'),'Volumetry.entite_id IS NULL'));
+            endif;
+        }
+        
+        public function get_volumetry_actif_filter($id){
+            $result = array();
+            switch($id):
+                case null:
+                case 1:
+                    $result['condition']="Volumetry.ACTIF=1";
+                    $result['filter'] = 'actives';
+                    break;
+                case 0:
+                    $result['condition']="Volumetry.ACTIF=0";
+                    $result['filter'] = 'inactives';
+                    break;
+            endswitch;
+            return $result;
+        }
+        
+        public function get_volumetry_entite_filter($id,$visibility){
+            $result = array();
+            switch($id):
+                case null:
+                case 'tous':
+                    if($visibility == null):
+                        $result['condition']='1=1';
+                    elseif ($visibility!=''):
+                        $result['condition']=array('OR'=>array('Volumetry.entite_id IN ('.$visibility.')','Volumetry.entite_id IS NULL'));
+                    else:
+                        $result['condition']=array('OR'=>array('Volumetry.entite_id ='.userAuth('entite_id'),'Volumetry.entite_id IS NULL'));
+                    endif;                      
+                    $result['filter'] = ' de tous les cercles';
+                    break;
+                default:
+                    $result['condition']='Volumetry.entite_id ='.$id;
+                    $nom = $this->requestAction('entites/get_entite_nom/'.$id);
+                    $result['filter'] = 'ayant pour entité '.$nom;
+            endswitch;
+            return $result;
+        }        
 /**
  * index method
  *
  * @return void
  */
-	public function index($actif=null) {
-            $this->set('title_for_layout','Volumétries');
-            if (isAuthorized('volumetries', 'index')) :
-                switch($actif):
-                    case null:
-                    case 1:
-                        $newconditions[]="Volumetry.ACTIF=1";
-                        $strfilter = 'actives';
-                        break;
-                    case 0:
-                        $newconditions[]="Volumetry.ACTIF=0";
-                        $strfilter = 'inactives';
-                        break;
-                endswitch;
-                $this->set('strfilter',$strfilter);
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
-		$this->Volumetry->recursive = 0;
+	public function index($actif=null,$entite=null) {
+            if (isAuthorized('volumetries', 'index')) :               
+                $visibility = $this->get_visibility();                
+                $restriction= $this->get_restriction($visibility);
+                $getactif = $this->get_volumetry_actif_filter($actif);
+                $getentite = $this->get_volumetry_entite_filter($entite, $visibility);
+                $this->set('strfilter',$getactif['filter'].$getentite['filter']);
+                $newcondition = array($restriction,$getactif['condition'],$getentite['condition']);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newcondition,'recursive'=>0));   
 		$this->set('volumetries', $this->paginate());
+                $cercles = $this->requestAction('entites/get_all');
+                $this->set(compact('cercles'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                 
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-                $this->set('title_for_layout','Volumétries');
-		if (!$this->Volumetry->exists($id)) {
-			throw new NotFoundException(__('Volumétrie incorrecte'));
-		}
-		$options = array('conditions' => array('Volumetry.' . $this->Volumetry->primaryKey => $id));
-		$this->set('volumetry', $this->Volumetry->find('first', $options));
 	}
 
 /**
@@ -74,6 +107,7 @@ class VolumetriesController extends AppController {
                         $this->Volumetry->validate = array();
                         $this->History->goBack(1);
                     else:                     
+                        $this->request->data['Volumetry']['entite_id']=userAuth('entite_id');
 			$this->Volumetry->create();
 			if ($this->Volumetry->save($this->request->data)) {
 				$this->Session->setFlash(__('Volumétrie sauvegardée',true),'flash_success');
@@ -83,6 +117,8 @@ class VolumetriesController extends AppController {
 			}
                     endif;
 		endif;
+                $cercles = $this->requestAction('entites/find_list_cercle');
+                $this->set(compact('cercles')); 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -115,8 +151,10 @@ class VolumetriesController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Volumetry.' . $this->Volumetry->primaryKey => $id));
-			$this->request->data = $this->Volumetry->find('first', $options);
+                    $options = array('conditions' => array('Volumetry.' . $this->Volumetry->primaryKey => $id));
+                    $this->request->data = $this->Volumetry->find('first', $options);
+                    $cercles = $this->requestAction('entites/find_list_cercle');
+                    $this->set(compact('cercles'));                     
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -164,16 +202,35 @@ class VolumetriesController extends AppController {
 		exit();
         }
         
-        public function search(){
-            $this->set('title_for_layout','Volumétries');
+        public function search($actif=null,$entite=null,$keywords=null){
             if (isAuthorized('volumetries', 'index')) :
-                $keyword=isset($this->params->data['Volumetry']['SEARCH']) ? $this->params->data['Volumetry']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Volumetry.NOM LIKE '%".$keyword."%'","Volumetry.VALEUR LIKE '%".$keyword."%'","Volumetry.COMMENTAIRE LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Volumetry->recursive = 0;
-                $this->set('volumetries', $this->paginate());                  
-                $this->render('index');
+                if(isset($this->params->data['Volumetry']['SEARCH'])):
+                    $keywords = $this->params->data['Volumetry']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $visibility = $this->get_visibility();                
+                    $restriction= $this->get_restriction($visibility);
+                    $getactif = $this->get_volumetry_actif_filter($actif);
+                    $getentite = $this->get_volumetry_entite_filter($entite, $visibility);
+                    $this->set('strfilter',$getactif['filter'].$getentite['filter']);
+                    $newcondition = array($restriction,$getactif['condition'],$getentite['condition']);
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Volumetry.NOM LIKE '%".$value."%'","Volumetry.VALEUR LIKE '%".$value."%'","Volumetry.COMMENTAIRE LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newcondition,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
+                    $this->set('volumetries', $this->paginate());    
+                    $cercles = $this->requestAction('entites/get_all');
+                    $this->set(compact('cercles'));                    
+                else:
+                    $this->redirect(array('action'=>'index',$actif,$entite));
+                endif;                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -181,11 +238,16 @@ class VolumetriesController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Volumetry->find('list',array('fields'=>array('Volumetry.id','Volumetry.NOM'),'conditions'=>array('Volumetry.ACTIF'=>$actif),'order'=>array('Volumetry.NOM'=>'asc'),'recursive'=>0));
+            $visibility = $this->get_visibility();                
+            $conditions[]= $this->get_restriction($visibility);               
+            $conditions[] = $actif == null ? '1=1' : 'Volumetry.ACTIF='.$actif;
+            $list = $this->Volumetry->find('list',array('fields'=>array('Volumetry.id','Volumetry.NOM'),'conditions'=>$conditions,'order'=>array('Volumetry.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }      
         
         public function get_list($actif=null){
+            $visibility = $this->get_visibility();                
+            $conditions[]= $this->get_restriction($visibility);               
             $conditions[] = $actif == null ? '1=1' : 'Volumetry.ACTIF='.$actif;
             $list = $this->Volumetry->find('all',array('fields'=>array('Volumetry.id','Volumetry.NOM'),'conditions'=>$conditions,'order'=>array('Volumetry.NOM'=>'asc'),'recursive'=>0));
             return $list;

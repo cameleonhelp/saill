@@ -122,7 +122,8 @@ class Plancharge extends AppModel {
                 }      
                 if (isset($val['Plancharge']['modified'])) {
                     $results[$key]['Plancharge']['modified'] = $this->dateFormatAfterFind($val['Plancharge']['modified']);
-                }                    
+                }    
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Plancharge']['entite_id']); 
             }
             return $results;
         }   

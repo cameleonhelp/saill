@@ -7,45 +7,54 @@ App::uses('AppController', 'Controller');
  */
 class DossierpartagesController extends AppController {
         public $components = array('History','Common');
-    public $paginate = array(
+        
+        public $paginate = array(
         'limit' => 25,
         'order' => array('Dossierpartage.NOM' => 'asc'),
         /*'order' => array(
             'Post.title' => 'asc' /*/
         );
     
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/json_get_all_users_actif_nogenerique/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            if($visibility == null):
+                return '1=1';
+            elseif ($visibility!=''):
+                return array('OR'=>array('Dossierpartage.utilisateur_id IN ('.$visibility.')','Dossierpartage.utilisateur_id IS NULL'));
+            else:
+                return array('OR'=>array('Dossierpartage.utilisateur_id ='.userAuth('id'),'Dossierpartage.utilisateur_id IS NULL'));
+            endif;
+        }
+        
+        public function get_list_utilisateur($visibility){
+            if($visibility == null):
+                 $condition = array("Utilisateur.id > 1","Utilisateur.profil_id > 0","Utilisateur.ACTIF"=>1);
+            elseif ($visibility!=''):
+                $condition = array("Utilisateur.id > 1","Utilisateur.profil_id > 0","Utilisateur.ACTIF"=>1,'Utilisateur.id IN ('.$visibility.')');
+            else:
+                $condition = array("Utilisateur.id > 1","Utilisateur.profil_id > 0","Utilisateur.ACTIF"=>1,'Utilisateur.id ='.userAuth('id'));
+            endif;            
+            return $this->Dossierpartage->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'conditions'=>$condition));              
+        }     
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
-            //$this->Session->delete('history');
+            $this->set('title_for_layout','Partages réseaux');
             if (isAuthorized('dossierpartages', 'index')) :
-		$this->set('title_for_layout','Partages réseaux');
-                $this->Dossierpartage->recursive = 0;
+                $listusers = $this->get_visibility();
+                $newcondition = $this->get_restriction($listusers);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newcondition,'recursive'=>0));
 		$this->set('dossierpartages', $this->paginate());
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('dossierpartages', 'view')) :
-		$this->set('title_for_layout','Partages réseaux');
-                if (!$this->Dossierpartage->exists($id)) {
-			throw new NotFoundException(__('Dossier partagé incorrecte'));
-		}
-		$options = array('conditions' => array('Dossierpartage.' . $this->Dossierpartage->primaryKey => $id),'recursive'=>0);
-		$this->set('dossierpartage', $this->Dossierpartage->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -58,10 +67,8 @@ class DossierpartagesController extends AppController {
  * @return void
  */
 	public function add() {
-            if (isAuthorized('dossierpartages', 'add')) :
-                $gestionnaire = $this->Dossierpartage->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0')));              
-                $this->set('gestionnaire',$gestionnaire);                
-		$this->set('title_for_layout','Partages réseaux');
+            $this->set('title_for_layout','Partages réseaux');
+            if (isAuthorized('dossierpartages', 'add')) :            
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Dossierpartage->validate = array();
@@ -76,6 +83,9 @@ class DossierpartagesController extends AppController {
 			}
                     endif;
 		endif;
+                $listusers = $this->get_visibility();
+                $gestionnaire = $this->get_list_utilisateur($listusers);
+                $this->set('gestionnaire',$gestionnaire);                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -90,10 +100,8 @@ class DossierpartagesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            if (isAuthorized('dossierpartages', 'edit')) :
-                $gestionnaire = $this->Dossierpartage->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0')));              
-                $this->set('gestionnaire',$gestionnaire);                
-		$this->set('title_for_layout','Partages réseaux');
+            $this->set('title_for_layout','Partages réseaux');
+            if (isAuthorized('dossierpartages', 'edit')) :    
                 if (!$this->Dossierpartage->exists($id)) {
 			throw new NotFoundException(__('Dossier partagé incorrecte'));
 		}
@@ -110,8 +118,11 @@ class DossierpartagesController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Dossierpartage.' . $this->Dossierpartage->primaryKey => $id),'recursive'=>0);
-			$this->request->data = $this->Dossierpartage->find('first', $options);
+                    $options = array('conditions' => array('Dossierpartage.' . $this->Dossierpartage->primaryKey => $id),'recursive'=>0);
+                    $this->request->data = $this->Dossierpartage->find('first', $options);
+                    $listusers = $this->get_visibility();
+                    $gestionnaire = $this->get_list_utilisateur($listusers);
+                    $this->set('gestionnaire',$gestionnaire);                         
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -128,8 +139,8 @@ class DossierpartagesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            $this->set('title_for_layout','Partages réseaux');
             if (isAuthorized('dossierpartages', 'delete')) :
-		$this->set('title_for_layout','Partages réseaux');
                 $this->Dossierpartage->id = $id;
 		if (!$this->Dossierpartage->exists()) {
 			throw new NotFoundException(__('Dossier partagé incorrecte'));
@@ -152,16 +163,30 @@ class DossierpartagesController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($keywords=null) {
+            $this->set('title_for_layout','Partages réseaux');
             if (isAuthorized('dossierpartages', 'index')) :
-                $this->set('title_for_layout','Partages réseaux');
-                $keyword=isset($this->params->data['Dossierpartage']['SEARCH']) ? $this->params->data['Dossierpartage']['SEARCH'] : '';  
-                $newconditions = array('OR'=>array("Dossierpartage.NOM LIKE '%".$keyword."%'","Dossierpartage.DESCRIPTION LIKE '%".$keyword."%'","Dossierpartage.GROUPEAD LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Dossierpartage->recursive = 0;
-                $this->set('dossierpartages', $this->paginate());              
-                $this->render('index');
+                if(isset($this->params->data['Dossierpartage']['SEARCH'])):
+                    $keywords = $this->params->data['Dossierpartage']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $listusers = $this->get_visibility();
+                    $newcondition = $this->get_restriction($listusers);
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Dossierpartage.NOM LIKE '%".$value."%'","Dossierpartage.DESCRIPTION LIKE '%".$value."%'","Dossierpartage.GROUPEAD LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newcondition,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
+                    $this->set('dossierpartages', $this->paginate());     
+                else:
+                    $this->redirect(array('action'=>'index'));
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

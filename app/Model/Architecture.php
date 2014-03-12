@@ -63,7 +63,8 @@ class Architecture extends AppModel {
                 }      
                 if (isset($val['Architecture']['modified'])) {
                     $results[$key]['Architecture']['modified'] = $this->dateFormatAfterFind($val['Architecture']['modified']);
-                }            
+                }    
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Architecture']['entite_id']); 
             }
             return $results;
         } 

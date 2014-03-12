@@ -12,7 +12,7 @@
              $pass2 = 1 ;
         endif;  */      
         ?>     
-        <nav class="navbar toolbar marginright20">
+        <nav class="navbar toolbar ">
                 <ul class="nav navbar-nav toolbar">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('biens', 'add')) : ?>
                 <li><?php echo $this->Html->link('<span class="glyphicons plus size14 margintop4"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
@@ -66,7 +66,8 @@
                             <li><?php echo $this->Html->link($usage['Usage']['NOM'], array('action' => 'index',$pass0,$pass1,$pass2,$pass3,$pass4,$usage['Usage']['id']),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass5,$usage['Usage']['id']))); ?></li>
                          <?php endforeach; ?>
                       </ul>
-                 </li>                 
+                 </li>        
+                 <?php if (userAuth('profil_id')!='2' && isAuthorized('biens', 'edit')) : ?>
                 <li class="divider-vertical-only"></li>
                 <!-- Actions groupées -->  
                 <li class="dropdown">
@@ -76,7 +77,8 @@
                      <li><?php echo $this->Html->link('Installer', "#",array('id'=>'installlink','class'=>'showoverlay')); ?></li>
                      <li><?php echo $this->Html->link('Valider', "#",array('id'=>'checklink','class'=>'showoverlay')); ?></li>
                      </ul>
-                </li>                    
+                </li>    
+                <?php endif; ?>
                 <li class="divider-vertical-only"></li>
                 <!-- Export -->
                 <li>
@@ -85,12 +87,12 @@
                 </ul> 
                 <?php echo $this->Form->create("Bien",array('action' => 'search', 'class'=>'toolbar-form pull-right','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche ...','style'=>"width: 200px;",'class'=>"form-control")); ?>
-                    <button type="submit" class="btn form-btn showoverlay">Rechercher</button>
+                    <button type="submit" class="btn form-btn showoverlay"><span class="glyphicons notchange search"></span></button>
                 <?php echo $this->Form->end(); ?> 
         </nav>
-            <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 marginright20">
+            <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 ">
             <strong>Filtre appliqué : </strong><em>Liste des biens <?php echo $strfilter; ?></em></div><?php } ?>  
-        <div class="marginright10">
+        <div class="">
 	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
 	<tr>
                         <th style="text-align:center;width:15px !important;vertical-align: middle;padding-left:5px;"><?php echo $this->Form->input('checkall',array('type'=>'checkbox','label'=>false)) ; ?>
@@ -120,21 +122,22 @@
             <td style='text-align: right;'><?php echo h($bien['Lot']['NOM']); ?></td>
             <td style='text-align: right;'><?php echo h($bien['Bien']['COEURLICENCE']); ?>&nbsp;</td>
             <td style='text-align: center;'><?php $image = (isset($bien['Bien']['INSTALL']) && $bien['Bien']['INSTALL']==true) ? 'ok_2' : 'ok_2 disabled' ; ?>
-                <a href="#" class="installed cursor showoverlay" data-id="<?php echo $bien['Bien']['id']; ?>"  rel='tooltip'  data-container="body" data-title="Installé le <?php echo $bien['Bien']['DATEINSTALL']; ?>"><span class="glyphicons <?php echo $image; ?> notchange"></span></a></td>           
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('biens', 'edit')) : ?>
+                <a href="#" class="installed cursor showoverlay" data-id="<?php echo $bien['Bien']['id']; ?>"  rel='tooltip'  data-container="body" data-title="Installé le <?php echo $bien['Bien']['DATEINSTALL']; ?>"><span class="glyphicons <?php echo $image; ?> notchange"></span></a> 
+            <?php else: ?>
+                <span class="glyphicons <?php echo $image; ?> notchange"></span>
+            <?php endif; ?>
+            </td>
             <td style='text-align: center;'><?php $image = (isset($bien['Bien']['CHECK']) && $bien['Bien']['CHECK']==true) ? 'ok_2' : 'ok_2 disabled' ; ?>
+             <?php if (userAuth('profil_id')!='2' && isAuthorized('biens', 'add')) : ?>
                 <a href="#" class="valided cursor showoverlay" data-id="<?php echo $bien['Bien']['id']; ?>"  rel='tooltip'  data-container="body" data-title="Validé le <?php echo $bien['Bien']['DATECHECKINSTALL']; ?>"><span class="glyphicons <?php echo $image; ?> notchange"></span></a></td>   
+            <?php else: ?>
+                <span class="glyphicons <?php echo $image; ?> notchange"></span>
+            <?php endif; ?>
+            </td>
             <td class="actions">
             <?php if (userAuth('profil_id')!='2' && isAuthorized('biens', 'view')) : ?>
-            <?php echo '<span class="glyphicons eye_open" data-rel="popover" data-title="<h3>Biens :</h3>" data-content="<contenttitle>Coeur : </contenttitle>'.h($bien['Bien']['COEUR']).
-                    '<br/><contenttitle>Modèle : </contenttitle>'.h($bien['Modele']['NOM']).
-                    '<br/><contenttitle>Châssis : </contenttitle>'.h($bien['Chassis']['NOM']).
-                    '<br/><contenttitle>CPU : </contenttitle>'.h($bien['Cpus']['NOM']).
-                    '<br/><contenttitle>Mémoire : </contenttitle>'.h($bien['Bien']['RAM']).' Mo'.
-                    '<br/><contenttitle>Coût : </contenttitle>'.h(isset($bien['Bien']['COUT']) ? $bien['Bien']['COUT'] : '0.00').' €'.
-                    '<br/><contenttitle>Installé le: </contenttitle>'.h($bien['Bien']['DATEINSTALL']).
-                    '<br/><contenttitle>Validé le: </contenttitle>'.h($bien['Bien']['DATECHECKINSTALL']).'<br/><contenttitle>Validé par : </contenttitle>'.h(isset($bien['Bien']['CHECKBY_NOM']) ? $bien['Bien']['CHECKBY_NOM'] : '').
-                    '<br/><contenttitle>Crée le: </contenttitle>'.h($bien['Bien']['created']).
-                    '<br/><contenttitle>Modifié le: </contenttitle>'.h($bien['Bien']['modified']).'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
+                <?php echo '<span class="glyphicons eye_open cursor"></span>'; ?>&nbsp;
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('biens', 'edit')) : ?>
             <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit', $bien['Bien']['id']),array('escape' => false)); ?>&nbsp;
@@ -149,11 +152,19 @@
             <?php endif; ?>            
             </td>
 	</tr>
+        <tr class="trhidden" style="display:none;">
+            <td colspan="11" align="center">
+                <table cellpadding="0" cellspacing="0" class="table table-hidden" style="margin-bottom:-3px;">
+                    <tr><th>Coeur</th><th>Modèle</th><th>Châssis</th><th>CPU</th><th>Mémoire</th><th>Coût</th><th>Installé le</th><th>Validé le</th><th>Validé par</th></tr>
+                    <tr><td><?php echo $bien['Bien']['COEUR']; ?></td><td><?php echo $bien['Modele']['NOM']; ?></td><td><?php echo $bien['Chassis']['NOM']; ?></td><td><?php echo $bien['Cpus']['NOM']; ?></td><td><?php echo $bien['Bien']['RAM'].' Mo'; ?></td><td><?php echo isset($bien['Bien']['COUT']) ? $bien['Bien']['COUT'] : '0.00'.' €'; ?></td><td><?php echo $bien['Bien']['DATEINSTALL']; ?></td><td><?php echo $bien['Bien']['DATECHECKINSTALL']; ?></td><td><?php echo isset($bien['Bien']['CHECKBY_NOM']) ? $bien['Bien']['CHECKBY_NOM'] : ''; ?></td></tr>
+                </table>
+            </td>
+        </tr>        
 <?php endforeach; ?>
 	</table>
         </div>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
-	<div class="pull-right marginright20"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>   
+	<div class="pull-right "><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>   
         <div class='text-center'>
         <ul class="pagination pagination-sm">
 	<?php
@@ -168,6 +179,10 @@
 </div>
 <script>
 $(document).ready(function () {
+    $(document).on('click','.eye_open',function(e){
+        $(this).parents('tr').next('.trhidden').slideToggle("slow");
+    });
+    
     $(document).on('click','.installed',function(e){
         var id = $(this).attr('data-id');
             $.ajax({

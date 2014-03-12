@@ -94,4 +94,14 @@ class HistoryutilisateursController extends AppController {
 		$this->Session->setFlash(__('Historyutilisateur was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
+        
+        public function get_list($id){
+            $options = array('conditions' => array('utilisateur_id' => $id));
+            return $this->Historyutilisateur->find('list',array('fields' => array('id', 'HISTORIQUE'),$options,'order'=>array('HISTORIQUE'=>'desc'),'recursive'=>0));
+        }
+        
+        public function get_all($id){
+            $options = array('conditions' => array('utilisateur_id' => $id));
+            return $this->Historyutilisateur->find('all',array('order'=>array('HISTORIQUE'=>'desc'),$options,'recursive'=>0));
+        }           
 }

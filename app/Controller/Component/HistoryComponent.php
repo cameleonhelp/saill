@@ -23,7 +23,7 @@ class HistoryComponent extends Component {
      * Ajouter toutes les méthode dont on fait $this->History->goBack()
      * @var type 
      */
-    var $exception = array('saveColor','delete','erase','json_get_select_compatible','ajaxdelete','ajaxadd','openmaintenance','files/source','closemaintenance','json_get_info','ajax_update_cpu','ajax_install','saveColor','pinghost','budgetisactif','ajaxedit','ajax_actif','json_get_logiciel_info','json_get_version_info','json_get_info','json_get_version_for','ajaxdelete','ajaxadd','notifier','addnewpc','sendmailgestannuaire','newactivite','dupliquer','search','export_doc','export_xls','incra','parseICS','progressduree','progressavancement','prolonger','progressstatut','progressstate','autoduplicate','errorfacturation','setmenuvisible','deverouiller','soumettre','deleteall','autoprogressState','addIndisponibilite');
+    var $exception = array('saveColor','json_get_all_projets','json_get_all_users','json_get_my_entite','json_get_all_users_entite','json_get_all_projets_entite','json_get_projets','json_get_users','save','ajax_save_password','json_get_assoid','json_get_info','delete','erase','json_get_select_for_application','json_get_select_compatible','ajaxdelete','ajaxadd','openmaintenance','files/source','closemaintenance','json_get_info','ajax_update_cpu','ajax_install','saveColor','pinghost','budgetisactif','ajaxedit','ajax_actif','json_get_logiciel_info','json_get_version_info','json_get_info','json_get_version_for','ajaxdelete','ajaxadd','notifier','addnewpc','sendmailgestannuaire','newactivite','dupliquer','search','export_doc','export_xls','incra','parseICS','progressduree','progressavancement','prolonger','progressstatut','progressstate','autoduplicate','errorfacturation','setmenuvisible','deverouiller','soumettre','deleteall','autoprogressState','addIndisponibilite');
 
     /**
      * action initialisant l'historique
@@ -253,7 +253,7 @@ class HistoryComponent extends Component {
         $newhistory = $history;
         foreach ($history as $key => $value) {
             foreach($this->exception as $exception):
-                if(strpos($value, $exception)!==false):
+                if(strpos($value, $exception)!==false || strpos($value, '.map')!==false ):
                     unset($newhistory[$key]);
                 endif;
             endforeach;

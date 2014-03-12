@@ -149,13 +149,15 @@ class Logiciel extends AppModel {
  * @return void
  */
         public function afterFind($results, $primary = false) {
-            foreach ($results as $key => $val) {
+            foreach ($results as $key => $val) {   
+                    //debug($val);exit();                 
                 if (isset($val['Logiciel']['created'])) {
                     $results[$key]['Logiciel']['created'] = $this->dateFormatAfterFind($val['Logiciel']['created']);
                 }      
                 if (isset($val['Logiciel']['modified'])) {
                     $results[$key]['Logiciel']['modified'] = $this->dateFormatAfterFind($val['Logiciel']['modified']);
-                }            
+                }   
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Logiciel']['entite_id']); 
             }
             return $results;
         } 
@@ -234,5 +236,17 @@ class Logiciel extends AppModel {
  		fclose($handle);
                 unlink(realpath($filename));
  		return $return;
-	}        
+	}       
+        
+        public function getNomEnvDsit($ids){
+            $listid = explode(',',$ids);
+            $list='';
+            foreach($listid as $id):
+                $sql = "SELECT dsitenvs.NOM FROM dsitenvs WHERE dsitenvs.id = ".$id;
+                $obj = $this->query($sql);
+                $list .= $obj[0]['dsitenvs']['NOM'].',';
+            endforeach;
+            $list = $list != '' ? rtrim($list,',') : 'null';
+            return $list;
+        }         
 }

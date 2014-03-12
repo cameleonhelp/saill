@@ -6,7 +6,7 @@
         $pass3 = isset($this->params->pass[3]) ? $this->params->pass[3] : 'tous';
         $pass4 = isset($this->params->pass[4]) ? $this->params->pass[4] : 'tous';
         ?>     
-        <nav class="navbar toolbar marginright20">
+        <nav class="navbar toolbar ">
                 <ul class="nav navbar-nav toolbar">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('logiciels', 'add')) : ?>
                 <li><?php echo $this->Html->link('<span class="glyphicons plus size14 margintop4"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
@@ -102,12 +102,12 @@
                 </ul> 
                 <?php echo $this->Form->create("Logiciel",array('action' => 'search', 'class'=>'toolbar-form pull-right','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche ...','style'=>"width: 190px;",'class'=>"form-control")); ?>
-                    <button type="submit" class="btn form-btn showoverlay">Rechercher</button>
+                    <button type="submit" class="btn form-btn showoverlay"><span class="glyphicons notchange search"></span></button>
                 <?php echo $this->Form->end(); ?> 
         </nav>
-        <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 marginright20">
+        <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 ">
             <strong>Filtre appliqué : </strong><em>Liste des logiciels <?php echo $strfilter; ?></em></div><?php } ?>     
-        <div class="marginright10">             
+        <div class="">             
 	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
 	<tr>
             <th style="text-align:center;width:15px !important;vertical-align: middle;padding-left:5px;"><?php echo $this->Form->input('checkall',array('type'=>'checkbox','label'=>false)) ; ?>
@@ -151,7 +151,7 @@
 	</table>
         </div>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
-	<div class="pull-right marginright20"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>   
+	<div class="pull-right "><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>   
         <div class='text-center'>
         <ul class="pagination pagination-sm">
 	<?php
@@ -175,13 +175,13 @@
               <?php echo $this->Form->create('Logiciel',array('action'=>'importCSV','id'=>'formValidate','class'=>'form-horizontal', 'style'=>'margin-bottom:-7px !important;','type' => 'file','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
               <div class="modal-body">
                   <div class="form-group">
-                        <label for="LogicielFile" class="col-lg-4 control-label">Fichiers CSV à intégrer</label>
-                        <div class="col-lg-offset-4">
+                        <label for="LogicielFile" class="col-md-4 control-label">Fichiers CSV à intégrer</label>
+                        <div class="col-md-offset-4">
                           <?php echo $this->Form->input('file', array('type' => 'file','size'=>"40")); ?><label for="LogicielFile" class="pull-left margintop7 italic"><?php echo 'taille max de '.ini_get('upload_max_filesize'); ?></label>
                         </div>
                   </div>
                   <div class="form-group">
-                        <div class="col-lg-offset-4">
+                        <div class="col-md-offset-4">
                           <?php $csvfile = '../files/csv/logiciels.csv'; ?>
                           <?php echo $this->Html->link('Modèle de fichier CSV',$csvfile,array('target'=>'blank')); ?>
                         </div>

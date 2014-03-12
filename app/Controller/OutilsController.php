@@ -14,36 +14,46 @@ class OutilsController extends AppController {
             'Post.title' => 'asc' /*/
         );
         
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/json_get_all_users_actif_nogenerique/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            if($visibility == null):
+                return '1=1';
+            elseif ($visibility!=''):
+                return array('OR'=>array('Outil.utilisateur_id IN ('.$visibility.')','Outil.utilisateur_id IS NULL'));
+            else:
+                return array('OR'=>array('Outil.utilisateur_id ='.userAuth('id'),'Outil.utilisateur_id IS NULL'));
+            endif;
+        }
+        
+        public function get_list_utilisateur($visibility){
+            if($visibility == null):
+                 $condition = array("Utilisateur.id > 1","Utilisateur.profil_id > 0","Utilisateur.ACTIF"=>1);
+            elseif ($visibility!=''):
+                $condition = array("Utilisateur.id > 1","Utilisateur.profil_id > 0","Utilisateur.ACTIF"=>1,'Utilisateur.id IN ('.$visibility.')');
+            else:
+                $condition = array("Utilisateur.id > 1","Utilisateur.profil_id > 0","Utilisateur.ACTIF"=>1,'Utilisateur.id ='.userAuth('id'));
+            endif;            
+            return $this->Outil->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'conditions'=>$condition));              
+        }        
+        
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
-            //$this->Session->delete('history');
             if (isAuthorized('outils', 'index')) :
-		$this->Outil->recursive = 0;
+                $listusers = $this->get_visibility();
+                $newcondition = $this->get_restriction($listusers);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newcondition,'recursive'=>0));                 
 		$this->set('outils', $this->paginate());
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-        
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('outils', 'view')) :
-		if (!$this->Outil->exists($id)) {
-			throw new NotFoundException(__('Outil incorrect'));
-		}
-		$options = array('conditions' => array('Outil.' . $this->Outil->primaryKey => $id),'recursive'=>0);
-		$this->set('outil', $this->Outil->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -56,23 +66,24 @@ class OutilsController extends AppController {
  * @return void
  */
 	public function add() {
-            if (isAuthorized('outils', 'add')) :
-                $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0')));              
-                $this->set('gestionnaire',$gestionnaire);            
+            if (isAuthorized('outils', 'add')) :           
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Outil->validate = array();
                         $this->History->goBack(1);
                     else:                     
 			$this->Outil->create();
-			if ($this->Outil->save($this->request->data)) {
+			if ($this->Outil->save($this->request->data)) :
 				$this->Session->setFlash(__('Outil sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
-			} else {
+			else :
 				$this->Session->setFlash(__('Outil incorrect, veuillez corriger l\'outil',true),'flash_failure');
-			}
+			endif;
                     endif;
 		endif;
+                $listusers = $this->get_visibility();
+                $gestionnaire = $this->get_list_utilisateur($listusers);
+                $this->set('gestionnaire',$gestionnaire);                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -87,9 +98,7 @@ class OutilsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            if (isAuthorized('outils', 'edit')) :
-                $gestionnaire = $this->Outil->Utilisateur->find('list',array('fields' => array('Utilisateur.id', 'Utilisateur.NOMLONG'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0'),'recursive'=>-1));              
-                $this->set('gestionnaire',$gestionnaire);            
+            if (isAuthorized('outils', 'edit')) :         
 		if (!$this->Outil->exists($id)) {
 			throw new NotFoundException(__('Outil incorrect'));
 		}
@@ -106,8 +115,11 @@ class OutilsController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Outil.' . $this->Outil->primaryKey => $id),'recursive'=>0);
-			$this->request->data = $this->Outil->find('first', $options);
+                    $options = array('conditions' => array('Outil.' . $this->Outil->primaryKey => $id),'recursive'=>0);
+                    $this->request->data = $this->Outil->find('first', $options);
+                    $listusers = $this->get_visibility();
+                    $gestionnaire = $this->get_list_utilisateur($listusers);
+                    $this->set('gestionnaire',$gestionnaire);                        
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -129,7 +141,6 @@ class OutilsController extends AppController {
 		if (!$this->Outil->exists()) {
 			throw new NotFoundException(__('Outil incorrect'));
 		}
-		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Outil->delete()) {
 			$this->Session->setFlash(__('Outil supprimé',true),'flash_success');
 			$this->History->goBack(1);
@@ -147,15 +158,29 @@ class OutilsController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($keywords=null) {
             if (isAuthorized('outils', 'index')) :
-                $keyword=isset($this->params->data['Outil']['SEARCH']) ? $this->params->data['Outil']['SEARCH'] : '';  
-                $newconditions = array('OR'=>array("Outil.NOM LIKE '%".$keyword."%'","Outil.DESCRIPTION LIKE '%".$keyword."%'","(CONCAT(Utilisateur.NOM, ' ', Utilisateur.PRENOM)) LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Outil->recursive = 0;
-                $this->set('outils', $this->paginate());              
-                $this->render('index');
+                if(isset($this->params->data['Outil']['SEARCH'])):
+                    $keywords = $this->params->data['Outil']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $listusers = $this->get_visibility();
+                    $newcondition = $this->get_restriction($listusers);
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Outil.NOM LIKE '%".$value."%'","Outil.DESCRIPTION LIKE '%".$value."%'","(CONCAT(Utilisateur.NOM, ' ', Utilisateur.PRENOM)) LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newcondition,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
+                    $this->set('outils', $this->paginate());     
+                else:
+                    $this->redirect(array('action'=>'index'));
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

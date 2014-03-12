@@ -22,7 +22,7 @@ class ChangelogdemandesController extends AppController {
  *
  * @return void
  */
-	public function index($changelog=null,$all=null,$criticite=null,$etat=null,$type=null) {
+	public function index($changelog=null,$all=null,$criticite=null,$etat=null,$type=null,$version_id=null) {
             $this->set('title_for_layout','Liste des changements demandés');
             switch($changelog):
                 case '1';
@@ -35,11 +35,12 @@ class ChangelogdemandesController extends AppController {
                     $conditions[]="Changelogversion.ETAT=0";
                     $conditions[]="Changelogdemande.changelogversion_id is not null";                    
                     break;
+                case null:
                 default:
                     if (userAuth('profil_id')>1) :
                         $conditions[]="Changelogdemande.utilisateur_id=".userAuth('id');
                     endif;   
-                    $conditions[]= isset($all) && $all=='1' ? "Changelogdemande.OPEN=1" : "Changelogversion.ETAT=0";
+                    $conditions[]= (isset($all) && $all=='1') || $all==null ? "Changelogdemande.OPEN=1" : "Changelogversion.ETAT=0";
                     unset($this->paginate['order']);                   
                     $this->paginate = array('order'=>array('Changelogdemande.OPEN'=>'desc','Changelogversion.VERSION'=>'asc','Changelogdemande.TYPE'=>'asc'));
             endswitch;
@@ -69,26 +70,38 @@ class ChangelogdemandesController extends AppController {
                     default:
                         $conditions[]="Changelogdemande.TYPE=".$type;
                         break;
-                endswitch;                
+                endswitch;  
+                switch($version_id):
+                    case null:
+                    case 'tous':
+                        $conditions[]="1=1";
+                        break;
+                    default:
+                        $conditions[]="Changelogdemande.changelogversion_id=".$version_id;
+                        break;
+                endswitch;                 
 		$this->Changelogdemande->recursive = 1;
                 $this->paginate = isset($conditions) ? array_merge_recursive($this->paginate,array('conditions'=>$conditions)) : $this->paginate;
 		if($changelog==1):
-                    $this->paginate = array('limit'=>$this->Changelogdemande->find('count'));
+                    $this->paginate = array('limit'=>$this->Changelogdemande->find('count'),'conditions'=>$conditions);
                 endif;
                 $this->set('changelogdemandes', $this->paginate());
                 $this->set('datereelle', $this->paginate());
                 $changelogetats = Configure::read('changelogEtatDemande');  
                 $changelogtypes = Configure::read('changelogType');  
                 $changelogcriticites = Configure::read('changelogCriticite'); 
+                $versions = $this->Changelogdemande->requestAction('changelogversions/get_all_open');
                 $nextversion = $this->Changelogdemande->requestAction('changelogversions/getnextversion');
-		$this->set(compact('changelogetats','changelogtypes','changelogcriticites','nextversion')); 
+		$this->set(compact('changelogetats','changelogtypes','changelogcriticites','nextversion','versions')); 
                 $export = $this->Changelogdemande->find('all',array('conditions'=>$conditions,'order'=>array('Changelogversion.VERSION'=>'asc','Changelogdemande.id'=>'desc'),'recursive'=>0));
                 $this->Session->delete('xls_export');
                 $this->Session->write('xls_export',$export);  
 	}
         
-        public function changelog(){
-            $this->index('1');
+        public function changelog($id=null){
+            $id = $id==null ? $this->requestAction('changelogversions/get_last') : $id;
+            $id = is_array($id) ? $id['Changelogversion']['id'] : $id;
+            $this->index('1','0','tous','tous','tous',$id);
             $versions = $this->requestAction('changelogversions/get_all_close');
             $this->set(compact('versions'));
         }
@@ -167,7 +180,8 @@ class ChangelogdemandesController extends AppController {
 			} else {
 				$this->Session->setFlash(__('Demande incorrecte, veuillez corriger la demande',true),'flash_failure');
 			}
-                        return $this->redirect(array('action' => 'index',0,1));
+                        //return $this->redirect(array('action' => 'index',0,1));
+                        $this->History->goBack(1);
                     endif;
 		} else {
 			$options = array('conditions' => array('Changelogdemande.' . $this->Changelogdemande->primaryKey => $id));
@@ -197,7 +211,8 @@ class ChangelogdemandesController extends AppController {
 		} else {
 			$this->Session->setFlash(__('Demande <b>NON</b> supprimée',true),'flash_failure');
 		}
-		return $this->redirect(array('action' => 'index',0,1));
+		//return $this->redirect(array('action' => 'index',0,1));
+                $this->History->goBack(1);
 	}
         
         public function ajax_changeetat($id=null){
@@ -210,6 +225,8 @@ class ChangelogdemandesController extends AppController {
                 if ($this->Changelogdemande->saveField('OPEN',$newactif) && $this->Changelogdemande->saveField('ETAT',$etat)) {
                         if ($id==null):
                             $this->Session->setFlash(__('Modification de l\'état de la demande prise en compte',true),'flash_success');
+                            $demande = $this->get_info($newid);
+                            if($etat == 4): $this->requestAction('changelogreponses/sendmail',array('pass'=>array($demande))); endif;
                         else:
                             $result = true;
                         endif;

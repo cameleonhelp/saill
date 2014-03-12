@@ -62,19 +62,18 @@ class ChangelogreponsesController extends AppController {
 		if ($this->request->is('post')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Changelogreponse->validate = array();
-                        return $this->redirect(array('controller'=>'changelogdemandes','action' => 'index',0,1));
+                        //return $this->redirect(array('controller'=>'changelogdemandes','action' => 'index',0,1));
+                        $this->History->goBack(1);
                     else:              
                         if($this->request->data['Changelogreponse']['REPONSE']!=''):
                             $this->Changelogreponse->create();
                             if ($this->Changelogreponse->save($this->request->data)) {
-                                    //edit changelogdemande pour mettre à jour les champs ETAT, TYPE et CRITICITE
-                                    $demande = $this->requestAction('Cchangelogdemande/get_info/'+$id);
-                                    if(in_array($this->request->data['Changelogreponse']['ETAT'],array('0','2','4'))) : $this->sendmail($demande); endif;
                                     $this->Session->setFlash(__('Réponse sauvegardée',true),'flash_success');
                             } else {
                                     $this->Session->setFlash(__('Réponse incorrecte, veuillez corriger la réponse',true),'flash_failure');
                             }
                         endif;
+
                         $this->Changelogreponse->Changelogdemande->id = $id;
                         $this->Changelogreponse->Changelogdemande->saveField('ETAT', $this->request->data['Changelogreponse']['ETAT']);
                         $this->Changelogreponse->Changelogdemande->saveField('TYPE', $this->request->data['Changelogreponse']['TYPE']);
@@ -90,7 +89,10 @@ class ChangelogreponsesController extends AppController {
                         if($this->request->data['Changelogreponse']['CRITICITE']!=''):
                             $this->Changelogreponse->Changelogdemande->saveField('changelogversion_id', $this->request->data['Changelogreponse']['version_id']);
                         endif;                            
-                        return $this->redirect(array('controller'=>'changelogdemandes','action' => 'index',0,1));
+                        $demande = $this->requestAction('changelogdemandes/get_info/'.$id);
+                        if(in_array($this->request->data['Changelogreponse']['ETAT'],array('0','2','4'))) : $this->sendmail($demande); endif;
+                        //return $this->redirect(array('controller'=>'changelogdemandes','action' => 'index',0,1));
+                        $this->History->goBack(2);
                     endif;
 		}
                 $changelogetats = Configure::read('changelogEtatDemande');  
@@ -184,16 +186,21 @@ class ChangelogreponsesController extends AppController {
         }
         
         public function sendmail($obj){
-            $tmpreponses = $this->requestAction('changelogreponses/get_all_reponses/'+$obj['Changelogdemande']['id']);
+            $reponses = '';
+            $tmpreponses = $this->requestAction('changelogreponses/get_all_reponses/'.$obj['Changelogdemande']['id']);          
             foreach($tmpreponses as $tmpreponse):
-                $reponses .= '<li>'.$tmpreponse['Changelogreponse']['REPONSE'].'</li>';
+                $reponses .= '<li>'.$tmpreponse['Changelogreponse']['created'].' - '.$tmpreponse['Changelogreponse']['REPONSE'].'</li>';
             endforeach;
-            $demandeur = $this->requestAction('utilisateurs/get_mail/'+$obj['Changelogdemande']['utilisateur_id']);
-            $to =$demandeur[0]['Utilisateur']['MAIL'];
+            $changelogetats = Configure::read('changelogEtatDemande');  
+            $demandeur = $this->requestAction('utilisateurs/get_mail/'.$obj['Changelogdemande']['utilisateur_id']);           
+            $to =$demandeur[0];
             $from = userAuth('MAIL');
             $objet = 'SAILL : Réponse à la demande de changement n°'.' [C-'.  strYear($obj['Changelogdemande']['created']).'-'.$obj['Changelogdemande']['id'].']';
-            $message = "Voici la réposne à la demande : ".
+            $message = "Voici la réponse à la demande : ".
                     '<ul>
+                    <li>Statut : '.$changelogetats[$obj['Changelogdemande']['ETAT']].'</li>
+                    <li>Prévu en version : '.$obj['Changelogversion']['VERSION'].'</li>
+                    <li>Livraison prévue le : '.$obj['Changelogversion']['DATEPREVUE'].'</li>
                     <li>Demande : '.$obj['Changelogdemande']['DEMANDE'].'</li>  
                     <li>Réponses : <ul>'.$reponses.'</ul></li>
                     </ul>';

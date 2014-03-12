@@ -165,4 +165,19 @@ class DotationsController extends AppController {
             $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - mise à jour de la dotation dotation";
             $this->Dotation->Utilisateur->Historyutilisateur->save($history); 				
         }
+        
+        public function get_list($id){
+            $options = array('Dotation.utilisateur_id='.$id);
+            return $this->Dotation->find('list',array('fields' => array('Dotation.id','Materielinformatique.NOM'),'conditions' =>$options,'order'=>array('Materielinformatique.NOM'=>'asc','Typemateriel.NOM'=>'asc'),'recursive'=>0));
+        }
+        
+        public function get_all($id){
+            $options = array('Dotation.utilisateur_id='.$id);
+            return $this->Dotation->find('all',array('conditions' =>$options,'order'=>array('Materielinformatique.NOM'=>'asc','Typemateriel.NOM'=>'asc'),'recursive'=>0));
+        }    
+        
+        public function get_compteur($id){
+            $options =array('Dotation.utilisateur_id' => $id);
+            return $this->Dotation->find('first',array('fields'=>array('count(Dotation.id) AS nbDotation'),'conditions' =>$options,'recursive'=>0));
+        }        
 }

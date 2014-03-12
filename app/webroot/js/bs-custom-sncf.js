@@ -651,4 +651,90 @@ $(document).ready(function () {
     $('.changelogversion').mask('9.9.9.999',{placeholder:"0"});
     $('.dateonly').mask('99/99/9999',{placeholder:".."});
     //$('.frais').mask('9999.99',{placeholder:"0"});
+    
+    var highchartsOptions = Highcharts.setOptions({
+      lang: {
+            loading: 'Chargement...',
+            months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+            weekdays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+            shortMonths: ['Jan', 'Fev', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'],
+            exportButtonTitle: "Exporter",
+            printButtonTitle: "Imprimer",
+            rangeSelectorFrom: "De",
+            rangeSelectorTo: "A",
+            rangeSelectorZoom: "Periode",
+            downloadPNG: 'Format PNG',
+            downloadJPEG: 'Fromat JPEG',
+            downloadPDF: 'Format PDF',
+            downloadSVG: 'Format SVG'
+            // resetZoom: "Reset",
+            // resetZoomTitle: "Reset,
+            // thousandsSep: ".",
+            // decimalPoint: ','
+            }
+      }
+  );
+  $.tablesorter.addParser({
+    id: 'fr-date',
+    is: function(s) {
+        return false;
+    },
+    format: function(s) { 
+        var date = s.split('/');
+        return new Date(date[2],date[1],date[0]).getTime();
+    },
+    type: 'Numeric'
+  });
+  $.tablesorter.addParser({
+    id: 'mois-annee',
+    is: function(s) {
+        return false;
+    },
+    format: function(s) { 
+        var date = s.split(' ');
+        var month = new Array();
+        month['Janvier']=1;
+        month['Février']=2;
+        month['Mars']=3;
+        month['Avril']=4;
+        month['Mai']=5;
+        month['Juin']=6;
+        month['Juillet']=7;
+        month['Août']=8;
+        month['Septembre']=9;
+        month['Octobre']=10;
+        month['Novembre']=11;
+        month['Décembre']=12;
+        return new Date(date[1],month[date[0]],1).getTime();
+    },
+    type: 'Numeric'
+  });
+  $.tablesorter.addParser({
+    id: "digit",
+    is: function(s) {
+     console.log("1-"+s);
+     return false;
+    },
+    format: function(s) {
+     console.log("2-"+s);
+    return $.tablesorter.formatFloat(s);
+    },
+    type: "Numeric"
+  });
+
+  $('.table-striped tr:visible').filter(':odd').css({'background-color': '#f9f9f9'});
+  $('.table-striped tr:visible').filter(':even').css({'background-color': 'white'});  
+  
+
+  
+  /*$(document).on('click','.toolbar-form input',function(e){
+      $(this).attr({style: 'width:200px !important; z-index:2000;'});
+      $(this).parents('form').attr({style: 'width:auto !important; z-index:2000;clear:both;'});
+      $(this).parents().parent('.toolbar.pull-right').attr({style:'float:left;'});
+  });
+  
+  $(document).on('focusout','.toolbar-form input',function(e){
+      $(this).attr({style: 'width:auto'});
+      $(this).parents('form').attr({style: ''});
+  });*/
 });

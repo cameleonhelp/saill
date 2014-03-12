@@ -116,6 +116,7 @@ class Contrat extends AppModel {
                  if (isset($val['Contrat']['ANNEEFIN'])) {
                     $results[$key]['Contrat']['ANNEEFIN'] = $this->YearFormatAfterFind($val['Contrat']['ANNEEFIN']);
                 } 
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Contrat']['entite_id']); 
             }
             return $results;
         } 

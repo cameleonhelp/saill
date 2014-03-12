@@ -36,35 +36,35 @@ class CakeEmail {
 /**
  * Default X-Mailer
  *
- * @constant EMAIL_CLIENT
+ * @var string
  */
 	const EMAIL_CLIENT = 'CakePHP Email';
 
 /**
  * Line length - no should more - RFC 2822 - 2.1.1
  *
- * @constant LINE_LENGTH_SHOULD
+ * @var integer
  */
 	const LINE_LENGTH_SHOULD = 78;
 
 /**
  * Line length - no must more - RFC 2822 - 2.1.1
  *
- * @constant LINE_LENGTH_MUST
+ * @var integer
  */
 	const LINE_LENGTH_MUST = 998;
 
 /**
  * Type of message - HTML
  *
- * @constant MESSAGE_HTML
+ * @var string
  */
 	const MESSAGE_HTML = 'html';
 
 /**
  * Type of message - TEXT
  *
- * @constant MESSAGE_TEXT
+ * @var string
  */
 	const MESSAGE_TEXT = 'text';
 
@@ -1120,7 +1120,7 @@ class CakeEmail {
 		$this->_message = $this->_render($this->_wrap($content));
 
 		$contents = $this->transportClass()->send($this);
-		/*if (!empty($this->_config['log'])) {
+		if (!empty($this->_config['log'])) {
 			$config = array(
 				'level' => LOG_DEBUG,
 				'scope' => 'email'
@@ -1136,7 +1136,7 @@ class CakeEmail {
 				PHP_EOL . $contents['headers'] . PHP_EOL . $contents['message'],
 				$config['scope']
 			);
-		}*/
+		}
 		return $contents;
 	}
 
@@ -1308,6 +1308,7 @@ class CakeEmail {
  * Wrap the message to follow the RFC 2822 - 2.1.1
  *
  * @param string $message Message to wrap
+ * @param integer $wrapLength The line length
  * @return array Wrapped message
  */
 	protected function _wrap($message, $wrapLength = CakeEmail::LINE_LENGTH_MUST) {

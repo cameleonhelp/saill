@@ -7,45 +7,53 @@ App::uses('AppController', 'Controller');
  */
 class TypematerielsController extends AppController {
         public $components = array('History','Common'); 
-    public $paginate = array(
+    
+        public $paginate = array(
         'limit' => 25,
         'order' => array('Typemateriel.NOM' => 'asc'),
-        /*'order' => array(
-            'Post.title' => 'asc' /*/
         );
     
+        public function get_list_uc(){
+            return $this->Typemateriel->find('list',array('fields'=>array('Typemateriel.id','Typemateriel.NOM'),'conditions'=>array('Typemateriel.UC'=>1),'oreder'=>array('Typemateriel.NOM'=>'asc'),'recursive'=>0));
+        }
+        
+        public function get_all_uc(){
+            return $this->Typemateriel->find('all',array('conditions'=>array('Typemateriel.UC'=>1),'oreder'=>array('Typemateriel.NOM'=>'asc'),'recursive'=>0));
+        }      
+        
+        public function get_typemateriel_uc_filter($id){
+            $result = array();
+            switch ($id){
+                case 'tous':
+                case null:    
+                    $result['condition']="1=1";
+                    $result['filter'] = " de tout type de matériel";
+                    break;
+                case '1' :
+                    $result['condition']="Typemateriel.UC = 1";
+                    $result['filter'] = " des Unités centrales et/ou portables";  
+                    break;
+                case '0' :
+                    $result['condition']="Typemateriel.UC = 0";
+                    $result['filter'] = " des autres type de matériel que Unité Centrale et portable";  
+                    break;            
+            }   
+            return $result; 
+        }
+        
 /**
  * index method
  *
  * @return void
  */
-	public function index() {
-            //$this->Session->delete('history');
+	public function index($filtreUC = null) {
+            $this->set('title_for_layout','Types de matériel');
             if (isAuthorized('typemateriels', 'index')) :
-		$this->set('title_for_layout','Types de matériel');
-                $this->Typemateriel->recursive = 0;
+                $getUC = $this->get_typemateriel_uc_filter($filtreUC);
+                $this->set('strfilter',$getUC['filter']);
+                $newconditions = array($getUC['condition']);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->set('typemateriels', $this->paginate());
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('typemateriels', 'view')) :
-		$this->set('title_for_layout','Types de matériel');
-                if (!$this->Typemateriel->exists($id)) {
-			throw new NotFoundException(__('Type de matériel incorrect'));
-		}
-		$options = array('conditions' => array('Typemateriel.' . $this->Typemateriel->primaryKey => $id),'recursive'=>0);
-		$this->set('typemateriel', $this->Typemateriel->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -58,8 +66,8 @@ class TypematerielsController extends AppController {
  * @return void
  */
 	public function add() {
+            $this->set('title_for_layout','Types de matériel');
             if (isAuthorized('typemateriels', 'add')) :
-		$this->set('title_for_layout','Types de matériel');
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Typemateriel->validate = array();
@@ -88,8 +96,8 @@ class TypematerielsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            $this->set('title_for_layout','Types de matériel');
             if (isAuthorized('typemateriels', 'edit')) :
-		$this->set('title_for_layout','Types de matériel');
                 if (!$this->Typemateriel->exists($id)) {
 			throw new NotFoundException(__('Type de matériel incorrect'));
 		}
@@ -124,8 +132,8 @@ class TypematerielsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            $this->set('title_for_layout','Types de matériel');
             if (isAuthorized('typemateriels', 'delete')) :
-		$this->set('title_for_layout','Types de matériel');
                 $this->Typemateriel->id = $id;
 		if (!$this->Typemateriel->exists()) {
 			throw new NotFoundException(__('Type de matériel incorrect'));
@@ -148,16 +156,31 @@ class TypematerielsController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($filtreUC=null,$keywords=null) {
+            $this->set('title_for_layout','Types de matériel');
             if (isAuthorized('typemateriels', 'index')) :
-                $this->set('title_for_layout','Types de matériel');
-                $keyword=isset($this->params->data['Typemateriel']['SEARCH']) ? $this->params->data['Typemateriel']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Typemateriel.NOM LIKE '%".$keyword."%'","Typemateriel.DESCRIPTION LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Typemateriel->recursive = 0;
-                $this->set('typemateriels', $this->paginate());              
-                $this->render('index');
+                if(isset($this->params->data['Typemateriel']['SEARCH'])):
+                    $keywords = $this->params->data['Typemateriel']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $getUC = $this->get_typemateriel_uc_filter($filtreUC);
+                    $this->set('strfilter',$getUC['filter']);
+                    $newcondition = array($getUC['condition']);
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Typemateriel.NOM LIKE '%".$value."%'","Typemateriel.DESCRIPTION LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newcondition,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
+                    $this->set('typemateriels', $this->paginate());     
+                else:
+                    $this->redirect(array('action'=>'index',$filtreUC));
+                endif;                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

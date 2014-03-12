@@ -19,13 +19,16 @@ class AchatsController extends AppController {
  */
 	public function index($filtre=null) {
             //$this->Session->delete('history');
+            $listactivite = $this->requestAction('activites/find_str_id_cercle_activite/'.userAuth('id'));
             if (isAuthorized('achats', 'index')) : 
                 switch ($filtre){
                     case 'toutes':
                     case null: 
-                    case '<':    
-                        $newconditions[]="1=1";
+                    case '<':   
+                        if (count($listactivite)>0):
+                        $newconditions[]="Activite.id IN (".$listactivite.')';
                         $factivite = "toutes les activités";
+                        endif;
                         break;                 
                     default :
                         $newconditions[]="Activite.id='".$filtre."'";
@@ -40,13 +43,7 @@ class AchatsController extends AppController {
                 $this->Session->delete('xls_export');
                 $export = $this->Achat->find('all',array('conditions'=>$newconditions,'order'=>array('Achat.DATE'=>'desc')));
                 $this->Session->write('xls_export',$export); 
-                $listeActivites = $this->Achat->find('all',array('fileds'=>array('Achat.activite_id'),'group'=>'Achat.activite_id','recursive'=>-1));
-                $listein = '';
-                foreach($listeActivites as $liste):
-                    $listein .= $liste['Achat']['activite_id'].',';
-                endforeach;
-                $this->Achat->Activite->recursive = 0;
-                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>"asc",'Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1','Activite.id IN ('.substr_replace($listein ,"",-1).')')));
+                $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
                 $this->set('activites',$activites); 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -61,7 +58,7 @@ class AchatsController extends AppController {
  */
 	public function add() {
             if (isAuthorized('achats', 'add')) : 
-                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>'Activite.projet_id>1'));
+                $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
                 $this->set('activites',$activites);   
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
@@ -93,7 +90,7 @@ class AchatsController extends AppController {
  */
 	public function edit($id = null) {
             if (isAuthorized('achats', 'edit')) : 
-                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1'),'recursive'=>0));
+                $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
                 $this->set('activites',$activites);                
 		if (!$this->Achat->exists($id)) {
 			throw new NotFoundException(__('Achat incorrect'));
@@ -152,25 +149,54 @@ class AchatsController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($filtre=null,$keywords=null) {
             if (isAuthorized('achats', 'index')) : 
-                $keyword=isset($this->params->data['Achat']['SEARCH']) ? $this->params->data['Achat']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Achat.DATE LIKE '%".$keyword."%'","Activite.NOM LIKE '%".$keyword."%'","Achat.LIBELLEACHAT LIKE '%".$keyword."%'","Achat.DESCRIPTION LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Achat->recursive = 0;
-                $this->set('achats', $this->paginate());
-                $this->Session->delete('xls_export');
-                $export = $this->Achat->find('all',array('conditions'=>$newconditions));
-                $this->Session->write('xls_export',$export);     
-                $listeActivites = $this->Achat->find('all',array('fileds'=>array('Achat.activite_id'),'group'=>'Achat.activite_id','recursive'=>-1));
-                $listein = '';
-                foreach($listeActivites as $liste):
-                    $listein .= $liste['Achat']['activite_id'].',';
-                endforeach;
-                $activites = $this->Achat->Activite->find('all',array('fields' => array('id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>"asc",'Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1','Activite.id IN ('.substr_replace($listein ,"",-1).')')));
-                $this->set('activites',$activites);   
-                $this->render('index');
+                if(isset($this->params->data['Achat']['SEARCH'])):
+                    $keywords = $this->params->data['Achat']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords));            
+                    $listactivite = $this->requestAction('activites/find_str_id_cercle_activite/'.userAuth('id'));
+                    switch ($filtre){
+                        case 'toutes':
+                        case null: 
+                        case '<':   
+                            if (count($listactivite)>0):
+                            $newconditions[]="Activite.id IN (".$listactivite.')';
+                            $factivite = "toutes les activités";
+                            endif;
+                            break;                 
+                        default :
+                            $newconditions[]="Activite.id='".$filtre."'";
+                            $activite = $this->Achat->Activite->find('first',array('fields'=>array('Activite.NOM'),'conditions'=>array('Activite.id'=>$filtre)));
+                            $factivite = "l'activité ".$activite['Activite']['NOM'];
+                            break;                      
+                    }  
+                    $this->set('factivite',$factivite);            
+                    $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
+                    $this->set('activites',$activites); 
+                    $newconditions[] = array("Activite.id IN (".$listactivite.')');
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Achat.DATE LIKE '%".$value."%'","Activite.NOM LIKE '%".$value."%'","Achat.LIBELLEACHAT LIKE '%".$value."%'","Achat.DESCRIPTION LIKE '%".$value."%'"));
+                    endforeach;
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions));                    
+                    $this->Achat->recursive = 0;
+                    $this->set('achats', $this->paginate());
+                    $this->Session->delete('xls_export');
+                    $export = $this->Achat->find('all',array('conditions'=>$newconditions));
+                    $this->Session->write('xls_export',$export);     
+                    $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
+                    $this->set('activites',$activites);   
+                else:
+                    $this->redirect(array('action'=>'index',$filtre));
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

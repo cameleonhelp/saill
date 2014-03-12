@@ -8,17 +8,16 @@ App::uses('CakeEmail', 'Network/Email');
  */
 class UtiliseoutilsController extends AppController {
         public $components = array('History','Common'); 
-    public $paginate = array(
-        'limit' => 25,
-        'order' => array('Utiliseoutil.created' => 'desc'),
-        /*'order' => array(
-            'Post.title' => 'asc' /*/
-        );
-    
-    public function beforeFilter() {   
-        $this->Auth->allow(array('mailprogressstate','index'));
-        parent::beforeFilter();
-    }   
+        
+        public $paginate = array(
+            'limit' => 25,
+            'order' => array('Utiliseoutil.created' => 'desc'),
+            );
+        
+        public function beforeFilter() {   
+            $this->Auth->allow(array('mailprogressstate','index'));
+            parent::beforeFilter();
+        }   
         
 /**
  * index method
@@ -29,6 +28,7 @@ class UtiliseoutilsController extends AppController {
             //$this->Session->delete('history');
             if (isAuthorized('utiliseoutils', 'index')) :
 		$this->set('title_for_layout','Ouvertures des droits');
+                $listusers = $this->requestAction('assoentiteutilisateurs/json_get_all_users_actif_nogenerique/'.userAuth('id'));
                 switch ($filtreetat){
                     case 'complet':
                         $newconditions[]="1=1";
@@ -51,7 +51,7 @@ class UtiliseoutilsController extends AppController {
                 switch ($utilisateur_id){
                     case 'tous':
                     case null:    
-                        $newconditions[]="1=1";
+                        $newconditions[]="Utiliseoutil.utilisateur_id IN (".$listusers.")";
                         $futilisateur = "de tous les utilisateurs";
                         break;                      
                     default :
@@ -90,7 +90,7 @@ class UtiliseoutilsController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->Utiliseoutil->recursive = 0;
 		$this->set('utiliseoutils', $this->paginate());
-                $conditions = array('Utilisateur.id > 1','Utilisateur.profil_id > 0',$conditionetat);
+                $conditions = array('Utilisateur.id > 1','Utilisateur.profil_id > 0','Utilisateur.id IN ('.$listusers.')',$conditionetat);
                 if (userAuth('WIDEAREA')==0) {$restriction[]="Utilisateur.section_id=".userAuth('section_id'); $conditions = array_merge_recursive($conditions,$restriction);}
                 $this->Utiliseoutil->Utilisateur->recursive = -1;
                 $utilisateurs = $this->Utiliseoutil->find('all',array('fields' => array('Utilisateur.id','Utilisateur.NOM','Utilisateur.PRENOM'),'conditions'=>$conditions,'order'=>array('Utilisateur.NOMLONG'=>'asc'),'group'=>'Utilisateur.id','recursive'=>0));
@@ -98,9 +98,9 @@ class UtiliseoutilsController extends AppController {
                 $this->Utiliseoutil->recursive = -1;
                 $etats = $this->Utiliseoutil->find('all',array('fields' => array('Utiliseoutil.STATUT'),'group'=>'Utiliseoutil.STATUT','order'=>array('Utiliseoutil.STATUT'=>'asc')));
                 $this->set('etats',$etats); 
-                $outils = $this->Utiliseoutil->find('all',array('fields' => array('Outil.id','Outil.NOM'),'conditions'=>array('Utiliseoutil.outil_id IS NOT NULL',$conditionetat),'group'=>'Outil.NOM','order'=>array('Outil.NOM'=>'asc'),'recursive'=>0));
-                $liste = $this->Utiliseoutil->find('all',array('fields' => array('Listediffusion.id','Listediffusion.NOM'),'conditions'=>array('Utiliseoutil.listediffusion_id IS NOT NULL',$conditionetat),'group'=>'Listediffusion.NOM','order'=>array('Listediffusion.NOM'=>'asc'),'recursive'=>0));
-                $partage = $this->Utiliseoutil->find('all',array('fields' => array('Dossierpartage.id','Dossierpartage.NOM'),'conditions'=>array('Utiliseoutil.dossierpartage_id IS NOT NULL',$conditionetat),'group'=>'Dossierpartage.NOM','order'=>array('Dossierpartage.NOM'=>'asc'),'recursive'=>0));
+                $outils = $this->Utiliseoutil->find('all',array('fields' => array('Outil.id','Outil.NOM'),'conditions'=>array('Utiliseoutil.outil_id IS NOT NULL','Outil.utilisateur_id IN ('.$listusers.')',$conditionetat),'group'=>'Outil.NOM','order'=>array('Outil.NOM'=>'asc'),'recursive'=>0));
+                $liste = $this->Utiliseoutil->find('all',array('fields' => array('Listediffusion.id','Listediffusion.NOM'),'conditions'=>array('Utiliseoutil.listediffusion_id IS NOT NULL','Listediffusion.utilisateur_id IN ('.$listusers.')',$conditionetat),'group'=>'Listediffusion.NOM','order'=>array('Listediffusion.NOM'=>'asc'),'recursive'=>0));
+                $partage = $this->Utiliseoutil->find('all',array('fields' => array('Dossierpartage.id','Dossierpartage.NOM'),'conditions'=>array('Utiliseoutil.dossierpartage_id IS NOT NULL','Dossierpartage.utilisateur_id IN ('.$listusers.')',$conditionetat),'group'=>'Dossierpartage.NOM','order'=>array('Dossierpartage.NOM'=>'asc'),'recursive'=>0));
                 $this->set('outils',$outils);    
                 $this->set('listes',$liste);  
                 $this->set('partages',$partage);  
@@ -139,12 +139,13 @@ class UtiliseoutilsController extends AppController {
 	public function add($id = null) {
             if (isAuthorized('utiliseoutils', 'add')) :
 		$this->set('title_for_layout','Ouvertures des droits');
+                $listusers = $this->requestAction('assoentiteutilisateurs/json_get_all_users_actif_nogenerique/'.userAuth('id'));
                 if($id==null){
                     $this->Utiliseoutil->Utilisateur->recursive = -1;
-                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'order'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0')));
+                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'order'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id IN ('.$listusers.')')));
                 } else {
                     $this->Utiliseoutil->Utilisateur->recursive = -1;
-                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id','NOMLONG'),'order'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>$id,'Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 0')));
+                    $utilisateur = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id','NOMLONG'),'order'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id IN ('.$listusers.')')));
                 }
                 $this->set('utilisateur',$utilisateur);
                 $this->Utiliseoutil->Outil->recursive = -1;
@@ -353,8 +354,7 @@ class UtiliseoutilsController extends AppController {
                        break;
                     case 'Pris en compte':
                        $newetat = 'En validation';
-                       $valideur = $this->requestAction('parameters/get_valideuroutil');
-                       $valideur = $valideur['Parameter']['param'];                        
+                       $valideur = $this->requestAction('sections/get_valideur/'.$record['Utilisateur']['section_id']);                     
                        break;                
                     case 'En validation':
                        $newetat = 'Validé';
@@ -415,8 +415,7 @@ class UtiliseoutilsController extends AppController {
                        break;
                     case 'Pris en compte':
                        $newetat = 'En validation';
-                       $valideur = $this->requestAction('parameters/get_valideuroutil');
-                       $valideur = $valideur['Parameter']['param'];
+                       $valideur = $this->requestAction('sections/get_valideur/'.$record['Utilisateur']['section_id']);
                        break;                
                     case 'En validation':
                        $newetat = 'Validé';
@@ -586,7 +585,7 @@ class UtiliseoutilsController extends AppController {
             endif;
             if(!empty($utiliseoutil['Utiliseoutil']['dossierpartage_id']) && $utiliseoutil['Utiliseoutil']['dossierpartage_id']!=null):
                 $dossierpartage = $this->Utiliseoutil->Dossierpartage->find('first',array('conditions'=>array('Dossierpartage.id'=>$utiliseoutil['Utiliseoutil']['dossierpartage_id'])));
-                $nom = $dossierpartage['Dossierpartage']['NOM'];
+                $nom = $dossierpartage['Dossierpartage']['NOM'].' groupe : '.$dossierpartage['Dossierpartage']['GROUPEAD'];
                 $gestionnaire = $dossierpartage['Dossierpartage']['utilisateur_id'];                 
                 $mailto = $this->requestAction('parameters/get_contact');
                 $to = explode(';',$mailto['Parameter']['param']);               
@@ -601,8 +600,8 @@ class UtiliseoutilsController extends AppController {
             $message = "Demande de création de compte ou d'ouverture de droit pour : ";
             $url = $gestionnaire != '' ? FULL_BASE_URL.$this->params->base.'/utiliseoutils/mailprogressstate/'.$utiliseoutil['Utiliseoutil']['id']."/".$gestionnaire : '';
             $etat = $utiliseoutil['Utiliseoutil']['STATUT'];
-            if($valideur!=null): 
-                $to = $valideur; 
+            if(isset($valideur) && $valideur!=null): 
+                $to = explode(";",$valideur); 
                 $objet = "SAILL : Demande de validation pour ".$nom;
                 $message = "Demande de validation pour : ";
                 $url = '';
@@ -669,7 +668,7 @@ class UtiliseoutilsController extends AppController {
             endif;
             if(!empty($utiliseoutil['Utiliseoutil']['dossierpartage_id']) && $utiliseoutil['Utiliseoutil']['dossierpartage_id']!=null):
                 $dossierpartage = $this->Utiliseoutil->Dossierpartage->find('first',array('conditions'=>array('Dossierpartage.id'=>$utiliseoutil['Utiliseoutil']['dossierpartage_id'])));
-                $nom = $dossierpartage['Dossierpartage']['NOM'];
+                $nom = $dossierpartage['Dossierpartage']['NOM'].' groupe : '.$dossierpartage['Dossierpartage']['GROUPEAD'];
                 $gestionnaire = $dossierpartage['Dossierpartage']['utilisateur_id'];                 
                 $mailto = $this->requestAction('parameters/get_contact');
                 $to = explode(';',$mailto['Parameter']['param']);               
@@ -745,5 +744,20 @@ class UtiliseoutilsController extends AppController {
                     $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une ouverture de droit".' par '.userAuth('NOMLONG');
                     $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                     
             endforeach;
-        }        
+        }  
+        
+        public function get_list($id){
+            $options = array('Utiliseoutil.utilisateur_id' => $id);
+            return $this->Utiliseoutil->find('list',array('fields' => array('id','outil_id','Outil.NOM','listediffusion_id','Listediffusion.NOM','dossierpartage_id','Dossierpartage.NOM'),'conditions' =>$options,'order'=>array('Outil.NOM'=>'asc','Listediffusion.NOM'=>'asc','Dossierpartage.NOM'=>'asc'),'recursive'=>0));
+        }
+        
+        public function get_all($id){
+            $options =array('Utiliseoutil.utilisateur_id' => $id);
+            return $this->Utiliseoutil->find('all',array('order'=>array('Outil.NOM'=>'asc','Listediffusion.NOM'=>'asc','Dossierpartage.NOM'=>'asc'),'conditions' =>$options,'recursive'=>0));
+        }   
+        
+        public function get_compteur($id){
+            $options =array('Utiliseoutil.utilisateur_id' => $id);
+            return $this->Utiliseoutil->find('first',array('fields'=>array('count(outil_id) AS nboutil', 'count(listediffusion_id) AS nbliste', 'count(dossierpartage_id) AS nbpartage'),'conditions' =>$options,'recursive'=>0));
+        }
 }

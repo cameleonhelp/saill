@@ -1,25 +1,25 @@
-<div class="marginright20">
+<div class="">
     <?php echo $this->element('changelogsubmenu'); ?>
     <div class="changelogreponses form">      
 <?php echo $this->Form->create('Changelogreponse',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
         <div class="block-panel-50-left">
         <div class="form-group">
-            <label class="col-lg-4" for="ChangelogreponseVersionId">Version : </label>
-            <div  class="col-lg-6">
+            <label class="col-md-4" for="ChangelogreponseVersionId">Version : </label>
+            <div  class="col-md-6">
                 <?php $version = isset($changelogdemande['Changelogdemande']['changelogversion_id']) ? $changelogdemande['Changelogdemande']['changelogversion_id'] : '';
                 echo $this->Form->select('version_id',$changelogversions,array('class'=>'form-control','empty'=>'Choisissez une version','default'=>$version)); ?>          
             </div>
         </div>
         <div class="form-group">
-            <label class="col-lg-4" for="ChangelogreponseETAT">Etat : </label>
-            <div  class="col-lg-6">
+            <label class="col-md-4" for="ChangelogreponseETAT">Etat : </label>
+            <div  class="col-md-6">
                 <?php $etat = isset($changelogdemande['Changelogdemande']['ETAT']) ? $changelogdemande['Changelogdemande']['ETAT'] : 0;
 		echo $this->Form->select('ETAT',$changelogetats,array('class'=>'form-control','empty'=>false,'default'=>$etat)); ?>          
             </div>
         </div>   
         <div class="form-group">
-            <label class="col-lg-4" for="ChangelogreponseDATEPREVUE">Date prévue : </label>
-            <div  class="col-lg-5">
+            <label class="col-md-4" for="ChangelogreponseDATEPREVUE">Date prévue : </label>
+            <div  class="col-md-5">
               <div class="input-group" style="margin-left: 0px;">
               <?php $today = new dateTime(); ?>
               <?php echo $this->Form->input('DATEPREVUE',array('type'=>'text','placeholder'=>'ex.: '.$today->format('d/m/Y'),'class'=>"form-control dateall", 'value'=>$changelogdemande['Changelogdemande']['DATEPREVUE'])); ?>
@@ -31,27 +31,27 @@
         </div>
         <div class="block-panel-50-right">
         <div class="form-group">
-            <label class="col-lg-4" for="ChangelogreponseTYPE">Type : </label>
-            <div  class="col-lg-6">
+            <label class="col-md-4" for="ChangelogreponseTYPE">Type : </label>
+            <div  class="col-md-6">
                 <?php $type = isset($changelogdemande['Changelogdemande']['TYPE']) ? $changelogdemande['Changelogdemande']['TYPE'] : 0;
 		echo $this->Form->select('TYPE',$changelogtypes,array('class'=>'form-control','default' => $type,'empty'=>false)); ?>          
             </div>
         </div>
         <div class="form-group">
-            <label class="col-lg-4" for="ChangelogreponseCRITICITE">Criticité : </label>
-            <div  class="col-lg-6">
+            <label class="col-md-4" for="ChangelogreponseCRITICITE">Criticité : </label>
+            <div  class="col-md-6">
                 <?php $criticite = isset($changelogdemande['Changelogdemande']['CRITICITE']) ? $changelogdemande['Changelogdemande']['CRITICITE'] : 1;
                 echo $this->Form->select('CRITICITE',$changelogcriticites,array('class'=>'form-control','default' => $criticite,'empty'=>false)); ?>          
             </div>
         </div>  
         <div class="form-group">
-            <label class="col-lg-4">&nbsp</label>
-            <div class="col-lg-8">&nbsp;</div>
+            <label class="col-md-4">&nbsp</label>
+            <div class="col-md-8">&nbsp;</div>
         </div>               
         </div>            
         <div class="form-group" style="clear: both;">
-            <label class="col-lg-2" for="ChangelogreponseDEMANDE">Demande : </label>
-            <div  class="col-lg-9">
+            <label class="col-md-2" for="ChangelogreponseDEMANDE">Demande : </label>
+            <div  class="col-md-9">
                 <div class="well well-sm" style="background-color: #FFFFFF;">
                 <?php
                         echo $changelogdemande['Changelogdemande']['DEMANDE'];
@@ -66,7 +66,7 @@
 
         <div class="changelogreponses form">
             <div class="form-group">
-            <label class="col-lg-2" for="ChangelogreponseREPONSE">Réponse : </label>
+            <label class="col-md-2" for="ChangelogreponseREPONSE">Réponse : </label>
             </div>
                 <?php
                         echo $this->Form->input('REPONSE');

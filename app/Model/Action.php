@@ -215,7 +215,10 @@ class Action extends AppModel {
                 }  
                 if (isset($val['Action']['destinataire'])) {
                     $results[$key]['Action']['destinataire_nom'] = $this->getDestinataire($val['Action']['destinataire']);
-                }                  
+                }       
+                if (isset($val['Action']['activite_id'])) {
+                    $results[$key]['Action']['projet_nom'] = $this->getProjet($val['Action']['activite_id']);
+                }                   
             }
             return $results;
         } 
@@ -229,4 +232,14 @@ class Action extends AppModel {
             endif;
             return $value;
         }
+        
+        public function getProjet($id){
+            $value = false;
+            if ($id != 0):
+            $sql = 'SELECT projets.NOM AS NOM FROM projets LEFT JOIN activites ON activites.projet_id = projets.id WHERE activites.id='.$id;
+            $result = $this->query($sql);
+            $value =  $result[0]['projets']['NOM'];
+            endif;
+            return $value;
+        }        
 }

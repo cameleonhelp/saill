@@ -161,4 +161,19 @@ class TjmagentsController extends AppController {
             endif;                
         }  
               
+        public function get_list(){
+            return $this->Tjmagent->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc'),'recursive'=>0));
+        }
+        
+        public function get_all(){
+            return $this->Tjmagent->find('all',array('order'=>array('NOM'=>'asc'),'recursive'=>0));
+        }   
+        
+        public function get_current_list(){
+            return $this->Tjmagent->find('list',array('fields' => array('id', 'NOM'),'conditions'=>array('ANNEE'=>date('Y')),'order'=>array('NOM'=>'asc'),'recursive'=>0));
+        }
+        
+        public function get_current_all(){
+            return $this->Tjmagent->find('all',array('order'=>array('NOM'=>'asc'),'conditions'=>array('ANNEE'=>date('Y')),'recursive'=>0));
+        }         
 }

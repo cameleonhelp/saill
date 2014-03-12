@@ -94,7 +94,8 @@ class Envoutil extends AppModel {
                 }      
                 if (isset($val['Envoutil']['modified'])) {
                     $results[$key]['Envoutil']['modified'] = $this->dateFormatAfterFind($val['Envoutil']['modified']);
-                }                    
+                }      
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Envoutil']['entite_id']); 
             }
             return $results;
         }            

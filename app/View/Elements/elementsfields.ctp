@@ -1,6 +1,6 @@
 <h4>Liste des fichiers d'aide à votre disposition:</h4>
 <?php if (userAuth('profil_id')==1): ?>
-    <?php echo $this->element('modaladdfiles'); ?>
+    <?php echo $this->element('modals/addfiles'); ?>
 <?php endif; ?>
 <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" style="width: 100% !important;">
 <thead>

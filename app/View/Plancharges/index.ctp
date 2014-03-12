@@ -10,8 +10,8 @@
               <?php echo $this->Form->create('Plancharge',array('action'=>'addnewpc','class'=>'form-horizontal','novalidate'=>true, 'style'=>'margin-bottom:-7px !important;','type' => 'file','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
               <div class="modal-body">
                   <div class="form-group">
-                        <label for="PlanchargeANNEE" class="col-lg-4 required">Année :</label>
-                        <div class="col-lg-4">
+                        <label for="PlanchargeANNEE" class="col-md-4 required">Année :</label>
+                        <div class="col-md-4">
                             <select class="form-control" name="data[Plancharge][ANNEE]" data-rule-required="true" data-msg-required="L'année est obligatoire" id="PlanchargeANNEE">
                                 <option value="">Choisir une année</option>
                                 <?php $annee = new DateTime(); $annee = $annee->format('Y'); ?>
@@ -30,21 +30,24 @@
                         </div>
                   </div>    
                   <div class="form-group">
-                        <label class="col-lg-4 required" for="PlanchargeContratId">Contrat : </label>
-                        <div class="col-lg-4">
+                        <label class="col-md-4 required" for="PlanchargeContratId">Contrat : </label>
+                        <div class="col-md-4">
                             <?php echo $this->Form->select('contrat_id',$addcontrats,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>"Le nom du contrat est obligatoire", 'empty' => 'Choisir un contrat')); ?>                     
                         </div>
                   </div>   
                   <div class="form-group">
-                        <label class="col-lg-4 required" for="PlanchargeNOM">Nom : </label>
-                        <div class="col-lg-7">
+                        <label class="col-md-4 required" for="PlanchargeNOM">Nom : </label>
+                        <div class="col-md-7">
                             <?php echo $this->Form->input('NOM',array('class'=>'form-control','type'=>'text','placeholder'=>'Nom du plan de charge','data-rule-required'=>'true','data-msg-required'=>"Le nom du projet est obligatoire")); ?>                     
                         </div>
                   </div>  
                   <div class="form-group">
-                        <label class="col-lg-4 required" for="PlanchargeTJM">TJM : </label>
-                        <div class="col-lg-2">
-                            <?php echo $this->Form->input('TJM',array('class'=>'form-control','type'=>'text','style'=>"width:45px;",'class'=>'text-right','placeholder'=>'TJM','data-rule-required'=>'true','data-msg-required'=>"Le TJM est obligatoire")); ?> €/j               
+                        <label class="col-md-4 required" for="PlanchargeTJM">TJM : </label>
+                        <div class="row">
+                        <div class="col-md-1" style="margin-right:15px;">
+                            <?php echo $this->Form->input('TJM',array('class'=>'form-control text-right','type'=>'text','style'=>"width:45px;",'placeholder'=>'TJM','data-rule-required'=>'true','data-msg-required'=>"Le TJM est obligatoire")); ?>           
+                        </div>
+                        <div> €/j</div> 
                         </div>
                   </div>                    
               </div>
@@ -69,8 +72,8 @@
               <?php echo $this->Form->create('Plancharge',array('action'=>'edit','id'=>'formValidate','class'=>'form-horizontal','novalidate'=>true, 'style'=>'margin-bottom:-7px !important;','type' => 'file','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
               <div class="modal-body">
                   <div class="form-group">
-                        <label for="PlanchargeANNEE" class="col-lg-4 required">Année :</label>
-                        <div class="col-lg-4">
+                        <label for="PlanchargeANNEE" class="col-md-4 required">Année :</label>
+                        <div class="col-md-4">
                             <select class="form-control" name="data[Plancharge][ANNEE]" data-rule-required="true" data-msg-required="L'année est obligatoire" id="PlanchargeANNEE">
                                 <option value="">Choisir une année</option>
                                 <?php $annee = new DateTime(); $annee = $annee->format('Y'); ?>
@@ -89,20 +92,20 @@
                         </div>
                   </div>    
                   <div class="form-group">
-                        <label class="col-lg-4 required" for="PlanchargeContratId">Contrat : </label>
-                        <div class="col-lg-4">
+                        <label class="col-md-4 required" for="PlanchargeContratId">Contrat : </label>
+                        <div class="col-md-4">
                             <?php echo $this->Form->select('contrat_id',$addcontrats,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>"Le nom du contrat est obligatoire", 'empty' => 'Choisir un contrat')); ?>                     
                         </div>
                   </div>   
                   <div class="form-group">
-                        <label class="col-lg-4 required" for="PlanchargeNOM">Nom : </label>
-                        <div class="col-lg-7">
+                        <label class="col-md-4 required" for="PlanchargeNOM">Nom : </label>
+                        <div class="col-md-7">
                             <?php echo $this->Form->input('NOM',array('class'=>'form-control','type'=>'text','placeholder'=>'Nom du plan de charge','data-rule-required'=>'true','data-msg-required'=>"Le nom du projet est obligatoire")); ?>                     
                         </div>
                   </div>  
                   <div class="form-group">
-                        <label class="col-lg-4 required" for="PlanchargeTJM">TJM : </label>
-                        <div class="col-lg-2">
+                        <label class="col-md-4 required" for="PlanchargeTJM">TJM : </label>
+                        <div class="col-md-2">
                             <?php echo $this->Form->input('TJM',array('class'=>'form-control','type'=>'text','style'=>"width:45px;",'class'=>'text-right','placeholder'=>'TJM','data-rule-required'=>'true','data-msg-required'=>"Le TJM est obligatoire")); ?> €/j               
                         </div>
                   </div>                    
@@ -116,7 +119,7 @@
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
         <!-- /insert Edit newplancharge modal //--> 
-        <nav class="navbar toolbar marginright20">
+        <nav class="navbar toolbar ">
                 <ul class="nav navbar-nav toolbar">
                 <?php 
                 $filtre_visible = isset($this->params->pass[2]) ? $this->params->pass[2] : '1';
@@ -156,8 +159,8 @@
                 </li>                    
                 </ul> 
         </nav>
-        <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 marginright20"><strong>Filtre appliqué : </strong><em>Liste de <?php echo $fannee; ?>, <?php echo $fprojet; ?></em></div><?php } ?>        
-        <div class="marginright10">
+        <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 "><strong>Filtre appliqué : </strong><em>Liste de <?php echo $fannee; ?>, <?php echo $fprojet; ?></em></div><?php } ?>        
+        <div class="">
         <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
         <thead>
 	<tr>
@@ -218,7 +221,7 @@
 	</table>
         </div>
         <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>
-        <div class="pull-right marginright20"><?php	echo $this->Paginator->counter('Nombre total d\'éléments : {:count}');	?></div>
+        <div class="pull-right "><?php	echo $this->Paginator->counter('Nombre total d\'éléments : {:count}');	?></div>
         <div class='text-center'>
         <ul class="pagination pagination-sm">
 	<?php

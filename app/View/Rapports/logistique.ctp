@@ -1,9 +1,9 @@
-<div class="marginright20">
+<div class="">
 <div class="logistique form">
 <?php echo $this->Form->create('Rapport',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class="form-group">
-        <label class="col-lg-4 required" for="RapportSectionId">Section : </label>
-        <div class="col-lg-4">
+        <label class="col-md-4 required" for="RapportSectionId">Section : </label>
+        <div class="col-md-4">
                 <?php echo $this->Form->select('section_id',$sections,array('data-rule-required'=>'true','class'=>"form-control",'data-msg-required'=>"La section est obligatoire",'empty' => 'Choisir une section')); ?>
         </div>
     </div>
@@ -87,7 +87,7 @@ $(document).ready(function (){
         });
         return tot.toFixed(2);
      }   
-    
+    $("table").tablesorter();
     $("#totalagent").html(sumOfColumns('nbagent'));
     $("#totalmat").html(sumOfColumns('nbmat'));
 });

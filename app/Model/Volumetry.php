@@ -39,7 +39,8 @@ class Volumetry extends AppModel {
                 }      
                 if (isset($val['Volumetry']['modified'])) {
                     $results[$key]['Volumetry']['modified'] = $this->dateFormatAfterFind($val['Volumetry']['modified']);
-                }            
+                }    
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Volumetry']['entite_id']); 
             }
             return $results;
         }   

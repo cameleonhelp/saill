@@ -15,47 +15,82 @@ class ComposantsController extends AppController {
         public $paginate = array('limit' => 25,'order'=>array('Composant.NOM'=>'asc'));
 	public $components = array('History','Common');
 
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            if($visibility == null):
+                return '1=1';
+            elseif ($visibility!=''):
+                return array('OR'=>array('Composant.entite_id IN ('.$visibility.')','Composant.entite_id IS NULL'));
+            else:
+                return array('OR'=>array('Composant.entite_id ='.userAuth('entite_id'),'Composant.entite_id IS NULL'));
+            endif;
+        }
+        
+        public function get_composant_actif_filter($id){
+            $result = array();
+            switch($id):
+                case null:
+                case 1:
+                    $result['condition']="Composant.ACTIF=1";
+                    $result['filter'] = 'actives';
+                    break;
+                case 0:
+                    $result['condition']="Composant.ACTIF=0";
+                    $result['filter'] = 'inactives';
+                    break;
+            endswitch;
+            return $result;
+        }     
+        
+        public function get_composant_entite_filter($id,$visibility){
+            $result = array();
+            switch($id):
+                case null:
+                case 'tous':
+                    if($visibility == null):
+                        $result['condition']='1=1';
+                    elseif ($visibility!=''):
+                        $result['condition']=array('OR'=>array('Composant.entite_id IN ('.$visibility.')','Composant.entite_id IS NULL'));
+                    else:
+                        $result['condition']=array('OR'=>array('Composant.entite_id ='.userAuth('entite_id'),'Composant.entite_id IS NULL'));
+                    endif;                      
+                    $result['filter'] = ' de tous les cercles';
+                    break;
+                default:
+                    $result['condition']='Composant.entite_id ='.$id;
+                    $nom = $this->requestAction('entites/get_entite_nom/'.$id);
+                    $result['filter'] = 'ayant pour entité '.$nom;
+            endswitch;
+            return $result;
+        }            
 /**
  * index method
  *
  * @return void
  */
-	public function index($actif=null) {
+	public function index($actif=null,$entite=null) {
             if (isAuthorized('composants', 'index')) :
-                switch($actif):
-                    case null:
-                    case 1:
-                        $newconditions[]="Composant.ACTIF=1";
-                        $strfilter = 'actifs';
-                        break;
-                    case 0:
-                        $newconditions[]="Composant.ACTIF=0";
-                        $strfilter = 'inactifs';
-                        break;
-                endswitch;
-                $this->set('strfilter',$strfilter);
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
-		$this->Composant->recursive = 0;
+                $visibility = $this->get_visibility();                
+                $restriction= $this->get_restriction($visibility);
+                $getactif = $this->get_composant_actif_filter($actif);
+                $getentite = $this->get_composant_entite_filter($entite, $visibility);
+                $this->set('strfilter',$getactif['filter'].$getentite['filter']);
+                $newcondition = array($restriction,$getactif['condition'],$getentite['condition']);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newcondition,'recursive'=>0));   
 		$this->set('composants', $this->paginate());
+                $cercles = $this->requestAction('entites/get_all');
+                $this->set(compact('cercles'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                 
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-		if (!$this->Composant->exists($id)) {
-			throw new NotFoundException(__('Composant incorrect'));
-		}
-		$options = array('conditions' => array('Composant.' . $this->Composant->primaryKey => $id));
-		$this->set('composant', $this->Composant->find('first', $options));
 	}
 
 /**
@@ -69,7 +104,8 @@ class ComposantsController extends AppController {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Composant->validate = array();
                         $this->History->goBack(1);
-                    else:                    
+                    else:                 
+                        $this->request->data['Composant']['entite_id']=userAuth('entite_id');
 			$this->Composant->create();
 			if ($this->Composant->save($this->request->data)) {
 				$this->Session->setFlash(__('Composant sauvegardé',true),'flash_success');
@@ -79,6 +115,8 @@ class ComposantsController extends AppController {
 			}
                     endif;
 		endif;
+                $cercles = $this->requestAction('entites/find_list_cercle');
+                $this->set(compact('cercles'));                  
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -110,8 +148,10 @@ class ComposantsController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Composant.' . $this->Composant->primaryKey => $id));
-			$this->request->data = $this->Composant->find('first', $options);
+                    $options = array('conditions' => array('Composant.' . $this->Composant->primaryKey => $id));
+                    $this->request->data = $this->Composant->find('first', $options);
+                    $cercles = $this->requestAction('entites/find_list_cercle');
+                    $this->set(compact('cercles'));                      
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -157,27 +197,52 @@ class ComposantsController extends AppController {
 		exit();
         }
         
-        public function search(){
+        public function search($actif=null,$entite=null,$keywords=null){
             if (isAuthorized('composants', 'index')) :
-                $keyword=isset($this->params->data['Composant']['SEARCH']) ? $this->params->data['Composant']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Composant.NOM LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Composant->recursive = 0;
-                $this->set('composants', $this->paginate());                  
-                $this->render('index');
+                if(isset($this->params->data['Composant']['SEARCH'])):
+                    $keywords = $this->params->data['Composant']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $visibility = $this->get_visibility();                
+                    $restriction= $this->get_restriction($visibility);
+                    $getactif = $this->get_composant_actif_filter($actif);
+                    $getentite = $this->get_composant_entite_filter($entite, $visibility);
+                    $this->set('strfilter',$getactif['filter'].$getentite['filter']);
+                    $newcondition = array($restriction,$getactif['condition'],$getentite['condition']);
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Composant.NOM LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newcondition,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
+                    $this->set('composants', $this->paginate());  
+                    $cercles = $this->requestAction('entites/get_all');
+                    $this->set(compact('cercles'));                    
+                else:
+                    $this->redirect(array('action'=>'index',$actif,$entite));
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;  
         }   
         
-        public function get_select($actif=1){
-            $list = $this->Composant->find('list',array('fields'=>array('Composant.id','Composant.NOM'),'conditions'=>array('Composant.ACTIF'=>$actif),'order'=>array('Composant.NOM'=>'asc'),'recursive'=>0));
+        public function get_select($actif=1){        
+            $visibility = $this->get_visibility();                
+            $conditions[]= $this->get_restriction($visibility);      
+            $conditions[] = 'Composant.ACTIF='.$actif;
+            $list = $this->Composant->find('list',array('fields'=>array('Composant.id','Composant.NOM'),'conditions'=>$conditions,'order'=>array('Composant.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }  
         
         public function get_list($actif=null){
+            $visibility = $this->get_visibility();                
+            $conditions[]= $this->get_restriction($visibility);               
             $conditions[] = $actif == null ? '1=1' : 'Composant.ACTIF='.$actif;
             $list = $this->Composant->find('all',array('fields'=>array('Composant.id','Composant.NOM'),'order'=>array('Composant.NOM'=>'asc'),'conditions'=>$conditions,'recursive'=>0));
             return $list;

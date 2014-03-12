@@ -1,4 +1,4 @@
-<div class="marginright20">
+<div class="">
 <div class="dashboards form">
 <?php echo $this->Form->create('Dashboard',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class="bs-callout bs-callout-info" style="margin-top:0px;">
@@ -10,8 +10,8 @@
     </div> 
     <div class='block-panel block-panel-50-left'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="DashboardProjetId">Projets: </label>
-            <div class="col-lg-offset-4">
+            <label class="col-md-4 required" for="DashboardProjetId">Projets: </label>
+            <div class="col-md-offset-4">
                     <?php echo $this->Form->select('projet_id',$listprojets,array('data-rule-required'=>'true','multiple'=>'true','class'=>"form-control multiselect size75",'size'=>"10",'data-msg-required'=>"Le nom du projet est obligatoire",'hiddenField' => false)); ?>               
                 <br><?php echo $this->Form->input('SelectAllProjetId',array('type'=>'checkbox')); ?><label class="labelAfter" for="DashboardSelectAllProjetId">&nbsp;Tout sélectionner</label>  
             </div>
@@ -19,8 +19,8 @@
     </div>
     <div class='block-panel block-panel-50-right'>
         <div class="form-group">
-            <label class="col-lg-4" for="DashboardPlanchargeId">Plan de charge : </label>
-            <div class="col-lg-offset-4">
+            <label class="col-md-4" for="DashboardPlanchargeId">Plan de charge : </label>
+            <div class="col-md-offset-4">
                     <?php echo $this->Form->select('plancharge_id',$listplancharges,array('multiple'=>'true','size'=>"10",'class'=>"form-control multiselect size75")); ?>               
                 <br><?php echo $this->Form->input('SelectAllPlanchargeId',array('type'=>'checkbox')); ?><label class="labelAfter" for="DashboardSelectAllPlanchargeId">&nbsp;Tout sélectionner</label>            
             </div>            
@@ -38,7 +38,7 @@
 <?php $israpport = isset($results) ? count($results) : 0; ?>
 <?php $style = $israpport==0 ? 'style="display:none;"' : ''; ?>
 <div id="rapport" <?php echo $style; ?>>
-    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc" style="vertical-align: bottom;"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn btn-sm btn-default','escape' => false)); ?></div>
+    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc" style="vertical-align: baseline;"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn btn-sm btn-default','escape' => false)); ?></div>
 <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
     <table id="datatable" style="display:none;">
         <thead>
@@ -49,18 +49,20 @@
             </tr>
         </thead>
         <tbody>
+            <?php if (isset($results)): ?>
             <?php foreach($results as $result): ?>
             <tr>
                 <th><?php echo $result['CONTRAT']['NOM']; ?></th>
-                <td><?php echo $result[0]['RAF']; ?></td>                
+                <td><?php echo $result[0]['RAF'] < 0 ? 0 : $result[0]['RAF']; ?></td>                
                 <td><?php echo $result[0]['TOTALCHARGEFACTUREE']; ?></td> 
             </tr>           
             <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>        
     </table>
 <br><br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Tableau CRA</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="datatable" style="width:100%;">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table1" id="datatable" style="width:100%;">
         <thead>
             <tr>
             <th rowspan="2" style="vertical-align: middle;">Projet</th>
@@ -80,6 +82,7 @@
             </tr>            
         </thead>
         <tbody>
+            <?php if (isset($results)): ?>
             <?php foreach($results as $result): ?>
             <tr>
                 <td><?php echo $result['CONTRAT']['NOM']; ?> <?php echo ($result['ACHAT']['COUTACHAT']>0) ? '¹':''; ?></td>
@@ -105,6 +108,7 @@
                 <td style="text-align: right;" class="raf1"><?php echo $result[0]['RAF']<0 ? 0 : $result[0]['RAF']; ?></td>    
             </tr>           
             <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
         <tfooter>
 	<tr>
@@ -121,21 +125,72 @@
         </tfooter>
     </table>
     <?php $listeachats = ""; ?>
+    <?php if (isset($results)): ?>
     <?php foreach($results as $result): ?>
         <?php if($result['ACHAT']['COUTACHAT']>0): ?>
             <?php $listeachats .= "<li>".$result['CONTRAT']['NOM']." achats d'un montant de ".$result['ACHAT']['COUTACHAT']." € soit une charge de ".$result['ACHAT']['CHARGEACHAT']." jours</li>"; ?>
         <?php endif; ?>
     <?php endforeach; ?>
+    <?php endif; ?>
     <?php if($listeachats != ""): ?>
-    <div class="alert alert-info">
+    <div class="bs-callout bs-callout-info">
         Des couts liés à des achats sont imputés sur les projets repérés par ¹ et dont voici le détail :
         <ul><?php echo $listeachats; ?>
         </ul>
     </div>  
     <?php endif; ?>
     <br />
+    <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Tableau équilibre du budget par rapport à la prévision</div><br>    
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table2" id="balance" style="width:100%;">
+        <thead>
+            <tr>
+            <th rowspan="2" style="vertical-align: middle;">Projet</th>
+            <th rowspan="2" width="60px" style="vertical-align: middle;">TJM</th>
+            <th colspan="2">Contrat</th>
+            <th colspan="2">Prévision</th>
+            <th colspan="2" class="sorter-false">Ecart</th>
+            </tr>
+            <tr>
+            <th width="80px">Budget (k€)</th>
+            <th width="80px">Charge (j)</th>
+            <th width="80px">Budget (k€)</th>
+            <th width="80px">Charge (j)</th>
+            <th width="80px" class="sorter-false">Budget (k€)</th>
+            <th width="80px" class="sorter-false">Charge (j)</th>            
+            </tr>            
+        </thead>
+        <tbody>
+            <?php if (isset($results)): ?>
+            <?php foreach($results as $result): ?>
+            <tr>
+                <td><?php echo $result['CONTRAT']['NOM']; ?></td>
+                <td style="text-align: right;" class="tjm"><?php echo $result['CONTRAT']['TJM']; ?> €/j</td>
+                <td style="text-align: right;" class="contratbudgetbalance"><?php echo $result['CONTRAT']['BUDGET']; ?></td>
+                <td style="text-align: right;" class="contratchargebalance"><?php echo $result['CONTRAT']['CHARGE']; ?></td>
+                <td style="text-align: right;" class="previsionbudgetbalance"><?php echo $result[0]['BUDGETPREVU']; ?></td>
+                <td style="text-align: right;" class="previsionchargebalance"><?php echo $result['PREVISION']['CHARGEPREVUE']; ?></td>                  
+                <td style="text-align: right;" class="ecartbudgetbalance"></td>   
+                <td style="text-align: right;" class="ecartchargebalance"></td> 
+            </tr>           
+            <?php endforeach; ?>
+            <?php endif; ?>
+        </tbody>
+        <tfooter>
+	<tr>
+            <td class="footer nowrap" style="text-align:right;">Total :</td>
+            <td class="footer nowrap" id="moyennetjm" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalcontratbudgetbalance" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalcontratchargebalance" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalprevisionbudgetbalance" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalprevisionchargebalance" style="text-align:right;"></td>
+            <td class="footer nowrap" id="totalecartbudgetbalance" style="text-align:right;"></td> 
+            <td class="footer nowrap" id="totalecartchargebalance" style="text-align:right;"></td>
+	</tr> 
+        </tfooter>
+    </table>    
+    <br />
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Tableau général</div><br>    
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="datatable" style="width:100%;">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table1" id="datatable" style="width:100%;">
         <thead>
             <tr>
             <th rowspan="2" style="vertical-align: middle;">Projet</th>
@@ -164,10 +219,11 @@
             </tr>            
         </thead>
         <tbody>
+            <?php if (isset($results)): ?>
             <?php foreach($results as $result): ?>
             <tr>
                 <td><?php echo $result['CONTRAT']['NOM']; ?></td>
-                <td style="text-align: right;" class="tjm"><?php echo $result['CONTRAT']['TJM']; ?> €/j</td>
+                <td style="text-align: right;" class="tjm" nowrap><?php echo $result['CONTRAT']['TJM']; ?> €/j</td>
                 <td style="text-align: right;" class="contratbudget"><?php echo $result['CONTRAT']['BUDGET']; ?></td>
                 <td style="text-align: right;" class="contratcharge"><?php echo $result['CONTRAT']['CHARGE']; ?></td>
                 <td style="text-align: right;" class="previsionbudget"><?php echo $result[0]['BUDGETPREVU']; ?></td>
@@ -183,6 +239,7 @@
                 <td style="text-align: right;" class="raf"><?php echo $result[0]['RAF']; ?></td>   
             </tr>           
             <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
         <tfooter>
 	<tr>
@@ -206,7 +263,7 @@
     </table>
     <br />
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Répartition charge réelle par domaine</div><br>    
-    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table1">
         <thead>
             <tr>
             <th rowspan="2" style="vertical-align: middle;">Projet</th>
@@ -219,6 +276,7 @@
             </tr>            
         </thead>
         <tbody>
+            <?php if (isset($resultsdom)): ?>
             <?php foreach($resultsdom as $result): ?>
             <tr>
                 <td><?php echo $result['CONTRAT']['NOM']; ?></td>
@@ -227,6 +285,7 @@
                 <td style="text-align: right;" class="domchargeID"><?php echo $result[0]['TOTALDOMCHARGEREELLE']; ?></td>  
             </tr>           
             <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
         <tfooter>
 	<tr>
@@ -239,7 +298,7 @@
     </table>        
     <br />
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Indicateurs département</div><br>    
-    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table1">
         <thead>
             <tr>
             <th rowspan="2" style="vertical-align: middle;">Projet</th>
@@ -258,6 +317,7 @@
             </tr>            
         </thead>
         <tbody>
+            <?php if (isset($results)): ?>
             <?php foreach($results as $result): ?>
             <tr>
                 <td><?php echo $result['CONTRAT']['NOM']; ?></td>
@@ -282,6 +342,7 @@
                 <td style="text-align: right;" class="rafID"><?php echo $result[0]['RAF']<0 ? 0 : $result[0]['RAF']; ?></td>   
             </tr>           
             <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
         <tfooter>
 	<tr>
@@ -303,7 +364,10 @@
 </div>
 <script>
 $(document).ready(function (){ 
-
+   $(".table1").tablesorter();
+   
+   $(".table2").tablesorter();
+    
    $(document).on('click','#DashboardSelectAllProjetId',function() {
         if($(this).is(':checked')){
             $('#DashboardProjetId option').prop('selected', 'selected');
@@ -370,6 +434,35 @@ $(document).ready(function (){
         var result = diviser=='0.00' ? '0.00' : sumOfColumnsOnly('facturecharge'+id)/diviser;
         return parseFloat(result*100).toFixed(2)+" %";        
     }    
+    
+
+    var count = $("#balance tr").length;
+    var sumc = 0;
+    var sumb = 0;
+    for (var i = 2; i < (count - 1); i++) {
+        var contratb = parseFloat($("#balance tr").eq(i).find(".contratbudgetbalance").html());
+        var prevub = parseFloat($("#balance tr").eq(i).find(".previsionbudgetbalance").html());
+        if(isNaN(contratb)) { contratb = 0; }
+        if(isNaN(prevub)) { prevub = 0; }
+        sumb = (contratb - prevub);
+        if (sumb < 0) {$("#balance tr").eq(i).find(".ecartbudgetbalance").addClass("td-error");} else {$("#balance tr").eq(i).find(".ecartbudgetbalance").addClass("td-success");}
+        $("#balance tr").eq(i).find(".ecartbudgetbalance").html(sumb.toFixed(2));
+        var contratc = parseFloat($("#balance tr").eq(i).find(".contratchargebalance").html());
+        var prevuc = parseFloat($("#balance tr").eq(i).find(".previsionchargebalance").html());
+        if(isNaN(contratc)) { contratc = 0; }
+        if(isNaN(prevuc)) { prevuc = 0; }
+        sumc = (contratc - prevuc);
+        if (sumc < 0) {$("#balance tr").eq(i).find(".ecartchargebalance").addClass("td-error");} else {$("#balance tr").eq(i).find(".ecartchargebalance").addClass("td-success");}
+        $("#balance tr").eq(i).find(".ecartchargebalance").html(sumc.toFixed(2));        
+    }
+    $("#totalcontratbudgetbalance").html(sumOfColumns('contratbudgetbalance','k/€'));
+    $("#totalcontratchargebalance").html(sumOfColumns('contratchargebalance','j'));
+    $("#totalprevisionbudgetbalance").html(sumOfColumns('previsionbudgetbalance','k/€'));
+    $("#totalprevisionchargebalance").html(sumOfColumns('previsionchargebalance','j'));
+    $("#totalecartbudgetbalance").html(sumOfColumns('ecartbudgetbalance','k/€'));
+    $("#totalecartchargebalance").html(sumOfColumns('ecartchargebalance','j'));
+    if (sumOfColumns('ecartbudgetbalance','') < 0) {$("#totalecartbudgetbalance").addClass("td-error");} else {$("#totalecartbudgetbalance").addClass("td-success");}
+    if (sumOfColumns('ecartchargebalance','') < 0) {$("#totalecartchargebalance").addClass("td-error");} else {$("#totalecartchargebalance").addClass("td-success");}
     
     $("#moyennetjm").html(moyenneOfColumns('tjm','€/j'));
     $("#totalcontratbudget").html(sumOfColumns('contratbudget','k€'));

@@ -1,9 +1,9 @@
-<div class="marginright20">
+<div class="">
 <div class="actions form">
 <?php echo $this->Form->create('Action',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class="form-group">
-        <label class="col-lg-4 required" for="ActionDomaineId">Domaine : </label>
-        <div class="col-lg-4">
+        <label class="col-md-4 required" for="ActionDomaineId">Domaine : </label>
+        <div class="col-md-4">
             <?php echo $this->Form->select('domaine_id',$domaines,array('data-rule-required'=>'true','class'=>"form-control",'data-msg-required'=>"Le domaine est obligatoire",'empty'=>'Choisir un domaine')); ?>                  
         </div>
     </div>
@@ -46,6 +46,7 @@
 </div>
 <script>
 $(document).ready(function (){ 
+    $("table").tablesorter();
     
     function sumOfColumns(id) {
         var tot = 0;

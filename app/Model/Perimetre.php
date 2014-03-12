@@ -79,7 +79,8 @@ class Perimetre extends AppModel {
                 }      
                 if (isset($val['Perimetre']['modified'])) {
                     $results[$key]['Perimetre']['modified'] = $this->dateFormatAfterFind($val['Perimetre']['modified']);
-                }            
+                }     
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Perimetre']['entite_id']); 
             }
             return $results;
         }           

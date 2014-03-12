@@ -24,25 +24,46 @@
     </div>
 <script>
 $(document).ready(function(e){
-    $('.showpickcolor').colorpicker({format:'hex',horizontal:true});
+    
+    $('.showpickcolor').colorpicker({format:'hex',horizontal:true,template:
+            '<div class="colorpicker dropdown-menu">' +
+            '<div class="colorpicker-saturation"><i><b></b></i></div>' +
+            '<div class="colorpicker-hue"><i></i></div>' +
+            '<div class="colorpicker-alpha"><i></i></div>' +
+            '<div class="colorpicker-color"><div /></div>' +
+            '<div class="colorpicker-btn"><span class="pull-left glyphicons cursor colorpicker-cancel remove_2 notchange"></span><span data-id data-newcolor class="pull-right glyphicons  cursor colorpicker-submit ok_2 notchange"></span><div />' +
+            '</div>'});
     
     $(document).on('click','.showpickcolor',function(e){
         var value = $(this).attr('data-color');
+        var id = $(this).find('.colorpicker-submit').attr('data-id',$(this).attr('data-id'));
         $(this).colorpicker('setValue', value).colorpicker('show');
     });
     
-    $('.showpickcolor').colorpicker().on('hidePicker', function(ev){
+    $(document).on('click','.colorpicker-cancel',function(e){
+        $('.showpickcolor').colorpicker('hide');
+    })
+    
+    /*$('.showpickcolor').colorpicker().on('hidePicker', function(ev){*/
+    $(document).on('click','.colorpicker-submit',function(e){
         var id = $(this).attr('data-id');
-        var color = ev.color.toHex().substring(1);
+        var color = $(this).attr('data-newcolor');
+        if(id!='' && color!=''){
         $.ajax({
             dataType: "html",
             type: "POST",
-            url: "<?php echo $this->Html->url(array('controller'=>'equipes','action'=>'saveColor')); ?>/"+id+"/"+color
+            url: "<?php echo $this->Html->url(array('controller'=>'equipes','action'=>'saveColor')); ?>/"+id+"/"+color.substring(1),
+            success : function(response) {
+                $('td[data-id="'+id+'"]').css('background-color',color);
+            }
         });
+        }
+        $('.showpickcolor').colorpicker('hide');
      });
      
      $('.showpickcolor').colorpicker().on('changeColor', function(ev){
-        $(this).css('background-color',ev.color.toHex());
+        $('.colorpicker-submit').attr('data-newcolor',ev.color.toHex());
+        $('.colorpicker-submit').attr('data-id',$(this).attr('data-id'));
      });
      
      

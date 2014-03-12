@@ -1,18 +1,18 @@
-<div class="marginright20">
+<div class="">
 <div class="etatsaisie form">
 <?php echo $this->Form->create('Rapport',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class='block-panel block-panel-50-left'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="RapportMois">Mois : </label>
-            <div class="col-lg-4">
+            <label class="col-md-4 required" for="RapportMois">Mois : </label>
+            <div class="col-md-4">
                     <?php echo $this->Form->select('mois',$mois,array('default'=>date('m'),'class'=>"form-control",'empty'=>false)); ?>  
             </div>
         </div>        
     </div>
     <div class='block-panel block-panel-50-right'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="RapportAnnee">Année : </label>
-            <div class="col-lg-4">
+            <label class="col-md-4 required" for="RapportAnnee">Année : </label>
+            <div class="col-md-4">
                     <?php echo $this->Form->select('annee',$annee,array('default'=>date('Y'),'class'=>"form-control",'empty'=>false)); ?>           
             </div>            
         </div>     
@@ -87,6 +87,7 @@
 </div>
 <script>
 $(document).ready(function () {    
+    $("table").tablesorter();
     $(document).on('click','.sendmail',function(e){
         var id = $(this).attr('userid');
         var overlay = $('#overlay');

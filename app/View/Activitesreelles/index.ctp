@@ -1,3 +1,3 @@
 <div class="activitesreelles index">
-<?php echo $this->element('indexActivitesReelle'); ?>
+<?php echo $this->element('index/ActivitesReelle'); ?>
 </div>

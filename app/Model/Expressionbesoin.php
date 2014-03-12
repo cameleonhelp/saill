@@ -131,6 +131,13 @@ class Expressionbesoin extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'Dsitenv' => array(
+			'className' => 'Dsitenv',
+			'foreignKey' => 'dsitenv_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
 
@@ -176,6 +183,10 @@ class Expressionbesoin extends AppModel {
                 if (isset($val['Expressionbesoin']['DATEFIN'])) {
                     $results[$key]['Expressionbesoin']['DATEFIN'] = $this->dateFormatAfterFind($val['Expressionbesoin']['DATEFIN']);
                 }                                    
+                if (isset($val['Expressionbesoin']['dsitenv_id'])) {
+                    $results[$key]['Expressionbesoin']['dsitenv_nom'] = $this->getNomEnvDsit($val['Expressionbesoin']['dsitenv_id']);
+                }     
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Expressionbesoin']['entite_id']); 
             }
             return $results;
         }   
@@ -197,6 +208,18 @@ class Expressionbesoin extends AppModel {
             }
             parent::beforeSave();
             return true;
+        }   
+        
+        public function getNomEnvDsit($ids){
+            $listid = explode(',',$ids);
+            $list='';
+            foreach($listid as $id):
+                $sql = "SELECT DISTINCT(dsitenvs.NOM) FROM dsitenvs WHERE (dsitenvs.id = ".$id." OR dsitenvs.id like '%".$id.",%' OR dsitenvs.id like '%,".$id."%')";
+                $obj = $this->query($sql);
+                $list .= $obj[0]['dsitenvs']['NOM'].',';
+            endforeach;
+            $list = $list != '' ? rtrim($list,',') : 'null';
+            return $list;
         }   
         
         /**

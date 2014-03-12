@@ -63,7 +63,8 @@ class Phase extends AppModel {
                 }      
                 if (isset($val['Phase']['modified'])) {
                     $results[$key]['Phase']['modified'] = $this->dateFormatAfterFind($val['Phase']['modified']);
-                }            
+                }       
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Phase']['entite_id']); 
             }
             return $results;
         }     

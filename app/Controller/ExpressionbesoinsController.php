@@ -24,6 +24,8 @@ class ExpressionbesoinsController extends AppController {
 	public function index($application=null,$etat=null,$type=null,$perimetre=null) {
             $this->set('title_for_layout','Environnements'); 
             if (isAuthorized('expressionbesoins', 'index')) :  
+                $listentite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+                $newconditions[]="Expressionbesoin.entite_id IN (".$listentite.')';                
                 switch($application):
                     case null:
                     case 'tous':
@@ -121,7 +123,8 @@ class ExpressionbesoinsController extends AppController {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Expressionbesoin->validate = array();
                         $this->History->goBack(1);
-                    else:                    
+                    else:           
+                        $this->request->data['Expressionbesoin']['entite_id']=userAuth('entite_id');
 			$this->Expressionbesoin->create();
 			if ($this->Expressionbesoin->save($this->request->data)) {
                                 $id = $this->Expressionbesoin->getLastInsertID();
@@ -145,7 +148,8 @@ class ExpressionbesoinsController extends AppController {
 		$volumetries = $this->requestAction('volumetries/get_select/1'); 
 		$puissances = $this->requestAction('puissances/get_select/1'); 
 		$architectures = $this->requestAction('architectures/get_select/1'); 
-		$this->set(compact('applications', 'composants', 'perimetres', 'lots', 'etats', 'types', 'phases', 'volumetries', 'puissances', 'architectures'));
+                $dsitenvs = array();
+		$this->set(compact('applications', 'composants', 'perimetres', 'lots', 'etats', 'types', 'phases', 'volumetries', 'puissances', 'architectures','dsitenvs'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -193,7 +197,8 @@ class ExpressionbesoinsController extends AppController {
 		$puissances = $this->requestAction('puissances/get_select/1'); 
 		$architectures = $this->requestAction('architectures/get_select/1'); 
                 $histories = $this->requestAction('historyexpbs/get_list/'.$id);
-		$this->set(compact('applications', 'composants', 'perimetres', 'lots', 'etats', 'types', 'phases', 'volumetries', 'puissances', 'architectures','histories'));
+                $dsitenvs = $this->requestAction('dsitenvs/get_select_for_application/'.$this->request->data['Expressionbesoin']['application_id']);
+		$this->set(compact('applications', 'composants', 'perimetres', 'lots', 'etats', 'types', 'phases', 'volumetries', 'puissances', 'architectures','histories','dsitenvs'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -346,7 +351,7 @@ class ExpressionbesoinsController extends AppController {
         
         public function rapport(){
             $this->set('title_for_layout','Rapport environnements');
-            if (isAuthorized('expressionbesoins', 'delete')) :               
+            if (isAuthorized('expressionbesoins', 'rapports')) :               
                 $etats = $this->requestAction('etats/get_select/1');                
 		$lots = $this->requestAction('lots/get_select/1'); 
                 $perimetres = $this->requestAction('perimetres/get_select/1'); 
@@ -443,6 +448,10 @@ class ExpressionbesoinsController extends AppController {
                                       order by perimetre_id asc;"; //retiré les états 1 et 2 pour ne prendre que les livrés
                     $chartcumulenvresults = $this->Expressionbesoin->query($chartcumulenv);
                     $this->set('chartcumulenvresults',$chartcumulenvresults);
+                    //TODO : piste de select 
+                    //TODO : SELECT *,COUNT(id), CONCAT(MONTH(DATELIVRAISON),'/',YEAR(DATELIVRAISON)) FROM `historyexpbs` 
+                    //TODO : WHERE `etat_id` = 3 AND DATELIVRAISON IS NOT NULL GROUP BY MONTH(DATELIVRAISON) 
+                    //TODO : ORDER BY CONCAT(YEAR(DATELIVRAISON),IF(MONTH(DATELIVRAISON)<10,CONCAT('0',MONTH(DATELIVRAISON)),MONTH(DATELIVRAISON))) asc
                     $charthistosql = "select count(expressionbesoins.id) as NB,MONTH(DATELIVRAISON) as MOIS, lots.NOM as LOT
                             from expressionbesoins
                             LEFT JOIN lots on expressionbesoins.lot_id = lots.id
@@ -462,7 +471,7 @@ class ExpressionbesoinsController extends AppController {
         public function search(){
             if (isAuthorized('expressionbesoins', 'index')) :
                 $keyword=isset($this->params->data['Expressionbesoin']['SEARCH']) ? $this->params->data['Expressionbesoin']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Application.NOM LIKE '%".$keyword."%'","Composant.NOM LIKE '%".$keyword."%'","Perimetre.NOM LIKE '%".$keyword."%'","Lot.NOM LIKE '%".$keyword."%'","Etat.NOM LIKE '%".$keyword."%'","Type.NOM LIKE '%".$keyword."%'","Phase.NOM LIKE '%".$keyword."%'","Volumetrie.NOM LIKE '%".$keyword."%'","Puissance.NOM LIKE '%".$keyword."%'","Architecture.NOM LIKE '%".$keyword."%'","Expressionbesoin.ENVIRONNEMENT LIKE '%".$keyword."%'","Expressionbesoin.USAGE LIKE '%".$keyword."%'","Expressionbesoin.NOMUSAGE LIKE '%".$keyword."%'","Expressionbesoin.PVU LIKE '%".$keyword."%'"));
+                $newconditions = array('OR'=>array("Application.NOM LIKE '%".$keyword."%'","Composant.NOM LIKE '%".$keyword."%'","Perimetre.NOM LIKE '%".$keyword."%'","Lot.NOM LIKE '%".$keyword."%'","Etat.NOM LIKE '%".$keyword."%'","Type.NOM LIKE '%".$keyword."%'","Phase.NOM LIKE '%".$keyword."%'","Volumetrie.NOM LIKE '%".$keyword."%'","Puissance.NOM LIKE '%".$keyword."%'","Architecture.NOM LIKE '%".$keyword."%'","Dsitenv.NOM LIKE '%".$keyword."%'","Expressionbesoin.USAGE LIKE '%".$keyword."%'","Expressionbesoin.NOMUSAGE LIKE '%".$keyword."%'","Expressionbesoin.PVU LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                 $this->autoRender = false;
                 $this->Expressionbesoin->recursive = 0;

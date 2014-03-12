@@ -1,10 +1,10 @@
-<div class="marginright20">
+<div class="">
 <div class="actions form">
 <?php echo $this->Form->create('Action',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class='block-panel block-panel-50-left'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="ActionDestinataire">Responsable: </label>
-            <div class="col-lg-offset-4">
+            <label class="col-md-4 required" for="ActionDestinataire">Responsable: </label>
+            <div class="col-md-offset-4">
                     <?php echo $this->Form->select('destinataire',$destinataires,array('data-rule-required'=>'true','multiple'=>'true','class'=>"form-control multiselect size75",'size'=>"10",'data-msg-required'=>"Le nom du responsable est obligatoire",'hiddenField' => false)); ?>               
                 <br><?php echo $this->Form->input('SelectAll',array('type'=>'checkbox')); ?><label class="labelAfter" for="ActionSelectAll">&nbsp;Tout sélectionner</label>  
             </div>
@@ -12,8 +12,8 @@
     </div>
     <div class='block-panel block-panel-50-right'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="ActionDomaineId">Domaine : </label>
-            <div class="col-lg-offset-4">
+            <label class="col-md-4 required" for="ActionDomaineId">Domaine : </label>
+            <div class="col-md-offset-4">
                     <?php echo $this->Form->select('domaine_id',$domaines,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'class'=>"form-control multiselect size75",'data-msg-required'=>"Le domaine est obligatoire")); ?>               
                 <br><?php echo $this->Form->input('SelectAllDomaine',array('type'=>'checkbox')); ?><label class="labelAfter" for="ActionSelectAllDomaine">&nbsp;Tout sélectionner</label>            
             </div>            
@@ -63,7 +63,10 @@
 </div>
 <script>
 $(document).ready(function (){ 
-
+   $("table").tablesorter(
+           { headers: { 1: { sorter: 'fr-date' } }}
+   );
+   
    $(document).on('click','#ActionSelectAll',function() {
         if($(this).is(':checked')){
             $('#ActionDestinataire option').prop('selected', 'selected');

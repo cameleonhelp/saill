@@ -154,6 +154,12 @@ class ChangelogversionsController extends AppController {
             return $list;
         }     
         
+        public function get_all_open(){
+            $conditions[] = 'Changelogversion.ETAT=0';
+            $list = $this->Changelogversion->find('all',array('fields'=>array('Changelogversion.id','Changelogversion.VERSION'),'conditions'=>$conditions,'order'=>array('Changelogversion.VERSION'=>'asc'),'recursive'=>0));
+            return $list;
+        }            
+        
         public function get_all_close(){
             $conditions[] = 'Changelogversion.ETAT=1';
             $list = $this->Changelogversion->find('all',array('fields'=>array('Changelogversion.id,Changelogversion.DATEREELLE','Changelogversion.VERSION'),'conditions'=>$conditions,'order'=>array('Changelogversion.VERSION'=>'desc'),'recursive'=>0));
@@ -171,6 +177,12 @@ class ChangelogversionsController extends AppController {
         public function getnextversion(){
             $conditions[] = 'Changelogversion.ETAT=0';
             $list = $this->Changelogversion->find('all',array('conditions'=>$conditions,'order'=>array('Changelogversion.VERSION'=>'asc'),'recursive'=>0));
+            return $list;
+        }
+        
+        public function get_last(){
+            $conditions[] = 'Changelogversion.ETAT=1';
+            $list = $this->Changelogversion->find('first',array('conditions'=>$conditions,'order'=>array('Changelogversion.VERSION'=>'desc'),'recursive'=>0));
             return $list;
         }
 }

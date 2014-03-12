@@ -38,8 +38,8 @@
         <?php  echo $this->Form->input('lot_id',array('type'=>'hidden','value'=>$this->data['Lot']['id'])); ?>
         <?php  echo $this->Form->input('id',array('type'=>'hidden')); ?>
         <div class="form-group">
-              <label class="col-lg-4" for="VersionNOM">Nom : </label>
-              <div class="col-lg-7">
+              <label class="col-md-4" for="VersionNOM">Nom : </label>
+              <div class="col-md-7">
                   <?php echo $this->Form->input('NOM',array('class'=>'form-control','type'=>'text','placeholder'=>'Numéro de version du lot '.$this->data['Lot']['NOM'])); ?>                     
               </div>
         </div>            
@@ -56,6 +56,8 @@
 
 <script>
 $(document).ready(function () {
+    $("table").tablesorter();
+    
     $(document).on('click','.actif',function(e){
         var id = $(this).attr('data-id');
             $.ajax({

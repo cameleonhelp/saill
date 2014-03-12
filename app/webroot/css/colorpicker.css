@@ -1,6 +1,6 @@
 /*!
  * Bootstrap Colorpicker
- * http://mjaalnir.github.io/colorpicker/
+ * http://mjolnic.github.io/colorpicker/
  *
  * Originally written by (c) 2012 Stefan Petre
  * Licensed under the Apache License v2.0
@@ -123,11 +123,11 @@
   position: relative;
 }
 
-.colorpicker.alpha {
+.colorpicker.colorpicker-with-alpha {
   min-width: 140px;
 }
 
-.colorpicker.alpha .colorpicker-alpha {
+.colorpicker.colorpicker-with-alpha .colorpicker-alpha {
   display: block;
 }
 
@@ -151,7 +151,7 @@
 }
 
 .colorpicker.colorpicker-inline {
-  position: static;
+  position: relative;
   display: inline-block;
   float: none;
 }
@@ -199,4 +199,16 @@
 
 .colorpicker.colorpicker-horizontal .colorpicker-alpha {
   background-image: url("../img/colorpicker/alpha-horizontal.png");
+}
+
+.colorpicker.colorpicker-hidden {
+  display: none;
+}
+
+.colorpicker.colorpicker-visible {
+  display: block;
+}
+
+.colorpicker-inline.colorpicker-visible {
+  display: inline-block;
 }

@@ -1,10 +1,10 @@
-<div class="marginright20">
+<div class="">
 <div class="actions form">
 <?php echo $this->Form->create('Plancharge',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class='block-panel block-panel-50-left'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="PlanchargeId">Plan de charge: </label>
-            <div class="col-lg-offset-4">
+            <label class="col-md-4 required" for="PlanchargeId">Plan de charge: </label>
+            <div class="col-md-offset-4">
                     <?php echo $this->Form->select('id',$plancharges,array('data-rule-required'=>'true','multiple'=>'true','class'=>"form-control multiselect size75",'size'=>"10",'data-msg-required'=>"Le nom du plan de charge est obligatoire",'hiddenField' => false)); ?>               
                 <br><?php echo $this->Form->input('SelectAll',array('type'=>'checkbox')); ?><label class="labelAfter" for="PlanchargeSelectAll">&nbsp;Tout sélectionner</label>  
             </div>
@@ -12,8 +12,8 @@
     </div>
     <div class='block-panel block-panel-50-right'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="PlanchargeDomaineId">Domaine : </label>
-            <div class="col-lg-offset-4">
+            <label class="col-md-4 required" for="PlanchargeDomaineId">Domaine : </label>
+            <div class="col-md-offset-4">
                     <?php echo $this->Form->select('domaine_id',$domaines,array('data-rule-required'=>'true','multiple'=>'true','size'=>"10",'class'=>"form-control multiselect size75",'data-msg-required'=>"Le domaine est obligatoire")); ?>               
                 <br><?php echo $this->Form->input('SelectAllDomaine',array('type'=>'checkbox')); ?><label class="labelAfter" for="PlanchargeSelectAllDomaine">&nbsp;Tout sélectionner</label>            
             </div>            
@@ -31,7 +31,7 @@
 <?php $israpport = isset($rapportresults) ? count($rapportresults) : 0; ?>
 <?php $style = $israpport==0 ? 'style="display:none;"' : ''; ?>
 <div id="rapport" <?php echo $style; ?>>
-    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc" style="vertical-align: bottom;"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn btn-sm btn-default','escape' => false)); ?></div>
+    <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc" style="vertical-align: baseline;"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn btn-sm btn-default','escape' => false)); ?></div>
 <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br><br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Répartition des plans de charge par domaines</div><br>
@@ -100,7 +100,7 @@
 </div>
 <script>
 $(document).ready(function (){ 
-
+   $("table").tablesorter();
    $(document).on('click','#PlanchargeSelectAll',function() {
         if($(this).is(':checked')){
             $('#PlanchargeId option').prop('selected', 'selected');

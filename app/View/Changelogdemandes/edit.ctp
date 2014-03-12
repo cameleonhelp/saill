@@ -1,11 +1,11 @@
-<div class="marginright20">
+<div class="">
     <?php echo $this->element('changelogsubmenu'); ?>
     <div class="changelogdemandes form tablemarginright">      
 <?php echo $this->Form->create('Changelogdemande',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
         Expliquez en quelques lignes votre demande de changement (évolution ou anomalies) :
 	<?php
                 echo $this->Form->input('id',array('type'=>'hidden'));
-		echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>  userAuth('id')));
+		//echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>  userAuth('id')));
 		echo $this->Form->input('DEMANDE');
 	?>
     <div style="clear:both;margin-top: 10px;">

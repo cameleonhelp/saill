@@ -22,7 +22,7 @@ class VersionsController extends AppController {
  */
 	public function index($actif=null) {
             $this->set('title_for_layout','Versions');
-            if (isAuthorized('versions', 'index')) :
+            if (isAuthorized('versions', 'index')) :  
                 switch($actif):
                     case null:
                     case 1:
@@ -200,12 +200,18 @@ class VersionsController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Version->find('list',array('fields'=>array('Version.id','Version.NOM'),'conditions'=>array('Version.ACTIF'=>$actif),'order'=>array('Version.NOM'=>'asc'),'recursive'=>0));
+            $listentite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+            $conditions[]="Lot.entite_id IN (".$listentite.')';     
+            $conditions[] = 'Version.ACTIF='.$actif;
+            $list = $this->Version->find('list',array('fields'=>array('Version.id','Version.NOM'),'conditions'=>$conditions,'order'=>array('Version.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }
         
         public function get_list($actif=1){
-            $list = $this->Version->find('all',array('fields'=>array('Version.id','Version.NOM'),'conditions'=>array('Version.ACTIF'=>$actif),'order'=>array('Version.NOM'=>'asc'),'recursive'=>0));
+            $listentite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+            $conditions[]="Lot.entite_id IN (".$listentite.')';     
+            $conditions[] = 'Version.ACTIF='.$actif;            
+            $list = $this->Version->find('all',array('fields'=>array('Version.id','Version.NOM'),'conditions'=>$conditions,'order'=>array('Version.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }        
         

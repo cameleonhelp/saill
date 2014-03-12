@@ -1,3 +1,3 @@
-<div class="actions form">
-<?php echo $this->element('formAction'); ?>
+<div class="actions form add">
+<?php echo $this->element('form/actions'); ?>
 </div>

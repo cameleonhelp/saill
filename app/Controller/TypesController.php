@@ -12,52 +12,85 @@ class TypesController extends AppController {
  *
  * @var array
  */
-        public $paginate = array('limit' => 25);
+        public $paginate = array('limit' => 25,'order'=>array('Type.NOM'=>'asc'));
 	public $components = array('History','Common');
 
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            if($visibility == null):
+                return '1=1';
+            elseif ($visibility!=''):
+                return array('OR'=>array('Type.entite_id IN ('.$visibility.')','Type.entite_id IS NULL'));
+            else:
+                return array('OR'=>array('Type.entite_id ='.userAuth('entite_id'),'Type.entite_id IS NULL'));
+            endif;
+        }
+        
+        public function get_type_actif_filter($id){
+            $result = array();
+            switch($id):
+                case null:
+                case 1:
+                    $result['condition']="Type.ACTIF=1";
+                    $result['filter'] = 'actives';
+                    break;
+                case 0:
+                    $result['condition']="Type.ACTIF=0";
+                    $result['filter'] = 'inactives';
+                    break;
+            endswitch;
+            return $result;
+        }
+        
+        public function get_type_entite_filter($id,$visibility){
+            $result = array();
+            switch($id):
+                case null:
+                case 'tous':
+                    if($visibility == null):
+                        $result['condition']='1=1';
+                    elseif ($visibility!=''):
+                        $result['condition']=array('OR'=>array('Type.entite_id IN ('.$visibility.')','Type.entite_id IS NULL'));
+                    else:
+                        $result['condition']=array('OR'=>array('Type.entite_id ='.userAuth('entite_id'),'Type.entite_id IS NULL'));
+                    endif;                      
+                    $result['filter'] = ' de tous les cercles';
+                    break;
+                default:
+                    $result['condition']='Type.entite_id ='.$id;
+                    $nom = $this->requestAction('entites/get_entite_nom/'.$id);
+                    $result['filter'] = 'ayant pour entité '.$nom;
+            endswitch;
+            return $result;
+        }        
 /**
  * index method
  *
  * @return void
  */
-	public function index($actif=null) {
-            $this->set('title_for_layout','Type d\'environnement');
-            if (isAuthorized('types', 'index')) :
-                switch($actif):
-                    case null:
-                    case 1:
-                        $newconditions[]="Type.ACTIF=1";
-                        $strfilter = 'actifs';
-                        break;
-                    case 0:
-                        $newconditions[]="Type.ACTIF=0";
-                        $strfilter = 'inactifs';
-                        break;
-                endswitch;
-                $this->set('strfilter',$strfilter);
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
-		$this->Type->recursive = 0;
+	public function index($actif=null,$entite=null) {
+            if (isAuthorized('types', 'index')) :               
+                $visibility = $this->get_visibility();                
+                $restriction= $this->get_restriction($visibility);
+                $getactif = $this->get_type_actif_filter($actif);
+                $getentite = $this->get_type_entite_filter($entite, $visibility);
+                $this->set('strfilter',$getactif['filter'].$getentite['filter']);
+                $newcondition = array($restriction,$getactif['condition'],$getentite['condition']);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newcondition,'recursive'=>0));   
 		$this->set('types', $this->paginate());
+                $cercles = $this->requestAction('entites/get_all');
+                $this->set(compact('cercles'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                 
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-                $this->set('title_for_layout','Type d\'environnement');
-		if (!$this->Type->exists($id)) {
-			throw new NotFoundException(__('Type d\'environnement incorrect'));
-		}
-		$options = array('conditions' => array('Type.' . $this->Type->primaryKey => $id));
-		$this->set('type', $this->Type->find('first', $options));
 	}
 
 /**
@@ -72,7 +105,8 @@ class TypesController extends AppController {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Type->validate = array();
                         $this->History->goBack(1);
-                    else:                     
+                    else:              
+                        $this->request->data['Type']['entite_id']=userAuth('entite_id');
 			$this->Type->create();
 			if ($this->Type->save($this->request->data)) {
 				$this->Session->setFlash(__('Type d\'environnement sauvegardé',true),'flash_success');
@@ -82,6 +116,8 @@ class TypesController extends AppController {
 			}
                    endif;
 		endif;
+                $cercles = $this->requestAction('entites/find_list_cercle');
+                $this->set(compact('cercles'));  
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -114,8 +150,10 @@ class TypesController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Type.' . $this->Type->primaryKey => $id));
-			$this->request->data = $this->Type->find('first', $options);
+                    $options = array('conditions' => array('Type.' . $this->Type->primaryKey => $id));
+                    $this->request->data = $this->Type->find('first', $options);
+                    $cercles = $this->requestAction('entites/find_list_cercle');
+                    $this->set(compact('cercles'));                      
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -163,16 +201,36 @@ class TypesController extends AppController {
 		exit();
         }
         
-        public function search(){
+        public function search($actif=null,$entite=null,$keywords=null){
             $this->set('title_for_layout','Type d\'environnement');
             if (isAuthorized('types', 'index')) :
-                $keyword=isset($this->params->data['Type']['SEARCH']) ? $this->params->data['Type']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Type.NOM LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Type->recursive = 0;
-                $this->set('types', $this->paginate());                  
-                $this->render('index');
+                if(isset($this->params->data['Type']['SEARCH'])):
+                    $keywords = $this->params->data['Type']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $visibility = $this->get_visibility();                
+                    $restriction= $this->get_restriction($visibility);
+                    $getactif = $this->get_type_actif_filter($actif);
+                    $getentite = $this->get_type_entite_filter($entite, $visibility);
+                    $this->set('strfilter',$getactif['filter'].$getentite['filter']);
+                    $newcondition = array($restriction,$getactif['condition'],$getentite['condition']);
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Type.NOM LIKE '%".$value."%'","Type.ORDER LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newcondition,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
+                    $this->set('types', $this->paginate());    
+                    $cercles = $this->requestAction('entites/get_all');
+                    $this->set(compact('cercles'));                    
+                else:
+                    $this->redirect(array('action'=>'index',$actif,$entite));
+                endif;                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -180,12 +238,17 @@ class TypesController extends AppController {
         }
         
         public function get_select($actif=1){
-            $list = $this->Type->find('list',array('fields'=>array('Type.id','Type.NOM'),'conditions'=>array('Type.ACTIF'=>$actif),'order'=>array('Type.NOM'=>'asc'),'recursive'=>0));
+            $visibility = $this->get_visibility();                
+            $conditions[]= $this->get_restriction($visibility);               
+            $conditions[] = $actif == null ? '1=1' : 'Type.ACTIF='.$actif;               
+            $list = $this->Type->find('list',array('fields'=>array('Type.id','Type.NOM'),'conditions'=>$conditions,'order'=>array('Type.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }        
         
         public function get_list($actif=null){
-            $conditions[] = $actif == null ? '1=1' : 'Type.ACTIF='.$actif;
+            $visibility = $this->get_visibility();                
+            $conditions[]= $this->get_restriction($visibility);               
+            $conditions[] = $actif == null ? '1=1' : 'Type.ACTIF='.$actif;  
             $list = $this->Type->find('all',array('fields'=>array('Type.id','Type.NOM'),'conditions'=>$conditions,'order'=>array('Type.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }    

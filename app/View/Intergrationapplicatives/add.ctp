@@ -1,3 +1,3 @@
 <div class="intergrationapplicatives form">
-<?php echo $this->element('formIntergrationapplicative'); ?>
+<?php echo $this->element('form/intergrationapplicative'); ?>
 </div>

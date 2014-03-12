@@ -10,8 +10,7 @@ class SitesController extends AppController {
     public $paginate = array(
         'limit' => 25,
         'order' => array('Site.NOM' => 'asc'),
-        /*'order' => array(
-            'Post.title' => 'asc' /*/
+
         );
     
 /**
@@ -22,28 +21,7 @@ class SitesController extends AppController {
 	public function index() {
             //$this->Session->delete('history');
             if (isAuthorized('sites', 'index')) :
-		$this->Site->recursive = 0;
 		$this->set('sites', $this->paginate());
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('sites', 'view')) :
-		if (!$this->Site->exists($id)) {
-			throw new NotFoundException(__('Site incorrect'));
-		}
-		$options = array('conditions' => array('Site.' . $this->Site->primaryKey => $id),'recursive'=>0);
-		$this->set('site', $this->Site->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -143,18 +121,39 @@ class SitesController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($keywords=null) {
             if (isAuthorized('sites', 'index')) :
-                $keyword=isset($this->params->data['Site']['SEARCH']) ? $this->params->data['Site']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Site.NOM LIKE '%".$keyword."%'","Site.DESCRIPTION LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Site->recursive = 0;
-                $this->set('sites', $this->paginate());              
-                $this->render('index');
+                if(isset($this->params->data['Site']['SEARCH'])):
+                    $keywords = $this->params->data['Site']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $newcondition = array();
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Site.NOM LIKE '%".$value."%'","Site.DESCRIPTION LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newcondition,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
+                    $this->set('sites', $this->paginate());     
+                else:
+                    $this->redirect(array('action'=>'index'));
+                endif;                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
-        }         
+        }    
+        
+        public function get_list(){
+            return $this->Site->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc'),'recursive'=>0));
+        }
+        
+        public function get_all(){
+            return $this->Site->find('all',array('order'=>array('NOM'=>'asc'),'recursive'=>0));
+        }           
 }

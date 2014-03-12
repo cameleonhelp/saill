@@ -14,41 +14,55 @@ class ListediffusionsController extends AppController {
             'Post.title' => 'asc' /*/
         );
             
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/json_get_all_users/'. userAuth('id'));  
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            $result = array();
+            if($visibility == null):
+                $result['condition']='1=1';
+            elseif ($visibility!=''):
+                $result['condition']=array('OR'=>array('Listediffusion.utilisateur_id IN ('.$visibility.')','Listediffusion.utilisateur_id IS NULL'));
+            else:
+                $result['condition']=array('OR'=>array('Listediffusion.utilisateur_id ='.userAuth('id'),'Listediffusion.utilisateur_id IS NULL'));
+            endif;
+            return $result;
+        }
+        
+        public function get_export($condition){
+            $this->Session->delete('xls_export');
+            $export = $this->Listediffusion->find('all',array('conditions'=>$condition,'order' => array('Listediffusion.NOM' => 'asc'),'recursive'=>0));
+            $this->Session->write('xls_export',$export);
+        }
+        
+        public function get_list_utilisateur($visibility){
+            if($visibility == null):
+                 $condition = array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1','Utilisateur.profil_id > 0');
+            elseif ($visibility!=''):
+                $condition = array('Utilisateur.ACTIF'=>1,'Utilisateur.id IN ('.$visibility.')','Utilisateur.profil_id > 0');
+            else:
+                $condition = array('Utilisateur.ACTIF'=>1,'Utilisateur.id ='.userAuth('id'),'Utilisateur.profil_id > 0');
+            endif;            
+            return $this->Listediffusion->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>$condition,'order'=>'Utilisateur.NOMLONG ASC','recursive'=>-1));
+        }
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
-            //$this->Session->delete('history');
+            $this->set('title_for_layout','Listes de diffusion');
             if (isAuthorized('listediffusions', 'index')) :
-		$this->set('title_for_layout','Listes de diffusion');
-                $this->Listediffusion->recursive = 0;
+                $listusers = $this->get_visibility();
+                $newcondition = $this->get_restriction($listusers);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newcondition['condition'],'recursive'=>0)); 
 		$this->set('listediffusions', $this->paginate());
-                $this->Session->delete('xls_export');
-                $export = $this->Listediffusion->find('all',array('order' => array('Listediffusion.NOM' => 'asc'),'recursive'=>0));
-                $this->Session->write('xls_export',$export);                 
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('listediffusions', 'view')) :
-		$this->set('title_for_layout','Listes de diffusion');
-                if (!$this->Listediffusion->exists($id)) {
-			throw new NotFoundException(__('Liste de diffusion incorrecte'));
-		}
-		$options = array('conditions' => array('Listediffusion.' . $this->Listediffusion->primaryKey => $id));
-		$this->set('listediffusion', $this->Listediffusion->find('first', $options));
+                $this->get_export($newcondition['condition']);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -61,8 +75,8 @@ class ListediffusionsController extends AppController {
  * @return void
  */
 	public function add() {
+            $this->set('title_for_layout','Listes de diffusion');
             if (isAuthorized('listediffusions', 'add')) :
-		$this->set('title_for_layout','Listes de diffusion');
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Listediffusion->validate = array();
@@ -77,7 +91,8 @@ class ListediffusionsController extends AppController {
 			}
                     endif;
                 endif;
-                $utilisateurs = $this->Listediffusion->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1','Utilisateur.profil_id > 0'),'order'=>'Utilisateur.NOMLONG ASC','recursive'=>-1));
+                $visibility = $this->get_visibility();
+                $utilisateurs = $this->get_list_utilisateur($visibility);
                 $this->set('utilisateurs',$utilisateurs);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -93,8 +108,8 @@ class ListediffusionsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            $this->set('title_for_layout','Listes de diffusion');
             if (isAuthorized('listediffusions', 'edit')) :
-		$this->set('title_for_layout','Listes de diffusion');
                 if (!$this->Listediffusion->exists($id)) {
 			throw new NotFoundException(__('Liste de diffusion incorrecte'));
 		}
@@ -111,11 +126,12 @@ class ListediffusionsController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Listediffusion.' . $this->Listediffusion->primaryKey => $id),'recursive'=>0);
-			$this->request->data = $this->Listediffusion->find('first', $options);
-		}
-                $utilisateurs = $this->Listediffusion->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.id>1','Utilisateur.profil_id > 0'),'order'=>'Utilisateur.NOMLONG ASC'));
-                $this->set('utilisateurs',$utilisateurs);                
+                    $options = array('conditions' => array('Listediffusion.' . $this->Listediffusion->primaryKey => $id),'recursive'=>0);
+                    $this->request->data = $this->Listediffusion->find('first', $options);
+                    $visibility = $this->get_visibility();
+                    $utilisateurs = $this->get_list_utilisateur($visibility);
+                    $this->set('utilisateurs',$utilisateurs);                        
+		}            
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -131,8 +147,8 @@ class ListediffusionsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            $this->set('title_for_layout','Listes de diffusion');
             if (isAuthorized('listediffusions', 'delete')) :
-		$this->set('title_for_layout','Listes de diffusion');
                 $this->Listediffusion->id = $id;
 		if (!$this->Listediffusion->exists()) {
 			throw new NotFoundException(__('Liste de diffusion incorrecte'));
@@ -155,19 +171,31 @@ class ListediffusionsController extends AppController {
  *
  * @return void
  */
-	public function search() {
-            if (isAuthorized('listediffusions', 'index')) :
-                $this->set('title_for_layout','Listes de diffusion');
-                $keyword=isset($this->params->data['Listediffusion']['SEARCH']) ? $this->params->data['Listediffusion']['SEARCH'] : '';   
-                $newconditions = array('OR'=>array("Listediffusion.NOM LIKE '%".$keyword."%'","Listediffusion.DESCRIPTION LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Listediffusion->recursive = 0;
-                $this->set('listediffusions', $this->paginate()); 
-                $this->Session->delete('xls_export');
-                $export = $this->Listediffusion->find('all',array('conditions'=>$newconditions,'recursive'=>0));
-                $this->Session->write('xls_export',$export);                    
-                $this->render('index');
+	public function search($keywords=null) {
+            $this->set('title_for_layout','Listes de diffusion');
+            if (isAuthorized('listediffusions', 'index')) :               
+                if(isset($this->params->data['Assistance']['SEARCH'])):
+                    $keywords = $this->params->data['Assistance']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Listediffusion.NOM LIKE '%".$value."%'","Listediffusion.DESCRIPTION LIKE '%".$value."%'"));
+                    endforeach;
+                    $listusers = $this->get_visibility();
+                    $newcondition = $this->get_restriction($listusers);                    
+                    $conditions = array($newcondition['condition'],'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));
+                    $this->set('listediffusions', $this->paginate()); 
+                    $this->get_export($conditions);                    
+                else:
+                    $this->redirect(array('action'=>'index'));
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

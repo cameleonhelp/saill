@@ -63,7 +63,8 @@ class Composant extends AppModel {
                 }      
                 if (isset($val['Composant']['modified'])) {
                     $results[$key]['Composant']['modified'] = $this->dateFormatAfterFind($val['Composant']['modified']);
-                }            
+                }   
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Composant']['entite_id']); 
             }
             return $results;
         }         

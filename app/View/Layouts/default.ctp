@@ -37,8 +37,11 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->css('colorpicker');
                 echo $this->Html->css('bs-custom-sncf');
                 echo $this->Html->css('iosswitch');
+                echo $this->Html->css('flipcountdown');
+                echo $this->Html->css('tablesorter');
                 
                 echo $this->Html->script('jQuery/jquery');
+                //echo $this->Html->script('jQuery/jquery-ui');
                 echo $this->Html->script('bootstrap');              
                 echo $this->Html->script('validate/validate');  
                 echo $this->Html->script('validate/additional-methods');                  
@@ -52,6 +55,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->script('highcharts/highcharts-more');
                 echo $this->Html->script('highcharts/modules/exporting');   
                 echo $this->Html->script('highcharts/modules/data');
+                echo $this->Html->script('flipcountdown/flipcountdown');
                 //mask sur input
                 echo $this->Html->script('maskedinput/maskedinput');
                 //pour enregistrer image
@@ -65,7 +69,9 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 //pour le color picker
                 echo $this->Html->script('colorpicker/colorpicker');     
                 echo $this->Html->script('docs'); 
-
+                //echo $this->Html->script('classie/classie');
+                //sort on table
+                echo $this->Html->script('tablesorter/tablesorter');
                 // compatibilité IE
                 echo $this->Html->script('respond');     
                 echo $this->Html->script('html5shiv'); 
@@ -77,105 +83,101 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
 		echo $this->fetch('script');
 	?>
 </head>
-<body>
-    <?php if(file_exists (WWW_ROOT.'maintenance.md') && userAuth('profil_id') != 1):
-            echo $this->element('maintenance'); 
-          else: ?>
+<body <?php echo $this->Session->check('Auth.User') ? 'class="cbp-spmenu-push"' : ''; ?>>
+    <?php 
+    //maintenance du site
+    if(file_exists (WWW_ROOT.'maintenance.md') && userAuth('profil_id') != 1):
+        echo $this->element('layout/maintenance'); 
+    else: 
+    ?>
     <div id="overlay" style="display:none;"><?php echo $this->Html->image("loading.gif", array('fullBase' => true)); ?> <span class="overlaytext">Chargement en cours, veuillez patienter ...</span></div>
-    <!--insert Add red modal //-->
-    <div class="modal fade" id="ieredModal" data-color="red" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header" style="background-color:red;color:white;">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4>Navigateur non recommandé</h4>
+    <?php echo $this->element('layout/modal_ie'); ?>
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="menu-retractable">
+            <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
+                <!-- DEBUT DU MENU //-->
+                
+                <?php if ($this->Session->check('Auth.User')) echo $this->element('layout/horloge'); ?>
+                <?php if ($this->Session->check('Auth.User')) echo $this->element('layout/menu'); ?>
+                <!-- FIN DU MENU //-->
+            </nav>
+            <div class="novisible" id="notvisible">&nbsp;</div>  
             </div>
-            <div class="modal-body">
-              <p style="color:red;">Vous utilisez Internet explorer, ce site ne fonctionne pas correctement avec ce navigateur.<br/>Nous vous recommandons d'utiliser Chrome ou Firefox dans leur dernière version.<br/>Merci de votre compréhension.</p>
+            <!-- DEBUT DU HEADER //-->
+            <?php echo $this->element('layout/header'); ?>
+            <?php
+            if($this->params['action']=="login" || $this->params['action']=='initmypassword'):
+                echo $this->element('layout/subheader');
+            endif;
+            ?>
+            <!-- FIN DU HEADER //-->
+            <!-- DEBUT DU CONTENU //-->
+            <div class="col-sm-12 column" id="content">
+            <div class="cursor" id="flash_message"><?php echo $this->Session->flash(); ?></div>
+            <div id="container_message" name="container_message" style="cursor:pointer;" class="alert alert-danger"><ol></ol></div>
+            <?php echo $this->fetch('content'); ?>
             </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <!-- /insert Add red modal //-->        
-    <div id="wrap">   
-       <!-- Fixed navbar -->
-       <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-         <div class="navbar-header">
-           <?php if (userAuth('id') > 0): ?>
-           <button type="button" id="togglemenu" class="navbar-btn" data-target="#panelcontainerleft" data-content="#content">
-             <span class="icon-bar"></span>
-             <span class="icon-bar"></span>
-             <span class="icon-bar"></span>
-           </button>
-           <?php else: ?>
-             <div style="margin-left:10px;float:left;">&nbsp;</div>
-           <?php endif; ?>
-             <div class="pull-left margintop5"><?php echo $this->Html->link($this->Html->image('logo-sncf-galactic.png'),"https://www.int.sncf.fr/",array('escape' => false,'target'=>'blank')); ?></div>
-             <div class="pull-left">
-             <?php echo $this->Html->link('<span class="glyphicons home hard-grey margintop4 icons-navbar size14"></span>&nbsp;S.A.I.L.L. -',array('controller'=>'pages','action'=>'home'),array('class'=>"navbar-brand showoverlay",'escape' => false)); ?>
-             <?php echo $this->Html->link($title_for_layout,"#",array('class'=>"navbar-brand","style"=>"margin-left:-20px;margin-top:0px;margin-bottom:0px;",'escape' => false)); ?>
-             </div>
-         </div>
-         <?php if (userAuth('id') > 0): ?>
-           <div class="marginright20">
-             <ul class="nav navbar-nav navbar-right">
-               <li class="dropdown">
-                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicons user size14 hard-grey marginright10"></span><?php echo userAuth('PRENOM'); ?>. <?php echo userAuth('NOM'); ?><b class="caret"></b></a>
-                 <ul class="dropdown-menu">
-                    <li><?php echo $this->Html->link('<span class="glyphicons nameplate margintop4 size14 notchange" ></span> Mon profil',array('controller'=>'utilisateurs','action'=>'profil',userAuth('id')),array('escape' => false,'class'=>'showoverlay')); ?></li>
-                    <li class="divider"></li>
-                    <li><?php echo $this->Html->link('<span class="glyphicons log_out margintop4 size14 notchange" ></span> Se déconnecter',array('controller'=>'utilisateurs','action'=>'logout'),array('class'=>'showoverlay','escape' => false)); ?></li>
-                 </ul>
-               </li>
-             </ul>            
-         </div><!--/.nav-collapse -->
-         <?php endif; ?>	
-       </nav>       
-       <div class="container page-header">
-        <div class="row" >            
-            <?php $valmenu = userAuth('id')>0  ? userAuth('MENU') : 1 ; ?>
-            <?php $valmenu = $this->Session->check('userMenu') ? $this->Session->read('userMenu') : $valmenu; ?>
-            <?php echo $this->Form->input('MENU', array('type'=>'hidden','value'=>$valmenu)); ?>
-            <div id="panelcontainerleft">
-            <div id='panelcontrol' class='float'>
-                <?php if (userAuth('id')>0) echo $this->element('server'); ?>
-                <div id="telecommand">
-                <?php if (userAuth('id')>0) echo $this->element('menu'); ?>
-                </div>
-                <?php if (userAuth('id')>0) echo $this->element('infos'); ?>          
-            </div>
-            </div>
-            <?php $class = $valmenu==1 ? 'col-auto-margin' : 'col-expand'; ?>
-            <div id='content' class="<?php echo $class; ?>"> 
-                <div class="cursor marginright20" id="flash_message"><?php echo $this->Session->flash(); ?></div>
-                <div id="container_message" name="container_message" style="cursor:pointer;width: 98%;" class="alert alert-danger"><ol></ol></div>
-                <?php echo $this->fetch('content'); ?>
-                <div><?php       
-//debug($this->Session->read('User.history'));
-//debug($this->Session->read('User.goback'));
-//debug($this->request->data);
-//echo $this->element('sql_dump'); ?></div>
-            </div> 
         </div>
-        <div class="navbar navbar-fixed-bottom navbar-inverse">
-            <div class="navbar-inner">  
-                <div class="text-muted credit marginleft10">
-                    <div class="pull-left"><span class="glyphicons right_arrow yellow margintop5 marginright-5 flash1"></span><span class="glyphicons chevron-right red margintop5 flash2"></span></div>
-                    <ul id="ticker" class="ticker">
-                        <?php echo $this->element('messages_defilant'); ?>
-                    </ul>
-                </div>               
-            </div>           
+        <div class="row">
+            <!-- FIN DU CONTENU //-->
+            <!-- DEBUT DU DEBUG //-->
+            <div class="col-sm-12 column" id="debug">
+            <?php       
+            //debug($this->Session->read('User.history'));
+            //debug($this->Session->read('User.goback'));
+            //debug($this->request->data);
+            //echo $this->element('sql_dump'); 
+            ?>
+            </div>
+            <!-- FIN DU DEBUG //-->
         </div>
-       </div>
     </div> 
     <?php endif; ?>
+    <?php echo $this->element('modals/password'); ?>
+<script>
+$(document).on('mouseover','.novisible',function(){
+    if($(this).hasClass('active')){
+         $(this).removeClass('active');
+         $('body').removeClass('cbp-spmenu-push-toright');
+         $('#cbp-spmenu-s1').removeClass('cbp-spmenu-open');
+         if($('nav.toolbar').hasClass('fixed-active') && $(document).scrollTop() >= 32){
+             $('nav.toolbar').removeClass('fixed-active').addClass('fixed');
+         }            
+     }else{
+         $(this).addClass('active');  
+         $('body').addClass('cbp-spmenu-push-toright');
+         $('#cbp-spmenu-s1').addClass('cbp-spmenu-open');
+         if($('nav.toolbar').hasClass('fixed') && $(document).scrollTop() >= 32){
+             $('nav.toolbar').removeClass('fixed').addClass('fixed-active');
+         }
+     }       
+});
+</script>     
 </body>
 </html>
-<script>
+<script>   
 $(document).ready(function () {
-    /** first element focus **/
-    $("#formValidate").find("input,textarea,select").filter(":not([readonly='readonly']):not([type='file']):not('.dateyear-year'):visible:first").focus();
+    $('.carousel').carousel();
+$(window).scroll(function() {
+    if ( $(document).scrollTop() >= 53){
+        if($('body').hasClass('cbp-spmenu-push-toright')){
+            $('nav.toolbar').removeClass('fixed').addClass('fixed-active');
+        } else {
+            $('nav.toolbar').removeClass('fixed-active').addClass('fixed');
+        }   
+    } else {
+         $('nav.toolbar').removeClass('fixed').removeClass('fixed-active');
+    } 
+
+});      
+        /** first element focus **/
+    $("#formValidate").find("input,textarea,select").filter(":not([readonly='readonly']):not([type='file']):not('.dateall'):not('.dateyear-year'):visible:first").focus();
+
+    $(document).on('mouseup','.btn-expand',function(e){
+        setTimeout(function(){$(".toolbar-form").find("input[type=text]").focus();},0);
+    });    
+    
     /** Initialisation des durée des actions **/
     $('#ActionDUREEPREVUE').val()=='' ? $('#ActionLblDUREEPREVUE').text('0 jour') : $('#ActionLblDUREEPREVUE').text(($('#ActionDUREEPREVUE').val()/8)+' jours');
     $('#ActionDUREEREELLE').val()=='' ? $('#ActionLblDUREEREELLE').text('0 jour') : $('#ActionLblDUREEREELLE').text(($('#ActionDUREEREELLE').val()/8)+' jours');
@@ -212,22 +214,7 @@ $(document).ready(function () {
             isVisible = true
         });  
     }  
-
-    $(document).on('click', '#togglemenu', function (e) {
-      $.ajax({
-        dataType: "html",
-        type: "POST",
-        url: "<?php echo $this->Html->url(array('controller'=>'utilisateurs','action'=>'setmenuvisible')); ?>/"
-      });
-      var newval = $("#MENU").val()==1 ? 0 : 1;
-      $("#MENU").val(newval);
-    })
     
-    if ($("#MENU").val()==1) {
-        $("#panelcontainerleft").show();
-    } else {
-        $("#panelcontainerleft").hide();
-    }
     /** permet d'affciher un overlay pour éviter les doubles cliques **/
     $(document).on('click','.menu1 .accordion-inner > ul > li > a, .showoverlay:not(".disabled")',function(e){
         var overlay = $('#overlay');

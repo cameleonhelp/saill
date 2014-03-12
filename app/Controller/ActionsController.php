@@ -15,168 +15,241 @@ class ActionsController extends AppController {
 
 	public $components = array('History','Common');
         
-        public function beforeRender() {             
+        public function beforeRender() { 
             parent::beforeRender();
         }
+        
+    public function get_visibility(){
+        //si l'utilisateur est administrateur il voit tout
+        //dans les autres cas la visibilité est limitée aux utilisateur de ses cercles
+        //qu'ils soient actif ou pas même les génériques
+        if(userAuth('profil_id')==1):
+            return null;
+        else:
+            return $this->requestAction('assoentiteutilisateurs/json_get_all_users/'. userAuth('id'));  
+        endif;
+    }
+    
+    public function get_action_priority_filter($id){
+        $result = array();
+        switch ($id){
+            case 'tous':
+            case null:  
+                $result['condition']="1=1";
+                $result['filter'] = "toutes les priorités";
+                break;                  
+            case '1':
+                $result['condition']="Action.PRIORITE='normale'";
+                $result['filter'] = "la priorité normale";
+                break;                      
+            case '2':
+                $result['condition']="Action.PRIORITE='moyenne'";
+                $result['filter'] = "la priorité moyenne";
+                break;   
+            case '3':
+                $result['condition']="Action.PRIORITE='haute'";
+                $result['filter'] = "la priorité haute";
+                break;   
+        }  
+        return $result;
+    }
+    
+    public function get_action_etat_filter($id){
+        $result = array();
+        switch ($id){
+            case 'tous':    
+                $result['condition']="1=1";
+                $result['filter'] = "tous les états";
+                break;                 
+            case 'news':    
+                $result['condition']="Action.NEW=1 AND Action.AVANCEMENT < 10 AND Action.STATUT <> 'terminée'";
+                $result['filter'] = "nouvellement créées";
+                break; 
+            case '1':
+                $result['condition']="Action.STATUT='à faire'";
+                $result['filter'] = "l'état à faire";
+                break;                      
+            case '2':
+                $result['condition']="Action.STATUT='en cours'";
+                $result['filter'] = "l'état en cours";
+                break;    
+            case '3':
+                $result['condition']="Action.STATUT='terminée'";
+                $result['filter'] = "l'état terminée";
+                break;    
+            case '4':
+                $result['condition']="Action.STATUT='livrée'";
+                $result['filter'] = "l'état livrée";
+                break;    
+            case '5':
+                $result['condition']="Action.STATUT='annulée'";
+                $result['filter'] = "l'état annulée";
+                break;                        
+            case '6':
+            case null :
+                $result['condition']="(Action.STATUT ='à faire' OR Action.STATUT ='en cours')";
+                $result['filter'] = "l'état à faire ou en cours";
+                break;
+            }  
+            return $result;
+    }
+    
+    public function get_action_emetteur_filter($id,$visibility){
+        $result = array();
+        $nomlong = $this->Action->Utilisateur->find('first',array('conditions'=>array("Utilisateur.id"=>$id),'recursive'=>-1));        
+        $result['nomlonge'] = isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : "";
+        switch ($id){                   
+            case null :
+            case 'tous':
+                if($visibility == null):
+                    $result['condition']='1=1';
+                elseif ($visibility!=''):
+                    $result['condition']="Action.utilisateur_id IN (".$visibility.")";
+                else:
+                    $result['condition']="Action.utilisateur_id =".userAuth('id');
+                endif;                
+                $result['filter'] = "tous les émetteurs " ;  
+                break;
+            default :
+                $result['condition']="Action.utilisateur_id=".$id;
+                $result['filter'] = "dont l'émetteur est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
+                break;                      
+        }     
+        return $result;
+    }
+    
+    public function get_action_responsable_filter($id,$visibility){
+        $result = array();
+        $nomlong = $this->Action->Utilisateur->recursive = 0;
+        $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array("Utilisateur.id"=>$id)));        
+        $result['nomlong'] = isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'];
+        if (areaIsVisible() || $id==userAuth('id')):
+        switch ($id){
+            case 'tous':   
+                //TODO : pose un problème pour le CONTRIBUTEURS
+                //FIXME : Il faut probablement revoir la façon de sauvegarder les contributeurs
+                if($visibility == null):
+                    $result['condition']='1=1';
+                elseif ($visibility!=''):
+                    $result['condition']="Action.destinataire IN (".$visibility.")";
+                else:
+                    $result['condition']="Action.destinataire =".userAuth('id');
+                endif;                          
+                $result['filter'] = "de tous les agents";
+                break; 
+            case 'equipe':   
+                //TODO : pose un problème pour le CONTRIBUTEURS
+                $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
+                $result['condition']="(Action.destinataire in (".$monequipe.") OR (CONTRIBUTEURS LIKE '%".userAuth('id').",%' OR CONTRIBUTEURS LIKE '%,".userAuth('id')."%' OR CONTRIBUTEURS = '".userAuth('id')."'))";
+                $result['filter'] = "de mon équipe";
+                break;                     
+            case null :
+                //TODO : pose un problème pour le CONTRIBUTEURS
+                $result['condition']="(Action.destinataire='".userAuth('id')."' OR (CONTRIBUTEURS LIKE '%".userAuth('id').",%' OR CONTRIBUTEURS LIKE '%,".userAuth('id')."%' OR CONTRIBUTEURS = '".userAuth('id')."'))";
+                $result['filter'] = "dont le responsable est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
+                break;                      
+            default :
+                //TODO : pose un problème pour le CONTRIBUTEURS
+                $result['condition']="(Action.destinataire='".$id."' OR (`CONTRIBUTEURS` LIKE '%".$id.",%' OR `CONTRIBUTEURS` LIKE '%,".$id."%' OR `CONTRIBUTEURS` = '".$id."'))";
+                $result['filter'] = "dont le responsable est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
+                break;                      
+        }  
+        else:
+            //TODO : pose un problème pour le CONTRIBUTEURS
+            $result['condition']="Action.destinataire='".userAuth('id')."' OR (`CONTRIBUTEURS` LIKE '%".userAuth('id').",%' OR `CONTRIBUTEURS` LIKE '%,".userAuth('id')."%' OR `CONTRIBUTEURS` = '".userAuth('id')."'))";
+            $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>userAuth('id'))));
+            $result['filter'] = "dont le responsable est ".$nomlong['Utilisateur']['NOMLONG'];
+        endif;  
+        return $result;
+    }
+    
+    public function get_action_utilisateur_id($id){
+        return $this->Action->find('first',array('conditions'=>array('Action.id'=>$id),'fields'=>array('utilisateur_id')));
+    }
+    
+    public function get_action_periodicity($id){
+        return $this->Action->Periodicite->find('first',array('conditions'=>array('Periodicite.id'=>$id),'recursive'=>0));
+    }
+    
+    public function get_action_history($id){
+        return $this->Action->Historyaction->find('all',array('conditions'=>array('Historyaction.action_id'=>$id),'order'=>array('Historyaction.id'=>'desc'),'recursive'=>-1));        
+    }
+    
+    public function get_list_profil_autorised(){
+        $profilin = "";
+        $listeprofilsautorises = $this->Action->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.MODEL'=>'actions','OR'=>array('Autorisation.ADD'=>1,'Autorisation.EDIT'=>1,'Autorisation.DELETE'=>1))));
+        $profilin = '';
+        foreach($listeprofilsautorises as $liste):
+            $profilin .= $liste['Autorisation']['profil_id'].',';
+        endforeach;  
+        return substr_replace($profilin ,"",-1);
+    }
+    
+    public function get_all_responsables($profil,$visibility){
+        $result = null;
+        if($profil!= '' && $visibility!=''):
+            $result = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.$profil.')','Utilisateur.id IN ('.$visibility.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+        elseif($profil!= ''):
+            $result = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.$profil.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+        else:
+            $result = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id >1'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+        endif;
+        return $result;
+    }
+    
+    public function get_list_responsables($profil,$visibility){
+        $result = null;
+        if($profil!= '' && $visibility!=''):
+            $result = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.$profil.')','Utilisateur.id IN ('.$visibility.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+        elseif($profil!= ''):
+            $result = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.$profil.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+        else:
+            $result = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id >1'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+        endif;
+        return $result;
+    }    
+    
+    public function get_export($conditions){
+        $export = $this->Action->find('all',array('conditions'=>$conditions,'order' => array('Action.ECHEANCE' => 'asc'),'recursive'=>0));
+        $this->Session->delete('xls_export');
+        $this->Session->write('xls_export',$export);    
+    }   
+    
+    public function get_chronoline_action($conditions){
+        $listeactions = $this->Action->find('all',array('conditions'=>$conditions,'recursive'=>0));
+        $this->Session->delete('actions_index');
+        $this->Session->write('actions_index',$listeactions);        
+    }
 /**
  * index method
  *
  * @return void
  */
 	public function index($filtrePriorite=null,$filtreEtat=null,$filtreResponsable=null,$filtreEmetteur=null) {
-            //$this->Session->delete('history');
             if (isAuthorized('actions', 'index')) :
-                switch ($filtrePriorite){
-                    case 'tous':
-                    case null:  
-                    case '<': 
-                        $newconditions[]="1=1";
-                        $fpriorite = "toutes les priorités";
-                        break;                  
-                    case '1':
-                        $newconditions[]="Action.PRIORITE='normale'";
-                        $fpriorite = "la priorité normale";
-                        break;                      
-                    case '2':
-                        $newconditions[]="Action.PRIORITE='moyenne'";
-                        $fpriorite = "la priorité moyenne";
-                        break;   
-                    case '3':
-                        $newconditions[]="Action.PRIORITE='haute'";
-                        $fpriorite = "la priorité haute";
-                        break;   
-                    }  
-                $this->set('fpriorite',$fpriorite); 
-                switch ($filtreEtat){
-                    case 'tous':    
-                        $newconditions[]="1=1";
-                        $fetat = "tous les états";
-                        break;                 
-                    case 'news':    
-                        $newconditions[]="Action.NEW=1 AND Action.AVANCEMENT < 10 AND Action.STATUT <> 'terminée'";
-                        $fetat = "nouvellement créées";
-                        break; 
-                    case '1':
-                        $newconditions[]="Action.STATUT='à faire'";
-                        $fetat = "l'état à faire";
-                        break;                      
-                    case '2':
-                        $newconditions[]="Action.STATUT='en cours'";
-                        $fetat = "l'état en cours";
-                        break;    
-                    case '3':
-                        $newconditions[]="Action.STATUT='terminée'";
-                        $fetat = "l'état terminée";
-                        break;    
-                    case '4':
-                        $newconditions[]="Action.STATUT='livrée'";
-                        $fetat = "l'état livrée";
-                        break;    
-                    case '5':
-                        $newconditions[]="Action.STATUT='annulée'";
-                        $fetat = "l'état annulée";
-                        break;                        
-                    case '6':
-                    case null :
-                        $newconditions[]="(Action.STATUT ='à faire' OR Action.STATUT ='en cours')";
-                        $fetat = "l'état à faire ou en cours";
-                        break;
-                    }  
-                $this->set('fetat',$fetat); 
-                if (areaIsVisible() || $filtreResponsable==userAuth('id')):
-                switch ($filtreResponsable){
-                    case 'tous':   
-                        $newconditions[]="1=1";
-                        $fresponsable = "de tous les agents";
-                        break; 
-                    case 'equipe':   
-                        $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
-                        $newconditions[]="Action.destinataire in (".$monequipe.")";
-                        $fresponsable = "de mon équipe";
-                        break;                     
-                    case null :
-                        $newconditions[]="Action.destinataire='".userAuth('id')."'OR (`CONTRIBUTEURS` LIKE '%".userAuth('id').",%' OR `CONTRIBUTEURS` LIKE '%,".userAuth('id')."%' OR `CONTRIBUTEURS` = '".userAuth('id')."')";
-                        $nomlong = $this->Action->Utilisateur->recursive = -1;
-                        $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>userAuth('id'))));
-                        $fresponsable = "dont le responsable est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
-                        $this->set('nomlong',isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG']);
-                        break;                      
-                    default :
-                        $newconditions[]="Action.destinataire='".$filtreResponsable."'OR (`CONTRIBUTEURS` LIKE '%".$filtreResponsable.",%' OR `CONTRIBUTEURS` LIKE '%,".$filtreResponsable."%' OR `CONTRIBUTEURS` = '".$filtreResponsable."')";
-                        $nomlong = $this->Action->Utilisateur->recursive = -1;
-                        $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>$filtreResponsable)));
-                        $fresponsable = "dont le responsable est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
-                        $this->set('nomlong',isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG']);
-                        break;                      
-                }  
-                else:
-                    $newconditions[]="Action.destinataire='".userAuth('id')."'";
-                    $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>userAuth('id'))));
-                    $fresponsable = "dont le responsable est ".$nomlong['Utilisateur']['NOMLONG'];
-                endif;
-                $this->set('fresponsable',$fresponsable);
-                switch ($filtreEmetteur){                   
-                    case null :
-                        /*$newconditions[]="Action.utilisateur_id='".userAuth('id')."'";
-                        $nomlong = $this->Action->Utilisateur->recursive = -1;
-                        $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>userAuth('id'))));
-                        $femetteur = "dont l'émetteur est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
-                        $this->set('nomlonge',isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG']);
-                        break;  */ 
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $femetteur = "tous les émetteurs " ;                        
-                        break;
-                    default :
-                        $newconditions[]="Action.utilisateur_id='".$filtreEmetteur."'";
-                        $nomlong = $this->Action->Utilisateur->recursive = -1;
-                        $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('NOMLONG'),'conditions'=>array("Utilisateur.id"=>$filtreEmetteur)));
-                        $femetteur = "dont l'émetteur est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
-                        $this->set('nomlonge',isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG']);
-                        break;                      
-                }                  
-                $this->set('femetteur',$femetteur); 
-                $listeprofilsautorises = $this->Action->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.MODEL'=>'actions','OR'=>array('Autorisation.ADD'=>1,'Autorisation.EDIT'=>1,'Autorisation.DELETE'=>1))));
-                $profilin = '';
-                foreach($listeprofilsautorises as $liste):
-                    $profilin .= $liste['Autorisation']['profil_id'].',';
-                endforeach;                
-                $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.substr_replace($profilin ,"",-1).')'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+                $listuser = $this->get_visibility();
+                $getpriority = $this->get_action_priority_filter($filtrePriorite);
+                $getetat = $this->get_action_etat_filter($filtreEtat);
+                $getemetteur = $this->get_action_emetteur_filter($filtreEmetteur, $listuser);
+                $getdestinataire = $this->get_action_responsable_filter($filtreResponsable, $listuser);
+                $newconditions=array($getpriority['condition'],$getetat['condition'],$getemetteur['condition'],$getdestinataire['condition']);
+                $this->set('fpriorite',$getpriority['filter']); 
+                $this->set('fetat',$getetat['filter']);               
+                $this->set('femetteur',$getemetteur['filter']);    
+                $this->set('nomlonge',$getemetteur['nomlonge']); 
+                $this->set('nomlong',$getdestinataire['nomlong']); 
+                $this->set('fresponsable',$getdestinataire['filter']);
+                $profils_autorised = $this->get_list_profil_autorised();
+                $responsables = $this->get_all_responsables($profils_autorised, $listuser);
                 $this->set('responsables',$responsables);                 
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-		$this->Action->recursive = 0;
-                $listeactions = $this->Action->find('all',array('conditions'=>$newconditions,'recursive'=>0));
-                $this->Session->delete('actions_index');
-                $this->Session->write('actions_index',$listeactions);
-                $export = $this->Action->find('all',array('conditions'=>$newconditions,'order' => array('Action.ECHEANCE' => 'asc'),'recursive'=>0));
-                $this->Session->delete('xls_export');
-                $this->Session->write('xls_export',$export);                 
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));
                 $this->set('actions', $this->paginate());
-                
+                $this->get_export($newconditions);
+                $this->get_chronoline_action($newconditions);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif; 
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('actions', 'view')) :
-		if (!$this->Action->exists($id)) {
-			throw new NotFoundException(__('Action incorrecte'));
-		}
-		$options = array('conditions' => array('Action.' . $this->Action->primaryKey => $id));
-		$this->set('action', $this->Action->find('first', $options));
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();            
-            endif;                
 	}
 
 /**
@@ -241,13 +314,13 @@ class ActionsController extends AppController {
                     $end = new DateTime(CUSDate($periodicite['Periodicite']['END']));
                     $period = new DatePeriod($start,$interval,$end);
                     $whichday = array();
-                    if ($periodicite['Periodicite']['LU']) $whichday[]=1;
-                    if ($periodicite['Periodicite']['MA']) $whichday[]=2;
-                    if ($periodicite['Periodicite']['ME']) $whichday[]=3;
-                    if ($periodicite['Periodicite']['JE']) $whichday[]=4;
-                    if ($periodicite['Periodicite']['VE']) $whichday[]=5;
-                    if ($periodicite['Periodicite']['SA']) $whichday[]=6;
-                    if ($periodicite['Periodicite']['DI']) $whichday[]=7;
+                    if ($periodicite['Periodicite']['LU']) { $whichday[]=1; }
+                    if ($periodicite['Periodicite']['MA']) { $whichday[]=2; }
+                    if ($periodicite['Periodicite']['ME']) { $whichday[]=3; }
+                    if ($periodicite['Periodicite']['JE']) { $whichday[]=4; }
+                    if ($periodicite['Periodicite']['VE']) { $whichday[]=5; }
+                    if ($periodicite['Periodicite']['SA']) { $whichday[]=6; }
+                    if ($periodicite['Periodicite']['DI']) { $whichday[]=7; }
                     foreach($period as $dt){
                       for ($i=1; $i<8; $i++):
                         $dt->add(new DateInterval('P1D'));
@@ -312,22 +385,26 @@ class ActionsController extends AppController {
                         /** Avant la création de l'action on doit créer une périodicité **/
                         $this->request->data['Action']['periodicite_id'] = $this->savePeriodicite($this->request->data['Action']['REPETITION']);
                         if ($this->request->data['Action']['REPETITION']!='Q'):
-                            $days = $this->calculDaysFromPeriodicite($this->request->data['Action']['periodicite_id'],$this->request->data['Action']['ECHEANCE']);
+                            $days = $this->calculDaysFromPeriodicite($this->request->data['Action']['periodicite_id']);    //,$this->request->data['Action']['ECHEANCE']
                         else :
                             $days[] = CUSDate($this->request->data['Action']['ECHEANCE']);
                         endif;
                         $record = $this->request->data;
                         $success = false;
+                        $i = 0;
                         foreach($days as $day):
                             $record['Action']['ECHEANCE'] = $day;
                             $start = new DateTime($day);
                             $start->sub(new DateInterval('P5D'));
-                            $record['Action']['DEBUT'] = $start->format("Y-m-d");
+                            $record['Action']['DEBUT'] = $i==0 ? $this->request->data['Action']['DEBUT']!='' ? $this->request->data['Action']['DEBUT'] : $start->format("Y-m-d")  : $start->format("Y-m-d");
+                            $i = 1;
                             $record['Action']['STATUT'] = $record['Action']['STATUT']=='' ? 'à faire': $record['Action']['STATUT'];
                             unset($record['Action']['FREQUENCE']);
                             $record['Action']['FREQUENCE'] = isset($this->request->data['Action']['REPETITION']) ? $this->request->data['Action']['REPETITION'] : $this->request->data['Action']['FREQUENCE'];
                             $this->Action->create();
                             if ($this->Action->save($record)) {
+                                    //FIXME : Il faut probablement revoir la façon de sauvegarder les contributeurs
+                                    //FIXME : faut-il enregistrer à deux endroits 'RISQUE'
                                     $this->saveHistory($this->Action->getInsertID()); 
                                     $this->Session->setFlash(__('Action sauvegardée',true),'flash_success');
                                     $this->sendmailactions($this->Action->find('first',array('conditions'=>array('Action.id'=>$this->Action->getInsertID()))));
@@ -340,34 +417,19 @@ class ActionsController extends AppController {
                         if($success) $this->History->goBack(1);
                     endif;
 		}
-                $etats = Configure::read('etatAction');
-                $this->set('etats',$etats); 
+                $listuser = $this->get_visibility();  
+                $etats = Configure::read('etatAction'); 
                 $priorites = Configure::read('prioriteAction');
-                $this->set('priorites',$priorites); 
                 $types = Configure::read('typeAction');
-                $this->set('types',$types); 
-                $nomlong = $this->Action->Utilisateur->recursive = -1;
-                $listeprofilsautorises = $this->Action->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.MODEL'=>'actions','OR'=>array('Autorisation.ADD'=>1,'Autorisation.EDIT'=>1,'Autorisation.DELETE'=>1))));
-                $profilin = '';
-                foreach($listeprofilsautorises as $liste):
-                    $profilin .= $liste['Autorisation']['profil_id'].',';
-                endforeach;
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.substr_replace($profilin ,"",-1).')'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
-                $this->set('destinataires',$destinataires); 
+                $profil = $this->get_list_profil_autorised();
                 $activitesagent = $this->findActiviteForUtilisateur(userAuth('id'));
-                $this->set('activitesagent',$activitesagent);    
-                $this->Action->Domaine->recursive = -1;
-                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM')));
-                $this->set('domaines',$domaines); 
-                $this->Action->Utilisateur->recursive = -1;
-		$nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
-		$this->set('nomlong', $nomlong);   
+                $destinataires = $this->get_list_responsables($profil, $listuser);
+                $domaines = $this->requestAction('domaines/get_list');
+                $nomlong = $this->requestAction('utilisateurs/get_nomlong',array('pass'=>array(userAuth('id'))));
                 $all_utilisateurs = $this->requestAction(('utilisateurs/get_list_actif'));
-                $this->set(compact('all_utilisateurs'));  
                 $list_sections = $this->Action->requestAction('sections/getList');
-                $this->set('list_sections',$list_sections);   
                 $contributeurs = array();
-                $this->set(compact('contributeurs'));
+                $this->set(compact('types','etats','priorites','activitesagent','destinataires','domaines','nomlong','all_utilisateurs','list_sections','contributeurs')); 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();      
@@ -424,57 +486,46 @@ class ActionsController extends AppController {
                         $contributeurs_nom = $this->requestAction('utilisateurs/get_nom',array('pass'=>array($this->request->data['Action']['CONTRIBUTEURS'])));
                         $this->set(compact('contributeurs','contributeurs_nom'));                        
 		}
-                $nbActivite = $this->ActiviteExists($id);
-                $this->set('nbActivite',$nbActivite);
-                $this->set('actionId',$id);
-                if ($nbActivite < 2)  {
-                    $this->Action->Activitesreelle->recursive = -1;
-                    $activite = $this->Action->Activitesreelle->find('first',array('conditions'=>array('Activitesreelle.action_id'=>$id),'fields'=>array('id')));
-                    $this->set('activiteId',$activite);  
-                }
-                $this->Action->recursive = -1;
-                $utilisateurId = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id),'fields'=>array('utilisateur_id')));
-                $this->set('utilisateurId', $utilisateurId);
-                $etats = Configure::read('etatAction');
-                $this->set('etats',$etats); 
+                $listuser = $this->get_visibility();  
+                $etats = Configure::read('etatAction'); 
                 $priorites = Configure::read('prioriteAction');
-                $this->set('priorites',$priorites); 
                 $types = Configure::read('typeAction');
-                $this->set('types',$types);    
-                $this->Action->Utilisateur->recursive = -1;
-                $listeprofilsautorises = $this->Action->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.MODEL'=>'actions','OR'=>array('Autorisation.ADD'=>1,'Autorisation.EDIT'=>1,'Autorisation.DELETE'=>1))));
-                $profilin = '';
-                foreach($listeprofilsautorises as $liste):
-                    $profilin .= $liste['Autorisation']['profil_id'].',';
-                endforeach;
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.substr_replace($profilin ,"",-1).')'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
-                $this->set('destinataires',$destinataires); 
+                $profil = $this->get_list_profil_autorised();
                 $activitesagent = $this->findActiviteForUtilisateur(userAuth('id'));
-                $this->set('activitesagent',$activitesagent);  
-                $livrables = $this->findLivrable($id);
-                $this->set('livrables',$livrables);
-                $this->Action->Domaine->recursive = -1;
-                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM')));
-                $this->set('domaines',$domaines);
-                $this->Action->Historyaction->recursive = -1;
-                $histories = $this->Action->Historyaction->find('all',array('conditions'=>array('Historyaction.action_id'=>$id),'order'=>array('Historyaction.id'=>'desc')));
-                $this->set('histories',$histories);
-                $this->Action->Utilisateur->recursive = -1;
-		$nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'))));
-		$this->set('nomlong', $nomlong);  
-                $periodicite = $this->Action->Periodicite->find('first',array('conditions'=>array('Periodicite.id'=>$this->request->data['Action']['periodicite_id']),'recursive'=>0));
-                $this->set('periodicite',$periodicite);
-                $addlivrables = $this->requestAction('actionslivrables/get_list_livrables');
+                $destinataires = $this->get_list_responsables($profil, $listuser);
+                $domaines = $this->requestAction('domaines/get_list');
+                $nomlong = $this->requestAction('utilisateurs/get_nomlong',array('pass'=>array(userAuth('id'))));
                 $all_utilisateurs = $this->requestAction(('utilisateurs/get_list_actif'));
-                $this->set(compact('addlivrables','all_utilisateurs'));     
                 $list_sections = $this->Action->requestAction('sections/getList');
-                $this->set('list_sections',$list_sections);                
+                $contributeurs = array();
+                //spécifique edit
+                /*$nbActivite = $this->ActiviteExists($id);
+                $this->set('actionId',$id);
+                $utilisateurId = $this->get_action_utilisateur_id($id);*/
+                $periodicite = $this->get_action_periodicity($this->request->data['Action']['periodicite_id']);
+                $addlivrables = $this->requestAction('actionslivrables/get_list_livrables');
+                $all_utilisateurs = $this->requestAction(('utilisateurs/get_list_actif'));      
+                $list_sections = $this->Action->requestAction('sections/getList');
+                $histories = $this->get_action_history($id);
+                $livrables = $this->findLivrable($id);
+                //set all variables
+                $this->set(compact('types','etats','priorites','activitesagent','destinataires','domaines','nomlong','all_utilisateurs','list_sections','contributeurs','nbActivite','utilisateurId','livrables','periodicite','actionId','addlivrables','all_utilisateurs','list_sections','histories'));                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;                 
         }
 
+        public function allow_delete($id){
+            $result = false;
+            if(userAuth('profil_id') == 1) 
+            {$result = true; } 
+            else if(userAuth('profil_id') == -2) 
+            { $result = true; }            
+            else if(userAuth('id') == $id) 
+            { $result = true; }
+            return $result;
+        }
 /**
  * delete method
  *
@@ -490,23 +541,29 @@ class ActionsController extends AppController {
 			throw new NotFoundException(__('Action incorrecte'));
 		}
                 $action = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id),'recursive'=>0));
-                if($action['Action']['utilisateur_id'] ==  userAuth('id')):
+                if($this->allow_delete($action['Action']['utilisateur_id'])):
                     if ($this->Action->delete()) {
                             if($msg) :
                                 $this->sendmailactiondelete($action);
                                 $this->Session->setFlash(__('Action supprimée',true),'flash_success');
                                 $this->History->goBack(1);
+                            else:
+                                return true;
                             endif;
                     }
                     if($msg) :
                         $this->Session->setFlash(__('Action <b>NON</b> supprimée',true),'flash_failure');
                         $this->History->goBack(1);
+                    else:
+                        return true;
                     endif;
                 else:
                     if($msg) :
                         $this->Session->setFlash(__('Action <b>NON</b> supprimée car vous n\'êtes pas l\'émetteur de cette action',true),'flash_failure');
                         $this->History->goBack(1);
-                    endif;  
+                    else:
+                        return true;
+                    endif; 
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -519,18 +576,44 @@ class ActionsController extends AppController {
  *
  * @return void
  */
-	public function search() {
-            if (isAuthorized('actions', 'index')) :
-                $keyword=isset($this->params->data['Action']['SEARCH']) ? $this->params->data['Action']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Action.OBJET LIKE '%".$keyword."%'","Utilisateur.NOM LIKE '%".$keyword."%'","Utilisateur.PRENOM LIKE '%".$keyword."%'","Action.COMMENTAIRE LIKE '%".$keyword."%'","Activite.NOM LIKE '%".$keyword."%'","Domaine.NOM LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Action->recursive = 0;
-                $this->set('actions', $this->paginate());
-                $this->Action->Utilisateur->recursive = -1;
-                $responsables = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
-                $this->set('responsables',$responsables);                   
-                $this->render('index');
+	public function search($filtrePriorite=null,$filtreEtat=null,$filtreResponsable=null,$filtreEmetteur=null,$keywords=null) {
+            if (isAuthorized('actions', 'index')) :       
+                if(isset($this->params->data['Action']['SEARCH'])):
+                    $keywords = $this->params->data['Action']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords));  
+                    $listuser = $this->get_visibility();
+                    $getpriority = $this->get_action_priority_filter($filtrePriorite);
+                    $getetat = $this->get_action_etat_filter($filtreEtat);
+                    $getemetteur = $this->get_action_emetteur_filter($filtreEmetteur, $listuser);
+                    $getdestinataire = $this->get_action_responsable_filter($filtreResponsable, $listuser);
+                    $newconditions=array($getpriority['condition'],$getetat['condition'],$getemetteur['condition'],$getdestinataire['condition']);
+                    $this->set('fpriorite',$getpriority['filter']); 
+                    $this->set('fetat',$getetat['filter']);               
+                    $this->set('femetteur',$getemetteur['filter']);    
+                    $this->set('nomlonge',$getemetteur['nomlonge']); 
+                    $this->set('nomlong',$getdestinataire['nomlong']); 
+                    $this->set('fresponsable',$getdestinataire['filter']);
+                    $profils_autorised = $this->get_list_profil_autorised();
+                    $responsables = $this->get_all_responsables($profils_autorised, $listuser);
+                    $this->set('responsables',$responsables);                 
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Action.OBJET LIKE '%".$value."%'","Utilisateur.NOM LIKE '%".$value."%'","Utilisateur.PRENOM LIKE '%".$value."%'","Action.COMMENTAIRE LIKE '%".$value."%'","Activite.NOM LIKE '%".$value."%'","Domaine.NOM LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
+                    $this->get_export($conditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive' => 0));
+                    $this->set('actions', $this->paginate());
+                    $this->get_chronoline_action($conditions);
+                else:
+                    $this->redirect(array('action'=>'index',$filtrePriorite,$filtreEtat,$filtreResponsable,$filtreEmetteur));
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -538,8 +621,9 @@ class ActionsController extends AppController {
         }     
         
         public function findActiviteForUtilisateur($utilisateur_id = null) {
+            $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.$utilisateur_id);
             $this->Action->Activite->recursive = 0;
-            $results = $this->Action->Activite->find('all',array('fields' => array('Activite.id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1')));
+            $results = $this->Action->Activite->find('all',array('fields' => array('Activite.id','Activite.NOM','Projet.NOM'),'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'conditions'=>array('Activite.projet_id>1','Activite.projet_id IN ('.$listprojets.')')));
             return $results;
         }        
 
@@ -622,7 +706,7 @@ class ActionsController extends AppController {
  * rapport
  */        
         public function rapport() {
-            $this->set('title_for_layout','Rapport des actions');
+            $this->set('title_for_layout','Rapport des actions par agents');
             if (isAuthorized('actions', 'rapports')) :
                 if ($this->request->is('post')):
                     foreach ($this->request->data['Action']['destinataire'] as &$value) {
@@ -657,14 +741,8 @@ class ActionsController extends AppController {
                         $this->Session->write('details',$details);
                     endif;                      
                 endif;
-                /*$profils = $this->Action->Utilisateur->Profil->Autorisation->find('all',array('fields'=>array('Autorisation.profil_id'),'conditions'=>array('Autorisation.MODEL'=>'actions','Autorisation.RAPPORTS'=>1),'recursive'=>0));
-                $profilin = '';
-                foreach($profils as $profil):
-                    $profilin .= $profil['Autorisation']['profil_id'].',';
-                endforeach;
-                $this->set('profil',$profilin);  */
-                //$destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.substr_replace($profilin ,"",-1).')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $listuser = $this->requestAction('assoentiteutilisateurs/json_get_all_users/'. userAuth('id'));                  
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0','Utilisateur.id IN ('.$listuser.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
                 $this->set('destinataires',$destinataires);  
                 $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
@@ -673,7 +751,34 @@ class ActionsController extends AppController {
                 throw new NotAuthorizedException();
             endif; 
 	}     
-           
+
+/**
+ * rapport à partir des projets
+ */        
+        public function rapportprojet() {
+            $this->set('title_for_layout','Rapport des actions par projets');
+            if (isAuthorized('actions', 'rapports')) :
+                if ($this->request->is('post')):
+                    $options = array('pass' => array(implode(',',$this->request->data['Action']['projets'])));
+                    $activites = $this->requestAction('projets/get_activities',$options);
+                    $destinataire = 'Action.destinataire IN ('.$activites.')';
+                    $periode = 'Action.ECHEANCE BETWEEN "'.  startWeek(CUSDate($this->request->data['Action']['START'])).'" AND "'.  endWeek(CUSDate($this->request->data['Action']['END'])).'"';
+                    $chartresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Utilisateur.NOM','Action.destinataire','Utilisateur.PRENOM','COUNT(Action.id) AS NB','Action.STATUT'),'conditions'=>array($destinataire,$periode,'Action.CRA'=>1),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'group'=>array('MONTH(Action.ECHEANCE)','YEAR(Action.ECHEANCE)'),'recursive'=>0));
+                    $this->set('chartresults',$chartresult);                    
+                    $detailrapportresult = $this->Action->find('all',array('fields'=>array('MONTH(Action.ECHEANCE) AS MONTH', 'YEAR(Action.ECHEANCE) AS YEAR','Action.destinataire','Action.NIVEAU','Action.STATUT','Action.OBJET','Domaine.NOM','Action.activite_id'),'conditions'=>array($destinataire,$periode,'Action.CRA'=>1),'order'=>array('MONTH(Action.ECHEANCE)'=>'asc','YEAR(Action.ECHEANCE)'=>'asc'),'recursive'=>1));
+                    $this->set('detailrapportresults',$detailrapportresult);
+                    $this->Session->delete('detailrapportresults');                      
+                    $this->Session->write('detailrapportresults',$detailrapportresult);                   
+                endif;
+                $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.userAuth('id'));
+                $projets = $this->Action->Activite->Projet->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Projet.ACTIF'=>1,'Projet.id IN ('.$listprojets.')'),'order'=>array('Projet.NOM'=>'asc'),'recursive'=>-1));
+                $this->set('projets',$projets);                
+            else :
+                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
+                throw new NotAuthorizedException();
+            endif; 
+	}             
+        
         public function last7days() {
             $this->set('title_for_layout','Rapport des actions modifiées sur les 7 derniers jours');
             if (isAuthorized('actions', 'rapports')) :
@@ -694,8 +799,9 @@ class ActionsController extends AppController {
                     $this->Session->delete('details');
                     $this->Session->write('details',$details);                
                 endif;
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
-                $this->set('destinataires',$destinataires);  
+                $listuser = $this->requestAction('assoentiteutilisateurs/json_get_all_users/'. userAuth('id'));                  
+                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0','Utilisateur.id IN ('.$listuser.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $this->set('destinataires',$destinataires); 
                 $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
                 $this->set('domaines',$domaines);                
             else :
@@ -833,18 +939,22 @@ class ActionsController extends AppController {
         }        
         
         public function incra(){
+            $this->autoRender = false;
             $ids = explode('-', $this->request->data('all_ids'));
             if (count($ids)>1):
                 $ids = explode('-', $this->request->data('all_ids'));
                 if(count($ids)>0 && $ids[0]!=""):
-                    foreach($ids as $id):
-                        $this->Action->id = $id;
-                        $cra = $this->Action->find('first',array('fields'=>array('CRA'),'conditions'=>array('Action.id'=>$id),'recursive'=>-1));
-                        if($this->Action->saveField('CRA', !$cra['Action']['CRA'])):     
-                            $this->Session->setFlash(__('Information du CRA sauvegardée',true),'flash_success');
-                        else :
-                            $this->Session->setFlash(__('Information du CRA <b>NON</b> sauvegardée',true),'flash_failure');
-                        endif; 
+                    foreach ($ids as $id) :
+                        if ($this->Action->exists($id)) :
+                            $this->Action->id = $id;
+                            $cra = $this->Action->find('first',array('fields'=>array('CRA'),'conditions'=>array('Action.id'=>$id),'recursive'=>-1));
+                            $boolcra = $cra['Action']['CRA']==1 ? 0 : 1;
+                            if($this->Action->saveField('CRA', $boolcra)):     
+                                $this->Session->setFlash(__('Information du CRA sauvegardée',true),'flash_success');
+                            else :
+                                $this->Session->setFlash(__('Information du CRA <b>NON</b> sauvegardée',true),'flash_failure');
+                            endif; 
+                        endif;
                     endforeach;
                     sleep(3);
                     echo $this->Session->setFlash(__('Mises à jour complétées',true),'flash_success');
@@ -855,13 +965,15 @@ class ActionsController extends AppController {
                 $this->Action->id = $this->request->data('all_ids');
                 $id = $this->request->data('all_ids');
                 $cra = $this->Action->find('first',array('fields'=>array('CRA'),'conditions'=>array('Action.id'=>$id),'recursive'=>-1));
-                if($this->Action->saveField('CRA', !$cra['Action']['CRA'])):     
+                $boolcra = $cra['Action']['CRA']==1 ? 0 : 1;
+                if($this->Action->saveField('CRA', $boolcra)):     
                     $this->Session->setFlash(__('Information du CRA sauvegardée',true),'flash_success');
                 else :
                     $this->Session->setFlash(__('Information du CRA <b>NON</b> sauvegardée',true),'flash_failure');
                 endif;                
             endif;
-            exit();
+            return $this->request->data('all_ids');
+            //exit();
         }
         
         
@@ -1025,7 +1137,6 @@ class ActionsController extends AppController {
                     'description'=>"Résumé :<br>".$resume."<hr>Echéance le : ".$data['Action']['ECHEANCE']."<br>Charge : ".($data['Action']['DUREEPREVUE']/8)." jour(s)<br>Etat : ".$data['Action']['STATUT']."<br>Avancement : ".$data['Action']['AVANCEMENT']." %"
                 );
             endforeach;
-            
             return $eventAtts;
         }
         
@@ -1049,48 +1160,49 @@ class ActionsController extends AppController {
         }     
                
         public function deleteall(){
+            $this->autoRender = false;
             $ids = explode('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
-                    $this->Action->id = $id;
-                    $action = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id),'recursive'=>0));
-                    if($action['Action']['utilisateur_id'] ==  userAuth('id')):            
-                        if($this->Action->delete()):
-                            echo $this->Session->setFlash(__('Actions supprimées',true),'flash_success'); 
-                        else :
-                            $this->Session->setFlash(__('Actions <b>NON</b> supprimées',true),'flash_failure');
-                        endif;
+                    if($this->delete($id,false)):
+                        echo $this->Session->setFlash(__('Actions supprimées',true),'flash_success'); 
+                    else :
+                        echo $this->Session->setFlash(__('Actions <b>NON</b> supprimées',true),'flash_failure');
                     endif;
                 endforeach;
                 sleep(3);
-                echo $this->Session->setFlash(__('Suppressions réalisées si vous en êtes l\émetteur uniquement',true),'flash_success');
+                echo $this->Session->setFlash(__('Suppressions réalisées si vous en êtes l\'émetteur uniquement',true),'flash_success');
             else:
                 echo $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
             endif;
-            exit(); 
+            return $this->request->data('all_ids');
+            //exit(); 
         }
         
         public function closeall(){
+            $this->autoRender = false;
             $ids = explode('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
-                    $this->Action->id = $id;
-                    $cra = $this->Action->find('first',array('fields'=>array('CRA'),'conditions'=>array('Action.id'=>$id),'recursive'=>-1));
-                    $this->Action->saveField('AVANCEMENT', '100');
-                    $this->Action->saveField('STATUT', 'terminée');
-                    if($this->Action->saveField('NEW', '0')):
-                        $this->saveHistory($id);  
-                        echo $this->Session->setFlash(__('Actions cloturées',true),'flash_success'); 
-                    else :
-                        $this->Session->setFlash(__('Actions <b>NON</b> clotûrées correctement',true),'flash_failure');
-                    endif;
+                    if ($this->Action->exists($id)) {
+                        $this->Action->id = $id;
+                        $this->Action->saveField('NEW', 0);
+                        $this->Action->saveField('STATUT', 'terminée');
+                        if($this->Action->saveField('AVANCEMENT', '100')):
+                            $this->saveHistory($id);  
+                            echo $this->Session->setFlash(__('Actions cloturées',true),'flash_success'); 
+                        else :
+                            $this->Session->setFlash(__('Actions <b>NON</b> clotûrées correctement',true),'flash_failure');
+                        endif;
+                    }
                 endforeach;
                 sleep(3);
                 echo $this->Session->setFlash(__('Mises à jour complétées',true),'flash_success');
             else:
                 echo $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
             endif;
-            exit();                       
+            return $this->request->data('all_ids');
+            //exit();                       
         }
         
         public function risques(){

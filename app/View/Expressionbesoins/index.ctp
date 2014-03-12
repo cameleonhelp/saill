@@ -7,7 +7,7 @@
         $pass4 = isset($this->params->pass[4]) ? $this->params->pass[4] : 'tous';
         $pass5 = isset($this->params->pass[5]) ? $this->params->pass[5] : 'tous';        
         ?>     
-        <nav class="navbar toolbar marginright20">
+        <nav class="navbar toolbar ">
                 <ul class="nav navbar-nav toolbar">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('expressionbesoins', 'add')) : ?>
                 <li><?php echo $this->Html->link('<span class="glyphicons plus size14 margintop4"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
@@ -54,7 +54,8 @@
                             <li><?php echo $this->Html->link($perimetre['Perimetre']['NOM'], array('action' => 'index',$pass0,$pass1,$pass2,$perimetre['Perimetre']['id']),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass3,$perimetre['Perimetre']['id']))); ?></li>
                          <?php endforeach; ?>
                       </ul>
-                 </li>                 
+                 </li>                
+                 <?php if (userAuth('profil_id')!='2' && isAuthorized('expressionbesoins', 'edit')) : ?>
                 <li class="divider-vertical-only"></li>
                 <!-- Actions groupées -->  
                 <li class="dropdown">
@@ -64,7 +65,8 @@
                      <!--<li><?php echo $this->Html->link('Livrer', "#",array('id'=>'livrelink')); ?></li>
                      <li><?php echo $this->Html->link('Terminer', "#",array('id'=>'closelink')); ?></li>-->
                      </ul>
-                </li>                    
+                </li>               
+                <?php endif; ?>
                 <li class="divider-vertical-only"></li>
                 <!-- Export -->
                 <li>
@@ -76,14 +78,14 @@
                 </ul> 
                 <?php echo $this->Form->create("Expressionbesoin",array('action' => 'search', 'class'=>'toolbar-form pull-right','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche ...','style'=>"width: 180px;",'class'=>"form-control")); ?>
-                    <button type="submit" class="btn form-btn showoverlay">Rechercher</button>
+                    <button type="submit" class="btn form-btn showoverlay"><span class="glyphicons notchange search"></span></button>
                 <?php echo $this->Form->end(); ?> 
         </nav>
-            <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 marginright20">
+            <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 ">
                 <?php $sort = isset($this->params->paging['Expressionbesoin']['options']['sort']) && $this->params->paging['Expressionbesoin']['options']['sort']== 'modified' ? true : false; ?>
                 <?php $arrow = $sort ? isset($this->params->paging['Expressionbesoin']['options']['direction']) && $this->params->paging['Expressionbesoin']['options']['direction']== 'asc' ? 'up_arrow' : 'down_arrow' : "blank"; ?>
                 <strong>Filtre appliqué : </strong><em>Liste des expressions de besoins <?php echo $strfilter; ?></em><span class="pull-right"><?php echo $this->Paginator->sort('modified','<span class="glyphicons '.$arrow.' showoverlay notchange"></span><span class="glyphicons calendar showoverlay notchange"></span>',array('escape' => false)); ?></div><?php } ?>     
-        <div class="marginright10">
+        <div class="">
 	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
 	<tr>
             <th style="text-align:center;width:15px !important;vertical-align: middle;padding-left:5px;"><?php echo $this->Form->input('checkall',array('type'=>'checkbox','label'=>false)) ; ?>
@@ -93,7 +95,7 @@
             <th><?php echo $this->Paginator->sort('Composant.NOM','Composant'); ?></th>
             <th><?php echo $this->Paginator->sort('Perimetre.NOM','Périmètre'); ?></th>
             <th><?php echo $this->Paginator->sort('Type.NOM','Type d\'environnement'); ?></th>
-            <th><?php echo $this->Paginator->sort('NOMINTERNE','Type Env. DSIT'); ?></th>
+            <th><?php echo $this->Paginator->sort('Dsitenv.NOM','Env. DSIT'); ?></th>
             <th><?php echo $this->Paginator->sort('Phase.NOM','Phase'); ?></th>
             <th><?php echo $this->Paginator->sort('USAGE','Usage'); ?></th>
             <th><?php echo $this->Paginator->sort('NOMUSAGE','Nom d\'usage'); ?></th>
@@ -121,7 +123,7 @@
 			<?php echo $expressionbesoin['Type']['NOM']; ?>
 		</td>
 		<td>
-			<?php echo $expressionbesoin['Expressionbesoin']['ENVIRONNEMENT']; ?>
+			<?php echo $expressionbesoin['Dsitenv']['NOM']; ?>
 		</td>                
 		<td>
 			<?php echo $expressionbesoin['Phase']['NOM']; ?>
@@ -138,15 +140,7 @@
 		<td style="text-align: center"><?php echo h($expressionbesoin['Expressionbesoin']['DATEFIN']); ?>&nbsp;</td>
 		<td class="actions">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('expressionbesoins', 'view')) : ?>
-                <?php $connect = (isset($expressionbesoin['Expressionbesoin']['CONNECT']) && $expressionbesoin['Expressionbesoin']['CONNECT']==true) ? 'Oui' : 'Non' ; ?>
-                <?php echo '<span class="glyphicons eye_open" data-rel="popover" data-title="<h3>Expression du besoin :</h3>" '
-                . 'data-content="'
-                        . '<contenttitle>Volumétrie: </contenttitle>'.h($expressionbesoin['Volumetrie']['NOM']).'<br/><contenttitle>'
-                        . '<contenttitle>Puissance: </contenttitle>'.h($expressionbesoin['Puissance']['NOM']).'<br/><contenttitle>'
-                        . '<contenttitle>Architecture: </contenttitle>'.h($expressionbesoin['Architecture']['NOM']).'<br/><contenttitle>'
-                        . '<contenttitle>PVU: </contenttitle>'.h($expressionbesoin['Expressionbesoin']['PVU']).'<br/><contenttitle>'
-                        . '<contenttitle>Connecté: </contenttitle>'.$connect.'<br/><contenttitle>'
-                        . '<contenttitle>Crée le: </contenttitle>'.h($expressionbesoin['Expressionbesoin']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($expressionbesoin['Expressionbesoin']['modified']).'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
+                    <?php echo '<span class="glyphicons eye_open cursor"></span>'; ?>&nbsp;
                 <?php endif; ?>
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('expressionbesoins', 'edit')) : ?>
                 <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit', $expressionbesoin['Expressionbesoin']['id']),array('escape' => false)); ?>&nbsp;
@@ -161,11 +155,20 @@
                 <?php endif; ?>                 
             </td>
 	</tr>
+        <tr class="trhidden" style="display:none;">
+            <td colspan="14" align="center">
+                <table cellpadding="0" cellspacing="0" class="table table-hidden" style="margin-bottom:-3px;">
+                    <tr><th>Volumétrie</th><th>Puissance</th><th>Architecture</th><th>PVU</th><th>Connecté</th></tr>
+                    <?php $connect = (isset($expressionbesoin['Expressionbesoin']['CONNECT']) && $expressionbesoin['Expressionbesoin']['CONNECT']==true) ? 'Oui' : 'Non' ; ?>
+                    <tr><td><?php echo $expressionbesoin['Volumetrie']['NOM']; ?></td><td><?php echo $expressionbesoin['Puissance']['NOM']; ?></td><td><?php echo $expressionbesoin['Architecture']['NOM']; ?></td><td><?php echo $expressionbesoin['Expressionbesoin']['PVU']; ?></td><td><?php echo $connect; ?></td></tr>
+                </table>
+            </td>
+        </tr>    
 <?php endforeach; ?>
 	</table>
         </div>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
-	<div class="pull-right marginright20"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>   
+	<div class="pull-right "><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>   
         <div class='text-center'>
         <ul class="pagination pagination-sm">
 	<?php
@@ -189,13 +192,13 @@
               <?php echo $this->Form->create('Expressionbesoin',array('action'=>'importCSV','id'=>'formValidate','class'=>'form-horizontal', 'style'=>'margin-bottom:-7px !important;','type' => 'file','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
               <div class="modal-body">
                   <div class="form-group">
-                        <label for="ExpressionbesoinFile" class="col-lg-4 control-label">Fichiers CSV à intégrer</label>
-                        <div class="col-lg-offset-4">
+                        <label for="ExpressionbesoinFile" class="col-md-4 control-label">Fichiers CSV à intégrer</label>
+                        <div class="col-md-offset-4">
                           <?php echo $this->Form->input('file', array('type' => 'file','size'=>"40")); ?><label for="FilesharedFile" class="pull-left margintop7 italic"><?php echo 'taille max de '.ini_get('upload_max_filesize'); ?></label>
                         </div>
                   </div>
                   <div class="form-group">
-                        <div class="col-lg-offset-4">
+                        <div class="col-md-offset-4">
                           <?php $csvfile = '../files/csv/expressionbesoins.csv'; ?>
                           <?php echo $this->Html->link('Modèle de fichier CSV',$csvfile,array('target'=>'blank')); ?>
                         </div>
@@ -212,6 +215,10 @@
         <!-- /insert ICS modal //-->   
 <script>
 $(document).ready(function () {
+    $(document).on('click','.eye_open',function(e){
+        $(this).parents('tr').next('.trhidden').slideToggle("slow");
+    });    
+    
     $(document).on('click','#checkall',function(e){
         $(this).parents().find(':checkbox').prop('checked', this.checked);
         if ($(this).is(':checked')){

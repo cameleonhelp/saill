@@ -260,4 +260,23 @@ class Entite extends AppModel {
 		)
 	);
 
+        /**
+ * afterFind method
+ *
+ * @throws NotFoundException
+ * @throws MethodNotAllowedException
+ * @param none
+ * @return void
+ */
+        public function afterFind($results, $primary = false) {
+            foreach ($results as $key => $val) {
+                if (isset($val['Entite']['created'])) {
+                    $results[$key]['Entite']['created'] = $this->datetimeFormatAfterFind($val['Entite']['created']);
+                }      
+                if (isset($val['Entite']['modified'])) {
+                    $results[$key]['Entite']['modified'] = $this->datetimeFormatAfterFind($val['Entite']['modified']);
+                }                   
+            }
+            return $results;
+        } 
 }

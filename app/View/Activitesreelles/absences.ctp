@@ -1,5 +1,5 @@
 <?php $this->set('title_for_layout','Calendrier des absences'); ?>
-<div class="marginright10">
+<div class="">
 <table class="table table-bordered table-striped table-hover" id="capture">
         <thead>
             <?php
@@ -14,12 +14,18 @@
                     <th colspan="<?php echo ($maxday*2)+1; ?>" class="text-center">
                         <div class="btn-group pull-left">
                             <a class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" href="#">
-                              Filtre utilisateurs
+                              Filtre ...
                               <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
+                                <li class="dropdown-header uppercase" style="text-align:left;">Utilisateurs</li>
                                 <li style="text-align:left;"><?php echo $this->Html->link('Tous', "#",array('class'=>'showoverlay','id'=>"all")); ?></li>
                                 <li style="text-align:left;"><?php echo $this->Html->link('Mon équipe', "#",array('class'=>'showoverlay','id'=>"team")); ?></li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header uppercase" style="text-align:left;">Cercles</li>
+                                <?php foreach ($cercles as $cercle): ?>
+                                   <li style="text-align:left;"><?php echo $this->Html->link($cercle['Entite']['NOM'],'#',array('class'=>'showoverlay cercle','data-id'=>$cercle['Entite']['id'])); ?></li>
+                                <?php endforeach; ?>                                
                             </ul>
                         </div>
                         <?php echo $this->Form->button('<span class="glyphicons left_arrow" data-container="body" rel="tooltip" data-title="Mois précédent"></span>', array('id'=>"previousMonth",'type'=>'button','class' => 'btn  btn-sm btn-default','style'=>'margin-right:75px;')); ?>
@@ -36,15 +42,18 @@
             <tr>
             <th class="nowrap" style="vertical-align: middle;" rowspan="2">Nom</th>
             <?php 
+            $today = new DateTime();
             for($i=1;$i<$maxday;$i++) {
                 $nbday = date("N", mktime(0, 0, 0, $month, $i, $year))-1;
                 $day = $i<10 ? '0'.$i : $i;                
                 $date= new DateTime($year.'-'.$month.'-'.$day);
-                $classferie = isFerie($date) ? ' ferie' : '';                
+                $classferie = isFerie($date) ? ' ferie' : '';   
+                $interval = $date->format('Ymd') == $today->format('Ymd');
+                $class_today = $interval ? " cel-today" : '';
                 $strday = array("Lu","Ma","Me","Je","Ve","Sa","Di");
                 $weekend = $date->format('N');
                 $class = $weekend >5 ? "class='absday week text-center nowrap" : "class='absday text-center nowrap";
-                echo "<th colspan='2' ".$class.$classferie."'>".$strday[$nbday]."</th>";
+                echo "<th colspan='2' ".$class.$classferie.$class_today."'>".$strday[$nbday]."</th>";
             }
             ?>
             </tr>
@@ -54,9 +63,11 @@
                 $day = $i<10 ? '0'.$i : $i;
                 $date=new DateTime($year.'-'.$month.'-'.$day);
                 $classferie = isFerie($date) ? ' ferie' : '';
+                $interval = $date->format('Ymd') == $today->format('Ymd');
+                $class_today = $interval ? " cel-today" : '';              
                 $weekend = $date->format('N');
                 $class = $weekend >5 ? "class='absday week nowrap text-center" : "class='absday nowrap text-center";
-                echo "<th colspan='2' ".$class.$classferie."'>".$day."</th>";
+                echo "<th colspan='2' ".$class.$classferie.$class_today."'>".$day."</th>";
             }
             ?>
             </tr>
@@ -77,6 +88,8 @@
                 $classweek = $weekend >5 ?  ' week': '';              
                 $class = "class='absday nowrap";
                 $classferie = isFerie($date) ? ' ferie' : '';
+                $interval = $date->format('Ymd') == $today->format('Ymd');
+                $class_today = $interval ? " sur-today" : '';                 
                 if($debutactif > CIntDate($date->format('d/m/Y')) || $debutinactif < CIntDate($date->format('d/m/Y'))):
                     $classIndispo = ' indispo';
                     echo "<td ".$class.$classIndispo.$classweek.$classferie."' style='line-height: 4px;'></td><td ".$class.$classIndispo.$classweek.$classferie."'></td>";
@@ -95,9 +108,9 @@
                             $classIndispo1 = '';
                             $classIndispo2 = $result['tmp'] ? ' tmpindispo' : ' indispo';
                         }            
-                        echo "<td ".$class.$classweek.$classferie.$classIndispo1."' style='line-height: 4px;'></td><td ".$class.$classweek.$classferie.$classIndispo2."'></td>";
+                        echo "<td ".$class.$classweek.$classferie.$class_today.$classIndispo1."' style='line-height: 4px;'></td><td ".$class.$classweek.$classferie.$class_today.$classIndispo2."'></td>";
                     else:
-                        echo "<td ".$class.$classweek.$classferie."' style='line-height: 4px;'></td><td ".$class.$classweek.$classferie."'></td>";               
+                        echo "<td ".$class.$classweek.$classferie.$class_today."' style='line-height: 4px;'></td><td ".$class.$classweek.$classferie.$class_today."'></td>";               
                     endif; 
                 endif;
             endfor;
@@ -147,9 +160,20 @@
              var overlay = $('#overlay');
              overlay.show();                
              var date = moment();
-             $('#ActivitesreellePass').val('1');
+             $('#ActivitesreellePass').val('-1');
              $('#ActivitesreelleAbsencesForm').submit();
-         });          
+         });    
+         
+         $(".cercle").on('click', function(e){
+             e.preventDefault();
+             var overlay = $('#overlay');
+             overlay.show();                
+             var date = moment();
+             var id = $(this).attr('data-id');
+             $('#ActivitesreellePass').val(id);
+             $('#ActivitesreelleAbsencesForm').submit();
+         });   
+         
          $("#canvas").on('click',function(e){
             html2canvas($("#capture"),{
                 useCORS:true,

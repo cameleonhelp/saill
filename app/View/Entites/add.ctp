@@ -1,3 +1,3 @@
-<div class="entites form">
-    <?php echo $this->element('formEntite'); ?>
+<div class="entites form add">
+    <?php echo $this->element('form/cercle'); ?>
 </div>

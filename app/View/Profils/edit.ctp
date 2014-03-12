@@ -1,3 +1,3 @@
-<div class="profils form">
-<?php echo $this->element('formProfil'); ?>
+<div class="profils form edit">
+<?php echo $this->element('form/profil'); ?>
 </div>

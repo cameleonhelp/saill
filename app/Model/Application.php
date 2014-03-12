@@ -91,7 +91,8 @@ class Application extends AppModel {
                 }      
                 if (isset($val['Application']['modified'])) {
                     $results[$key]['Application']['modified'] = $this->dateFormatAfterFind($val['Application']['modified']);
-                }            
+                }   
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Application']['entite_id']); 
             }
             return $results;
         }   

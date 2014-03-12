@@ -7,7 +7,7 @@
         $pass4 = isset($this->params->pass[4]) ? $this->params->pass[4] : 'tous';
         $pass5 = isset($this->params->pass[5]) ? $this->params->pass[5] : 'tous';
         ?>     
-        <nav class="navbar toolbar marginright20">
+        <nav class="navbar toolbar ">
                 <ul class="nav navbar-nav toolbar">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('intergrationapplicatives', 'add')) : ?>
                 <li><?php echo $this->Html->link('<span class="glyphicons plus size14 margintop4"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
@@ -19,9 +19,11 @@
                      <ul class="dropdown-menu">
                      <li><?php echo $this->Html->link('Toutes', array('action' => 'index','tous',$pass1,$pass2,$pass3,$pass4,$pass5),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass0,'tous'))); ?></li>
                      <li class="divider"></li>
+                     <?php if(count($applications) > 0): ?>
                          <?php foreach ($applications as $application): ?>
                             <li><?php echo $this->Html->link($application['Application']['NOM'], array('action' => 'index',$application['Application']['id'],$pass1,$pass2,$pass3,$pass4,$pass5),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass0,$application['Application']['id']))); ?></li>
                          <?php endforeach; ?>
+                      <?php endif; ?>
                       </ul>
                  </li>
                 <li class="dropdown <?php echo filtre_is_actif(array($pass1,$pass2,$pass3),array('tous','tous','tous')); ?>">
@@ -67,9 +69,11 @@
                      <ul class="dropdown-menu">
                      <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,$pass1,$pass2,$pass3,'tous',$pass5),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass4,'tous'))); ?></li>
                      <li class="divider"></li>
+                     <?php if(count($types) > 0): ?>
                          <?php foreach ($types as $type): ?>
                             <li><?php echo $this->Html->link($type['Type']['NOM'], array('action' => 'index',$pass0,$pass1,$pass2,$pass3,$type['Type']['id'],$pass5),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass4,$type['Type']['id']))); ?></li>
                          <?php endforeach; ?>
+                     <?php endif; ?>
                       </ul>
                  </li>     
                 <li class="dropdown <?php echo filtre_is_actif($pass5,'tous'); ?>">
@@ -77,11 +81,14 @@
                      <ul class="dropdown-menu">
                      <li><?php echo $this->Html->link('Tous', array('action' => 'index',$pass0,$pass1,$pass2,$pass3,$pass4,'tous'),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass5,'tous'))); ?></li>
                      <li class="divider"></li>
+                     <?php if(count($versions) > 0): ?>
                          <?php foreach ($versions as $version): ?>
                             <li><?php echo $this->Html->link($version['Version']['NOM'], array('action' => 'index',$pass0,$pass1,$pass2,$pass3,$pass4,$version['Version']['id']),array('escape' => false,'class'=>'showoverlay'.subfiltre_is_actif($pass5,$version['Version']['id']))); ?></li>
                          <?php endforeach; ?>
+                     <?php endif; ?>
                       </ul>
-                 </li>                  
+                 </li>         
+                 <?php if (userAuth('profil_id')!='2' && isAuthorized('intergrationapplicatives', 'edit')) : ?>
                 <li class="divider-vertical-only"></li>
                 <!-- Actions groupées -->  
                 <li class="dropdown">
@@ -91,7 +98,8 @@
                      <li><?php echo $this->Html->link('Installer', "#",array('id'=>'installlink','class'=>'showoverlay')); ?></li>
                      <li><?php echo $this->Html->link('Valider', "#",array('id'=>'checklink','class'=>'showoverlay')); ?></li>
                      </ul>
-                </li>                    
+                </li>                   
+                <?php endif; ?>
                 <li class="divider-vertical-only"></li>
                 <!-- Export -->
                 <li>
@@ -100,12 +108,12 @@
                 </ul>
                 <?php echo $this->Form->create("Intergrationapplicative",array('action' => 'search', 'class'=>'toolbar-form pull-right','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
                     <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche ...','style'=>"width: 200px;",'class'=>"form-control")); ?>
-                    <button type="submit" class="btn form-btn showoverlay">Rechercher</button>
+                    <button type="submit" class="btn form-btn showoverlay"><span class="glyphicons notchange search"></span></button>
                 <?php echo $this->Form->end(); ?> 
         </nav>
-            <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 marginright20">
+            <?php if ($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 ">
             <strong>Filtre appliqué : </strong><em>Liste des intégrations applicatives <?php echo $strfilter; ?></em></div><?php } ?>      
-        <div class="marginright10">
+        <div class="">
 	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
 	<tr>
                         <th style="text-align:center;width:15px !important;vertical-align: middle;padding-left:5px;"><?php echo $this->Form->input('checkall',array('type'=>'checkbox','label'=>false)) ; ?>
@@ -137,9 +145,19 @@
                     <?php echo $intergrationapplicative['Version']['NOM']; ?>
             </td>
             <td style='text-align: center;'><?php $image = (isset($intergrationapplicative['Intergrationapplicative']['INSTALL']) && $intergrationapplicative['Intergrationapplicative']['INSTALL']==true) ? 'ok_2' : 'ok_2 disabled' ; ?>
-                <a href="#"  data-id="<?php echo $intergrationapplicative['Intergrationapplicative']['id']; ?>"  rel='tooltip'  data-container="body" data-title="Installé le <?php echo $intergrationapplicative['Intergrationapplicative']['DATEINSTALL']; ?>"><span class="glyphicons <?php echo $image; ?> notchange"></span></a></td>           
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('intergrationapplicatives', 'edit')) : ?>    
+                <a href="#"  data-id="<?php echo $intergrationapplicative['Intergrationapplicative']['id']; ?>"  rel='tooltip'  data-container="body" data-title="Installé le <?php echo $intergrationapplicative['Intergrationapplicative']['DATEINSTALL']; ?>"><span class="glyphicons <?php echo $image; ?> notchange"></span></a>
+            <?php else: ?>
+                <span class="glyphicons <?php echo $image; ?> notchange"></span>
+            <?php endif; ?>
+            </td>           
             <td style='text-align: center;'><?php $image = (isset($intergrationapplicative['Intergrationapplicative']['CHECK']) && $intergrationapplicative['Intergrationapplicative']['CHECK']==true) ? 'ok_2' : 'ok_2 disabled' ; ?>
-                <a href="#" class="valided cursor showoverlay" data-id="<?php echo $intergrationapplicative['Intergrationapplicative']['id']; ?>"  rel='tooltip'  data-container="body" data-title="Validé le <?php echo $intergrationapplicative['Intergrationapplicative']['DATECHECK']; ?>"><span class="glyphicons <?php echo $image; ?> notchange"></span></a></td>   
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('intergrationapplicatives', 'edit')) : ?>
+                <a href="#" class="valided cursor showoverlay" data-id="<?php echo $intergrationapplicative['Intergrationapplicative']['id']; ?>"  rel='tooltip'  data-container="body" data-title="Validé le <?php echo $intergrationapplicative['Intergrationapplicative']['DATECHECK']; ?>"><span class="glyphicons <?php echo $image; ?> notchange"></span></a>
+            <?php else: ?>
+                <span class="glyphicons <?php echo $image; ?> notchange"></span>
+            <?php endif; ?>
+            </td>   
             <td class="actions">
             <?php if (userAuth('profil_id')!='2' && isAuthorized('intergrationapplicatives', 'view')) : ?>
             <?php echo '<span class="glyphicons eye_open" data-rel="popover" data-title="<h3>Intégration applicative :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($intergrationapplicative['Intergrationapplicative']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($intergrationapplicative['Intergrationapplicative']['modified']).'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
@@ -161,7 +179,7 @@
 	</table>
         </div>
 	<div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
-	<div class="pull-right marginright20"><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>   
+	<div class="pull-right "><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>   
         <div class='text-center'>
         <ul class="pagination pagination-sm">
 	<?php

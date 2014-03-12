@@ -1,3 +1,3 @@
 <div class="listediffusions form">
-<?php echo $this->element('formListediffusion'); ?>
+<?php echo $this->element('form/listediffusion'); ?>
 </div>

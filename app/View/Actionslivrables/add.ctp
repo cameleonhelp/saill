@@ -1,9 +1,9 @@
-<div class="marginright20">
+<div class="">
 <div class="actionslivrables form">
 <?php echo $this->Form->create('Actionslivrable',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class="form-group">
-        <label class="col-lg-2 required" for="ActionslivrableLivrableId">Livrable : </label>
-        <div class="col-lg-10">  
+        <label class="col-md-2 required" for="ActionslivrableLivrableId">Livrable : </label>
+        <div class="col-md-10">  
             <?php echo $this->Form->select('livrable_id',$livrables,array('default' => userAuth('id'),'class'=>'form-control multiselect','empty' => 'Choisir un livrable','data-rule-required'=>'true','data-msg-required'=>"Le livrable est obligatoire",'multiple'=>'true','size'=>"10")); ?>
         </div>
     </div>	

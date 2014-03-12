@@ -77,13 +77,13 @@ define("tinymce/Editor", [
 	var isGecko = Env.gecko, ie = Env.ie;
 
 	function getEventTarget(editor, eventName) {
-		if (eventName == 'selectionchange' || eventName == 'drop') {
+		if (eventName == 'selectionchange') {
 			return editor.getDoc();
 		}
 
 		// Need to bind mousedown/mouseup etc to document not body in iframe mode
 		// Since the user might click on the HTML element not the BODY
-		if (!editor.inline && /^mouse|click|contextmenu/.test(eventName)) {
+		if (!editor.inline && /^mouse|click|contextmenu|drop/.test(eventName)) {
 			return editor.getDoc();
 		}
 
@@ -262,8 +262,8 @@ define("tinymce/Editor", [
 		self.inline = settings.inline;
 
 		// Call setup
-		self.execCallback('setup', self);
 		editorManager.fire('SetupEditor', self);
+		self.execCallback('setup', self);
 	}
 
 	Editor.prototype = {
@@ -389,7 +389,7 @@ define("tinymce/Editor", [
 			function loadScripts() {
 				var scriptLoader = ScriptLoader.ScriptLoader;
 
-				if (settings.language && settings.language != 'en') {
+				if (settings.language && settings.language != 'en' && !settings.language_url) {
 					settings.language_url = self.editorManager.baseURL + '/langs/' + settings.language + '.js';
 				}
 
@@ -1262,7 +1262,7 @@ define("tinymce/Editor", [
 		 *
 		 *    setup: function(ed) {
 		 *       ed.addMenuItem('example', {
-		 *          title: 'My menu item',
+		 *          text: 'My menu item',
 		 *          context: 'tools',
 		 *          onclick: function() {
 		 *             ed.insertContent('Hello world!!');
@@ -1637,7 +1637,10 @@ define("tinymce/Editor", [
 			html = args.content;
 
 			if (!/TEXTAREA|INPUT/i.test(elm.nodeName)) {
-				elm.innerHTML = html;
+				// Update DIV element when not in inline mode
+				if (!self.inline) {
+					elm.innerHTML = html;
+				}
 
 				// Update hidden form element
 				if ((form = DOM.getParent(self.id, 'form'))) {
@@ -1980,7 +1983,7 @@ define("tinymce/Editor", [
 					case 'A':
 						if (!dom.getAttrib(elm, 'href', false)) {
 							value = dom.getAttrib(elm, 'name') || elm.id;
-							cls = 'mce-item-anchor';
+							cls = settings.visual_anchor_class || 'mce-item-anchor';
 
 							if (value) {
 								if (self.hasVisual) {

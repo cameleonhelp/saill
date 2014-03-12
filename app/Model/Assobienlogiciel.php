@@ -57,6 +57,13 @@ class Assobienlogiciel extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'Dsitenv' => array(
+			'className' => 'Dsitenv',
+			'foreignKey' => 'dsitenv_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
         
@@ -112,7 +119,16 @@ class Assobienlogiciel extends AppModel {
                 }   
                 if (isset($val['Assobienlogiciel']['logiciel_id'])) {
                     $results[$key]['Logiciel']['lot_id'] = $this->getLotId($val['Assobienlogiciel']['logiciel_id']); //$this->datetimeFormatAfterFind($val['Assobienlogiciel']['DATEINSTALL']);
+                }  
+                if (isset($val['Assobienlogiciel']['bien_id'])) {
+                    $obj = $this->getInfoAssoForEnvDsit($val['Assobienlogiciel']['bien_id']);
+                    $results[$key]['Bien']['USAGE_NOM'] = $obj['usages']['USAGE'];
+                    $results[$key]['Bien']['MODELE_NOM'] = $obj['modeles']['MODELE'];
+                    $results[$key]['Bien']['CHASSIS_NOM'] = $obj['chassis']['CHASSIS'];
                 }                   
+                if (isset($val['Assobienlogiciel']['dsitenv_id'])) {
+                    $results[$key]['Assobienlogiciel']['LISTNOMENV'] = $this->getNomEnvDsit($val['Assobienlogiciel']['dsitenv_id']); //$this->datetimeFormatAfterFind($val['Assobienlogiciel']['DATEINSTALL']);
+                }                  
             }
             return $results;
         }   
@@ -160,5 +176,28 @@ class Assobienlogiciel extends AppModel {
             $sql = "SELECT logiciels.lot_id FROM logiciels WHERE logiciels.id = ".$id;
             $obj = $this->query($sql);
             return $obj[0]['logiciels']['lot_id'];
-        }           
+        }     
+        
+        public function getNomEnvDsit($ids){
+            $listid = explode(',',$ids);
+            $list='';
+            foreach($listid as $id):
+                $sql = "SELECT DISTINCT(dsitenvs.NOM) FROM dsitenvs WHERE (dsitenvs.id = ".$id." OR dsitenvs.id like '%".$id.",%' OR dsitenvs.id like '%,".$id."%')";
+                $obj = $this->query($sql);
+                $list .= $obj[0]['dsitenvs']['NOM'].',';
+            endforeach;
+            $list = $list != '' ? rtrim($list,',') : 'null';
+            return $list;
+        }    
+        
+        public function getInfoAssoForEnvDsit($bien_id){
+            $sql = "SELECT usages.NOM AS 'USAGE',modeles.NOM AS MODELE,chassis.NOM AS CHASSIS FROM `assobienlogiciels`
+                    LEFT JOIN biens ON biens.id = assobienlogiciels.bien_id
+                    LEFT JOIN usages ON biens.usage_id = usages.id
+                    LEFT JOIN modeles ON modeles.id = biens.modele_id
+                    LEFT JOIN chassis ON chassis.id = biens.chassis_id
+                    WHERE biens.id=".$bien_id;
+            $result = $this->query($sql);
+            return $result[0];
+        }
 }

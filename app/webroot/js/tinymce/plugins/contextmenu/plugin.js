@@ -11,10 +11,15 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('contextmenu', function(editor) {
-	var menu;
+	var menu, contextmenuNeverUseNative = editor.settings.contextmenu_never_use_native;
 
 	editor.on('contextmenu', function(e) {
 		var contextmenu;
+
+		// Block TinyMCE menu on ctrlKey
+		if (e.ctrlKey && !contextmenuNeverUseNative) {
+			return;
+		}
 
 		e.preventDefault();
 
@@ -48,12 +53,7 @@ tinymce.PluginManager.add('contextmenu', function(editor) {
 			menu = new tinymce.ui.Menu({
 				items: items,
 				context: 'contextmenu'
-			});
-
-			// allow css to target this special menu
-			menu.addClass('contextmenu');
-
-			menu.renderTo(document.body);
+			}).addClass('contextmenu').renderTo();
 
 			editor.on('remove', function() {
 				menu.remove();

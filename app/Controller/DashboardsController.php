@@ -27,7 +27,7 @@ class DashboardsController extends AppController {
                     endif;
                     $plancharges = 'plancharges.id IN ('.substr_replace(@$planchargeslist ,"",-1).') ';
                     $viewcontrat = "CREATE VIEW CONTRAT AS
-                                    SELECT projets.id AS id,projets.NOM,tjmcontrats.TJM,SUM(activites.BUDGETREVU) AS BUDGET,TRUNCATE(SUM(activites.BUDGETREVU)/(TJM/1000),2) AS CHARGE
+                                    SELECT projets.id AS id,projets.NOM,tjmcontrats.TJM,SUM(historybudgets.REVU) AS BUDGET,TRUNCATE(SUM(historybudgets.REVU)/(TJM/1000),2) AS CHARGE
                                     FROM projets
                                     LEFT JOIN activites ON activites.projet_id = projets.id
                                     LEFT JOIN contrats ON contrats.id = projets.contrat_id
@@ -36,7 +36,7 @@ class DashboardsController extends AppController {
                                     WHERE ".$projets."
                                     AND activites.DELETABLE = 1
                                     AND historybudgets.ANNEE = ".$annee.
-                                    " AND historybudgets.ACTIF = 1".
+                                    //" AND historybudgets.ACTIF = 1".
                                     " GROUP BY projets.id
                                     ORDER BY projets.NOM;";
                     $viewprevu =   "CREATE VIEW PREVISION AS

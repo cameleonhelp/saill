@@ -105,7 +105,8 @@ class Lot extends AppModel {
                 }      
                 if (isset($val['Lot']['modified'])) {
                     $results[$key]['Lot']['modified'] = $this->dateFormatAfterFind($val['Lot']['modified']);
-                }            
+                }  
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Lot']['entite_id']); 
             }
             return $results;
         }            

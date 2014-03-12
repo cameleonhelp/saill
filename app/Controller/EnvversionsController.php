@@ -147,6 +147,7 @@ class EnvversionsController extends AppController {
         } 
         
         public function get_select_version_for($id=null,$actif=null){
+            //TODO : limiter aux version de mes outils
             $conditions[] = $actif == null ? '1=1' : 'Envversion.ACTIF='.$actif;
             $conditions[] = 'Envversion.envoutil_id='.$id;
             $list = $this->Envversion->find('list',array('fields'=>array('id','VERSIONEDITION'),'conditions'=>$conditions,'order'=>array('Envversion.VERSIONEDITION'=>'asc'),'recursive'=>0));

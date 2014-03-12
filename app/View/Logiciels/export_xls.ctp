@@ -67,7 +67,8 @@
 			echo '<td class="tableTdContent">'.$row['lots']['lot'].'</td>';
                         echo '<td class="tableTdCourrier">'.$row['biens']['bien'].'</td>';
                         echo '<td class="tableTdContent">'.$row['types']['type'].'</td>';
-                        echo '<td class="tableTdCourrier">'.$row['assobienlogiciels']['ENVDSIT'].'</td>';
+                        $listenv = isset($row['assobienlogiciels']['dsitenv_nom']) ? $row['assobienlogiciels']['dsitenv_nom'] : '';
+                        echo '<td class="tableTdCourrier">'.$listenv.'</td>';
                         echo '<td class="tableTdCourrier">'.convertDecimal($row['biens']['COEUR']).'</td>';
                         echo '<td class="tableTdCourrier">'.convertDecimal($row['biens']['COEURLICENCE']).'</td>';
                         echo '<td class="tableTdCourrier">'.convertDecimal($row['biens']['PVU']).'</td>';
@@ -81,4 +82,5 @@
 
 <?php function convertDecimal($value){
         return str_replace(".", ",", $value);
-}; ?>
+       }
+?>

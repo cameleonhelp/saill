@@ -24,6 +24,8 @@ class IntergrationapplicativesController extends AppController {
 	public function index($aplication=null,$installe=null,$valide=null,$actif=null,$type=null,$version = null) {
             $this->set('title_for_layout','Intégration applicative');
             if (isAuthorized('intergrationapplicatives', 'index')) :
+                $listentite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+                $newconditions[]="Intergrationapplicative.entite_id IN (".$listentite.')';                 
                 switch($aplication):
                     case null:
                     case 'tous':
@@ -152,7 +154,8 @@ class IntergrationapplicativesController extends AppController {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Intergrationapplicative->validate = array();
                         $this->History->goBack(1);
-                    else:                    
+                    else:          
+                        $this->request->data['Intergrationapplicative']['entite_id']=userAuth('entite_id');
 			$this->Intergrationapplicative->create();
                         if($this->request->data['Intergrationapplicative']['DATEINSTALL'] != ''):
                             $this->request->data['Intergrationapplicative']['INSTALL'] = 1;
@@ -161,7 +164,7 @@ class IntergrationapplicativesController extends AppController {
                         endif;
 			if ($this->Intergrationapplicative->save($this->request->data)) {
 				$this->Session->setFlash(__('Intégration sauvegardée',true),'flash_success');
-				$this->History->goBack(1);
+				$this->History->goBack(2);
 			} else {
 				$this->Session->setFlash(__('Intégration incorrecte, veuillez corriger l\'intégration',true),'flash_failure');
 			}
@@ -533,17 +536,18 @@ class IntergrationapplicativesController extends AppController {
                         $listapplications.=$value.',';
                     endforeach;
                     $selectapplications = ' AND application_id in ('.substr_replace($listapplications ,"",-1).')';
-                    $selectlot = $this->data['Intergrationapplicative']['lot_id']=='' || $this->data['Intergrationapplicative']['lot_id']=='4' ? ' AND lot_id != 3' : ' AND (lot_id = '.$this->data['Intergrationapplicative']['lot_id'].' AND lot_id != 3)';
+                    $selectlot = $this->data['Intergrationapplicative']['lot_id']=='' || $this->data['Intergrationapplicative']['lot_id']=='4' ? ' AND intergrationapplicatives.lot_id != 3' : ' AND (intergrationapplicatives.lot_id = '.$this->data['Intergrationapplicative']['lot_id'].' AND intergrationapplicatives.lot_id != 3)';
                     $selecttype = $this->data['Intergrationapplicative']['environnement_id']=='' || $this->data['Intergrationapplicative']['environnement_id']=='16' ? '' : ' AND type_id = '.$this->data['Intergrationapplicative']['environnement_id'];
-                    $sql = "select count(intergrationapplicatives.id) as NB,MONTH(DATEINSTALL) as MOIS, lots.NOM as LOT,applications.NOM as APPLICATION, types.`NOM` AS TYPE
+                    $sql = "select count(intergrationapplicatives.id) as NB,MONTH(DATEINSTALL) as MOIS, lots.NOM as LOT,applications.NOM as APPLICATION, types.`NOM` AS TYPE,intergrationapplicatives.DATEINSTALL AS DATEINSTALL,versions.NOM AS VERSION
                             from intergrationapplicatives
                             LEFT JOIN lots on intergrationapplicatives.lot_id = lots.id
+                            LEFT JOIN versions on intergrationapplicatives.version_id = versions.id
                             LEFT JOIN applications on intergrationapplicatives.application_id = applications.id
                             LEFT JOIN types on intergrationapplicatives.type_id = types.id
                             WHERE MONTH(DATEINSTALL) = ".$mois.
                             " AND YEAR(DATEINSTALL) = ".$annee." ".$selectapplications.$selectlot.$selecttype.
-                            " group by lot_id, application_id, type_id
-                            order by lot_id asc, application_id asc, type_id asc;";
+                            " group by lots.NOM, versions.NOM, applications.NOM, types.NOM, intergrationapplicatives.DATEINSTALL
+                            order by lots.NOM asc, versions.NOM asc, applications.NOM asc, types.NOM asc;";
                     $results = $this->Intergrationapplicative->query($sql);
                     $this->set('results',$results);
                     $chartsql = "select count(intergrationapplicatives.id) as NB,lots.NOM as LOT,applications.NOM as APPLICATION
@@ -598,12 +602,12 @@ class IntergrationapplicativesController extends AppController {
                     endif;
                     endif;
                     $this->set('chartresults',$chartresults);   
-                    $charthistosql = "select count(intergrationapplicatives.id) as NB,lots.NOM as LOT,MONTH(DATEINSTALL) as MOIS
+                    $charthistosql = "select count(intergrationapplicatives.id) as NB,lots.NOM as LOT,MONTH(DATEINSTALL) AS MOIS,CONCAT(IF(MONTH(DATEINSTALL)<10,CONCAT('0',MONTH(DATEINSTALL)),MONTH(DATEINSTALL)),'/',YEAR(DATEINSTALL)) as MOISANNEE
                             from intergrationapplicatives
                             LEFT JOIN lots on intergrationapplicatives.lot_id = lots.id
-                            WHERE YEAR(DATEINSTALL) = ".$annee." ".$selectapplications.$selectlot.$selecttype.
-                            " group by MONTH(DATEINSTALL),lot_id
-                            order by MONTH(DATEINSTALL) asc,lot_id asc;";
+                            WHERE YEAR(DATEINSTALL) BETWEEN ".($annee-1)." AND ".$annee." ".$selectapplications.$selectlot.$selecttype.
+                            " group by CONCAT(YEAR(DATEINSTALL),IF(MONTH(DATEINSTALL)<10,CONCAT('0',MONTH(DATEINSTALL)),MONTH(DATEINSTALL))),lot_id
+                            order by CONCAT(YEAR(DATEINSTALL),IF(MONTH(DATEINSTALL)<10,CONCAT('0',MONTH(DATEINSTALL)),MONTH(DATEINSTALL))) asc,lot_id asc;";
                     $charthistoresults = $this->Intergrationapplicative->query($charthistosql);
                     $this->set('charthistoresults',$charthistoresults);                     
                 endif;
@@ -611,7 +615,7 @@ class IntergrationapplicativesController extends AppController {
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                     
-        }  
+        } 
         
         public function export_xls() {
 		$data = $this->Session->read('xls_export');             

@@ -50,12 +50,12 @@ class AppController extends Controller {
     );
          
     public function beforeRender() { 
-        if($this->params['action']=='index' || $this->params['action']=='home' || $this->params['action']=='rapportagent' || $this->params['controller']=='pages' || $this->params['controller']=='dashboard' || $this->params['controller']=='risques' || $this->params['controller']=='rapports'|| $this->params['action']=='rapport' || $this->params['action']=='last7days'):
+        /*if($this->params['action']=='index' || $this->params['action']=='home' || $this->params['action']=='rapportagent' || $this->params['controller']=='pages' || $this->params['controller']=='dashboard' || $this->params['controller']=='risques' || $this->params['controller']=='rapports'|| $this->params['action']=='rapport' || $this->params['action']=='last7days'):
             $url = $this->params->here;
             $sql = "UPDATE utilisateurs SET LASTURL='".$url."' WHERE utilisateurs.id=".userAuth('id');
             $db = ConnectionManager::getDataSource('default');
             $db->rawQuery($sql);
-        endif;        
+        endif;      */  
         parent::beforeRender();
     }
     

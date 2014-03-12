@@ -44,8 +44,9 @@
 			echo '<tr>';
 			echo '<td class="tableTdContent">'.$row['Projet']['NOM'].'</td>';
 			echo '<td class="tableTdContent">'.$row['Contrat']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Projet']['NUMEROGALILEI'].'</td>';                        
-			echo '<td class="tableTdContent">'.$row['Projet']['ETAT'].'</td>';
+			echo '<td class="tableTdContent">'.$row['Projet']['NUMEROGALLILIE'].'</td>';   
+                        $etat = $row['Projet']['ACTIF']==1 ? 'Actif' : 'Inactif';
+			echo '<td class="tableTdContent">'.$etat.'</td>';
 			echo '<td class="tableTdContent">'.$row['Projet']['TYPE'].'</td>'; 
 			echo '<td class="tableTdContent">'.$row['Projet']['FACTURATION'].'</td>';
 			echo '<td class="tableTdContent">'.$row['Projet']['COMMENTAIRE'].'</td>';

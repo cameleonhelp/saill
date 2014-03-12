@@ -1,3 +1,3 @@
 <div class="composants form">
-<?php echo $this->element('formComposant'); ?>
+<?php echo $this->element('form/composant'); ?>
 </div>

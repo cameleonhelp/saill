@@ -1,19 +1,19 @@
-<div class="marginright20">
+<div class="">
 <div class="actions form">
 <?php echo $this->Form->create('Plancharge',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
 
     <div class='block-panel block-panel-50-left'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="PlanchargeUtilisateurId">Agent : </label>
-            <div class="col-lg-5">
+            <label class="col-md-4 required" for="PlanchargeUtilisateurId">Agent : </label>
+            <div class="col-md-5">
                     <?php echo $this->Form->select('utilisateur_id',$utilisateurs,array('data-rule-required'=>'true','class'=>"form-control",'data-msg-required'=>"Le nom d'un agent est obligatoire",'empty'=>'Choisir un agent ...','hiddenField' => false)); ?>                
             </div>
         </div>         
     </div>
     <div class='block-panel block-panel-50-right'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="PlanchargeANNEE">Année : </label>
-            <div class="col-lg-5">
+            <label class="col-md-4 required" for="PlanchargeANNEE">Année : </label>
+            <div class="col-md-5">
                     <?php echo $this->Form->select('ANNEE',$annees,array('data-rule-required'=>'true','class'=>"form-control",'data-msg-required'=>"L'année est obligatoire",'empty'=>'Choisir une année ...')); ?>           
             </div>            
         </div>     
@@ -74,6 +74,7 @@
 </div>
 <script>
 $(document).ready(function (){   
+    $("table").tablesorter();
     function sumOfColumns(id) {
         var tot = 0;
         $("."+id).each(function() {

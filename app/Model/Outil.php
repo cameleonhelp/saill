@@ -113,7 +113,8 @@ class Outil extends AppModel {
                 }      
                 if (isset($val['Outil']['modified'])) {
                     $results[$key]['Outil']['modified'] = $this->dateFormatAfterFind($val['Outil']['modified']);
-                }            }
+                }            
+            }
             return $results;
         }         
         

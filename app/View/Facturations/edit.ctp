@@ -1,3 +1,3 @@
 <div class="facturations form">
-<?php echo $this->element('formFacturation') ?>
+<?php echo $this->element('form/facturation') ?>
 </div>

@@ -188,8 +188,6 @@ define("tinymce/dom/ControlSelection", [
 					var handleElm, handlerContainerElm;
 
 					function startDrag(e) {
-						resizeStarted = true;
-
 						startX = e.screenX;
 						startY = e.screenY;
 						startW = selectedElm.clientWidth;
@@ -237,12 +235,18 @@ define("tinymce/dom/ControlSelection", [
 							id: 'mceResizeHandle' + name,
 							'data-mce-bogus': true,
 							'class': 'mce-resizehandle',
-							contentEditable: false, // Hides IE move layer cursor
-							unSelectabe: true,
+							unselectable: true,
 							style: 'cursor:' + name + '-resize; margin:0; padding:0'
 						});
 
+						// Hides IE move layer cursor
+						// If we set it on Chrome we get this wounderful bug: #6725
+						if (Env.ie) {
+							handleElm.contentEditable = false;
+						}
+
 						dom.bind(handleElm, 'mousedown', function(e) {
+							e.stopImmediatePropagation();
 							e.preventDefault();
 							startDrag(e);
 						});
@@ -294,11 +298,13 @@ define("tinymce/dom/ControlSelection", [
 			var controlElm;
 
 			function isChildOrEqual(node, parent) {
-				do {
-					if (node === parent) {
-						return true;
-					}
-				} while ((node = node.parentNode));
+				if (node) {
+					do {
+						if (node === parent) {
+							return true;
+						}
+					} while ((node = node.parentNode));
+				}
 			}
 
 			// Remove data-mce-selected from all elements since they might have been copied using Ctrl+c/v
@@ -309,7 +315,7 @@ define("tinymce/dom/ControlSelection", [
 			controlElm = e.type == 'mousedown' ? e.target : selection.getNode();
 			controlElm = dom.getParent(controlElm, isIE ? 'table' : 'table,img,hr');
 
-			if (controlElm) {
+			if (isChildOrEqual(controlElm, editor.getBody())) {
 				disableGeckoResize();
 
 				if (isChildOrEqual(selection.getStart(), controlElm) && isChildOrEqual(selection.getEnd(), controlElm)) {
@@ -471,6 +477,10 @@ define("tinymce/dom/ControlSelection", [
 		}
 
 		return {
+			isResizable: isResizable,
+			showResizeRect: showResizeRect,
+			hideResizeRect: hideResizeRect,
+			updateResizeRect: updateResizeRect,
 			controlSelect: controlSelect,
 			destroy: destroy
 		};

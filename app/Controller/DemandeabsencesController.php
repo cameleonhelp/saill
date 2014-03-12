@@ -20,7 +20,74 @@ class DemandeabsencesController extends AppController {
         );
 
 	public $components = array('History','Common');
+        
+        public function get_demandeur_filter($id){
+            $result = array();
+            switch($id):
+                case null:
+                case 'tous':
+                    $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
+                    $result['condition'] = 'Utilisateur.id IN ('.$monequipe.')';
+                    $result['filter'] = ', pour toute mon équipe';
+                    break;
+                default:
+                    $result['condition']="Demandeabsence.utilisateur_id=".$id;
+                    $nom = $this->Demandeabsence->Utilisateur->findById($id);
+                    $result['filter'] = ', pour '.$nom['Utilisateur']['NOMLONG'];
+                    break;
+            endswitch;
+            return $result;
+        }
 
+        public function get_reponse_filter($id){
+            $result = array();
+            switch($id):
+                case null:
+                case '0':
+                    $result['condition']="Demandeabsence.REPONSE IS NULL";
+                    $result['filter'] = ', en attente';
+                    break;                        
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter'] = '';
+                    break;  
+                case '1':
+                    $result['condition']="Demandeabsence.REPONSE='1'";
+                    $result['filter'] = ', validées';
+                    break;                    
+                case '2':
+                    $result['condition']="Demandeabsence.REPONSE='2'";
+                    $result['filter'] = ', refusées';
+                    break;  
+                case '3':
+                    $result['condition']="Demandeabsence.REPONSE='3'";
+                    $result['filter'] = ', supprimées';
+                    break;                     
+            endswitch; 
+            return $result;
+        }
+        
+        public function get_date_filter($date){
+            $result = array();
+            switch($date):
+                case null:
+                case '2':
+                    $today = new DateTime();
+                    $result['condition']="Demandeabsence.DATEDU >= '".$today->format('Y-m-d')."'";
+                    $result['filter'] = ', après aujourd\'hui (inclus)';
+                    break;                          
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter'] = '';
+                    break; 
+                case '1':
+                    $today = new DateTime();
+                    $result['condition']="Demandeabsence.DATEDU < '".$today->format('Y-m-d')."'";
+                    $result['filter'] = ', avant aujourd\'hui';
+                    break;                                        
+            endswitch; 
+            return $result;
+        }
 /**
  * index method
  *
@@ -29,60 +96,11 @@ class DemandeabsencesController extends AppController {
 	public function index($filtreDemandeur=null,$filtreReponse=null,$filtreDate=null) {  
             $this->set('title_for_layout','Suivi des absences');
             if (isAuthorized('demandeabsences', 'index')) :
-                // application des filtres
-                switch($filtreDemandeur):
-                    case null:
-                    case 'tous':
-                        $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
-                        $newconditions[] = 'Utilisateur.id IN ('.$monequipe.')';
-                        $strfilter = ', pour toute mon équipe';
-                        break;
-                    default:
-                        $newconditions[]="Demandeabsence.utilisateur_id=".$filtreDemandeur;
-                        $nom = $this->Demandeabsence->Utilisateur->findById($filtreDemandeur);
-                        $strfilter = ', pour '.$nom['Utilisateur']['NOMLONG'];
-                        break;
-                endswitch;
-                switch($filtreReponse):
-                    case null:
-                    case '0':
-                        $newconditions[]="Demandeabsence.REPONSE IS NULL";
-                        $strfilter .= ', en attente';
-                        break;                        
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= '';
-                        break;  
-                    case '1':
-                        $newconditions[]="Demandeabsence.REPONSE='1'";
-                        $strfilter .= ', validées';
-                        break;                    
-                    case '2':
-                        $newconditions[]="Demandeabsence.REPONSE='2'";
-                        $strfilter .= ', refusées';
-                        break;  
-                    case '3':
-                        $newconditions[]="Demandeabsence.REPONSE='3'";
-                        $strfilter .= ', supprimées';
-                        break;                     
-                endswitch;  
-                switch($filtreDate):
-                    case null:
-                    case '2':
-                        $today = new DateTime();
-                        $newconditions[]="Demandeabsence.DATEDU >= '".$today->format('Y-m-d')."'";
-                        $strfilter .= ', après aujourd\'hui (inclus)';
-                        break;                          
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= '';
-                        break; 
-                    case '1':
-                        $today = new DateTime();
-                        $newconditions[]="Demandeabsence.DATEDU < '".$today->format('Y-m-d')."'";
-                        $strfilter .= ', avant aujourd\'hui';
-                        break;                                        
-                endswitch;                 
+                $getdemandeur = $this->get_demandeur_filter($filtreDemandeur);
+                $getreponse = $this->get_reponse_filter($filtreReponse);
+                $getdate = $this->get_date_filter($filtreDate);
+                $newconditions = array($getdemandeur['condition'],$getreponse['condition'],$getdate['condition']);
+                $strfilter = $getdemandeur['filter'].$getreponse['filter'].$getdate['filter'];
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Demandeabsence->recursive = 0;
 		$this->set('demandeabsences', $this->paginate());   
@@ -116,6 +134,7 @@ class DemandeabsencesController extends AppController {
  * @return void
  */
 	public function add() {
+            $this->autoRender  =false;
             if (isAuthorized('demandeabsences', 'add')) :            
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
@@ -123,56 +142,42 @@ class DemandeabsencesController extends AppController {
                     else:          
                         $today = new DateTime();
                         $this->request->data['Demandeabsence']['DATEDEMANDE'] = $today->format('y-m-d H:i:s');
-			$this->Demandeabsence->create();
-                    	if ($this->Demandeabsence->save($this->request->data)) {
-                            //calcul du nombre de jour et insertion dans activitesreelles avec demandeabsence_id = getLastInsert()
-                            $options = array('conditions' => array('Demandeabsence.' . $this->Demandeabsence->primaryKey => $this->Demandeabsence->getLastInsertID()));
-                            $demandeabsence =  $this->Demandeabsence->find('first', $options);                               
-                            //$demandeabsence = $this->Demandeabsence->read($this->Demandeabsence->getLastInsertID());
-                            $this->insertConges($demandeabsence);
-                            $this->sendmaildemandeabsences($demandeabsence);
-                            $this->Session->setFlash(__('Demande d\'absences sauvegardée',true),'flash_success');
-                        } else {
-                            $this->Session->setFlash(__('Demande d\'absences <b>NON</b> sauvegardée',true),'flash_failure');
-                        }
+                        $this->Demandeabsence->create();                        
+                        if($this->request->data['Demandeabsence']['REPEAT']==1):
+                            //TODO : dowhile si datefin <= dateau 
+                            $datefin = $this->request->data['Demandeabsence']['DATEFIN'];
+                            $datedu = $this->request->data['Demandeabsence']['DATEDU'];
+                            $dateau = $this->request->data['Demandeabsence']['DATEAU'];                        
+                            while($dateau <= $datefin):
+                                //$this->Demandeabsence->save($this->request->data);
+                                //$options = array('conditions' => array('Demandeabsence.' . $this->Demandeabsence->primaryKey => $this->Demandeabsence->getLastInsertID()));
+                                //$demandeabsence =  $this->Demandeabsence->find('first', $options); 
+                                //$this->insertConges($demandeabsence);
+                                //$this->sendmaildemandeabsences($demandeabsence);
+                                //TODO Incrémenter la date de début et date de fin de 7 jours
+                                //$datedu = +7jours;
+                                //$this->request->data['Demandeabsence']['DATEDU']=$datedu;
+                                //$dateau = +7jours;
+                                //$this->request->data['Demandeabsence']['DATEAU']=$dateau;
+                            endwhile;
+                        else:
+                            if ($this->Demandeabsence->save($this->request->data)) {
+                                $options = array('conditions' => array('Demandeabsence.' . $this->Demandeabsence->primaryKey => $this->Demandeabsence->getLastInsertID()));
+                                $demandeabsence =  $this->Demandeabsence->find('first', $options);                               
+                                $this->insertConges($demandeabsence);
+                                $this->sendmaildemandeabsences($demandeabsence);
+                                $this->Session->setFlash(__('Demande d\'absences sauvegardée',true),'flash_success');
+                            } else {
+                                $this->Session->setFlash(__('Demande d\'absences <b>NON</b> sauvegardée',true),'flash_failure');
+                            }
+                        endif;
                     endif;
-                    $this->History->goBack(1);
+                    $this->History->goFirst();
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
             endif;                    
-	}
-
-/**
- * edit method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function edit($id = null) {
-            if (isAuthorized('demandeabsences', 'add')) : 
-                $id = $id == null ? $this->request->data['Demandeabsence']['id'] : $id;
-		if (!$this->Demandeabsence->exists($id)) :
-			throw new NotFoundException(__('Invalid demandeabsence'));
-		endif;
-		if ($this->request->is(array('post', 'put'))) :
-                    if (isset($this->params['data']['cancel'])) :
-                        $this->Demandeabsence->validate = array();
-                    else:
-                    	if ($this->Demandeabsence->save($this->request->data)) {
-                            $this->Session->setFlash(__('Demande d\'absences sauvegardée',true),'flash_success');
-                        } else {
-                            $this->Session->setFlash(__('Demande d\'absences <b>NON</b> sauvegardée',true),'flash_failure');
-                        }
-                    endif;
-                    $this->History->goBack(2);
-		endif;
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();           
-            endif;                 
 	}
 
 /**
@@ -304,9 +309,9 @@ class DemandeabsencesController extends AppController {
             $valideurs = $this->Demandeabsence->Utilisateur->Equipe->find('all',array('conditions'=>array('Equipe.agent'=>userAuth('id'))));
             $mailto = array();
             foreach($valideurs as $valideur):
-                $mailto[]=$valideur['Utilisateur']['MAIL'];
+                $mailto[]=$valideur['Valideur']['utilisateurs']['MAIL'];
             endforeach;
-            $mailto[]=userAuth('MAIL');
+            //$mailto[]=userAuth('MAIL');   plus besoin il y a la confirmation     
             $to=$mailto;
             $from = userAuth('MAIL');
             $objrelance = $relance ? '[RELANCE] ' : '';

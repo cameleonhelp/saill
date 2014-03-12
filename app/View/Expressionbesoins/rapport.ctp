@@ -1,36 +1,36 @@
-<div class="marginright20">
+<div class="">
 <div class="actions form">
 <?php echo $this->Form->create('Expressionbesoin',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class='block-panel block-panel-50-left'>
         <div class="form-group">
-            <label class="col-lg-4" for="ExpressionbesoinLotId">Lots : </label>
-            <div class="col-lg-4">
+            <label class="col-md-4" for="ExpressionbesoinLotId">Lots : </label>
+            <div class="col-md-4">
                     <?php echo $this->Form->select('lot_id',$lots,array('class'=>"form-control",'empty'=>'Tous')); ?>                          
             </div>            
         </div>    
         <div class="form-group">
-            <label class="col-lg-4" for="ExpressionbesoinPerimetreId">Périmètres : </label>
-            <div class="col-lg-4">
+            <label class="col-md-4" for="ExpressionbesoinPerimetreId">Périmètres : </label>
+            <div class="col-md-4">
                     <?php echo $this->Form->select('perimetre_id',$perimetres,array('class'=>"form-control",'empty'=>'Tous')); ?>                          
             </div>            
         </div>    
         <div class="form-group">
-            <label class="col-lg-4 required" for="ExpressionbesoinMois">Mois :</label>
-            <div class="col-lg-4">
+            <label class="col-md-4 required" for="ExpressionbesoinMois">Mois :</label>
+            <div class="col-md-4">
                     <?php echo $this->Form->select('mois',$mois,array('default'=>date('m'),'class'=>"form-control",'empty'=>false)); ?>           
             </div>            
         </div>        
         <div class="form-group">
-            <label class="col-lg-4 required" for="ExpressionbesoinAnnee">Année : </label>
-            <div class="col-lg-4">
+            <label class="col-md-4 required" for="ExpressionbesoinAnnee">Année : </label>
+            <div class="col-md-4">
                     <?php echo $this->Form->select('annee',$annee,array('default'=>date('Y'),'class'=>"form-control",'empty'=>false)); ?>           
             </div>            
         </div>        
     </div>
     <div class='block-panel block-panel-50-right'>
         <div class="form-group">
-            <label class="col-lg-4 required" for="ExpressionbesoinEtatId">Etat : </label>
-            <div class="col-lg-4">
+            <label class="col-md-4 required" for="ExpressionbesoinEtatId">Etat : </label>
+            <div class="col-md-4">
                     <?php echo $this->Form->select('etat_id',$etats,array('data-rule-required'=>'true','data-msg-required'=>"L'état est obligatoire",'multiple'=>'true','size'=>"5",'class'=>"form-control multiselect size75")); ?>                          
                     <br><?php echo $this->Form->input('SelectAll',array('type'=>'checkbox')); ?><label class="labelAfter" for="ExpressionbesoinSelectAll">&nbsp;Tout sélectionner</label>            
             </div>            
@@ -150,7 +150,7 @@
 <?php endif; ?>   
 <script>
 $(document).ready(function (){ 
-    
+    $("table").tablesorter();
     $(document).on('click','#ExpressionbesoinSelectAll',function() {
         if($(this).is(':checked')){
             $('#ExpressionbesoinEtatId option').prop('selected', 'selected');
@@ -189,7 +189,7 @@ $(document).ready(function (){
         },
         title: {
             useHTML: true,
-            text: 'Nombre d\'environnements par lot et périmètre pour '+mois+' '+annee
+            text: 'Nombre de nouveaux environnements par lot et périmètre pour '+mois+' '+annee
         },
         data: {
             table: document.getElementById('datatable')
@@ -199,10 +199,6 @@ $(document).ready(function (){
             title: {
                        text: 'Nombre d\'environnements'
                    }
-        },
-        xAxis: {
-            categories: [<?php echo implode(",", $lots); ?>],
-            
         },
         plotOptions: {
                 column: {
@@ -236,10 +232,6 @@ $(document).ready(function (){
             title: {
                        text: 'Nombre d\'environnements'
                    }
-        },
-        xAxis: {
-            categories: [<?php echo implode(",", $lots); ?>],
-            
         },
         plotOptions: {
                 column: {

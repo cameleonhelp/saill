@@ -21,9 +21,9 @@ class PlanchargesController extends AppController {
  * @return void
  */
 	public function index($annee=null,$contrat_id=null,$isvisble=null) {
-            //$this->Session->delete('history');
+            $this->set('title_for_layout','Plans de charge'); 
             if (isAuthorized('plancharges', 'index')) :
-                $this->set('title_for_layout','Plans de charge'); 
+                $listcontrat = $this->requestAction('assoprojetentites/find_str_id_contrats/'.userAuth('id'));
                 switch ($annee){
                     case 'tous':
                     case null:                        
@@ -39,7 +39,7 @@ class PlanchargesController extends AppController {
                 switch ($contrat_id){
                     case 'tous':
                     case null:
-                        $newconditions[]="1=1";
+                        $newconditions[]="Plancharge.contrat_id IN (".$listcontrat.')';
                         $fprojet = "de tous les contrats";
                         break;
                     default:
@@ -63,9 +63,9 @@ class PlanchargesController extends AppController {
 		$this->set('plancharges', $this->paginate());
                 $annees = $this->Plancharge->find('all',array('fields'=>array('Plancharge.ANNEE'),'group'=>'Plancharge.ANNEE','recursive'=>-1));
                 $this->set('annees',$annees);
-                $contrats = $this->Plancharge->find('all',array('fields'=>array('Plancharge.contrat_id','Contrat.NOM'),'group'=>'Contrat.NOM','recursive'=>0));
+                $contrats = $this->Plancharge->find('all',array('fields'=>array('Plancharge.contrat_id','Contrat.NOM'),'conditions'=>array('Contrat.id IN ('.$listcontrat.')'),'group'=>'Contrat.NOM','recursive'=>0));
                 $this->set('contrats',$contrats);  
-                $addcontrats = $this->Plancharge->Contrat->find('list',array('fields'=>array('Contrat.id','Contrat.NOM'),'conditions'=>array('Contrat.ACTIF'=>1,'Contrat.id>1'),'order'=>'Contrat.NOM'));
+                $addcontrats = $this->Plancharge->Contrat->find('list',array('fields'=>array('Contrat.id','Contrat.NOM'),'conditions'=>array('Contrat.ACTIF'=>1,'Contrat.id IN ('.$listcontrat.')'),'order'=>'Contrat.NOM'));
                 $this->set('addcontrats',$addcontrats);                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -85,7 +85,9 @@ class PlanchargesController extends AppController {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Plancharge->validate = array();
                         $this->History->goBack(1);
-                    else:                     
+                    else:        
+                        //TODO à partir du contrat en déduire l'entité et ajouter cette information à l'objet $this->request->data
+                        $this->request->data['Plancharge']['entite_id'] = $this->requestAction('assoprojetentites/find_first_entite_for_contrat/'.$this->request->data['Plancharge']['contrat_id']);
 			$this->Plancharge->create();
 			if ($this->Plancharge->save($this->request->data)) {
 				$this->Session->setFlash(__('Plan de charge créé',true),'flash_success');

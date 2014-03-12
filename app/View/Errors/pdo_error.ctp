@@ -1,4 +1,4 @@
-<div class="marginright20">
+<div class="">
     <div class="bs-callout bs-callout-danger">
         <h2><?php echo __d('cake_dev', 'Erreur en base de données'); ?></h2>
         <p class="error">

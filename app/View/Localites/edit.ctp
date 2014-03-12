@@ -1,4 +1,4 @@
 <div class="localites form">
-<?php echo $this->element('formLocalite'); ?>
+<?php echo $this->element('form/localite'); ?>
 </div>
 

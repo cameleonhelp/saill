@@ -3,8 +3,6 @@
  * Exceptions file. Contains the various exceptions CakePHP will throw until they are
  * moved into their permanent location.
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -90,6 +88,30 @@ class BadRequestException extends HttpException {
 }
 
 /**
+ * DO BY JLR le 03/03/2014
+ * 
+ * Represents an HTTP 401 error.
+ *
+ * @package       Cake.Error
+ */
+class NotAuthorizedException extends HttpException {
+
+/**
+ * Constructor
+ *
+ * @param string $message If no message is given 'Unauthorized' will be the message
+ * @param integer $code Status code, defaults to 401
+ */
+	public function __construct($message = null, $code = 401) {
+		if (empty($message)) {
+			$message = 'Action non autorisée, veuillez contacter l\'administrateur.';
+		}
+		parent::__construct($message, $code);
+	}
+
+}
+
+/**
  * Represents an HTTP 401 error.
  *
  * @package       Cake.Error
@@ -105,28 +127,6 @@ class UnauthorizedException extends HttpException {
 	public function __construct($message = null, $code = 401) {
 		if (empty($message)) {
 			$message = 'Unauthorized';
-		}
-		parent::__construct($message, $code);
-	}
-
-}
-
-/**
- * Represents an HTTP 401 error.
- *
- * @package       Cake.Error
- */
-class NotAuthorizedException extends HttpException {
-
-/**
- * Constructor
- *
- * @param string $message If no message is given 'Unauthorized' will be the message
- * @param integer $code Status code, defaults to 401
- */
-	public function __construct($message = null, $code = 401) {
-		if (empty($message)) {
-			$message = 'Vous n\'êtes pas autorisé à utiliser cette fonctionnalité de l\'outil';
 		}
 		parent::__construct($message, $code);
 	}

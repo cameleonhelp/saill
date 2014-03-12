@@ -3,7 +3,7 @@
             <th><?php echo 'Logiciel'; ?></th>
             <th><?php echo 'Application'; ?></th>
             <th><?php echo 'Lot'; ?></th>
-            <th><?php echo 'Type Env. DSIT'; ?></th>
+            <th><?php echo 'Env. DSIT'; ?></th>
             <th><?php echo 'Installé'; ?></th>
             <th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
@@ -12,7 +12,9 @@
 		<td><?php echo $logiciel['Logiciel']['NOM']; ?></td>
                 <td><?php echo $logiciel['Logiciel']['APPNOM']; ?></td>
                 <td><?php echo $logiciel['Logiciel']['LOTNOM']; ?></td>
-		<td><?php echo h($logiciel['Assobienlogiciel']['ENVDSIT']); ?>&nbsp;</td>
+                <?php $listenv = isset($logiciel['Assobienlogiciel']['LISTNOMENV']) ? $logiciel['Assobienlogiciel']['LISTNOMENV'] : ''; ?>
+                <td><span id='bienlogiciel<?php echo $logiciel['Assobienlogiciel']['id']; ?>'><?php echo $listenv; ?></span>
+                <span class="pull-right"><a class="btn btn-xs btn-default addenv" data-span="bienlogiciel<?php echo $logiciel['Assobienlogiciel']['id']; ?>" data-envid="<?php echo $logiciel['Assobienlogiciel']['dsitenv_id']; ?>" data-id="<?php echo $logiciel['Assobienlogiciel']['id']; ?>"><span class="glyphicons notchange electrical_plug"></span></a></span></td>
 		<td style="text-align:center;">
                     <?php $image = (isset($logiciel['Assobienlogiciel']['INSTALL']) && $logiciel['Assobienlogiciel']['INSTALL']==true) ? 'ok_2' : 'ok_2 disabled' ; ?>
                 <a href="#" class="installed cursor showoverlay" data-id="<?php echo $logiciel['Assobienlogiciel']['id']; ?>"  rel='tooltip'  data-container="body" data-title="Installé le <?php echo $logiciel['Assobienlogiciel']['DATEINSTALL']; ?>"><span class="glyphicons <?php echo $image; ?> notchange"></span></a>
@@ -46,34 +48,34 @@
         <?php  echo $this->Form->input('bien_id',array('type'=>'hidden','value'=>$this->data['Bien']['id'])); ?>
         <?php  echo $this->Form->input('id',array('type'=>'hidden')); ?>
         <div class="form-group">
-              <label class="col-lg-4" for="AssobienlogicielApplicationId">Application : </label>
-              <div class="col-lg-7">
+              <label class="col-md-4" for="AssobienlogicielApplicationId">Application : </label>
+              <div class="col-md-7">
                   <?php echo $this->Form->input('application_id',array('type'=>'hidden','value'=>$this->data['Bien']['application_id'])); ?>
                   <?php echo $this->Form->select('application_id',$applications,array('class'=>'form-control','id'=>'SelectApplicationId','empty'=>false,'selected' => $this->data['Bien']['application_id'])); ?>                   
               </div>
         </div>     
         <div class="form-group">
-              <label class="col-lg-4" for="AssobienlogicielLotId">Lot : </label>
-              <div class="col-lg-7">
+              <label class="col-md-4" for="AssobienlogicielLotId">Lot : </label>
+              <div class="col-md-7">
                   <?php echo $this->Form->input('lot_id',array('type'=>'hidden','value'=>$this->data['Bien']['lot_id'])); ?>
                   <?php echo $this->Form->select('lot_id',$lots,array('class'=>'form-control','id'=>'SelectLotId','empty'=>false,'selected' => $this->data['Bien']['lot_id'])); ?>                   
               </div>
         </div>             
         <div class="form-group">
-              <label class="col-lg-4" for="AssobienlogicielLogicielId">Nom : </label>
-              <div class="col-lg-7">
+              <label class="col-md-4" for="AssobienlogicielLogicielId">Nom : </label>
+              <div class="col-md-7">
                   <?php echo $this->Form->select('logiciel_id',$listlogiciels,array('class'=>'form-control','empty' => 'Choisir un logiciel')); ?>                   
               </div>
         </div>  
-        <div class="form-group">
-            <label class="col-lg-4" for="AssobienlogicielENVDSIT">Nom environnement DSI-T : </label>      
-            <div class="col-lg-7">
+        <!--<div class="form-group">
+            <label class="col-md-4" for="AssobienlogicielENVDSIT">Nom environnement DSI-T : </label>      
+            <div class="col-md-7">
                 <?php echo $this->Form->input('ENVDSIT',array('type'=>'text','placeholder'=>'Nom environnement DSI-T','class'=>'form-control')); ?>
             </div>         
-        </div>  
+        </div>  -->
         <div class="form-group">
-            <label class="col-lg-4" for="AssobienlogicielINSTALL">Installé : </label>      
-            <div class="col-lg-7">
+            <label class="col-md-4" for="AssobienlogicielINSTALL">Installé : </label>      
+            <div class="col-md-7">
                 <?php echo $this->Form->input('INSTALL',array('class'=>'yesno')); ?>
                 &nbsp;<label for="AssobienlogicielINSTALL" class='labelAfter'></label>
             </div>
@@ -88,13 +90,23 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <!-- /test modal //-->
-
+<?php echo $this->element('modals/envdsit'); ?>
 <script>
 $(document).ready(function () {
+    $(document).on('click','.addenv',function(e){
+        var id = $(this).attr('data-id');
+        var envsid = $(this).attr('data-envid');
+        var bienlogicielid = $(this).attr('data-span');
+        $('#modalenvdsit #assoid').val(id);
+        $('#modalenvdsit #envsid').val(envsid);
+        $('#modalenvdsit #tospan').val("#"+bienlogicielid);
+        $('#modalenvdsit').modal('show');
+    });
+    
     $(document).on('click','.pencil',function(e){
         var id = $(this).parent('a').attr('data-id');
         var appid = $(this).parent('a').attr('data-appid');
-        var lotid = $(this).parent('a').attr('data-lotid');;
+        var lotid = $(this).parent('a').attr('data-lotid');
         $("#editModal #AssobienlogicielLogicielId").find('option:not(:first)').remove();
         //remplir select logiciel_id avec bon liste
         $.ajax({

@@ -37,6 +37,14 @@
                  
 </nav>
 <script>
+    <?php 
+        $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous';
+        $pass3 = isset($this->params->pass[3]) ? $this->params->pass[3] : 'tous';        
+        $pass4 = isset($this->params->pass[4]) ? $this->params->pass[4] : 'tous';   
+        $pass5 = isset($this->params->pass[5]) ? $this->params->pass[5] : 'tous';
+        $pass = $pass2."/".$pass3."/".$pass4."/".$pass5;
+        
+    ?>
     $(document).ready(function () {
         $(document).on('click',".ios-switch",function() {
             var overlay = $('#overlay');
@@ -49,7 +57,7 @@
                 $("#filterlabel").text('Toutes ');
                 checked = '0';
             }
-            location.href =  "<?php echo $this->Html->url(array('controller'=>'changelogdemandes')); ?>/index/0/"+checked;          
+            location.href =  "<?php echo $this->Html->url(array('controller'=>'changelogdemandes')); ?>/index/0/"+checked+"/<?php echo $pass?>";          
         });
     });
 </script>

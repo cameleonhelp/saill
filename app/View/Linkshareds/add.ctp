@@ -1,4 +1,4 @@
-<div class="linkshareds form">
-<?php echo $this->element('formLinkshared'); ?>
+<div class="linkshareds form add">
+<?php echo $this->element('form/linkshareds'); ?>
 </div>
 

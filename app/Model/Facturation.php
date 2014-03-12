@@ -141,6 +141,15 @@ class Facturation extends AppModel {
                 if (isset($val['Activite']['projet_id'])) {
                     $results[$key]['Facturation']['projet_NOM'] = $this->getProjetForActivite($val['Activite']['projet_id']);
                 }      
+                if (isset($val['Activite']['projet_id'])) {
+                    $results[$key]['Facturation']['projet_GALILEI'] = $this->getProjetCodeForActivite($val['Activite']['projet_id']);
+                }     
+                if (isset($val['Activite']['projet_id'])) {
+                    $cdc = $this->getInfoCDC($val['Activite']['projet_id'],$val['Facturation']['id']);
+                    $results[$key]['Facturation']['cdc_NOM'] = $cdc['centrecouts']['NOM'];
+                    $results[$key]['Facturation']['cdc_CODEPROJET'] = $cdc['centrecouts']['CODEPROJET'];
+                    $results[$key]['Facturation']['cdc_CODEACTIVITE'] = $cdc['centrecouts']['CODEACTIVITE'];
+                }                   
                 if (isset($val['Facturation']['TOTAL'])) {
                     $results[$key]['Facturation']['TOTAL'] = $this->changeSeparator($val['Facturation']['TOTAL']);
                 }                  
@@ -153,6 +162,25 @@ class Facturation extends AppModel {
             $result = $this->query($sql);
             return $result[0]['projets']['NOM'];
         }
+        
+        public function getProjetCodeForActivite($id){
+            $sql = "SELECT NUMEROGALLILIE FROM projets WHERE id='".$id."'";
+            $result = $this->query($sql);
+            return $result[0]['projets']['NUMEROGALLILIE'];
+        }        
+        
+        public function getInfoCDC($id,$utilisateur_id){
+            $sql = "SELECT societe_id FROM utilisateurs LEFT JOIN facturations ON facturations.utilisateur_id = utilisateurs.id WHERE facturations.id = ".$utilisateur_id;
+            $result = $this->query($sql);
+            $isSNCF = $result[0]['utilisateurs']['societe_id']==1 ? 1 : 0;
+            $sql = "SELECT NOM,CODEPROJET,CODEACTIVITE FROM centrecouts
+                    LEFT JOIN assocdcprojets ON assocdcprojets.centrecout_id = centrecouts.id
+                    WHERE (assocdcprojets.projet_id = ".$id." OR assocdcprojets.projet_id LIKE '%".$id.",%' OR assocdcprojets.projet_id LIKE '%,".$id."%')"
+                    . " AND centrecouts.SNCF = ".$isSNCF; 
+            $result = $this->query($sql);
+            $result = isset($result[0]) ? $result[0] : array('centrecouts'=>array('NOM'=>'','CODEPROJET'=>'','CODEACTIVITE'=>''));
+            return $result;
+        }  
         
         public function changeSeparator($value){
              return str_replace('.', ',', $value);

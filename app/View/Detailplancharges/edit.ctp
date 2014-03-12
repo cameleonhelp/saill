@@ -1,4 +1,4 @@
-<div class="marginright20">
+<div class="">
 <div class="detailplancharges form">
     <div class="bs-callout bs-callout-info" style="margin-top:0px;">
         Les vacances de février (5 jours), pâques (5 jours), été (5 jours en juillet et 10 jours en août) et noël (5 jours en décembre) sont prises en comptes

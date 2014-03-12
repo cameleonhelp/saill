@@ -1,4 +1,4 @@
-<div class="marginright20">
+<div class="">
     <?php echo $this->element('changelogsubmenu'); ?>
     <?php echo $this->element('changelognextversion'); ?>
     <div class="changelogdemandes index tablemarginright">
@@ -20,21 +20,34 @@
         $pass1 = isset($this->params->pass[1]) ? $this->params->pass[1] : '1';
         $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous';
         $pass3 = isset($this->params->pass[3]) ? $this->params->pass[3] : 'tous';        
-        $pass4 = isset($this->params->pass[4]) ? $this->params->pass[4] : 'tous';     
+        $pass4 = isset($this->params->pass[4]) ? $this->params->pass[4] : 'tous';   
+        $pass5 = isset($this->params->pass[5]) ? $this->params->pass[5] : 'tous'; 
         ?>           
         <tr>
                         <th style="border-top: 0px solid #000000 !important;"></th>
-			<th style="border-top: 0px solid #000000 !important;"></th>
+                        <th style="text-align:center;border-top: 0px solid #000000 !important;">
+                            <div class="btn-group">
+                                <button class="btn btn-default btn-xs dropdown-toggle<?php echo filtre_btn_is_actif($pass5,'tous'); ?>" type="button" data-toggle="dropdown"><span class="glyphicons filter size8"></span> <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu">
+                                  <li style="text-align:left;"><?php echo $this->Html->link("Toutes", array('action' => 'index',$pass0,$pass1,$pass2,$pass3,$pass4,'tous'),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass5,'tous'))); ?></li>
+                                  <li class="divider"></li>
+                                  <?php foreach($versions as $version): ?>
+                                    <li style="text-align:left;"><?php echo $this->Html->link($version['Changelogversion']['VERSION'], array('action' => 'index',$pass0,$pass1,$pass2,$pass3,$pass4,$version['Changelogversion']['id']),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass5,$version['Changelogversion']['id']))); ?></li>
+                                  <?php endforeach; ?>
+                              </ul>
+                            </div>                            
+                        </th>
                         <th style="border-top: 0px solid #000000 !important;"></th>
                         <th style="text-align:center;border-top: 0px solid #000000 !important;">
                             <div class="btn-group">
                                 <button class="btn btn-default btn-xs dropdown-toggle<?php echo filtre_btn_is_actif($pass2,'tous'); ?>" type="button" data-toggle="dropdown"><span class="glyphicons filter size8"></span> <span class="caret"></span>
                               </button>
                               <ul class="dropdown-menu">
-                                  <li style="text-align:left;"><?php echo $this->Html->link("Toutes", array('action' => 'index',$pass0,$pass1,"tous",$pass3,$pass4),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass2,'tous'))); ?></li>
+                                  <li style="text-align:left;"><?php echo $this->Html->link("Toutes", array('action' => 'index',$pass0,$pass1,"tous",$pass3,$pass4,$pass5),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass2,'tous'))); ?></li>
                                   <li class="divider"></li>
                                   <?php foreach($changelogcriticites as $key=>$value): ?>
-                                    <li style="text-align:left;"><?php echo $this->Html->link($value, array('action' => 'index',$pass0,$pass1,$key,$pass3,$pass4),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass2,$key))); ?></li>
+                                    <li style="text-align:left;"><?php echo $this->Html->link($value, array('action' => 'index',$pass0,$pass1,$key,$pass3,$pass4,$pass5),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass2,$key))); ?></li>
                                   <?php endforeach; ?>
                               </ul>
                             </div>                            
@@ -46,10 +59,10 @@
                                 <button class="btn btn-default btn-xs dropdown-toggle<?php echo filtre_btn_is_actif($pass3,'tous'); ?>" type="button" data-toggle="dropdown"><span class="glyphicons filter size8"></span> <span class="caret"></span>
                               </button>
                               <ul class="dropdown-menu">
-                                  <li style="text-align:left;"><?php echo $this->Html->link("Tous", array('action' => 'index',$pass0,$pass1,$pass2,"tous",$pass4),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass3,'tous'))); ?></li>
+                                  <li style="text-align:left;"><?php echo $this->Html->link("Tous", array('action' => 'index',$pass0,$pass1,$pass2,"tous",$pass4,$pass5),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass3,'tous'))); ?></li>
                                   <li class="divider"></li>                                  
                                   <?php foreach($changelogetats as $key=>$value): ?>
-                                    <li style="text-align:left;"><?php echo $this->Html->link($value, array('action' => 'index',$pass0,$pass1,$pass2,$key,$pass4),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass3,$key))); ?></li>
+                                    <li style="text-align:left;"><?php echo $this->Html->link($value, array('action' => 'index',$pass0,$pass1,$pass2,$key,$pass4,$pass5),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass3,$key))); ?></li>
                                   <?php endforeach; ?>
                               </ul>
                             </div>                            
@@ -59,10 +72,10 @@
                                 <button class="btn btn-default btn-xs dropdown-toggle<?php echo filtre_btn_is_actif($pass4,'tous'); ?>" type="button" data-toggle="dropdown"><span class="glyphicons filter size8"></span> <span class="caret"></span>
                               </button>
                               <ul class="dropdown-menu">
-                                  <li style="text-align:left;"><?php echo $this->Html->link("Tous", array('action' => 'index',$pass0,$pass1,$pass2,$pass3,"tous"),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass4,'tous'))); ?></li>
+                                  <li style="text-align:left;"><?php echo $this->Html->link("Tous", array('action' => 'index',$pass0,$pass1,$pass2,$pass3,"tous",$pass5),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass4,'tous'))); ?></li>
                                   <li class="divider"></li>                                  
                                   <?php foreach($changelogtypes as $key=>$value): ?>
-                                    <li style="text-align:left;"><?php echo $this->Html->link($value, array('action' => 'index',$pass0,$pass1,$pass2,$pass3,$key),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass4,$key))); ?></li>
+                                    <li style="text-align:left;"><?php echo $this->Html->link($value, array('action' => 'index',$pass0,$pass1,$pass2,$pass3,$key,$pass5),array('class'=>'showoverlay'.subfiltre_btn_is_actif($pass4,$key))); ?></li>
                                   <?php endforeach; ?>
                               </ul>
                             </div>                            

@@ -137,7 +137,8 @@ class Intergrationapplicative extends AppModel {
                 }      
                 if (isset($val['Intergrationapplicative']['DATEINSTALL'])) {
                     $results[$key]['Intergrationapplicative']['DATEINSTALL'] = $this->datetimeFormatAfterFind($val['Intergrationapplicative']['DATEINSTALL']);
-                }                                    
+                }    
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Intergrationapplicative']['entite_id']); 
             }
             return $results;
         } 

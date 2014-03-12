@@ -8,7 +8,9 @@
 	<?php foreach ($biens as $bien): ?>
 	<tr>
             <td class="text-courrier"><?php echo h($bien['Bien']['NOM']); ?>&nbsp;</td>
-            <td><?php echo h($bien['Assobienlogiciel']['ENVDSIT']); ?>&nbsp;</td>
+            <?php $listenv = isset($bien['Assobienlogiciel']['LISTNOMENV']) ? $bien['Assobienlogiciel']['LISTNOMENV'] : ''; ?>
+            <td><span id='bienlogiciel<?php echo $bien['Assobienlogiciel']['id']; ?>'><?php echo $listenv; ?></span>
+                <span class="pull-right"><a class="btn btn-xs btn-default addenv" data-span="bienlogiciel<?php echo $bien['Assobienlogiciel']['id']; ?>" data-envid="<?php echo $bien['Assobienlogiciel']['dsitenv_id']; ?>" data-id="<?php echo $bien['Assobienlogiciel']['id']; ?>"><span class="glyphicons notchange electrical_plug"></span></a></span></td>
             <td style="text-align: center;">
             <?php $image = (isset($bien['Assobienlogiciel']['INSTALL']) && $bien['Assobienlogiciel']['INSTALL']==true) ? 'ok_2' : 'ok_2 disabled' ; ?>
                 <a href="#" class="installed cursor showoverlay" data-id="<?php echo $bien['Assobienlogiciel']['id']; ?>"  rel='tooltip'  data-container="body" data-title="Installé le <?php echo $bien['Assobienlogiciel']['DATEINSTALL']; ?>"><span class="glyphicons <?php echo $image; ?> notchange"></span></a>
@@ -41,20 +43,20 @@
         <?php  echo $this->Form->input('id',array('type'=>'hidden')); ?>
         <?php  echo $this->Form->input('logiciel_id',array('type'=>'hidden','value'=>$this->data['Logiciel']['id'])); ?>
         <div class="form-group">
-              <label class="col-lg-4" for="AssobienlogicielLogicielId">Nom : </label>
-              <div class="col-lg-7">
+              <label class="col-md-4" for="AssobienlogicielLogicielId">Nom : </label>
+              <div class="col-md-7">
                   <?php echo $this->Form->select('bien_id',$listbiens,array('class'=>'form-control','empty' => 'Choisir un bien')); ?>                   
               </div>
         </div> 
-        <div class="form-group">
-            <label class="col-lg-4" for="AssobienlogicielENVDSIT">Nom environnement DSI-T : </label>      
-            <div class="col-lg-7">
+        <!--<div class="form-group">
+            <label class="col-md-4" for="AssobienlogicielENVDSIT">Nom environnement DSI-T : </label>      
+            <div class="col-md-7">
                 <?php echo $this->Form->input('ENVDSIT',array('type'=>'text','placeholder'=>'Nom environnement DSI-T','class'=>'form-control')); ?>
             </div>         
-        </div>  
+        </div>  -->
         <div class="form-group">
-            <label class="col-lg-4" for="AssobienlogicielINSTALL">Installé : </label>      
-            <div class="col-lg-7">
+            <label class="col-md-4" for="AssobienlogicielINSTALL">Installé : </label>      
+            <div class="col-md-7">
                 <?php echo $this->Form->input('INSTALL',array('class'=>'yesno')); ?>
                 &nbsp;<label for="AssobienlogicielINSTALL" class='labelAfter'></label>
             </div>
@@ -69,9 +71,19 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <!-- /test modal //-->
-
+<?php echo $this->element('modals/envdsit'); ?>
 <script>
 $(document).ready(function () {
+    $(document).on('click','.addenv',function(e){
+        var id = $(this).attr('data-id');
+        var envsid = $(this).attr('data-envid');
+        var bienlogicielid = $(this).attr('data-span');
+        $('#modalenvdsit #assoid').val(id);
+        $('#modalenvdsit #envsid').val(envsid);
+        $('#modalenvdsit #tospan').val("#"+bienlogicielid);
+        $('#modalenvdsit').modal('show');
+    });    
+    
     $(document).on('click','.pencil',function(e){
         var id = $(this).parent('a').attr('data-id');
         $.ajax({

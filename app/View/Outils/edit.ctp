@@ -1,3 +1,3 @@
 <div class="outils form">
-<?php echo $this->element('formOutil'); ?>
+<?php echo $this->element('form/outil'); ?>
 </div>

@@ -11,94 +11,103 @@ class MaterielinformatiquesController extends AppController {
     public $paginate = array(
         'limit' => 25,
         'order' => array('Materielinformatique.NOM' => 'asc'),
-        /*'order' => array(
-            'Post.title' => 'asc' /*/
         );
-    
+
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/find_all_section/'.userAuth('id'));
+            endif;
+        }
+                
+        public function get_materiel_etat_filter($id){
+            $result = array();
+            $id = $id==null ? 'En stock': $id;
+            switch($id):
+                case 'tous':  
+                    $result['condition']="1=1";
+                    $result['filter'] = "de tous les états";
+                    break;
+                default :
+                    $result['condition']="Materielinformatique.ETAT='".$id."'";
+                    $result['filter'] = "étant '".$id."'"; 
+                    break;
+            endswitch;
+            return $result;
+        }    
+        
+        public function get_materiel_type_filter($id){
+            $result = array();
+            switch($id):
+                    case 'tous':
+                    case null:    
+                        $result['condition']="1=1";
+                        $result['filter'] = "tous les types de matériel";
+                        break;
+                    default :
+                        $result['condition']="Typemateriel.NOM='".$id."'";
+                        $result['filter'] = "type de matériel '".$id."'";  
+                    break;
+            endswitch;
+            return $result;
+        }       
+        
+        public function get_materiel_section_filter($id,$visibility){
+            $result = array();
+            switch($id):
+                case 'toutes':
+                case null:    
+                    if($visibility == null):
+                        $result['condition']='1=1';
+                    elseif ($visibility!=''):
+                        if (userAuth('WIDEAREA')==0) :
+                            $result['condition']='Section.id ='.userAuth('section_id');
+                        else:
+                            $result['condition']='Section.id IN ('.$visibility.')';
+                        endif;
+                    else:
+                        $result['condition']='Section.id ='.userAuth('section_id');
+                    endif;                     
+                    $result['filter'] = "toutes les sections";
+                    break;
+                default :
+                    $result['condition']="Section.id='".$id."'";
+                    $nomsection = $this->Materielinformatique->Section->find('first',array('conditions'=>array('Section.id'=>$id),'recursive'=>-1));
+                    $result['filter'] = "la section ".$nomsection['Section']['NOM'];   
+                    break;
+            endswitch;
+            return $result;
+        }      
+               
+        public function get_export($conditions){
+            $this->Session->delete('xls_export');
+            $export = $this->Materielinformatique->find('all',array('conditions'=>$conditions,'order' => array('Materielinformatique.NOM' => 'asc'),'recursive'=>0));
+            $this->Session->write('xls_export',$export);   
+        }
 /**
  * index method
  *
  * @return void
  */
 	public function index($filtreetat=null,$filtretype=null,$filtresection=null) {
-            //$this->Session->delete('history');
+            $this->set('title_for_layout','Postes informatique');
             if (isAuthorized('materielinformatiques', 'index')) :
-                $filtreetat= $filtreetat==null ? 'En stock': $filtreetat;
-                switch ($filtreetat){
-                    case 'tous':  
-                        $newconditions[]="1=1";
-                        $fetat = "de tous les états";
-                        break;
-                    default :
-                        $newconditions[]="Materielinformatique.ETAT='".$filtreetat."'";
-                        $fetat = "étant '".$filtreetat."'";                        
-                }    
-                $this->set('fetat',$fetat); 
-                switch ($filtretype){
-                    case 'tous':
-                    case null:    
-                        $newconditions[]="1=1";
-                        $ftype = "tous les types de matériel";
-                        break;
-                    default :
-                        $newconditions[]="Typemateriel.NOM='".$filtretype."'";
-                        $ftype = "type de matériel '".$filtretype."'";                        
-                }    
-                $this->set('ftype',$ftype); 
-                switch ($filtresection){
-                    case 'toutes':
-                    case null:    
-                        $newconditions[]="1=1";
-                        $fsection = "toutes les sections";
-                        break;
-                    default :
-                        $newconditions[]="Section.id='".$filtresection."'";
-                        $nomsection = $this->Materielinformatique->Section->find('first',array('conditions'=>array('Section.id'=>$filtresection),'recursive'=>-1));
-                        $fsection = "la section ".$nomsection['Section']['NOM'];                        
-                }    
-                $this->set('fsection',$fsection);                 
-                $this->set('title_for_layout','Postes informatique');
-                if (userAuth('WIDEAREA')==0) {$newconditions[]="Materielinformatique.section_id=".userAuth('section_id');}                
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
-		$this->Materielinformatique->recursive = 0;
+                $visibility = $this->get_visibility();
+                $getetat = $this->get_materiel_etat_filter($filtreetat);
+                $gettype = $this->get_materiel_type_filter($filtretype);
+                $getsection = $this->get_materiel_section_filter($filtresection, $visibility);
+                $this->set('fetat',$getetat['filter']); 
+                $this->set('ftype',$gettype['filter']); 
+                $this->set('fsection',$getsection['filter']);                 
+                $newconditions = array($getetat['condition'],$gettype['condition'],$getsection['condition']);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                
 		$this->set('materielinformatiques', $this->paginate());
-                $this->Session->delete('xls_export');
-                $this->Materielinformatique->recursive = 0;
-                $export = $this->Materielinformatique->find('all',array('conditions'=>$newconditions,'order' => array('Materielinformatique.NOM' => 'asc')));
-                $this->Session->write('xls_export',$export); 
-                $this->Materielinformatique->recursive = -1;
-                $etats = $this->Materielinformatique->find('all',array('fields' => array('ETAT'),'group'=>'ETAT','order'=>array('ETAT'=>'asc')));
-                $this->set('etats',$etats); 
-                $this->Materielinformatique->recursive = 0;
-                $types = $this->Materielinformatique->find('all',array('fields' => array('Typemateriel.NOM'),'group'=>'Typemateriel.NOM','order'=>array('Typemateriel.NOM'=>'asc')));
-                $this->set('types',$types);    
-                if (userAuth('WIDEAREA')==0) {
-                   $sections = $this->Materielinformatique->Section->find('all',array('fields' => array('Section.id','Section.NOM'),'conditions'=>array('Section.id'=>userAuth('section_id')),'recursive'=>0));
-                } else {
-                   $sections = $this->Materielinformatique->Section->find('all',array('fields' => array('Section.id','Section.NOM'),'group'=>'Section.NOM','order'=>array('Section.NOM'=>'asc'),'recursive'=>0));
-                }
-                $this->set('sections',$sections);  
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('materielinformatiques', 'view')) :
-		$this->set('title_for_layout','Postes informatique');
-                if (!$this->Materielinformatique->exists($id)) {
-			throw new NotFoundException(__('Postes informatique incorrect'));
-		}
-		$options = array('conditions' => array('Materielinformatique.' . $this->Materielinformatique->primaryKey => $id));
-		$this->set('materielinformatique', $this->Materielinformatique->find('first', $options));
+                $this->get_export($newconditions);
+                $etats = Configure::read('etatMaterielInformatique');
+                $types = $this->requestAction('typemateriels/get_all_uc');
+                $sections = $this->requestAction('sections/get_all/',array('pass'=>array($visibility)));
+                $this->set(compact('etats','types','sections')); 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -111,19 +120,8 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function add() {
+            $this->set('title_for_layout','Postes informatique');
             if (isAuthorized('materielinformatiques', 'add')) :
-                $this->Materielinformatique->Typemateriel->recursive = -1;
-                $peripherique = $this->Materielinformatique->Typemateriel->find('list',array('fields' => array('id', 'NOM'),'conditions'=>array('id <'=>3)));
-                $this->set('peripherique',$peripherique); 
-                $this->Materielinformatique->Section->recursive = -1;
-                $section = $this->Materielinformatique->Section->find('list',array('fields' => array('id', 'NOM')));
-                $this->set('section',$section); 
-                $this->Materielinformatique->Assistance->recursive = -1;
-                $assistance = $this->Materielinformatique->Assistance->find('list',array('fields' => array('id', 'NOM')));
-                $this->set('assistance',$assistance); 
-                $etat = Configure::read('etatMaterielInformatique');
-                $this->set('etat',$etat); 
-                $this->set('title_for_layout','Postes informatique');
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Materielinformatique->validate = array();
@@ -138,6 +136,12 @@ class MaterielinformatiquesController extends AppController {
 			}
                     endif;
 		endif;
+                $visibility = $this->get_visibility();
+                $peripherique = $this->requestAction('typemateriels/get_list_uc');
+                $section = $this->requestAction('sections/get_list/',array('pass'=>array($visibility)));
+                $etat = Configure::read('etatMaterielInformatique');
+                $assistance = $this->requestAction('assistances/get_list');
+                $this->set(compact('peripherique','section','etat','assistance'));                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -152,19 +156,8 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            $this->set('title_for_layout','Postes informatique');
             if (isAuthorized('materielinformatiques', 'edit')) :
-		$this->set('title_for_layout','Postes informatique');
-                $this->Materielinformatique->Typemateriel->recursive = -1;
-                $peripherique = $this->Materielinformatique->Typemateriel->find('list',array('fields' => array('id', 'NOM'),'conditions'=>array('id <'=>3)));
-                $this->set('peripherique',$peripherique); 
-                $this->Materielinformatique->Section->recursive = -1;
-                $section = $this->Materielinformatique->Section->find('list',array('fields' => array('id', 'NOM')));
-                $this->set('section',$section); 
-                $this->Materielinformatique->Assistance->recursive = -1;
-                $assistance = $this->Materielinformatique->Assistance->find('list',array('fields' => array('id', 'NOM')));
-                $this->set('assistance',$assistance); 
-                $etat = Configure::read('etatMaterielInformatique');
-                $this->set('etat',$etat); 
                 if (!$this->Materielinformatique->exists($id)) {
 			throw new NotFoundException(__('Postes informatique incorrect'));
 		}
@@ -187,9 +180,15 @@ class MaterielinformatiquesController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Materielinformatique.' . $this->Materielinformatique->primaryKey => $id),'recursive'=>0);
-			$this->request->data = $this->Materielinformatique->find('first', $options);
-                        $this->set('materielinformatique',$this->request->data);
+                    $options = array('conditions' => array('Materielinformatique.' . $this->Materielinformatique->primaryKey => $id),'recursive'=>0);
+                    $this->request->data = $this->Materielinformatique->find('first', $options);
+                    $this->set('materielinformatique',$this->request->data);
+                    $visibility = $this->get_visibility();
+                    $peripherique = $this->requestAction('typemateriels/get_list_uc');
+                    $section = $this->requestAction('sections/get_list/',array('pass'=>array($visibility)));
+                    $etat = Configure::read('etatMaterielInformatique');
+                    $assistance = $this->requestAction('assistances/get_list');
+                    $this->set(compact('peripherique','section','etat','assistance'));                         
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -206,13 +205,12 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            $this->set('title_for_layout','Postes informatique');
             if (isAuthorized('materielinformatiques', 'delete')) :
-		$this->set('title_for_layout','Postes informatique');
                 $this->Materielinformatique->id = $id;
 		if (!$this->Materielinformatique->exists()) {
 			throw new NotFoundException(__('Postes informatique incorrect'));
 		}
-		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Materielinformatique->delete()) {
 			$this->Session->setFlash(__('Postes informatique supprimé',true),'flash_success');
 			$this->History->goBack(1);
@@ -230,25 +228,41 @@ class MaterielinformatiquesController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($filtreetat=null,$filtretype=null,$filtresection=null,$keywords=null) {
+            $this->set('title_for_layout','Postes informatique');
             if (isAuthorized('materielinformatiques', 'index')) :
-                $this->set('title_for_layout','Postes informatique');
-                $keyword=isset($this->params->data['Materielinformatique']['SEARCH']) ? $this->params->data['Materielinformatique']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Materielinformatique.NOM LIKE '%".$keyword."%'","Materielinformatique.ETAT LIKE '%".$keyword."%'","Materielinformatique.COMMENTAIRE LIKE '%".$keyword."%'","Assistance.NOM LIKE '%".$keyword."%'","Section.NOM LIKE '%".$keyword."%'","Typemateriel.NOM LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 
-                $this->autoRender = false;
-                $this->Materielinformatique->recursive = 0;
-                $this->set('materielinformatiques', $this->paginate());
-                $this->Session->delete('xls_export');
-                $export = $this->Materielinformatique->find('all',array('conditions'=>$newconditions));
-                $this->Session->write('xls_export',$export);                  
-                $etats = $this->Materielinformatique->find('all',array('fields' => array('ETAT'),'group'=>'ETAT','order'=>array('ETAT'=>'asc')));
-                $this->set('etats',$etats); 
-                $types = $this->Materielinformatique->find('all',array('fields' => array('Typemateriel.NOM'),'group'=>'Typemateriel.NOM','order'=>array('Typemateriel.NOM'=>'asc')));
-                $this->set('types',$types);    
-                $sections = $this->Materielinformatique->find('all',array('fields' => array('Section.NOM'),'group'=>'Section.NOM','order'=>array('Section.NOM'=>'asc')));
-                $this->set('sections',$sections);                 
-                $this->render('index');
+                if(isset($this->params->data['Materielinformatique']['SEARCH'])):
+                    $keywords = $this->params->data['Materielinformatique']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $visibility = $this->get_visibility();
+                    $getetat = $this->get_materiel_etat_filter($filtreetat);
+                    $gettype = $this->get_materiel_type_filter($filtretype);
+                    $getsection = $this->get_materiel_section_filter($filtresection, $visibility);
+                    $this->set('fetat',$getetat['filter']); 
+                    $this->set('ftype',$gettype['filter']); 
+                    $this->set('fsection',$getsection['filter']);                 
+                    $newconditions = array($getetat['condition'],$gettype['condition'],$getsection['condition']);
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Materielinformatique.NOM LIKE '%".$value."%'","Materielinformatique.ETAT LIKE '%".$value."%'","Materielinformatique.COMMENTAIRE LIKE '%".$value."%'","Assistance.NOM LIKE '%".$value."%'","Section.NOM LIKE '%".$value."%'","Typemateriel.NOM LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newcondition,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
+                    $this->set('materielinformatiques', $this->paginate());
+                    $this->get_export($newconditions);
+                    $etats = Configure::read('etatMaterielInformatique');
+                    $types = $this->requestAction('typemateriels/get_all_uc');
+                    $sections = $this->requestAction('sections/get_all/',array('pass'=>array($visibility)));
+                    $this->set(compact('etats','types','sections'));                    
+                else:
+                    $this->redirect(array('action'=>'index',$actif,$entite));
+                endif;   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -302,10 +316,11 @@ class MaterielinformatiquesController extends AppController {
             $this->autoRender = false;
             $ip = gethostbyname($host);
             if($ip != NULL):
-                /*$ping = new Ping($ip);
-                $latency = $ping->ping();                
-                if ($latency) :*/
-                exec("ping -n 1 " . $ip, $output, $result);
+                if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') :
+                    exec("ping -n 2 " . $ip, $output, $result);
+                else:
+                    exec("ping -c 2 " . $ip, $output, $result);
+                endif;
                 if ($result == 0):
                   $retour = true;
                 else :

@@ -214,7 +214,8 @@ class Bien extends AppModel {
                 }       
                 if (isset($val['Bien']['chassis_id'])) {
                     $results[$key]['Localite']['NOM'] = $this->getLocalite($val['Bien']['chassis_id']);
-                }                 
+                } 
+                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Bien']['entite_id']); 
             }
             return $results;
         } 

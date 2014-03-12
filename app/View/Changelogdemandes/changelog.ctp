@@ -1,34 +1,28 @@
-<div class="marginright20">
+<div class="marginbottom10">
     <?php echo $this->element('changelogsubmenu'); ?>
     <?php echo $this->element('changelognextversion'); ?>
-    <?php foreach($versions as $version): ?>
-    <div class="panel-group" id="panel_<?php echo $version['Changelogversion']['id']; ?>" style="margin-bottom:10px;">
-          <div class="panel">
-            <div class="panel-heading">
-              <h3 class="panel-title">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#panel_<?php echo $version['Changelogversion']['id']; ?>" href="#panel_<?php echo $version['Changelogversion']['id']; ?>_content">
-                    <?php echo 'Version '.$version['Changelogversion']['VERSION'].' finalisée le '.$version['Changelogversion']['DATEREELLE']; ?>
-                </a>
-              </h3>
-            </div>
-            <div id="panel_<?php echo $version['Changelogversion']['id']; ?>_content" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <?php foreach ($changelogdemandes as $changelogdemande): ?>
-                        <?php if($version['Changelogversion']['id'] == $changelogdemande['Changelogdemande']['changelogversion_id']): ?>
-                            <ul style="margin-bottom:5px !important;">
-                                <li style="font-weight: bold;">[<?php echo $changelogtypes[$changelogdemande['Changelogdemande']['TYPE']]; ?>] <?php echo $changelogdemande['Changelogdemande']['DEMANDE']; ?></li>
-                                <ul style="font-style: italic;">
-                                    <?php $reponses = $this->requestAction('changelogreponses/get_all_reponses/'.$changelogdemande['Changelogdemande']['id']); ?>
-                                    <?php foreach($reponses as $reponse):
-                                        echo '<li>Le : '.$reponse['Changelogreponse']['modified'].'<br>'.$reponse['Changelogreponse']['REPONSE'].'</li>';
-                                    endforeach; ?>                                    
-                                </ul>
-                            </ul>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-          </div>  
-        </div>
+    <div class="btn-group pull-left" style="margin-bottom:15px;">
+        <a class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+          Version <?php echo $changelogdemandes[0]['Changelogversion']['VERSION'] ; ?>
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <?php foreach($versions as $version): ?>
+            <li style="text-align:left;"><?php echo $this->Html->link($version['Changelogversion']['VERSION'], array('action'=>'changelog',$version['Changelogversion']['id']),array('class'=>'showoverlay')); ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <div style="clear:both;border: solid 1px #D5D5D5; padding-top:15px !important">
+    <?php foreach ($changelogdemandes as $changelogdemande): ?>
+        <ul style="margin-bottom:5px !important;">
+            <li style="font-weight: bold;">[<?php echo $changelogtypes[$changelogdemande['Changelogdemande']['TYPE']]; ?>] <?php echo $changelogdemande['Changelogdemande']['DEMANDE']; ?></li>
+            <ul style="font-style: italic;">
+                <?php $reponses = $this->requestAction('changelogreponses/get_all_reponses/'.$changelogdemande['Changelogdemande']['id']); ?>
+                <?php foreach($reponses as $reponse):
+                    echo '<li>Le : '.$reponse['Changelogreponse']['modified'].'<br>'.$reponse['Changelogreponse']['REPONSE'].'</li>';
+                endforeach; ?>                                    
+            </ul>
+        </ul>
     <?php endforeach; ?>
-</div>
+    </div>
+</div>  

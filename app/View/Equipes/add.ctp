@@ -1,9 +1,9 @@
-<div class="marginright20">
+<div class="">
 <div class="equipes form">
 <?php echo $this->Form->create('Equipe',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class="form-group">
-        <label class="col-lg-4 required" for="EquipeAgent">Agent à ajouter : </label>
-        <div class="col-lg-4">  	
+        <label class="col-md-4 required" for="EquipeAgent">Agent à ajouter : </label>
+        <div class="col-md-4">  	
             <?php echo $this->Form->select('agents',$utilisateurs,array('data-rule-required'=>'true','multiple'=>'true','class'=>"form-control multiselect size75",'data-msg-required'=>'Le nom de l\'agent est obligatoire','size'=>"10")); ?>
         </div>
     </div>

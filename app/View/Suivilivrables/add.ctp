@@ -1,3 +1,3 @@
 <div class="suivilivrables form">
-<?php echo $this->element('formSuivilivrable'); ?>
+<?php echo $this->element('form/suivilivrable'); ?>
 </div>

@@ -10,8 +10,6 @@ class SocietesController extends AppController {
     public $paginate = array(
         'limit' => 25,
         'order' => array('Societe.NOM' => 'asc'),
-        /*'order' => array(
-            'Post.title' => 'asc' /*/
         );
     
 /**
@@ -22,28 +20,7 @@ class SocietesController extends AppController {
 	public function index() {
             //$this->Session->delete('history');
             if (isAuthorized('societes', 'index')) :
-		$this->Societe->recursive = 0;
 		$this->set('societes', $this->paginate());
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('societes', 'view')) :
-		if (!$this->Societe->exists($id)) {
-			throw new NotFoundException(__('Société incorrecte'));
-		}
-		$options = array('conditions' => array('Societe.' . $this->Societe->primaryKey => $id),'recursive'=>0);
-		$this->set('societe', $this->Societe->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -143,15 +120,28 @@ class SocietesController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($keywords=null) {
             if (isAuthorized('societes', 'index')) :
-                $keyword=isset($this->params->data['Societe']['SEARCH']) ? $this->params->data['Societe']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Societe.NOM LIKE '%".$keyword."%'","Societe.NOMCONTACT LIKE '%".$keyword."%'","Societe.TELEPHONE LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Societe->recursive = 0;
-                $this->set('societes', $this->paginate());              
-                $this->render('index');
+                if(isset($this->params->data['Societe']['SEARCH'])):
+                    $keywords = $this->params->data['Societe']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $newcondition = array();
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Societe.NOM LIKE '%".$value."%'","Societe.NOMCONTACT LIKE '%".$value."%'","Societe.TELEPHONE LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newcondition,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
+                    $this->set('societes', $this->paginate());     
+                else:
+                    $this->redirect(array('action'=>'index'));
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -162,4 +152,14 @@ class SocietesController extends AppController {
             $societes = $this->Societe->find('list',array('fields'=>array('Societe.id','Societe.NOM'),'order'=>array('Societe.NOM'=>'asc'),'recursive'=>-1));
             return $societes;
         }
+        
+        public function get_list(){
+            $societes = $this->Societe->find('list',array('fields'=>array('Societe.id','Societe.NOM'),'order'=>array('Societe.NOM'=>'asc'),'recursive'=>-1));
+            return $societes;
+        }
+        
+        public function get_all(){
+            $societes = $this->Societe->find('all',array('order'=>array('Societe.NOM'=>'asc'),'recursive'=>-1));
+            return $societes;
+        }        
 }

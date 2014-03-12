@@ -11,7 +11,7 @@
 	<?php foreach ($historyutilisateurs as $historyutilisateur): ?>
 	<tr>
 		<td style="text-align:center;"><?php echo h($historyutilisateur['Historyutilisateur']['created']); ?>&nbsp;</td>
-                <td><?php echo h($historyutilisateur['Historyutilisateur']['HISTORIQUE']); ?>&nbsp;</td>
+                <td><?php echo $historyutilisateur['Historyutilisateur']['HISTORIQUE']; ?>&nbsp;</td>
 	</tr>
 <?php endforeach; ?>
         </tbody>

@@ -1,4 +1,4 @@
-<div class="marginright20">
+<div class="">
     <?php echo $this->element('changelogsubmenu'); ?>
     <div class="changelogdemandes form">      
 <?php echo $this->Form->create('Changelogdemande',array('id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>

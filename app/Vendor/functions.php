@@ -82,6 +82,26 @@ App::uses('ConnectionManager', 'Model');
     endif;
     return $result;
     }    
+    
+    function CUSDatetimeToFRDate($day){
+    $result = $day;
+    if(strstr($day, '/')===false):
+        $day = explode(' ',$day);
+        $date = explode('-',$day[0]);
+        if(count($date) > 1):
+            $time = explode(':',$day[1]);
+        else : 
+            $time = array();
+        endif;
+        if(count($time) > 0) :
+            $result = date('d/m/Y', mktime($time[0], $time[1], $time[2], $date[1], $date[2], $date[0]));
+        else :
+            $result = date('d/m/Y', mktime('0', '0', '0', $date[1], $date[2], $date[0]));
+        endif;
+    endif;
+    return $result;
+    }  
+    
 /**
  * CIntDateDeb
  * 
@@ -447,6 +467,12 @@ App::uses('ConnectionManager', 'Model');
         /*else {
             SessionComponent::setFlash(__('Votre session est expirée veuillez rafraîchir la page.<br />Vos données ont été prises en compte, si toutefois cela n\'était pas le cas, veuillez contacter l\'administrateur.',true),'flash_failure');
         }*/ 
+    }
+    
+    function refreshSession($user){
+        SessionComponent::delete('Auth.User');
+        sleep(1);
+        SessionComponent::write('Auth.User',$user);
     }
         
     function isAuthorized($model,$action){
@@ -833,7 +859,7 @@ function styleBarreInd($avancement){
     }
     
     function strMonth($month){
-        $moisentier = array(1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin',7=>'Juillet',8=>'Août',9=>'Setpembre',10=>'Octobre',11=>'Novembre',12=>'Décembre');
+        $moisentier = array(1=>'Janvier',2=>'Février',3=>'Mars',4=>'Avril',5=>'Mai',6=>'Juin',7=>'Juillet',8=>'Août',9=>'Septembre',10=>'Octobre',11=>'Novembre',12=>'Décembre');
         return $moisentier[(int)$month];
     }
     
@@ -921,29 +947,37 @@ function styleBarreInd($avancement){
     function aasort (&$array, $key) {
         $sorter=array();
         $ret=array();
-        reset($array);
-        foreach ($array as $ii => $va) {
-            $sorter[$ii]=$va[$key];
-        }
-        asort($sorter);
-        foreach ($sorter as $ii => $va) {
-            $ret[$ii]=$array[$ii];
-        }
-        $array=$ret;
+        if(count($array)>0):
+            reset($array);
+            foreach ($array as $ii => $va) {
+                $sorter[$ii]=$va[$key];
+            }
+            asort($sorter);
+            foreach ($sorter as $ii => $va) {
+                $ret[$ii]=$array[$ii];
+            }
+            $array=$ret;
+        else:
+            $array=null;
+        endif;
     }  
     
     function aarsort (&$array, $key) {
         $sorter=array();
         $ret=array();
-        reset($array);
-        foreach ($array as $ii => $va) {
-            $sorter[$ii]=$va[$key];
-        }
-        arsort($sorter);
-        foreach ($sorter as $ii => $va) {
-            $ret[$ii]=$array[$ii];
-        }
-        $array=$ret;
+        if(count($array)>0):
+            reset($array);
+            foreach ($array as $ii => $va) {
+                $sorter[$ii]=$va[$key];
+            }
+            arsort($sorter);
+            foreach ($sorter as $ii => $va) {
+                $ret[$ii]=$array[$ii];
+            }
+            $array=$ret;
+        else:
+            $array=null;
+        endif;            
     }   
     
     function translateMailException($message){

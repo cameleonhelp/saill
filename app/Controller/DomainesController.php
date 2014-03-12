@@ -13,6 +13,22 @@ class DomainesController extends AppController {
         /*'order' => array(
             'Post.title' => 'asc' /*/
         );
+        
+        public function get_visibilty(){
+            if(userAuth('profil_id')==1):
+                return "1=1";
+            else:
+                return array('OR'=>array('Domaine.entite_id IS NULL','Domaine.entite_id'=>userAuth('entite_id')));
+            endif;
+        }        
+        
+        public function get_cercles(){
+            if(userAuth('profil_id')==1):
+                return $this->requestAction('entites/find_list_all_actif_cercle');
+            else:
+                return $this->requestAction('entites/find_list_cercle');
+            endif;
+        }        
             
 /**
  * index method
@@ -22,28 +38,9 @@ class DomainesController extends AppController {
 	public function index() {
             //$this->Session->delete('history');
             if (isAuthorized('domaines', 'index')) :
-		$this->Domaine->recursive = 0;
+                $newconditions[]= $this->get_visibilty();
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));  
 		$this->set('domaines', $this->paginate());
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('domaines', 'view')) :
-		if (!$this->Domaine->exists($id)) {
-			throw new NotFoundException(__('Domaine incorrect'));
-		}
-		$options = array('conditions' => array('Domaine.' . $this->Domaine->primaryKey => $id),'recursive'=>0);
-		$this->set('domaine', $this->Domaine->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -71,6 +68,8 @@ class DomainesController extends AppController {
 			}
                     endif;
 		endif;
+                $cercles = $this->get_cercles();
+                $this->set(compact('cercles'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -104,6 +103,8 @@ class DomainesController extends AppController {
 		} else {
 			$options = array('conditions' => array('Domaine.' . $this->Domaine->primaryKey => $id));
 			$this->request->data = $this->Domaine->find('first', $options);
+                        $cercles = $this->get_cercles();
+                        $this->set(compact('cercles'));                        
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -145,16 +146,37 @@ class DomainesController extends AppController {
  */
 	public function search() {
             if (isAuthorized('domaines', 'index')) :
-                $keyword=isset($this->params->data['Domaine']['SEARCH']) ? $this->params->data['Domaine']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Domaine.NOM LIKE '%".$keyword."%'","Domaine.DESCRIPTION LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Domaine->recursive = 0;
-                $this->set('domaines', $this->paginate());               
-                $this->render('index');
+                if(isset($this->params->data['Domaine']['SEARCH'])):
+                    $keywords = $this->params->data['Domaine']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Domaine.NOM LIKE '%".$value."%'","Domaine.DESCRIPTION LIKE '%".$value."%'"));
+                    endforeach;
+                    $newconditions[]= $this->get_visibilty();                  
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                
+                    $this->set('domaines', $this->paginate());               
+                else:
+                    $this->redirect(array('action'=>'index'));
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
-        }               
+        }    
+        
+        public function get_list(){
+            return $this->Domaine->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc'),'recursive'=>0));
+        }
+        
+        public function get_all(){
+            return $this->Domaine->find('all',array('order'=>array('NOM'=>'asc'),'recursive'=>0));
+        }           
 }

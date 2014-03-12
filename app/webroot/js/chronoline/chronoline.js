@@ -325,7 +325,6 @@ function Chronoline(domElement, events, options) {
     }
 
     // SPLIT THE DATES INTO THE ROW THAT THEY BELONG TO
-    // TODO
     // this is a greedy algo that definitely isn't optimal
     // it at least needs to find the latest row that still fits
     // this, however, may cause very strange behavior (everything being on the 2nd line),

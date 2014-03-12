@@ -135,7 +135,6 @@ _html2canvas.Util.Bounds = function getBounds (el) {
     clientRect = el.getBoundingClientRect();
 
 
-    // TODO add scroll position to bounds, so no scrolling of window necessary
     bounds.top = clientRect.top;
     bounds.bottom = clientRect.bottom || (clientRect.top + clientRect.height);
     bounds.left = clientRect.left;
@@ -1117,14 +1116,12 @@ _html2canvas.Parse = function (images, options) {
     switch(text_decoration) {
       case "underline":
         // Draws a line at the baseline of the font
-        // TODO As some browsers display the line as more than 1px if the font-size is big, need to take that into account both in position and size
         renderRect(ctx, bounds.left, Math.round(bounds.top + metrics.baseline + metrics.lineWidth), bounds.width, 1, color);
         break;
       case "overline":
         renderRect(ctx, bounds.left, Math.round(bounds.top), bounds.width, 1, color);
         break;
       case "line-through":
-        // TODO try and find exact position for line-through
         renderRect(ctx, bounds.left, Math.ceil(bounds.top + metrics.middle + metrics.lineWidth), bounds.width, 1, color);
         break;
     }
@@ -1319,7 +1316,6 @@ _html2canvas.Parse = function (images, options) {
   }
 
   function setZ(zIndex, parentZ){
-    // TODO fix static elements overlapping relative/absolute elements under same stack, if they are defined after them
     var newContext;
     if (!parentZ){
       newContext = h2czContext(0);
@@ -1925,7 +1921,6 @@ _html2canvas.Parse = function (images, options) {
 
       image = loadImage(key);
 
-      // TODO add support for background-origin
       if (image) {
         renderBackgroundRepeating(element, bounds, ctx, image, imageIndex);
       } else {
@@ -1965,7 +1960,6 @@ _html2canvas.Parse = function (images, options) {
       clip: (parentStack && parentStack.clip) ? _html2canvas.Util.Extend( {}, parentStack.clip ) : null
     };
 
-    // TODO correct overflow for absolute content residing under a static position
     if (options.useOverflow === true && /(hidden|scroll|auto)/.test(getCSS(element, "overflow")) === true && /(BODY)/i.test(element.nodeName) === false){
       stack.clip = (stack.clip) ? clipBounds(stack.clip, bounds) : bounds;
     }
@@ -2029,8 +2023,6 @@ _html2canvas.Parse = function (images, options) {
         }
         break;
       case "INPUT":
-        // TODO add all relevant type's, i.e. HTML5 new stuff
-        // todo add support for placeholder attribute for browsers which support it
         if (/^(text|url|email|submit|button|reset)$/.test(element.type) && (element.value || element.placeholder).length > 0){
           renderFormValue(element, bounds, stack);
         }

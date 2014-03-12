@@ -1,3 +1,3 @@
 <div class="types form">
-    <?php echo $this->element('formType'); ?>
+    <?php echo $this->element('form/type'); ?>
 </div>

@@ -169,4 +169,19 @@ class AffectationsController extends AppController {
             $this->History->goBack(1);
             
         }
+        
+        public function get_list($id){
+            $options = array('Affectation.utilisateur_id' => $id);
+            return $this->Affectation->find('list',array('fields' => array('Affectation.activite_id','Activite.NOM'),'conditions'=> $options,'order'=>array('Activite.NOM'=>'asc'),'recursive'=>0));
+        }
+        
+        public function get_all($id){
+            $options = array('Affectation.utilisateur_id' => $id);
+            return $this->Affectation->find('all',array('order'=>array('Activite.NOM'=>'asc'),'conditions'=>$options,'recursive'=>0));
+        }       
+        
+        public function get_compteur($id){
+            $options =array('Affectation.utilisateur_id' => $id);
+            return $this->Affectation->find('first',array('fields'=>array('count(Affectation.id) AS nbAffectation'),'conditions' =>$options,'recursive'=>0));
+        }             
 }

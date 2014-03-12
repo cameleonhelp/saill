@@ -9,10 +9,33 @@ class AutorisationsController extends AppController {
         public $components = array('History','Common'); 
         public $paginate = array(
             'limit' => 25,
-            'order' => array('Autorisation.profil_id' => 'asc','Autorisation.MODEL' => 'asc'),
+            'order' => array('Profil.NOM' => 'asc','Autorisation.MODEL' => 'asc'),
             /*'order' => array(
                 'Post.title' => 'asc' /*/
             );
+        
+        public function get_autorisations_filter($id){
+            $result = array();
+            switch ($id){
+                case 'tous':
+                case null:    
+                    $result['condition']="1=1";
+                    $result['filter'] = "tous les profils";
+                    break;
+                default :
+                    $result['condition']="Profil.id='".$id."'";
+                    $profil = $this->Autorisation->Profil->find('first',array('conditions'=>array('Profil.id'=>$id)));
+                    $result['filter'] = "le profil ".$profil['Profil']['NOM'];                        
+            }  
+            return $result;
+        }
+        
+        public function get_all_tables(){
+            $models = $this->Autorisation->findAllTables($this->Autorisation);
+            $models = array_merge($models,array('rapports'=>'rapports'));
+            asort($models);
+            return $models;
+        }
     
  /**
  * index method
@@ -22,44 +45,13 @@ class AutorisationsController extends AppController {
 	public function index($filtreautorisation=null) {
             //$this->Session->delete('history');
             if (isAuthorized('autorisations', 'index')) :
-                switch ($filtreautorisation){
-                    case 'tous':
-                    case '<':
-                    case null:    
-                        $newconditions[]="1=1";
-                        $fprofil = "tous les profils";
-                        break;
-                    default :
-                        $newconditions[]="Profil.id='".$filtreautorisation."'";
-                        $profil = $this->Autorisation->Profil->find('first',array('conditions'=>array('Profil.id'=>$filtreautorisation)));
-                        $fprofil = "le profil ".$profil['Profil']['NOM'];                        
-                }    
-                $this->set('fprofil',$fprofil); 
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-		$this->Autorisation->recursive = 0;
+                $getautorisation = $this->get_autorisations_filter($filtreautorisation);
+                $this->set('fprofil',$getautorisation['filter']); 
+                $newconditions = array($getautorisation['condition']);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));
 		$this->set('autorisations', $this->paginate());
-                $profils = $this->Autorisation->find('all',array('fields' => array('Profil.id','Profil.NOM'),'group'=>'Profil.NOM','order'=>array('Profil.NOM'=>'asc'),'recursive'=>0));
+                $profils = $this->requestAction('profils/get_all');
                 $this->set('profils',$profils);                
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('autorisations', 'index')) :
-		if (!$this->Autorisation->exists($id)) {
-			throw new NotFoundException(__('Autorisation incorrecte'));
-		}
-		$options = array('conditions' => array('Autorisation.' . $this->Autorisation->primaryKey => $id));
-		$this->set('autorisation', $this->Autorisation->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -73,12 +65,6 @@ class AutorisationsController extends AppController {
  */
 	public function add() {
             if (isAuthorized('autorisations', 'index')) :
-                $models = $this->Autorisation->findAllTables($this->Autorisation);
-                $models = array_merge($models,array('rapports'=>'rapports'));
-                asort($models);
-                $this->set('models',$models);
-                $profil = $this->Autorisation->Profil->find('list',array('fields' => array('id', 'NOM'),'recursive'=>-1));
-                $this->set('profil',$profil);
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Autorisation->validate = array();
@@ -93,6 +79,9 @@ class AutorisationsController extends AppController {
 			}
                     endif;
 		endif;
+                $models = $this->get_all_tables();
+                $profil = $this->requestAction('profils/get_list');
+                $this->set(compact('models','profil'));                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -107,11 +96,7 @@ class AutorisationsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            if (isAuthorized('autorisations', 'index')) :
-                $models = $this->Autorisation->findAllTables($this->Autorisation);
-                $this->set('models',$models);            
-                $profil = $this->Autorisation->Profil->find('list',array('fields' => array('id', 'NOM'),'recursive'=>-1));
-                $this->set('profil',$profil);                
+            if (isAuthorized('autorisations', 'index')) :           
 		if (!$this->Autorisation->exists($id)) {
 			throw new NotFoundException(__('Autorisation incorrecte'));
 		}
@@ -131,6 +116,9 @@ class AutorisationsController extends AppController {
 			$options = array('conditions' => array('Autorisation.' . $this->Autorisation->primaryKey => $id),'recursive'=>0);
 			$this->request->data = $this->Autorisation->find('first', $options);
                         $this->set('autorisation', $this->Autorisation->find('first', $options));
+                        $models = $this->get_all_tables();
+                        $profil = $this->requestAction('profils/get_list');
+                        $this->set(compact('models','profil'));                        
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -170,18 +158,32 @@ class AutorisationsController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($filtreautorisation=null,$keywords=null) {
             if (isAuthorized('autorisations', 'index')) :
-                $keyword=isset($this->params->data['Autorisation']['SEARCH']) ? $this->params->data['Autorisation']['SEARCH'] : '';
-                $newconditions = array('OR'=>array("Profil.NOM LIKE '%".$keyword."%'","Autorisation.MODEL LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                //$this->set('messages',$this->Message->search($this->data['Message']['MessageSEARCH'])); 
-                $this->autoRender = false;
-                $this->Autorisation->recursive = 0;
-                $this->set('autorisations', $this->paginate());
-                $profils = $this->Autorisation->find('all',array('fields' => array('Profil.id','Profil.NOM'),'group'=>'Profil.NOM','order'=>array('Profil.NOM'=>'asc'),'recursive'=>0));
-                $this->set('profils',$profils);                   
-                $this->render('index');
+                if(isset($this->params->data['Autorisation']['SEARCH'])):
+                    $keywords = $this->params->data['Autorisation']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords));                 
+                    $getautorisation = $this->get_autorisations_filter($filtreautorisation);
+                    $this->set('fprofil',$getautorisation['filter']); 
+                    $newconditions = array($getautorisation['condition']);
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Profil.NOM LIKE '%".$value."%'","Autorisation.MODEL LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));
+                    $this->set('autorisations', $this->paginate());
+                    $profils = $this->requestAction('profils/get_all');
+                    $this->set('profils',$profils);    
+                else:
+                    $this->redirect(array('action'=>'index',$filtreautorisation));
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

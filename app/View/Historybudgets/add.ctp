@@ -1,4 +1,4 @@
 <div class="historybudgets form">
-<?php echo $this->element('formHistorybudget'); ?>
+<?php echo $this->element('form/historybudget'); ?>
 </div>
 
