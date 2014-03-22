@@ -33,13 +33,13 @@
         <?php endforeach; ?>
         <?php endif; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
             <tr>
                 <th colspan="5" class="footer" style="text-align: center;">
                     <?php echo $this->Html->link('Nouveau budget',"#", array('class' => 'btn btn-sm btn-default','data-toggle'=>"modal", 'data-target'=>"#modalnewbudget")); ?>
                 </th>
             </tr>
-        </tfooter>
+        </tfoot>
 </table>
 <script>
 $(document).ready(function () {

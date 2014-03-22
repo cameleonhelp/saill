@@ -10,84 +10,112 @@ class ActivitesController extends AppController {
         public $paginate = array(
         'limit' => 25,
         'order' => array('Projet.NOM'=>'asc','Activite.NOM' => 'asc'),
-        //'conditions' => array('Activite.projet_id >' => 1),
-        //'group'=>array('Activite.projet_id'),
         );
+        
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoprojetentites/json_get_all_projets/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            if($visibility == null):
+                return '1=1';
+            elseif ($visibility!=''):
+                return array("Projet.id IN (".$visibility.')');
+            else:
+                return '1=1';
+            endif;
+        }      
+        
+        public function get_activite_etat_filter($filtreEtat){
+            $result = array();
+            switch ($filtreEtat){
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter'] = "toutes les activités";
+                    break;
+                case 'actif':
+                case null:                         
+                    $result['condition']="Activite.ACTIVE=1";
+                    $result['filter'] = "toutes les activités actives";
+                    break;  
+                case 'inactif':
+                    $result['condition']="Activite.ACTIVE=0";
+                    $result['filter'] = "toutes les activités inactives";
+                    break;                                         
+            }  
+            return $result;
+        }
+        
+        public function get_activite_filtre_filter($filtre,$visibility){
+            $result = array();
+            switch ($filtre){
+                case 'tous':
+                case null:  
+                    if($visibility == null):
+                        $result['condition'] = '1=1';
+                    elseif ($visibility!=''):
+                        $result['condition'] = "Activite.projet_id IN (".$visibility.")";
+                    else:
+                        $result['condition'] = 'Activite.projet_id < 1';
+                    endif;                    
+                    $result['filter'] = "tous les projets";
+                    break;
+                case 'autres':
+                    if($visibility == null):
+                        $result['condition'] = '1=1';
+                    elseif ($visibility!=''):
+                        $visibility = strlen ($visibility) == 1 ? '0' : substr_replace($visibility ,"",0,2);
+                        $result['condition'] = "Activite.projet_id IN (".$visibility.")";
+                    else:
+                        $result['condition'] = 'Activite.projet_id < 1';
+                    endif;                        
+                    $result['filter'] = "tous les projets autres que indisponibilité";
+                    break;                    
+                default :
+                    $result['condition']="Projet.id='".$filtre."'";
+                    $projet = $this->Activite->Projet->find('first',array('fields'=>array('Projet.NOM'),'recusrsive'=>0,'conditions'=>array('Projet.id'=>$filtre)));
+                    $result['filter'] = "le projet ".$projet['Projet']['NOM'];
+                    break;                      
+            }
+            return $result;
+        }
+        
+        public function get_export($condition){
+            $this->Session->delete('xls_export');
+            $export = $this->Activite->find('all',array('conditions'=>$condition,'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'recursive'=>0));
+            $this->Session->write('xls_export',$export); 
+        }
+        
+        public function get_history($id){
+            return $this->Activite->Historybudget->find('all',array('conditions'=>array('activite_id'=>$id),'recursive'=>-1,'order'=>array('ANNEE'=>'desc','Historybudget.created'=>'desc')));
+        }
 /**
  * index method
  *
  * @return void
  */
 	public function index($filtreEtat=null,$filtre=null) {
-            //$this->Session->delete('history');
-            $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.userAuth('id'));
+            $this->set('title_for_layout','Activités');
             if (isAuthorized('activites', 'index')) :
-                switch ($filtre){
-                    case 'tous':
-                    case null:    
-                        $newconditions[]="Activite.projet_id IN (".$listprojets.")";
-                        $fprojet = "tous les projets";
-                        break;
-                    case 'autres':
-                        $listprojets = strlen ($listprojets) == 1 ? '0' : substr_replace($listprojets ,"",0,2);
-                        $newconditions[]="Activite.projet_id IN (".$listprojets.")";
-                        $fprojet = "tous les projets autres que indisponibilité";
-                        break;                    
-                    default :
-                        $newconditions[]="Projet.id='".$filtre."'";
-                        $projet = $this->Activite->Projet->find('first',array('fields'=>array('Projet.NOM'),'recusrsive'=>0,'conditions'=>array('Projet.id'=>$filtre)));
-                        $fprojet = "le projet ".$projet['Projet']['NOM'];
-                        break;                      
-                }  
-                $this->set('fprojet',$fprojet); 
-                switch ($filtreEtat){
-                    case 'tous':
-                    case '<':   
-                        $newconditions[]="1=1";
-                        $fetat = "toutes les activités";
-                        break;
-                    case 'actif':
-                    case null:                         
-                        $newconditions[]="Activite.ACTIVE=1";
-                        $fetat = "toutes les activités actives";
-                        break;  
-                    case 'inactif':
-                        $newconditions[]="Activite.ACTIVE=0";
-                        $fetat = "toutes les activités inactives";
-                        break;                                         
-                }    
-                $this->set('fetat',$fetat); 
+                $listprojets = $this->get_visibility();
+                $getfiltre = $this->get_activite_filtre_filter($filtre, $listprojets);
+                $getetat = $this->get_activite_etat_filter($filtreEtat);
+                $restriction = $this->get_restriction($listprojets);
+                $this->set('fprojet',$getfiltre['filter']); 
+                $this->set('fetat',$getetat['filter']); 
+                $newconditions = array($getfiltre['condition'],$getetat['condition'],$restriction);
                 $projets = $this->requestAction('projets/find_all_cercle_projet/'.userAuth('id'));
                 $this->set('projets',$projets);  
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
-		$this->Activite->recursive = 0;
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                
 		$this->set('activites', $this->paginate());
-                $this->Session->delete('xls_export');
-                $export = $this->Activite->find('all',array('conditions'=>$newconditions,'order'=>array('Projet.NOM'=>'asc','Activite.NOM'=>'asc'),'recursive'=>0));
-                $this->Session->write('xls_export',$export);                
+                $this->get_export($newconditions);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();           
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('activites', 'view')) :
-		if (!$this->Activite->exists($id)) {
-			throw new NotFoundException(__('Activité incorrecte'));
-		}
-		$options = array('conditions' => array('Activite.' . $this->Activite->primaryKey => $id),'recursive'=>-1);
-		$this->set('activite', $this->Activite->find('first', $options));
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();        
             endif;                
 	}
 
@@ -97,9 +125,8 @@ class ActivitesController extends AppController {
  * @return void
  */
 	public function add() {
-            if (isAuthorized('activites', 'add')) :
-                $projets = $this->requestAction('projets/find_list_cercle_projet/'.userAuth('id'));
-                $this->set('projets',$projets);               
+            $this->set('title_for_layout','Activités');
+            if (isAuthorized('activites', 'add')) :               
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Activite->validate = array();
@@ -114,6 +141,8 @@ class ActivitesController extends AppController {
 			}
                    endif;
                 endif;
+                $projets = $this->requestAction('projets/find_list_cercle_projet/'.userAuth('id'));
+                $this->set('projets',$projets);                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();    
@@ -128,11 +157,8 @@ class ActivitesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            if (isAuthorized('activites', 'edit')) :
-                $projets = $this->requestAction('projets/find_list_cercle_projet/'.userAuth('id'));
-                $this->set('projets',$projets);  
-                $historybudgets = $this->Activite->Historybudget->find('all',array('conditions'=>array('activite_id'=>$id),'recursive'=>-1,'order'=>array('ANNEE'=>'desc','Historybudget.created'=>'desc')));
-                $this->set('historybudgets', $historybudgets);                
+            $this->set('title_for_layout','Activités');
+            if (isAuthorized('activites', 'edit')) :             
 		if (!$this->Activite->exists($id)) {
 			throw new NotFoundException(__('Activité incorrecte'));
 		}
@@ -149,8 +175,11 @@ class ActivitesController extends AppController {
 			}
                     endif;
 		} else {                    
-			$options = array('conditions' => array('Activite.' . $this->Activite->primaryKey => $id),'recursive'=>0);
-			$this->request->data = $this->Activite->find('first', $options);
+                    $options = array('conditions' => array('Activite.' . $this->Activite->primaryKey => $id),'recursive'=>0);
+                    $this->request->data = $this->Activite->find('first', $options);
+                    $projets = $this->requestAction('projets/find_list_cercle_projet/'.userAuth('id')); 
+                    $historybudgets = $this->get_history($id);
+                    $this->set(compact('historybudgets','projets'));                           
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -167,12 +196,12 @@ class ActivitesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            $this->set('title_for_layout','Activités');
             if (isAuthorized('activites', 'delete')) :
 		$this->Activite->id = $id;
 		if (!$this->Activite->exists()) {
 			throw new NotFoundException(__('Activité incorrecte'));
 		}
-		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Activite->delete()) {
 			$this->Session->setFlash(__('Activité supprimée',true),'flash_success');
 			$this->History->goBack(1);
@@ -191,28 +220,38 @@ class ActivitesController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($filtreEtat=null,$filtre=null,$keywords=null) {
+            $this->set('title_for_layout','Activités');
             if (isAuthorized('activites', 'index')) :
-                $keyword=isset($this->params->data['Activite']['SEARCH']) ? $this->params->data['Activite']['SEARCH'] : '';
-                $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.userAuth('id'));
-                $newconditions[] = array();
-                $newconditions[] = array("Projet.id IN (".$listprojets.')');
-                $newconditions[] = array('OR'=>array("Activite.NOM LIKE '%".$keyword."%'","Projet.NOM LIKE '%".$keyword."%'","Activite.NUMEROGALLILIE LIKE '%".$keyword."%'","Activite.DESCRIPTION LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Activite->recursive = 0;
-                $this->set('activites', $this->paginate());
-                $this->Session->delete('xls_export');
-                $export = $this->Activite->find('all',array('conditions'=>$newconditions,'recursive'=>0));
-                $this->Session->write('xls_export',$export);               
-                $listeprojets = $this->Activite->find('all',array('fileds'=>'Activite.projet_id','group'=>'Activite.projet_id','recursive'=>-1));
-                $listein = '';
-                foreach($listeprojets as $liste):
-                    $listein .= $liste['Activite']['projet_id'].',';
-                endforeach;
-                $projets = $this->Activite->Projet->find('all',array('fields' => array('id','NOM'),'conditions'=>array('Projet.id IN ('.substr_replace($listein ,"",-1).')'),'group'=>'NOM','order'=>array('NOM'=>'asc')));
-                $this->set('projets',$projets);   
-                $this->render('index');
+                if(isset($this->params->data['Activitesreelle']['SEARCH'])):
+                    $keywords = $this->params->data['Activitesreelle']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords));                  
+                    $listprojets = $this->get_visibility();
+                    $restriction = $this->get_restriction($listprojets);
+                    $getfiltre = $this->get_activite_filtre_filter($filtre, $listprojets);
+                    $getetat = $this->get_activite_etat_filter($filtreEtat);
+                    $this->set('fprojet',$getfiltre['filter']); 
+                    $this->set('fetat',$getetat['filter']); 
+                    $projets = $this->requestAction('projets/find_all_cercle_projet/'.userAuth('id'));
+                    $this->set('projets',$projets);                      
+                    $newconditions = array($getfiltre['condition'],$getetat['condition'],$restriction);
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Activite.NOM LIKE '%".$value."%'","Projet.NOM LIKE '%".$value."%'","Activite.NUMEROGALLILIE LIKE '%".$value."%'","Activite.DESCRIPTION LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                
+                    $this->set('activites', $this->paginate());
+                    $this->get_export($conditions);                
+                else:
+                    $this->redirect(array('action'=>'index',$filtreEtat,$filtre));
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
@@ -253,16 +292,32 @@ class ActivitesController extends AppController {
         }      
         
         public function find_all_cercle_activite($utilisateur_id){
-            $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.$utilisateur_id);
-            $conditions = array();
-            $conditions[]= array('Activite.projet_id>1');
-            $conditions[]=array('Activite.projet_id IN ('.$listprojets.')');
-            $order = array();
+            $listprojets = $this->get_visibility();
+            $conditions[]= array('Activite.projet_id > 1');
+            if($listprojets != ''):
+                $conditions[]=array('Activite.projet_id IN ('.$listprojets.')');
+            endif;
             $order[]=array('Projet.NOM'=>'asc');
             $order[]=array('Activite.NOM'=>'asc');
             $list = $this->Activite->find('all',array('order'=>$order,'conditions'=>$conditions,'recursive'=>1));
             return $list;
         }
+        
+        public function find_all_cercle_activite_and_indisponibility($utilisateur_id){
+            $listprojets = $this->get_visibility();
+            $conditions[]= array('Activite.projet_id > 0');
+            if($listprojets != ''):
+                $conditions[]=array('Activite.projet_id IN (1,'.$listprojets.')');
+            elseif ($listprojets == null):
+                $conditions[]="1=1";        
+            else:                
+                $conditions[]= array('Activite.projet_id = 1');
+            endif;
+            $order[]=array('Projet.NOM'=>'asc');
+            $order[]=array('Activite.NOM'=>'asc');
+            $list = $this->Activite->find('all',array('order'=>$order,'conditions'=>$conditions,'recursive'=>1));
+            return $list;
+        }        
         
         public function find_str_id_cercle_activite($utilisateur_id){
             $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.$utilisateur_id);

@@ -18,7 +18,7 @@
 </div>
 <?php if (isset($agents)): ?>
 <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'agents actif par site</div><br>
-<table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
+<table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table1">
     <thead>
         <tr>
         <th>Section</th>
@@ -35,18 +35,18 @@
         </tr>           
         <?php endforeach; ?>
     </tbody>  
-    <tfooter>
+    <tfoot>
 	<tr>
             <td colspan="2" class="footer" style="text-align:right;">Total :</td>
             <td class="footer" id="totalagent" style="text-align:center;"></td>
 	</tr> 
-    </tfooter>    
+    </tfoot>    
 </table>
 <?php endif; ?>
 <br/>
 <?php if (isset($materiels) && count($materiels)>0): ?>
 <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de matériel par type et état</div><br>
-<table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
+<table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table2">
     <thead>
         <tr>
         <th>Section</th>
@@ -65,12 +65,12 @@
         </tr>           
         <?php endforeach; ?>
     </tbody>     
-    <tfooter>
+    <tfoot>
 	<tr>
             <td colspan="3" class="footer" style="text-align:right;">Total :</td>
             <td class="footer" id="totalmat" style="text-align:center;"></td>
 	</tr> 
-    </tfooter>      
+    </tfoot>      
 </table>
 <?php endif; ?>
 
@@ -87,7 +87,49 @@ $(document).ready(function (){
         });
         return tot.toFixed(2);
      }   
-    $("table").tablesorter();
+    $(".table1").tablesorter({
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_saveFilters : true,
+            filter_useParsedData : false,    
+            filter_startsWith : false,
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    }).bind('filterEnd',function(e,t){
+        $("#totalagent").html(newSumOfColumns('tr:not(.filtered) > td.nbagent',''));
+    });  
+    
+    $(".table2").tablesorter({
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_saveFilters : true,
+            filter_useParsedData : false,
+            filter_startsWith : false,
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    }).bind('filterEnd',function(e,t){
+        $("#totalmat").html(newSumOfColumns('tr:not(.filtered) > td.nbmat',''));
+    });   
+        
+    function newSumOfColumns(id,symbole) {
+        var tot = 0;
+        $(id).each(function() {
+          value = $(this).html()=='' ? 0: $(this).html();
+          tot += parseFloat(value);
+        });
+        return parseFloat(tot).toFixed(0)+" "+symbole;
+     };
+        
     $("#totalagent").html(sumOfColumns('nbagent'));
     $("#totalmat").html(sumOfColumns('nbmat'));
 });

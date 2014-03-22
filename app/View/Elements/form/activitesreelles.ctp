@@ -262,7 +262,7 @@
     </tr> 
     </tr> 
     </tbody>
-    <tfooter>
+    <tfoot>
     <tr>
         <td colspan="2" class="footer" style="text-align:right;">Total :</td>
         <td class="footer" id="totallu" style="text-align:center;"></td>
@@ -275,7 +275,7 @@
         <td class="footer" id="totalactivites" style="text-align:center;"></td>
         <td colspan="2" class="footer" id="totalfrais" width="90px" style="text-align:center;"></td>
     </tr>            
-    </tfooter>
+    </tfoot>
 </table>
     <div id="container_message_erreur_total" name="container_message_erreur_total" class="bs-callout bs-callout-danger" style="display: block;">
         <ul style="display: block;list-style: none;margin-left:-30px;margin-bottom:-7px;">

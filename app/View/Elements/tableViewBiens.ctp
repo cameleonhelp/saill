@@ -1,5 +1,5 @@
 	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax">
-	<tr>
+	<thead><tr>
                         <th><?php echo 'Nom'; ?></th>
                         <th><?php echo 'Usage'; ?></th>
                         <th><?php echo 'Coeur'; ?></th>
@@ -8,7 +8,7 @@
                         <th><?php echo 'Mémoire'; ?></th>
                         <th><?php echo 'Modèle'; ?></th>
                         <th><?php echo 'Chassis'; ?></th>
-	</tr>
+	</tr></thead>
 	<?php foreach ($biens as $bien): ?>
 	<tr>
             <td class="text-courrier"><?php echo $bien['Bien']['NOM']; ?></td>
@@ -22,3 +22,9 @@
 	</tr>
 <?php endforeach; ?>
 	</table>
+<script>
+$(document).ready(function (){ 
+    //tri sur le tableau 
+    $('table').tablesorter();
+});
+</script>

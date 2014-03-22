@@ -252,7 +252,7 @@ class MaterielinformatiquesController extends AppController {
                     foreach ($arkeywords as $key=>$value):
                         $ornewconditions[] = array('OR'=>array("Materielinformatique.NOM LIKE '%".$value."%'","Materielinformatique.ETAT LIKE '%".$value."%'","Materielinformatique.COMMENTAIRE LIKE '%".$value."%'","Assistance.NOM LIKE '%".$value."%'","Section.NOM LIKE '%".$value."%'","Typemateriel.NOM LIKE '%".$value."%'"));
                     endforeach;
-                    $conditions = array($newcondition,'OR'=>$ornewconditions);
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
                     $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
                     $this->set('materielinformatiques', $this->paginate());
                     $this->get_export($newconditions);
@@ -261,7 +261,7 @@ class MaterielinformatiquesController extends AppController {
                     $sections = $this->requestAction('sections/get_all/',array('pass'=>array($visibility)));
                     $this->set(compact('etats','types','sections'));                    
                 else:
-                    $this->redirect(array('action'=>'index',$actif,$entite));
+                    $this->redirect(array('action'=>'index',$filtreetat,$filtretype,$filtresection));
                 endif;   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');

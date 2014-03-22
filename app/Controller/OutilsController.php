@@ -188,8 +188,16 @@ class OutilsController extends AppController {
         }  
         
         public function get_list_outil(){
-            $list = $this->Outil->find('list',array('fields'=>array('id','NOM'),"recursive"=>1));
+            $visibility = $this->get_visibility();
+            $conditions = $this->get_restriction($visibility);
+            $list = $this->Outil->find('list',array('fields'=>array('id','NOM'),'conditions'=>$conditions,'order'=>array('Outil.NOM'=>'asc'),"recursive"=>1));
             return $list;
         }
-              
+            
+        public function get_all_outil(){
+            $visibility = $this->get_visibility();
+            $conditions = $this->get_restriction($visibility);
+            $list = $this->Outil->find('all',array('conditions'=>$conditions,'order'=>array('Outil.NOM'=>'asc'),"recursive"=>1));
+            return $list;
+        }        
 }

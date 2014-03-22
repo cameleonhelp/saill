@@ -1,4 +1,4 @@
-<div>
+<div style="padding-top: 15px;">
     <h4>Liste des fichiers d'aide à votre disposition:</h4>
     <?php if (userAuth('profil_id')==1): ?>
         <?php echo $this->element('modals/addfiles'); ?>

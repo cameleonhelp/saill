@@ -1,46 +1,70 @@
 <nav class="navbar toolbar ">
+<?php 
+$pass0 = isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous';
+$pass1 = isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous';
+$pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : 'toutes';
+$passaction = $this->params->action;
+if (count($this->params->data) > 0) :
+    $keyword = $this->params->data['Materielinformatique']['SEARCH'];
+elseif (isset($this->params->pass[3]) && $this->params->pass[3] !=''):
+    $keyword = $this->params->pass[3];
+elseif (isset($keywords) && $keywords != ''):
+    $keyword = $keywords;
+else :
+    $keyword = '';
+endif;    
+?>           
         <ul class="nav navbar-nav toolbar">
         <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'add')) : ?>
         <li><?php echo $this->Html->link('<span class="glyphicons plus size14 margintop4"></span>', array('action' => 'add'),array('escape' => false)); ?></li>
         <li class="divider-vertical-only"></li>
         <?php endif; ?>
-        <li class="dropdown <?php echo filtre_is_actif(isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous'); ?>">
+        <li class="dropdown <?php echo filtre_is_actif($pass0,'tous'); ?>">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Etats <b class="caret"></b></a>
              <ul class="dropdown-menu">
-             <li><?php echo $this->Html->link('Tous', array('action' => 'index','tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'toutes'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous'))); ?></li>
+             <li><?php echo $this->Html->link('Tous', array('action'=> $passaction,'tous',$pass1,$pass2,$keyword),array('class'=>'showoverlay'.subfiltre_is_actif($pass0,'tous'))); ?></li>
              <li class="divider"></li>
                  <?php foreach ($etats as $key=>$value): ?>
-                    <li><?php echo $this->Html->link($value, array('action' => 'index',$key,isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'toutes'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$key))); ?></li>
+                    <li><?php echo $this->Html->link($value, array('action'=> $passaction,$key,$pass1,$pass2,$keyword),array('class'=>'showoverlay'.subfiltre_is_actif($pass0,$key))); ?></li>
                  <?php endforeach; ?>
               </ul>
          </li>   
-        <li class="dropdown <?php echo filtre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous'); ?>">
+        <li class="dropdown <?php echo filtre_is_actif($pass1,'tous'); ?>">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Type de matériel <b class="caret"></b></a>
              <ul class="dropdown-menu">
-             <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous',isset($this->params->pass[2]) ? $this->params->pass[2] : 'toutes'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous'))); ?></li>
+             <li><?php echo $this->Html->link('Tous', array('action'=> $passaction,$pass0,'tous',$pass2,$keyword),array('class'=>'showoverlay'.subfiltre_is_actif($pass1,'tous'))); ?></li>
              <li class="divider"></li>
                  <?php foreach ($types as $type): ?>
-                    <li><?php echo $this->Html->link($type['Typemateriel']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$type['Typemateriel']['NOM'],isset($this->params->pass[2]) ? $this->params->pass[2] : 'toutes'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$type['Typemateriel']['NOM']))); ?></li>
+                    <li><?php echo $this->Html->link($type['Typemateriel']['NOM'], array('action'=> $passaction,$pass0,$type['Typemateriel']['NOM'],$pass2,$keyword),array('class'=>'showoverlay'.subfiltre_is_actif($pass1,$type['Typemateriel']['NOM']))); ?></li>
                  <?php endforeach; ?>
               </ul>
         </li>  
-        <li class="dropdown <?php echo filtre_is_actif(isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous','toutes'); ?>">
+        <li class="dropdown <?php echo filtre_is_actif($pass2,'toutes'); ?>">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Sections <b class="caret"></b></a>
              <ul class="dropdown-menu">
-             <li><?php echo $this->Html->link('Toutes', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','toutes'),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[2]) ? $this->params->pass[2] : 'toutes','toutes'))); ?></li>
+             <li><?php echo $this->Html->link('Toutes', array('action'=> $passaction,$pass0,$pass1,'toutes',$keyword),array('class'=>'showoverlay'.subfiltre_is_actif($pass2,'toutes'))); ?></li>
              <li class="divider"></li>
                  <?php foreach ($sections as $section): ?>
-                    <li><?php echo $this->Html->link($section['Section']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$section['Section']['id']),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[2]) ? $this->params->pass[2] : 'toutes',$section['Section']['id']))); ?></li>
+                    <li><?php echo $this->Html->link($section['Section']['NOM'], array('action'=> $passaction,$pass0,$pass1,$section['Section']['id'],$keyword),array('class'=>'showoverlay'.subfiltre_is_actif($pass2,$section['Section']['id']))); ?></li>
                  <?php endforeach; ?>
               </ul>
          </li>                   
         <li class="divider-vertical-only"></li>
         <li><?php echo $this->Html->link('<span class="ico-xls"></span>', array('action' => 'export_xls'),array('escape' => false)); ?></li>               
         </ul> 
-        <?php echo $this->Form->create("Materielinformatique",array('action' => 'search', 'class'=>'toolbar-form pull-right','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
-            <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche ...','style'=>"width: 200px;",'class'=>"form-control")); ?>
-            <button type="submit" class="btn form-btn showoverlay"><span class="glyphicons notchange search"></span></button>
-        <?php echo $this->Form->end(); ?>                     
+        <ul class="nav navbar-nav toolbar pull-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle btn-expand" data-toggle="dropdown"><span class="glyphicons expand notchange" style="width:13px;"></span></a>
+                <ul class="dropdown-menu" style="left: -205px;min-width: 250px;max-width: 250px;">
+                    <li>
+                        <?php echo $this->Form->create("Materielinformatique",array('url' => array('action' => 'search',$pass0,$pass1,$pass2), 'class'=>'toolbar-form pull-right','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+                            <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche ...','style'=>"width: 200px;margin-left:3px;margin-right:-3px;display: inline-table;",'class'=>"form-control",'value'=>$keyword, 'rel'=>"tooltip", 'data-container'=>"body", 'data-title'=>Configure::read('search_tooltip'))); ?>
+                            <button type="submit" class="btn form-btn showoverlay"><span class="glyphicons notchange search"></span></button>
+                        <?php echo $this->Form->end(); ?> 
+                    </li>
+                </ul>
+            </li>
+        </ul>     
 </nav>
 <?php if($this->params['action']=='index') { ?><div class="panel-body panel-filter marginbottom15 "><strong>Filtre appliqué : </strong><em>Liste des postes informatiques <?php echo $fetat; ?>, de <?php echo $ftype; ?> et étant affectés à <?php echo $fsection; ?></em></div><?php } ?>
 <div class="">   
@@ -76,6 +100,7 @@
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'edit')) : ?>
             <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit', $materielinformatique['Materielinformatique']['id']),array('escape' => false)); ?>&nbsp;
+            <?php echo $this->Html->link('<span class="glyphicons user_add notchange"></span>', "#",array('escape' => false, 'data-toggle'=>"modal", 'data-target'=>"#modalassign")); ?>&nbsp;
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'delete')) : ?>
             <?php echo $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete', $materielinformatique['Materielinformatique']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce poste informatique ?')); ?>
@@ -85,6 +110,7 @@
             <?php endif; ?>                    
         </td>
 </tr>
+<?php echo $this->element('modals/assign'); ?>
 <?php $utilisateur = isset($materielinformatique['Materielinformatique']['utilisateur_NOMLONG']) ? $materielinformatique['Materielinformatique']['utilisateur_NOMLONG'] : ""; ?>
 <tr class="trhidden" style="display:none;">
     <td colspan="9" align="center">
@@ -145,5 +171,10 @@
                 }
              });
         });
+        
+    $(document).on('keyup','#MaterielinformatiqueSEARCH',function (event){
+        var url = "<?php echo $this->webroot;?>materielinformatiques/search/<?php echo $pass0; ?>/<?php echo $pass1; ?>/<?php echo $pass2; ?>/";
+        $(this).parents('form').attr('action',url+$(this).val());
+    });            
     });
 </script>

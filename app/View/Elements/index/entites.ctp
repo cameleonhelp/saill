@@ -32,13 +32,13 @@
 </nav>
 <div class="">
 <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
-<tr>
+<thead><tr>
     <th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
     <th><?php echo $this->Paginator->sort('COMMENTAIRE','Commentaire'); ?></th>
     <th><?php echo $this->Paginator->sort('MAILGESTENV','Gestionnaire des environnements'); ?></th>
     <th class="actions"><?php echo __('Périmètre'); ?></th>
     <th class="actions"><?php echo __('Actions'); ?></th>
-</tr>
+</tr></thead>   
 <?php foreach ($entites as $entite): ?>
 <tr>
     <td><?php echo $entite['Entite']['NOM']; ?>&nbsp;</td>

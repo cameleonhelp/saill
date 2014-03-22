@@ -12,57 +12,75 @@ class ContratsController extends AppController {
         'order' => array('Contrat.NOM' => 'asc'),
         'conditions' => array('Contrat.id >' => 1),
         );
+        
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoprojetentites/find_str_id_contrats/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            if($visibility == null):
+                return '1=1';
+            elseif ($visibility!=''):
+                return "Contrat.id IN (".$visibility.')';
+            else:
+                return "Contrat.id < 1";
+            endif; 
+        }
+        
+        public function get_contrat_filtre_filter($filtre,$visibility){
+            $result = array();
+            switch ($filtre){
+                case 'tous':   
+                    if($visibility == null):
+                        $result['condition']='1=1';
+                    elseif ($visibility!=''):
+                        $result['condition']="Contrat.id IN (".$visibility.')';
+                    else:
+                        $result['condition']="Contrat.id < 1";
+                    endif;   
+                    $result['filter'] = "tous les contrats";
+                    break;
+                case 'actif':
+                case null:   
+                    if($visibility == null):
+                        $result['condition']='Contrat.ACTIF=1';
+                    elseif ($visibility!=''):
+                        $result['condition']="Contrat.id IN (".$visibility.') AND Contrat.ACTIF=1';
+                    else:
+                        $result['condition']="Contrat.id < 1 AND Contrat.ACTIF=1";
+                    endif;                      
+                    $result['filter'] = "tous les contrats actifs";
+                    break;  
+                case 'inactif':
+                    if($visibility == null):
+                        $result['condition']='Contrat.ACTIF=0';
+                    elseif ($visibility!=''):
+                        $result['condition']="Contrat.id IN (".$visibility.') AND Contrat.ACTIF=0';
+                    else:
+                        $result['condition']="Contrat.id < 1 AND Contrat.ACTIF=0";
+                    endif;  
+                    $result['filter'] = "tous les contrats inactifs";
+                    break;                     
+            } 
+            return $result;
+        }  
 /**
  * index method
  *
  * @return void
  */
 	public function index($filtre=null) {
-            //$this->Session->delete('history');
-            $listcontrats = $this->requestAction('assoprojetentites/find_str_id_contrats/'.userAuth('id'));
             if (isAuthorized('contrats', 'index')) :
-                switch ($filtre){
-                    case 'tous':    
-                        $newconditions[]="Contrat.id IN (".$listcontrats.')';
-                        $fcontrat = "tous les contrats";
-                        break;
-                    case 'actif':
-                    case '<':
-                    case null:    
-                        $newconditions[]="Contrat.id IN (".$listcontrats.')';
-                        $newconditions[]="Contrat.ACTIF=1";
-                        $fcontrat = "tous les contrats actifs";
-                        break;  
-                    case 'inactif':
-                        $newconditions[]="Contrat.id IN (".$listcontrats.')';
-                        $newconditions[]="Contrat.ACTIF=0";
-                        $fcontrat = "tous les contrats inactifs";
-                        break;                     
-                }    
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
-		$this->Contrat->recursive = 0;
+                $listcontrats = $this->get_visibility();
+                $getfiltre = $this->get_contrat_filtre_filter($filtre, $listcontrats);
+                $newconditions = array($getfiltre['condition']);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                
 		$this->set('contrats', $this->paginate());
-                $this->set('fcontrat',$fcontrat);
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('contrats', 'view')) :
-		if (!$this->Contrat->exists($id)) {
-			throw new NotFoundException(__('Contrat incorrect'));
-		}
-		$options = array('conditions' => array('Contrat.' . $this->Contrat->primaryKey => $id));
-		$this->set('contrat', $this->Contrat->find('first', $options));
+                $this->set('fcontrat',$getfiltre['filter']);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -75,9 +93,7 @@ class ContratsController extends AppController {
  * @return void
  */
 	public function add() {
-            if (isAuthorized('contrats', 'add')) :
-                $tjmcontrats = $this->Contrat->Tjmcontrat->find('list',array('fields' => array('id', 'TJM'),'recursive'=>-1));
-                $this->set('tjmcontrats',$tjmcontrats);             
+            if (isAuthorized('contrats', 'add')) :         
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Contrat->validate = array();
@@ -92,6 +108,8 @@ class ContratsController extends AppController {
 			}
                     endif;
 		endif;
+                $tjmcontrats = $this->requestAction('tjmcontrats/get_list');
+                $this->set(compact('tjmcontrats'));                    
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -106,9 +124,7 @@ class ContratsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            if (isAuthorized('contrats', 'edit')) :
-                $tjmcontrats = $this->Contrat->Tjmcontrat->find('list',array('fields' => array('id', 'TJM'),'recursive'=>-1));
-                $this->set('tjmcontrats',$tjmcontrats);            
+            if (isAuthorized('contrats', 'edit')) :          
 		if (!$this->Contrat->exists($id)) {
 			throw new NotFoundException(__('Contrat incorrect'));
 		}
@@ -133,8 +149,10 @@ class ContratsController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Contrat.' . $this->Contrat->primaryKey => $id));
-			$this->request->data = $this->Contrat->find('first', $options);
+                    $options = array('conditions' => array('Contrat.' . $this->Contrat->primaryKey => $id));
+                    $this->request->data = $this->Contrat->find('first', $options);
+                    $tjmcontrats = $this->requestAction('tjmcontrats/get_list');
+                    $this->set(compact('tjmcontrats'));                            
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -156,7 +174,6 @@ class ContratsController extends AppController {
 		if (!$this->Contrat->exists()) {
 			throw new NotFoundException(__('Contrat incorrect'));
 		}
-		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Contrat->delete()) {
 			$this->Session->setFlash(__('Contrat supprimé',true),'flash_success');
 			$this->History->goBack(1);
@@ -174,19 +191,70 @@ class ContratsController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($filtre=null,$keywords=null) {
             if (isAuthorized('contrats', 'index')) :
-                $keyword=isset($this->params->data['Contrat']['SEARCH']) ? $this->params->data['Contrat']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Contrat.NOM LIKE '%".$keyword."%'","Contrat.DESCRIPTION LIKE '%".$keyword."%'","Contrat.ANNEEDEBUT LIKE '%".$keyword."%'","Contrat.ANNEEFIN LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Contrat->recursive = 0;
-                $this->set('contrats', $this->paginate());              
-                $this->render('index');
+                if(isset($this->params->data['Contrat']['SEARCH'])):
+                    $keywords = $this->params->data['Contrat']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $listcontrats = $this->get_visibility();
+                    $getfiltre = $this->get_contrat_filtre_filter($filtre, $listcontrats);
+                    $this->set('fcontrat',$getfiltre['filter']);
+                    $newconditions = array($getfiltre['condition']);
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Contrat.NOM LIKE '%".$value."%'","Contrat.DESCRIPTION LIKE '%".$value."%'","Contrat.ANNEEDEBUT LIKE '%".$value."%'","Contrat.ANNEEFIN LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                
+                    $this->set('contrats', $this->paginate());
+                else:
+                    $this->redirect(array('action'=>'index',$filtre));
+                endif; 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
         }      
         
+            public function get_list(){
+            $visibility = $this->get_visibility();                
+            $conditions[]= $this->get_restriction($visibility);               
+            $list = $this->Contrat->find('list',array('fields'=>array('Contrat.id','Contrat.NOM'),'conditions'=>$conditions,'order'=>array('Contrat.NOM'=>'asc'),'recursive'=>0));
+            return $list;
+        }
+        
+        public function get_all(){
+            $visibility = $this->get_visibility();                
+            $conditions[]= $this->get_restriction($visibility);               
+            $list = $this->Contrat->find('all',array('conditions'=>$conditions,'order'=>array('Contrat.NOM'=>'asc'),'recursive'=>0));
+            return $list;
+        }    
+        
+        public function get_list_no_absence(){
+            $visibility = $this->get_visibility();                
+            $conditions[]= $this->get_restriction($visibility); 
+            $conditions[]= 'Contrat.id > 1';
+            $list = $this->Contrat->find('list',array('fields'=>array('Contrat.id','Contrat.NOM'),'conditions'=>$conditions,'order'=>array('Contrat.NOM'=>'asc'),'recursive'=>0));
+            return $list;
+        }
+        
+        public function get_all_no_absence(){
+            $visibility = $this->get_visibility();                
+            $conditions[]= $this->get_restriction($visibility);  
+            $conditions[]= 'Contrat.id > 1';            
+            $list = $this->Contrat->find('all',array('conditions'=>$conditions,'order'=>array('Contrat.NOM'=>'asc'),'recursive'=>0));
+            return $list;
+        }            
+        
+        public function get_nom($id){
+            $conditions[]="Contrat.id = ".$id;
+            $list = $this->Contrat->find('first',array('conditions'=>$conditions,'order'=>array('Contrat.NOM'=>'asc'),'recursive'=>-1));
+            return $list['Contrat']['NOM'];
+        }
 }

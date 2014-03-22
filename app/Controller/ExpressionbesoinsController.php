@@ -16,99 +16,134 @@ class ExpressionbesoinsController extends AppController {
         public $paginate = array('limit' => 25,'order'=>array('Expressionbesoin.modified'=>'desc'));
 	public $components = array('History','Common');
 
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            if($visibility == null):
+                return "1=1";
+            elseif ($visibility !=""):
+                return "Expressionbesoin.entite_id IN (".$visibility.')';
+            else:
+                return "Expressionbesoin.entite_id=".userAuth('entite_id');
+            endif;
+        }
+        
+        public function get_environnement_application_filter($application){
+            $result = array();
+            switch($application):
+                case null:
+                case 'tous':
+                    $listapp = $this->requestAction('applications/get_str_list');
+                    $result['condition']="Expressionbesoin.application_id IN (".$listapp.")";
+                    $result['filter'] = ', pour toutes les applications';
+                    break;
+                default :
+                    $result['condition']="Expressionbesoin.application_id=".$application;
+                    $nom = $this->Expressionbesoin->Application->findById($application);
+                    $result['filter'] = ', pour l\'application '.$nom['Application']['NOM'];
+                    break;
+            endswitch;
+            return $result;
+        }
+        
+        public function get_environnement_etat_filter($etat){
+            $result = array();
+            switch($etat):
+                case null:
+                case 'actif':
+                    $result['condition']="Expressionbesoin.etat_id < 4";
+                    $result['filter']= ', avec un état actif';
+                    break;                          
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= '';
+                    break;                         
+                default :
+                    $result['condition']="Expressionbesoin.etat_id=".$etat;
+                    $nom = $this->Expressionbesoin->Etat->findById($etat);
+                    $result['filter']= ', '.$nom['Etat']['NOM'];
+                    break;                   
+            endswitch;
+            return $result;
+        }
+        
+        public function get_environnement_type_filter($type){
+            $result = array();
+            switch($type):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= ', pour tous les environnements';
+                    break;
+                default:
+                    $result['condition']="Expressionbesoin.type_id=".$type;
+                    $nom = $this->Expressionbesoin->Type->findById($type);
+                    $result['filter']= ', pour l\'environnement '.$nom['Type']['NOM'];
+                    break;
+            endswitch;
+            return $result;
+        }
+        
+        public function get_environnement_perimetre_filter($perimetre){
+            $result = array();
+            switch($perimetre):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= '';
+                    break;
+                default:
+                    $result['condition']="Expressionbesoin.perimetre_id=".$perimetre;
+                    $nom = $this->Expressionbesoin->Perimetre->findById($perimetre);
+                    $result['filter']= ', pour le périmétre '.$nom['Perimetre']['NOM'];
+                    break;
+            endswitch;
+            return $result;
+        }
+        
+        public function get_export($conditions){
+            $this->Session->delete('xls_export');
+            $export = $this->Expressionbesoin->find('all',array('conditions'=>$conditions,'order' => array('Expressionbesoin.id' => 'desc'),'recursive'=>0));
+            $this->Session->write('xls_export',$export); 
+        }
+        
+        public function set_title(){
+            $this->set('title_for_layout','Environnements'); 
+        }
 /**
  * index method
  *
  * @return void
  */
 	public function index($application=null,$etat=null,$type=null,$perimetre=null) {
-            $this->set('title_for_layout','Environnements'); 
+            $this->set_title(); 
             if (isAuthorized('expressionbesoins', 'index')) :  
-                $listentite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
-                $newconditions[]="Expressionbesoin.entite_id IN (".$listentite.')';                
-                switch($application):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter = ', pour toutes les applications';
-                        break;
-                    default :
-                        $newconditions[]="Expressionbesoin.application_id=".$application;
-                        $nom = $this->Expressionbesoin->Application->findById($application);
-                        $strfilter = ', pour l\'application '.$nom['Application']['NOM'];
-                        break;
-                endswitch;
-                switch($etat):
-                    case null:
-                    case 'actif':
-                        $newconditions[]="Expressionbesoin.etat_id < 4";
-                        $strfilter .= ', avec un état actif';
-                        break;                          
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= '';
-                        break;                         
-                    default :
-                        $newconditions[]="Expressionbesoin.etat_id=".$etat;
-                        $nom = $this->Expressionbesoin->Etat->findById($etat);
-                        $strfilter .= ', '.$nom['Etat']['NOM'];
-                        break;                   
-                endswitch;                     
-                switch($type):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= ', pour tous les environnements';
-                        break;
-                    default:
-                        $newconditions[]="Expressionbesoin.type_id=".$type;
-                        $nom = $this->Expressionbesoin->Type->findById($type);
-                        $strfilter .= ', pour l\'environnement '.$nom['Type']['NOM'];
-                        break;
-                endswitch;   
-                switch($perimetre):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= '';
-                        break;
-                    default:
-                        $newconditions[]="Expressionbesoin.perimetre_id=".$perimetre;
-                        $nom = $this->Expressionbesoin->Perimetre->findById($perimetre);
-                        $strfilter .= ', pour le périmétre '.$nom['Perimetre']['NOM'];
-                        break;
-                endswitch;                 
-                $this->set('strfilter',$strfilter);
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-		$this->Expressionbesoin->recursive = 0;
-                $export = $this->Expressionbesoin->find('all',array('conditions'=>$newconditions,'order' => array('Expressionbesoin.id' => 'desc'),'recursive'=>0));
-                $this->Session->delete('xls_export');
-                $this->Session->write('xls_export',$export);                 
+                $listentite = $this->get_visibility();
+                $restriction = $this->get_restriction($listentite);              
+                $getapplication = $this->get_environnement_application_filter($application);
+                $getetat = $this->get_environnement_etat_filter($etat);
+                $gettype = $this->get_environnement_type_filter($type);
+                $getperimetre = $this->get_environnement_perimetre_filter($perimetre);
+                $strfilter = $getapplication['filter'].$getetat['filter'].$gettype['filter'].$getperimetre['filter'];
+                $newconditions = array($restriction,$getapplication['condition'],$getetat['condition'],$gettype['condition'],$getperimetre['condition']);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                
 		$this->set('expressionbesoins', $this->paginate());
+                $this->get_export($newconditions);
                 $applications = $this->requestAction('applications/get_list/1');
                 $types = $this->requestAction('types/get_list/1');
                 $perimetres = $this->requestAction('perimetres/get_list/1');
                 $etats = $this->requestAction('etats/get_list/1');
-		$this->set(compact('applications','types','perimetres','etats'));    
+		$this->set(compact('strfilter','applications','types','perimetres','etats'));    
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                 
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-		if (!$this->Expressionbesoin->exists($id)) {
-			throw new NotFoundException(__('Invalid expressionbesoin'));
-		}
-		$options = array('conditions' => array('Expressionbesoin.' . $this->Expressionbesoin->primaryKey => $id));
-		$this->set('expressionbesoin', $this->Expressionbesoin->find('first', $options));
 	}
 
 /**
@@ -117,7 +152,7 @@ class ExpressionbesoinsController extends AppController {
  * @return void
  */
 	public function add() {
-            $this->set('title_for_layout','Expression des besoins'); 
+            $this->set_title(); 
             if (isAuthorized('expressionbesoins', 'add')) : 
 		if ($this->request->is('post')) {
                     if (isset($this->params['data']['cancel'])) :
@@ -129,7 +164,7 @@ class ExpressionbesoinsController extends AppController {
 			if ($this->Expressionbesoin->save($this->request->data)) {
                                 $id = $this->Expressionbesoin->getLastInsertID();
                                 $this->saveHistory($id);
-                                $expb = $this->Expressionbesoin->find('all',array('conditions'=>array('Expressionbesoin.id'=>$id),'recursive'=>0));
+                                $expb = $this->Expressionbesoin->findById($id);
                                 $this->sendmailajout($expb);
 				$this->Session->setFlash(__('Expression du besoin sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
@@ -164,7 +199,7 @@ class ExpressionbesoinsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','Expression des besoins'); 
+            $this->set_title();  
             if (isAuthorized('expressionbesoins', 'edit')) : 
 		if (!$this->Expressionbesoin->exists($id)) {
 			throw new NotFoundException(__('Invalid expressionbesoin'));
@@ -213,7 +248,7 @@ class ExpressionbesoinsController extends AppController {
  * @return void
  */
 	public function delete($id = null,$loop=false) {
-            $this->set('title_for_layout','Expression des besoins');            
+            $this->set_title();          
             if (isAuthorized('expressionbesoins', 'delete')) : 
 		$this->Expressionbesoin->id = $id;
 		if (!$this->Expressionbesoin->exists()) {
@@ -468,20 +503,42 @@ class ExpressionbesoinsController extends AppController {
             endif;                 
         }
         
-        public function search(){
+        public function search($application=null,$etat=null,$type=null,$perimetre=null,$keywords=null){
+            $this->set_title();             
             if (isAuthorized('expressionbesoins', 'index')) :
-                $keyword=isset($this->params->data['Expressionbesoin']['SEARCH']) ? $this->params->data['Expressionbesoin']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Application.NOM LIKE '%".$keyword."%'","Composant.NOM LIKE '%".$keyword."%'","Perimetre.NOM LIKE '%".$keyword."%'","Lot.NOM LIKE '%".$keyword."%'","Etat.NOM LIKE '%".$keyword."%'","Type.NOM LIKE '%".$keyword."%'","Phase.NOM LIKE '%".$keyword."%'","Volumetrie.NOM LIKE '%".$keyword."%'","Puissance.NOM LIKE '%".$keyword."%'","Architecture.NOM LIKE '%".$keyword."%'","Dsitenv.NOM LIKE '%".$keyword."%'","Expressionbesoin.USAGE LIKE '%".$keyword."%'","Expressionbesoin.NOMUSAGE LIKE '%".$keyword."%'","Expressionbesoin.PVU LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Expressionbesoin->recursive = 0;
-                $this->set('expressionbesoins', $this->paginate());    
-                $applications = $this->requestAction('applications/get_list/1');
-                $types = $this->requestAction('types/get_list/1');
-                $perimetres = $this->requestAction('perimetres/get_list/1');
-                $etats = $this->requestAction('etats/get_list/1');
-		$this->set(compact('applications','types','perimetres','etats'));                 
-                $this->render('index');
+                if(isset($this->params->data['Expressionbesoin']['SEARCH'])):
+                    $keywords = $this->params->data['Expressionbesoin']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords));  
+                    $listentite = $this->get_visibility();
+                    $restriction = $this->get_restriction($listentite);              
+                    $getapplication = $this->get_environnement_application_filter($application);
+                    $getetat = $this->get_environnement_etat_filter($etat);
+                    $gettype = $this->get_environnement_type_filter($type);
+                    $getperimetre = $this->get_environnement_perimetre_filter($perimetre);
+                    $strfilter = $getapplication['filter'].$getetat['filter'].$gettype['filter'].$getperimetre['filter'];
+                    $newconditions = array($restriction,$getapplication['condition'],$getetat['condition'],$gettype['condition'],$getperimetre['condition']);
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Application.NOM LIKE '%".$value."%'","Composant.NOM LIKE '%".$value."%'","Perimetre.NOM LIKE '%".$value."%'","Lot.NOM LIKE '%".$value."%'","Etat.NOM LIKE '%".$value."%'","Type.NOM LIKE '%".$value."%'","Phase.NOM LIKE '%".$value."%'","Volumetrie.NOM LIKE '%".$value."%'","Puissance.NOM LIKE '%".$value."%'","Architecture.NOM LIKE '%".$value."%'","Dsitenv.NOM LIKE '%".$value."%'","Expressionbesoin.USAGE LIKE '%".$value."%'","Expressionbesoin.NOMUSAGE LIKE '%".$value."%'","Expressionbesoin.PVU LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));  
+                    $this->set('expressionbesoins', $this->paginate());
+                    $this->get_export($newconditions);
+                    $applications = $this->requestAction('applications/get_list/1');
+                    $types = $this->requestAction('types/get_list/1');
+                    $perimetres = $this->requestAction('perimetres/get_list/1');
+                    $etats = $this->requestAction('etats/get_list/1');
+                    $this->set(compact('strfilter','applications','types','perimetres','etats')); 
+                else:
+                    $this->redirect(array('action'=>'index',$aplication,$etat,$type,$perimetre));
+                endif; 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

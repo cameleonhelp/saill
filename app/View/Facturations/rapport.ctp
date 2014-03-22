@@ -65,7 +65,7 @@
     <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br><br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jour facturés par projet</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table1">
         <thead>
             <tr>
             <th>Début de période</th>
@@ -91,16 +91,16 @@
             </tr>           
             <?php endforeach; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td colspan="2" class="footer" style="text-align:right;">Total :</td>
             <td class="footer" id="total" style="text-align:center;"></td>
 	</tr> 
-        </tfooter>
+        </tfoot>
     </table>
 <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jours facturés par projet et activité</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table2">
         <thead>
             <tr>
             <th>Début de période</th>
@@ -128,17 +128,17 @@
             </tr>           
             <?php endforeach; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td colspan="3" class="footer" style="text-align:right;">Total :</td>
             <td class="footer" id="totaldetail" style="text-align:center;"></td>
 	</tr> 
-        </tfooter>        
+        </tfoot>        
     </table>
     <?php if (isset($repartitions)): ?>
     <br />
         <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jours facturés par utilisateur et par activité</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table3">
         <thead>
             <tr>
             <th>Début de période</th>
@@ -168,12 +168,12 @@
             </tr>           
             <?php endforeach; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td colspan="4" class="footer" style="text-align:right;">Total :</td>
             <td class="footer" id="totalrepartition" style="text-align:center;"></td>
 	</tr> 
-        </tfooter>        
+        </tfoot>        
     </table>
     <?php endif; ?>
 </div>
@@ -183,13 +183,77 @@
 </div>
 <script>
 $(document).ready(function (){ 
-   $("table").tablesorter({
+   $(".table1").tablesorter({
         headers: {
-            0: {
-                sorter: 'mois-annee'
-            }
+            0: {sorter: 'mois-annee' },
+            2:{filter:false}
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_saveFilters : true,
+            filter_useParsedData : false,
+            filter_startsWith : false,
+            zebra : [ "normal-row", "alt-row" ]
         }
+    }).bind('filterEnd',function(e,t){
+        $("#total").html(newSumOfColumns('tr:not(.filtered) > td.nbaction',''));
     });
+    
+   $(".table2").tablesorter({
+        headers: {
+            0: {sorter: 'mois-annee' },
+            3:{filter:false}
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_saveFilters : true,
+            filter_useParsedData : false,
+            filter_startsWith : false,
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    }).bind('filterEnd',function(e,t){
+        $("#totaldetail").html(newSumOfColumns('tr:not(.filtered) > td.nbactiondetail',''));
+    }); 
+        
+   $(".table3").tablesorter({
+        headers: {
+            0: {sorter: 'mois-annee' },
+            4:{filter:false}
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_saveFilters : true,
+            filter_useParsedData : false,
+            filter_startsWith : false,
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    }).bind('filterEnd',function(e,t){
+        $("#totalrepartition").html(newSumOfColumns('tr:not(.filtered) > td.nbrepartition',''));
+    }); 
+        
+    function newSumOfColumns(id,symbole) {
+        var tot = 0;
+        $(id).each(function() {
+          value = $(this).html()=='' ? 0: $(this).html();
+          tot += parseFloat(value);
+        });
+        return parseFloat(tot).toFixed(0)+" "+symbole;
+     };    
     
     $(document).on('click','#FacturationSelectAll',function() {
         if($(this).is(':checked')){

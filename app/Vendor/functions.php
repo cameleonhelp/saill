@@ -2,6 +2,15 @@
 App::uses('AppModel', 'Model', 'Autorisation', 'Activite');
 App::uses('ConnectionManager', 'Model');
 
+function get_page_mod_time() { 
+    $incls = get_included_files(); 
+    $incls = array_filter($incls, "is_file"); 
+    $mod_times = array_map('filemtime', $incls); 
+    $mod_time = max($mod_times); 
+
+    return date("d/m/Y H:i:s",$mod_time); 
+} 
+
 /**
  * isFerie 
  * 
@@ -456,7 +465,8 @@ App::uses('ConnectionManager', 'Model');
  * @return Variable de session user
  */    
     function userAuth($key = null){
-        if(SessionComponent::check('Auth.User')){
+        $check = SessionComponent::check('Auth.User');
+        if($check){
             $user = SessionComponent::read('Auth.User');
             if ($key === null) {
                 return $user;

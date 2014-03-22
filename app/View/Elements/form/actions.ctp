@@ -166,7 +166,7 @@
         <div class="col-md-10"> 
             <div style="padding-bottom:15px;">
               <div style="float:left;width:130px;">
-                  <button type="submit" data-toggle="modal" data-target="#RiskModal" class="btn btn-default btn-sm">Evaluer un risque</button>
+                  <button type="button" data-toggle="modal" data-target="#RiskModal" class="btn btn-default btn-sm">Evaluer un risque</button>
               </div>
               <div id="squareRisque" style="float:left;padding-left:20px;width:10px;height:19px;margin-top:4px;"></div>
               <label id="commentRisque" style="float:left;padding-left:10px;margin-top:5px;"></label>  

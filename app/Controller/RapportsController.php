@@ -35,7 +35,8 @@ class RapportsController extends AppController {
                 $materiels = $this->Rapport->query($sqlMateriel);
                 $this->set('materiels',$materiels);                 
             endif;
-            $sections = $this->requestAction('sections/getList');
+            $visibility = $this->requestAction('assoentiteutilisateurs/find_all_section/'.userAuth('id'));
+            $sections = $this->requestAction('sections/getList/'.$visibility);
             $this->set('sections',$sections);                 
         else :
             $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -135,15 +136,14 @@ class RapportsController extends AppController {
         $this->set('title_for_layout','Facturations des agents SNCF');
         if (isAuthorized('activitesreelles', 'rapports')) :
             if ($this->request->is('post')):
-                /** Calcul du rapport aprés submit **/
-                    $societes = array('1');
-                    $start = $this->request->data['Rapport']['DU'];
-                    $end = $this->request->data['Rapport']['AU'];;//@date('t',$start).'/'.$this->request->data['Rapport']['mois'].'/'.$this->request->data['Rapport']['annee'];            
-                    $rapportresult = $this->requestAction('facturations/forsncf', array('pass'=>array('societes'=>$societes,'start'=>CUSDate($start),'end'=>CUSDate($end),'indisponibilite'=>$this->request->data['Rapport']['indisponibilite'])));
-                    $this->set('results',$rapportresult['result']);
-                    $this->set('entrops',$rapportresult['trop']);
-                    $this->Session->delete('xls_export');
-                    $this->Session->write('xls_export',$rapportresult);                     
+                $societes = array('1');
+                $start = $this->request->data['Rapport']['DU'];
+                $end = $this->request->data['Rapport']['AU'];          
+                $rapportresult = $this->requestAction('facturations/forsncf', array('pass'=>array('societes'=>$societes,'start'=>CUSDate($start),'end'=>CUSDate($end),'indisponibilite'=>$this->request->data['Rapport']['indisponibilite'])));
+                $this->set('results',$rapportresult['result']);
+                $this->set('entrops',$rapportresult['trop']);
+                $this->Session->delete('xls_export');
+                $this->Session->write('xls_export',$rapportresult);                     
             endif;
             /** Au chargement de la page **/
             $mois = array('01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre');
@@ -153,7 +153,7 @@ class RapportsController extends AppController {
                 $year = $fiveyearago + $i;
                 $annee[$year]=$year;
             endfor;
-            $this->set('annee',$annee);
+            $this->set('annee',$annee);            
         else :
             $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
             throw new NotAuthorizedException();

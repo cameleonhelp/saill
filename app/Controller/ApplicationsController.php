@@ -27,9 +27,9 @@ class ApplicationsController extends AppController {
             if($visibility == null):
                 return '1=1';
             elseif ($visibility!=''):
-                return array('OR'=>array('Application.entite_id IN ('.$visibility.')','Application.entite_id IS NULL'));
+                return array('Application.entite_id IN ('.$visibility.')');
             else:
-                return array('OR'=>array('Application.entite_id ='.userAuth('entite_id'),'Application.entite_id IS NULL'));
+                return array('Application.entite_id ='.userAuth('entite_id'));
             endif;
         }
         
@@ -49,6 +49,10 @@ class ApplicationsController extends AppController {
             return $result;
         }
         
+        public function get_entite_id($app_id){
+            $obj = $this->Application->findById($app_id);
+            return $obj['Application']['entite_id']!=null ? $obj['Application']['entite_id'] : userAuth('entite_id');
+        }
         
         public function get_application_entite_filter($id,$visibility){
             $result = array();
@@ -247,7 +251,19 @@ class ApplicationsController extends AppController {
             $conditions[] = $actif == null ? '1=1' : 'Application.ACTIF='.$actif;
             $list = $this->Application->find('all',array('fields'=>array('Application.id','Application.NOM'),'order'=>array('Application.NOM'=>'asc'),'conditions'=>$conditions,'recursive'=>0));
             return $list;
-        }        
+        }      
+        
+        public function get_str_list($actif=null){
+            $list = '';
+            $visibility = $this->get_visibility();                
+            $conditions[]= $this->get_restriction($visibility);               
+            $conditions[] = $actif == null ? '1=1' : 'Application.ACTIF='.$actif;
+            $objs = $this->Application->find('all',array('fields'=>array('Application.id','Application.NOM'),'order'=>array('Application.id'=>'asc'),'conditions'=>$conditions,'recursive'=>0));
+            foreach ($objs as $obj):
+                $list .= $obj['Application']['id'].",";
+            endforeach;
+            return strlen($list) > 1 ? substr_replace($list ,"",-1) : '0';
+        }
         
         public function getbynom($nom){
             $this->Application->recursive = 0;

@@ -18,32 +18,10 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function index() {
-            //$this->Session->delete('history');
+            $this->set('title_for_layout','TJM agents');
             if (isAuthorized('tjmagents', 'index')) :
-		$this->set('title_for_layout','TJM agents');
                 $this->Tjmagent->recursive = 0;
 		$this->set('tjmagents', $this->paginate());
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('tjmagents', 'view')) :
-		$this->set('title_for_layout','TJM agents');
-                if (!$this->Tjmagent->exists($id)) {
-			throw new NotFoundException(__('TJM agent incorrect'));
-		}
-		$options = array('conditions' => array('Tjmagent.' . $this->Tjmagent->primaryKey => $id),'recursive'=>0);
-		$this->set('tjmagent', $this->Tjmagent->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -56,8 +34,8 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function add() {
+            $this->set('title_for_layout','TJM agents');
             if (isAuthorized('tjmagents', 'add')) :
-		$this->set('title_for_layout','TJM agents');
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Tjmagent->validate = array();
@@ -86,8 +64,8 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            $this->set('title_for_layout','TJM agents');
             if (isAuthorized('tjmagents', 'edit')) :
-		$this->set('title_for_layout','TJM agents');
                 if (!$this->Tjmagent->exists($id)) {
 			throw new NotFoundException(__('TJM agent incorrect'));
 		}
@@ -122,13 +100,12 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            $this->set('title_for_layout','TJM agents');
             if (isAuthorized('tjmagents', 'delete')) :
-		$this->set('title_for_layout','TJM agents');
                 $this->Tjmagent->id = $id;
 		if (!$this->Tjmagent->exists()) {
 			throw new NotFoundException(__('TJM agent incorrect'));
 		}
-		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Tjmagent->delete()) {
 			$this->Session->setFlash(__('TJM agent supprimé',true),'flash_success');
 			$this->History->goBack(1);
@@ -145,16 +122,29 @@ class TjmagentsController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($keywords=null) {
+            $this->set('title_for_layout','TJM agents');
             if (isAuthorized('tjmagents', 'index')) :
-                $this->set('title_for_layout','TJM agents');
-                $keyword=isset($this->params->data['Tjmagent']['SEARCH']) ? $this->params->data['Tjmagent']['SEARCH'] : '';  
-                $newconditions = array('OR'=>array("Tjmagent.NOM LIKE '%".$keyword."%'","Tjmagent.ANNEE LIKE '%".$keyword."%'","Tjmagent.TARIFHT LIKE '%".$keyword."%'","Tjmagent.TARIFTTC LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 
-                $this->autoRender = false;
-                $this->Tjmagent->recursive = 0;
-                $this->set('tjmagents', $this->paginate());            
-                $this->render('index');
+                if(isset($this->params->data['Tjmagent']['SEARCH'])):
+                    $keywords = $this->params->data['Tjmagent']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $newcondition = array();
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Tjmagent.NOM LIKE '%".$value."%'","Tjmagent.ANNEE LIKE '%".$value."%'","Tjmagent.TARIFHT LIKE '%".$value."%'","Tjmagent.TARIFTTC LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newcondition,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
+                    $this->set('tjmagents', $this->paginate());   
+                else:
+                    $this->redirect(array('action'=>'index'));
+                endif;   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

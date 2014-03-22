@@ -18,32 +18,10 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function index() {
-            //$this->Session->delete('history');
+            $this->set('title_for_layout','TJM contrats');
             if (isAuthorized('tjmcontrats', 'index')) :
-		$this->set('title_for_layout','TJM contrats');
                 $this->Tjmcontrat->recursive = 0;
 		$this->set('tjmcontrats', $this->paginate());
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('tjmcontrats', 'view')) :
-		$this->set('title_for_layout','TJM contrats');
-                if (!$this->Tjmcontrat->exists($id)) {
-			throw new NotFoundException(__('TJM contrat incorrect'));
-		}
-		$options = array('conditions' => array('Tjmcontrat.' . $this->Tjmcontrat->primaryKey => $id),'recursive'=>0);
-		$this->set('tjmcontrat', $this->Tjmcontrat->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -56,8 +34,8 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function add() {
+            $this->set('title_for_layout','TJM contrats');
             if (isAuthorized('tjmcontrats', 'add')) :
-		$this->set('title_for_layout','TJM contrats');
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Tjmcontrat->validate = array();
@@ -86,8 +64,8 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            $this->set('title_for_layout','TJM contrats');
             if (isAuthorized('tjmcontrats', 'edit')) :
-		$this->set('title_for_layout','TJM contrats');
                 if (!$this->Tjmcontrat->exists($id)) {
 			throw new NotFoundException(__('TJM contrat incorrect'));
 		}
@@ -122,13 +100,12 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
+            $this->set('title_for_layout','TJM contrats');
             if (isAuthorized('tjmcontrats', 'delete')) :
-		$this->set('title_for_layout','TJM contrats');
                 $this->Tjmcontrat->id = $id;
 		if (!$this->Tjmcontrat->exists()) {
 			throw new NotFoundException(__('TJM contrat incorrect'));
 		}
-		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Tjmcontrat->delete()) {
 			$this->Session->setFlash(__('TJM contrat supprimé',true),'flash_success');
 			$this->History->goBack(1);
@@ -146,19 +123,41 @@ class TjmcontratsController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($keywords=null) {
+            $this->set('title_for_layout','TJM contrats');
             if (isAuthorized('tjmcontrats', 'index')) :
-                $this->set('title_for_layout','TJM contrats');
-                $keyword=isset($this->params->data['Tjmcontrat']['SEARCH']) ? $this->params->data['Tjmcontrat']['SEARCH'] : '';   
-                $newconditions = array('OR'=>array("Tjmcontrat.TJM LIKE '%".$keyword."%'","Tjmcontrat.ANNEE LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions)); 
-                $this->autoRender = false;
-                $this->Tjmcontrat->recursive = 0;
-                $this->set('tjmcontrats', $this->paginate());            
-                $this->render('index');
+                if(isset($this->params->data['Tjmcontrat']['SEARCH'])):
+                    $keywords = $this->params->data['Tjmcontrat']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Tjmcontrat.TJM LIKE '%".$value."%'","Tjmcontrat.ANNEE LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array('OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
+                    $this->set('tjmcontrats', $this->paginate());                   
+                else:
+                    $this->redirect(array('action'=>'index'));
+                endif;              
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                
-        }         
+        }      
+        
+        public function get_all(){
+            $conditions[] = '1=1';
+            return $this->Tjmcontrat->find('all',array('conditions'=>$conditions,'recursive'=>0));
+        }
+        
+        public function get_list(){
+            $conditions[] = '1=1';
+            return $this->Tjmcontrat->find('list',array('fields'=>array('Tjmcontrat.id','Tjmcontrat.TJM'),'conditions'=>$conditions,'recursive'=>0));
+        }        
 }

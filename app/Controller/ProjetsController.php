@@ -11,74 +11,106 @@ class ProjetsController extends AppController {
         'limit' => 25,
         'order' => array('Projet.NOM' => 'asc'),
         'conditions' => array('Projet.id >' => 1),
-        //'group'=>array('Projet.contrat_id'),
         );
+        
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoprojetentites/find_str_id_contrats/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_all_projets_for_contrat($contrat){
+            $condition[]="Projet.contrat_id=".$contrat;
+            return $this->Projet->find('all',array('conditions'=>$condition,'reursive'=>-1));
+        }
+        
+        public function get_str_projets_for_contrat($contrat){
+            $projets = $this->get_all_projets_for_contrat($contrat);
+            $list = "";
+            foreach ($projets as $projet):
+                $list .= $projet['Projet']['id'].',';
+            endforeach;
+            return strlen($list) > 1 ? substr_replace($list ,"",-1) : '0';
+        }
+        
+        public function get_restriction(){
+            if($visibility == null):
+                return '1=1';
+            elseif ($visibility!=''):
+                return '1=1';
+            else:
+                return '1=1';
+            endif;
+        }     
+        
+        public function get_projet_contrat_filter($filtreContrat,$visibility){
+            $result =array();
+            switch ($filtreContrat){
+                case 'tous':
+                case null:
+                    if($visibility == null):
+                       $result['condition']='1=1';
+                    elseif ($visibility!=''):
+                        $result['condition']="Projet.contrat_id IN (".$visibility.")";
+                    else:
+                        $result['condition']='Projet.contrat_id < 1';
+                    endif;                    
+                    $result['filter'] = "tous les contrats";
+                    break;
+                default :
+                    $result['condition']="Contrat.id='".$filtreContrat."'";
+                    $contrat = $this->Projet->Contrat->find('first',array('conditions'=>array('Contrat.id'=>$filtreContrat),'recursive'=>0));
+                    $result['filter'] = "le contrat ".$contrat['Contrat']['NOM'];
+                    break;                      
+            }  
+            return $result;
+        }
+        
+        public function get_projet_etat_filter($filtreEtat){
+            $result = array();
+            switch ($filtreEtat){
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter'] = "tous les projets";
+                    break;
+                case 'actif':
+                case null:                        
+                    $result['condition']="Projet.ACTIF=1";
+                    $result['filter'] = "tous les projets actifs";
+                    break;  
+                case 'inactif':
+                    $result['condition']="Projet.ACTIF=0";
+                    $result['filter'] = "tous les projets inactifs";
+                    break;                                         
+            }  
+            return $result;
+        }      
+        
+        public function get_export($condition){
+            $this->Session->delete('xls_export');
+            $export = $this->Projet->find('all',array('conditions'=>$condition,'order' => array('Projet.NOM' => 'asc'),'recursive'=>0));
+            $this->Session->write('xls_export',$export); 
+        }
 /**
  * index method
  *
  * @return void
  */
 	public function index($filtreEtat=null,$filtreContrat=null) {
-            //$this->Session->delete('history');
-            $listcontrats = $this->requestAction('assoprojetentites/find_str_id_contrats/'.userAuth('id'));
             if (isAuthorized('projets', 'index')) :
-                switch ($filtreContrat){
-                    case 'tous':
-                    case null:
-                        $newconditions[]="Projet.contrat_id IN (".$listcontrats.")";
-                        $fcontrat = "tous les contrats";
-                        break;
-                    default :
-                        $newconditions[]="Contrat.id='".$filtreContrat."'";
-                        $contrat = $this->Projet->Contrat->find('first',array('conditions'=>array('Contrat.id'=>$filtreContrat),'recursive'=>0));
-                        $fcontrat = "le contrat ".$contrat['Contrat']['NOM'];
-                        break;                      
-                }  
-                $this->set('fcontrat',$fcontrat);
-                switch ($filtreEtat){
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $fetat = "tous les projets";
-                        break;
-                    case 'actif':
-                    case null:                        
-                        $newconditions[]="Projet.ACTIF=1";
-                        $fetat = "tous les projets actifs";
-                        break;  
-                    case 'inactif':
-                        $newconditions[]="Projet.ACTIF=0";
-                        $fetat = "tous les projets inactifs";
-                        break;                                         
-                }    
-                $this->set('fetat',$fetat); 
-                $contrats = $this->Projet->Contrat->find('all',array('fields' => array('Contrat.id','NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id IN ('.$listcontrats.')','recursive'=>-1));
-                $this->set('contrats',$contrats);                
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
-		$this->Projet->recursive = 0;
+                $listcontrats = $this->get_visibility();
+                $getetat = $this->get_projet_etat_filter($filtreEtat);
+                $getcontrat = $this->get_projet_contrat_filter($filtreContrat,$listcontrats);
+                $this->set('fcontrat',$getetat['filter']);
+                $this->set('fetat',$getcontrat['filter']); 
+                $contrats = $this->requestAction('contrats/get_all');
+                $this->set(compact('contrats'));
+                $newconditions = array($getetat['condition'],$getcontrat['condition']);              
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                
 		$this->set('projets', $this->paginate());
-                $this->Session->delete('xls_export');
-                $export = $this->Projet->find('all',array('conditions'=>$newconditions,'order' => array('Projet.NOM' => 'asc'),'recursive'=>0));
-                $this->Session->write('xls_export',$export);                   
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;                
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            if (isAuthorized('projets', 'view')) :
-		if (!$this->Projet->exists($id)) {
-			throw new NotFoundException(__('Projet incorrect'));
-		}
-		$options = array('conditions' => array('Projet.' . $this->Projet->primaryKey => $id));
-		$this->set('projet', $this->Projet->find('first', $options));
+                $this->get_export($newconditions);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -92,22 +124,13 @@ class ProjetsController extends AppController {
  */
 	public function add() {
             if (isAuthorized('projets', 'add')) :
-                $listcontrats = $this->requestAction('assoprojetentites/find_str_id_contrats/'.userAuth('id'));
-                $contrats = $this->Projet->Contrat->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id IN ('.$listcontrats.')','recursive'=>-1));
-                $cercles = userAuth('profil_id')== 0 ? $this->requestAction('entites/find_list_all_actif_cercle') : $this->requestAction('entites/find_list_cercle');
-                $this->set(Compact('contrats','cercles'));
-                $typeProjet = Configure::read('typeProjet');
-                $this->set('type',$typeProjet);
-                $factureProjet = Configure::read('factureProjet');
-                $this->set('facturation',$factureProjet);                
-                if ($this->request->is('post')) :
+               if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Projet->validate = array();
                         $this->History->goBack(1);
                     else:                     
 			$this->Projet->create();
 			if ($this->Projet->save($this->request->data)) {
-                                //TODO ajouter une méthode pour faire l'association à la création
                                 $lastid = $this->Projet->getLastInsertID();
                                 $entite_id = $this->request->data['Projet']['entite_id'];
                                 $this->requestAction('assoprojetentites/silent_save/'.$entite_id."/".$lastid);
@@ -118,6 +141,12 @@ class ProjetsController extends AppController {
 			}
                     endif;
 		endif;
+                $listcontrats = $this->get_visibility();
+                $contrats = $this->requestAction('contrats/get_list');
+                $cercles = $this->requestAction('entites/find_list_cercle');
+                $type = Configure::read('typeProjet');
+                $facturation = Configure::read('factureProjet');
+                $this->set(Compact('contrats','cercles','type','facturation'));                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -132,15 +161,7 @@ class ProjetsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            if (isAuthorized('projets', 'edit')) :
-                $listcontrats = $this->requestAction('assoprojetentites/find_str_id_contrats/'.userAuth('id'));
-                $contrats = $this->Projet->Contrat->find('list',array('fields' => array('NOM'),'group'=>'NOM','order'=>array('NOM'=>'asc'),'conditions'=>'Contrat.id IN ('.$listcontrats.')','recursive'=>-1));
-                $cercles = userAuth('profil_id')== 0 ? $this->requestAction('entites/find_list_all_actif_cercle') : $this->requestAction('entites/find_list_cercle');
-                $this->set(Compact('contrats','cercles'));  
-                $typeProjet = Configure::read('typeProjet');
-                $this->set('type',$typeProjet);
-                $factureProjet = Configure::read('factureProjet');
-                $this->set('facturation',$factureProjet);                   
+            if (isAuthorized('projets', 'edit')) :                  
                 if (!$this->Projet->exists($id)) {
 			throw new NotFoundException(__('Projet incorrect'));
 		}
@@ -162,8 +183,14 @@ class ProjetsController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Projet.' . $this->Projet->primaryKey => $id),'recursive'=>0);
-			$this->request->data = $this->Projet->find('first', $options);
+                    $options = array('conditions' => array('Projet.' . $this->Projet->primaryKey => $id),'recursive'=>0);
+                    $this->request->data = $this->Projet->find('first', $options);
+                    $listcontrats = $this->get_visibility();
+                    $contrats = $this->requestAction('contrats/get_list');
+                    $cercles = $this->requestAction('entites/find_list_cercle');
+                    $type = Configure::read('typeProjet');
+                    $facturation = Configure::read('factureProjet');
+                    $this->set(Compact('contrats','cercles','type','facturation'));                        
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -204,8 +231,40 @@ class ProjetsController extends AppController {
  *
  * @return void
  */
-	public function search() {
+	public function search($filtreEtat=null,$filtreContrat=null,$keywords=null) {
             if (isAuthorized('projets', 'index')) :
+                if(isset($this->params->data['Projet']['SEARCH'])):
+                    $keywords = $this->params->data['Projet']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $listcontrats = $this->get_visibility();
+                    $getetat = $this->get_projet_etat_filter($filtreEtat);
+                    $getcontrat = $this->get_projet_contrat_filter($filtreContrat,$listcontrats);
+                    $this->set('fcontrat',$getetat['filter']);
+                    $this->set('fetat',$getcontrat['filter']); 
+                    $contrats = $this->requestAction('contrats/get_all');
+                    $this->set(compact('contrats'));
+                    $newconditions = array($getetat['condition'],$getcontrat['condition']);              
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Projet.NOM LIKE '%".$value."%'","Contrat.NOM LIKE '%".$value."%'","Projet.NUMEROGALLILIE LIKE '%".$value."%'","Projet.COMMENTAIRE LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                
+                    $this->set('projets', $this->paginate());
+                    $this->get_export($conditions);                                          
+                else:
+                    $this->redirect(array('action'=>'index',$filtreEtat,$filtreContrat));
+                endif;   
+                
+                
+                
+                
                 $keyword=isset($this->params->data['Projet']['SEARCH']) ? $this->params->data['Projet']['SEARCH'] : ''; 
                 $newconditions = array('OR'=>array("Projet.NOM LIKE '%".$keyword."%'","Contrat.NOM LIKE '%".$keyword."%'","Projet.NUMEROGALLILIE LIKE '%".$keyword."%'","Projet.COMMENTAIRE LIKE '%".$keyword."%'"));
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
@@ -247,6 +306,13 @@ class ProjetsController extends AppController {
             return $list;
         }    
         
+        public function get_list_id_nom_projets($str=null){
+            $str = $str == null ? '0' : $str;
+            $conditions[] = "Projet.id IN (".$str.")";
+            $list = $this->Projet->find('list',array('fields'=>array('id','NOM'),'conditions'=>$conditions,'order'=>array('Projet.NOM'=>'asc'),'recursive'=>0));
+            return $list;
+        }            
+        
         public function get_list_actif(){
             $conditions[] = array('Projet.ACTIF'=>1);
             $list = $this->Projet->find('all',array('fields'=>array('Projet.id','Projet.NOM'),'conditions'=>$conditions,'order'=>array('Projet.NOM'=>'asc'),'recursive'=>0));
@@ -285,21 +351,35 @@ class ProjetsController extends AppController {
             endif;
         }
         
+        public function get_visibility_projet(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoprojetentites/json_get_all_projets/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction_projet($visibility){
+            if($visibility == null):
+                return '1=1';
+            elseif ($visibility!=''):
+                return array('Projet.id IN ('.$visibility.')');
+            else:
+                return '1=1';
+            endif;
+        }
+        
         public function find_all_cercle_projet($utilisateur_id){
-            $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.$utilisateur_id);
-            $conditions = array();
-            $conditions[]=array('Projet.id IN ('.$listprojets.')');
-            $order = array();
+            $listprojets = $this->get_visibility_projet();
+            $conditions[]=$this->get_restriction_projet($listprojets);
             $order[]=array('Projet.NOM'=>'asc');
             $list = $this->Projet->find('all',array('order'=>$order,'conditions'=>$conditions,'recursive'=>1));
             return $list;
         }    
         
         public function find_list_cercle_projet($utilisateur_id){
-            $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.$utilisateur_id);
-            $conditions = array();
-            $conditions[]=array('Projet.id IN ('.$listprojets.')');
-            $order = array();
+            $listprojets = $this->get_visibility_projet();
+            $conditions[]=$this->get_restriction_projet($listprojets);
             $order[]=array('Projet.NOM'=>'asc');
             $fields = array('Projet.id','Projet.NOM');
             $list = $this->Projet->find('list',array('fields'=>$fields,'order'=>$order,'conditions'=>$conditions,'recursive'=>1));

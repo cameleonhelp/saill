@@ -57,41 +57,41 @@ class UtilisateursController extends AppController {
             case 'actif':    
             case null: 
                 if($visibility == null):
-                    $result['condition']="Utilisateur.ACTIF=1 AND Utilisateur.profil_id > 0";
+                    $result['condition']="Utilisateur.ACTIF=1 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2)";
                 elseif ($visibility!=''):
-                    $result['condition']="Utilisateur.id IN (".$visibility.") AND Utilisateur.ACTIF=1 AND Utilisateur.profil_id > 0";
+                    $result['condition']="Utilisateur.id IN (".$visibility.") AND Utilisateur.ACTIF=1 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2)";
                 else:
-                    $result['condition']="Utilisateur.entite_id =".userAuth('entite_id')." AND Utilisateur.ACTIF=1 AND Utilisateur.profil_id > 0";
+                    $result['condition']="Utilisateur.entite_id =".userAuth('entite_id')." AND Utilisateur.ACTIF=1 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2)";
                 endif;                
                 $result['filter'] = "tous les utilisateurs actifs";
                 break;  
             case 'inactif':
                 if($visibility == null):
-                    $result['condition']="Utilisateur.ACTIF=0 AND Utilisateur.profil_id > 0";
+                    $result['condition']="Utilisateur.ACTIF=0 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2)";
                 elseif ($visibility!=''):
-                    $result['condition']="Utilisateur.id IN (".$visibility.") AND Utilisateur.ACTIF=0 AND Utilisateur.profil_id > 0";
+                    $result['condition']="Utilisateur.id IN (".$visibility.") AND Utilisateur.ACTIF=0 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2)";
                 else:
-                    $result['condition']="Utilisateur.entite_id =".userAuth('entite_id')." AND Utilisateur.ACTIF=0 AND Utilisateur.profil_id > 0";
+                    $result['condition']="Utilisateur.entite_id =".userAuth('entite_id')." AND Utilisateur.ACTIF=0 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2)";
                 endif;                 
                 $result['filter'] = "tous les utilisateurs inactifs";
                 break;  
             case 'incomplet':
                 if($visibility == null):
-                    $result['condition']="Utilisateur.ACTIF=1 AND Utilisateur.profil_id > 0 AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL";
+                    $result['condition']="Utilisateur.ACTIF=1 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2) AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL";
                 elseif ($visibility!=''):
-                    $result['condition']="Utilisateur.ACTIF=1 AND Utilisateur.profil_id > 0AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL AND Utilisateur.id IN (".$visibility.')';
+                    $result['condition']="Utilisateur.ACTIF=1 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2) AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL AND Utilisateur.id IN (".$visibility.')';
                 else:
-                    $result['condition']="Utilisateur.entite_id =".userAuth('entite_id')." AND Utilisateur.ACTIF=1 AND Utilisateur.profil_id > 0 AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL";
+                    $result['condition']="Utilisateur.entite_id =".userAuth('entite_id')." AND Utilisateur.ACTIF=1 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2) AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL";
                 endif;                 
                 $result['filter'] = "tous les utilisateurs actifs et incomplets";
                 break;  
             case 'aprolonger':
                 if($visibility == null):
-                    $result['condition']="Utilisateur.ACTIF=1 AND Utilisateur.profil_id >0 AND Utilisateur.FINMISSION IS NOT NULL AND Utilisateur.FINMISSION < DATE_ADD(CURDATE(), INTERVAL 1 MONTH";
+                    $result['condition']="Utilisateur.ACTIF=1 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2) AND Utilisateur.FINMISSION IS NOT NULL AND Utilisateur.FINMISSION < DATE_ADD(CURDATE(), INTERVAL 1 MONTH";
                 elseif ($visibility!=''):
-                    $result['condition']="Utilisateur.ACTIF=1 AND Utilisateur.profil_id >0 AND Utilisateur.FINMISSION IS NOT NULL AND Utilisateur.FINMISSION < DATE_ADD(CURDATE(), INTERVAL 1 MONTH AND Utilisateur.id IN (".$visibility.')';
+                    $result['condition']="Utilisateur.ACTIF=1 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2) AND Utilisateur.FINMISSION IS NOT NULL AND Utilisateur.FINMISSION < DATE_ADD(CURDATE(), INTERVAL 1 MONTH AND Utilisateur.id IN (".$visibility.')';
                 else:
-                    $result['condition']="Utilisateur.entite_id =".userAuth('entite_id')." AND Utilisateur.ACTIF=1 AND Utilisateur.profil_id >0 AND Utilisateur.FINMISSION IS NOT NULL AND Utilisateur.FINMISSION < DATE_ADD(CURDATE(), INTERVAL 1 MONTH";
+                    $result['condition']="Utilisateur.entite_id =".userAuth('entite_id')." AND Utilisateur.ACTIF=1 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2) AND Utilisateur.FINMISSION IS NOT NULL AND Utilisateur.FINMISSION < DATE_ADD(CURDATE(), INTERVAL 1 MONTH";
                 endif;                 
                 $result['filter'] = "tous les utilisateurs actifs, dont la date de fin de mission est proche de son terme";
                 break;  
@@ -113,8 +113,9 @@ class UtilisateursController extends AppController {
         $result = array();
         switch ($id){
             case 'allsections':
-            case null:    
-                $result['condition']="1=1";
+            case null:  
+                $sections = $this->requestAction('assoentiteutilisateurs/find_all_section/'.userAuth('id'));
+                $result['condition'] = "Utilisateur.section_id IN (".$sections.")";                 
                 $result['filter'] = "toutes les sections";
                 break;
             default :
@@ -170,7 +171,7 @@ class UtilisateursController extends AppController {
     }
     
     public function get_list_hierarchique(){
-        $condition = array('id >'=>1,"Utilisateur.HIERARCHIQUE = 1");
+        $condition = array('Utilisateur.id >'=>1,"Utilisateur.HIERARCHIQUE = 1");
         return $this->Utilisateur->Utilisateur->find('list',array('fields' => array('id', 'NOMLONG'),'conditions'=>$condition,'recursive'=>0));
     }
     
@@ -194,6 +195,20 @@ class UtilisateursController extends AppController {
             $condition = "Utilisateur.id IN (".userAuth('entite_id').") AND Utilisateur.HIERARCHIQUE = 1";
         endif;         
         return $this->Utilisateur->Utilisateur->find('all',array('order'=>array('NOMLONG'=>'asc'),'conditions'=>$condition,'recursive'=>0));
+    }  
+    
+    public function get_str_section_utilisateurs(){
+        $list = "";
+        $sections = $this->requestAction('assoentiteutilisateurs/find_all_section/'.userAuth('id'));
+        $conditions[]="Utilisateur.section_id IN (".$sections.')';
+        $order = array("Utilisateur.section_id"=>'asc');
+        $group = "Utilisateur.section_id";
+        $fields = array("Utilisateur.section_id");
+        $users = $this->Utilisateur->find('all',array('fields'=>$fields,'conditions'=>$conditions,'order'=>$order,'group'=>$group,'recursive'=>-1));
+        foreach ($users as $result):
+            $list .= $result['Utilisateur']['section_id'].',';
+        endforeach;
+        return strlen($list) > 1 ? substr_replace($list ,"",-1) : '0';
     }    
 /**
  * index method
@@ -205,7 +220,7 @@ class UtilisateursController extends AppController {
             if (isAuthorized('utilisateurs', 'index')) :
                 $listusers = $this->get_visibility();
                 $getusers = $this->get_utilisateur_etat_filter($filtreUtilisateur, $listusers);
-                $getsection = $this->get_section_filter($filtreSection);
+                $getsection = $this->get_section_filter($filtreSection,$listusers);
                 $getsociete = $this->get_societe_filter($filtresociete);
                 $getalpha = $this->get_alpha_filter($filtreAlpha);
                 $newconditions=array($getusers['condition'],$getsection['condition'],$getsociete['condition'],$getalpha['condition']);
@@ -255,7 +270,7 @@ class UtilisateursController extends AppController {
 			if ($this->Utilisateur->save($this->request->data)) {
                                 $lastid = $this->Utilisateur->getLastInsertID();
                                 $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$lastid),'recursive'=>0));
-                                if($utilisateur['Utilisateur']['profil_id']>0):
+                                if($utilisateur['Utilisateur']['profil_id']>0 || $utilisateur['Utilisateur']['profil_id']==-2):
                                     $this->sendmailnewutilisateur($utilisateur);
                                 endif;
                                 $this->addnewaction($lastid);
@@ -491,7 +506,7 @@ class UtilisateursController extends AppController {
                         $this->set('agents',$agents);
                         $this->set('nbagents',count($agents));
                         $listusers = $this->requestAction('assoentiteutilisateurs/json_get_all_users/'.userAuth('id'));
-                        $utilisateurs = $this->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.ACTIF'=>1,'Utilisateur.profil_id >'=>0,'Utilisateur.id IN ('.$listusers.')'),'order'=>array('NOMLONG'=>'asc'),'recursive'=>-1));
+                        $utilisateurs = $this->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.profil_id >'=>0,'Utilisateur.profil_id'=>-2),'Utilisateur.id IN ('.$listusers.')'),'order'=>array('NOMLONG'=>'asc'),'recursive'=>-1));
                         $this->set('utilisateurs',$utilisateurs);                        
                     }             
         }
@@ -810,9 +825,7 @@ class UtilisateursController extends AppController {
                         $ornewconditions[] = array('OR'=>array("Utilisateur.username LIKE '%".$value."%'","Utilisateur.NOM LIKE '%".$value."%'","Utilisateur.PRENOM LIKE '%".$value."%'","Utilisateur.COMMENTAIRE LIKE '%".$value."%'","Utilisateur.TELEPHONE LIKE '%".$value."%'","Utilisateur.WORKCAPACITY LIKE '%".$value."%'","Profil.NOM LIKE '%".$value."%'","Societe.NOM LIKE '%".$value."%'","Assistance.NOM LIKE '%".$value."%'","Section.NOM LIKE '%".$value."%'","Tjmagent.NOM LIKE '%".$value."%'"));
                     endforeach;
                     $conditions = array($newconditions,'OR'=>$ornewconditions);
-                    $keyword=isset($this->params->data['Utilisateur']['SEARCH'])? $this->params->data['Utilisateur']['SEARCH'] : ''; 
-                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions));
-                    $this->Utilisateur->recursive = 0;
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));
                     $this->set('utilisateurs', $this->paginate());
                     $this->get_export($conditions);                               
                 else:
@@ -1155,8 +1168,8 @@ class UtilisateursController extends AppController {
             foreach ($societes as &$value) {
                 @$societelist .= $value.',';
             }  
-            $societe = 'Utilisateur.societe_id IN ('.substr_replace(@$societelist ,"",-1).')';  
-            $result = $this->Utilisateur->find('all',array('conditions'=>array($societe),'recursive'=>0));
+            $societe = substr_replace(@$societelist ,"",-1);  
+            $result = $this->requestAction('assoentiteutilisateurs/get_all_utilisateur_for_societe/',array('pass'=>array($societe)));
             return $result;
         }
         
@@ -1239,18 +1252,18 @@ class UtilisateursController extends AppController {
         }
         
 	function export_fm($id) {
-                $this->Utilisateur->recursive = 0;
-                $options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));           
-		$data = $this->Utilisateur->find('first', $options);              
-		$this->set('rows',$data);
-		$this->render('export_fm','export_xls');
+            $this->Utilisateur->recursive = 0;
+            $options = array('conditions' => array('Utilisateur.' . $this->Utilisateur->primaryKey => $id));           
+            $data = $this->Utilisateur->find('first', $options);              
+            $this->set('rows',$data);
+            $this->render('export_fm','export_xls');
 	}   
         
         public function get_select_actif($admin =false,$generique = false){
             $conditions = array();
             $conditions[] = array('Utilisateur.ACTIF'=>1);
             if (!$admin) : $conditions[] = array('Utilisateur.id > 1'); endif;
-            if (!$generique) : $conditions[] = array('Utilisateur.profil_id > 0'); endif;
+            if (!$generique) : $conditions[] = array('OR'=>array('Utilisateur.profil_id > 0','Utilisateur.profil_id'=>-2)); endif;
             $list = $this->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>$conditions,'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>0));
             return $list;
         }        
@@ -1259,14 +1272,14 @@ class UtilisateursController extends AppController {
             $conditions = array();
             $conditions[] = array('Utilisateur.ACTIF'=>1);
             if (!$admin) : $conditions[] = array('Utilisateur.id > 1'); endif;
-            if (!$generique) : $conditions[] = array('Utilisateur.profil_id > 0'); endif;
+            if (!$generique) : $conditions[] = array('OR'=>array('Utilisateur.profil_id > 0','Utilisateur.profil_id'=>-2)); endif;
             $list = $this->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.section_id','Utilisateur.NOMLONG'),'conditions'=>$conditions,'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>0));
             return $list;
         }   
         
         public function get_list_all_actif($generique = true){
             $conditions = array();
-            if ($generique == false) : $conditions[] = array('Utilisateur.profil_id > 0'); endif;            
+            if ($generique == false) : $conditions[] = array('OR'=>array('Utilisateur.profil_id > 0','Utilisateur.profil_id'=>-2)); endif;            
             $conditions[] = array('Utilisateur.ACTIF'=>1);
             $conditions[] = array('Utilisateur.id > 1');
             $list = $this->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.section_id','Utilisateur.NOMLONG'),'conditions'=>$conditions,'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>0));
@@ -1320,25 +1333,24 @@ class UtilisateursController extends AppController {
         }
         
         public function find_all_cercle_utilisateur($utilisateur_id,$generique=0,$absences=0){
-            $pass = $this->params->params['pass'];
+            $pass = isset($this->params->params['pass']) ? $this->params->params['pass'] : null;
             $utilisateur_id = isset($pass[0]) ? $pass[0] : $utilisateur_id;
             $generique =  isset($pass[1]) ? $pass[1] : $generique;
             $absences = isset($pass[2]) ? $pass[2] : $absences;
-            $list = $this->requestAction('assoentiteutilisateurs/json_get_all_users/'.$utilisateur_id);
-            if($list != '0'):
-                $conditions = array();  
-                $conditions[] = 'Utilisateur.id IN ('.$list.')';
-                if((int)$generique == 0 && (int)$absences == 1): $link = "AND"; else: $link = "OR"; endif;
-                if ((int)$generique == 0) : $orconditions[] = array('Utilisateur.profil_id > 0'); else: $orconditions[] = array('Utilisateur.profil_id = -1'); endif;                 
-                if ((int)$absences == 1) : $orconditions[] = array('Utilisateur.GESTIONABSENCES'=>1); endif;  
-                $conditions = array($conditions,$link=>$orconditions);
-                $order = array();
-                $order[]=array('Utilisateur.NOM'=>'asc');
-                $list = $this->Utilisateur->find('all',array('order'=>$order,'conditions'=>$conditions,'recursive'=>1));
-                return $list;
+            $list = $this->get_visibility();
+            $conditions = array(); 
+            if($list == null):
+                $conditions[]="Utilisateur.id > 1 AND Utilisateur.ACTIF = 1";
             else:
-                return '0';
+                $conditions[] = 'Utilisateur.id IN ('.$list.')';
             endif;
+            if((int)$generique == 0 && (int)$absences == 1): $link = "AND"; else: $link = "OR"; endif;
+            if ((int)$generique == 0) : $orconditions[] = array('OR'=>array('Utilisateur.profil_id > 0','Utilisateur.profil_id'=>-2)); else: $orconditions[] = array('Utilisateur.profil_id = -1'); endif;                 
+            if ((int)$absences == 1) : $orconditions[] = array('Utilisateur.GESTIONABSENCES'=>1); endif;  
+            $conditions = array($conditions,$link=>$orconditions);
+            $order[]=array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc');
+            $list = $this->Utilisateur->find('all',array('order'=>$order,'conditions'=>$conditions,'recursive'=>1));
+            return $list;
         }    
         
         public function find_list_cercle_utilisateur($utilisateur_id,$generique=0,$absences=0){
@@ -1346,22 +1358,21 @@ class UtilisateursController extends AppController {
             $utilisateur_id = isset($pass[0]) ? $pass[0] : $utilisateur_id;
             $generique =  isset($pass[1]) ? $pass[1] : $generique;
             $absences = isset($pass[2]) ? $pass[2] : $absences;            
-            $list = $this->requestAction('assoentiteutilisateurs/json_get_all_users/'.$utilisateur_id);
-            if($list !='0'):            
-                $conditions = array();
-                $conditions[] = 'Utilisateur.id IN ('.$list.')';
-                if((int)$generique == 0 && (int)$absences == 1): $link = "AND"; else: $link = "OR"; endif;
-                if ((int)$generique == 0) : $orconditions[] = array('Utilisateur.profil_id > 0'); else: $orconditions[] = array('Utilisateur.profil_id = -1'); endif;                 
-                if ((int)$absences == 1) : $orconditions[] = array('Utilisateur.GESTIONABSENCES'=>1); endif;  
-                $conditions = array($conditions,$link=>$orconditions);
-                $order = array();
-                $order[]=array('Utilisateur.NOM'=>'asc');
-                $fields = array('Utilisateur.id','Utilisateur.NOMLONG');
-                $list = $this->Utilisateur->find('list',array('fields'=>$fields,'order'=>$order,'conditions'=>$conditions,'recursive'=>1));
-                return $list;
+            $list = $this->get_visibility();
+            $conditions = array(); 
+            if($list == null):
+                $conditions[]="Utilisateur.id > 1 AND Utilisateur.ACTIF = 1";
             else:
-                return '0';
-            endif;            
+                $conditions[] = 'Utilisateur.id IN ('.$list.')';
+            endif;
+            if((int)$generique == 0 && (int)$absences == 1): $link = "AND"; else: $link = "OR"; endif;
+            if ((int)$generique == 0) : $orconditions[] = array('OR'=>array('Utilisateur.profil_id > 0','Utilisateur.profil_id'=>-2)); else: $orconditions[] = array('Utilisateur.profil_id = -1'); endif;                 
+            if ((int)$absences == 1) : $orconditions[] = array('Utilisateur.GESTIONABSENCES'=>1); endif;  
+            $conditions = array($conditions,$link=>$orconditions);
+            $order[]=array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc');
+            $fields = array('Utilisateur.id','Utilisateur.NOMLONG');
+            $list = $this->Utilisateur->find('list',array('fields'=>$fields,'order'=>$order,'conditions'=>$conditions,'recursive'=>1));
+            return $list;          
         }   
         
         public function find_str_cercle_utilisateur($utilisateur_id,$generique=0,$absences=0){
@@ -1369,22 +1380,22 @@ class UtilisateursController extends AppController {
             $utilisateur_id = isset($pass[0]) ? $pass[0] : $utilisateur_id;
             $generique =  isset($pass[1]) ? $pass[1] : $generique;
             $absences = isset($pass[2]) ? $pass[2] : $absences;
-            $list = $this->requestAction('assoentiteutilisateurs/json_get_all_users/'.$utilisateur_id);
-            if($list != '0'):
-                $conditions = array();                
-                if ((int)$generique == 0 && (int)$absences == 1): $link = "AND"; else: $link = "OR"; endif;
-                if ((int)$generique == 0) : $orconditions[] = array('Utilisateur.profil_id > 0'); else: $orconditions[] = array('Utilisateur.profil_id = -1'); endif;                 
-                if ((int)$absences == 1) : $orconditions[] = array('Utilisateur.GESTIONABSENCES'=>1); endif;  
-                $conditions = array($conditions,$link=>$orconditions);
-                $order = array();
-                $order[]=array('Utilisateur.NOM'=>'asc');
-                $results = $this->Utilisateur->find('all',array('order'=>$order,'conditions'=>$conditions,'recursive'=>1));
-                foreach ($results as $result):
-                        $list .= $result['Utilisateur']['id'].',';
-                endforeach;
-                return strlen($list) > 1 ? substr_replace($list ,"",-1) : '0';
+            $list = $this->get_visibility();
+            $conditions = array(); 
+            if($list == null):
+                $conditions[]="Utilisateur.id > 1 AND Utilisateur.ACTIF = 1";
             else:
-                return '0';
+                $conditions[] = 'Utilisateur.id IN ('.$list.')';
             endif;
+            if((int)$generique == 0 && (int)$absences == 1): $link = "AND"; else: $link = "OR"; endif;
+            if ((int)$generique == 0) : $orconditions[] = array('OR'=>array('Utilisateur.profil_id > 0','Utilisateur.profil_id'=>-2)); else: $orconditions[] = array('Utilisateur.profil_id = -1'); endif;                 
+            if ((int)$absences == 1) : $orconditions[] = array('Utilisateur.GESTIONABSENCES'=>1); endif;  
+            $conditions = array($conditions,$link=>$orconditions);
+            $order[]=array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc');
+            $results = $this->Utilisateur->find('all',array('order'=>$order,'conditions'=>$conditions,'recursive'=>1));
+            foreach ($results as $result):
+                    $list .= $result['Utilisateur']['id'].',';
+            endforeach;
+            return strlen($list) > 1 ? substr_replace($list ,"",-1) : '0';
         }            
 }

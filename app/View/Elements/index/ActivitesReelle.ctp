@@ -120,11 +120,11 @@
                 </li>   
                 <?php endif; ?>                
                 </ul> 
-                <?php if ($this->params->controller == "activitesreelles" && ($this->params->action == "index" || $this->params->action == "search")) : ?>
+                <?php if ($this->params->controller == "activitesreelles" && $this->params->action != "afacturer") : ?>
                     <ul class="nav navbar-nav toolbar pull-right">
                         <li><?php echo $this->Html->link('<span class="glyphicons blue circle_question_mark size14 margintop4"></span>', '#',array('escape' => false,'data-toggle'=>"modal",'data-target'=>"#modalhelp")); ?></li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle btn-expand" data-toggle="dropdown btn-expand"><span class="glyphicons expand notchange" style="width:13px;"></span></a>
+                            <a href="#" class="dropdown-toggle btn-expand" data-toggle="dropdown"><span class="glyphicons expand notchange" style="width:13px;"></span></a>
                             <ul class="dropdown-menu" style="left: -205px;min-width: 250px;max-width: 250px;">
                                 <li>
                                     <?php echo $this->Form->create("Activitesreelle",array('url' => array('action' => 'search',$pass0,$pass1,$pass2,$pass3,$pass4),'class'=>'toolbar-form pull-right','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
@@ -364,7 +364,7 @@
         <?php endforeach; ?> 
         <?php endif; ?> 
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <?php $nbrows = $this->params->action == "afacturer" ? 12 : 12; ?>
             <td colspan="<?php echo $nbrows; ?>" class="footer admonition" style="text-align:right;">
@@ -382,7 +382,7 @@
             <td class="footer" id="totalactivites" style="text-align:right;"></td>
             <td class="footer" style="text-align:left;">jours</td>
 	</tr>            
-        </tfooter>
+        </tfoot>
 	</table> 
         </div>
         <!--info alert modal //-->

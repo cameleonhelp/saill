@@ -13,8 +13,8 @@ class DetailplanchargesController extends AppController {
  * @return void
  */
 	public function index($id=null) {
-            if (isAuthorized('plancharges', 'index')) :
-                $this->set('title_for_layout','Plan de charge');             
+            $this->set('title_for_layout','Plan de charge');
+            if (isAuthorized('plancharges', 'index')) :             
 		$this->Detailplancharge->recursive = 0;
 		$this->set('detailplancharges', $this->paginate());
             else :
@@ -22,36 +22,62 @@ class DetailplanchargesController extends AppController {
                 throw new NotAuthorizedException();            
             endif;  
         }
+        
+        public function get_visibility($id){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/json_get_all_users_entite/'.$id);
+            endif;
+        }
+        
+        public function get_list_plancharge_ressources($visibility){
+            $result = array();
+            $dsit = array('-1'=>'Ressource DSI-T');
+            $reserve = array('-2'=>'Réserve');
+            $autreressource = array('-3'=> 'Ressource à prévoir');  
+            if($visibility==null):
+                $conditions = array('OR'=>array('Utilisateur.profil_id >0','Utilisateur.profil_id =-2','Utilisateur.profil_id =-1'),'Utilisateur.ACTIF'=>1);
+            elseif($visibility !=''):
+                $conditions = array('OR'=>array('Utilisateur.id IN ('.$visibility.')','Utilisateur.profil_id =-1'));
+            else:
+                $result = array('OR'=>array('Utilisateur.entite_id'=>userAuth('entite_id'),'Utilisateur.profil_id =-1'));
+            endif;
+            $result = $this->Detailplancharge->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>$conditions,'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+            return $dsit+$reserve+$autreressource+$result;
+        }
+        
+        public function get_plancharge($id){
+            return $this->requestAction('plancharges/get_plancharge/'.$id);
+        }
 
+        public function get_all_plancharge_projet_acvtivite($contrat){
+            $projets = $this->requestAction('projets/get_str_projets_for_contrat/'.$contrat);
+            return $this->Detailplancharge->Activite->find('all',array('fields'=>array('Activite.id','Projet.NOM','Activite.NOM'),'conditions'=>array('Activite.ACTIVE'=>1,'Activite.projet_id in ('.$projets.')'),'order'=>array('Projet.NOM'=>"asc",'Activite.NOM'=>'asc'),'recursive'=>0));
+        }
+        
+        
+        
 /**
  * add method
  *
  * @return void
  */
 	public function add($id=null) {
-            if (isAuthorized('plancharges', 'add')) :              
-                        $plancharge = $this->Detailplancharge->Plancharge->find('first',array('conditions'=>array('Plancharge.id'=>$id),'recursive'=>-1));
-                        $this->set('annee',$plancharge['Plancharge']['ANNEE']);
-                        $this->set('title_for_layout','Plan de charge');  
-                        $utilisateurs = array();
-                        $dsit = array('-1'=>'Ressource DSI-T');
-                        $reserve = array('-2'=>'Réserve');
-                        $autreressource = array('-3'=> 'Ressource à prévoir');  
-                        $listusers = $this->requestAction('assoentiteutilisateurs/json_get_all_users_entite/'.$plancharge['Plancharge']['entite_id']);
-                        $utilisateursrequest = $this->Detailplancharge->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id IN ('.$listusers.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
-                        $utilisateurs = $dsit+$reserve+$autreressource+$utilisateursrequest;
-                        $this->set('utilisateurs',$utilisateurs);
-                        $domaines = $this->Detailplancharge->Domaine->find('list',array('fields'=>array('Domaine.id','Domaine.NOM'),'order'=>array('Domaine.NOM'=>'asc')));
-                        $this->set('domaines',$domaines);
-                        $projets = $this->getAllProjetsForContrat($plancharge['Plancharge']['contrat_id']);
-                        $activites = $this->Detailplancharge->Activite->find('all',array('fields'=>array('Activite.id','Projet.NOM','Activite.NOM'),'conditions'=>array('Activite.ACTIVE'=>1,'Activite.projet_id in ('.$projets.')'),'order'=>array('Activite.NOM'=>'asc'),'recursive'=>0));
-                        $this->set('activites',$activites);    
-                else :
+            $this->set('title_for_layout','Plan de charge');
+            if (isAuthorized('plancharges', 'add')) :       
+                $plancharge = $this->get_plancharge($id);
+                $visibility = $this->get_visibility($plancharge['Plancharge']['id']);
+                $this->set('annee',$plancharge['Plancharge']['ANNEE']);
+                $utilisateurs = $this->get_list_plancharge_ressources($visibility);
+                $domaines = $this->requestAction('domaines/get_list');
+                $activites = $this->get_all_plancharge_projet_acvtivite($plancharge['Plancharge']['contrat_id']);
+                $this->set(compact('utilisateurs','domaines','activites'));
+            else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
             endif;  
         }
-        
         
         public function save(){
                 $this->set('title_for_layout','Plan de charge');            
@@ -99,28 +125,19 @@ class DetailplanchargesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            $this->set('title_for_layout','Plan de charge');
             if (isAuthorized('plancharges', 'edit')) :                  
-                        $this->set('title_for_layout','Plan de charge'); 
-                        $plancharge = $this->Detailplancharge->Plancharge->find('first',array('conditions'=>array('Plancharge.id'=>$id),'recursive'=>-1));
-                        $this->set('annee',$plancharge['Plancharge']['ANNEE']); 
-                        $utilisateurs = array();
-                        $dsit = array('-1'=>'Ressource DSI-T');
-                        $reserve = array('-2'=>'Réserve');
-                        $autreressource = array('-3'=> 'Ressource à prévoir');   
-                        $listusers = $this->requestAction('assoentiteutilisateurs/json_get_all_users_entite/'.$plancharge['Plancharge']['entite_id']);
-                        $utilisateursrequest = $this->Detailplancharge->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id IN ('.$listusers.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
-                        $utilisateurs = $dsit+$reserve+$autreressource+$utilisateursrequest;
-                        $this->set('utilisateurs',$utilisateurs);
-                        $domaines = $this->Detailplancharge->Domaine->find('list',array('fields'=>array('Domaine.id','Domaine.NOM'),'order'=>array('Domaine.NOM'=>'asc')));
-                        $this->set('domaines',$domaines);
-                        $projets = $this->getAllProjetsForContrat($plancharge['Plancharge']['contrat_id']);
-                        $activites = $this->Detailplancharge->Activite->find('all',array('fields'=>array('Activite.id','Projet.NOM','Activite.NOM'),'conditions'=>array('Activite.ACTIVE'=>1,'Activite.projet_id in ('.$projets.')'),'order'=>array('Activite.NOM'=>'asc'),'recursive'=>0));
-                        $this->set('activites',$activites);                 
-                        $newconditions = array('Detailplancharge.plancharge_id'=>$id);
-                        $this->paginate = array('limit'=>$this->Detailplancharge->find('count'));    
-                        $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));            
-                        $this->Detailplancharge->recursive = 0;
-                        $this->set('detailplancharges', $this->paginate());
+                $plancharge = $this->get_plancharge($id);
+                $visibility = $this->get_visibility($plancharge['Plancharge']['id']);
+                $this->set('annee',$plancharge['Plancharge']['ANNEE']);
+                $utilisateurs = $this->get_list_plancharge_ressources($visibility);
+                $domaines = $this->requestAction('domaines/get_list');
+                $activites = $this->get_all_plancharge_projet_acvtivite($plancharge['Plancharge']['contrat_id']);
+                $this->set(compact('utilisateurs','domaines','activites'));                 
+                $newconditions = array('Detailplancharge.plancharge_id'=>$id);
+                $this->paginate = array('limit'=>$this->Detailplancharge->find('count'));    
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));            
+                $this->set('detailplancharges', $this->paginate());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
@@ -138,23 +155,4 @@ class DetailplanchargesController extends AppController {
             $this->Detailplancharge->id = $id;
             $this->Detailplancharge->delete();
 	}        
-        
-/**
- * getAllProjetsForContrat method
- * 
- * @param type $id
- * @return array
- */        
-        public function getAllProjetsForContrat($id=null){
-            $result = '';
-            $sql ="select id
-                   from projets 
-                   where projets.ACTIF = 1 AND projets.contrat_id = ".$id;
-            $results = $this->Detailplancharge->query($sql);
-            $countids = count($results);
-            foreach($results as $projetid):
-                $result .= $projetid['projets']['id'].",";
-            endforeach;
-            return substr($result, 0,-1);
-        }       
 }

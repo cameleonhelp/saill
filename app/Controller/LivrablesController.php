@@ -139,21 +139,21 @@ class LivrablesController extends AppController {
     
     public function get_all_gestionnaire($visibility){
         if($visibility == null):
-            return $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 1'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+            return $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.profil_id >1','Utilisateur.profil_id =-2')),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
         elseif ($visibility!=''):
-            return $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id IN ('.$visibility.')','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 1'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+            return $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id IN ('.$visibility.')','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.profil_id >1','Utilisateur.profil_id =-2')),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
         else:
-            return $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'),'Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 1'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+            return $this->Livrable->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'),'Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.profil_id >1','Utilisateur.profil_id =-2')),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
         endif; 
     }
     
     public function get_list_gestionnaire($visibility){
         if($visibility == null):
-            return $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 1'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+            return $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.profil_id >1','Utilisateur.profil_id =-2')),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
         elseif ($visibility!=''):
-            return $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id IN ('.$visibility.')','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 1'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+            return $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id IN ('.$visibility.')','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.profil_id >1','Utilisateur.profil_id =-2')),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
         else:
-            return $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'),'Utilisateur.ACTIF'=>1,'Utilisateur.profil_id > 1'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+            return $this->Livrable->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id'=>  userAuth('id'),'Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.profil_id >1','Utilisateur.profil_id =-2')),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
         endif; 
     }
     

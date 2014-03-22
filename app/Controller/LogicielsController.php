@@ -15,7 +15,178 @@ class LogicielsController extends AppController {
  */
         public $paginate = array('limit' => 25,'order'=>array('Logiciel.NOM'=>'asc'));
 	public $components = array('History','Common');
+        
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+            endif;
+        }
 
+        public function get_restriction($visibility){
+            if($visibility == null):
+                return '1=1';
+            elseif ($visibility!=''):
+                return "Logiciel.entite_id IN (".$visibility.')';             
+            else:
+                return "Logiciel.entite_id =".userAuth('entite_id');             
+            endif;
+        }
+        
+        public function get_logiciel_application_filter($aplication){
+            $result = array();
+            switch($aplication):
+                case null:
+                case 'tous':
+                    $listapp = $this->requestAction('applications/get_str_list');
+                    $result['condition']="Logiciel.application_id IN (".$listapp.")";
+                    $result['filter'] = ', pour toutes les applications';
+                    break;
+                default:
+                    $result['condition']="Logiciel.application_id=".$aplication;
+                    $nom = $this->Logiciel->Application->findById($aplication);
+                    $result['filter'] = ', pour l\'application '.$nom['Application']['NOM'];
+                    break;
+            endswitch;
+            return $result;
+        }
+        
+        public function get_logiciel_install_filter($installe){
+            $result = array();
+            switch($installe):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= '';
+                    break;                         
+                case '1':
+                    $result['condition']="Logiciel.INSTALL=0";
+                    $result['filter']= ', non installés';
+                    break;
+                case '0':
+                    $result['condition']="Logiciel.INSTALL=1";
+                    $result['filter']= ', installés';
+                    break;                   
+            endswitch; 
+            return $result;
+        }
+        
+        public function get_logiciel_actif_filter($actif){
+            $result = array();
+            switch($actif):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= '';
+                    break;                          
+                case '1':
+                    $result['condition']="Logiciel.ACTIF=1";
+                    $result['filter']= ', actifs';
+                    break;
+                case '0':
+                    $result['condition']="Logiciel.ACTIF=0";
+                    $result['filter']= ', inactifs';
+                    break;                   
+            endswitch;  
+            return $result;
+        }
+        
+        public function get_logiciel_type_filter($type){
+            $result = array();
+            switch($type):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= ', pour tous les environnements';
+                    break;
+                default:
+                    $result['condition']="Logiciel.type_id=".$type;
+                    $nom = $this->Logiciel->Type->findById($type);
+                    $result['filter']= ', pour l\'environnement '.$nom['Type']['NOM'];
+                    break;
+            endswitch; 
+            return $result;
+        }
+        
+        public function get_logiciel_outil_filter($outil){
+            $result = array();
+            switch($outil):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= ', pour tous les outils';
+                    break;
+                default:
+                    $result['condition']="Logiciel.envoutil_id=".$outil;
+                    $nom = $this->Logiciel->Envoutil->findById($outil);
+                    $result['filter']= ', pour l\'outil '.$nom['Envoutil']['NOM'];
+                    break;
+            endswitch; 
+            return $result;
+        }
+        
+        public function set_conditions($aplication,$installe,$actif,$type,$outil){
+            $conditions = array();
+            if($aplication!="1=1"):
+                $conditions[]=str_replace("Logiciel", "logiciels", $aplication);
+            endif;
+            if($installe!="1=1"):
+                $conditions[]=str_replace("Logiciel", "logiciels", $installe);
+            endif;
+            if($actif!="1=1"):
+                $conditions[]=str_replace("Logiciel", "logiciels", $actif);
+            endif;
+            if($type!="1=1"):
+                $conditions[]=str_replace("Logiciel", "logiciels", $type);
+            endif;
+            if($outil!="1=1"):
+                $conditions[]=str_replace("Logiciel", "logiciels", $outil);
+            endif;
+            return count($conditions) > 0 ? 'WHERE '.implode(' AND ', $conditions) : '';
+        }
+        
+        public function get_export($condition){
+            $sql = 'SELECT logiciels.NOM,
+                    envoutils.NOM as logiciel,
+                    envoutils.OS,
+                    envversions.VERSION,
+                    envversions.EDITION,
+                    biens.NOM as bien,
+                    lots.NOM as lot,
+                    applications.NOM as application,
+                    usages.NOM as usages,
+                    cpuses.NOM as cpu,
+                    biens.COEUR,
+                    biens.COEURLICENCE,
+                    biens.PVU,
+                    biens.RAM,
+                    biens.COUT,
+                    types.NOM as type,
+                    assobienlogiciels.dsitenv_id,
+                    logiciels.ACTIF
+                    FROM logiciels
+                    LEFT JOIN assobienlogiciels ON logiciels.id = assobienlogiciels.logiciel_id                        
+                    LEFT JOIN envoutils ON logiciels.envoutil_id = envoutils.id
+                    LEFT JOIN envversions ON logiciels.envversion_id = envversions.id
+                    LEFT JOIN lots ON logiciels.lot_id = lots.id
+                    LEFT JOIN applications ON logiciels.application_id = applications.id
+                    LEFT JOIN biens ON biens.id = assobienlogiciels.bien_id
+                    LEFT JOIN usages ON usages.id = biens.usage_id
+                    LEFT JOIN cpuses ON cpuses.id = biens.cpu_id
+                    LEFT JOIN types ON types.id = biens.type_id
+                    '.$condition.';';
+            $export = $this->Logiciel->query($sql);
+            $xls_export = array();
+            foreach($export as $obj):
+                $nomenv = $this->getNomEnvDsit($obj['assobienlogiciels']['dsitenv_id']);
+                if($nomenv != '') : $obj = array_merge($obj,array('assobienlogiciels' => array('dsitenv_nom' => $nomenv))); endif;
+                $xls_export[]=$obj;
+            endforeach;
+            $this->Session->delete('xls_export');
+            $this->Session->write('xls_export',$xls_export);   
+            return $xls_export;
+        }
 /**
  * index method
  *
@@ -23,126 +194,20 @@ class LogicielsController extends AppController {
  */
 	public function index($aplication=null,$installe=null,$actif=null,$type=null,$outil=null) {
             if (isAuthorized('logiciels', 'index')) : 
-                $listentite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
-                $newconditions[]="Logiciel.entite_id IN (".$listentite.')';                  
-                $conditionexport = array();
-                $sql ='';
-                switch($aplication):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter = ', pour toutes les applications';
-                        break;
-                    default:
-                        $conditionexport[] = "logiciels.application_id=".$aplication;
-                        $newconditions[]="Logiciel.application_id=".$aplication;
-                        $nom = $this->Logiciel->Application->findById($aplication);
-                        $strfilter = ', pour l\'application '.$nom['Application']['NOM'];
-                        break;
-                endswitch;
-                switch($installe):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= '';
-                        break;                         
-                    case '1':
-                        $conditionexport[] = "logiciels.INSTALL=0";
-                        $newconditions[]="Logiciel.INSTALL=0";
-                        $strfilter .= ', non installés';
-                        break;
-                    case '0':
-                        $conditionexport[] = "logiciels.INSTALL=1";
-                        $newconditions[]="Logiciel.INSTALL=1";
-                        $strfilter .= ', installés';
-                        break;                   
-                endswitch;    
-                switch($actif):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= '';
-                        break;                          
-                    case '1':
-                        $conditionexport[] = "logiciels.ACTIF=1";
-                        $newconditions[]="Logiciel.ACTIF=1";
-                        $strfilter .= ', actifs';
-                        break;
-                    case '0':
-                        $conditionexport[] = "logiciels.ACTIF=0";
-                        $newconditions[]="Logiciel.ACTIF=0";
-                        $strfilter .= ', inactifs';
-                        break;                   
-                endswitch;                 
-                switch($type):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= ', pour tous les environnements';
-                        break;
-                    default:
-                        $conditionexport[] = "logiciels.type_id=".$type;
-                        $newconditions[]="Logiciel.type_id=".$type;
-                        $nom = $this->Logiciel->Type->findById($type);
-                        $strfilter .= ', pour l\'environnement '.$nom['Type']['NOM'];
-                        break;
-                endswitch;       
-                switch($outil):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= ', pour tous les outils';
-                        break;
-                    default:
-                        $conditionexport[] = "logiciels.envoutil_id=".$outil;
-                        $newconditions[]="Logiciel.envoutil_id=".$outil;
-                        $nom = $this->Logiciel->Envoutil->findById($outil);
-                        $strfilter .= ', pour l\'outil '.$nom['Envoutil']['NOM'];
-                        break;
-                endswitch;    
-                $this->set('strfilter',$strfilter);
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
-		$this->Logiciel->recursive = 0;
+                $listentite = $this->get_visibility();
+                $restriction = $this->get_restriction($listentite);
+                $getapplication = $this->get_logiciel_application_filter($aplication);
+                $getinstall = $this->get_logiciel_install_filter($installe);
+                $getactif=$this->get_logiciel_actif_filter($actif);
+                $gettype = $this->get_logiciel_type_filter($type);
+                $getoutil = $this->get_logiciel_outil_filter($outil);
+                $strfilter = $getapplication['filter'].$getinstall['filter'].$getactif['filter'].$gettype['filter'].$getoutil['filter'];
+                $newconditions = array($getapplication['condition'],$getinstall['condition'],$getactif['condition'],$gettype['condition'],$getoutil['condition']);
+                $conditionexport = $this->set_conditions($getapplication['condition'],$getinstall['condition'],$getactif['condition'],$gettype['condition'],$getoutil['condition']);
+                $this->set(compact('strfilter'));
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                
 		$this->set('logiciels', $this->paginate());
-                $strconditionexport = count($conditionexport) > 0 ? 'WHERE '.implode(' AND ', $conditionexport) : '';
-                $sql = 'SELECT logiciels.NOM,
-                        envoutils.NOM as logiciel,
-                        envoutils.OS,
-                        envversions.VERSION,
-                        envversions.EDITION,
-                        biens.NOM as bien,
-                        lots.NOM as lot,
-                        applications.NOM as application,
-                        usages.NOM as usages,
-                        cpuses.NOM as cpu,
-                        biens.COEUR,
-                        biens.COEURLICENCE,
-                        biens.PVU,
-                        biens.RAM,
-                        biens.COUT,
-                        types.NOM as type,
-                        assobienlogiciels.dsitenv_id,
-                        logiciels.ACTIF
-                        FROM logiciels
-                        LEFT JOIN assobienlogiciels ON logiciels.id = assobienlogiciels.logiciel_id                        
-                        LEFT JOIN envoutils ON logiciels.envoutil_id = envoutils.id
-                        LEFT JOIN envversions ON logiciels.envversion_id = envversions.id
-                        LEFT JOIN lots ON logiciels.lot_id = lots.id
-                        LEFT JOIN applications ON logiciels.application_id = applications.id
-                        LEFT JOIN biens ON biens.id = assobienlogiciels.bien_id
-                        LEFT JOIN usages ON usages.id = biens.usage_id
-                        LEFT JOIN cpuses ON cpuses.id = biens.cpu_id
-                        LEFT JOIN types ON types.id = biens.type_id
-                        '.$strconditionexport.';';
-                $export = $this->Logiciel->query($sql);
-                $xls_export = array();
-                foreach($export as $obj):
-                    $nomenv = $this->getNomEnvDsit($obj['assobienlogiciels']['dsitenv_id']);
-                    if($nomenv != '') : $obj = array_merge($obj,array('assobienlogiciels' => array('dsitenv_nom' => $nomenv))); endif;
-                    $xls_export[]=$obj;
-                endforeach;
-                $this->Session->delete('xls_export');
-                $this->Session->write('xls_export',$xls_export);                
+                $xls_export = $this->get_export($conditionexport);
                 $applications = $this->requestAction('applications/get_list/1');
                 $types = $this->requestAction('types/get_list/1');
                 $outils = $this->requestAction('envoutils/get_list/1');
@@ -168,20 +233,6 @@ class LogicielsController extends AppController {
             $list = $list != '' ? rtrim($list,',') : '';
             return $list;
         }          
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-		if (!$this->Logiciel->exists($id)) {
-			throw new NotFoundException(__('Invalid logiciel'));
-		}
-		$options = array('conditions' => array('Logiciel.' . $this->Logiciel->primaryKey => $id));
-		$this->set('logiciel', $this->Logiciel->find('first', $options));
-	}
 
 /**
  * add method
@@ -200,7 +251,7 @@ class LogicielsController extends AppController {
                         if(!$this->isExist($this->request->data['Logiciel']['envoutil_id'], $this->request->data['Logiciel']['envversion_id'], $this->request->data['Logiciel']['application_id'], $this->request->data['Logiciel']['lot_id'])){
                             if ($this->Logiciel->save($this->request->data)) {
                                     $this->Session->setFlash(__('Logiciel sauvegardé',true),'flash_success');
-                                    $this->History->goFirst();
+                                    $this->History->goBack(1);
                             } else {
                                     $this->Session->setFlash(__('Logiciel incorrect, veuillez corriger le logiciel',true),'flash_failure');
                             }
@@ -273,8 +324,6 @@ class LogicielsController extends AppController {
 			$options = array('conditions' => array('Logiciel.' . $this->Logiciel->primaryKey => $id));
 			$this->request->data = $this->Logiciel->find('first', $options);
 		}
-                $this->Logiciel->id = $id;
-                $logiciel = $this->Logiciel->read();
 		$outils = $this->requestAction('envoutils/get_select/1');
                 $envoutil = $this->Logiciel->read('envoutil_id', $id);
                 $versions=$this->requestAction('envversions/get_select_version_for/'.$envoutil['Logiciel']['envoutil_id'].'/1');
@@ -282,8 +331,8 @@ class LogicielsController extends AppController {
 		$types = $this->requestAction('types/get_select/1');
 		$lots = $this->requestAction('lots/get_select/1');
                 $biens = $this->requestAction('assobienlogiciels/get_biens_for_outil/'.$id);
-                $listlogiciels = $this->requestAction('logiciels/get_select_compatible/'.$logiciel['Logiciel']['lot_id'].'/'.$logiciel['Logiciel']['application_id']);
-                $listbiens = $this->requestAction('biens/get_select_compatible/'.$logiciel['Logiciel']['lot_id'].'/'.$logiciel['Logiciel']['application_id']);
+                $listlogiciels = $this->requestAction('logiciels/get_select_compatible/'.$this->request->data['Logiciel']['lot_id'].'/'.$this->request->data['Logiciel']['application_id']);
+                $listbiens = $this->requestAction('biens/get_select_compatible/'.$this->request->data['Logiciel']['lot_id'].'/'.$this->request->data['Logiciel']['application_id']);
                 $histories = $this->requestAction('historylogiciels/get_list_for_logiciel/'.$id);
                 $all_dsitenvs = $this->requestAction('dsitenvs/get_list');
 		$this->set(compact('versions','outils', 'applications', 'types', 'lots','envoutil','biens','listbiens','histories','listlogiciels','all_dsitenvs'));
@@ -492,19 +541,43 @@ class LogicielsController extends AppController {
             endif;
         }
         
-        public function search(){
+        public function search($aplication=null,$installe=null,$actif=null,$type=null,$outil=null,$keywords=null){
             if (isAuthorized('logiciels', 'index')) :
-                $keyword=isset($this->params->data['Logiciel']['SEARCH']) ? $this->params->data['Logiciel']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Logiciel.NOM LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Logiciel->recursive = 0;
-                $this->set('logiciels', $this->paginate());  
-                $applications = $this->requestAction('applications/get_list/1');
-                $types = $this->requestAction('types/get_list/1');
-                $outils = $this->requestAction('envoutils/get_list/1');
-                $this->set(compact('applications','types','outils'));                 
-                $this->render('index');
+                if(isset($this->params->data['Logiciel']['SEARCH'])):
+                    $keywords = $this->params->data['Logiciel']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords));                 
+                    $listentite = $this->get_visibility();
+                    $restriction = $this->get_restriction($listentite);
+                    $getapplication = $this->get_logiciel_application_filter($aplication);
+                    $getinstall = $this->get_logiciel_install_filter($installe);
+                    $getactif=$this->get_logiciel_actif_filter($actif);
+                    $gettype = $this->get_logiciel_type_filter($type);
+                    $getoutil = $this->get_logiciel_outil_filter($outil);
+                    $strfilter = $getapplication['filter'].$getinstall['filter'].$getactif['filter'].$gettype['filter'].$getoutil['filter'];
+                    $newconditions = array($getapplication['condition'],$getinstall['condition'],$getactif['condition'],$gettype['condition'],$getoutil['condition']);
+                    $conditionexport = $this->set_conditions($getapplication['condition'],$getinstall['condition'],$getactif['condition'],$gettype['condition'],$getoutil['condition']);
+                    $this->set(compact('strfilter'));
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Logiciel.NOM LIKE '%".$value."%'"));
+                    endforeach;        
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                
+                    $this->set('logiciels', $this->paginate());
+                    $xls_export = $this->get_export($conditionexport);
+                    $applications = $this->requestAction('applications/get_list/1');
+                    $types = $this->requestAction('types/get_list/1');
+                    $outils = $this->requestAction('envoutils/get_list/1');
+                    $this->set(compact('applications','types','outils','strconditionexport','xls_export'));          
+                else:
+                    $this->redirect(array('action'=>'index',$aplication,$installe,$actif,$type,$outil));
+                endif; 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

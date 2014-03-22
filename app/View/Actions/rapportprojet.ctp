@@ -89,6 +89,16 @@ $(document).ready(function (){
             0: {
                 sorter: 'mois-annee'
             }
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_useParsedData : false,            
+            zebra : [ "normal-row", "alt-row" ]
         }
     });
    

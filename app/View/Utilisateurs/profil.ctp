@@ -6,7 +6,7 @@
       <h3 class="panel-title">
         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse0">
             <?php $classin = $this->params->action == 'add' ? 'in' : ''; ?>
-            Idcercle
+            Identité
             <span class="pull-right badge badge-default"><?php echo h((isset($utilisateur['Utilisateur']['username']) && !empty($utilisateur['Utilisateur']['username']))) ? h($utilisateur['Utilisateur']['username']) : "Nouveau"; ?></span>
         </a>
     </div>

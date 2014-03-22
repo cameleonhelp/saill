@@ -197,4 +197,18 @@ class DossierpartagesController extends AppController {
             $list = $this->Dossierpartage->find('list',array('fields'=>array('id','NOM'),"recursive"=>1));
             return $list;
         }
+        
+        public function get_list(){
+            $visibility = $this->get_visibility();
+            $conditions = $this->get_restriction($visibility);
+            $list = $this->Dossierpartage->find('list',array('fields'=>array('id','NOM'),'conditions'=>$conditions,'order'=>array('Dossierpartage.NOM'=>'asc'),"recursive"=>1));
+            return $list;
+        }
+            
+        public function get_all(){
+            $visibility = $this->get_visibility();
+            $conditions = $this->get_restriction($visibility);
+            $list = $this->Dossierpartage->find('all',array('conditions'=>$conditions,'order'=>array('Dossierpartage.NOM'=>'asc'),"recursive"=>1));
+            return $list;
+        }             
 }        

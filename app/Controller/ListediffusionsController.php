@@ -211,5 +211,19 @@ class ListediffusionsController extends AppController {
                 $this->Session->delete('xls_export');
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
-	}         
+	}  
+        
+        public function get_list(){
+            $visibility = $this->get_visibility();
+            $conditions = $this->get_restriction($visibility);
+            $list = $this->Listediffusion->find('list',array('fields'=>array('id','NOM'),'conditions'=>$conditions['condition'],'order'=>array('Listediffusion.NOM'=>'asc'),"recursive"=>1));
+            return $list;
+        }
+            
+        public function get_all(){
+            $visibility = $this->get_visibility();
+            $conditions = $this->get_restriction($visibility);
+            $list = $this->Listediffusion->find('all',array('conditions'=>$conditions['condition'],'order'=>array('Listediffusion.NOM'=>'asc'),"recursive"=>1));
+            return $list;
+        }           
 }

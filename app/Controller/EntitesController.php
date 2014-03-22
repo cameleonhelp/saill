@@ -176,8 +176,24 @@ class EntitesController extends AppController {
             return $list;
         }
         
+        public function find_all_cercle_not_empty($utilisateur=null){
+            $tmp = $utilisateur != null ? $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.$utilisateur) : $this->requestAction('assoentiteutilisateurs/json_get_my_entite');
+            $sql = "select Entite.*, count(assoentiteutilisateurs.id) AS ASSO FROM entites AS Entite
+                    left join assoentiteutilisateurs on Entite.id = assoentiteutilisateurs.entite_id
+                    WHERE Entite.ACTIF = 1
+                    AND Entite.id IN (".$tmp.")
+                    group by assoentiteutilisateurs.entite_id";
+            $cercles = $this->Entite->query($sql);
+            foreach ($cercles as $cercle):
+                if ($cercle[0]['ASSO'] != 0):
+                    $result[]['Entite'] = $cercle['Entite'];
+                endif;
+            endforeach;
+            return $result;
+        }
+        
         public function find_str_id_cercle($utilisateur_id){
-            $tmp = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.$utilisateur_id);
+            $tmp = $this->requestAction("assoentiteutilisateurs/json_get_my_entite/".$utilisateur_id);
             $conditions = array();  
             $conditions[]=array('Entite.id IN ('.$tmp.')');
             $order = array();

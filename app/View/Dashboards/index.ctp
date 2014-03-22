@@ -110,7 +110,7 @@
             <?php endforeach; ?>
             <?php endif; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td class="footer nowrap" style="text-align:right;">Total :</td>
             <td class="footer nowrap" id="moyennetjm1" style="text-align:right;"></td>
@@ -122,7 +122,7 @@
             <td class="footer nowrap" id="moyenneavancecharge1" style="text-align:right;"></td>
             <td class="footer nowrap" id="totalraf1" style="text-align:right;"></td>            
 	</tr> 
-        </tfooter>
+        </tfoot>
     </table>
     <?php $listeachats = ""; ?>
     <?php if (isset($results)): ?>
@@ -175,7 +175,7 @@
             <?php endforeach; ?>
             <?php endif; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td class="footer nowrap" style="text-align:right;">Total :</td>
             <td class="footer nowrap" id="moyennetjm" style="text-align:right;"></td>
@@ -186,7 +186,7 @@
             <td class="footer nowrap" id="totalecartbudgetbalance" style="text-align:right;"></td> 
             <td class="footer nowrap" id="totalecartchargebalance" style="text-align:right;"></td>
 	</tr> 
-        </tfooter>
+        </tfoot>
     </table>    
     <br />
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Tableau général</div><br>    
@@ -241,7 +241,7 @@
             <?php endforeach; ?>
             <?php endif; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td class="footer nowrap" style="text-align:right;">Total :</td>
             <td class="footer nowrap" id="moyennetjm" style="text-align:right;"></td>
@@ -259,7 +259,7 @@
             <td class="footer nowrap" id="totalrac" style="text-align:right;"></td>
             <td class="footer nowrap" id="totalraf" style="text-align:right;"></td>            
 	</tr> 
-        </tfooter>
+        </tfoot>
     </table>
     <br />
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Répartition charge réelle par domaine</div><br>    
@@ -287,14 +287,14 @@
             <?php endforeach; ?>
             <?php endif; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td class="footer nowrap"></td>
             <td class="footer nowrap" style="text-align:right;">Total :</td>
             <td class="footer nowrap" id="totaldombudgetID" style="text-align:right;"></td>
             <td class="footer nowrap" id="totaldomchargeID" style="text-align:right;"></td>        
 	</tr> 
-        </tfooter>
+        </tfoot>
     </table>        
     <br />
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Indicateurs département</div><br>    
@@ -344,7 +344,7 @@
             <?php endforeach; ?>
             <?php endif; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td class="footer nowrap" style="text-align:right;">Total :</td>
             <td class="footer nowrap" id="totalcontratbudgetID" style="text-align:right;"></td>
@@ -355,7 +355,7 @@
             <td class="footer nowrap" id="moyenneavancechargeID" style="text-align:right;"></td>
             <td class="footer nowrap" id="totalrafID" style="text-align:right;"></td>            
 	</tr> 
-        </tfooter>
+        </tfoot>
     </table>    
 </div>
 <?php if(isset($results) && $israpport==0) : ?>

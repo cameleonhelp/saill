@@ -8,7 +8,7 @@
         <h4 class="modal-title"><?php echo $modaltitle; ?></h4>
       </div>
       <div class="modal-body">
-        <div class="block-content">
+          <div class="block-content" style="width: 100%;">
             <!-- contenu de la fenêtre modale //-->
             <?php echo $helpcontent; ?>              
             <!-- fin du contenu de la fenêtre modale //-->

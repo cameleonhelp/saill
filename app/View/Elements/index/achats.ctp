@@ -30,10 +30,19 @@
         <li class="divider-vertical-only"></li>                
         <li><?php echo $this->Html->link('<span class="ico-xls"></span>', array('action' => 'export_xls'),array('escape' => false)); ?></li>
         </ul> 
-        <?php echo $this->Form->create("Achat",array('url' => array('action' => 'search',$pass0), 'class'=>'toolbar-form pull-right','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
-            <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche ...','style'=>"width: 200px;",'class'=>"form-control",'value'=>$keyword, 'rel'=>"tooltip", 'data-container'=>"body", 'data-title'=>Configure::read('search_tooltip'))); ?>
-            <button type="submit" class="btn form-btn showoverlay"><span class="glyphicons notchange search"></span></button>
-        <?php echo $this->Form->end(); ?> 
+        <ul class="nav navbar-nav toolbar pull-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle btn-expand" data-toggle="dropdown"><span class="glyphicons expand notchange" style="width:13px;"></span></a>
+                <ul class="dropdown-menu" style="left: -205px;min-width: 250px;max-width: 250px;">
+                    <li>
+                        <?php echo $this->Form->create("Achat",array('url' => array('action' => 'search',$pass0), 'class'=>'toolbar-form pull-right','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+                            <?php echo $this->Form->input('SEARCH',array('placeholder'=>'Recherche ...','style'=>"width: 200px;margin-left:3px;margin-right:-3px;display: inline-table;",'class'=>"form-control",'value'=>$keyword, 'rel'=>"tooltip", 'data-container'=>"body", 'data-title'=>Configure::read('search_tooltip'))); ?>
+                            <button type="submit" class="btn form-btn showoverlay"><span class="glyphicons notchange search"></span></button>
+                        <?php echo $this->Form->end(); ?> 
+                    </li>
+                </ul>
+            </li>
+        </ul>
 </nav>
 </div>
 <div class="panel-body panel-filter marginbottom15 ">

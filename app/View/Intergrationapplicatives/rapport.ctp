@@ -104,12 +104,12 @@
             </tr>           
             <?php endforeach; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td class="footer nowrap" colspan='5' style="text-align:right;">Total :</td>
             <td class="footer nowrap" id="totalall" style="text-align:center;"></td>            
 	</tr> 
-        </tfooter>
+        </tfoot>
     </table>
 <?php endif; ?> 
 <?php if($israpport==0 && isset($results)): ?> 
@@ -121,10 +121,21 @@ $(document).ready(function (){
     //tri sur le tableau 
     $("#sorttable").tablesorter({
         headers: {
-            2: {
-                sorter: 'fr-date'
-            }
+            2: {sorter: 'fr-date',filter:false},
+            5: {filter:false}
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_useParsedData : false,            
+            zebra : [ "normal-row", "alt-row" ]
         }
+    }).bind('filterEnd',function(e,t){
+        $("#totalall").html(newSumOfColumns('tr:not(.filtered) > td.totalapp',''));
     }); 
     
     $(document).on('click','#IntergrationapplicativeSelectAll',function() {
@@ -139,6 +150,15 @@ $(document).ready(function (){
             $('#IntergrationapplicativeSelectAll').prop('checked', false);
     }); 
     
+    function newSumOfColumns(id,symbole) {
+        var tot = 0;
+        $(id).each(function() {
+          value = $(this).html()=='' ? 0: $(this).html();
+          tot += parseFloat(value);
+        });
+        return parseFloat(tot).toFixed(0)+" "+symbole;
+     };
+     
     function sumOfColumns(id,symbole) {
         var tot = 0;
         $("."+id).each(function() {
@@ -146,7 +166,7 @@ $(document).ready(function (){
           tot += parseFloat(value);
         });
         return parseFloat(tot).toFixed(0)+" "+symbole;
-     } 
+     };
      
      $("#totalall").html(sumOfColumns('totalapp',''));
      

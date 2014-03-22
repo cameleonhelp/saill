@@ -143,7 +143,7 @@
                          <li><?php echo $this->Html->link('Tous', array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous','tous',$filtre_visible),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous','tous'))); ?></li>
                          <li class="divider"></li>
                          <?php foreach ($contrats as $contrat) : ?>
-                            <li><?php echo $this->Html->link($contrat['Contrat']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$contrat['Plancharge']['contrat_id'],$filtre_visible),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$contrat['Plancharge']['contrat_id']))); ?></li>
+                            <li><?php echo $this->Html->link($contrat['Contrat']['NOM'], array('action' => 'index',isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous',$contrat['Contrat']['id'],$filtre_visible),array('class'=>'showoverlay'.subfiltre_is_actif(isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous',$contrat['Contrat']['id']))); ?></li>
                          <?php endforeach; ?>
                      </ul>
                  </li> 
@@ -210,14 +210,14 @@
         <?php endforeach; ?>
         <?php endif; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
             <tr>
                 <td class="footer" colspan="3" style="text-align:right;">Total</td>
                 <td class="footer" style="text-align:right;" id="totaletp">0</td>
                 <td class="footer" style="text-align:right;" id="totalcharges">0</td>
                 <td class="footer" colspan="4">&nbsp;</td>  
             </tr>
-        </tfooter>
+        </tfoot>
 	</table>
         </div>
         <div class="pull-left">	<?php	echo $this->Paginator->counter('Page {:page} sur {:pages}');	?></div>

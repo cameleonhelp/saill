@@ -15,7 +15,143 @@ class BiensController extends AppController {
  */
         public $paginate = array('limit' => 25,'order'=>array('Bien.DATEINSTALL'=>'desc'));
 	public $components = array('History','Common');
-
+       
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            if($visibility == null):
+                return "1=1";
+            elseif ($visibility !=""):
+                return "Bien.entite_id IN (".$visibility.')';
+            else:
+                return "Bien.entite_id=".userAuth('entite_id');
+            endif;
+        }
+        
+        public function get_bien_application_filter($application){
+            $result = array();
+            switch($application):
+                case null:
+                case 'tous':
+                    $listapp = $this->requestAction('applications/get_str_list');
+                    $result['condition']="Bien.application_id IN (".$listapp.")";
+                    $result['filter'] = ', pour toutes les applications';
+                    break;
+                default:
+                    $result['condition']="Bien.application_id=".$application;
+                    $nom = $this->Bien->Application->findById($application);
+                    $result['filter'] = ', pour l\'application '.$nom['Application']['NOM'];
+                    break;
+            endswitch;     
+            return $result;
+        }
+        
+        public function get_bien_install_filter($installe){
+            $result = array();
+            switch($installe):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= '';
+                    break;                         
+                case '1':
+                    $result['condition']="Bien.INSTALL=0";
+                    $result['filter']= ', non installés';
+                    break;
+                case '0':
+                    $result['condition']="Bien.INSTALL=1";
+                    $result['filter']= ', installés';
+                    break;                   
+            endswitch;
+            return $result;
+        }
+        
+        public function get_bien_valid_filter($valide){
+            $result = array();
+            switch($valide):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= '';
+                    break;                          
+                case '1':
+                    $result['condition']="Bien.CHECK=0";
+                    $result['filter']= ', non validés';
+                    break;
+                case '0':
+                    $result['condition']="Bien.CHECK=1";
+                    $result['filter']= ', validés';
+                    break;                   
+            endswitch;      
+            return $result;
+        }
+        
+        public function get_bien_actif_filter($actif){
+            $result = array();
+            switch($actif):
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= '';
+                    break; 
+                case null:                    
+                case '0':
+                    $result['condition']="Bien.ACTIF=1";
+                    $result['filter']= ', actifs';
+                    break;
+                case '1':
+                    $result['condition']="Bien.ACTIF=0";
+                    $result['filter']= ', inactifs';
+                    break;                   
+            endswitch;
+            return $result;
+        }
+        
+        public function get_bien_type_filter($type){
+            $result = array();
+            switch($type):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= ', pour tous les environnements';
+                    break;
+                default:
+                    $result['condition']="Bien.type_id=".$type;
+                    $nom = $this->Bien->Type->findById($type);
+                    $result['filter']= ', pour l\'environnement '.$nom['Type']['NOM'];
+                    break;
+            endswitch;
+            return $result;
+        }
+        
+        public function get_bien_usage_filter($usage){
+            $result = array();
+            switch($usage):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= ', pour tous les usages';
+                    break;
+                default:
+                    $result['condition']="Bien.usage_id=".$usage;
+                    $nom = $this->Bien->Usage->findById($usage);
+                    $result['filter']= ', pour l\'usage '.$nom['Usage']['NOM'];
+                    break;
+            endswitch; 
+            return $result;
+        }
+        
+        public function get_export($conditions){
+            $this->Session->delete('xls_export');
+            $export = $this->Bien->find('all',array('conditions'=>$conditions,'order' => array('Bien.DATEINSTALL' => 'desc'),'recursive'=>0));
+            $this->Session->write('xls_export',$export);
+            return $export;
+        }
 /**
  * index method
  *
@@ -23,120 +159,27 @@ class BiensController extends AppController {
  */
 	public function index($aplication=null,$installe=null,$valide=null,$actif=null,$type=null,$usage=null) {
             if (isAuthorized('biens', 'index')) :
-                $listentite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
-                $newconditions[]="Bien.entite_id IN (".$listentite.')';                
-                switch($aplication):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter = ', pour toutes les applications';
-                        break;
-                    default:
-                        $newconditions[]="Bien.application_id=".$aplication;
-                        $nom = $this->Bien->Application->findById($aplication);
-                        $strfilter = ', pour l\'application '.$nom['Application']['NOM'];
-                        break;
-                endswitch;
-                switch($installe):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= '';
-                        break;                         
-                    case '1':
-                        $newconditions[]="Bien.INSTALL=0";
-                        $strfilter .= ', non installés';
-                        break;
-                    case '0':
-                        $newconditions[]="Bien.INSTALL=1";
-                        $strfilter .= ', installés';
-                        break;                   
-                endswitch;     
-                switch($valide):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= '';
-                        break;                          
-                    case '1':
-                        $newconditions[]="Bien.CHECK=0";
-                        $strfilter .= ', non validés';
-                        break;
-                    case '0':
-                        $newconditions[]="Bien.CHECK=1";
-                        $strfilter .= ', validés';
-                        break;                   
-                endswitch;   
-                switch($actif):
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= '';
-                        break; 
-                    case null:                    
-                    case '0':
-                        $newconditions[]="Bien.ACTIF=1";
-                        $strfilter .= ', actifs';
-                        break;
-                    case '1':
-                        $newconditions[]="Bien.ACTIF=0";
-                        $strfilter .= ', inactifs';
-                        break;                   
-                endswitch;                 
-                switch($type):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= ', pour tous les environnements';
-                        break;
-                    default:
-                        $newconditions[]="Bien.type_id=".$type;
-                        $nom = $this->Bien->Type->findById($type);
-                        $strfilter .= ', pour l\'environnement '.$nom['Type']['NOM'];
-                        break;
-                endswitch;   
-                switch($usage):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= ', pour tous les usages';
-                        break;
-                    default:
-                        $newconditions[]="Bien.usage_id=".$usage;
-                        $nom = $this->Bien->Usage->findById($usage);
-                        $strfilter .= ', pour l\'usage '.$nom['Usage']['NOM'];
-                        break;
-                endswitch;                 
-                $this->set('strfilter',$strfilter);
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-		$this->Bien->recursive = 0;
-                $export = $this->Bien->find('all',array('conditions'=>$newconditions,'order' => array('Bien.DATEINSTALL' => 'desc'),'recursive'=>0));
-                $this->Session->delete('xls_export');
-                $this->Session->write('xls_export',$export);  
-                $this->set(compact('export'));
-		$this->set('biens', $this->paginate());
+                $listentite = $this->get_visibility(); 
+                $resttriction = $this->get_restriction($listentite);
+                $getapplication = $this->get_bien_application_filter($aplication);
+                $getinstall = $this->get_bien_install_filter($installe);
+                $getvalid = $this->get_bien_valid_filter($valide);
+                $getactif = $this->get_bien_actif_filter($actif);
+                $gettype = $this->get_bien_type_filter($type);
+                $getusage = $this->get_bien_usage_filter($usage);
+                $strfilter = $getapplication['filter'].$getinstall['filter'].$getvalid['filter'].$getactif['filter'].$gettype['filter'].$getusage['filter'];
+                $newconditions = array($resttriction,$getapplication['condition'],$getinstall['condition'],$getvalid['condition'],$getactif['condition'],$gettype['condition'],$getusage['condition']);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));
+                $export = $this->get_export($newconditions);
                 $applications = $this->requestAction('applications/get_list/1');
                 $types = $this->requestAction('types/get_list/1');
-                $usages = $this->requestAction('usages/get_list/1');
-		$this->set(compact('applications','types','usages'));    
+                $usages = $this->requestAction('usages/get_list/1');               
+                $this->set(compact('strfilter','export','applications','types','usages'));
+                $this->set('biens', $this->paginate());    
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                 
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-		if (!$this->Bien->exists($id)) {
-			throw new NotFoundException(__('Invalid bien'));
-		}
-		$options = array('conditions' => array('Bien.' . $this->Bien->primaryKey => $id));
-		$this->set('bien', $this->Bien->find('first', $options));
 	}
 
 /**
@@ -151,7 +194,8 @@ class BiensController extends AppController {
                         $this->Bien->validate = array();
                         $this->History->goBack(1);
                     else:
-                        $this->request->data['Bien']['entite_id']=userAuth('entite_id');
+                        $entite_id = $this->requestAction('applications/get_entite_id/'.$this->request->data['Bien']['application_id']);
+                        $this->request->data['Bien']['entite_id']=$entite_id;
 			$this->Bien->create();
 			if ($this->Bien->save($this->request->data)) {
 				$this->Session->setFlash(__('Bien sauvegardé',true),'flash_success');
@@ -203,11 +247,13 @@ class BiensController extends AppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Bien->validate = array();
-                        $this->History->goBack(3);
-                    else:                    
+                        $this->History->goBack(1);
+                    else:       
+                        $entite_id = $this->requestAction('applications/get_entite_id/'.$this->request->data['Bien']['application_id']);
+                        $this->request->data['Bien']['entite_id']=$entite_id;                        
 			if ($this->Bien->save($this->request->data)) {
 				$this->Session->setFlash(__('Bien sauvegardé',true),'flash_success');
-				$this->History->goBack(2);
+				$this->History->goBack(1);
 			} else {
                             if (!$this->isUnique($this->request->data['Bien']['NOM'])):
                                 $this->Session->setFlash(__('Le nom '.$this->request->data['Bien']['NOM'].' du bien doit être unique, ce nom existe déjà.',true),'flash_failure');
@@ -475,19 +521,42 @@ class BiensController extends AppController {
             endif;
         }
         
-        public function search(){
+        public function search($aplication=null,$installe=null,$valide=null,$actif=null,$type=null,$usage=null,$keywords=null){
             if (isAuthorized('biens', 'index')) :
-                $keyword=isset($this->params->data['Bien']['SEARCH']) ? $this->params->data['Bien']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Bien.NOM LIKE '%".strtoupper($keyword)."%'","Modele.NOM LIKE '%".strtoupper($keyword)."%'","Lot.NOM LIKE '%".$keyword."%'","Chassis.NOM LIKE '%".strtoupper($keyword)."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Bien->recursive = 0;
-                $this->set('biens', $this->paginate()); 
-                $applications = $this->requestAction('applications/get_list/1');
-                $types = $this->requestAction('types/get_list/1');
-                $usages = $this->requestAction('usages/get_list/1');
-		$this->set(compact('applications','types','usages'));                
-                $this->render('index');
+                if(isset($this->params->data['Bien']['SEARCH'])):
+                    $keywords = $this->params->data['Bien']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $listentite = $this->get_visibility(); 
+                    $resttriction = $this->get_restriction($listentite);
+                    $getapplication = $this->get_bien_application_filter($aplication);
+                    $getinstall = $this->get_bien_install_filter($installe);
+                    $getvalid = $this->get_bien_valid_filter($valide);
+                    $getactif = $this->get_bien_actif_filter($actif);
+                    $gettype = $this->get_bien_type_filter($type);
+                    $getusage = $this->get_bien_usage_filter($usage);
+                    $strfilter = $getapplication['filter'].$getinstall['filter'].$getvalid['filter'].$getactif['filter'].$gettype['filter'].$getusage['filter'];
+                    $newconditions = array($resttriction,$getapplication['condition'],$getinstall['condition'],$getvalid['condition'],$getactif['condition'],$gettype['condition'],$getusage['condition']);
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Bien.NOM LIKE '%".strtoupper($value)."%'","Type.NOM LIKE '%".strtoupper($value)."%'","Modele.NOM LIKE '%".strtoupper($value)."%'","Lot.NOM LIKE '%".$value."%'","Chassis.NOM LIKE '%".strtoupper($value)."%'"));
+                    endforeach;
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));    
+                    $export = $this->get_export($conditions);
+                    $applications = $this->requestAction('applications/get_list/1');
+                    $types = $this->requestAction('types/get_list/1');
+                    $usages = $this->requestAction('usages/get_list/1');               
+                    $this->set(compact('strfilter','export','applications','types','usages'));
+                    $this->set('biens', $this->paginate());   
+                else:
+                    $this->redirect(array('action'=>'index',$aplication,$installe,$valide,$actif,$type,$usage));
+                endif;    
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

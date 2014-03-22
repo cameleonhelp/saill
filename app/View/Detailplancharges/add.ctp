@@ -115,7 +115,7 @@
 		</td>
 	</tr>
         </tbody>
-        <tfooter>
+        <tfoot>
         <tr>
             <td colspan='13' class="footer" style='text-align:right;'>Total :
             <?php echo $this->Form->input('Detailplancharge.0.TOTALETP',array('type'=>'hidden')); ?>
@@ -129,7 +129,7 @@
             <td class="footer" id="totalcout" style='text-align:right;'></td>
             <td class="footer"> k€</td>             
         </tr>
-        </tfooter>
+        </tfoot>
     </table>
     <div style="clear:both;margin-top: 10px;">
     <div class="form-group">

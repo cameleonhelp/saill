@@ -41,6 +41,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->css('tablesorter');
                 
                 echo $this->Html->script('jQuery/jquery');
+                echo $this->Html->script('jQuery/jquery.browser');
                 //echo $this->Html->script('jQuery/jquery-ui');
                 echo $this->Html->script('bootstrap');              
                 echo $this->Html->script('validate/validate');  
@@ -59,8 +60,9 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 //mask sur input
                 echo $this->Html->script('maskedinput/maskedinput');
                 //pour enregistrer image
-                echo $this->Html->script('html2canvas');     
-                echo $this->Html->script('canvas2image');   
+                echo $this->Html->script('html2canvas/html2canvas');     
+                echo $this->Html->script('html2canvas/plugin.html2canvas');                     
+                echo $this->Html->script('html2canvas/canvas2image');   
                 echo $this->Html->script('base64'); 
                 //pour la timeline dans la liste des actions
                 //echo $this->Html->script('timeline_js/timeline-api');
@@ -68,10 +70,10 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->script('chronoline/chronoline');
                 //pour le color picker
                 echo $this->Html->script('colorpicker/colorpicker');     
-                echo $this->Html->script('docs'); 
-                //echo $this->Html->script('classie/classie');
+                //echo $this->Html->script('docs'); 
                 //sort on table
                 echo $this->Html->script('tablesorter/tablesorter');
+                echo $this->Html->script('tablesorter/tablesorter.widgets');                
                 // compatibilité IE
                 echo $this->Html->script('respond');     
                 echo $this->Html->script('html5shiv'); 
@@ -83,7 +85,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
 		echo $this->fetch('script');
 	?>
 </head>
-<body <?php echo $this->Session->check('Auth.User') ? 'class="cbp-spmenu-push"' : ''; ?>>
+<body <?php echo $this->Session->check('Auth.User') ? 'class="cbp-spmenu-push"' : ''; ?> style="overflow: hidden;">
     <?php 
     //maintenance du site
     if(file_exists (WWW_ROOT.'maintenance.md') && userAuth('profil_id') != 1):
@@ -94,16 +96,18 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
     <?php echo $this->element('layout/modal_ie'); ?>
     <div class="container-fluid">
         <div class="row clearfix">
-            <div class="menu-retractable">
+            <?php if ($this->Session->check('Auth.User')): ?>
+            <div class="row-fluid menu-retractable">
             <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
                 <!-- DEBUT DU MENU //-->
                 
-                <?php if ($this->Session->check('Auth.User')) echo $this->element('layout/horloge'); ?>
-                <?php if ($this->Session->check('Auth.User')) echo $this->element('layout/menu'); ?>
+                <?php echo $this->element('layout/horloge'); ?>
+                <?php echo $this->element('layout/menu'); ?>
                 <!-- FIN DU MENU //-->
             </nav>
-            <div class="novisible" id="notvisible">&nbsp;</div>  
+                <div class="novisible" id="notvisible"><div class="vertical-text label-menu">⇡ Menu ⇡</div></div>  
             </div>
+            <?php endif; ?>
             <!-- DEBUT DU HEADER //-->
             <?php echo $this->element('layout/header'); ?>
             <?php
@@ -113,10 +117,12 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
             ?>
             <!-- FIN DU HEADER //-->
             <!-- DEBUT DU CONTENU //-->
-            <div class="col-sm-12 column" id="content">
+            <div id="content" class="row" style="margin-left: 0px;margin-right: 0px;margin-top:-17px;">
+            <div class="col-sm-12 column" style="margin-top:15px;">
             <div class="cursor" id="flash_message"><?php echo $this->Session->flash(); ?></div>
             <div id="container_message" name="container_message" style="cursor:pointer;" class="alert alert-danger"><ol></ol></div>
             <?php echo $this->fetch('content'); ?>
+            </div>
             </div>
         </div>
         <div class="row">
@@ -127,7 +133,8 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
             //debug($this->Session->read('User.history'));
             //debug($this->Session->read('User.goback'));
             //debug($this->request->data);
-            //echo $this->element('sql_dump'); 
+            //echo $this->element('sql_dump');
+            //debug($etats);
             ?>
             </div>
             <!-- FIN DU DEBUG //-->
@@ -136,19 +143,19 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
     <?php endif; ?>
     <?php echo $this->element('modals/password'); ?>
 <script>
-$(document).on('mouseover','.novisible',function(){
+$(document).on('mouseover click','.novisible',function(){
     if($(this).hasClass('active')){
          $(this).removeClass('active');
          $('body').removeClass('cbp-spmenu-push-toright');
          $('#cbp-spmenu-s1').removeClass('cbp-spmenu-open');
-         if($('nav.toolbar').hasClass('fixed-active') && $(document).scrollTop() >= 32){
+         if($('nav.toolbar').hasClass('fixed-active') && $("#content").scrollTop() >= 32){
              $('nav.toolbar').removeClass('fixed-active').addClass('fixed');
          }            
      }else{
          $(this).addClass('active');  
          $('body').addClass('cbp-spmenu-push-toright');
          $('#cbp-spmenu-s1').addClass('cbp-spmenu-open');
-         if($('nav.toolbar').hasClass('fixed') && $(document).scrollTop() >= 32){
+         if($('nav.toolbar').hasClass('fixed') && $("#content").scrollTop() >= 32){
              $('nav.toolbar').removeClass('fixed').addClass('fixed-active');
          }
      }       
@@ -159,18 +166,33 @@ $(document).on('mouseover','.novisible',function(){
 <script>   
 $(document).ready(function () {
     $('.carousel').carousel();
-$(window).scroll(function() {
-    if ( $(document).scrollTop() >= 53){
-        if($('body').hasClass('cbp-spmenu-push-toright')){
-            $('nav.toolbar').removeClass('fixed').addClass('fixed-active');
+    
+    var windows_height = $(window).height();
+    var cbpmenu_height = $("#menu").height();
+    
+    
+    $("#content").scroll(function() {
+        var right = $('.index').width();
+        if(typeof right === "undefined") { right = $('.search').width();}        
+        if ( $(this).scrollTop() >= 32){
+            if($('body').hasClass('cbp-spmenu-push-toright')){
+                $('nav.toolbar').removeClass('fixed').addClass('fixed-active').css('width','auto');
+            } else {
+                $('nav.toolbar').removeClass('fixed-active').addClass('fixed').css('width',right);
+            }   
         } else {
-            $('nav.toolbar').removeClass('fixed-active').addClass('fixed');
-        }   
-    } else {
-         $('nav.toolbar').removeClass('fixed').removeClass('fixed-active');
-    } 
+             $('nav.toolbar').removeClass('fixed').removeClass('fixed-active').css('width','auto');
+        } 
 
-});      
+    });  
+    
+    $( window ).resize(function() {
+        var right = $('.index').width();
+        if(typeof right === "undefined") { right = $('.search').width();} 
+        $('nav.toolbar').css('width',right);
+    });
+    
+    
         /** first element focus **/
     $("#formValidate").find("input,textarea,select").filter(":not([readonly='readonly']):not([type='file']):not('.dateall'):not('.dateyear-year'):visible:first").focus();
 
@@ -206,7 +228,7 @@ $(window).scroll(function() {
     var clickedAway = false;
     /** permet de cacher les autres popover si on clique dans le body **/
     if ($("[rel=popover]").length) {
-        $("[rel=popover]").popover({placement:'auto',trigger:'manual',html:true});
+        $("[rel=popover]").popover({placement:'auto left',trigger:'manual',html:true,container:'content'});
         $(document).on('click',"[rel=popover]",function(e){
             e.preventDefault;
             $(this).popover('toggle');

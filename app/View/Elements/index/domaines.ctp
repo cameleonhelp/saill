@@ -1,10 +1,11 @@
 <nav class="navbar toolbar ">
         <?php 
+        $pass0 = isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous';
         $passaction = $this->params->action;
         if (count($this->params->data) > 0) :
             $keyword = $this->params->data['Domaine']['SEARCH'];
-        elseif (isset($this->params->pass[0]) && $this->params->pass[0] !=''):
-            $keyword = $this->params->pass[0];
+        elseif (isset($this->params->pass[1]) && $this->params->pass[1] !=''):
+            $keyword = $this->params->pass[1];
         elseif (isset($keywords) && $keyword != ''):
             $keyword = $keywords;
         else :
@@ -15,6 +16,16 @@
         <?php if (userAuth('profil_id')!='2' && isAuthorized('domaines', 'add')) : ?>
         <li><?php echo $this->Html->link('<span class="glyphicons plus size14 margintop4"></span>', array('action' => 'add'),array('escape' => false,'class'=>'showoverlay')); ?></li>
         <?php endif; ?>
+        <li class="dropdown <?php echo filtre_is_actif($pass0,'tous'); ?>">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre cercle<b class="caret"></b></a>
+             <ul class="dropdown-menu">
+             <li><?php echo $this->Html->link('Tous', array('action' => $passaction,'tous',$keyword),array('class'=>'showoverlay'.subfiltre_is_actif($pass0,'tous'))); ?></li>
+             <li class="divider"></li>
+             <?php foreach ($cercles as $cercle): ?>
+                <li><?php echo $this->Html->link($cercle['Entite']['NOM'], array('action' => $passaction,$cercle['Entite']['id'],$keyword),array('class'=>'showoverlay'.subfiltre_is_actif($pass0,$cercle['Entite']['id']))); ?></li>
+             <?php endforeach; ?>
+             </ul>
+        </li>          
         </ul> 
         <ul class="nav navbar-nav toolbar pull-right">
             <li class="dropdown">
@@ -35,6 +46,7 @@
 <thead>
 <tr>
                 <th><?php echo $this->Paginator->sort('NOM','Nom'); ?></th>
+                <th><?php echo $this->Paginator->sort('Entite.NOM','Cercle'); ?></th>
                 <th><?php echo $this->Paginator->sort('DESCRIPTION','Description'); ?></th>
                 <th class="actions" width="60px;"><?php echo __('Actions'); ?></th>
 </tr>
@@ -44,6 +56,7 @@
 <?php foreach ($domaines as $domaine): ?>
 <tr>
         <td><?php echo h($domaine['Domaine']['NOM']); ?>&nbsp;</td>
+        <td><?php echo h($domaine['Entite']['NOM']); ?>&nbsp;</td>
         <td><?php echo $domaine['Domaine']['DESCRIPTION']; ?>&nbsp;</td>
         <td class="actions">
             <?php if (userAuth('profil_id')!='2' && isAuthorized('domaines', 'view')) : ?>

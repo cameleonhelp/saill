@@ -63,33 +63,70 @@
     <div style="clear:both;margin-top: 10px;">
     <div class="form-group">
       <div class="btn-block-horizontal">
-            <?php echo $this->Form->button('Annuler', array('type'=>'submit','class' => 'btn btn-sm btn-default showoverlay cancel','value'=>'cancel','div' => false, 'name' => 'cancel')); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?>                
+            <?php echo $this->Form->button('Annuler', array('type'=>'submit','class' => 'btn btn-sm btn-default showoverlay cancel','value'=>'cancel','div' => false, 'name' => 'cancel')); ?>&nbsp;<?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-sm btn-primary showoverlay','type'=>'submit')); ?>                
       </div>
     </div>  
     </div>
-<?php if ($this->params->action == 'edit') echo $this->Form->input('id',array('type'=>'hidden')); ?>
-<?php echo $this->Form->end(); ?>
-<?php if ($this->params->action == 'add') : ?>
-<?php echo $this->Form->create('Utiliseoutil',array('id'=>'formValidate','action'=>'add_template','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
-    <div class="form-group">
-        <label class="col-md-2 required" for="UtiliseoutilUtilisateurId">Utilisateur : </label>
-        <div class="col-md-3">
-                <?php if (!isset($this->params->pass[0])) { 
-                    echo $this->Form->select('utilisateur_id',$utilisateur,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>'Le nom de l\'utilisateur est obligatoire','empty' => 'Choisir un utilisateur')); ?>
-                <?php } else { 
-                    echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>$this->params->pass[0])); 
-                    echo $utilisateur[$this->params->pass[0]];
-                    } 
-                ?>
+    <div class="row">
+        <div class="col-md-6 column">	
+            <?php if ($this->params->action == 'edit') echo $this->Form->input('id',array('type'=>'hidden')); ?>
+            <?php echo $this->Form->end(); ?>
+            <?php if ($this->params->action == 'add') : ?>
+            <?php echo $this->Form->create('Utiliseoutil',array('id'=>'formValidate','action'=>'add_template','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+                <div class="form-group">
+                    <label class="col-md-4 required" for="UtiliseoutilUtilisateurId">Utilisateur : </label>
+                    <div class="col-md-6">
+                            <?php if (!isset($this->params->pass[0])) { 
+                                echo $this->Form->select('utilisateur_id',$utilisateur,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>'Le nom de l\'utilisateur est obligatoire','empty' => 'Choisir un utilisateur')); ?>
+                            <?php } else { 
+                                echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>$this->params->pass[0])); 
+                                echo $utilisateur[$this->params->pass[0]];
+                                } 
+                            ?>
+                    </div>
+                </div>
+                <div style="clear:both;margin-top: 10px;">
+                <div class="form-group">
+                  <div class="btn-block-horizontal">
+                        <?php echo $this->Form->button('Enregistrer les outils et partages par défaut', array('class' => 'btn btn-sm btn-default showoverlay','type'=>'submit')); ?>                
+                  </div>
+                </div>  
+                </div>
+            <?php echo $this->Form->end(); ?>
+            <?php endif; ?>
         </div>
+        <div class="col-md-6 column">
+            <?php if ($this->params->action == 'edit') echo $this->Form->input('id',array('type'=>'hidden')); ?>
+            <?php echo $this->Form->end(); ?>
+            <?php if ($this->params->action == 'add') : ?>
+            <?php echo $this->Form->create('Utiliseoutil',array('id'=>'formValidate','action'=>'dupliquer','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+                <div class="form-group">
+                    <label class="col-md-4 required" for="UtiliseoutilORIGINE">Utilisateur à copier : </label>
+                    <div class="col-md-6">
+                            <?php echo $this->Form->select('ORIGINE',$utilisateur,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>'Le nom de l\'utilisateur d\'origine est obligatoire','empty' => 'Choisir un utilisateur')); ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 required" for="UtiliseoutilUtilisateurId">Utilisateur : </label>
+                    <div class="col-md-6">
+                            <?php if (!isset($this->params->pass[0])) { 
+                                echo $this->Form->select('utilisateur_id',$utilisateur,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>'Le nom de l\'utilisateur est obligatoire','empty' => 'Choisir un utilisateur')); ?>
+                            <?php } else { 
+                                echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>$this->params->pass[0])); 
+                                echo $utilisateur[$this->params->pass[0]];
+                                } 
+                            ?>
+                    </div>
+                </div>            
+                <div style="clear:both;margin-top: 10px;">
+                <div class="form-group">
+                  <div class="btn-block-horizontal">
+                        <?php echo $this->Form->button('Dupliquer les droits', array('class' => 'btn btn-sm btn-default showoverlay','type'=>'submit')); ?>                
+                  </div>
+                </div>  
+                </div>
+            <?php echo $this->Form->end(); ?>
+            <?php endif; ?>
+	</div>
     </div>
-    <div style="clear:both;margin-top: 10px;">
-    <div class="form-group">
-      <div class="btn-block-horizontal">
-            <?php echo $this->Form->button('Enregistrer les outils et partages par défaut', array('class' => 'btn btn-sm btn-default','type'=>'submit')); ?>                
-      </div>
-    </div>  
-    </div>
-<?php echo $this->Form->end(); ?>
-<?php endif; ?>
 </div>

@@ -6,7 +6,7 @@
       <h3 class="panel-title">
         <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse0">
             <?php $classin = $this->params->action == 'add' ? 'in' : ''; ?>
-            Idcercle
+            Identité
             <span class="pull-right badge badge-default"><?php echo h((isset($utilisateur['Utilisateur']['username']) && !empty($utilisateur['Utilisateur']['username']))) ? h($utilisateur['Utilisateur']['username']) : "Nouveau"; ?></span>
         </a>
     </div>
@@ -291,7 +291,9 @@
     <div id="collapse4" class="panel-collapse collapse">
         <div class="panel-body">
             <?php if(isAuthorized('utiliseoutils', 'add')) : ?>
-            <button type="button" style="margin-bottom:10px;" class='btn btn-sm btn-default pull-right' onclick="location.href='<?php echo $this->Html->url('/utiliseoutils/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter une ouverture de droit</button><br>                     
+            <button type="button" style="margin-bottom:10px;" class='btn btn-sm btn-default pull-right' onclick="location.href='<?php echo $this->Html->url('/utiliseoutils/add/'.$this->data['Utilisateur']['id']); ?>';">Dupliquer les ouvertures de droit</button>&nbsp;
+            <button type="button" style="margin-bottom:10px;margin-right:10px;" class='btn btn-sm btn-default pull-right' onclick="location.href='<?php echo $this->Html->url('/utiliseoutils/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter les ouvertures de droit par défaut</button>&nbsp;
+            <button type="button" style="margin-bottom:10px;margin-right:10px;" class='btn btn-sm btn-default pull-right' onclick="location.href='<?php echo $this->Html->url('/utiliseoutils/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter une ouverture de droit</button><br>                     
             <?php endif; ?>            
             <label class="sstitre">Liste des droits et état avancement des demandes à mettre dans un tableau</label> 
             <?php echo $this->element('tableUtiliseOutil'); ?>

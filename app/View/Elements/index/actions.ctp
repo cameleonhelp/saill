@@ -212,7 +212,7 @@
 	?>
         </ul>
         </div>
-        <div id="content-timeline" style="padding-bottom: 10px;">
+        <div id="content-timeline" >
         <?php if(count($actions) >0): ?>
         <br>
         <?php $events = $this->requestAction('actions/timelinedata'); ?>

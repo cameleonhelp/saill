@@ -16,6 +16,141 @@ class IntergrationapplicativesController extends AppController {
         public $paginate = array('limit' => 25,'order'=>array('Intergrationapplicative.DATEINSTALL'=>'desc'));
 	public $components = array('History','Common');
 
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            if($visibility == null):
+                return "1=1";
+            elseif ($visibility !=""):
+                return "Intergrationapplicative.entite_id IN (".$visibility.')';
+            else:
+                return "Intergrationapplicative.entite_id=".userAuth('entite_id');
+            endif;
+        }
+        
+        public function get_integration_application_filter($aplication){
+            $result = array();
+            switch($aplication):
+                case null:
+                case 'tous':
+                    $listapp = $this->requestAction('applications/get_str_list');
+                    $result['condition']="Intergrationapplicative.application_id IN (".$listapp.")";
+                    $result['filter'] = ', pour toutes les applications';
+                    break;
+                default:
+                    $result['condition']="Intergrationapplicative.application_id=".$aplication;
+                    $nom = $this->Intergrationapplicative->Application->findById($aplication);
+                    $result['filter'] = ', pour l\'application '.$nom['Application']['NOM'];
+                    break;
+            endswitch;
+            return $result;
+        }
+        
+        public function get_integration_install_filter($installe){
+            $result = array();
+            switch($installe):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter'] = '';
+                    break;                         
+                case '1':
+                    $result['condition']="Intergrationapplicative.INSTALL=0";
+                    $result['filter'] = ', non installés';
+                    break;
+                case '0':
+                    $result['condition']="Intergrationapplicative.INSTALL=1";
+                    $result['filter']= ', installés';
+                    break;                   
+            endswitch;     
+            return $result;
+        }
+        
+        public function get_integration_valid_filter($valide){
+            $result = array();
+            switch($valide):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= '';
+                    break;                          
+                case '1':
+                    $result['condition']="Intergrationapplicative.CHECK=0";
+                    $result['filter']= ', non validés';
+                    break;
+                case '0':
+                    $result['condition']="Intergrationapplicative.CHECK=1";
+                    $result['filter']= ', validés';
+                    break;                   
+            endswitch;
+            return $result;
+        }
+        
+        public function get_integration_actif_filter($actif){
+            $result = array();
+            switch($actif):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= '';
+                    break;                          
+                case '1':
+                    $result['condition']="Intergrationapplicative.ACTIF=1";
+                    $result['filter']= ', actifs';
+                    break;
+                case '0':
+                    $result['condition']="Intergrationapplicative.ACTIF=0";
+                    $result['filter']= ', inactifs';
+                    break;                   
+            endswitch; 
+            return $result;
+        }
+        
+        public function get_integration_type_filter($type){
+            $result = array();
+            switch($type):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter']= ', pour tous les environnements';
+                    break;
+                default:
+                    $result['condition']="Intergrationapplicative.type_id=".$type;
+                    $nom = $this->Intergrationapplicative->Type->findById($type);
+                    $result['filter']= ', pour l\'environnement '.$nom['Type']['NOM'];
+                    break;
+            endswitch; 
+            return $result;
+        }
+        
+        public function get_integration_version_filter($version){
+            $result = array();
+            switch($version):
+                case null:
+                case 'tous':
+                    $result['condition']="1=1";
+                    $result['filter'] = ', pour toutes les versions';
+                    break;
+                default:
+                    $result['condition']="Intergrationapplicative.version_id=".$version;
+                    $nom = $this->Intergrationapplicative->Version->findById($version);
+                    $result['filter']= ', pour la version '.$nom['Version']['NOM'];
+                    break;
+            endswitch; 
+            return $result;
+        }
+        
+        public function get_export($condition){
+            $this->Session->delete('xls_export');            
+            $export = $this->Intergrationapplicative->find('all',array('conditions'=>$condition,'order' => array('Intergrationapplicative.DATEINSTALL' => 'desc'),'recursive'=>0));
+            $this->Session->write('xls_export',$export);    
+        }
 /**
  * index method
  *
@@ -24,122 +159,28 @@ class IntergrationapplicativesController extends AppController {
 	public function index($aplication=null,$installe=null,$valide=null,$actif=null,$type=null,$version = null) {
             $this->set('title_for_layout','Intégration applicative');
             if (isAuthorized('intergrationapplicatives', 'index')) :
-                $listentite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
-                $newconditions[]="Intergrationapplicative.entite_id IN (".$listentite.')';                 
-                switch($aplication):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter = ', pour toutes les applications';
-                        break;
-                    default:
-                        $newconditions[]="Intergrationapplicative.application_id=".$aplication;
-                        $nom = $this->Intergrationapplicative->Application->findById($aplication);
-                        $strfilter = ', pour l\'application '.$nom['Application']['NOM'];
-                        break;
-                endswitch;
-                switch($installe):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= '';
-                        break;                         
-                    case '1':
-                        $newconditions[]="Intergrationapplicative.INSTALL=0";
-                        $strfilter .= ', non installés';
-                        break;
-                    case '0':
-                        $newconditions[]="Intergrationapplicative.INSTALL=1";
-                        $strfilter .= ', installés';
-                        break;                   
-                endswitch;     
-                switch($valide):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= '';
-                        break;                          
-                    case '1':
-                        $newconditions[]="Intergrationapplicative.CHECK=0";
-                        $strfilter .= ', non validés';
-                        break;
-                    case '0':
-                        $newconditions[]="Intergrationapplicative.CHECK=1";
-                        $strfilter .= ', validés';
-                        break;                   
-                endswitch;   
-                switch($actif):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= '';
-                        break;                          
-                    case '1':
-                        $newconditions[]="Intergrationapplicative.ACTIF=1";
-                        $strfilter .= ', actifs';
-                        break;
-                    case '0':
-                        $newconditions[]="Intergrationapplicative.ACTIF=0";
-                        $strfilter .= ', inactifs';
-                        break;                   
-                endswitch;                 
-                switch($type):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter .= ', pour tous les environnements';
-                        break;
-                    default:
-                        $newconditions[]="Intergrationapplicative.type_id=".$type;
-                        $this->Intergrationapplicative->Type->recursive = -1;
-                        $nom = $this->Intergrationapplicative->Type->findById($type);
-                        $strfilter .= ', pour l\'environnement '.$nom['Type']['NOM'];
-                        break;
-                endswitch;    
-                switch($version):
-                    case null:
-                    case 'tous':
-                        $newconditions[]="1=1";
-                        $strfilter = ', pour toutes les versions';
-                        break;
-                    default:
-                        $newconditions[]="Intergrationapplicative.version_id=".$version;
-                        $nom = $this->Intergrationapplicative->Version->findById($version);
-                        $strfilter = ', pour la version '.$nom['Version']['NOM'];
-                        break;
-                endswitch;                
-                $this->set('strfilter',$strfilter);
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
-		$this->Intergrationapplicative->recursive = 0;
-                $export = $this->Intergrationapplicative->find('all',array('conditions'=>$newconditions,'order' => array('Intergrationapplicative.DATEINSTALL' => 'desc'),'recursive'=>0));
-                $this->Session->delete('xls_export');
-                $this->Session->write('xls_export',$export);                 
+                $listentite = $this->get_visibility();
+                $restriction = $this->get_restriction($listentite);               
+                $getapplication = $this->get_integration_application_filter($aplication);
+                $getinstall = $this->get_integration_install_filter($installe);
+                $getvalid = $this->get_integration_valid_filter($valide);
+                $getactif = $this->get_integration_actif_filter($actif);
+                $gettype = $this->get_integration_type_filter($type);
+                $getversion = $this->get_integration_version_filter($version);
+                $strfilter = $getapplication['filter'].$getinstall['filter'].$getvalid['filter'].$getactif['filter'].$gettype['filter'].$getversion['filter'];
+                $newconditions = array($restriction,$getapplication['condition'],$getinstall['condition'],$getvalid['condition'],$getactif['condition'],$gettype['condition'],$getversion['condition']);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                             
 		$this->set('intergrationapplicatives', $this->paginate());
+                $this->get_export($newconditions);
                 $applications = $this->requestAction('applications/get_list/1');
                 $etats = $this->requestAction('etats/get_list/1');
                 $types = $this->requestAction('types/get_list/1');
                 $versions = $this->requestAction('versions/get_list/1');
-		$this->set(compact('applications','etats','types','versions'));  
+		$this->set(compact('strfilter','applications','etats','types','versions'));  
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                 
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-            $this->set('title_for_layout','Intégration applicative');            
-		if (!$this->Intergrationapplicative->exists($id)) {
-			throw new NotFoundException(__('Invalid intergrationapplicative'));
-		}
-		$options = array('conditions' => array('Intergrationapplicative.' . $this->Intergrationapplicative->primaryKey => $id));
-		$this->set('intergrationapplicative', $this->Intergrationapplicative->find('first', $options));
 	}
 
 /**
@@ -155,7 +196,8 @@ class IntergrationapplicativesController extends AppController {
                         $this->Intergrationapplicative->validate = array();
                         $this->History->goBack(1);
                     else:          
-                        $this->request->data['Intergrationapplicative']['entite_id']=userAuth('entite_id');
+                        $entite_id = $this->requestAction('applications/get_entite_id/'.$this->request->data['Bien']['application_id']);
+                        $this->request->data['Intergrationapplicative']['entite_id']=$entite_id;
 			$this->Intergrationapplicative->create();
                         if($this->request->data['Intergrationapplicative']['DATEINSTALL'] != ''):
                             $this->request->data['Intergrationapplicative']['INSTALL'] = 1;
@@ -164,7 +206,7 @@ class IntergrationapplicativesController extends AppController {
                         endif;
 			if ($this->Intergrationapplicative->save($this->request->data)) {
 				$this->Session->setFlash(__('Intégration sauvegardée',true),'flash_success');
-				$this->History->goBack(2);
+				$this->History->goBack(1);
 			} else {
 				$this->Session->setFlash(__('Intégration incorrecte, veuillez corriger l\'intégration',true),'flash_failure');
 			}
@@ -199,6 +241,8 @@ class IntergrationapplicativesController extends AppController {
                         $this->Intergrationapplicative->validate = array();
                         $this->History->goBack(1);
                     else:  
+                        $entite_id = $this->requestAction('applications/get_entite_id/'.$this->request->data['Bien']['application_id']);
+                        $this->request->data['Intergrationapplicative']['entite_id']=$entite_id;                        
                         if($this->request->data['Intergrationapplicative']['DATEINSTALL'] != ''):
                             $this->request->data['Intergrationapplicative']['INSTALL'] = 1;
                         else:
@@ -441,19 +485,44 @@ class IntergrationapplicativesController extends AppController {
             endif;
         }
         
-        public function search(){
+        public function search($aplication=null,$installe=null,$valide=null,$actif=null,$type=null,$version = null,$keywords=null){
+            $this->set('title_for_layout','Intégration applicative');
             if (isAuthorized('intergrationapplicatives', 'index')) :
-                $keyword=isset($this->params->data['Intergrationapplicative']['SEARCH']) ? $this->params->data['Intergrationapplicative']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Application.NOM LIKE '%".$keyword."%'","Type.NOM LIKE '%".$keyword."%'","Lot.NOM LIKE '%".$keyword."%'","Version.NOM LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Intergrationapplicative->recursive = 0;
-                $this->set('intergrationapplicatives', $this->paginate());  
-                $applications = $this->requestAction('applications/get_list/1');
-                $etats = $this->requestAction('etats/get_list/1');
-                $types = $this->requestAction('types/get_list/1');
-		$this->set(compact('applications','etats','types'));                 
-                $this->render('index');
+                if(isset($this->params->data['Intergrationapplicative']['SEARCH'])):
+                    $keywords = $this->params->data['Intergrationapplicative']['SEARCH'];
+                elseif (isset($keywords)):
+                    $keywords=$keywords;
+                else:
+                    $keywords=''; 
+                endif;
+                $this->set('keywords',$keywords);
+                if($keywords!= ''):
+                    $arkeywords = explode(' ',trim($keywords)); 
+                    $listentite = $this->get_visibility();
+                    $restriction = $this->get_restriction($listentite);               
+                    $getapplication = $this->get_integration_application_filter($aplication);
+                    $getinstall = $this->get_integration_install_filter($installe);
+                    $getvalid = $this->get_integration_valid_filter($valide);
+                    $getactif = $this->get_integration_actif_filter($actif);
+                    $gettype = $this->get_integration_type_filter($type);
+                    $getversion = $this->get_integration_version_filter($version);
+                    $strfilter = $getapplication['filter'].$getinstall['filter'].$getvalid['filter'].$getactif['filter'].$gettype['filter'].$getversion['filter'];
+                    $newconditions = array($restriction,$getapplication['condition'],$getinstall['condition'],$getvalid['condition'],$getactif['condition'],$gettype['condition'],$getversion['condition']);
+                    foreach ($arkeywords as $key=>$value):
+                        $ornewconditions[] = array('OR'=>array("Application.NOM LIKE '%".$value."%'","Type.NOM LIKE '%".$value."%'","Lot.NOM LIKE '%".$value."%'","Version.NOM LIKE '%".$value."%'"));
+                    endforeach;
+                    $conditions = array($newconditions,'OR'=>$ornewconditions);
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0)); 
+                    $this->set('intergrationapplicatives', $this->paginate());
+                    $this->get_export($conditions);
+                    $applications = $this->requestAction('applications/get_list/1');
+                    $etats = $this->requestAction('etats/get_list/1');
+                    $types = $this->requestAction('types/get_list/1');
+                    $versions = $this->requestAction('versions/get_list/1');
+                    $this->set(compact('strfilter','applications','etats','types','versions'));                   
+                else:
+                    $this->redirect(array('action'=>'index',$aplication,$installe,$valide,$actif,$type,$version));
+                endif; 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

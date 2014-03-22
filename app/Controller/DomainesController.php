@@ -41,6 +41,8 @@ class DomainesController extends AppController {
                 $newconditions[]= $this->get_visibilty();
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));  
 		$this->set('domaines', $this->paginate());
+                $cercles = $this->requestAction('entites/get_all');
+                $this->set(compact('cercles'));                   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();

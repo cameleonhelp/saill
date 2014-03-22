@@ -42,12 +42,12 @@
         <?php endforeach; ?>
         <?php endif; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
         <tr>
             <td colspan='16' class="footer" style='text-align:right;'>Total :</td>
             <td class="footer" colspan='2'></td>
         </tr>
-        </tfooter>
+        </tfoot>
     </table>
     <div class="navbar">
         <div class="navbar-inner">

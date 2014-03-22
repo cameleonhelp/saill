@@ -6,21 +6,30 @@
 
 html,
 body {
-  height: 100%;
   font-family: Arial;
   font-weight: lighter; 
   font-size: 12px;
   line-height: 18px;
   color: #747678;
+  /*padding-bottom: 15px;*/
   background-color: transparent ;/*#ffffff;*/
-  padding-bottom: 10px;
-  /* The html and body elements cannot have any padding or margin. */
+  overflow: no-display;  
+  -ms-overflow-style: none;
+  height: 95.6%;
+  max-height: 95.6%;
+  min-height: 97.5%;
 }
 
 #content{
-    /*padding-right:10px;*/
+    min-height: 95%;
+    max-height: 100%;
+    height: 100%;
+    width:100%;
+    position:absolute;
+    padding-bottom: 15px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
-
 
 span .clear:after{
     clear:both;
@@ -269,19 +278,20 @@ margin-left: 0px;
 .fixed {
     position: fixed;
     left: 15px;
-    right: 15px;
+    /*right: 30px; /* 15px;*/
     top:52px; 
-    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175) !important;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .175) !important;     
+    z-index: 1000;
+    box-shadow: 0 6px 12px -10x #FFF, 0 6px 12px -10px rgba(0, 0, 0, 2);
+    -webkit-box-shadow: 0 6px 12px -10px #FFF, 0 6px 12px -10px rgba(0, 0, 0, 2);
 }
 .fixed-active {
     position: fixed;
     left: 255px;
     right: -255px;
     top:52px; 
-    z-index: 1000;
-    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175) !important;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .175) !important;    
+    
+    box-shadow: 0 6px 12px -10x #FFF, 0 6px 12px -10px rgba(0, 0, 0, 2);
+    -webkit-box-shadow: 0 6px 12px -10px #FFF, 0 6px 12px -10px rgba(0, 0, 0, 2);
 }
 .toolbar .container,
 .container{
@@ -292,6 +302,10 @@ margin-left: 0px;
 }
 .toolbar .navbar-header{
     padding: 0px !important;
+}
+
+.index{
+    position: static;
 }
 .toolbar-form {
   margin-top: 2px;
@@ -555,6 +569,9 @@ float: left !important;
     min-height: 24px;
     height: 24px;
     padding-top: 3px;
+    display: inline-table;
+    padding-bottom: 3px;
+    width: 100%;    
 }
 .panel-info{
     background-color: #f0f7fd;
@@ -715,7 +732,7 @@ panel-price-stats{
     height: 1px;
 }
 #menu{
-   height: 85%;
+   height: 90%;
    background-color: transparent !important;
    /*padding-bottom: 60px;*/
    z-index: 900;
@@ -1332,6 +1349,17 @@ code {
   }
 }
 @media (min-width: 1200px) {
+  html,
+  body {
+    height: 95.5%;
+  }
+
+  #content{
+    min-height: 97%;
+    max-height: 100%;
+    margin-bottom: 15px;
+  }
+  
   .container {
     width: 97.5%;      
     max-width: 100%;
@@ -1417,6 +1445,17 @@ code {
   }
 }
 @media (min-width: 1400px) {
+  html,
+  body {
+    height: 97.54%;
+  }
+
+  #content{
+    min-height: 100%;
+    max-height: 100%;
+    padding-bottom: 15px;
+  }
+  
   .container {
     width: 99%;     
     max-width: 100%;
@@ -1496,7 +1535,31 @@ code {
   }  
 }
 
+@media (min-height: 1600px) {
+  html,
+  body {
+    height: 99%;
+  }
+
+  #content{
+    min-height: 100%;
+    max-height: 100%;
+    padding-bottom: 15px;
+  }
+}
+
 @media (min-width: 1600px) {
+  html,
+  body {
+    height: 97.54%;
+  }
+
+  #content{
+    min-height: 100%;
+    max-height: 100%;
+    padding-bottom: 15px;
+  }
+  
   .container {
     width: 96.5%;     
     max-width: 100%;
@@ -1813,7 +1876,7 @@ table th a.asc:after,
 }
 table th a.desc:after,
 .tablesorter-header.tablesorter-headerDesc div:after,
-.header.headerSortUp:after{
+.header.headerSortUp:after{ 
 	content: ' ⇡';
 }
 .table > thead > tr > th, 
@@ -2816,11 +2879,9 @@ div.transparent{
 .cbp-spmenu {
         background-color:transparent;
 	position: absolute;
-        overflow-y: hidden;
         padding-top: 10px; 
         margin-top: -10px;
-        height:100%;
-        overflow-y: auto;
+        /*overflow-y: auto;*/
         -ms-overflow-style: none;
         height: 100% !important;
 }
@@ -2842,7 +2903,10 @@ div.transparent{
         height:100%;
         /*position: fixed;
         z-index: 1000;
-        width: 260px;*/
+        */
+        width: 260px;
+        height: 100%;
+        top:50px;
         background-color: transparent;
 }
 
@@ -2854,6 +2918,8 @@ div.transparent{
     height: 100%;
     z-index: 1000;
     position: fixed; 
+    line-height: 100%;
+    vertical-align:middle;
 }
 
 .novisible.active{
@@ -3054,3 +3120,101 @@ height: 20px;
     -webkit-box-shadow: 0px 0px 21px #d7e3ae;
     box-shadow: 0px 0px 21px #d7e3ae;    
 }
+
+dd{
+    margin-left:20px;
+    list-style-type: square;
+     display: list-item; 
+}
+
+.vertical-text{
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    writing-mode: lr-tb;  
+}
+
+.label-menu{
+    background-color: #4D4F53;
+    color: #D5D5D5;
+    width: 75px;
+    height:15px;  
+    position:relative;
+    top:45%;
+    left:-31px;
+    text-align: center;
+    padding-top: 1px;
+}
+
+/* This css is already contained within each theme file */
+/* filter row */
+.tablesorter-filter-row td {
+  background: #eee;
+  line-height: normal;
+  text-align: center; /* center the input */
+  -webkit-transition: line-height 0.1s ease;
+  -moz-transition: line-height 0.1s ease;
+  -o-transition: line-height 0.1s ease;
+  transition: line-height 0.1s ease;
+}
+/* optional disabled input styling */
+.tablesorter-filter-row .disabled {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  cursor: not-allowed;
+}
+
+.tablesorter-filter-row.hideme td {
+    background: #428bca;
+    border: 1px solid #428bca;
+}
+
+/* hidden filter row */
+.tablesorter-filter-row.hideme td {
+  /*** *********************************************** ***/
+  /*** change this padding to modify the thickness     ***/
+  /*** of the closed filter row (height = padding x 2) ***/
+  padding: 2px;
+  /*** *********************************************** ***/
+  margin: 0;
+  line-height: 0;
+  cursor: pointer;
+  height: 0px;
+}
+.tablesorter-filter-row.hideme .tablesorter-filter {
+  height: 1px;
+  min-height: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  /* don't use visibility: hidden because it disables tabbing */
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+
+/* filters */
+.tablesorter-filter {
+  width: 97%;
+  height: inherit;
+  margin: -2px -2px;
+  padding: 2px;
+  background-color: #fff;
+  border: 1px solid #bbb;
+  color: #333;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: height 0.1s ease;
+  -moz-transition: height 0.1s ease;
+  -o-transition: height 0.1s ease;
+  transition: height 0.1s ease;
+}
+
+.tablesorter tbody tr.alt-row td {
+  background: white;
+}
+.tablesorter tbody tr.normal-row td {
+  background: #f9f9f9;
+}
+
+.tablesorter thead .disabled {display: none}

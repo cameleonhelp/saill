@@ -1,10 +1,10 @@
 	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax">
-	<tr>
+	<thead><tr>
                         <th><?php echo 'Nom'; ?></th>
                         <th><?php echo 'Environnement DSI-T'; ?></th>
                         <th><?php echo 'Installé'; ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
+        </tr></thead>
 	<?php foreach ($biens as $bien): ?>
 	<tr>
             <td class="text-courrier"><?php echo h($bien['Bien']['NOM']); ?>&nbsp;</td>
@@ -74,6 +74,9 @@
 <?php echo $this->element('modals/envdsit'); ?>
 <script>
 $(document).ready(function () {
+
+    $('table').tablesorter();
+    
     $(document).on('click','.addenv',function(e){
         var id = $(this).attr('data-id');
         var envsid = $(this).attr('data-envid');

@@ -12,37 +12,67 @@ class AchatsController extends AppController {
         'order' => array('Achat.DATE' => 'desc','Achat.LIBELLEACHAT' => 'asc'),
         );
         
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('activites/find_str_id_cercle_activite/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            if($visibility == null):
+                return '1=1';
+            elseif ($visibility!=''):
+                return '1=1';
+            else:
+                return '1=1';
+            endif;
+        }
+        
+        public function get_achat_filtre_filter($filtre,$visibility){
+            $result = array();
+            switch ($filtre){
+                case 'toutes':
+                case null: 
+                    if($visibility == null):
+                        $result['condition']="Activite.projet_id > 1";
+                    elseif ($visibility!=''):
+                        $result['condition']="Activite.id IN (".$visibility.')';
+                    else:
+                        $result['condition']="Activite.projet_id > 1";
+                    endif;                    
+                    $result['filter'] = "toutes les activités";
+                    break;                 
+                default :
+                    $result['condition']="Activite.id='".$filtre."'";
+                    $activite = $this->Achat->Activite->find('first',array('fields'=>array('Activite.NOM'),'conditions'=>array('Activite.id'=>$filtre)));
+                    $result['filter'] = "l'activité ".$activite['Activite']['NOM'];
+                    break;                      
+            }              
+            return $result;
+        }
+        
+        public function get_export($condition){
+            $this->Session->delete('xls_export');
+            $export = $this->Achat->find('all',array('conditions'=>$condition,'order'=>array('Achat.DATE'=>'desc'),'recursive'=>0));
+            $this->Session->write('xls_export',$export);  
+        }
+        
 /**
  * index method
  *
  * @return void
  */
 	public function index($filtre=null) {
-            //$this->Session->delete('history');
-            $listactivite = $this->requestAction('activites/find_str_id_cercle_activite/'.userAuth('id'));
             if (isAuthorized('achats', 'index')) : 
-                switch ($filtre){
-                    case 'toutes':
-                    case null: 
-                    case '<':   
-                        if (count($listactivite)>0):
-                        $newconditions[]="Activite.id IN (".$listactivite.')';
-                        $factivite = "toutes les activités";
-                        endif;
-                        break;                 
-                    default :
-                        $newconditions[]="Activite.id='".$filtre."'";
-                        $activite = $this->Achat->Activite->find('first',array('fields'=>array('Activite.NOM'),'conditions'=>array('Activite.id'=>$filtre)));
-                        $factivite = "l'activité ".$activite['Activite']['NOM'];
-                        break;                      
-                }  
-                $this->set('factivite',$factivite);            
-		$this->Achat->recursive = 0;
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
+                $listactivite = $this->get_visibility();
+                $getfiltre = $this->get_achat_filtre_filter($filtre, $listactivite);
+                $this->set('factivite',$getfiltre['filter']);  
+                $newconditions = array($getfiltre['condition']);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));
 		$this->set('achats', $this->paginate());
-                $this->Session->delete('xls_export');
-                $export = $this->Achat->find('all',array('conditions'=>$newconditions,'order'=>array('Achat.DATE'=>'desc')));
-                $this->Session->write('xls_export',$export); 
+                $this->get_export($newconditions);
                 $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
                 $this->set('activites',$activites); 
             else :
@@ -58,8 +88,6 @@ class AchatsController extends AppController {
  */
 	public function add() {
             if (isAuthorized('achats', 'add')) : 
-                $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
-                $this->set('activites',$activites);   
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Achat->validate = array();
@@ -74,6 +102,8 @@ class AchatsController extends AppController {
 			}
                     endif;
                  endif;
+                $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
+                $this->set('activites',$activites);                    
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -89,9 +119,7 @@ class AchatsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            if (isAuthorized('achats', 'edit')) : 
-                $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
-                $this->set('activites',$activites);                
+            if (isAuthorized('achats', 'edit')) :               
 		if (!$this->Achat->exists($id)) {
 			throw new NotFoundException(__('Achat incorrect'));
 		}
@@ -108,8 +136,10 @@ class AchatsController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Achat.' . $this->Achat->primaryKey => $id),'recursive'=>0);
-			$this->request->data = $this->Achat->find('first', $options);
+                    $options = array('conditions' => array('Achat.' . $this->Achat->primaryKey => $id),'recursive'=>0);
+                    $this->request->data = $this->Achat->find('first', $options);
+                    $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
+                    $this->set('activites',$activites);                          
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -160,40 +190,20 @@ class AchatsController extends AppController {
                 endif;
                 $this->set('keywords',$keywords);
                 if($keywords!= ''):
-                    $arkeywords = explode(' ',trim($keywords));            
-                    $listactivite = $this->requestAction('activites/find_str_id_cercle_activite/'.userAuth('id'));
-                    switch ($filtre){
-                        case 'toutes':
-                        case null: 
-                        case '<':   
-                            if (count($listactivite)>0):
-                            $newconditions[]="Activite.id IN (".$listactivite.')';
-                            $factivite = "toutes les activités";
-                            endif;
-                            break;                 
-                        default :
-                            $newconditions[]="Activite.id='".$filtre."'";
-                            $activite = $this->Achat->Activite->find('first',array('fields'=>array('Activite.NOM'),'conditions'=>array('Activite.id'=>$filtre)));
-                            $factivite = "l'activité ".$activite['Activite']['NOM'];
-                            break;                      
-                    }  
-                    $this->set('factivite',$factivite);            
-                    $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
-                    $this->set('activites',$activites); 
-                    $newconditions[] = array("Activite.id IN (".$listactivite.')');
+                    $arkeywords = explode(' ',trim($keywords));        
+                    $listactivite = $this->get_visibility();
+                    $getfiltre = $this->get_achat_filtre_filter($filtre, $listactivite);
+                    $this->set('factivite',$getfiltre['filter']);  
+                    $newconditions = array($getfiltre['condition']);
                     foreach ($arkeywords as $key=>$value):
                         $ornewconditions[] = array('OR'=>array("Achat.DATE LIKE '%".$value."%'","Activite.NOM LIKE '%".$value."%'","Achat.LIBELLEACHAT LIKE '%".$value."%'","Achat.DESCRIPTION LIKE '%".$value."%'"));
                     endforeach;
-                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
                     $conditions = array($newconditions,'OR'=>$ornewconditions);
-                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions));                    
-                    $this->Achat->recursive = 0;
+                    $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                    
                     $this->set('achats', $this->paginate());
-                    $this->Session->delete('xls_export');
-                    $export = $this->Achat->find('all',array('conditions'=>$newconditions));
-                    $this->Session->write('xls_export',$export);     
+                    $this->get_export($conditions);
                     $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
-                    $this->set('activites',$activites);   
+                    $this->set('activites',$activites);  
                 else:
                     $this->redirect(array('action'=>'index',$filtre));
                 endif;
@@ -211,10 +221,5 @@ class AchatsController extends AppController {
 		$data = $this->Session->read('xls_export');
 		$this->set('rows',$data);
 		$this->render('export_xls','export_xls');
-	}    
-        
-    public function returnTo($pos=null){
-        
-    }        
-             
+	}        
 }

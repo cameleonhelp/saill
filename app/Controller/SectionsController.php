@@ -159,14 +159,15 @@ class SectionsController extends AppController {
             return $sections;
         }
         
-        //TODO : ajouter des méthodes pour lister les sections de mes cercles à partir des utilisateurs
+        
         public function get_all($visibility=null) {
             if($visibility==null):
                 $conditions[] = "1=1";
             elseif ($visibility != '' && userAuth('WIDEAREA')==0):
                 $conditions[] = 'Section.id = '.userAuth('section_id');
             elseif ($visibility != '' && userAuth('WIDEAREA')!=0):
-                $conditions[] = "Utilisateur.section_id IN (".$visibility.")";            
+                $sections = $this->requestAction('utilisateurs/get_str_section_utilisateurs/');
+                $conditions[] = "Section.id IN (".$sections.")";            
             else:
                 $conditions[] = 'Section.id = '.userAuth('section_id');
             endif;
@@ -179,7 +180,8 @@ class SectionsController extends AppController {
             elseif ($visibility != '' && userAuth('WIDEAREA')==0):
                 $conditions[] = 'Section.id = '.userAuth('section_id');
             elseif ($visibility != '' && userAuth('WIDEAREA')!=0):
-                $conditions[] = "Utilisateur.section_id IN (".$visibility.")";            
+                $sections = $this->requestAction('utilisateurs/get_str_section_utilisateurs/');
+                $conditions[] = "Section.id IN (".$sections.")";            
             else:
                 $conditions[] = 'Section.id = '.userAuth('section_id');
             endif;

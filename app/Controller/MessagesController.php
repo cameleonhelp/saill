@@ -44,6 +44,8 @@ class MessagesController extends AppController {
                 $newconditions[]= $this->get_visibilty();
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));    
 		$this->set('messages', $this->paginate());
+                $cercles = $this->requestAction('entites/get_all');
+                $this->set(compact('cercles'));                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -151,18 +153,24 @@ class MessagesController extends AppController {
  * @return les messages actifs
  */        
         public function activeMessage() {
-            $today = date('Y-m-d');
+            $newconditions= is_array($this->get_visibilty()) ? $this->get_visibilty() : array($this->get_visibilty());
+            $today = date('Y-m-d');            
+            $conditions = array("OR" => array('Message.DATELIMITE IS NULL','Message.DATELIMITE >=' =>'0000-00-00','Message.DATELIMITE >=' => $today));
+            $conditions = array_merge($conditions,$newconditions);
             if(isset($this->params['requested'])) { //s’il s’agit de l’appel pour l’élément
-                $activeMessages = $this->Message->find('all',array('conditions' => array("OR" => array('Message.DATELIMITE IS NULL','Message.DATELIMITE >=' =>'0000-00-00','Message.DATELIMITE >=' => $today),"OR" => array('Message.entite_id IS NULL','Message.entite_id' => 0,'Message.entite_id' => userAuth('entite_id'))),'order'=>array('Message.id asc'),'recursive'=>-1));
+                $activeMessages = $this->Message->find('all',array('conditions' => $conditions,'order'=>array('Message.id asc'),'recursive'=>-1));
                 return $activeMessages;
             }
             return null;
         }
         
         public function listMessages(){
-            $today = date('Y-m-d');
+            $newconditions= is_array($this->get_visibilty()) ? $this->get_visibilty() : array($this->get_visibilty());
+            $today = date('Y-m-d');            
+            $conditions = array("OR" => array('Message.DATELIMITE IS NULL','Message.DATELIMITE >=' =>'0000-00-00','Message.DATELIMITE >=' => $today));
+            $conditions = array_merge($conditions,$newconditions);
             $messages="";
-            $activeMessages = $this->Message->find('all',array('fields'=>array('Message.LIBELLE'),'conditions' => array("OR" => array('Message.DATELIMITE' => NULL,'Message.DATELIMITE >=' => $today),"OR" => array('Message.entite_id IS NULL','Message.entite_id' => '','Message.entite_id' => userAuth('entite_id'))),'order'=>array('Message.id asc'),'recursive'=>-1));
+            $activeMessages = $this->Message->find('all',array('fields'=>array('Message.LIBELLE'),'conditions' => $conditions,'order'=>array('Message.id asc'),'recursive'=>-1));
             foreach ($activeMessages as $activeMessage) {
                     $messages .=  '"'.str_replace('"', "'", $activeMessage['Message']['LIBELLE']).'",';            
             }   

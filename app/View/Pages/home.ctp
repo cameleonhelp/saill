@@ -37,16 +37,12 @@ $this->set('title_for_layout','Accueil');
                         <br/>
                         Nous espérons que ce site vous facilitera votre restitution d'activité et un meilleur partage de l'information.
                     </div>                
-                    <div class="carousel-caption">
-                    </div>
                 </div>
                 <?php 
                 if (isset($activeMessages)):
                     foreach ($activeMessages as $activeMessage) { ?>
                         <div class="item">
                             <div class="well well-small top-header-orange"><?php echo $activeMessage['Message']['LIBELLE']; ?></div>
-                            <div class="carousel-caption">
-                            </div>
                         </div>                           
                 <?php    }
                 endif;

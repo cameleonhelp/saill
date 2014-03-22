@@ -126,6 +126,16 @@ class ActivitesreellesController extends AppController {
             endif;  
         }
         
+        public function get_all_utilisateurs_for_saisie($visibility){
+            if($visibility == null):
+                return $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Utilisateur.DATEDEBUTACTIF','Utilisateur.FINMISSION'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.id' => 'asc')));
+            elseif ($visibility!=''):
+                return $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Utilisateur.DATEDEBUTACTIF','Utilisateur.FINMISSION'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.id  IN ('.$visibility.')','Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.id' => 'asc')));
+            else:
+                return $this->Activitesreelle->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Utilisateur.DATEDEBUTACTIF','Utilisateur.FINMISSION'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.id'=>userAuth('id'),'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.id' => 'asc')));
+            endif;  
+        }        
+        
         public function get_activitesreelle_groupby_date_user($conditions){
             return $this->Activitesreelle->find('all',array('fields'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','COUNT(Activitesreelle.DATE) AS NBACTIVITE'),'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),'order'=>array('CONCAT(Utilisateur.NOM," ",Utilisateur.PRENOM)' => 'asc','Activitesreelle.DATE' => 'desc' ),'conditions'=>$conditions,'recursive'=>0));
         }
@@ -134,10 +144,12 @@ class ActivitesreellesController extends AppController {
             $result = array();
             switch ($id){                  
                 case 'facture':
+                case 'tous':                    
                 case null:
                     $result['condition']="Activitesreelle.VEROUILLE = 0";
                     $result['filter'] = "toutes les feuilles de temps à facturer";
-                    break;                      
+                    break;   
+                    
             }  
             return $result;
         } 
@@ -264,7 +276,7 @@ class ActivitesreellesController extends AppController {
                     endif;
                 }
                 $utilisateur = $this->requestAction('utilisateurs/find_all_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
-                $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
+                $activites = $this->requestAction('activites/find_all_cercle_activite_and_indisponibility/'.userAuth('id'));
                 $domaines = $this->requestAction('domaines/get_list');
                 $this->set(compact('utilisateur','activites','domaines'));
                 $this->set_request_data_activitesreelle($action_id);           
@@ -347,7 +359,7 @@ class ActivitesreellesController extends AppController {
                    endif;
 		} else {
                 $utilisateur = $this->requestAction('utilisateurs/find_all_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
-                $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
+                $activites = $this->requestAction('activites/find_all_cercle_activite_and_indisponibility/'.userAuth('id'));
                 $domaines = $this->requestAction('domaines/get_list');
                 $activitesreelles = $this->get_activitesreelle_all_for_date($id);
                 $this->set(compact('utilisateur','activites','domaines','activitesreelles'));                    
@@ -726,10 +738,22 @@ class ActivitesreellesController extends AppController {
                         break;
             endswitch;
             $indisponibilites = $this->Activitesreelle->query($viewabsences);
-            $cercles = $this->requestAction('entites/find_all_cercle/'.userAuth('id'));
+            $cercles = $this->requestAction('entites/find_all_cercle_not_empty/'.userAuth('id'));
             $this->set(compact('indisponibilites','utilisateurs','cercles'));
         }
         
+    public function get_list_responsables($visibility){
+        $result = null;
+        if($visibility == null):
+            $result = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.profil_id >1','Utilisateur.profil_id =-2')),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+        elseif($visibility!=''):
+            $result = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.ACTIF'=>1,'Utilisateur.id IN ('.$visibility.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+        else:
+            $result = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.profil_id >1','Utilisateur.profil_id =-2')),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+        endif;
+        return $result;
+    }    
+    
 /**
  * rapport
  */        
@@ -776,10 +800,11 @@ class ActivitesreellesController extends AppController {
                 foreach($listeagentsavecsaisie as $agent):
                     $listein .= $agent['Activitesreelle']['utilisateur_id'].',';
                 endforeach;
-                $destinataires = $this->Activitesreelle->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id in ('.substr_replace($listein ,"",-1).')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
-                $this->set('destinataires',$destinataires);  
-                $domaines = $this->Activitesreelle->Activite->Projet->find('list',array('fields'=>array('id','NOM'),'order'=>array('Projet.NOM'),'recursive'=>-1));
-                $this->set('domaines',$domaines);                
+                $listuser = $this->get_visibility();
+                $destinataires = $this->get_list_responsables($listuser);                 
+                $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.userAuth('id'));
+                $domaines = $this->requestAction('projets/get_list_id_nom_projets/',array('pass'=>array($listprojets)));   
+                $this->set(compact('destinataires','domaines')); 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -1381,7 +1406,24 @@ class ActivitesreellesController extends AppController {
             endif;
         }
         
+        public function get_visibility_user_activity(){
+            $list = '';
+            if(userAuth('profil_id')==1):
+                return '';
+            else:
+                $visibility = $this->get_visibility();
+                $users = $this->get_all_utilisateurs_for_saisie($visibility);
+                foreach($users as $user):
+                    $list .= $user['Utilisateur']['id'].',';
+                endforeach;
+                $list = strlen($list) > 1 ? substr_replace($list ,"",-1) : '0';
+                return " AND activitesreelles.utilisateur_id IN (".$list.") ";
+            endif;
+        }
+        
         public function getActivitesReelles($mois,$annee){
+            $visibility = $this->get_visibility_user_activity();
+            
             $lastMonthDay = $annee.'-'.$mois.'-'.date('t');
             $firstMonthDay = startWeek($annee.'-'.$mois.'-01');
             $sql = "CREATE VIEW SAISIE AS
@@ -1389,7 +1431,7 @@ class ActivitesreellesController extends AppController {
                     FROM activitesreelles
                     LEFT JOIN utilisateurs ON activitesreelles.utilisateur_id = utilisateurs.id
                     WHERE activitesreelles.DATE BETWEEN '".$firstMonthDay."' AND '".$lastMonthDay."'
-                        AND utilisateurs.profil_id > 0
+                    AND utilisateurs.profil_id > 0 ".$visibility."
                     GROUP BY activitesreelles.utilisateur_id
                     ORDER BY CONCAT(utilisateurs.NOM,' ',utilisateurs.PRENOM) ASC";
             $select = "SELECT * FROM SAISIE"; 
@@ -1401,7 +1443,8 @@ class ActivitesreellesController extends AppController {
         }       
         
         public function saisieVide($mois,$annee){
-            $utilisateurs = $this->Activitesreelle->Utilisateur->find('all',array('conditions'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.ACTIF'=>1),'recursive'=>-1));
+            $utilisateurs = $this->requestAction('utilisateurs/find_all_cercle_utilisateur',array('pass'=>array(userAuth('id'),'0','1')));
+            
             $allIdUsers = array();
             foreach($utilisateurs as $utilisateur):
                 $allIdUsers[] = $utilisateur['Utilisateur']['id'];

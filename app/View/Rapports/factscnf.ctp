@@ -91,13 +91,13 @@
         <?php endif; ?>
         <?php endforeach; ?>
     </tbody>  
-    <tfooter>
+    <tfoot>
     <tr>
         <td colspan="6" class="footer" style="text-align:right;">Total :</td>
         <td class="footer" id="total" style="text-align:center;" nowrap></td>
         <td class="footer" colspan="4" style="text-align:left;">&nbsp;</td>
     </tr> 
-    </tfooter>    
+    </tfoot>    
 </table>
 <?php endif; ?>
 <?php if(isset($results) && count($results)==0) : ?>
@@ -106,7 +106,35 @@
 </div>
 <script>
 $(document).ready(function (){ 
-    $("table").tablesorter();
+   $("table").tablesorter({
+        headers: {
+            6:{filter:false}
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_saveFilters : true,
+            filter_useParsedData : true,
+            filter_startsWith : false,
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    }).bind('filterEnd',function(e,t){
+        $("#total").html(newSumOfColumns('tr:not(.filtered) > td.nb','j'));
+        $("#totalfrais").html(newSumOfColumns('tr:not(.filtered) > td.frais','€'));
+    });
+            
+    function newSumOfColumns(id,symbole) {
+        var tot = 0;
+        $(id).each(function() {
+          value = $(this).html()=='' ? 0: $(this).html();
+          tot += parseFloat(value);
+        });
+        return parseFloat(tot).toFixed(2)+" "+symbole;
+     };    
     function sumOfColumns(id,type) {
         var tot = 0;
         $("."+id).each(function() {

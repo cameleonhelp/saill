@@ -54,13 +54,13 @@
             </tr>           
             <?php endforeach; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td colspan="2" class="footer" style="text-align:right;">Total :</td>
             <td class="footer" id="totaletp1" style="text-align:center;"></td>
             <td class="footer" id="totalcharges1" style="text-align:center;"></td>
 	</tr> 
-        </tfooter>
+        </tfoot>
     </table>
 <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Détail de la répartition des plans de charge</div><br>
@@ -85,13 +85,13 @@
             </tr>           
             <?php endforeach; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td colspan="3" class="footer" style="text-align:right;">Total :</td>
             <td class="footer" id="totaletp" style="text-align:center;"></td>
             <td class="footer" id="totalcharges" style="text-align:center;"></td>
 	</tr> 
-        </tfooter>
+        </tfoot>
     </table>
 </div>
 <?php if(isset($rapportresults) && $israpport==0) : ?>

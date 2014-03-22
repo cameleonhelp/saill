@@ -63,9 +63,23 @@
 </div>
 <script>
 $(document).ready(function (){ 
-   $("table").tablesorter(
-           { headers: { 1: { sorter: 'fr-date' } }}
-   );
+   $("table").tablesorter({ 
+        headers: { 
+            0: {filter:false},
+            1: { sorter: 'fr-date',filter:false},
+            4: {filter:false},
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_useParsedData : false,            
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    }); 
    
    $(document).on('click','#ActionSelectAll',function() {
         if($(this).is(':checked')){

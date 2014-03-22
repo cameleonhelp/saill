@@ -114,7 +114,7 @@
    <div id="charthistocontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'environnements par mois, lot, application, périmètre et état</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped sizemax" id="datatable">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped sizemax" id="sorttable">
         <thead>
             <tr>
                 <th>Mois</th>
@@ -137,20 +137,65 @@
             </tr>           
             <?php endforeach; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td class="footer nowrap" colspan='5' style="text-align:right;">Total :</td>
             <td class="footer nowrap" id="totalall" style="text-align:center;"></td>            
 	</tr> 
-        </tfooter>
+        </tfoot>
     </table>
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped sizemax" id="datatable" style="display:none;">
+        <thead>
+            <tr>
+                <th>Mois</th>
+                <th>Lot</th>
+                <th>Application</th>
+                <th>Périmètre</th>
+                <th>Etats</th>
+                <th>Nombres</th>
+            </tr>           
+        </thead>
+        <tbody>
+            <?php foreach($results as $result): ?>
+            <tr>
+                <td><?php echo strMonth($result[0]['MOIS']); ?></td>
+                <td><?php echo $result['lots']['LOT']; ?></td>
+                <td><?php echo $result['applications']['APPLICATION']; ?></td>                
+                <td><?php echo $result['perimetres']['PERIMETRE']; ?></td>
+                <td><?php echo $result['etats']['ETAT']; ?></td>
+                <td width='40px' style='text-align: center' class='totalapp'><?php echo intval($result[0]['NB']); ?></td>
+            </tr>           
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+	<tr>
+            <td class="footer nowrap" colspan='5' style="text-align:right;">Total :</td>
+            <td class="footer nowrap" id="totalall" style="text-align:center;"></td>            
+	</tr> 
+        </tfoot>
+    </table>    
 <?php endif; ?> 
 <?php if($israpport==0 && isset($results)): ?> 
     <div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
 <?php endif; ?>   
 <script>
 $(document).ready(function (){ 
-    $("table").tablesorter();
+    $("#sorttable").tablesorter({
+        headers: { 5: { filter: false} },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_useParsedData : false,
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    }).bind('filterEnd',function(e,t){
+        $("#totalall").html(newSumOfColumns('tr:not(.filtered) > td.totalapp',''));
+    });
+    
     $(document).on('click','#ExpressionbesoinSelectAll',function() {
         if($(this).is(':checked')){
             $('#ExpressionbesoinEtatId option').prop('selected', 'selected');
@@ -162,6 +207,15 @@ $(document).ready(function (){
    $(document).on('click','#ExpressionbesoinEtatId',function() {
             $('#ExpressionbesoinSelectAll').prop('checked', false);
     }); 
+    
+    function newSumOfColumns(id,symbole) {
+        var tot = 0;
+        $(id).each(function() {
+          value = $(this).html()=='' ? 0: $(this).html();
+          tot += parseFloat(value);
+        });
+        return parseFloat(tot).toFixed(0)+" "+symbole;
+     };    
     
     function sumOfColumns(id,symbole) {
         var tot = 0;

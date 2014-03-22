@@ -14,6 +14,40 @@ class VersionsController extends AppController {
  */
         public $paginate = array('limit' => 25,'order'=>array('Version.NOM'=>'asc'));
 	public $components = array('History','Common');
+        
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            if($visibility == null):
+                return "1=1";
+            elseif ($visibility !=""):
+                return "Lot.entite_id IN (".$visibility.')'; 
+            else:
+                return "Lot.entite_id=".userAuth('entite_id');
+            endif;
+        }
+        
+        public function get_version_actif_filter($actif){
+            $result = array();
+            switch($actif):
+                case null:
+                case 1:
+                    $result['condition']="Version.ACTIF=1";
+                    $result['filter'] = 'actifs';
+                    break;
+                case 0:
+                    $result['condition']="Version.ACTIF=0";
+                    $result['filter']= 'inactifs';
+                    break;
+            endswitch;
+            return $result;
+        }
 
 /**
  * index method
@@ -23,41 +57,14 @@ class VersionsController extends AppController {
 	public function index($actif=null) {
             $this->set('title_for_layout','Versions');
             if (isAuthorized('versions', 'index')) :  
-                switch($actif):
-                    case null:
-                    case 1:
-                        $newconditions[]="Version.ACTIF=1";
-                        $strfilter = 'actifs';
-                        break;
-                    case 0:
-                        $newconditions[]="Version.ACTIF=0";
-                        $strfilter = 'inactifs';
-                        break;
-                endswitch;
-                $this->set('strfilter',$strfilter);
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                
-		$this->Version->recursive = 0;
+                $getactif = $this->get_version_actif_filter($actif);
+                $this->set('strfilter',$getactif['filter']);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$getactif['condition'],'recursive'=>0));                
 		$this->set('versions', $this->paginate());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
             endif;                 
-	}
-
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-                $this->set('title_for_layout','Versions');
-		if (!$this->Version->exists($id)) {
-			throw new NotFoundException(__('Versions incorrecte'));
-		}
-		$options = array('conditions' => array('Version.' . $this->Version->primaryKey => $id));
-		$this->set('version', $this->Version->find('first', $options));
 	}
 
 /**
@@ -183,33 +190,17 @@ class VersionsController extends AppController {
             endif;                  
 	}
         
-        public function search(){
-            $this->set('title_for_layout','Versions');
-            if (isAuthorized('versions', 'index')) :
-                $keyword=isset($this->params->data['Version']['SEARCH']) ? $this->params->data['Version']['SEARCH'] : ''; 
-                $newconditions = array('OR'=>array("Version.NOM LIKE '%".$keyword."%'","Version.PVU LIKE '%".$keyword."%'"));
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
-                $this->autoRender = false;
-                $this->Version->recursive = 0;
-                $this->set('versions', $this->paginate());                  
-                $this->render('index');
-            else :
-                $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
-            endif;  
-        }
-        
         public function get_select($actif=1){
-            $listentite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
-            $conditions[]="Lot.entite_id IN (".$listentite.')';     
+            $listentite = $this->get_visibility();
+            $conditions[]=$this->get_restriction($listentite);     
             $conditions[] = 'Version.ACTIF='.$actif;
             $list = $this->Version->find('list',array('fields'=>array('Version.id','Version.NOM'),'conditions'=>$conditions,'order'=>array('Version.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }
         
         public function get_list($actif=1){
-            $listentite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
-            $conditions[]="Lot.entite_id IN (".$listentite.')';     
+            $listentite = $this->get_visibility();
+            $conditions[]=$this->get_restriction($listentite);
             $conditions[] = 'Version.ACTIF='.$actif;            
             $list = $this->Version->find('all',array('fields'=>array('Version.id','Version.NOM'),'conditions'=>$conditions,'order'=>array('Version.NOM'=>'asc'),'recursive'=>0));
             return $list;

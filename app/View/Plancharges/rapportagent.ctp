@@ -56,7 +56,7 @@
             </tr>           
             <?php endforeach; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td colspan="3" class="footer" style="text-align:right;">Total :</td>
             <td class="footer" id="totaletp1" style="text-align:center;"></td>
@@ -64,7 +64,7 @@
             <td class="footer"></td>
             <td class="footer" id="totalcout1" style="text-align:center;"></td>
 	</tr> 
-        </tfooter>
+        </tfoot>
     </table>
     <?php echo $this->Html->link('Envoyer par mail à l\'agent',array('controller'=>'plancharges','action'=>'sendmail'),array('type'=>'button','class' => 'btn btn-sm btn-default pull-right')); ?>
 </div>

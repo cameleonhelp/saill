@@ -222,7 +222,7 @@ class AppModel extends Model {
  * @return null
  */        
         public function get_entite_nom($id){
-            if($id != null):
+            if($id != null &&  $id!=0):
                 $sql = "SELECT NOM FROM entites AS Entite WHERE id = ".$id." LIMIT 1";
                 $result = $this->query($sql);
                 return $result[0]['Entite']['NOM'];

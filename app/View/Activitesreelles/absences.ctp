@@ -121,6 +121,9 @@
         </tbody>
     </table>
     </div>
+<form method="POST" enctype="multipart/form-data" action="save.php" id="myForm">
+    <input type="hidden" name="img_val" id="img_val" value="" />
+</form>
 <script>
      $(document).ready(function () {
          $("#previousMonth").on('click', function(e){
@@ -172,16 +175,59 @@
              var id = $(this).attr('data-id');
              $('#ActivitesreellePass').val(id);
              $('#ActivitesreelleAbsencesForm').submit();
-         });   
+         });         
          
+        var downloadDataURI = function(options) {
+          if(!options) {
+            return;
+          }
+          $.isPlainObject(options) || (options = {data: options});
+          if(!$.browser.webkit) {
+            location.href = options.data;
+            
+          }
+          options.filename || (options.filename = "download." + options.data.split(",")[0].split(";")[0].substring(5).split("/")[1]);
+          options.url || (options.url = "http://download-data-uri.appspot.com/");
+          $('<form method="post" action="'+options.url+'" style="display:none"><input type="hidden" name="filename" value="'+options.filename+'"/><input type="hidden" name="data" value="'+options.data+'"/></form>').submit().remove();
+        }   
+        
+function downloadWithName(uri, name) {
+    var link = document.createElement("a");
+    link.download = name;
+    link.href = uri;
+    eventFire(link, "click");
+}     
+
+function eventFire(el, etype){
+    if (el.fireEvent) {
+        (el.fireEvent('on' + etype));
+    } else {
+        var evObj = document.createEvent('Events');
+        evObj.initEvent(etype, true, false);
+        el.dispatchEvent(evObj);
+    }
+}
+
          $("#canvas").on('click',function(e){
-            html2canvas($("#capture"),{
-                useCORS:true,
-                onrendered: function (canvas) {
-                    var oCanvas = canvas.toDataURL('image/png');
-                    Canvas2Image.saveAsPNG(canvas);
-                }
-            });
+            $('#capture').html2canvas({
+                    onrendered: function (canvas) {
+                        var img = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+                        var titre = 'Calendrier <?php echo $month.' '.$year; ?>.png';
+                        if(!$.browser.webkit) {
+                            //sauvegarde sous firefox impossible de changer le nom du fichier
+                            Canvas2Image.saveAsPNG(canvas,false);
+                        } else {
+                            //sauvegarde sous Chrome avec nom du fichier forcé
+                            downloadWithName(img, titre);
+                        }
+                        /*    downloadDataURI({
+                              filename: titre,
+                              data: img
+                            });
+                            */
+                        //
+                    }
+                });             
          });
      });
 </script>

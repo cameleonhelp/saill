@@ -14,59 +14,106 @@ class PlanchargesController extends AppController {
         'order' => array('Plancharge.ANNEE' => 'asc','Contrat.NOM' => 'asc'),
         //'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),
         );
+        
+        public function get_visibility(){
+            if(userAuth('profil_id')==1):
+                return null;
+            else:
+                return $this->requestAction('assoprojetentites/find_str_id_contrats/'.userAuth('id'));
+            endif;
+        }
+        
+        public function get_restriction($visibility){
+            if($visibility == null):
+            
+            elseif($visibility!=''):
+                
+            endif;
+        }
+        
+        public function get_plancharge($id){
+            $condition[]="Plancharge.id=".$id;
+            return $this->Plancharge->find('first',array('conditions'=>$condition,'recursive'=>0));
+        }
+        
+        public function get_plancharge_chrono_filter($annee){
+            $result = array();
+            switch ($annee){
+                case 'tous':
+                case null:                        
+                    $result['condition']="1=1";
+                    $result['filter'] = "de tous les plans de charge pour toutes les années";
+                    break;                       
+                default:
+                    $result['condition']="Plancharge.ANNEE = '".$annee."'";
+                    $result['filter'] = "tous les plans de charge de ".$annee;
+                    break;                                         
+            }  
+            return $result;
+        }
+        
+        public function get_plancharge_contrat_filter($contrat_id,$visibility){
+            $result = array();
+            switch ($contrat_id){
+                case 'tous':
+                case null:
+                    if($visibility==null):
+                        $result['condition']="Plancharge.contrat_id > 1";
+                    elseif($visibility !=""):
+                        $result['condition']="Plancharge.contrat_id IN (".$visibility.')';
+                    else :
+                        $result['condition']="Plancharge.contrat_id > 1";
+                    endif;
+                    $result['filter'] = "de tous les contrats";
+                    break;
+                default:
+                    $result['condition']="Plancharge.contrat_id = ".$contrat_id;
+                    $contrat = $this->requestAction('contrats/get_nom/'.$contrat_id);
+                    $result['filter'] = "du contrat :".$contrat;
+                    break;                                         
+            }  
+            return $result; 
+        }
+        
+        public function get_planchrage_visible_filter($isvisible){
+            $result = array();
+            switch ($isvisible){
+                case '1':
+                case null:
+                    $result['condition']="Plancharge.VISIBLE=1";
+                    break;
+                default:
+                    $result['condition']="1=1";
+                    break;                                         
+            }  
+            return $result; 
+        }
+        
+        public function get_plancharge_all_annee(){
+            return $this->Plancharge->find('all',array('fields'=>array('Plancharge.ANNEE'),'group'=>'Plancharge.ANNEE','recursive'=>-1));
+        }
             
 /**
  * index method
  *
  * @return void
  */
-	public function index($annee=null,$contrat_id=null,$isvisble=null) {
+	public function index($annee=null,$contrat_id=null,$isvisible=null) {
             $this->set('title_for_layout','Plans de charge'); 
             if (isAuthorized('plancharges', 'index')) :
-                $listcontrat = $this->requestAction('assoprojetentites/find_str_id_contrats/'.userAuth('id'));
-                switch ($annee){
-                    case 'tous':
-                    case null:                        
-                        $newconditions[]="1=1";
-                        $fannee = "de tous les plans de charge pour toutes les années";
-                        break;                       
-                    default:
-                        $newconditions[]="Plancharge.ANNEE = '".$annee."'";
-                        $fannee = "tous les plans de charge de ".$annee;
-                        break;                                         
-                }  
-                $this->set('fannee',$fannee);    
-                switch ($contrat_id){
-                    case 'tous':
-                    case null:
-                        $newconditions[]="Plancharge.contrat_id IN (".$listcontrat.')';
-                        $fprojet = "de tous les contrats";
-                        break;
-                    default:
-                        $newconditions[]="Plancharge.contrat_id = ".$contrat_id;
-                        $contrat = $this->Plancharge->Contrat->find('first',array('fields'=>array('Contrat.NOM'),'conditions'=>array('Contrat.id'=>$contrat_id),'recursive'=>-1));
-                        $fprojet = "du contrat :".$contrat['Contrat']['NOM'];
-                        break;                                         
-                }  
-                switch ($isvisble){
-                    case '1':
-                    case null:
-                        $newconditions[]="Plancharge.VISIBLE=1";
-                        break;
-                    default:
-                        $newconditions[]="1=1";
-                        break;                                         
-                }  
-                $this->set('fprojet',$fprojet);                  
-		$this->Plancharge->recursive = 0;
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));                   
+                $listcontrat = $this->get_visibility();
+                $getchrono = $this->get_plancharge_chrono_filter($annee);
+                $getcontrat = $this->get_plancharge_contrat_filter($contrat_id, $listcontrat);
+                $getvisible = $this->get_planchrage_visible_filter($isvisible);
+                $this->set('fannee',$getchrono['filter']);    
+                $this->set('fprojet',$getcontrat['filter']); 
+                $newconditions = array($getchrono['condition'],$getcontrat['condition'],$getvisible['condition']);
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                   
 		$this->set('plancharges', $this->paginate());
-                $annees = $this->Plancharge->find('all',array('fields'=>array('Plancharge.ANNEE'),'group'=>'Plancharge.ANNEE','recursive'=>-1));
-                $this->set('annees',$annees);
-                $contrats = $this->Plancharge->find('all',array('fields'=>array('Plancharge.contrat_id','Contrat.NOM'),'conditions'=>array('Contrat.id IN ('.$listcontrat.')'),'group'=>'Contrat.NOM','recursive'=>0));
-                $this->set('contrats',$contrats);  
-                $addcontrats = $this->Plancharge->Contrat->find('list',array('fields'=>array('Contrat.id','Contrat.NOM'),'conditions'=>array('Contrat.ACTIF'=>1,'Contrat.id IN ('.$listcontrat.')'),'order'=>'Contrat.NOM'));
-                $this->set('addcontrats',$addcontrats);                
+                $contrats = $this->requestAction('contrats/get_all_no_absence');
+                $addcontrats = $this->requestAction('contrats/get_list_no_absence');
+                $annees = $this->get_plancharge_all_annee();
+                $this->set(compact('annees','contrats','addcontrats'));             
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();            
@@ -79,14 +126,13 @@ class PlanchargesController extends AppController {
  * @return void
  */
 	public function addnewpc() {
+            $this->set('title_for_layout','Plan de charge');
             if (isAuthorized('plancharges', 'add')) :
-                $this->set('title_for_layout','Plan de charge');                  
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Plancharge->validate = array();
                         $this->History->goBack(1);
                     else:        
-                        //TODO à partir du contrat en déduire l'entité et ajouter cette information à l'objet $this->request->data
                         $this->request->data['Plancharge']['entite_id'] = $this->requestAction('assoprojetentites/find_first_entite_for_contrat/'.$this->request->data['Plancharge']['contrat_id']);
 			$this->Plancharge->create();
 			if ($this->Plancharge->save($this->request->data)) {
@@ -112,8 +158,8 @@ class PlanchargesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
+            $this->set('title_for_layout','Plan de charge');
             if (isAuthorized('plancharges', 'edit')) :
-                $this->set('title_for_layout','Plan de charge'); 
                 $id = $id==null ? $this->request->data['Plancharge']['id'] : $id;
 		if (!$this->Plancharge->exists($id)) {
 			throw new NotFoundException(__('Plan de charge incorrect'));

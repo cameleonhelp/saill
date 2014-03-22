@@ -114,7 +114,7 @@
     </table>    
     <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'actions par mois, par destinataire et par état</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table5">
         <thead>
             <tr>
             <th>Période</th>
@@ -133,18 +133,18 @@
             </tr>           
             <?php endforeach; ?>
         </tbody>
-        <tfooter>
+        <tfoot>
 	<tr>
             <td colspan="2" class="footer" style="text-align:right;">Total :</td>
             <td class="footer" id="total" style="text-align:center;"></td>
             <td class="footer" width="90px" style="text-align:left;">actions</td>
 	</tr> 
-        </tfooter>
+        </tfoot>
     </table>
     <?php if (isset($repartitions)): ?>
     <br />
         <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'actions par mois, par destinataire, par domaine et par état</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table2">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table3">
         <thead>
             <tr>
             <th>Période</th>
@@ -165,19 +165,19 @@
             </tr>           
             <?php endforeach; ?>
         </tbody>  
-        <tfooter>
+        <tfoot>
 	<tr>
             <td colspan="3" class="footer" style="text-align:right;">Total :</td>
             <td class="footer" id="totalrepartition" style="text-align:center;"></td>
             <td class="footer"> actions</td>
 	</tr> 
-        </tfooter>          
+        </tfoot>          
     </table>
     <?php endif; ?>   
     <?php if (isset($details)): ?>
     <br />
         <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Rapport détaillé des actions par utilisateur</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table4">
         <thead>
             <tr>
             <th width="10px"></th>
@@ -217,16 +217,98 @@ $(document).ready(function (){
             0: {
                 sorter: 'mois-annee'
             }
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_useParsedData : false,            
+            zebra : [ "normal-row", "alt-row" ]
         }
     });
    
    $(".table1").tablesorter({
         headers: {
+            0: {filter:false},
             1: {
                 sorter: 'mois-annee'
             }
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_useParsedData : false,            
+            zebra : [ "normal-row", "alt-row" ]
         }
     });
+    
+   $(".table3").tablesorter({
+        headers: {
+            0: {
+                sorter: 'mois-annee'
+            },
+            3: {filter:false}
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_useParsedData : false,            
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    }).bind('filterEnd',function(e,t){
+        $("#totalrepartition").html(newSumOfColumns('tr:not(.filtered) > td.nbrepartition',''));
+    });
+    
+   $(".table5").tablesorter({
+        headers: {
+            0: {
+                sorter: 'mois-annee'
+            },
+            2: {filter:false}
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_useParsedData : false,            
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    }).bind('filterEnd',function(e,t){
+        $("#total").html(newSumOfColumns('tr:not(.filtered) > td.nbaction',''));
+    });    
+    
+   $(".table4").tablesorter({
+        headers: {
+            0: {filter:false},
+            1: {
+                sorter: 'mois-annee'
+            }
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_useParsedData : false,            
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    });    
     
    $(document).on('click','#ActionSelectAll',function() {
         if($(this).is(':checked')){
@@ -251,6 +333,15 @@ $(document).ready(function (){
    $(document).on('click','#ActionDomaineId',function() {
             $('#ActionSelectAllDomaine').prop('checked', false);
     }); 
+        
+    function newSumOfColumns(id,symbole) {
+        var tot = 0;
+        $(id).each(function() {
+          value = $(this).html()=='' ? 0: $(this).html();
+          tot += parseFloat(value);
+        });
+        return parseFloat(tot).toFixed(0)+" "+symbole;
+     };
     
     function sumOfColumns(id) {
         var tot = 0;
@@ -258,7 +349,7 @@ $(document).ready(function (){
           tot += parseFloat($(this).html());
         });
         return tot.toFixed(2);
-     }   
+    };   
         
     $("#total").html(sumOfColumns('nbaction'));
     $("#totalrepartition").html(sumOfColumns('nbrepartition'));

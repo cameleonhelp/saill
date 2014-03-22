@@ -120,9 +120,11 @@ class ActionsController extends AppController {
     
     public function get_action_responsable_filter($id,$visibility){
         $result = array();
-        $nomlong = $this->Action->Utilisateur->recursive = 0;
-        $nomlong = $this->Action->Utilisateur->find('first',array('fields'=>array('Utilisateur.NOMLONG'),'conditions'=>array("Utilisateur.id"=>$id)));        
-        $result['nomlong'] = isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'];
+        $nomlong = '';
+        if($id != 'tous' && $id != 'equipe'):
+            $nomlong = $this->requestAction('utilisateurs/get_nomlong/'.$id);
+        endif;
+        $result['nomlong'] = $nomlong;
         if (areaIsVisible() || $id==userAuth('id')):
         switch ($id){
             case 'tous':   
@@ -146,12 +148,12 @@ class ActionsController extends AppController {
             case null :
                 //TODO : pose un problème pour le CONTRIBUTEURS
                 $result['condition']="(Action.destinataire='".userAuth('id')."' OR (CONTRIBUTEURS LIKE '%".userAuth('id').",%' OR CONTRIBUTEURS LIKE '%,".userAuth('id')."%' OR CONTRIBUTEURS = '".userAuth('id')."'))";
-                $result['filter'] = "dont le responsable est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
+                $result['filter'] = "dont le responsable est ".$nomlong ;
                 break;                      
             default :
                 //TODO : pose un problème pour le CONTRIBUTEURS
                 $result['condition']="(Action.destinataire='".$id."' OR (`CONTRIBUTEURS` LIKE '%".$id.",%' OR `CONTRIBUTEURS` LIKE '%,".$id."%' OR `CONTRIBUTEURS` = '".$id."'))";
-                $result['filter'] = "dont le responsable est ".isset($nomlong['Utilisateur']['NOMLONG']) ? $nomlong['Utilisateur']['NOMLONG'] : $nomlong['NOMLONG'] ;
+                $result['filter'] = "dont le responsable est ".$nomlong ;
                 break;                      
         }  
         else:
@@ -192,7 +194,7 @@ class ActionsController extends AppController {
         elseif($profil!= ''):
             $result = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.$profil.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
         else:
-            $result = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id >1'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+            $result = $this->Action->Utilisateur->find('all',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.profil_id >1','Utilisateur.profil_id =-2')),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
         endif;
         return $result;
     }
@@ -204,7 +206,7 @@ class ActionsController extends AppController {
         elseif($profil!= ''):
             $result = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id IN ('.$profil.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
         else:
-            $result = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.profil_id >1'),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
+            $result = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.profil_id >1','Utilisateur.profil_id =-2')),'order'=>array('Utilisateur.NOMLONG'=>'asc')));
         endif;
         return $result;
     }    
@@ -741,11 +743,11 @@ class ActionsController extends AppController {
                         $this->Session->write('details',$details);
                     endif;                      
                 endif;
-                $listuser = $this->requestAction('assoentiteutilisateurs/json_get_all_users/'. userAuth('id'));                  
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0','Utilisateur.id IN ('.$listuser.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
-                $this->set('destinataires',$destinataires);  
-                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
-                $this->set('domaines',$domaines);                
+                $listuser = $this->get_visibility();
+                $profil = $this->get_list_profil_autorised();
+                $destinataires = $this->get_list_responsables($profil, $listuser);
+                $domaines = $this->requestAction('domaines/get_list');
+                $this->set(compact('domaines','destinataires'));                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -771,7 +773,7 @@ class ActionsController extends AppController {
                     $this->Session->write('detailrapportresults',$detailrapportresult);                   
                 endif;
                 $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.userAuth('id'));
-                $projets = $this->Action->Activite->Projet->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Projet.ACTIF'=>1,'Projet.id IN ('.$listprojets.')'),'order'=>array('Projet.NOM'=>'asc'),'recursive'=>-1));
+                $projets = $this->requestAction('projets/get_list_id_nom_projets/',array('pass'=>array($listprojets)));
                 $this->set('projets',$projets);                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
@@ -799,11 +801,11 @@ class ActionsController extends AppController {
                     $this->Session->delete('details');
                     $this->Session->write('details',$details);                
                 endif;
-                $listuser = $this->requestAction('assoentiteutilisateurs/json_get_all_users/'. userAuth('id'));                  
-                $destinataires = $this->Action->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id > 0','Utilisateur.id IN ('.$listuser.')'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
-                $this->set('destinataires',$destinataires); 
-                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
-                $this->set('domaines',$domaines);                
+                $listuser = $this->get_visibility();
+                $profil = $this->get_list_profil_autorised();
+                $destinataires = $this->get_list_responsables($profil, $listuser);
+                $domaines = $this->requestAction('domaines/get_list');
+                $this->set(compact('domaines','destinataires'));                  
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
@@ -1215,8 +1217,8 @@ class ActionsController extends AppController {
                     $chartresult = $this->Action->find('all',array('fields'=>array('Action.domaine_id', 'COUNT(Action.id) AS NB','Action.NIVEAU'),'conditions'=>array('Action.domaine_id'=>$domaine,'Action.STATUT NOT IN ("terminée","livrée")','Action.NIVEAU >'=>0),'group'=>array('Action.NIVEAU'),'recursive'=>0));
                     $this->set('chartresults',$chartresult);                                      
                 endif; 
-                $domaines = $this->Action->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
-                $this->set('domaines',$domaines);                
+                $domaines = $this->requestAction('domaines/get_list');
+                $this->set(compact('domaines'));                  
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
                 throw new NotAuthorizedException();
