@@ -3,7 +3,7 @@ SAILL
 
 SAILL [Suivi d'Activités, d'Indisponibilité, des Livrables et de la Logistique] est un site pour suivre l'activité d'une équipe de développeurs, ainsi que le suivi logistique du matériel mis à disposition.
 
-SAILL2_MCD.mwb => Schéma de base de données 
+SAILL*.mwb => Schéma de base de données 
 
 ## Cette version s'appuie sur :
 
