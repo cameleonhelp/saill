@@ -1,10 +1,18 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('CakeEmail', 'Network/Email');
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Utilisateurs');
+App::import('Controller', 'Outils');
+App::import('Controller', 'Listediffusions');
+App::import('Controller', 'Dossierpartages');
+App::import('Controller', 'Entites');
+App::import('Controller', 'Sections');
 /**
  * Utiliseoutils Controller
  *
  * @property Utiliseoutil $Utiliseoutil
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class UtiliseoutilsController extends AppController {
         public $components = array('History','Common'); 
@@ -14,17 +22,55 @@ class UtiliseoutilsController extends AppController {
             'order' => array('Utiliseoutil.id' => 'desc'),
             );
         
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Ouvertures de droits" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }         
+        
         public function beforeFilter() {   
-            $this->Auth->allow(array('mailprogressstate','index','search'));
+            $this->Auth->allow(array('mailprogressstate','index','search','json_all_listes','json_all_outils','json_all_partages','json_all_user','get_all_outil'));
             parent::beforeFilter();
         }   
-        //TODO : Factoriser le plus possible pour faciliter la maintenance
+        
+        public function duplicatefrom(){
+            $this->autoRender = false;
+            $origine = $this->request->data['Utiliseoutil']['ORIGINE'];
+            $destinataire = $this->request->data['Utiliseoutil']['utilisateur_id'];
+            $ObjUtilisateurs = new UtilisateursController();
+            $nomlong = $ObjUtilisateurs->get_nomlong($origine);
+            $conditions[]='Utiliseoutil.utilisateur_id = '.$origine;
+            $all_droits = $this->Utiliseoutil->find('all',array('conditions'=>$conditions,'recursive'=>-1));
+            foreach ($all_droits as $droit):
+                $type = isset($droit['Utiliseoutil']['TYPE']) ? $droit['Utiliseoutil']['TYPE'] : null;
+                $droit_id = null;
+                if (isset($droit['Utiliseoutil']['outil_id']) && $droit['Utiliseoutil']['outil_id'] !=null) :
+                    $droit_id = $droit['Utiliseoutil']['outil_id'];
+                    $type = 'outil';
+                elseif (isset($droit['Utiliseoutil']['listediffusion_id']) && $droit['Utiliseoutil']['listediffusion_id'] !=null) :
+                    $droit_id = $droit['Utiliseoutil']['listediffusion_id'];
+                    $type = 'list';
+                elseif (isset($droit['Utiliseoutil']['dossierpartage_id']) && $droit['Utiliseoutil']['dossierpartage_id'] !=null) :
+                    $droit_id = $droit['Utiliseoutil']['dossierpartage_id'];
+                    $type = 'group';
+                endif;
+                $this->save_new($destinataire, $droit_id, $type,1);
+            endforeach;
+            $this->Session->setFlash(__(count($all_droits).' overtures des droits dupliquées depuis l\'utilisateur '.$nomlong,true),'flash_success');
+            $this->History->notmove();
+        }
         
         public function dupliquer(){
             $this->autoRender = false;
             $origine = $this->request->data['Utiliseoutil']['ORIGINE'];
             $destinataire = $this->request->data['Utiliseoutil']['utilisateur_id'];
-            $nomlong = $this->requestaction('utilisateurs/get_nomlong/'.$origine);
+            $ObjUtilisateurs = new UtilisateursController();
+            $nomlong = $ObjUtilisateurs->get_nomlong($origine);
             $conditions[]='Utiliseoutil.utilisateur_id = '.$origine;
             $all_droits = $this->Utiliseoutil->find('all',array('conditions'=>$conditions,'recursive'=>-1));
             foreach ($all_droits as $droit):
@@ -57,7 +103,8 @@ class UtiliseoutilsController extends AppController {
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/json_get_all_users_actif_nogenerique/'.userAuth('id'));
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return $ObjAssoentiteutilisateurs->json_get_all_users_actif_nogenerique(userAuth('id'));
             endif;
         }
         
@@ -104,7 +151,8 @@ class UtiliseoutilsController extends AppController {
                     break;                      
                 default :
                     $result['condition']="Utiliseoutil.utilisateur_id = '".$id."'";
-                    $nomlong = $this->requestaction('utilisateurs/get_nomlong/'.$id);
+                    $ObjUtilisateurs = new UtilisateursController();
+                    $nomlong = $ObjUtilisateurs->get_nomlong($id);
                     $result['filter'] = "de ".$nomlong;                     
             }
             return $result;
@@ -142,13 +190,14 @@ class UtiliseoutilsController extends AppController {
         public function get_new_etat($old_etat,$valideur=null){
             $result['newetat']='';
             $result['valideur']='';
+            $ObjSections = new SectionsController();
             switch ($old_etat) {
                 case 'Demandé':
                    $result['newetat'] = 'Pris en compte';
                    break;
                 case 'Pris en compte':
                    $result['newetat'] = 'En validation';
-                   $result['valideur'] = $valideur!=null ? $this->requestAction('sections/get_valideur/'.$valideur): '';                     
+                   $result['valideur'] = $valideur!=null ? $ObjSections->get_valideur($valideur): '';                     
                    break;                
                 case 'En validation':
                    $result['newetat'] = 'Validé';
@@ -209,14 +258,80 @@ class UtiliseoutilsController extends AppController {
             if($visibility == null):
                 $conditions =array('1=1');
             elseif ($visibility!=''):
-                $conditions = array('Utilisateur.id > 1','Utilisateur.profil_id > 0','Utilisateur.id IN ('.$visibility.')');
+                $conditions = array('Utilisateur.id IN ('.$visibility.')','Utilisateur.id > 1','Utilisateur.profil_id != -1');
             else:
-                $conditions =array('Utilisateur.id > 1','Utilisateur.profil_id > 0','Utilisateur.id ='.userAuth('id'));
+                $conditions =array('Utilisateur.id ='.userAuth('id'),'Utilisateur.id > 1','Utilisateur.profil_id != -1');
             endif;                      
             $conditions = array_merge_recursive($conditions,array($restriction));
             $utilisateurs = $this->Utiliseoutil->Utilisateur->find('list',array('fields' => array('id','NOMLONG'),'conditions'=>$conditions,'order'=>array('Utilisateur.NOMLONG'=>'asc'),'group'=>'Utilisateur.id','recursive'=>-1));
             return $utilisateurs;
         }       
+        
+        public function json_all_user(){
+            $this->autoRender = false;
+            $visibility = $this->get_visibility();
+            $restriction = $this->get_restriction();
+            if($visibility == null):
+                $conditions =array('1=1');
+            elseif ($visibility!=''):
+                $conditions = array('Utilisateur.id IN ('.$visibility.')','Utilisateur.id > 1','Utilisateur.profil_id != -1');
+            else:
+                $conditions =array('Utilisateur.id ='.userAuth('id'),'Utilisateur.id > 1','Utilisateur.profil_id != -1');
+            endif;                      
+            $conditions = array_merge_recursive($conditions,array($restriction));
+            $utilisateurs = $this->Utiliseoutil->Utilisateur->find('all',array('fields' => array('NOMLONG','id'),'conditions'=>$conditions,'order'=>array('Utilisateur.NOMLONG'=>'asc'),'group'=>'Utilisateur.id','recursive'=>-1));
+            $result = array();
+            foreach($utilisateurs as $user):
+                $result[$user['Utilisateur']['NOMLONG']]=$user['Utilisateur']['id'];
+            endforeach;
+            return json_encode($result);
+        } 
+        
+        public function json_all_outils(){
+            $this->autoRender = false;
+            $result = array();
+            $ObjOutils = new OutilsController();
+            $outils = $ObjOutils->get_all_outil();
+            foreach($outils as $obj):
+                $result[$obj['Outil']['NOM']]=$obj['Outil']['id'];
+            endforeach;
+            return json_encode($result);
+        }
+        
+        public function json_all_listes(){
+            $this->autoRender = false;
+            $result = array();
+            $ObjListediffusions = new ListediffusionsController();
+            $listes = $ObjListediffusions->get_all();
+            foreach($listes as $obj):
+                $result[$obj['Listediffusion']['NOM']]=$obj['Listediffusion']['id'];
+            endforeach;            
+            return json_encode($result);
+        }
+        
+        public function json_all_partages(){
+            $this->autoRender = false;
+            $result = array();
+            $ObjDossierpartages = new DossierpartagesController();
+            $dossiers = $ObjDossierpartages->get_all();
+            foreach($dossiers as $obj):
+                $result[$obj['Dossierpartage']['NOM']]=$obj['Dossierpartage']['id'];
+            endforeach;  
+            return json_encode($result);
+        }
+        
+        public function addto(){
+            $this->autoRender = false;
+            $this->request->data['Utiliseoutil']['created'] = date('Y-m-d');
+            $this->request->data['Utiliseoutil']['modified'] = date('Y-m-d');
+            $this->Utiliseoutil->create();
+            if($this->Utiliseoutil->save($this->request->data)):
+                $this->Session->setFlash(__('Ouverture de droit sauvegardée',true),'flash_success');
+            else:
+                $this->Session->setFlash(__('Ouverture de droit incorrecte, veuillez corriger l\'ouverture de droit',true),'flash_failure');
+            endif;
+            $this->History->goback(0);
+        }
         
         public function get_nom_outil($data){
             $nomoutil = "inconnu";
@@ -243,7 +358,7 @@ class UtiliseoutilsController extends AppController {
  * @return void
  */
         public function index($filtreetat=null,$utilisateur_id=null,$filtreoutil=null) {
-            $this->set('title_for_layout','Ouvertures des droits');
+            $this->set_title();
             $listusers = $this->get_visibility() ;
             $restriction=$this->get_restriction();
             $getetat = $this->get_utiliseoutil_etat_filter($filtreetat);
@@ -254,9 +369,12 @@ class UtiliseoutilsController extends AppController {
             $this->set('foutil',$getoutil['filter']);
             $newconditions=array($getetat['condition'],$getutilisateur['condition'],$getoutil['condition'],$restriction);
             $etats = $this->get_all_utiliseoutil_etat();
-            $outils = $this->requestAction('outils/get_all_outil');
-            $listes = $this->requestAction('listediffusions/get_all');
-            $partages = $this->requestAction('dossierpartages/get_all');
+            $ObjOutils = new OutilsController();
+            $ObjListediffusions = new ListediffusionsController();
+            $ObjDossierpartages = new DossierpartagesController();
+            $outils = $ObjOutils->get_all_outil();
+            $listes = $ObjListediffusions->get_all();
+            $partages = $ObjDossierpartages->get_all();
             $utilisateurs = $this->get_all_utiliseoutil_utilisateur($listusers, $getetat['condition'], $restriction);
             $this->set(compact('etats','outils','listes','partages','utilisateurs'));              
             $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));
@@ -269,7 +387,7 @@ class UtiliseoutilsController extends AppController {
  * @return void
  */
 	public function add($id = null) {
-            $this->set('title_for_layout','Ouvertures des droits');
+            $this->set_title();
             if (isAuthorized('utiliseoutils', 'add')) :           
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
@@ -294,13 +412,16 @@ class UtiliseoutilsController extends AppController {
                 $restriction = $this->get_restriction();
                 $utilisateur = $this->get_list_utiliseoutil_utilisateur($listusers, $restriction);
                 $etat = $this->get_list_utiliseoutil_etat();
-                $outil = $this->requestAction('outils/get_list_outil');
-                $listediffusion = $this->requestAction('listediffusions/get_list');
-                $dossierpartage = $this->requestAction('dossierpartages/get_list');
+                $ObjOutils = new OutilsController();
+                $ObjListediffusions = new ListediffusionsController();
+                $ObjDossierpartages = new DossierpartagesController();
+                $outil = $ObjOutils->get_list_outil();
+                $listediffusion = $ObjListediffusions->get_list();
+                $dossierpartage = $ObjDossierpartages->get_list();
                 $this->set(compact('etat','outil','listediffusion','dossierpartage','utilisateur'));                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -336,7 +457,7 @@ class UtiliseoutilsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','Ouvertures des droits');
+            $this->set_title();
             if (isAuthorized('utiliseoutils', 'edit')) :
                 if (!$this->Utiliseoutil->exists($id)) {
 			throw new NotFoundException(__('Ouvertures des droits incorrecte'));
@@ -349,7 +470,7 @@ class UtiliseoutilsController extends AppController {
                         //$this->autoprogressState($id);
                         if ($this->Utiliseoutil->save($this->request->data)) {
                                 $nomoutil = $this->get_nom_outil($this->request->data);     
-                                $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$id)));
+                                $utiliseoutil = $this->Utiliseoutil->find('first',array('conditions'=>array('Utiliseoutil.id'=>$id),'recursive'=>0));
                                 $newetat = $utiliseoutil['Utiliseoutil']['STATUT'];
                                 if($newetat=='Demande transférée' || $newetat=='A supprimer' || $newetat = 'En validation'):
                                     $this->sendmailutiliseoutil($utiliseoutil);  
@@ -368,14 +489,17 @@ class UtiliseoutilsController extends AppController {
                     $restriction = $this->get_restriction();
                     $utilisateur = $this->get_list_utiliseoutil_utilisateur($listusers, $restriction);
                     $etat = $this->get_list_utiliseoutil_etat();
-                    $outil = $this->requestAction('outils/get_list_outil');
-                    $listediffusion = $this->requestAction('listediffusions/get_list');
-                    $dossierpartage = $this->requestAction('dossierpartages/get_list');
+                    $ObjOutils = new OutilsController();
+                    $ObjListediffusions = new ListediffusionsController();
+                    $ObjDossierpartages = new DossierpartagesController();
+                    $outil = $ObjOutils->get_list_outil();
+                    $listediffusion = $ObjListediffusions->get_list();
+                    $dossierpartage = $ObjDossierpartages->get_list();
                     $this->set(compact('etat','outil','listediffusion','dossierpartage','utilisateur'));                           
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -387,27 +511,34 @@ class UtiliseoutilsController extends AppController {
  * @param string $id
  * @return void
  */
-	public function delete($id = null) {
+	public function delete($id = null,$msg=0) {
             if (isAuthorized('utiliseoutils', 'delete')) :
-		$this->set('title_for_layout','Ouvertures des droits');
+		$this->set_title();
                 $this->Utiliseoutil->id = $id;
                 $userid = $this->Utiliseoutil->read();
 		if (!$this->Utiliseoutil->exists()) {
 			throw new NotFoundException(__('Ouvertures des droits incorrecte'));
 		}
-		//$this->request->onlyAllow('post', 'delete');
 		if ($this->Utiliseoutil->delete()) {
                         $history['Historyutilisateur']['utilisateur_id']=$userid['Utiliseoutil']['utilisateur_id'];
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une ouverture de droit".' par '.userAuth('NOMLONG');
-                        $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history);                         
-			$this->Session->setFlash(__('Ouvertures des droits supprimée',true),'flash_success');
-			$this->History->goBack(1);
+                        $this->Utiliseoutil->Utilisateur->Historyutilisateur->save($history); 
+                        if($msg==0):
+                            $this->Session->setFlash(__('Ouvertures des droits supprimée',true),'flash_success');
+                            $this->History->goBack(1);
+                        else:
+                            return true;
+                        endif;
 		}
-		$this->Session->setFlash(__('Ouvertures des droits <b>NON</b> supprimée',true),'flash_failure');
-		$this->History->goBack(1);
+                if($msg==0):
+                    $this->Session->setFlash(__('Ouvertures des droits <b>NON</b> supprimée',true),'flash_failure');
+                    $this->History->goBack(1);
+                else:
+                    return false;
+                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -420,7 +551,7 @@ class UtiliseoutilsController extends AppController {
  * @return void
  */
 	public function progressstate($id = null) {
-            $this->set('title_for_layout','Ouvertures des droits');
+            $this->set_title();
             if (isAuthorized('utiliseoutils', 'update')) :
                 $newetat = '';
                 $id = $id==null ? $this->request->data('id') : $id;
@@ -447,7 +578,7 @@ class UtiliseoutilsController extends AppController {
 		exit();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}    
         
@@ -496,7 +627,7 @@ class UtiliseoutilsController extends AppController {
  * @return void
  */
 	public function search($filtreetat=null,$utilisateur_id=null,$filtreoutil=null,$keywords=null) {
-            $this->set('title_for_layout','Ouvertures des droits');
+            $this->set_title();
             if(isset($this->params->data['Utiliseoutil']['SEARCH'])):
                 $keywords = $this->params->data['Utiliseoutil']['SEARCH'];
             elseif (isset($keywords)):
@@ -522,9 +653,12 @@ class UtiliseoutilsController extends AppController {
                 $conditions = array($newconditions,'OR'=>$ornewconditions);
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                
                 $etats = $this->get_all_utiliseoutil_etat();
-                $outils = $this->requestAction('outils/get_all_outil');
-                $listes = $this->requestAction('listediffusions/get_all');
-                $partages = $this->requestAction('dossierpartages/get_all');
+                $ObjOutils = new OutilsController();
+                $ObjListediffusions = new ListediffusionsController();
+                $ObjDossierpartages = new DossierpartagesController();
+                $outils = $ObjOutils->get_all_outil();
+                $listes = $ObjListediffusions->get_all();
+                $partages = $ObjDossierpartages->get_all();
                 $utilisateurs = $this->get_all_utiliseoutil_utilisateur($listusers, $getetat['condition'], $restriction);
                 $this->set(compact('etats','outils','listes','partages','utilisateurs'));              
                 $this->set('utiliseoutils', $this->paginate());   
@@ -566,8 +700,28 @@ class UtiliseoutilsController extends AppController {
             return json_encode($ids);
         }
         
+        public function alldelete($ids=null){
+            $this->autoRender = false;
+            $ids = explode('-', $this->request->data('all_ids'));
+            if(count($ids)>0 && $ids[0]!=""):
+                $result = array();
+                foreach($ids as $id):
+                    $result[] = $this->delete($id,1);
+                endforeach;
+                sleep(3);
+                if(in_array(false,$result)):
+                    echo $this->Session->setFlash(__('Au moins une ouvertures de droits <b>N\'EST PAS</b> supprimée',true),'flash_failure');
+                else:
+                    echo $this->Session->setFlash(__('Ouvertures de droits supprimées',true),'flash_success');
+                endif;
+            else:
+                echo $this->Session->setFlash(__('Aucune ouverture de droit sélectionnée',true),'flash_failure');
+            endif;
+            return json_encode($ids);
+        }
+        
         public function sendmailutiliseoutil($utiliseoutil,$valideur=null){
-            $utilisateur = $this->Utiliseoutil->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$utiliseoutil['Utiliseoutil']['utilisateur_id']),'recursive'=>0));
+            $utilisateur = $this->Utiliseoutil->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$utiliseoutil['Utiliseoutil']['utilisateur_id']),'recursive'=>0));            
             $to = '';
             if(!empty($utiliseoutil['Utiliseoutil']['outil_id']) && $utiliseoutil['Utiliseoutil']['outil_id']!=null):
                 $outil = $this->Utiliseoutil->Outil->find('first',array('conditions'=>array('Outil.id'=>$utiliseoutil['Utiliseoutil']['outil_id']),'recursive'=>0));
@@ -576,32 +730,34 @@ class UtiliseoutilsController extends AppController {
                 if($utiliseoutil['Utiliseoutil']['STATUT']=='Demande transférée'):
                     $to = $outil['Utilisateur']['MAIL'];
                 elseif($utiliseoutil['Utiliseoutil']['STATUT']=='Demandé'):
-                    $mailto = $this->requestAction('parameters/get_contact');
-                    $to = explode(';',$mailto['Parameter']['param']);          
+                    $ObjEntites = new EntitesController();
+                    $mailto = $ObjEntites->get_contact();
+                    $to = explode(';',$mailto);          
                 endif;
             endif;
             if(!empty($utiliseoutil['Utiliseoutil']['listediffusion_id']) && $utiliseoutil['Utiliseoutil']['listediffusion_id']!=null):
                 $listediffusion = $this->Utiliseoutil->Listediffusion->find('first',array('conditions'=>array('Listediffusion.id'=>$utiliseoutil['Utiliseoutil']['listediffusion_id'])));
                 $nom = $listediffusion['Listediffusion']['NOM'];
                 $gestionnaire = $listediffusion['Listediffusion']['utilisateur_id'];                
-                $mailto = $this->requestAction('parameters/get_contact');
-                $to = explode(';',$mailto['Parameter']['param']);      
+                $ObjEntites = new EntitesController();
+                $mailto = $ObjEntites->get_contact();
+                $to = explode(';',$mailto);     
             endif;
             if(!empty($utiliseoutil['Utiliseoutil']['dossierpartage_id']) && $utiliseoutil['Utiliseoutil']['dossierpartage_id']!=null):
                 $dossierpartage = $this->Utiliseoutil->Dossierpartage->find('first',array('conditions'=>array('Dossierpartage.id'=>$utiliseoutil['Utiliseoutil']['dossierpartage_id'])));
                 $nom = $dossierpartage['Dossierpartage']['NOM'].' groupe : '.$dossierpartage['Dossierpartage']['GROUPEAD'];
                 $gestionnaire = $dossierpartage['Dossierpartage']['utilisateur_id'];                 
-                $mailto = $this->requestAction('parameters/get_contact');
-                $to = explode(';',$mailto['Parameter']['param']);               
-            endif;     
+                $ObjEntites = new EntitesController();
+                $mailto = $ObjEntites->get_contact();
+                $to = explode(';',$mailto);             
+            endif;              
             $domaine = isset($utiliseoutil['Utilisateur']['domaine_id']) ? $this->Utiliseoutil->Utilisateur->Domaine->find('first',array('conditions'=>array('Domaine.id'=>$utiliseoutil['Utilisateur']['domaine_id']),'recursive'=>-1)) : null;
             $section = isset($utiliseoutil['Utilisateur']['section_id']) ? $this->Utiliseoutil->Utilisateur->Section->find('first',array('conditions'=>array('Section.id'=>$utiliseoutil['Utilisateur']['section_id']),'recursive'=>-1)): null;
             $site = isset($utiliseoutil['Utilisateur']['site_id']) ? $this->Utiliseoutil->Utilisateur->Site->find('first',array('conditions'=>array('Site.id'=>$utiliseoutil['Utilisateur']['site_id']),'recursive'=>-1)) : null;
-            $from = userAuth('MAIL');
+            $from = Configure::read('mailapp');
             $email = isset($utiliseoutil['Utilisateur']['MAIL']) ? $utiliseoutil['Utilisateur']['MAIL'] : "Demandez un complément d'information à l'émetteur de cette demande";
             $domaine = isset($domaine['Domaine']['NOM']) ? $domaine['Domaine']['NOM'] : "Demandez un complément d'information à l'émetteur de cette demande";
             $objet = 'SAILL : Demande de création de compte ou d\'ouverture de droit pour ['.$nom.']';
-            $message = "Demande de création de compte ou d'ouverture de droit pour : ";
             $url = $gestionnaire != '' ? FULL_BASE_URL.$this->params->base.'/utiliseoutils/mailprogressstate/'.$utiliseoutil['Utiliseoutil']['id']."/".$gestionnaire : '';
             $etat = $utiliseoutil['Utiliseoutil']['STATUT'];
             if(isset($valideur) && $valideur!=null): 
@@ -612,29 +768,32 @@ class UtiliseoutilsController extends AppController {
             endif;
             $groupcaliber = "";
             if(isset($section['Section']['NOM'])):
-            switch(strtolower($section['Section']['NOM'])){
-                case 'groupement':
-                    $groupcaliber = "<ul><li>[ ] OSMOSE - Intégrateur</li><li>[ ] PANAM - Intégrateur</li><li>[ ] OSMOSE - Négociateur</li></ul>";
-                    break;
-                case 'moa':
-                    $groupcaliber = "<ul><li>[ ] OSMOSE - MOA SI</li><li>[ ] PANAM - MOA SI</li><li>[ ] OSMOSE Existant (devt) - MOE</li></ul>";
-                    break;
-                default:
-                    $groupcaliber = "<ul><li>[ ] OSMOSE - MOE</li><li>[ ] PANAM - MOE</li><li>[ ] OSMOSE Existant (devt) - MOA</li></ul>";
-                    break;                    
-            }
+                switch(strtolower($section['Section']['NOM'])){
+                    case 'groupement':
+                        $groupcaliber = "<ul><li>[ ] OSMOSE - Intégrateur</li><li>[ ] PANAM - Intégrateur</li><li>[ ] OSMOSE - Négociateur</li></ul>";
+                        break;
+                    case 'moa':
+                        $groupcaliber = "<ul><li>[ ] OSMOSE - MOA SI</li><li>[ ] PANAM - MOA SI</li><li>[ ] OSMOSE Existant (devt) - MOE</li></ul>";
+                        break;
+                    default:
+                        $groupcaliber = "<ul><li>[ ] OSMOSE - MOE</li><li>[ ] PANAM - MOE</li><li>[ ] OSMOSE Existant (devt) - MOA</li></ul>";
+                        break;                    
+                }
             endif;
-            $message .= '<ul>
-                    <li>Outil :'.$nom.'</li>
-                    <li>Etat :'.$etat.'</li>
-                    <li>Agent :'.$utilisateur['Utilisateur']['NOMLONG'].'</li>
-                    <li>Identifiant :'.$utilisateur['Utilisateur']['username'].'</li>
-                    <li>Email :'.$email.'</li>
-                    <li>Domaine :'.$domaine.'</li>
-                    <li>Section :'.isset($section['Section']['NOM']) ? $section['Section']['NOM'] : "Inconnue".'</li>
-                    <li>Localisation :'.isset($site['Site']['NOM']) ? $site['Site']['NOM'] : "Inconnu".'</li>   
-                    <li>Groupe Caliber :'.$groupcaliber.'</li>  
-                    </ul><br>Merci de cliquer sur le lien ci-dessous, pour mettre à jour l\'avancement de la demande.<br>'.$url;
+            $section = isset($section['Section']['NOM']) ? $section['Section']['NOM'] : 'Inconnue';
+            $site = isset($site['Site']['NOM']) ? $site['Site']['NOM'] : 'Inconnu';
+            $message = "Demande de création de compte ou d'ouverture de droit pour : ";
+            $message = $message."<ul>
+                    <li>Outil :".$nom."</li>
+                    <li>Etat :".$etat."</li>
+                    <li>Agent :".$utilisateur['Utilisateur']['NOMLONG']."</li>
+                    <li>Identifiant :".$utilisateur['Utilisateur']['username']."</li>
+                    <li>Email :".$email."</li>
+                    <li>Domaine :".$domaine."</li>
+                    <li>Section :".$section."</li>
+                    <li>Localisation :".$site."</li>   
+                    <li>Groupe Caliber :".$groupcaliber."</li>  
+                    </ul><br>Merci de cliquer sur le lien ci-dessous, pour mettre à jour l\'avancement de la demande.<br>".$url;            
             $statuts = array('Demandé','En validation','A supprimer','Demande transférée');
             if($to!='' && in_array($utiliseoutil['Utiliseoutil']['STATUT'],$statuts)):
                 try{
@@ -661,28 +820,31 @@ class UtiliseoutilsController extends AppController {
                 if($utiliseoutil['Utiliseoutil']['STATUT']=='Demande transférée'):
                     $to = $outil['Utilisateur']['MAIL'];
                 elseif($utiliseoutil['Utiliseoutil']['STATUT']=='Demandé'):
-                    $mailto = $this->requestAction('parameters/get_contact');
-                    $to = explode(';',$mailto['Parameter']['param']);          
+                    $ObjEntites = new EntitesController();
+                    $mailto = $ObjEntites->get_contact();
+                    $to = explode(';',$mailto);         
                 endif;
             endif;
             if(!empty($utiliseoutil['Utiliseoutil']['listediffusion_id']) && $utiliseoutil['Utiliseoutil']['listediffusion_id']!=null):
                 $listediffusion = $this->Utiliseoutil->Listediffusion->find('first',array('conditions'=>array('Listediffusion.id'=>$utiliseoutil['Utiliseoutil']['listediffusion_id'])));
                 $nom = $listediffusion['Listediffusion']['NOM'];
                 $gestionnaire = $listediffusion['Listediffusion']['utilisateur_id'];                
-                $mailto = $this->requestAction('parameters/get_contact');
-                $to = explode(';',$mailto['Parameter']['param']);      
+                $ObjEntites = new EntitesController();
+                $mailto = $ObjEntites->get_contact();
+                $to = explode(';',$mailto);     
             endif;
             if(!empty($utiliseoutil['Utiliseoutil']['dossierpartage_id']) && $utiliseoutil['Utiliseoutil']['dossierpartage_id']!=null):
                 $dossierpartage = $this->Utiliseoutil->Dossierpartage->find('first',array('conditions'=>array('Dossierpartage.id'=>$utiliseoutil['Utiliseoutil']['dossierpartage_id'])));
                 $nom = $dossierpartage['Dossierpartage']['NOM'].' groupe : '.$dossierpartage['Dossierpartage']['GROUPEAD'];
                 $gestionnaire = $dossierpartage['Dossierpartage']['utilisateur_id'];                 
-                $mailto = $this->requestAction('parameters/get_contact');
-                $to = explode(';',$mailto['Parameter']['param']);               
+                $ObjEntites = new EntitesController();
+                $mailto = $ObjEntites->get_contact();
+                $to = explode(';',$mailto);               
             endif;     
             $domaine = $this->Utiliseoutil->Utilisateur->Domaine->find('first',array('conditions'=>array('Domaine.id'=>$utiliseoutil['Utilisateur']['domaine_id']),'recursive'=>-1));
             $section = $this->Utiliseoutil->Utilisateur->Section->find('first',array('conditions'=>array('Section.id'=>$utiliseoutil['Utilisateur']['section_id']),'recursive'=>-1));
             $site = $this->Utiliseoutil->Utilisateur->Site->find('first',array('conditions'=>array('Site.id'=>$utiliseoutil['Utilisateur']['site_id']),'recursive'=>-1));
-            $from = userAuth('MAIL');
+            $from = Configure::read('mailapp');
             $email = isset($utiliseoutil['Utilisateur']['MAIL']) ? $utiliseoutil['Utilisateur']['MAIL'] : "Demandez un complément d'information à l'émetteur de cette demande";
             $domaine = isset($domaine['Domaine']['NOM']) ? $domaine['Domaine']['NOM'] : "Demandez un complément d'information à l'émetteur de cette demande";
             $objet = 'SAILL : //!\ URGENT RELANCE : Demande d\'intervention pour ['.$nom.']';
@@ -720,10 +882,28 @@ class UtiliseoutilsController extends AppController {
         public function add_template(){
             $this->autoRender = false;
             $utilisateur_id = $this->request->data['Utiliseoutil']['utilisateur_id'];
-            $outils = $this->requestAction('parameters/get_templateoutil');
-            $outils = explode(',',$outils['Parameter']['param']);
-            $groups = $this->requestAction('parameters/get_templategroupe');
-            $groups = explode(',',$groups['Parameter']['param']);
+            $ObjEntites = new EntitesController();             
+            $outils = $ObjEntites->get_templateoutils(userAuth('entite_id'));
+            $outils = explode(',',$outils);
+            $groups = $ObjEntites->get_templategroup(userAuth('entite_id'));
+            $groups = explode(',',$groups);
+            foreach($outils as $outil):
+                $this->save_new($utilisateur_id, $outil, 'outil');
+            endforeach;
+            foreach($groups as $group):
+                $this->save_new($utilisateur_id, $group, 'group');
+            endforeach;            
+            $this->History->goBack(1);
+        }
+        
+        public function ajax_addtemplate($id){
+            $this->autoRender = false;
+            $utilisateur_id = $id;
+            $ObjEntites = new EntitesController();             
+            $outils = $ObjEntites->get_templateoutils(userAuth('entite_id'));
+            $outils = $outils!='' ? explode(',',$outils) : array();
+            $groups = $ObjEntites->get_templategroup(userAuth('entite_id'));
+            $groups = $groups!='' ? explode(',',$groups) : array();
             foreach($outils as $outil):
                 $this->save_new($utilisateur_id, $outil, 'outil');
             endforeach;

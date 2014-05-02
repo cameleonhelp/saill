@@ -5,6 +5,7 @@ App::uses('AppController', 'Controller');
  *
  * @property Assocdcprojet1 $Assocdcprojet1
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class AssocdcprojetsController extends AppController {
 
@@ -107,6 +108,11 @@ class AssocdcprojetsController extends AppController {
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
+                        
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_info','json_get_assoid'));
+            parent::beforeFilter();
+        }   
         
         public function json_get_info($cdc_id=null){
             $this->autoRender = false;

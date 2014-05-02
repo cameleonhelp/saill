@@ -95,8 +95,7 @@
     </tr> 
     </tfoot>    
 </table>
-<?php endif; ?>
-<?php if(isset($results) && count($results)==0) : ?>
+<?php else : ?>
 <div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
 <?php endif; ?>
 </div>

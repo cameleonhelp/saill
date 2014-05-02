@@ -1,15 +1,30 @@
 <?php
 App::uses('AppController', 'Controller');
-
+App::import('Controller', 'Assoprojetentites');
+App::import('Controller', 'Projets');
+App::import('Controller', 'Plancharges');
 /**
  * Dashboards Controller
  *
  * @property Dashboard $Dashboard
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class DashboardsController extends AppController {
     public $components = array('History','Common');    
+    
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Tableaux de bord" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }      
+    
     public function index() {
-            $this->set('title_for_layout','Tableau de bord');
+            $this->set_title();
             if (isAuthorized('facturations', 'rapports') || isAuthorized('activitesreelles', 'rapports') || isAuthorized('plancharges', 'rapports')) :
                 if ($this->request->is('post')):
                     $today = new DateTime();
@@ -131,23 +146,16 @@ class DashboardsController extends AppController {
                     $this->Session->delete('rapportresults');  
                     $this->Session->write('rapportresults',$results);
                 endif;
-                $allprojets = array();
-                $allpplancharges = array();
-                $sqllistprojets = "SELECT id,NOM FROM projets WHERE projets.ACTIF=1 ORDER BY projets.NOM";
-                $listprojets = $this->Dashboard->query($sqllistprojets);
-                foreach($listprojets as $projet):
-                    $allprojets = $allprojets+array($projet['projets']['id']=>$projet['projets']['NOM']);
-                endforeach; 
-                $this->set('listprojets',$allprojets);  
-                $sqllistplancharges = "SELECT id,NOM FROM plancharges WHERE plancharges.ANNEE >".(date('Y')-2)." AND plancharges.VISIBLE = 1";
-                $listplancharges = $this->Dashboard->query($sqllistplancharges);
-                foreach($listplancharges as $plancharge):
-                    $allpplancharges = $allpplancharges+array($plancharge['plancharges']['id']=>$plancharge['plancharges']['NOM']);
-                endforeach;                
-                $this->set('listplancharges',$allpplancharges);                
+                $ObjAssoprojetentites = new AssoprojetentitesController();	
+                $ObjProjets = new ProjetsController();	
+                $ObjPlancharges = new PlanchargesController();	
+                $listprojetsvisible = $ObjAssoprojetentites->json_get_all_projets(userAuth('id'));
+                $listprojets = $ObjProjets->get_list_id_nom_projets($listprojetsvisible);   
+                $listplancharges = $ObjPlancharges->get_list_plancharge_visibility();
+                $this->set(compact('listplancharges','listprojets'));                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                     
     }
     

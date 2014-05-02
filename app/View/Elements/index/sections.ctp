@@ -51,13 +51,14 @@
         <td><?php echo $section['Section']['MAILGESTANNUAIRE']; ?>&nbsp;</td>
         <td><?php echo $section['Section']['DESCRIPTION']; ?>&nbsp;</td>
         <td class="actions">
+            <?php $inmyentite = $this->requestAction('sections/is_in_my_entite/'.$section['Section']['id']); ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('sections', 'view')) : ?>
             <?php echo '<span class="glyphicons eye_open" data-rel="popover" data-title="<h3>Section :</h3>" data-content="<contenttitle>Crée le: </contenttitle>'.h($section['Section']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($section['Section']['modified']).'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
             <?php endif; ?>
-            <?php if (userAuth('profil_id')!='2' && isAuthorized('sections', 'edit')) : ?>
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('sections', 'edit') && $inmyentite) : ?>
             <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit', $section['Section']['id']),array('escape' => false)); ?>&nbsp;
             <?php endif; ?>
-            <?php if (userAuth('profil_id')!='2' && isAuthorized('sections', 'delete')) : ?>
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('sections', 'delete') && $inmyentite) : ?>
             <?php echo $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete', $section['Section']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette section ?')); ?>
             <?php endif; ?>
         </td>

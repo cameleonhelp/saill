@@ -1,10 +1,12 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
 /**
- * Versions Controller
+ * @versions Controller
  *
  * @property Version $Version
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class VersionsController extends AppController {
 /**
@@ -14,12 +16,18 @@ class VersionsController extends AppController {
  */
         public $paginate = array('limit' => 25,'order'=>array('Version.NOM'=>'asc'));
 	public $components = array('History','Common');
-        
+                                        
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_version_for','json_get_version_info'));
+            parent::beforeFilter();
+        }  
+          
         public function get_visibility(){
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return $ObjAssoentiteutilisateurs->json_get_my_entite(userAuth('id'));
             endif;
         }
         
@@ -55,7 +63,6 @@ class VersionsController extends AppController {
  * @return void
  */
 	public function index($actif=null) {
-            $this->set('title_for_layout','Versions');
             if (isAuthorized('versions', 'index')) :  
                 $getactif = $this->get_version_actif_filter($actif);
                 $this->set('strfilter',$getactif['filter']);
@@ -63,7 +70,7 @@ class VersionsController extends AppController {
 		$this->set('versions', $this->paginate());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -73,7 +80,6 @@ class VersionsController extends AppController {
  * @return void
  */
 	public function add() {
-            $this->set('title_for_layout','Versions');
             if (isAuthorized('versions', 'add')) :
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
@@ -91,7 +97,7 @@ class VersionsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -103,7 +109,6 @@ class VersionsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','Versions');
             if (isAuthorized('versions', 'edit')) :            
 		if (!$this->Version->exists($id)) {
 			throw new NotFoundException(__('Versions incorrecte'));
@@ -126,7 +131,7 @@ class VersionsController extends AppController {
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -138,7 +143,6 @@ class VersionsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-            $this->set('title_for_layout','Versions');
             if (isAuthorized('versions', 'delete')) : 
 		$this->Version->id = $id;
 		if (!$this->Version->exists()) {
@@ -152,7 +156,7 @@ class VersionsController extends AppController {
 		$this->History->notmove();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
         
@@ -171,7 +175,6 @@ class VersionsController extends AppController {
         }
         
 	public function ajaxdelete($id = null) {
-            $this->set('title_for_layout','Versions');
             $this->autoRender = false;
             if (isAuthorized('versions', 'delete')) : 
 		$this->Version->id = $id;
@@ -186,7 +189,7 @@ class VersionsController extends AppController {
 		$this->History->notmove();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
         
@@ -234,7 +237,6 @@ class VersionsController extends AppController {
         }
         
 	public function ajaxadd() {
-            $this->set('title_for_layout','Versions');
             $this->autoRender = false;
             if (isAuthorized('versions', 'add')) :
 		if ($this->request->is('post')) :
@@ -249,12 +251,11 @@ class VersionsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}   
         
 	public function ajaxedit() {
-            $this->set('title_for_layout','Versions');
             $this->autoRender = false;
             if (isAuthorized('versions', 'edit')) : 
 		if ($this->request->is('post') || $this->request->is('put')) :
@@ -268,7 +269,7 @@ class VersionsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}   
         

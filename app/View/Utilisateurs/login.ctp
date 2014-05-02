@@ -1,5 +1,11 @@
+<div class='row'>
 <div class="row margintop15">
-        <div class="col-md-3 column">
+        <div class="col-md-6 column">
+            <div class="bs-callout bs-callout-warning marginleft15">
+            <h4><small>Information sur la connexion à SAILL</small></h4>
+            La connexion à SAILL se fait dorénavant avec votre <b style="color:red;">compte de session Windows (LDAP)</b>.<br>
+            Seul les personnes avec un compte SAILL peuvent se connecter. Si votre compte n'est pas référencé dans SAILL, vous devez en faire la demande auprès d'un administrateur.
+            </div>              
         </div>
         <div class="col-md-6 column">
 <?php echo $this->Form->create('Utilisateur',array('action'=>'login','id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
@@ -25,11 +31,11 @@
             <?php echo $this->Form->button('Connexion', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?> 
         </div>
         </div>
-<?php echo $this->Form->end(); ?>
-    <div class="col-md-offset-4" style="padding-left:10px;">
-        <?php echo $this->Html->link('Perte de mot de passe', array('controller'=>'utilisateurs','action'=>'initmypassword')); ?>
-    </div>
         </div>
+<?php echo $this->Form->end(); ?>
+<!--    
         <div class="col-md-3 column">
         </div>
+    //-->
+</div>
 </div>

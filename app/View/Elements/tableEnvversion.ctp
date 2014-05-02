@@ -64,6 +64,25 @@
 
 <script>
 $(document).ready(function () {
+   $("#tableEnvversion").tablesorter({
+        headers: {
+            2:{filter:false},
+            3:{filter:false}
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_saveFilters : true,
+            filter_useParsedData : true,
+            filter_startsWith : false,
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    });    
+    
     $(document).on('click','.actif',function(e){
         var id = $(this).attr('data-id');
             $.ajax({
@@ -90,7 +109,7 @@ $(document).ready(function () {
                 $('#editModal').modal('show')
             },
             error :function(response, status,errorThrown) {
-                alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
             }
          });
     });

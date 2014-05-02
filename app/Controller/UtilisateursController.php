@@ -1,10 +1,25 @@
 <?php
 App::uses('AppController', 'Controller','Authentification');
 App::uses('CakeEmail', 'Network/Email');
+App::uses('AssoentiteutilisateursController', 'Controller');
+App::uses('ParametersController', 'Controller');
+App::uses('SectionsController', 'Controller');
+App::uses('UtiliseoutilsController', 'Controller');
+App::uses('AffectationsController', 'Controller');
+App::uses('DotationsController', 'Controller');
+App::uses('HistoryutilisateursController', 'Controller');
+App::uses('DomainesController', 'Controller');
+App::uses('TjmagentsController', 'Controller');
+App::uses('SitesController', 'Controller');
+App::uses('AssistancesController', 'Controller');
+App::uses('ProfilsController', 'Controller');
+App::uses('SocietesController', 'Controller');
+App::uses('EntitesController', 'Controller');
 /**
  * Utilisateurs Controller
  *
  * @property Utilisateur $Utilisateur
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class UtilisateursController extends AppController {
     public $components = array('History','Common'); 
@@ -17,6 +32,17 @@ class UtilisateursController extends AppController {
         'conditions'=>array('Utilisateur.id > '=> 1),
         );
 
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Utilisateurs" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }     
+    
     public function beforeRender() {
         parent::beforeRender();
     }
@@ -37,7 +63,8 @@ class UtilisateursController extends AppController {
         if(userAuth('profil_id')==1):
             return null;
         else:
-            return $this->requestAction('assoentiteutilisateurs/json_get_all_users/'.userAuth('id'));
+            $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+            return $ObjAssoentiteutilisateurs->json_get_all_users(userAuth('id'));
         endif;
     }
     
@@ -77,11 +104,11 @@ class UtilisateursController extends AppController {
                 break;  
             case 'incomplet':
                 if($visibility == null):
-                    $result['condition']="Utilisateur.ACTIF=1 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2) AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL";
+                    $result['condition']="Utilisateur.ACTIF=1 AND (Utilisateur.profil_id IS NULL OR Utilisateur.profil_id!=-1) AND (Utilisateur.section_id = 0 OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL)";
                 elseif ($visibility!=''):
-                    $result['condition']="Utilisateur.ACTIF=1 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2) AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL AND Utilisateur.id IN (".$visibility.')';
+                    $result['condition']="Utilisateur.ACTIF=1 AND (Utilisateur.profil_id IS NULL OR Utilisateur.profil_id!=-1) AND (Utilisateur.section_id = 0 OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL AND Utilisateur.id IN (".$visibility.'))';
                 else:
-                    $result['condition']="Utilisateur.entite_id =".userAuth('entite_id')." AND Utilisateur.ACTIF=1 AND (Utilisateur.profil_id > 0 OR Utilisateur.profil_id=-2) AND (Utilisateur.section_id IS NULL OR Utilisateur.profil_id IS NULL OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL";
+                    $result['condition']="Utilisateur.entite_id =".userAuth('entite_id')." AND Utilisateur.ACTIF=1 AND (Utilisateur.profil_id IS NULL OR Utilisateur.profil_id!=-1) AND (Utilisateur.section_id = 0 OR Utilisateur.assistance_id IS NULL OR Utilisateur.site_id IS NULL OR Utilisateur.username='' OR Utilisateur.username IS NULL OR Utilisateur.MAIL='' OR Utilisateur.MAIL IS NULL)";
                 endif;                 
                 $result['filter'] = "tous les utilisateurs actifs et incomplets";
                 break;  
@@ -109,13 +136,16 @@ class UtilisateursController extends AppController {
         return $result;
     }
     
-    public function get_section_filter($id) {
-        $result = array();
+    public function get_section_filter($id,$etat=null) {
+        $result = array('condition'=>"1=1",'filter'=>"toutes les sections");
+        $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();  
+        if($etat != 'nouveau' && $etat!='incomplet'):
         switch ($id){
             case 'allsections':
             case null:  
-                $sections = $this->requestAction('assoentiteutilisateurs/find_all_section/'.userAuth('id'));
-                $result['condition'] = "Utilisateur.section_id IN (".$sections.")";                 
+                //TODO : test si filtre état = incomplet ou nouveau
+                $sections = $ObjAssoentiteutilisateurs->find_all_section(userAuth('id'));
+                $result['condition'] = "Utilisateur.section_id IN (0,".$sections.")";                 
                 $result['filter'] = "toutes les sections";
                 break;
             default :
@@ -124,6 +154,7 @@ class UtilisateursController extends AppController {
                 $section = $this->Utilisateur->Section->find('first',array('conditions'=>array('Section.id'=>$id)));
                 $result['filter'] = "la section ".$section['Section']['NOM'];                        
         }  
+        endif;
         return $result;
     }
     
@@ -199,7 +230,8 @@ class UtilisateursController extends AppController {
     
     public function get_str_section_utilisateurs(){
         $list = "";
-        $sections = $this->requestAction('assoentiteutilisateurs/find_all_section/'.userAuth('id'));
+        $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();        
+        $sections = $ObjAssoentiteutilisateurs->find_all_section(userAuth('id'));
         $conditions[]="Utilisateur.section_id IN (".$sections.')';
         $order = array("Utilisateur.section_id"=>'asc');
         $group = "Utilisateur.section_id";
@@ -216,11 +248,10 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function index($filtreUtilisateur=null,$filtreSection=null,$filtresociete=null,$filtreAlpha=null) {
-            //$this->Session->delete('history');
             if (isAuthorized('utilisateurs', 'index')) :
                 $listusers = $this->get_visibility();
                 $getusers = $this->get_utilisateur_etat_filter($filtreUtilisateur, $listusers);
-                $getsection = $this->get_section_filter($filtreSection,$listusers);
+                $getsection = $this->get_section_filter($filtreSection,$filtreUtilisateur);
                 $getsociete = $this->get_societe_filter($filtresociete);
                 $getalpha = $this->get_alpha_filter($filtreAlpha);
                 $newconditions=array($getusers['condition'],$getsection['condition'],$getsociete['condition'],$getalpha['condition']);
@@ -231,21 +262,16 @@ class UtilisateursController extends AppController {
                 if (userAuth('WIDEAREA')==0) {
                     $newconditions[]="Utilisateur.section_id=".userAuth('section_id');
                 }
-                $sections = $this->requestAction('sections/get_all/',array('pass' => array($listusers)));
+                $ObjSections = new SectionsController();                
+                $sections = $ObjSections->get_all($listusers);
                 $this->set('sections',$sections);                
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Utilisateur->recursive = 0;
 		$this->set('utilisateurs', $this->paginate());
                 $this->get_export($newconditions);
-                
-                //INFO : pas retrouvé pourquoi non utilisé dans la page index
-                /*if (isset($this->request->data['Utilisateur'])) :
-                $hierarchique = $this->Utilisateur->find('first',array('fields' => array('id', 'NOMLONG'),'order'=>array('NOMLONG'=>'asc'),'conditions'=>array('Utilisateur.HIERARCHIQUE'=>1,'Utilisateur.id'=>$this->request->data['Utilisateur']['utilisateur_id'])));
-                $this->set('hierarchique',$hierarchique);  
-                endif;*/
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -258,7 +284,9 @@ class UtilisateursController extends AppController {
             if (isAuthorized('utilisateurs', 'add')) :
                 $this->Utilisateur->Societe->recursive = -1;
                 $societe = $this->Utilisateur->Societe->find('list',array('fields' => array('id', 'NOM'),'order'=>array('NOM'=>'asc')));
-                $cercles = $this->requestAction('entites/find_list_cercle');
+                $ObjEntites = new EntitesController();    
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();                
+                $cercles = $ObjEntites->find_list_cercle();
                 $this->set(compact('societe','cercles'));
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
@@ -275,7 +303,7 @@ class UtilisateursController extends AppController {
                                 endif;
                                 $this->addnewaction($lastid);
                                 $entite_id = $this->request->data['Utilisateur']['entite_id'];
-                                $this->requestAction('assoentiteutilisateurs/silent_save/'.$entite_id."/".$lastid);
+                                $ObjAssoentiteutilisateurs->silent_save($entite_id,$lastid);
                                 $this->save_history($lastid, "Utilisateur créé");                           
 				$this->Session->setFlash(__('Utilisateur sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
@@ -286,7 +314,7 @@ class UtilisateursController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -299,6 +327,19 @@ class UtilisateursController extends AppController {
  */
 	public function edit($id = null) {
             if (isAuthorized('utilisateurs', 'edit')) :
+                set_time_limit(60);
+                $ObjEntites = new EntitesController();
+                $ObjSocietes = new SocietesController();    
+                $ObjSections = new SectionsController();
+                $ObjProfils = new ProfilsController();   
+                $ObjAssistances = new AssistancesController();
+                $ObjSites = new SitesController();   
+                $ObjTjmagents = new TjmagentsController();  
+                $ObjDomaines = new DomainesController();  
+                $ObjUtiliseoutils = new UtiliseoutilsController();		
+                $ObjHistoryutilisateurs = new HistoryutilisateursController();	
+                $ObjDotations = new DotationsController();	
+                $ObjAffectations = new AffectationsController();                
                 if (!$this->Utilisateur->exists($id)) {
 			throw new NotFoundException(__('Utilisateur incorrect',true),'flash_failure');
 		}
@@ -321,28 +362,35 @@ class UtilisateursController extends AppController {
 		} else {
                         //pour les dropdownlists de la form
                         $listusers = $this->get_visibility();
-                        $societe = $this->requestAction('societes/get_list/');
-                        $cercles = $this->requestAction('entites/find_list_cercle');
-                        $section = $this->requestAction('sections/get_list/',array('pass' => array($listusers)));
+                        $societe = $ObjSocietes->get_list();
+                        $cercles = $ObjEntites->find_list_cercle();
+                        $section = $ObjSections->get_list($listusers);
                         $hierarchique = $this->get_list_my_hierarchie($listusers);
-                        $profil = $this->requestAction('profils/get_list/');
-                        $assistance = $this->requestAction('assistances/get_list/');
-                        $site = $this->requestAction('sites/get_list/');
-                        $domaine = $this->requestAction('domaines/get_list/');
-                        $tjmagent = $this->requestAction('tjmagents/get_current_list/');
+                        $profil = $ObjProfils->get_list();
+                        $assistance = $ObjAssistances->get_list();
+                        $site = $ObjSites->get_list();
+                        $domaine = $ObjDomaines->get_list();
+                        $tjmagent = $ObjTjmagents->get_current_list();
                         $workcapacite = Configure::read('workCapacity');
                         $this->set(compact('societe','cercles','section','hierarchique','profil','assistance','site','domaine','tjmagent','workcapacite'));
-                        //pour charger les informations de fenetres modales
-                        
-                        $this->set(compact('modoutil','modlistediffusion','moddossierpartage','modactivite'));
+                        //pour charger les informations de fenetres modales chargement en json à l'ouverture donc ici passage d'un array vide
+                        $matinformatique = array(); 
+                        $matautre = array(); 
+                        $activites = array(); 
+                        $utilisateurs = array();
+                        $outils = array();
+                        $listediffusions = array();
+                        $partages = array();
+                        $etats = $ObjUtiliseoutils->get_list_utiliseoutil_etat();
+                        $this->set(compact('matautre','matinformatique','activites','utilisateurs','outils','listediffusions','partages','etats'));
                         //pour charger les tableaux sur ce qui est associé à l'agent 
-                        $historyutilisateurs = $this->requestAction('historyutilisateurs/get_all/'.$id);
-                        $utiliseoutils = $this->requestAction('utiliseoutils/get_all/'.$id);
-                        $dotations = $this->requestAction('dotations/get_all/'.$id);
-                        $affectations = $this->requestAction('affectations/get_all/'.$id);
-                        $compteurs = $this->requestAction('utiliseoutils/get_compteur/'.$id);
-                        $nbDotation = $this->requestAction('dotations/get_compteur/'.$id);
-                        $nbAffectation = $this->requestAction('affectations/get_compteur/'.$id);
+                        $historyutilisateurs = $ObjHistoryutilisateurs->get_all($id);
+                        $utiliseoutils = $ObjUtiliseoutils->get_all($id);
+                        $dotations = $ObjDotations->get_all($id);
+                        $affectations = $ObjAffectations->get_all($id);
+                        $compteurs = $ObjUtiliseoutils->get_compteur($id);
+                        $nbDotation = $ObjDotations->get_compteur($id);
+                        $nbAffectation = $ObjAffectations->get_compteur($id);
                         $tabconges = $this->calculConge($id);
                         $tabRQ = $this->calculRQ($id);
                         $tabVT = $this->calculVT($id);
@@ -354,7 +402,7 @@ class UtilisateursController extends AppController {
                 }
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -370,7 +418,8 @@ class UtilisateursController extends AppController {
             $this->Utilisateur->id = $id;
             $user = $this->Utilisateur->read('ACTIF');
             if($user['Utilisateur']['ACTIF']==false):
-                $this->requestAction('assoentiteutilisateurs/delete_for_user/'.$id);
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();                
+                $ObjAssoentiteutilisateurs->delete_for_user($id);
             endif;
         }        
 
@@ -408,7 +457,7 @@ class UtilisateursController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -421,7 +470,7 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function profil($id=null) {
-            $this->set('title_for_layout','Mon profil');
+            $this->set_title('Mon profil');
             if (!$this->Utilisateur->exists($id)) {
                     throw new NotFoundException(__('Utilisateur incorrect',true),'flash_failure');
             }
@@ -505,58 +554,129 @@ class UtilisateursController extends AppController {
                         $agents = $this->Utilisateur->Equipe->find('all',array('conditions'=>array('Equipe.utilisateur_id'=>$id),'recursive'=>-1));
                         $this->set('agents',$agents);
                         $this->set('nbagents',count($agents));
-                        $listusers = $this->requestAction('assoentiteutilisateurs/json_get_all_users/'.userAuth('id'));
+                        $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                        $listusers = $ObjAssoentiteutilisateurs->json_get_all_users(userAuth('id'));                        
                         $utilisateurs = $this->Utilisateur->find('list',array('fields'=>array('id','NOMLONG'),'conditions'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.profil_id >'=>0,'Utilisateur.profil_id'=>-2),'Utilisateur.id IN ('.$listusers.')'),'order'=>array('NOMLONG'=>'asc'),'recursive'=>-1));
                         $this->set('utilisateurs',$utilisateurs);                        
                     }             
         }
    
-/**
- * Login method
- * 
- * @param none
- * @return void
- */        
+    /**
+     * Méthode pour tester la connexion a LDAP
+     * 
+     * @param string $username
+     * @param string $password
+     * @return boolean
+     */    
+    public function ldap_login($username,$password){
+        $this->autoRender = false;
+        $result = false;
+        $ldap = Configure::read('ldap');
+
+        $ldapServer = $ldap['host'].":".$ldap['port'];
+        $dn = $ldap['prefix'].$username.$ldap['domaine'];
+
+        $conn=ldap_connect($ldapServer);
+
+        if ($conn==true) :
+            if (ldap_set_option($conn, LDAP_OPT_PROTOCOL_VERSION, $ldap['version'])):
+                ldap_set_option($conn, LDAP_OPT_REFERRALS, 0);
+                if (@ldap_bind($conn,$dn,$password)) :
+                    $result = true;
+                    ldap_unbind($conn);
+                else:
+                    $this->Session->setFlash(__('Erreur d\'identification sur le serveur LDAP : Login ou mot de passe incorrect',true),'flash_failure');
+                endif;
+            else:
+                $this->Session->setFlash(__('Impossible de se connecter au serveur LDAP avec le protocole V3',true),'flash_failure');
+            endif;
+        else:
+            $this->Session->setFlash(__('Impossible de se connecter au serveur LDAP',true),'flash_failure');
+        endif;
+        ldap_close($conn);
+        return $result;
+    }
+    
+    /**
+     * Login method
+     * 
+     * @param none
+     * @return void
+     */        
         public function login() {
           if(userAuth('id')!=''):
-              $this->redirect(array('controller'=>'pages', 'action'=>'home'));
+                $this->redirect(array('controller'=>'pages', 'action'=>'home'));
           else:
             $this->Session->delete('history');
-            $this->set('title_for_layout',"Connexion");
+            $this->set_title("Connexion");
             if ($this->request->is('post')) {
-                $password=Security::hash($this->Auth->request->data['Utilisateur']['password'],'md5',false);
-                $username = $this->Auth->request->data['Utilisateur']['username'];
-                if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username))))>0){
-                    if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username,'Utilisateur.password'=>$password))))>0) {
-                        $utilisateur = $this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username,'Utilisateur.password'=>$password)));
-                        $autorisations = $this->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.profil_id'=>$utilisateur['Utilisateur']['profil_id'])));
-                        $this->Session->renew();
-                        $this->Session->write(AUTHORIZED,$autorisations);
-                        $this->Session->write('userMenu', $utilisateur['Utilisateur']['MENU']);
-                        /** cookie pour remember me **/
-                        if ($this->Auth->request->data['Utilisateur']['remember_me'] == 1) {
-                            // remove "remember me checkbox"
-                            unset($this->Auth->request->data['Utilisateur']['remember_me']);
-                            // hash the user's password
-                            $cookie = array();
-                            $cookie['username'] = $this->Auth->request->data['Utilisateur']['username'];
-                            $cookie['password'] = $this->Auth->request->data['Utilisateur']['password'];
-                            // write the cookie
-                            $this->Cookie->write('remember_me_cookie', $cookie, true, '2 weeks');
-                        }
-                        $this->Auth->login($utilisateur['Utilisateur']);
-                        //if(!empty(userAuth('LASTURL'))):
-                            //$url = isset(userAuth('LASTURL')) ? userAuth('LASTURL') : array('controller'=>'pages','action'=>'home');
-                            //$this->redirect($url);
-                        //else:                        
-                            $this->redirect(array('controller'=>'pages','action'=>'home'));
-                        //endif;
+                if($this->Auth->request->data['Utilisateur']['username']=="0000000A"):
+                    $password=Security::hash($this->Auth->request->data['Utilisateur']['password'],'md5',false);
+                    $username = $this->Auth->request->data['Utilisateur']['username'];
+                    if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username))))>0){
+                        if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username,'Utilisateur.password'=>$password))))>0) {
+                            $utilisateur = $this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username,'Utilisateur.password'=>$password)));
+                            $autorisations = $this->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.profil_id'=>$utilisateur['Utilisateur']['profil_id'])));
+                            $this->Session->renew();
+                            $this->Session->write(AUTHORIZED,$autorisations);
+                            $this->Session->write('userMenu', $utilisateur['Utilisateur']['MENU']);
+                            /** cookie pour remember me **/
+                            if ($this->Auth->request->data['Utilisateur']['remember_me'] == 1) {
+                                // remove "remember me checkbox"
+                                unset($this->Auth->request->data['Utilisateur']['remember_me']);
+                                // hash the user's password
+                                $cookie = array();
+                                $cookie['username'] = $this->Auth->request->data['Utilisateur']['username'];
+                                $cookie['password'] = $this->Auth->request->data['Utilisateur']['username']=="0000000A" ? $this->Auth->request->data['Utilisateur']['password'] : "ldap";
+                                // write the cookie
+                                $this->Cookie->write('remember_me_cookie', $cookie, true, '2 weeks');
+                            }
+                            $this->Auth->login($utilisateur['Utilisateur']);
+                                $auth_redirect = $this->Session->read("Auth.redirect");
+                                if(isset($auth_redirect) && $auth_redirect != "") {
+                                    $this->redirect($auth_redirect);
+                                } else { 
+                                    $this->redirect(array('controller'=>'pages','action'=>'home'));
+                                }        
+                        } else {
+                            $this->Session->setFlash(__('Mot de passe invalide, réessayer',true),'flash_failure');
+                        }                    
                     } else {
-                        $this->Session->setFlash(__('Mot de passe invalide, réessayer',true),'flash_failure');
+                        $this->Session->setFlash(__('Login inexistant ou compte invalide, contacter l\'administrateur',true),'flash_failure');
                     }                    
-                } else {
-                    $this->Session->setFlash(__('Login inexistant ou compte invalide, contacter l\'administrateur',true),'flash_failure');
-                }
+                else:
+                    if($this->ldap_login($this->Auth->request->data['Utilisateur']['username'], $this->Auth->request->data['Utilisateur']['password'])):
+                        $username = $this->Auth->request->data['Utilisateur']['username'];
+                        if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username))))>0){
+                            //if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username,'Utilisateur.password'=>$password))))>0) {
+                                $utilisateur = $this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$username))); //,'Utilisateur.password'=>$password)));
+                                $autorisations = $this->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.profil_id'=>$utilisateur['Utilisateur']['profil_id'])));
+                                $this->Session->renew();
+                                $this->Session->write(AUTHORIZED,$autorisations);
+                                $this->Session->write('userMenu', $utilisateur['Utilisateur']['MENU']);
+                                /** cookie pour remember me **/
+                                if ($this->Auth->request->data['Utilisateur']['remember_me'] == 1) {
+                                    unset($this->Auth->request->data['Utilisateur']['remember_me']);
+                                    $cookie = array();
+                                    $cookie['username'] = $this->Auth->request->data['Utilisateur']['username'];
+                                    $cookie['password'] = $this->Auth->request->data['Utilisateur']['username']=="0000000A" ? $this->Auth->request->data['Utilisateur']['password'] : "ldap";
+                                    $this->Cookie->write('remember_me_cookie', $cookie, true, '2 weeks');
+                                }
+                                $this->Auth->login($utilisateur['Utilisateur']);
+                                $auth_redirect = $this->Session->read("Auth.redirect");
+                                if(isset($auth_redirect) && $auth_redirect != "") {
+                                    $this->redirect($auth_redirect);
+                                } else { 
+                                    $this->redirect(array('controller'=>'pages','action'=>'home'));
+                                }                     
+                        } else {
+                            $this->Session->setFlash(__('Login inexistant ou compte invalide, contacter l\'administrateur',true),'flash_failure');
+                            $this->redirect(array('controller'=>'pages','action'=>'home'));
+                        }
+                    else:
+                        $this->redirect(array('controller'=>'pages','action'=>'home'));
+                    endif;
+                endif;
             }
             /** si login pas posté **/
             /** on lit le cookie et si c'est bon on se connecte **/
@@ -565,29 +685,58 @@ class UtilisateursController extends AppController {
                 if (!is_null($cookie)) {
                     $utilisateur = array();
                     $utilisateur['username'] = $cookie['username'];
-                    $utilisateur['password'] = Security::hash($cookie['password'],'md5',false);
-                    if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$utilisateur['username']))))>0){
-                        if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$utilisateur['username'],'Utilisateur.password'=>$utilisateur['password']))))>0) {
+                    $utilisateur['password'] = $utilisateur['username'] == "0000000A" ? Security::hash($cookie['password'],'md5',false) : "ldap";
+                    if($utilisateur['password']=='ldap'):
+                        if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$utilisateur['username']))))>0){
                             $utilisateur = $this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$utilisateur['username'],'Utilisateur.password'=>$utilisateur['password'])));
                             $autorisations = $this->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.profil_id'=>$utilisateur['Utilisateur']['profil_id'])));
                             $this->Session->renew();
                             $this->Session->write(AUTHORIZED,$autorisations);
                             if ($this->Auth->login($utilisateur['Utilisateur'])) {
-                                //  Clear auth message, just in case we use it.
-                                $this->redirect($this->Auth->redirect());
+                                //  Clear auth message, just in case we use it.  
+                                $auth_redirect = $this->Session->read("Auth.redirect");
+                                if(isset($auth_redirect) && $auth_redirect != "") {
+                                    $this->redirect($auth_redirect);
+                                } else { 
+                                    $this->redirect(array('controller'=>'pages','action'=>'home'));
+                                }                                                               
                             } else { // Delete invalid Cookie
                                 $this->Cookie->delete('remember_me_cookie');
-                            }
+                            }                  
                         } else {
                         $this->Session->renew();
                         $this->Cookie->delete('remember_me_cookie');
-                        $this->Session->setFlash(__('Cookie : Mot de passe invalide, réessayer',true),'flash_failure');
-                        }                    
-                    } else {
-                    $this->Session->renew();
-                    $this->Cookie->delete('remember_me_cookie');
-                    $this->Session->setFlash(__('Cookie : Login inexistant ou compte invalide, contacter l\'administrateur',true),'flash_failure');
-                    }
+                        $this->Session->setFlash(__('Cookie : Login inexistant ou compte invalide, contacter l\'administrateur',true),'flash_failure');
+                        }
+                    else:
+                        if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$utilisateur['username']))))>0){
+                            if (count($this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$utilisateur['username'],'Utilisateur.password'=>$utilisateur['password']))))>0) {
+                                $utilisateur = $this->Utilisateur->find('first', array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.username'=>$utilisateur['username'],'Utilisateur.password'=>$utilisateur['password'])));
+                                $autorisations = $this->Utilisateur->Profil->Autorisation->find('all',array('conditions'=>array('Autorisation.profil_id'=>$utilisateur['Utilisateur']['profil_id'])));
+                                $this->Session->renew();
+                                $this->Session->write(AUTHORIZED,$autorisations);
+                                if ($this->Auth->login($utilisateur['Utilisateur'])) {
+                                    //  Clear auth message, just in case we use it.                  
+                                $auth_redirect = $this->Session->read("Auth.redirect");
+                                if(isset($auth_redirect) && $auth_redirect != "") {
+                                    $this->redirect($auth_redirect);
+                                } else { 
+                                    $this->redirect(array('controller'=>'pages','action'=>'home'));
+                                }        
+                                } else { // Delete invalid Cookie
+                                    $this->Cookie->delete('remember_me_cookie');
+                                }
+                            } else {
+                            $this->Session->renew();
+                            $this->Cookie->delete('remember_me_cookie');
+                            $this->Session->setFlash(__('Cookie : Mot de passe invalide, réessayer',true),'flash_failure');
+                            }                    
+                        } else {
+                        $this->Session->renew();
+                        $this->Cookie->delete('remember_me_cookie');
+                        $this->Session->setFlash(__('Cookie : Login inexistant ou compte invalide, contacter l\'administrateur',true),'flash_failure');
+                        } 
+                    endif;
                 }
             }
             endif;
@@ -600,8 +749,8 @@ class UtilisateursController extends AppController {
  * @return void
  */
 	public function logout() {
+            $this->autoRender = false;
             $this->Session->delete('history');
-            $this->set('title_for_layout',"Connexion");
             $this->Cookie->delete('remember_me_cookie');
             $this->Session->delete('Auth.User');
             $this->redirect($this->Auth->logout());
@@ -686,7 +835,8 @@ class UtilisateursController extends AppController {
                         $lastid = $this->Utilisateur->id;
                         $this->addnewaction($lastid);
                         $this->save_history($lastid,'Création du compte à partir d\'une duplication');
-                        $this->Utilisateur->requestAction('utiliseoutils/duplicate_from_user', array('pass' => array($id,$lastid)));
+                        $ObjUtiliseoutils = new UtiliseoutilsController();
+                        $ObjUtiliseoutils->duplicate_from_user($id,$lastid);
                         $this->Session->setFlash(__('Utilisateur dupliqué',true),'flash_success');
                         $this->redirect(array('action'=>'edit',$lastid));
                 } 
@@ -694,7 +844,7 @@ class UtilisateursController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}   
     
@@ -725,7 +875,7 @@ class UtilisateursController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	} 
 
@@ -746,17 +896,10 @@ class UtilisateursController extends AppController {
                         $username = $this->data['Utilisateur']['usernamelost'];
                         $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.username'=>$username),'recursive'=>0));
                         $this->Utilisateur->id = $utilisateur['Utilisateur']['id'];
-                        $record = $this->Utilisateur->read();
-                        unset($record['Utilisateur']['password']); 
-                        unset($record['Utilisateur']['created']);
-                        unset($record['Utilisateur']['modified']);
-                        $password = generateRandomPassword();
-                        $record['Utilisateur']['password']=$password; 
-                        $record['Utilisateur']['created'] = $this->Utilisateur->read('created');
-                        $record['Utilisateur']['modified'] = date('Y-m-d');                
-                        if ($this->Utilisateur->save($record)) {
+                        $password = generateRandomPassword();            
+                        if ($this->Utilisateur->saveField("password",$password)) {
                                 $sendmail = $this->sendmailpassword($utilisateur,$password);
-                                $this->save_history($utilisateur['Utilisateur']['id'],'Initialisation du mot de passe de '.$username);
+                                $this->save_history($utilisateur['Utilisateur']['id'],'Initialisation du mot de passe de '.$username.' avec un mot de passe autogénéré.');
                                 $this->Session->setFlash(__('Mot de passe envoyé à votre adresse mail, si vous ne recevez pas l\'email contacter l\'administrateur',true),'flash_success');
                                 $this->History->goBack(1);
                         } 
@@ -785,7 +928,7 @@ class UtilisateursController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}         
         
@@ -819,7 +962,8 @@ class UtilisateursController extends AppController {
                     if (userAuth('WIDEAREA')==0) {
                         $newconditions[]="Utilisateur.section_id=".userAuth('section_id');
                     }
-                    $sections = $this->requestAction('sections/get_all/',array('pass' => array($listusers)));
+                    $ObjSections = new SectionsController();                    
+                    $sections = $ObjSections->get_all($listusers);
                     $this->set('sections',$sections);  
                     foreach ($arkeywords as $key=>$value):
                         $ornewconditions[] = array('OR'=>array("Utilisateur.username LIKE '%".$value."%'","Utilisateur.NOM LIKE '%".$value."%'","Utilisateur.PRENOM LIKE '%".$value."%'","Utilisateur.COMMENTAIRE LIKE '%".$value."%'","Utilisateur.TELEPHONE LIKE '%".$value."%'","Utilisateur.WORKCAPACITY LIKE '%".$value."%'","Profil.NOM LIKE '%".$value."%'","Societe.NOM LIKE '%".$value."%'","Assistance.NOM LIKE '%".$value."%'","Section.NOM LIKE '%".$value."%'","Tjmagent.NOM LIKE '%".$value."%'"));
@@ -833,7 +977,7 @@ class UtilisateursController extends AppController {
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }    
         
@@ -1005,12 +1149,13 @@ class UtilisateursController extends AppController {
         }
         
         public function sendmailnewutilisateur($utilisateur){
-            $mailtoGestannuaire = $this->requestAction('parameters/get_gestionnaireannuaire');
+            $ObjParameters = new ParametersController();
+            $mailtoGestannuaire = $ObjParameters->get_gestionnaireannuaire();
             $mailto[] = $mailtoGestannuaire['Parameter']['param'];
             $i = date('m') > 10 ? 2 : 1;
             $finmission = $utilisateur['Utilisateur']['FINMISSION'] = '' ? "05/01".(date('Y')+$i) : $utilisateur['Utilisateur']['FINMISSION'];
             $to=$mailto;
-            $from = userAuth('MAIL');
+            $from = Configure::read('mailapp');
             $objet = "SAILL : Ajout d'un nouvel utilisateur [".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].']';
             $message = "Merci de traiter cette demande concernant l'arrivée de ".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].
                     '<ul>
@@ -1037,12 +1182,13 @@ class UtilisateursController extends AppController {
         
         public function sendmailgestannuaire($id){
             $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$id),'recursive'=>0));
-            $mailtoGestannuaire = $this->requestAction('sections/get_gestionnaire_annuaire/'.$utilisateur['Utilisateur']['section_id']);
+            $ObjSections = new SectionsController(); 
+            $mailtoGestannuaire = $ObjSections->get_gestionnaire_annuaire($utilisateur['Utilisateur']['section_id']);
             $mailto = explode(';',$mailtoGestannuaire);
             $i = date('m') > 10 ? 2 : 1;
             $finmission = $utilisateur['Utilisateur']['FINMISSION'] = '' ? "05/01".(date('Y')+$i) : $utilisateur['Utilisateur']['FINMISSION'];
             $to=$mailto;
-            $from = userAuth('MAIL');
+            $from = Configure::read('mailapp');
             $objet = "SAILL : Ajout d'un nouvel utilisateur [".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].']';
             $message = "Merci de traiter cette demande concernant l'arrivée de ".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].
                     '<ul>
@@ -1070,7 +1216,7 @@ class UtilisateursController extends AppController {
         }
 
         public function sendmailpassword($utilisateur,$password){
-            $from =  'donotreply.saill@sncf.fr';
+            $from =  Configure::read('mailapp');
             $to=$utilisateur['Utilisateur']['MAIL'];
             $objet = "SAILL : Demande de nouveaux identifiants pour [".$utilisateur['Utilisateur']['NOM']." ".$utilisateur['Utilisateur']['PRENOM']."]";
             $message = "Bonjour<br>comme demandé voici le nouvel identifiant pour ".$utilisateur['Utilisateur']['NOM']." ".$utilisateur['Utilisateur']['PRENOM'].
@@ -1097,10 +1243,11 @@ class UtilisateursController extends AppController {
         }
         
         public function sendmailprolongation($utilisateur){
-            $mailtoGestannuaire = $this->requestAction('parameters/get_gestionnaireannuaire');
+            $ObjParameters = new ParametersController();
+            $mailtoGestannuaire = $ObjParameters->get_gestionnaireannuaire();
             $mailto[] = $mailtoGestannuaire['Parameter']['param'];
             $to=$mailto;
-            $from = userAuth('MAIL');
+            $from = Configure::read('mailapp');
             $objet = "SAILL : Prolongation d'un utilisateur [".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].']';
             $message = "Merci de traiter cette demande concernant la prolongation de ".$utilisateur['Utilisateur']['NOM'].' '.$utilisateur['Utilisateur']['PRENOM'].
                     '<ul>
@@ -1169,7 +1316,8 @@ class UtilisateursController extends AppController {
                 @$societelist .= $value.',';
             }  
             $societe = substr_replace(@$societelist ,"",-1);  
-            $result = $this->requestAction('assoentiteutilisateurs/get_all_utilisateur_for_societe/',array('pass'=>array($societe)));
+            $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+            $result = $ObjAssoentiteutilisateurs->get_all_utilisateur_for_societe($societe);
             return $result;
         }
         
@@ -1244,7 +1392,7 @@ class UtilisateursController extends AppController {
                     $this->progressengconf($id, true);
                 endforeach;
                 sleep(3);
-                $this->Session->setFlash(__('Engagements de confidentialité mis à jour',true),'flash_success');
+                echo $this->Session->setFlash(__('Engagements de confidentialité mis à jour',true),'flash_success');
             else:
                 echo $this->Session->setFlash(__('Aucun utilisateur sélectionné',true),'flash_failure');
             endif;
@@ -1269,9 +1417,17 @@ class UtilisateursController extends AppController {
         }        
         
         public function get_list_actif($admin =false,$generique = false){
+            $visibility = $this->get_visibility();
+            if ($admin) : $visibility = "1,".$visibility; endif;
             $conditions = array();
             $conditions[] = array('Utilisateur.ACTIF'=>1);
-            if (!$admin) : $conditions[] = array('Utilisateur.id > 1'); endif;
+            if($visibility == null):
+                $conditions[] = "1 = 1";
+            elseif ($visibility!=''):
+                $conditions[] = "Utilisateur.id IN (".$visibility.")";
+            else:
+                $conditions[] = "Utilisateur.id IN (".userAuth('entite_id').")";
+            endif; 
             if (!$generique) : $conditions[] = array('OR'=>array('Utilisateur.profil_id > 0','Utilisateur.profil_id'=>-2)); endif;
             $list = $this->Utilisateur->find('all',array('fields'=>array('Utilisateur.id','Utilisateur.section_id','Utilisateur.NOMLONG'),'conditions'=>$conditions,'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>0));
             return $list;
@@ -1319,9 +1475,9 @@ class UtilisateursController extends AppController {
         }
         
         public function ajax_save_password(){
-            $this->Utilisateur->id = userAuth('id');
             $this->autoRender = false;
             $msg  = $this->Session->setFlash(__('Mot de passe <b>NON</b> sauvegardé',true),'flash_failure');
+            $this->Utilisateur->id = userAuth('id');
             if ($this->Utilisateur->saveField('password', $this->request->data('password'))):
                  $this->save_history(userAuth('id'), 'Modification du mot de passe');
                  $utilisateur = $this->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>userAuth('id'))));
@@ -1349,15 +1505,15 @@ class UtilisateursController extends AppController {
             if ((int)$absences == 1) : $orconditions[] = array('Utilisateur.GESTIONABSENCES'=>1); endif;  
             $conditions = array($conditions,$link=>$orconditions);
             $order[]=array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc');
-            $list = $this->Utilisateur->find('all',array('order'=>$order,'conditions'=>$conditions,'recursive'=>1));
+            $list = $this->Utilisateur->find('all',array('order'=>$order,'conditions'=>$conditions,'recursive'=>0));
             return $list;
         }    
         
-        public function find_list_cercle_utilisateur($utilisateur_id,$generique=0,$absences=0){
-            $pass = $this->params->params['pass'];
-            $utilisateur_id = isset($pass[0]) ? $pass[0] : $utilisateur_id;
-            $generique =  isset($pass[1]) ? $pass[1] : $generique;
-            $absences = isset($pass[2]) ? $pass[2] : $absences;            
+        public function find_list_cercle_utilisateur($utilisateur_id=null,$generique=0,$absences=0){
+//            $pass = isset($this->params) ? $this->params->params['pass'] : array(); 
+//            $utilisateur_id = isset($pass[0]) ? $pass[0] : $utilisateur_id;
+//            $generique =  isset($pass[1]) ? $pass[1] : $generique;
+//            $absences = isset($pass[2]) ? $pass[2] : $absences;            
             $list = $this->get_visibility();
             $conditions = array(); 
             if($list == null):
@@ -1371,7 +1527,7 @@ class UtilisateursController extends AppController {
             $conditions = array($conditions,$link=>$orconditions);
             $order[]=array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc');
             $fields = array('Utilisateur.id','Utilisateur.NOMLONG');
-            $list = $this->Utilisateur->find('list',array('fields'=>$fields,'order'=>$order,'conditions'=>$conditions,'recursive'=>1));
+            $list = $this->Utilisateur->find('list',array('fields'=>$fields,'order'=>$order,'conditions'=>$conditions,'recursive'=>0));
             return $list;          
         }   
         
@@ -1397,5 +1553,39 @@ class UtilisateursController extends AppController {
                     $list .= $result['Utilisateur']['id'].',';
             endforeach;
             return strlen($list) > 1 ? substr_replace($list ,"",-1) : '0';
-        }            
+        }  
+        
+        public function ajax_autoend(){
+            $this->autoRender = false;
+            $today = new DateTime();
+            $today->format('Y-m-d');  
+            $users = $this->Utilisateur->find('all',array('conditions'=>array('Utilisateur.ACTIF'=>1,'Utilisateur.FINMISSION < "'.date("Y-m-d").'"'),'recursive'=>-1));           
+            foreach ($users as $user):
+                $finmission = new DateTime($user['Utilisateur']['FINMISSION']);
+                $diff = $today->format('m') - $finmission->format('m'); 
+                $this->Utilisateur->id = $user['Utilisateur']['id'];
+                if($diff>=1 && $user['Utilisateur']['ACTIF']==0):
+                    $this->Utilisateur->saveField('GESTIONABSENCES', 0);  
+                endif;
+                $this->Utilisateur->saveField('ACTIF', 0);
+                $this->Utilisateur->saveField('FINMISSION', $today);
+            endforeach;
+            return count($users);
+        }  
+        
+        public function get_users_gestionnaireabsences($actif=1){
+            set_time_limit(120);
+            $fields = array('Utilisateur.id','Utilisateur.PRENOM','Utilisateur.NOM','Utilisateur.MAIL');
+            $conditions = array('Utilisateur.GESTIONABSENCES'=>$actif,'Utilisateur.ACTIF'=>1,'Utilisateur.NOTIFYME'=>1);
+            return $this->Utilisateur->find('all',array('fields'=>$fields,'conditions'=>$conditions,'recursive'=>-1)); 
+        }
+        
+        public function get_str_users_gestionnaireabsences($actif=1){
+            $users = $this->get_users_gestionnaireabsences($actif);
+            $list = "";
+            foreach($users as $user):
+                $list .=$user['Utilisateur']['id'].',';
+            endforeach;
+            return strlen($list) > 1 ? substr_replace($list ,"",-1) : '0';
+        }
 }

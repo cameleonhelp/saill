@@ -1,13 +1,13 @@
 <div class="changelogdemandes form tablemarginright"> 
 <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" style="width:100%;">
-<tr>
+<thead><tr>
                 <th><?php echo 'Attribué à'; ?></th>
                 <th><?php echo 'Réponse'; ?></th>
                 <th><?php echo 'Le'; ?></th>
-                <?php if($this->params->controller == 'changelogreponses' && $this->params->action == 'add' && userAuth('profil_id')=='1'): ?>
+                <?php if($this->params->controller == 'changelogreponses' && $this->params->action == 'add' && (userAuth('profil_id')=='1' || isAuthorized('changelogreponses', 'add'))): ?>
                     <th><?php echo 'Editer'; ?></th>
                 <?php endif; ?>
-</tr>
+</tr></thead>
 <?php foreach ($changelogreponses as $changelogreponse): ?>
 <tr>
         <td>
@@ -67,7 +67,7 @@ $(document).ready(function () {
                 $('#editModal').modal('show')
             },
             error :function(response, status,errorThrown) {
-                alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
             }
          });
     });

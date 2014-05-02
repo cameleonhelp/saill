@@ -321,6 +321,7 @@ $(document).ready(function (){
     $('#chartcontainer').highcharts({
         chart: {
             type: 'column', 
+            zoomType: 'x' 
         },  
         colors: ['#A1006B','#E05206','#CCDC00','#009AA6','#CB0044','#FFB612','#7ABB00','#00BBCE','#6E267B'],
         credits: {

@@ -1,10 +1,21 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Applications');
+App::import('Controller', 'Types');
+App::import('Controller', 'Lots');
+App::import('Controller', 'Envversions');
+App::import('Controller', 'Assobienlogiciels');
+App::import('Controller', 'Biens');
+App::import('Controller', 'Historylogiciels');
+App::import('Controller', 'Dsitenvs');
+
 /**
  * Logiciels Controller
  *
  * @property Logiciel $Logiciel
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class LogicielsController extends AppController {
 
@@ -15,12 +26,18 @@ class LogicielsController extends AppController {
  */
         public $paginate = array('limit' => 25,'order'=>array('Logiciel.NOM'=>'asc'));
 	public $components = array('History','Common');
+                        
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_select_compatible'));
+            parent::beforeFilter();
+        }  
         
         public function get_visibility(){
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return $ObjAssoentiteutilisateurs->json_get_my_entite(userAuth('id'));
             endif;
         }
 
@@ -39,7 +56,8 @@ class LogicielsController extends AppController {
             switch($aplication):
                 case null:
                 case 'tous':
-                    $listapp = $this->requestAction('applications/get_str_list');
+                    $ObjApplications = new ApplicationsController();
+                    $listapp = $ObjApplications->get_str_list();
                     $result['condition']="Logiciel.application_id IN (".$listapp.")";
                     $result['filter'] = ', pour toutes les applications';
                     break;
@@ -208,13 +226,16 @@ class LogicielsController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                
 		$this->set('logiciels', $this->paginate());
                 $xls_export = $this->get_export($conditionexport);
-                $applications = $this->requestAction('applications/get_list/1');
-                $types = $this->requestAction('types/get_list/1');
-                $outils = $this->requestAction('envoutils/get_list/1');
+                $ObjApplications = new ApplicationsController();
+                $ObjTypes = new TypesController();
+                $ObjEnvoutils = new EnvoutilsController();
+                $applications = $ObjApplications->get_list(1);
+                $types = $ObjTypes->get_list(1);
+                $outils = $ObjEnvoutils->get_list(1);
                 $this->set(compact('applications','types','outils','strconditionexport','xls_export'));   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -260,15 +281,19 @@ class LogicielsController extends AppController {
                         }
                     endif;
 		endif;
-		$outils = $this->requestAction('envoutils/get_select/1');
+                $ObjEnvoutils = new EnvoutilsController();
+		$outils = $ObjEnvoutils->get_select(1);
                 $versions=array();
-		$applications = $this->requestAction('applications/get_select/1');
-		$types = $this->requestAction('types/get_select/1');
-		$lots = $this->requestAction('lots/get_select/1');
+                $ObjApplications = new ApplicationsController();
+                $ObjTypes = new TypesController();
+		$applications = $ObjApplications->get_select(1);
+		$types = $ObjTypes->get_select(1);
+                $ObjLots = new LotsController();
+		$lots = $ObjLots->get_select(1);
 		$this->set(compact('versions','outils', 'applications', 'types', 'lots'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -324,21 +349,30 @@ class LogicielsController extends AppController {
 			$options = array('conditions' => array('Logiciel.' . $this->Logiciel->primaryKey => $id));
 			$this->request->data = $this->Logiciel->find('first', $options);
 		}
-		$outils = $this->requestAction('envoutils/get_select/1');
+                $ObjEnvoutils = new EnvoutilsController();
+		$outils = $ObjEnvoutils->get_select(1);
                 $envoutil = $this->Logiciel->read('envoutil_id', $id);
-                $versions=$this->requestAction('envversions/get_select_version_for/'.$envoutil['Logiciel']['envoutil_id'].'/1');
-		$applications = $this->requestAction('applications/get_select/1');
-		$types = $this->requestAction('types/get_select/1');
-		$lots = $this->requestAction('lots/get_select/1');
-                $biens = $this->requestAction('assobienlogiciels/get_biens_for_outil/'.$id);
-                $listlogiciels = $this->requestAction('logiciels/get_select_compatible/'.$this->request->data['Logiciel']['lot_id'].'/'.$this->request->data['Logiciel']['application_id']);
-                $listbiens = $this->requestAction('biens/get_select_compatible/'.$this->request->data['Logiciel']['lot_id'].'/'.$this->request->data['Logiciel']['application_id']);
-                $histories = $this->requestAction('historylogiciels/get_list_for_logiciel/'.$id);
-                $all_dsitenvs = $this->requestAction('dsitenvs/get_list');
+                $ObjEnvversions = new EnvversionsController();
+                $versions = $ObjEnvversions->get_select_version_for($envoutil['Logiciel']['envoutil_id'],1);
+                $ObjApplications = new ApplicationsController();
+                $ObjTypes = new TypesController();
+		$applications = $ObjApplications->get_select(1);
+		$types = $ObjTypes->get_select(1);
+                $ObjLots = new LotsController();
+		$lots = $ObjLots->get_select(1);
+                $ObjAssobienlogiciels = new AssobienlogicielsController();
+                $biens = $ObjAssobienlogiciels->get_biens_for_outil($id);
+                $listlogiciels = $this->get_select_compatible($this->request->data['Logiciel']['lot_id'],$this->request->data['Logiciel']['application_id']);
+                $ObjBiens = new BiensController();
+                $listbiens = $ObjBiens->get_select_compatible($this->request->data['Logiciel']['lot_id'],$this->request->data['Logiciel']['application_id']);
+                $ObjHistorylogiciels = new HistorylogicielsController();
+                $histories = $ObjHistorylogiciels->get_list_for_logiciel($id);
+                $ObjDsitenvs = new DsitenvsController();
+                $all_dsitenvs = $ObjDsitenvs->get_list();
 		$this->set(compact('versions','outils', 'applications', 'types', 'lots','envoutil','biens','listbiens','histories','listlogiciels','all_dsitenvs'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -393,7 +427,7 @@ class LogicielsController extends AppController {
                 endif;                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
         
@@ -487,7 +521,7 @@ class LogicielsController extends AppController {
                 }              
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}        
         
@@ -537,7 +571,7 @@ class LogicielsController extends AppController {
                 }
             else:
                 $this->Session->setFlash(__('Historisation impossible le logiciel est incorect.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;
         }
         
@@ -571,16 +605,19 @@ class LogicielsController extends AppController {
                     $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                
                     $this->set('logiciels', $this->paginate());
                     $xls_export = $this->get_export($conditionexport);
-                    $applications = $this->requestAction('applications/get_list/1');
-                    $types = $this->requestAction('types/get_list/1');
-                    $outils = $this->requestAction('envoutils/get_list/1');
+                    $ObjApplications = new ApplicationsController();
+                    $ObjTypes = new TypesController();
+                    $ObjEnvoutils = new EnvoutilsController();
+                    $applications = $ObjApplications->get_list(1);
+                    $types = $ObjTypes->get_list(1);
+                    $outils = $ObjEnvoutils->get_list(1);
                     $this->set(compact('applications','types','outils','strconditionexport','xls_export'));          
                 else:
                     $this->redirect(array('action'=>'index',$aplication,$installe,$actif,$type,$outil));
                 endif; 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;  
         }  
         
@@ -597,6 +634,7 @@ class LogicielsController extends AppController {
         }
                
         public function deleteall(){
+            $this->autoRender = false;
             $ids = explode('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
@@ -611,7 +649,7 @@ class LogicielsController extends AppController {
             else :
                 $this->Session->setFlash(__('Aucun logiciel sélectionné',true),'flash_failure');
             endif;
-            exit();
+            return $this->request->data('all_ids');
         }      
         
 /**
@@ -665,7 +703,7 @@ class LogicielsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}    
         

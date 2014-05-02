@@ -14,8 +14,10 @@
           <li class="list-group-item"><a href="https://catalogue-solutions.sncf.fr/index.php/Google_Chrome" target="_blank"><span class="glyphicons link notchange marginright10 margintop4"></span></a>Chrome</li>
           <li class="list-group-item"><a href="https://catalogue-solutions.sncf.fr/index.php/Safari" target="_blank"><span class="glyphicons link notchange marginright10 margintop4"></span></a>Safari</li>
           <li class="list-group-item">
-              <div class="free" data-toggle="popover" data-rel="popover" data-container="body" data-content="Compatible IE10<br>partiellement compatible IE8." data-original-title="" title="">
-                  <span class="glyphicons circle_question_mark yellow notchange marginright10 margintop4"></span></div>Internet Explorer</li>
+              <!--<div class="free pull-right" data-rel="popover" data-container="body" data-content="Compatible IE10<br>partiellement compatible IE8." data-original-title="" title="">-->
+                  <span class="glyphicons circle_question_mark yellow notchange marginright10 margintop4 cursor" data-container="#subcontent"  data-toggle="popover" data-rel="popover"data-placement="left" data-content="Compatible IE10<br>partiellement compatible IE8." data-original-title="" title=""></span>
+                  <!--</div>-->
+        Internet Explorer</li>
         </ul>
       </div>
     </div>

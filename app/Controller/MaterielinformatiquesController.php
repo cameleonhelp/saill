@@ -1,10 +1,16 @@
 <?php
 App::uses('AppController', 'Controller');
-App::import('Vendor', 'ping', array('file'=>'class.ping.php'));
+App::uses('Vendor', 'ping', array('file'=>'class.ping.php'));
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Typemateriels');
+App::import('Controller', 'Sections');
+App::import('Controller', 'Assistances');
+App::import('Controller', 'Dotations');
 /**
  * Materielinformatiques Controller
  *
  * @property Materielinformatique $Materielinformatique
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class MaterielinformatiquesController extends AppController {
         public $components = array('History','Common'); 
@@ -12,12 +18,29 @@ class MaterielinformatiquesController extends AppController {
         'limit' => 25,
         'order' => array('Materielinformatique.NOM' => 'asc'),
         );
-
+                
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Postes informatiques" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }          
+    
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_list_all','json_list_stock'));
+            parent::beforeFilter();
+        }  
+        
         public function get_visibility(){
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/find_all_section/'.userAuth('id'));
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return$ObjAssoentiteutilisateurs->find_all_section(userAuth('id'));
             endif;
         }
                 
@@ -85,13 +108,44 @@ class MaterielinformatiquesController extends AppController {
             $export = $this->Materielinformatique->find('all',array('conditions'=>$conditions,'order' => array('Materielinformatique.NOM' => 'asc'),'recursive'=>0));
             $this->Session->write('xls_export',$export);   
         }
+        
+        public function get_list_utiliseoutil_utilisateur($visibility){
+            if($visibility == null):
+                $conditions =array('1=1');
+            elseif ($visibility!=''):
+                $conditions = array('Utilisateur.id > 1','Utilisateur.profil_id > 0','Utilisateur.section_id IN ('.$visibility.')');
+            else:
+                $conditions =array('Utilisateur.id > 1','Utilisateur.profil_id > 0','Utilisateur.section_id ='.userAuth('section_id'));
+            endif;                      
+            $utilisateurs = $this->Materielinformatique->Dotation->Utilisateur->find('list',array('fields' => array('id','NOMLONG'),'conditions'=>$conditions,'order'=>array('Utilisateur.NOMLONG'=>'asc'),'group'=>'Utilisateur.id','recursive'=>-1));
+            return $utilisateurs;
+        }   
+        
+        public function get_list_stock(){
+            $conditions = array('Materielinformatique.ETAT ='=>'En stock');
+            return $this->Materielinformatique->find('list',array('fields'=>array('id','NOM'),'conditions'=>$conditions,'order'=>array('Materielinformatique.NOM'=>'asc'),'recursive'=>-1));
+        }
+        
+        public function json_list_stock(){
+            $this->autoRender = false;
+            $conditions = array('Materielinformatique.ETAT ='=>'En stock');
+            $result = $this->Materielinformatique->find('list',array('fields'=>array('NOM','id'),'conditions'=>$conditions,'order'=>array('Materielinformatique.NOM'=>'asc'),'recursive'=>-1));
+            return json_encode($result);
+        }  
+        
+        public function json_list_all(){
+            $this->autoRender = false;
+            $conditions = array("1=1");
+            $result = $this->Materielinformatique->find('list',array('fields'=>array('NOM','id'),'conditions'=>$conditions,'order'=>array('Materielinformatique.NOM'=>'asc'),'recursive'=>-1));
+            return json_encode($result);
+        }         
 /**
  * index method
  *
  * @return void
  */
 	public function index($filtreetat=null,$filtretype=null,$filtresection=null) {
-            $this->set('title_for_layout','Postes informatique');
+            $this->set_title();
             if (isAuthorized('materielinformatiques', 'index')) :
                 $visibility = $this->get_visibility();
                 $getetat = $this->get_materiel_etat_filter($filtreetat);
@@ -105,12 +159,16 @@ class MaterielinformatiquesController extends AppController {
 		$this->set('materielinformatiques', $this->paginate());
                 $this->get_export($newconditions);
                 $etats = Configure::read('etatMaterielInformatique');
-                $types = $this->requestAction('typemateriels/get_all_uc');
-                $sections = $this->requestAction('sections/get_all/',array('pass'=>array($visibility)));
-                $this->set(compact('etats','types','sections')); 
+                $ObjTypemateriels = new TypematerielsController();
+                $ObjSections = new SectionsController();
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                $types = $ObjTypemateriels->get_all_uc();
+                $sections = $ObjSections->get_all($visibility);
+                $utilisateurs= $ObjAssoentiteutilisateurs->get_list_utilisateur(userAuth('id'));
+                $this->set(compact('etats','types','sections','utilisateurs')); 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -120,7 +178,7 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function add() {
-            $this->set('title_for_layout','Postes informatique');
+            $this->set_title();
             if (isAuthorized('materielinformatiques', 'add')) :
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
@@ -137,14 +195,17 @@ class MaterielinformatiquesController extends AppController {
                     endif;
 		endif;
                 $visibility = $this->get_visibility();
-                $peripherique = $this->requestAction('typemateriels/get_list_uc');
-                $section = $this->requestAction('sections/get_list/',array('pass'=>array($visibility)));
+                $ObjTypemateriels = new TypematerielsController();
+                $ObjSections = new SectionsController();
+                $ObjAssistances = new AssistancesController();  
+                $peripherique =$ObjTypemateriels->get_list_uc();
+                $section = $ObjSections->get_list($visibility);
                 $etat = Configure::read('etatMaterielInformatique');
-                $assistance = $this->requestAction('assistances/get_list');
+                $assistance = $ObjAssistances->get_list();
                 $this->set(compact('peripherique','section','etat','assistance'));                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -156,7 +217,7 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','Postes informatique');
+            $this->set_title();
             if (isAuthorized('materielinformatiques', 'edit')) :
                 if (!$this->Materielinformatique->exists($id)) {
 			throw new NotFoundException(__('Postes informatique incorrect'));
@@ -170,7 +231,8 @@ class MaterielinformatiquesController extends AppController {
                             if ($this->request->data['Materielinformatique']['ETAT']=='En stock'):
                                 $dotations = $this->Materielinformatique->Dotation->find('all',array('conditions'=>array('Dotation.materielinformatiques_id'=>$id),'recursive'=>0));
                                 foreach($dotations as $dotation):
-                                    $this->Materielinformatique->requestAction('dotations/reception',array('pass'=>array($dotation['Dotation']['id'],$dotation['Dotation']['utilisateur_id'])));
+                                    $ObjDotations = new DotationsController();	
+                                    $ObjDotations->reception($dotation['Dotation']['id'],$dotation['Dotation']['utilisateur_id']);
                                 endforeach;    
                             endif;
 				$this->Session->setFlash(__('Postes informatique sauvegardé',true),'flash_success');
@@ -184,15 +246,18 @@ class MaterielinformatiquesController extends AppController {
                     $this->request->data = $this->Materielinformatique->find('first', $options);
                     $this->set('materielinformatique',$this->request->data);
                     $visibility = $this->get_visibility();
-                    $peripherique = $this->requestAction('typemateriels/get_list_uc');
-                    $section = $this->requestAction('sections/get_list/',array('pass'=>array($visibility)));
+                    $ObjTypemateriels = new TypematerielsController();
+                    $ObjSections = new SectionsController();	
+                    $ObjAssistances = new AssistancesController();  	
+                    $peripherique = $ObjTypemateriels->get_list_uc();
+                    $section = $ObjSections->get_list($visibility);
                     $etat = Configure::read('etatMaterielInformatique');
-                    $assistance = $this->requestAction('assistances/get_list');
+                    $assistance = $ObjAssistances->get_list();
                     $this->set(compact('peripherique','section','etat','assistance'));                         
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -205,7 +270,7 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-            $this->set('title_for_layout','Postes informatique');
+            $this->set_title();
             if (isAuthorized('materielinformatiques', 'delete')) :
                 $this->Materielinformatique->id = $id;
 		if (!$this->Materielinformatique->exists()) {
@@ -219,7 +284,7 @@ class MaterielinformatiquesController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -229,7 +294,7 @@ class MaterielinformatiquesController extends AppController {
  * @return void
  */
 	public function search($filtreetat=null,$filtretype=null,$filtresection=null,$keywords=null) {
-            $this->set('title_for_layout','Postes informatique');
+            $this->set_title();
             if (isAuthorized('materielinformatiques', 'index')) :
                 if(isset($this->params->data['Materielinformatique']['SEARCH'])):
                     $keywords = $this->params->data['Materielinformatique']['SEARCH'];
@@ -257,15 +322,19 @@ class MaterielinformatiquesController extends AppController {
                     $this->set('materielinformatiques', $this->paginate());
                     $this->get_export($newconditions);
                     $etats = Configure::read('etatMaterielInformatique');
-                    $types = $this->requestAction('typemateriels/get_all_uc');
-                    $sections = $this->requestAction('sections/get_all/',array('pass'=>array($visibility)));
-                    $this->set(compact('etats','types','sections'));                    
+                    $ObjTypemateriels = new TypematerielsController();	
+                    $ObjSections = new SectionsController();	
+                    $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                    $types = $ObjTypemateriels->get_all_uc();
+                    $sections = $ObjSections->get_all($visibility);
+                    $utilisateurs= $ObjAssoentiteutilisateurs->get_list_utilisateur(userAuth('id'));
+                    $this->set(compact('etats','types','sections','utilisateurs'));                    
                 else:
                     $this->redirect(array('action'=>'index',$filtreetat,$filtretype,$filtresection));
                 endif;   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }   
         
@@ -308,7 +377,7 @@ class MaterielinformatiquesController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}     
         
@@ -336,5 +405,32 @@ class MaterielinformatiquesController extends AppController {
             $poste['LATENCE']=$result;
             $result = json_encode($poste);
             return $result;
+        }
+        
+        public function assignto(){
+            $this->autoRender = false;
+            $old = $this->Materielinformatique->Dotation->find('first',array('conditions'=>array('Dotation.materielinformatiques_id'=>$this->request->data['Materielinformatique']['id'])));
+            $delete = true;
+            $ObjDotations = new DotationsController();
+            if($old['Dotation']['id']):	
+                $delete = $ObjDotations->ajaxdelete($old['Dotation']['id']);
+            endif;
+            if($this->request->data['Materielinformatique']['utilisateur_id']!=''):
+                if($ObjDotations->ajaxadd($this->request->data)):
+                    $this->Materielinformatique->id = $this->request->data['Materielinformatique']['id'];
+                    $this->Materielinformatique->saveField('ETAT', 'En dotation');
+                    $this->Session->setFlash(__('Poste informatique affecté à l\'utilisateur',true),'flash_success');
+                else:
+                    $this->Session->setFlash(__('Poste informatique <b>NON</b> affecté à l\'utilisateur',true),'flash_failure');
+                endif;
+            else:
+                $this->Materielinformatique->id = $this->request->data['Materielinformatique']['id'];
+                if($this->Materielinformatique->saveField('ETAT', 'En stock') && $delete):
+                    $this->Session->setFlash(__('Poste informatique de nouveau disponible',true),'flash_success');
+                else:
+                    $this->Session->setFlash(__('Poste informatique <b>NON</b> retiré à l\'utilisateur',true),'flash_failure');
+                endif;                
+            endif;
+            $this->History->goBack(1);
         }
 }

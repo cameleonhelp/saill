@@ -32,7 +32,7 @@
     <thead>
         <tr>
         <th>Agent</th>
-        <th>Etat et jours saisis sur <?php echo $nbmaxopen; ?> (jours ouvrés du mois : <?php echo $nbopenday; ?>)</th>
+        <th>Etat et jours saisis sur <?php echo $nbmaxopen; ?> max sur le mois (le nombre de jours ouvrés sur la période du <?php echo CFRDate($firstday); ?> au <?php echo CFRDate($lastweek); ?> : <?php echo $nbopenday; ?>)</th>
         </tr>
     </thead>
     <tbody>
@@ -40,9 +40,9 @@
         <tr>
             <td><?php echo $result['SAISIE']['NOMLONG']; ?></td>
             <?php
-            if(($result['SAISIE']['TOTAL']-intval($nbmaxopen)) < 0):
+            if(($result['SAISIE']['TOTAL']-intval($nbopenday)) < 0):
                 $badge = 'badge-important showoverlay';
-            elseif(($result['SAISIE']['TOTAL']-intval($nbmaxopen))==0 && $result['SAISIE']['VEROUILLE']!=0):
+            elseif(($result['SAISIE']['TOTAL']-intval($nbopenday))==0 && $result['SAISIE']['VEROUILLE']!=0):
                 $badge = 'badge-warning showoverlay';
             elseif($result['SAISIE']['VEROUILLE']!=0):
                 $badge = 'badge-warning showoverlay';
@@ -60,6 +60,10 @@
     </tbody>    
 </table>
 <br/>
+<?php elseif (isset($results) && count($results)==0) : ?>
+<div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
+<?php endif; ?>
+<?php if (isset($resultvides) && count($resultvides)>0): ?>
 <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Agents avec aucune saisie</div><br>
 <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
     <thead>
@@ -79,9 +83,7 @@
         <?php endforeach; ?>
     </tbody>    
 </table>
-<?php endif; ?>
-
-<?php if (isset($results) && count($results)==0): ?>
+<?php elseif (isset($resultvides) && count($resultvides)==0) : ?>
 <div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
 <?php endif; ?>
 </div>

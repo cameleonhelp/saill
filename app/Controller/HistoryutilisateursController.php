@@ -4,6 +4,7 @@ App::uses('AppController', 'Controller');
  * Historyutilisateurs Controller
  *
  * @property Historyutilisateur $Historyutilisateur
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class HistoryutilisateursController extends AppController {
         public $components = array('History','Common');
@@ -96,12 +97,14 @@ class HistoryutilisateursController extends AppController {
 	}
         
         public function get_list($id){
-            $options = array('conditions' => array('utilisateur_id' => $id));
-            return $this->Historyutilisateur->find('list',array('fields' => array('id', 'HISTORIQUE'),$options,'order'=>array('HISTORIQUE'=>'desc'),'recursive'=>0));
+            $options = array('Historyutilisateur1.utilisateur_id' => $id);
+            return $this->Historyutilisateur->find('list',array('fields' => array('id', 'HISTORIQUE'),'conditions' => $options,'order'=>array('HISTORIQUE'=>'desc'),'recursive'=>0));
         }
         
         public function get_all($id){
-            $options = array('conditions' => array('utilisateur_id' => $id));
-            return $this->Historyutilisateur->find('all',array('order'=>array('HISTORIQUE'=>'desc'),$options,'recursive'=>0));
+//            debug($id);
+//            exit();
+            $options = array('Historyutilisateur.utilisateur_id' => $id);
+            return $this->Historyutilisateur->find('all',array('conditions' => $options,'order'=>array('Historyutilisateur.id'=>'desc'),'recursive'=>0));
         }           
 }

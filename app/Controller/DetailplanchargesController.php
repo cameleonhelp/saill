@@ -1,25 +1,42 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Plancharges');
+App::import('Controller', 'Projets');
+App::import('Controller', 'Domaines');
 /**
  * Detailplancharges Controller
  *
  * @property Detailplancharge $Detailplancharge
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class DetailplanchargesController extends AppController {
         public $components = array('History','Common');
+        
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Plan de charges" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }              
+        
 /**
  * index method
  *
  * @return void
  */
 	public function index($id=null) {
-            $this->set('title_for_layout','Plan de charge');
+            $this->set_title();
             if (isAuthorized('plancharges', 'index')) :             
 		$this->Detailplancharge->recursive = 0;
 		$this->set('detailplancharges', $this->paginate());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();            
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");            
             endif;  
         }
         
@@ -27,7 +44,8 @@ class DetailplanchargesController extends AppController {
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/json_get_all_users_entite/'.$id);
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return $ObjAssoentiteutilisateurs->json_get_all_users_entite($id);
             endif;
         }
         
@@ -48,11 +66,13 @@ class DetailplanchargesController extends AppController {
         }
         
         public function get_plancharge($id){
-            return $this->requestAction('plancharges/get_plancharge/'.$id);
+            $ObjPlancharges = new PlanchargesController();
+            return $ObjPlancharges->get_plancharge($id);
         }
 
         public function get_all_plancharge_projet_acvtivite($contrat){
-            $projets = $this->requestAction('projets/get_str_projets_for_contrat/'.$contrat);
+            $ObjProjets = new ProjetsController();	
+            $projets = $ObjProjets->get_str_projets_for_contrat($contrat);
             return $this->Detailplancharge->Activite->find('all',array('fields'=>array('Activite.id','Projet.NOM','Activite.NOM'),'conditions'=>array('Activite.ACTIVE'=>1,'Activite.projet_id in ('.$projets.')'),'order'=>array('Projet.NOM'=>"asc",'Activite.NOM'=>'asc'),'recursive'=>0));
         }
         
@@ -64,23 +84,24 @@ class DetailplanchargesController extends AppController {
  * @return void
  */
 	public function add($id=null) {
-            $this->set('title_for_layout','Plan de charge');
+            $this->set_title();
             if (isAuthorized('plancharges', 'add')) :       
                 $plancharge = $this->get_plancharge($id);
                 $visibility = $this->get_visibility($plancharge['Plancharge']['id']);
                 $this->set('annee',$plancharge['Plancharge']['ANNEE']);
                 $utilisateurs = $this->get_list_plancharge_ressources($visibility);
-                $domaines = $this->requestAction('domaines/get_list');
+                $ObjDomaines = new DomainesController();
+                $domaines = $ObjDomaines->get_list();
                 $activites = $this->get_all_plancharge_projet_acvtivite($plancharge['Plancharge']['contrat_id']);
                 $this->set(compact('utilisateurs','domaines','activites'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();            
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");            
             endif;  
         }
         
         public function save(){
-                $this->set('title_for_layout','Plan de charge');            
+                $this->set_title();            
 		if ($this->request->is('post') || $this->request->is('put')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Detailplancharge->validate = array();
@@ -125,13 +146,14 @@ class DetailplanchargesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','Plan de charge');
+            $this->set_title();
             if (isAuthorized('plancharges', 'edit')) :                  
                 $plancharge = $this->get_plancharge($id);
                 $visibility = $this->get_visibility($plancharge['Plancharge']['id']);
                 $this->set('annee',$plancharge['Plancharge']['ANNEE']);
                 $utilisateurs = $this->get_list_plancharge_ressources($visibility);
-                $domaines = $this->requestAction('domaines/get_list');
+                $ObjDomaines = new DomainesController();
+                $domaines = $ObjDomaines->get_list();
                 $activites = $this->get_all_plancharge_projet_acvtivite($plancharge['Plancharge']['contrat_id']);
                 $this->set(compact('utilisateurs','domaines','activites'));                 
                 $newconditions = array('Detailplancharge.plancharge_id'=>$id);
@@ -140,7 +162,7 @@ class DetailplanchargesController extends AppController {
                 $this->set('detailplancharges', $this->paginate());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();            
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");            
             endif;                   
 	}
 

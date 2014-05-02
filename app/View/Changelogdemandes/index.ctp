@@ -3,7 +3,7 @@
     <?php echo $this->element('changelognextversion'); ?>
     <div class="changelogdemandes index tablemarginright">
 	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" style="width:100%;">
-	<tr>
+	<thead><tr>
                         <th style="border-bottom: 0px solid #000000 !important;width:80px;"><?php echo $this->Paginator->sort('id','Identifiant'); ?></th>
 			<th style="border-bottom: 0px solid #000000 !important;"><?php echo $this->Paginator->sort('Changelogversion.VERSION','Version'); ?></th>
                         <th style="border-bottom: 0px solid #000000 !important;"><?php echo $this->Paginator->sort('DATEPREVUE','Prévue le'); ?></th>
@@ -82,7 +82,7 @@
                         </th>                        
 			<th style="border-top: 0px solid #000000 !important;"></th>
 			<th style="border-top: 0px solid #000000 !important;"></th>
-	</tr>
+	</tr></thead>
 	<?php foreach ($changelogdemandes as $changelogdemande): ?>
 	<tr>
                 <td><?php echo "C-".strYear($changelogdemande['Changelogdemande']['created'])."-".$changelogdemande['Changelogdemande']['id']; ?></td>
@@ -95,7 +95,7 @@
 			<?php echo $changelogdemande['Utilisateur']['NOMLONG']; ?>
 		</td>
 		<td style="text-align: center;"><?php $image = $changelogdemande['Changelogdemande']['OPEN']==1 ? 'unlock green' : 'lock red'; ?>
-                    <?php if (userAuth('profil_id')=='1') : ?>
+                    <?php if (userAuth('profil_id')=='1' || isAuthorized('changelogreponses', 'add')) : ?>
                     <a href="#" class="etat cursor showoverlay" data-id="<?php echo $changelogdemande['Changelogdemande']['id']; ?>"><span class="glyphicons <?php echo $image; ?> notchange"></span></a>
                     <?php else: ?>
                     <span class="glyphicons <?php echo $image; ?> notchange"></span>
@@ -109,7 +109,7 @@
                     <span class="glyphicons showoverlay comments notchange" style="position:relative;"><span style="position:absolute;color:white;top:2px;left:3.5px;font-weight:bold;;font-size:8px !important;"><?php echo $changelogdemande['Changelogdemande']['COUNT']; ?></span></span>
                     </a>
                     <?php if($changelogdemande['Changelogdemande']['OPEN']==1): ?>
-                    <?php if (userAuth('profil_id')=='1') : ?>
+                    <?php if (userAuth('profil_id')=='1' || isAuthorized('changelogreponses', 'add')) : ?>
 			<?php echo $this->Html->link('<span class="glyphicons showoverlay conversation notchange"></span>', array('controller'=>'changelogreponses','action' => 'add', $changelogdemande['Changelogdemande']['id']),array('escape' => false,'class'=>'showoverlay')); ?>
                     <?php endif; ?>
                         <?php echo $this->Html->link('<span class="glyphicons showoverlay pencil notchange"></span>', array('action' => 'edit', $changelogdemande['Changelogdemande']['id']),array('escape' => false,'class'=>'showoverlay')); ?>

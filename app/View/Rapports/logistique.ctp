@@ -42,6 +42,8 @@
 	</tr> 
     </tfoot>    
 </table>
+<?php elseif (isset($agents) && count($agents)==0): ?>
+<div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
 <?php endif; ?>
 <br/>
 <?php if (isset($materiels) && count($materiels)>0): ?>
@@ -72,9 +74,7 @@
 	</tr> 
     </tfoot>      
 </table>
-<?php endif; ?>
-
-<?php if (isset($materiels) && count($materiels)==0): ?>
+<?php elseif (isset($materiels) && count($materiels)==0): ?>
 <div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
 <?php endif; ?>
 </div>

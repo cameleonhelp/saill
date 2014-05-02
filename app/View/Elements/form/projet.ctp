@@ -16,7 +16,7 @@
             <?php echo $this->Form->input('NOM',array('class'=>'form-control','data-rule-required'=>'true','placeholder'=>'Nom du projet','data-msg-required'=>"Le nom du projet est obligatoire",'error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
         </div>
     </div>
-    <div class="form-group">
+    <!--<div class="form-group">
         <label class="col-md-2 required" for="ProjetEntiteId">Cercle de visibilité prioritaire : </label>
         <div class="col-md-3">
             <?php if ($this->params->action == 'edit') { ?>
@@ -26,7 +26,7 @@
                 <?php echo $this->Form->select('entite_id',$cercles,array('data-rule-required'=>'true','class'=>'form-control','data-msg-required'=>"Le cercle de visibilité prioritaire est obligatoire dans l'onglet idcercle",'selected' => $entite_id, 'default' => $entite_id, 'empty' => 'Choisir un cercle de visibilité')); ?>
             <?php } ?>
         </div>
-    </div>       
+    </div>      //--> 
     <div class="form-group">
         <label class="col-md-2" for="ProjetNUMEROGALLILIE">Réf. GALILEI : </label>
         <div class="col-md-5">

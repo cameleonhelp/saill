@@ -4,6 +4,7 @@ App::uses('AppController', 'Controller');
  * Tjmcontrats Controller
  *
  * @property Tjmcontrat $Tjmcontrat
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class TjmcontratsController extends AppController {
         public $components = array('History','Common'); 
@@ -12,19 +13,30 @@ class TjmcontratsController extends AppController {
         'order' => array('Tjmcontrat.TJM' => 'asc'),
         );
     
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "TJM contrats" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }          
+    
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
-            $this->set('title_for_layout','TJM contrats');
+            $this->set_title();
             if (isAuthorized('tjmcontrats', 'index')) :
                 $this->Tjmcontrat->recursive = 0;
 		$this->set('tjmcontrats', $this->paginate());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -34,7 +46,7 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function add() {
-            $this->set('title_for_layout','TJM contrats');
+            $this->set_title();
             if (isAuthorized('tjmcontrats', 'add')) :
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
@@ -52,7 +64,7 @@ class TjmcontratsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -64,7 +76,7 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','TJM contrats');
+            $this->set_title();
             if (isAuthorized('tjmcontrats', 'edit')) :
                 if (!$this->Tjmcontrat->exists($id)) {
 			throw new NotFoundException(__('TJM contrat incorrect'));
@@ -87,7 +99,7 @@ class TjmcontratsController extends AppController {
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -100,7 +112,7 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-            $this->set('title_for_layout','TJM contrats');
+            $this->set_title();
             if (isAuthorized('tjmcontrats', 'delete')) :
                 $this->Tjmcontrat->id = $id;
 		if (!$this->Tjmcontrat->exists()) {
@@ -114,7 +126,7 @@ class TjmcontratsController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -124,7 +136,7 @@ class TjmcontratsController extends AppController {
  * @return void
  */
 	public function search($keywords=null) {
-            $this->set('title_for_layout','TJM contrats');
+            $this->set_title();
             if (isAuthorized('tjmcontrats', 'index')) :
                 if(isset($this->params->data['Tjmcontrat']['SEARCH'])):
                     $keywords = $this->params->data['Tjmcontrat']['SEARCH'];
@@ -147,7 +159,7 @@ class TjmcontratsController extends AppController {
                 endif;              
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }      
         

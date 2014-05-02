@@ -1,10 +1,12 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Logiciels');
 /**
  * Assobienlogiciels Controller
  *
  * @property Assobienlogiciel $Assobienlogiciel
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class AssobienlogicielsController extends AppController {
 
@@ -15,7 +17,12 @@ class AssobienlogicielsController extends AppController {
  */
         public $paginate = array('limit' => 25);
 	public $components = array('History','Common');
-
+                
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_logiciel_info'));
+            parent::beforeFilter();
+        }   
+        
 /**
  * index method
  *
@@ -142,7 +149,7 @@ class AssobienlogicielsController extends AppController {
         
         public function get_outils_for_bien($id=null){
             if($id!=null):
-                $list = $this->Assobienlogiciel->find('all',array('conditions'=>array('Assobienlogiciel.bien_id'=>$id),'order'=>array('Logiciel.NOM'=>'asc'),'recursive'=>2));
+                $list = $this->Assobienlogiciel->find('all',array('conditions'=>array('Assobienlogiciel.bien_id'=>$id),'order'=>array('Logiciel.NOM'=>'asc'),'recursive'=>0));
                 return $list;
             else:
                 return array();
@@ -172,7 +179,7 @@ class AssobienlogicielsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}   
         
@@ -190,13 +197,13 @@ class AssobienlogicielsController extends AppController {
 				$this->Session->setFlash(__('Objet incorrect, veuillez corriger l\'objet',true),'flash_failure');
 			}
                      endforeach;
-                     //delete du logiciel
-                     $this->requestAction('logiciels/erase/'.$this->request->data['Assobienlogiciel']['old_logiciel_id']);
+                     $ObjLogiciels = new LogicielsController();		
+                     $ObjLogiciels->erase($this->request->data['Assobienlogiciel']['old_logiciel_id']);
                      $this->History->goFirst();                       
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}  
         
@@ -209,10 +216,10 @@ class AssobienlogicielsController extends AppController {
                             $this->Assobienlogiciel->id = $id;
                             if ($this->Assobienlogiciel->save($this->request->data)) {
                                     $this->add_date_install($id);
-                                    //tester si logiciel exist
-                                    $logiciel = $this->requestAction('logiciels/get_info/'.$this->request->data['Assobienlogiciel']['logiciel_id']);
+                                    $ObjLogiciels = new LogicielsController();	
+                                    $logiciel = $ObjLogiciels->get_info($this->request->data['Assobienlogiciel']['logiciel_id']);
                                     if($logiciel['Logiciel']['application_id'] != $this->request->data['Assobienlogiciel']['application_id']):
-                                        App::import('Controller', 'Logiciels');
+                                        App::uses('Controller', 'Logiciels');
                                         $thislogiciel = new LogicielsController();
                                         $envoutil_id = $logiciel['Logiciel']['envoutil_id'];
                                         $envversion_id = $logiciel['Logiciel']['envversion_id'];
@@ -240,7 +247,7 @@ class AssobienlogicielsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}  
         
@@ -258,7 +265,7 @@ class AssobienlogicielsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}         
         
@@ -326,7 +333,7 @@ class AssobienlogicielsController extends AppController {
                 }
             else:
                 $this->Session->setFlash(__('Historisation impossible le logiciel est incorect.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;
         }
         

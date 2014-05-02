@@ -21,7 +21,7 @@ $this->set('title_for_layout','Accueil');
             </ol>        
             <div class="carousel-inner ">
                 <div class="item active">
-                    <div class="well well-small top-header-orange">
+                    <div class="well well-small top-header-orange well-msg">
                         Ce site à pour objectif de suivre les activités, livrables réalisés sur le projet.<br/><br/>
                         Ce site est accessible à toutes personnes travaillant sur le projet.<br/><br/>
                         Un accès à votre profil vous permettra de suivre certaines informations vous concernant.<br/>
@@ -42,7 +42,7 @@ $this->set('title_for_layout','Accueil');
                 if (isset($activeMessages)):
                     foreach ($activeMessages as $activeMessage) { ?>
                         <div class="item">
-                            <div class="well well-small top-header-orange"><?php echo $activeMessage['Message']['LIBELLE']; ?></div>
+                            <div class="well well-small top-header-orange well-msg"><?php echo $activeMessage['Message']['LIBELLE']; ?></div>
                         </div>                           
                 <?php    }
                 endif;
@@ -56,30 +56,28 @@ $this->set('title_for_layout','Accueil');
 </div>
 <div class="row">
     <div class="col-sm-12 column">
-        <div class="col-sm-12 column">
         <div style='display: table;width: 100%;'>
             <?php echo $this->element('home/elementsfields'); ?>
         </div> 
-        </div>
     </div>
 </div>
-<div class="row clearfix">
-    <div class="col-sm-12 column">
-        <div class="col-sm-4 column">
-            <?php echo $this->element('home/info-left'); ?>
-        </div>
-        <div class="col-sm-4 column">
-            <?php echo $this->element('home/info-middle'); ?>
-        </div>
-        <div class="col-sm-4 column">
+<div class="row">
+        <div class="col-sm-3 column">
             <?php echo $this->element('home/info-right'); ?>
         </div>
-    </div>
+        <div class="col-sm-6 column">
+            <?php echo $this->element('home/info-middle'); ?>
+        </div>
+        <div class="col-sm-3 column">
+            <?php echo $this->element('home/info-left'); ?>
+        </div>
 </div>
 <script>
 $(document).ready(function () {
+    /*
     var defaultpswd = "<?php echo md5('SAILL'); ?>";
     var userpswd = "<?php echo userAuth('password'); ?>";
     if(defaultpswd === userpswd){$('#modalpassword').modal('show');}
+    */
 });
 </script>  

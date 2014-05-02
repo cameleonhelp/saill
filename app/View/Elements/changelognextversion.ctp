@@ -1,6 +1,6 @@
 <div class="bs-callout bs-callout-info">
 <?php
-    if (isset($nextversion[0])):
+    if (isset($nextversion[0]) && $nextversion[0]['Changelogversion']['DATEPREVUE'] != ''):
         $version = 'la v. '.$nextversion[0]['Changelogversion']['VERSION'].', elle  ';
         $date = "devrait être disponible le ".$nextversion[0]['Changelogversion']['DATEPREVUE'];   
     else:

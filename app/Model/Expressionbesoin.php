@@ -184,9 +184,9 @@ class Expressionbesoin extends AppModel {
                     $results[$key]['Expressionbesoin']['DATEFIN'] = $this->dateFormatAfterFind($val['Expressionbesoin']['DATEFIN']);
                 }                                    
                 if (isset($val['Expressionbesoin']['dsitenv_id'])) {
-                    $results[$key]['Expressionbesoin']['dsitenv_nom'] = $this->getNomEnvDsit($val['Expressionbesoin']['dsitenv_id']);
+//                    $results[$key]['Expressionbesoin']['dsitenv_nom'] = $this->getNomEnvDsit($val['Expressionbesoin']['dsitenv_id']);
                 }     
-                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Expressionbesoin']['entite_id']); 
+//                $results[$key]['Entite']['NOM'] = $this->get_entite_nom(@$val['Expressionbesoin']['entite_id']); 
             }
             return $results;
         }   

@@ -4,6 +4,7 @@ App::uses('AppController', 'Controller');
  * Equipes Controller
  *
  * @property Equipe $Equipe
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class EquipesController extends AppController {
 

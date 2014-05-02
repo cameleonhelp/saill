@@ -1,7 +1,5 @@
 <?php
 /**
- * CakePHP Email
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -16,7 +14,6 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-App::uses('Validation', 'Utility');
 App::uses('Multibyte', 'I18n');
 App::uses('AbstractTransport', 'Network/Email');
 App::uses('File', 'Utility');
@@ -317,7 +314,7 @@ class CakeEmail {
 
 /**
  * Regex for email validation
- * If null, it will use built in regex
+ * If null, filter_var() will be used.
  *
  * @var string
  */
@@ -554,13 +551,10 @@ class CakeEmail {
  * @param string|array $email
  * @param string $name
  * @return CakeEmail $this
- * @throws SocketException
  */
 	protected function _setEmail($varName, $email, $name) {
 		if (!is_array($email)) {
-			if (!Validation::email($email, false, $this->_emailPattern)) {
-				throw new SocketException(__d('cake_dev', 'Invalid email: "%s"', $email));
-			}
+			$this->_validateEmail($email);
 			if ($name === null) {
 				$name = $email;
 			}
@@ -572,13 +566,28 @@ class CakeEmail {
 			if (is_int($key)) {
 				$key = $value;
 			}
-			if (!Validation::email($key, false, $this->_emailPattern)) {
-				throw new SocketException(__d('cake_dev', 'Invalid email: "%s"', $key));
-			}
+			$this->_validateEmail($key);
 			$list[$key] = $value;
 		}
 		$this->{$varName} = $list;
 		return $this;
+	}
+
+/**
+ * Validate email address
+ *
+ * @param string $email
+ * @return void
+ * @throws SocketException If email address does not validate
+ */
+	protected function _validateEmail($email) {
+		$valid = (($this->_emailPattern !== null &&
+			preg_match($this->_emailPattern, $email)) ||
+			filter_var($email, FILTER_VALIDATE_EMAIL)
+		);
+		if (!$valid) {
+			throw new SocketException(__d('cake_dev', 'Invalid email: "%s"', $email));
+		}
 	}
 
 /**
@@ -612,9 +621,7 @@ class CakeEmail {
  */
 	protected function _addEmail($varName, $email, $name) {
 		if (!is_array($email)) {
-			if (!Validation::email($email, false, $this->_emailPattern)) {
-				throw new SocketException(__d('cake_dev', 'Invalid email: "%s"', $email));
-			}
+			$this->_validateEmail($email);
 			if ($name === null) {
 				$name = $email;
 			}
@@ -626,9 +633,7 @@ class CakeEmail {
 			if (is_int($key)) {
 				$key = $value;
 			}
-			if (!Validation::email($key, false, $this->_emailPattern)) {
-				throw new SocketException(__d('cake_dev', 'Invalid email: "%s"', $key));
-			}
+			$this->_validateEmail($key);
 			$list[$key] = $value;
 		}
 		$this->{$varName} = array_merge($this->{$varName}, $list);
@@ -1022,9 +1027,10 @@ class CakeEmail {
 				}
 				$fileInfo['data'] = chunk_split(base64_encode($fileInfo['data']), 76, "\r\n");
 			} else {
+				$fileName = $fileInfo['file'];
 				$fileInfo['file'] = realpath($fileInfo['file']);
 				if ($fileInfo['file'] === false || !file_exists($fileInfo['file'])) {
-					throw new SocketException(__d('cake_dev', 'File not found: "%s"', $fileInfo['file']));
+					throw new SocketException(__d('cake_dev', 'File not found: "%s"', $fileName));
 				}
 				if (is_int($name)) {
 					$name = basename($fileInfo['file']);
@@ -1129,7 +1135,7 @@ class CakeEmail {
 				if (!is_array($this->_config['log'])) {
 					$this->_config['log'] = array('level' => $this->_config['log']);
 				}
-				$config = array_merge($config, $this->_config['log']);
+				$config = $this->_config['log'] + $config;
 			}
 			CakeLog::write(
 				$config['level'],
@@ -1193,7 +1199,7 @@ class CakeEmail {
 			}
 			$config = $configs->{$config};
 		}
-		$this->_config = array_merge($this->_config, $config);
+		$this->_config = $config + $this->_config;
 		if (!empty($config['charset'])) {
 			$this->charset = $config['charset'];
 		}
@@ -1218,15 +1224,14 @@ class CakeEmail {
 			$this->setHeaders($config['headers']);
 			unset($config['headers']);
 		}
+
 		if (array_key_exists('template', $config)) {
-			$layout = false;
-			if (array_key_exists('layout', $config)) {
-				$layout = $config['layout'];
-				unset($config['layout']);
-			}
-			$this->template($config['template'], $layout);
-			unset($config['template']);
+			$this->_template = $config['template'];
 		}
+		if (array_key_exists('layout', $config)) {
+			$this->_layout = $config['layout'];
+		}
+
 		$this->transportClass()->config($config);
 	}
 
@@ -1624,6 +1629,11 @@ class CakeEmail {
 		$View = new $viewClass(null);
 		$View->viewVars = $this->_viewVars;
 		$View->helpers = $this->_helpers;
+
+		if ($this->_theme) {
+			$View->theme = $this->_theme;
+		}
+
 		$View->loadHelpers();
 
 		list($templatePlugin, $template) = pluginSplit($this->_template);
@@ -1633,24 +1643,22 @@ class CakeEmail {
 		} elseif ($layoutPlugin) {
 			$View->plugin = $layoutPlugin;
 		}
-		if ($this->_theme) {
-			$View->theme = $this->_theme;
-		}
-		// Convert null to false, as View needs false to disable
-		// the layout.
-		if ($layout === null) {
-			$layout = false;
-		}
 
 		if ($View->get('content') === null) {
 			$View->set('content', $content);
+		}
+
+		// Convert null to false, as View needs false to disable
+		// the layout.
+		if ($this->_layout === null) {
+			$this->_layout = false;
 		}
 
 		foreach ($types as $type) {
 			$View->hasRendered = false;
 			$View->viewPath = $View->layoutPath = 'Emails' . DS . $type;
 
-			$render = $View->render($template, $layout);
+			$render = $View->render($this->_template, $this->_layout);
 			$render = str_replace(array("\r\n", "\r"), "\n", $render);
 			$rendered[$type] = $this->_encodeString($render, $this->charset);
 		}

@@ -1,10 +1,15 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('CakeEmail', 'Network/Email');
+App::import('Controller', 'Assoprojetentites');
+App::import('Controller', 'Contrats');
+App::import('Controller', 'Domaines');
+App::import('Controller', 'Utilisateurs');
 /**
  * Plancharges Controller
  *
  * @property Plancharge $Plancharge
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class PlanchargesController extends AppController {
         public $components = array('History','Common');
@@ -15,11 +20,23 @@ class PlanchargesController extends AppController {
         //'group'=>array('Activitesreelle.DATE','Activitesreelle.utilisateur_id'),
         );
         
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Plans de charges" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }              
+        
         public function get_visibility(){
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoprojetentites/find_str_id_contrats/'.userAuth('id'));
+                $ObjAssoprojetentites = new AssoprojetentitesController();
+                return $ObjAssoprojetentites->find_str_id_contrats(userAuth('id'));
             endif;
         }
         
@@ -68,14 +85,15 @@ class PlanchargesController extends AppController {
                     break;
                 default:
                     $result['condition']="Plancharge.contrat_id = ".$contrat_id;
-                    $contrat = $this->requestAction('contrats/get_nom/'.$contrat_id);
+                    $ObjContrats = new ContratsController();
+                    $contrat = $ObjContrats->get_nom($contrat_id);
                     $result['filter'] = "du contrat :".$contrat;
                     break;                                         
             }  
             return $result; 
         }
         
-        public function get_planchrage_visible_filter($isvisible){
+        public function get_plancharge_visible_filter($isvisible){
             $result = array();
             switch ($isvisible){
                 case '1':
@@ -89,6 +107,15 @@ class PlanchargesController extends AppController {
             return $result; 
         }
         
+        public function get_list_plancharge_visibility(){
+            $visibility = $this->get_visibility();
+            if ($visibility!= null) { $condition[] = 'Plancharge.contrat_id IN ('.$visibility.')'; }
+            $condition[] = 'Plancharge.VISIBLE=1';
+            $order = array('Plancharge.NOM'=>'asc');
+            $fields = array('id','NOM');
+            return $this->Plancharge->find('list',array('fields'=>$fields,'conditions'=>$condition,'order'=>$order,'recursive'=>-1));
+        }
+        
         public function get_plancharge_all_annee(){
             return $this->Plancharge->find('all',array('fields'=>array('Plancharge.ANNEE'),'group'=>'Plancharge.ANNEE','recursive'=>-1));
         }
@@ -99,24 +126,25 @@ class PlanchargesController extends AppController {
  * @return void
  */
 	public function index($annee=null,$contrat_id=null,$isvisible=null) {
-            $this->set('title_for_layout','Plans de charge'); 
+            $this->set_title(); 
             if (isAuthorized('plancharges', 'index')) :
                 $listcontrat = $this->get_visibility();
                 $getchrono = $this->get_plancharge_chrono_filter($annee);
                 $getcontrat = $this->get_plancharge_contrat_filter($contrat_id, $listcontrat);
-                $getvisible = $this->get_planchrage_visible_filter($isvisible);
+                $getvisible = $this->get_plancharge_visible_filter($isvisible);
                 $this->set('fannee',$getchrono['filter']);    
                 $this->set('fprojet',$getcontrat['filter']); 
                 $newconditions = array($getchrono['condition'],$getcontrat['condition'],$getvisible['condition']);
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                   
 		$this->set('plancharges', $this->paginate());
-                $contrats = $this->requestAction('contrats/get_all_no_absence');
-                $addcontrats = $this->requestAction('contrats/get_list_no_absence');
+                $ObjContrats = new ContratsController();
+                $contrats = $ObjContrats->get_all_no_absence();
+                $addcontrats = $ObjContrats->get_list_no_absence();
                 $annees = $this->get_plancharge_all_annee();
                 $this->set(compact('annees','contrats','addcontrats'));             
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();            
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");            
             endif;                  
 	}
 
@@ -126,14 +154,15 @@ class PlanchargesController extends AppController {
  * @return void
  */
 	public function addnewpc() {
-            $this->set('title_for_layout','Plan de charge');
+            $this->set_title();
             if (isAuthorized('plancharges', 'add')) :
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Plancharge->validate = array();
                         $this->History->goBack(1);
-                    else:        
-                        $this->request->data['Plancharge']['entite_id'] = $this->requestAction('assoprojetentites/find_first_entite_for_contrat/'.$this->request->data['Plancharge']['contrat_id']);
+                    else:    
+                        $ObjAssoprojetentites = new AssoprojetentitesController();
+                        $this->request->data['Plancharge']['entite_id'] = $ObjAssoprojetentites->find_first_entite_for_contrat($this->request->data['Plancharge']['contrat_id']);
 			$this->Plancharge->create();
 			if ($this->Plancharge->save($this->request->data)) {
 				$this->Session->setFlash(__('Plan de charge créé',true),'flash_success');
@@ -146,7 +175,7 @@ class PlanchargesController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();            
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");            
             endif;                  
 	}
 
@@ -158,7 +187,7 @@ class PlanchargesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','Plan de charge');
+            $this->set_title();
             if (isAuthorized('plancharges', 'edit')) :
                 $id = $id==null ? $this->request->data['Plancharge']['id'] : $id;
 		if (!$this->Plancharge->exists($id)) {
@@ -198,7 +227,7 @@ class PlanchargesController extends AppController {
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();            
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");            
             endif;                  
 	}
 
@@ -210,7 +239,7 @@ class PlanchargesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-                $this->set('title_for_layout','Plan de charge');              
+                $this->set_title();              
 		$this->Plancharge->id = $id;
 		if (!$this->Plancharge->exists()) {
 			throw new NotFoundException(__('Plan de charge incorrect'));
@@ -239,7 +268,7 @@ class PlanchargesController extends AppController {
  * rapport
  */        
         public function rapport() {
-            $this->set('title_for_layout','Rapport des plans de charges');
+            $this->set_title('Rapport des plans de charges');
             if (isAuthorized('plancharges', 'rapports')) :
                 if ($this->request->is('post')):
                     foreach ($this->request->data['Plancharge']['id'] as &$value) {
@@ -263,18 +292,18 @@ class PlanchargesController extends AppController {
                     $this->Session->write('rapportresults',$rapportresult);
                     $this->Session->write('detailrapportresults',$detailrapportresult);
                 endif;
-                $plancharge = $this->Plancharge->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Plancharge.VISIBLE'=>1),'order'=>array('Plancharge.NOM'=>'asc'),'recursive'=>-1));
-                $this->set('plancharges',$plancharge);
-                $domaines = $this->Plancharge->Detailplancharge->Domaine->find('list',array('fields'=>array('id','NOM'),'order'=>array('Domaine.NOM'),'recursive'=>-1));
-                $this->set('domaines',$domaines);                
+                $plancharges = $this->get_list_plancharge_visibility();
+                $ObjDomaines = new DomainesController();
+                $domaines = $ObjDomaines->get_list();
+                $this->set(compact('domaines','plancharges'));                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;               
 	}    
 
         public function rapportagent() {
-            $this->set('title_for_layout','Rapport du plan de charges pour un agent');
+            $this->set_title('Rapport du plan de charges pour un agent');
             if (isAuthorized('plancharges', 'rapports')) :
                 if ($this->request->is('post')):
                     $id = $this->request->data['Plancharge']['utilisateur_id'];
@@ -291,7 +320,8 @@ class PlanchargesController extends AppController {
                     $this->Session->delete('mail');
                     $this->Session->write('mail',$rapportresult);
                 endif;
-                $utilisateurs = $this->Plancharge->Detailplancharge->Utilisateur->find('list',array('fields'=>array('Utilisateur.id','Utilisateur.NOMLONG'),'conditions'=>array('Utilisateur.id > 1','Utilisateur.ACTIF'=>1,'OR'=>array('Utilisateur.GESTIONABSENCES'=>1,'Utilisateur.profil_id'=>-1)),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));
+                $ObjUtilisateurs = new UtilisateursController();
+                $utilisateurs = $ObjUtilisateurs->find_list_cercle_utilisateur(null,0,1);
                 $this->set('utilisateurs',$utilisateurs);  
                 $annees = $this->Plancharge->find('all',array('fields'=>array('Plancharge.ANNEE'),'conditions'=>array('Plancharge.VISIBLE'=>1),'group'=>'Plancharge.ANNEE','recursive'=>-1));
                 foreach($annees as $annee):
@@ -301,7 +331,7 @@ class PlanchargesController extends AppController {
                 $this->set('annees',$years);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;               
 	}         
         
@@ -342,7 +372,7 @@ class PlanchargesController extends AppController {
                 $liste .= '<li>'.$plancharge['projets']['NOM'].' - '.$plancharge['activites']['NOM'].' - '.$plancharge['domaines']['NOM'].' : '.$plancharge['detailplancharges']['TOTAL'].' jours</li>';                     
             endforeach;
             $to=$mailto;
-            $from = userAuth('MAIL');
+            $from = Configure::read('mailapp');
             $objet = 'SAILL : Votre plan de répartition des charges';
             $message = "Bonjour,<br>Voici comment doit se répartir votre saisie sur l'année : ".
                     '<ul>'.$liste.'</ul>';
@@ -362,7 +392,12 @@ class PlanchargesController extends AppController {
             endif;
             $this->History->goBack(1);
         } 
-        
+                                
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_info','ajax_update'));
+            parent::beforeFilter();
+        }  
+                   
         public function json_get_info($id){
             $this->autoRender = false;
             $conditions[] = 'Plancharge.id='.$id;
@@ -370,4 +405,11 @@ class PlanchargesController extends AppController {
             $result = json_encode($return);
             return $result;
         }        
+        
+        public function ajax_update(){
+            $this->autoRender = false;
+            $this->Plancharge->id = $_POST['pk'];
+            $this->Plancharge->saveField( $_POST['name'], trim($_POST['value']));
+            return true;
+        }
 }

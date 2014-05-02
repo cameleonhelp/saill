@@ -4,6 +4,7 @@ App::uses('AppController', 'Controller');
  * Tjmagents Controller
  *
  * @property Tjmagent $Tjmagent
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class TjmagentsController extends AppController {
         public $components = array('History','Common');
@@ -12,19 +13,30 @@ class TjmagentsController extends AppController {
         'order' => array('Tjmagent.NOM' => 'asc'),
         );
     
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "TJM agents" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }      
+    
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
-            $this->set('title_for_layout','TJM agents');
+            $this->set_title();
             if (isAuthorized('tjmagents', 'index')) :
                 $this->Tjmagent->recursive = 0;
 		$this->set('tjmagents', $this->paginate());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -34,7 +46,7 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function add() {
-            $this->set('title_for_layout','TJM agents');
+            $this->set_title();
             if (isAuthorized('tjmagents', 'add')) :
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
@@ -52,7 +64,7 @@ class TjmagentsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -64,7 +76,7 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','TJM agents');
+            $this->set_title();
             if (isAuthorized('tjmagents', 'edit')) :
                 if (!$this->Tjmagent->exists($id)) {
 			throw new NotFoundException(__('TJM agent incorrect'));
@@ -87,7 +99,7 @@ class TjmagentsController extends AppController {
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -100,7 +112,7 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-            $this->set('title_for_layout','TJM agents');
+            $this->set_title();
             if (isAuthorized('tjmagents', 'delete')) :
                 $this->Tjmagent->id = $id;
 		if (!$this->Tjmagent->exists()) {
@@ -114,7 +126,7 @@ class TjmagentsController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 /**
@@ -123,7 +135,7 @@ class TjmagentsController extends AppController {
  * @return void
  */
 	public function search($keywords=null) {
-            $this->set('title_for_layout','TJM agents');
+            $this->set_title();
             if (isAuthorized('tjmagents', 'index')) :
                 if(isset($this->params->data['Tjmagent']['SEARCH'])):
                     $keywords = $this->params->data['Tjmagent']['SEARCH'];
@@ -147,7 +159,7 @@ class TjmagentsController extends AppController {
                 endif;   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }  
               

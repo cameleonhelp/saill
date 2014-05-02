@@ -151,15 +151,31 @@ $(document).ready(function (){
     $('#chartcontainer').highcharts({
         chart: {
             type: 'column', 
+            zoomType: 'x' 
         },      
         colors: ['#A1006B','#E05206','#CCDC00','#009AA6','#CB0044','#FFB612','#7ABB00','#00BBCE','#6E267B'],        
         credits: {
             enabled: false,
         },
         tooltip: {
+            useHTML : true,
+            shared: true,    
             formatter: function() {
+                console.log(this);
+                var ligne = "<br/>";
+                var total = 0;
+                for(l=0;l<this.points.length;l++){
+                    if (this.points[l].series.name=="etp"){libelle=" équivalents temps plein";}else if(this.points[l].series.name=="Charges"){libelle=" jours";} else {libelle="";}
+                    ligne += "<b style='color:"+this.points[l].series.color+";'>"+this.points[l].series.name+"</b> : "+this.points[l].y+libelle+"<br/>";
+                    total = total + this.points[l].y;
+                }
+                //ligne += "<b>Total pour ce lot</b> : "+total+"  environnements opérationnels<br/>";
+                var mois = this.x ;/*Highcharts.dateFormat('%b', new Date(this.x));*/
+                return '<b>'+ mois +'</b><br/>'+ligne;
+            }          
+            /*formatter: function() {
                 return this.series['name'] +' : <b>' + this.y + '</b> sur <b>' + this.x + '</b>';
-            }
+            }*/
         },
         title: {
             text: 'Nombre d\'etp et de charge par domaines'

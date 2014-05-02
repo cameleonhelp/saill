@@ -2,7 +2,7 @@
 /** 
  * Maximum size of the array containing the user navigation history 
  */ 
-define('STUDIOSIPAK_MAX_HISTORY', 10); 
+define('STUDIOSIPAK_MAX_HISTORY', 20); 
 /* 
  * HistoryComponent: User navigation history 
  * @author: Jacques LEVAVASSEUR
@@ -23,13 +23,24 @@ class HistoryComponent extends Component {
      * Ajouter toutes les méthode dont on fait $this->History->goBack()
      * @var type 
      */
-    var $exception = array('saveColor','json_get_all_projets','json_get_all_users','json_get_my_entite','json_get_all_users_entite','json_get_all_projets_entite','json_get_projets','json_get_users','save','ajax_save_password','json_get_assoid','json_get_info','delete','erase','json_get_select_for_application','json_get_select_compatible','ajaxdelete','ajaxadd','openmaintenance','files/source','closemaintenance','json_get_info','ajax_update_cpu','ajax_install','saveColor','pinghost','budgetisactif','ajaxedit','ajax_actif','json_get_logiciel_info','json_get_version_info','json_get_info','json_get_version_for','ajaxdelete','ajaxadd','notifier','addnewpc','sendmailgestannuaire','newactivite','dupliquer','export_doc','export_xls','incra','parseICS','progressduree','progressavancement','prolonger','progressstatut','progressstate','autoduplicate','errorfacturation','setmenuvisible','deverouiller','soumettre','deleteall','autoprogressState','addIndisponibilite');
+    var $exception = array(
+        'saveColor','set_templateoutils','get_templateoutils','set_templategroup','get_templategroup',
+        'set_memo','get_memo','get_contact','deleteline','addto','editto','json_all_outils','json_all_listes',
+        'json_all_partages','json_all_user','duplicatefrom','json_all_activite','json_list_stock','json_get_all_projets',
+        'json_list_all','json_list_other','json_get_this','json_get_all_users','json_get_my_entite','json_get_all_users_entite',
+        'json_get_all_projets_entite','json_get_projets','json_get_users','save','ajax_save_password','json_get_assoid','json_get_info',
+        'delete','erase','json_get_select_for_application','json_get_select_compatible','ajaxdelete','ajaxadd','openmaintenance',
+        'files/source','closemaintenance','ajax_update_cpu','ajax_install','pinghost','budgetisactif',
+        'ajaxedit','ajax_actif','json_get_logiciel_info','json_get_version_info','json_get_version_for',
+        'notifier','addnewpc','sendmailgestannuaire','newactivite','dupliquer','export_doc','export_xls','incra','parseICS',
+        'progressduree','progressavancement','prolonger','progressstatut','progressstate','autoduplicate','errorfacturation',
+        'setmenuvisible','deverouiller','soumettre','deleteall','autoprogressState','addIndisponibilite');
 
     /**
      * action initialisant l'historique
      * @var type 
      */
-    var $initpage = array('index','changelog','display','last7days','risques','home','profil', 'rapport','absences','login','listebackup');
+    var $initpage = array('index','changelog','display','last7days','risques','home','profil', 'rapport','absences','login','afacturer','listebackup');
 
     function initialize(Controller $controller){
     }

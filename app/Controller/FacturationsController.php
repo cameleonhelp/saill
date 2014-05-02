@@ -1,20 +1,38 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Utilisateurs');
+App::import('Controller', 'Activites');
+App::import('Controller', 'Assoprojetentites');
+App::import('Controller', 'Projets');
 /**
  * Facturations Controller
  *
  * @property Facturation $Facturation
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class FacturationsController extends AppController {
         public $components = array('History','Common');
     public $paginate = array(
     );
     
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Feuilles de temps (estimation de facturation)" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }          
+    
     public function get_visibility(){
         if(userAuth('profil_id')==1):
             return null;
         else:
-            return $this->requestAction('assoentiteutilisateurs/json_get_all_users/'.userAuth('id'));
+            $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+            return $ObjAssoentiteutilisateurs->json_get_all_users(userAuth('id'));
         endif;
     }
     
@@ -24,6 +42,7 @@ class FacturationsController extends AppController {
     
     public function get_facturation_utilisateur_filter($utilisateur,$visibility){
         $result = array();
+        $ObjUtilisateurs = new UtilisateursController();
         if (areaIsVisible() || $utilisateur==userAuth('id')):
         switch ($utilisateur){
             case 'tous':    
@@ -39,13 +58,13 @@ class FacturationsController extends AppController {
                 break;
             default:
                 $result['condition']="Facturation.utilisateur_id = ".$utilisateur;
-                $utilisateur = $this->requestAction('utilisateurs/get_nomlong/'.$utilisateur);
+                $utilisateur = $ObjUtilisateurs->get_nomlong($utilisateur);
                 $result['filter'] = $utilisateur;
                 break;                      
         }  
         else:
             $result['condition']="Facturation.utilisateur_id = ".userAuth('id');
-            $utilisateur =  $this->requestAction('utilisateurs/get_nomlong/'.userAuth('id')); 
+            $utilisateur =  $ObjUtilisateurs->get_nomlong(userAuth('id')); 
             $result['filter'] = $utilisateur;                 
         endif;  
         return $result;
@@ -53,9 +72,10 @@ class FacturationsController extends AppController {
     
     public function get_facturation_chrono_filter($mois,$annee){
         $result = array();
+        $mois = $mois==null ? date('m') : $mois;
+        $annee = $annee==null ? date('Y') : $annee;        
         switch ($mois){
             case 'tous':
-            case null:
                 $result['condition']="1=1";
                 $result['filter'] = "";
                 break;
@@ -123,9 +143,9 @@ class FacturationsController extends AppController {
  * @return void
  */
 	public function index($utilisateur=null,$mois=null,$visible=null,$indisponibilite=null,$annee=null) {
-            $this->set('title_for_layout','Feuilles de temps facturées');
+            $this->set_title();
             if (isAuthorized('facturations', 'index')) :     
-                $utilisateur = $utilisateur==null ? userAuth('id'):$utilisateur;
+                $utilisateur = $utilisateur==null ? 'tous':$utilisateur;
                 $mois = $mois==null ? date('m') : $mois;
                 $visible = $visible==null ? 1 :$visible;
                 $indisponibilite = $indisponibilite==null ? 0 : $indisponibilite;
@@ -138,7 +158,8 @@ class FacturationsController extends AppController {
                 $this->set('futilisateur',$getutilisateur['filter']);
                 $this->set('fperiode',$getchrono['filter']);  
                 $newconditions = array($getutilisateur['condition'],$getchrono['condition'],$getvisible['condition'],$getindisponibilite['condition']);
-                $utilisateurs = $this->requestAction('utilisateurs/find_all_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
+                $ObjUtilisateurs = new UtilisateursController();
+                $utilisateurs = $ObjUtilisateurs->find_all_cercle_utilisateur(userAuth('id'),'1','1');
                 $groups = $this->get_all_facturation_group($newconditions);
                 $annees = $this->get_all_facturation_annee();
                 $this->set(compact('utilisateurs','groups','annees'));
@@ -148,7 +169,7 @@ class FacturationsController extends AppController {
                 $this->get_export($newconditions);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();            
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");            
             endif;                
 	}
 
@@ -159,7 +180,8 @@ class FacturationsController extends AppController {
  */
 	public function add($userid=null,$reelid=null) {
                 $date = $this->Facturation->Activitesreelle->find('first',array('fields'=>array('Activitesreelle.DATE'),'conditions'=>array('Activitesreelle.id'=>$reelid),'recursive'=>-1));
-                $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
+                $ObjActivites = new ActivitesController();
+                $activites = $ObjActivites->find_all_cercle_activite_and_indisponibility(userAuth('id'));
 		$this->set('activites', $activites);
                 $facturation = $this->Facturation->find('first',array('conditions'=>array('Facturation.utilisateur_id'=>$userid,'Facturation.activitesreelle_id'=>$reelid),'recursive'=>-1));
                 $activitesreelles = $this->Facturation->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.utilisateur_id'=>$userid,'Activitesreelle.DATE'=>CUSDate($date['Activitesreelle']['DATE']),'Activitesreelle.VEROUILLE'=>0,'Activitesreelle.facturation_id'=>null),'recursive'=>-1));
@@ -180,7 +202,8 @@ class FacturationsController extends AppController {
 	public function edit($id = null,$userid=null) {
             $date = $this->Facturation->find('first',array('fields'=>array('Facturation.DATE'),'conditions'=>array('Facturation.id'=>$id),'recursive'=>-1));
             $version = $this->Facturation->find('first',array('fields'=>array('Facturation.VERSION'),'conditions'=>array('Facturation.id'=>$id),'recursive'=>-1));
-            $activites = $this->requestAction('activites/find_all_cercle_activite/'.userAuth('id'));
+            $ObjActivites = new ActivitesController();
+            $activites = $ObjActivites->find_all_cercle_activite(userAuth('id'));
             $this->set('activites', $activites);
             $activitesreelles = $this->Facturation->find('all',array('conditions'=>array('Facturation.utilisateur_id'=>$userid,'Facturation.DATE'=>CUSDate($date['Facturation']['DATE']),'Facturation.VERSION'=>$version['Facturation']['VERSION']),'recursive'=>-1));
             $this->set('activitesreelles', $activitesreelles);
@@ -195,7 +218,7 @@ class FacturationsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-            $this->set('title_for_layout','Feuilles de temps facturées');
+            $this->set_title();
             $this->Facturation->id = $id;
             if (!$this->Facturation->exists()) {
                     throw new NotFoundException(__('Invalid facturation'));
@@ -215,7 +238,7 @@ class FacturationsController extends AppController {
  * @return void
  */
 	public function search($utilisateur=null,$mois=null,$visible=null,$indisponibilite=null,$annee=null,$keywords=null) {
-            $this->set('title_for_layout','feuilles de temps à facturer');
+            $this->set_title();
             if (isAuthorized('facturations', 'index')) :
                 if(isset($this->params->data['Facturation']['SEARCH'])):
                     $keywords = $this->params->data['Facturation']['SEARCH'];
@@ -240,7 +263,8 @@ class FacturationsController extends AppController {
                     $this->set('futilisateur',$getutilisateur['filter']);
                     $this->set('fperiode',$getchrono['filter']);  
                     $newconditions = array($getutilisateur['condition'],$getchrono['condition'],$getvisible['condition'],$getindisponibilite['condition']);
-                    $utilisateurs = $this->requestAction('utilisateurs/find_all_cercle_utilisateur',array('pass'=>array(userAuth('id'),'1','1')));
+                    $ObjUtilisateurs = new UtilisateursController();
+                    $utilisateurs = $ObjUtilisateurs->find_all_cercle_utilisateur(userAuth('id'),'1','1');
                     $groups = $this->get_all_facturation_group($newconditions);
                     $annees = $this->get_all_facturation_annee();
                     $this->set(compact('utilisateurs','groups','annees'));
@@ -257,7 +281,7 @@ class FacturationsController extends AppController {
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();           
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");           
             endif;                
         }  
         
@@ -302,7 +326,7 @@ class FacturationsController extends AppController {
                                 }                  
                             endif;
                         endforeach;
-                        $this->History->goBack(2);
+                        $this->History->goBack(1);
                 endif;
             }            
         }
@@ -328,7 +352,7 @@ class FacturationsController extends AppController {
  * rapport
  */        
         public function rapport() {
-            $this->set('title_for_layout','Rapport des facturations estimées');
+            "Rapport des ".strtolower($this->set_title());
             if (isAuthorized('facturations', 'rapports')) :
                 if ($this->request->is('post')):
                     foreach ($this->request->data['Facturation']['utilisateur_id'] as &$value) {
@@ -374,13 +398,15 @@ class FacturationsController extends AppController {
                     $listein .= $agent['Facturation']['utilisateur_id'].',';
                 endforeach;
                 $listuser = $this->get_visibility();
-                $destinataires = $this->get_list_responsables($listuser);                 
-                $listprojets = $this->requestAction('assoprojetentites/json_get_all_projets/'.userAuth('id'));
-                $domaines = $this->requestAction('projets/get_list_id_nom_projets/',array('pass'=>array($listprojets)));   
+                $destinataires = $this->get_list_responsables($listuser); 
+                $ObjAssoprojetentites = new AssoprojetentitesController();
+                $listprojets = $ObjAssoprojetentites->json_get_all_projets(userAuth('id'));
+                $ObjProjets = new ProjetsController();
+                $domaines = $ObjProjets->get_list_id_nom_projets($listprojets);   
                 $this->set(compact('destinataires','domaines'));                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;             
 	}   
 
@@ -645,51 +671,53 @@ class FacturationsController extends AppController {
 		$this->render('export_xls','export_xls');
         }
         
-        public function forss2i(){
-            $options = $this->params->params['pass'];
+        public function forss2i($options=null){
+            $options = $options==null ? $this->params->params['pass'] : $options;
             $societes = $options['societes'];
-            $utilisateurs = $this->requestAction('assoentiteutilisateurs/json_get_all_users_nogenerique/',array('pass'=>array(userAuth('id'),$societes)));
-            if(strlen($utilisateurs)>0):
-            $destinataire = 'Facturation.utilisateur_id IN ('.substr_replace($utilisateurs ,"",-1).')';
-            $start = $options['start'];
-            $end = $options['end'];
-            $activitefirstweek = $this->Facturation->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Facturation.utilisateur_id', 'SUM(Facturation.LU) AS LU', 'SUM(Facturation.MA) AS MA', 'SUM(Facturation.ME) AS ME', 'SUM(Facturation.JE) AS JE', 'SUM(Facturation.VE) AS VE', 'SUM(Facturation.SA) AS SA', 'SUM(Facturation.DI) AS DI','Facturation.DATE AS DATE'),'conditions'=>array($destinataire,'Facturation.VISIBLE'=>0,'Facturation.DATE'=>startWeek(CUSDate($start))),'group'=>array('Activite.projet_id','Activite.id','Facturation.utilisateur_id'),'recursive'=>0));  
-            $activitelastweek = $this->Facturation->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Facturation.utilisateur_id', 'SUM(Facturation.LU) AS LU', 'SUM(Facturation.MA) AS MA', 'SUM(Facturation.ME) AS ME', 'SUM(Facturation.JE) AS JE', 'SUM(Facturation.VE) AS VE', 'SUM(Facturation.SA) AS SA', 'SUM(Facturation.DI) AS DI','Facturation.DATE AS DATE'),'conditions'=>array($destinataire,'Facturation.VISIBLE'=>0,'Facturation.DATE'=>startWeek(CUSDate($end))),'group'=>array('Activite.projet_id','Activite.id','Facturation.utilisateur_id'),'recursive'=>0));  
-            $entrop = array_merge($this->getEntropFirstSS2I($activitefirstweek),$this->getEntropLastSS2I($activitelastweek));
-            $byprojetactiviteutilisateur = $this->array_sum_merge($entrop);
-            $periode = 'Facturation.DATE BETWEEN "'. startWeek($start).'" AND "'.endWeek($end).'"';
-            $indisponibilite = $options['indisponibilite'] ? '1=1': 'Activite.projet_id > 1';
-            $result = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','SUM(Facturation.FRAIS) AS FRAIS','Utilisateur.id','Utilisateur.NOM','Utilisateur.PRENOM','Activite.projet_id','Utilisateur.societe_id','Activite.id','Activite.NOM','Activite.NUMEROGALLILIE','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$periode,$indisponibilite,'Facturation.VISIBLE'=>0),'order'=>array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc','Facturation.utilisateur_id'=>'asc'),'group'=>array('Facturation.utilisateur_id','Activite.projet_id','Activite.NOM'),'recursive'=>0));
-            return array('trop'=>$byprojetactiviteutilisateur,'result'=>$result);
+            $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+            $utilisateurs = $ObjAssoentiteutilisateurs->json_get_all_users_and_generique(userAuth('id'),$societes);
+            if($utilisateurs != '' && $utilisateurs != '0'):
+                $destinataire = 'Facturation.utilisateur_id IN ('.$utilisateurs.')';
+                $start = $options['start'];
+                $end = $options['end'];
+                $periode = 'Facturation.DATE BETWEEN "'. startWeek($start).'" AND "'.endWeek($end).'"';
+                $activitefirstweek = $this->Facturation->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Facturation.utilisateur_id', 'SUM(Facturation.LU) AS LU', 'SUM(Facturation.MA) AS MA', 'SUM(Facturation.ME) AS ME', 'SUM(Facturation.JE) AS JE', 'SUM(Facturation.VE) AS VE', 'SUM(Facturation.SA) AS SA', 'SUM(Facturation.DI) AS DI','Facturation.DATE AS DATE'),'conditions'=>array($destinataire,'Facturation.VISIBLE'=>0,'Facturation.DATE'=>startWeek(CUSDate($start))),'group'=>array('Activite.projet_id','Activite.id','Facturation.utilisateur_id'),'recursive'=>0));  
+                $activitelastweek = $this->Facturation->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Facturation.utilisateur_id', 'SUM(Facturation.LU) AS LU', 'SUM(Facturation.MA) AS MA', 'SUM(Facturation.ME) AS ME', 'SUM(Facturation.JE) AS JE', 'SUM(Facturation.VE) AS VE', 'SUM(Facturation.SA) AS SA', 'SUM(Facturation.DI) AS DI','Facturation.DATE AS DATE'),'conditions'=>array($destinataire,'Facturation.VISIBLE'=>0,'Facturation.DATE'=>startWeek(CUSDate($end))),'group'=>array('Activite.projet_id','Activite.id','Facturation.utilisateur_id'),'recursive'=>0));  
+                $entrop = array_merge($this->getEntropFirstSS2I($activitefirstweek,$options['mois']),$this->getEntropLastSS2I($activitelastweek,$options['mois']));
+                $byprojetactiviteutilisateur = $this->array_sum_merge($entrop);
+                $indisponibilite = $options['indisponibilite'] ? '1=1': 'Activite.projet_id > 1';
+                $result = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','SUM(Facturation.FRAIS) AS FRAIS','Utilisateur.id','Utilisateur.NOM','Utilisateur.PRENOM','Activite.projet_id','Utilisateur.societe_id','Activite.id','Activite.NOM','Activite.NUMEROGALLILIE','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$periode,$indisponibilite,'Facturation.VISIBLE'=>0),'order'=>array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc','Facturation.utilisateur_id'=>'asc'),'group'=>array('Facturation.utilisateur_id','Activite.projet_id','Activite.NOM'),'recursive'=>0));            
+                return array('trop'=>$byprojetactiviteutilisateur,'result'=>$result);
             endif;
         }
         
-        public function forsncf(){
-            $options = $this->params->params['pass'];
+        public function forsncf($options=null){
+            $options = $options==null ? $this->params->params['pass'] : $options;
             $societes = $options['societes'];
-            $utilisateurs = $this->requestAction('assoentiteutilisateurs/json_get_all_users_nogenerique/',array('pass'=>array(userAuth('id'),$societes)));
-            if(strlen($utilisateurs)>0):
-            $destinataire = 'Facturation.utilisateur_id IN ('.substr_replace($utilisateurs ,"",-1).')';
-            $start = $options['start'];
-            $end = $options['end'];
-            $activitefirstweek = $this->Facturation->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Facturation.utilisateur_id', 'SUM(Facturation.LU) AS LU', 'SUM(Facturation.MA) AS MA', 'SUM(Facturation.ME) AS ME', 'SUM(Facturation.JE) AS JE', 'SUM(Facturation.VE) AS VE', 'SUM(Facturation.SA) AS SA', 'SUM(Facturation.DI) AS DI','Facturation.DATE AS DATE'),'conditions'=>array($destinataire,'Facturation.VISIBLE'=>0,'Facturation.DATE'=>startWeek(CUSDate($start))),'group'=>array('Activite.projet_id','Activite.id','Facturation.utilisateur_id'),'recursive'=>0));  
-            $activitelastweek = $this->Facturation->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Facturation.utilisateur_id', 'SUM(Facturation.LU) AS LU', 'SUM(Facturation.MA) AS MA', 'SUM(Facturation.ME) AS ME', 'SUM(Facturation.JE) AS JE', 'SUM(Facturation.VE) AS VE', 'SUM(Facturation.SA) AS SA', 'SUM(Facturation.DI) AS DI','Facturation.DATE AS DATE'),'conditions'=>array($destinataire,'Facturation.VISIBLE'=>0,'Facturation.DATE'=>startWeek(CUSDate($end))),'group'=>array('Activite.projet_id','Activite.id','Facturation.utilisateur_id'),'recursive'=>0));  
-            $entrop = array_merge($this->getEntropFirstSNCF($activitefirstweek),$this->getEntropLastSNCF($activitelastweek));
-            $byprojetactiviteutilisateur = $this->array_sum_merge($entrop);
-            $periode = 'Facturation.DATE BETWEEN "'. startWeek($start).'" AND "'.startWeek($end).'"';
-            $indisponibilite = $options['indisponibilite'] ? '1=1': 'Activite.projet_id > 1';
-            $result = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','SUM(Facturation.FRAIS) AS FRAIS','Utilisateur.id','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Activite.projet_id','Utilisateur.societe_id','Activite.id','Activite.NOM','Activite.NUMEROGALLILIE','SUM(Facturation.TOTAL) AS NB'),'conditions'=>array($destinataire,$periode,$indisponibilite,'Facturation.VISIBLE'=>0),'order'=>array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc','Facturation.utilisateur_id'=>'asc'),'group'=>array('Facturation.utilisateur_id','Activite.projet_id','Activite.NOM'),'recursive'=>0));
-            return array('trop'=>$byprojetactiviteutilisateur,'result'=>$result);
+            $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+            $utilisateurs = $ObjAssoentiteutilisateurs->json_get_all_users_nogenerique(userAuth('id'),$societes);
+            if($utilisateurs != '' && $utilisateurs != '0'):
+                $destinataire = 'Facturation.utilisateur_id IN ('.$utilisateurs.')';
+                $start = $options['start'];
+                $end = $options['end'];
+                $periode = 'Facturation.DATE BETWEEN "'. startWeek($start).'" AND "'.endWeek($end).'"';
+                $activitefirstweek = $this->Facturation->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Facturation.utilisateur_id', 'SUM(Facturation.LU) AS LU', 'SUM(Facturation.MA) AS MA', 'SUM(Facturation.ME) AS ME', 'SUM(Facturation.JE) AS JE', 'SUM(Facturation.VE) AS VE', 'SUM(Facturation.SA) AS SA', 'SUM(Facturation.DI) AS DI','Facturation.DATE AS DATE'),'conditions'=>array($destinataire,'Facturation.VISIBLE'=>0,'Facturation.DATE'=>startWeek(CUSDate($start))),'group'=>array('Activite.projet_id','Activite.id','Facturation.utilisateur_id'),'recursive'=>0));  
+                $activitelastweek = $this->Facturation->find('all',array('fields'=>array('Activite.id','Activite.projet_id','Facturation.utilisateur_id', 'SUM(Facturation.LU) AS LU', 'SUM(Facturation.MA) AS MA', 'SUM(Facturation.ME) AS ME', 'SUM(Facturation.JE) AS JE', 'SUM(Facturation.VE) AS VE', 'SUM(Facturation.SA) AS SA', 'SUM(Facturation.DI) AS DI','Facturation.DATE AS DATE'),'conditions'=>array($destinataire,'Facturation.VISIBLE'=>0,'Facturation.DATE'=>startWeek(CUSDate($end))),'group'=>array('Activite.projet_id','Activite.id','Facturation.utilisateur_id'),'recursive'=>0));  
+                $entrop = array_merge($this->getEntropFirstSNCF($activitefirstweek,$start),$this->getEntropLastSNCF($activitelastweek,$start,$end));
+                $byprojetactiviteutilisateur = $this->array_sum_merge($entrop);
+                $result = $this->Facturation->find('all',array('fields'=>array('MONTH(Facturation.DATE) AS MONTH', 'YEAR(Facturation.DATE) AS YEAR','Activite.id','Activite.NOM','Activite.projet_id','SUM(Facturation.TOTAL) AS NB','Utilisateur.id','Utilisateur.username','Utilisateur.NOM','Utilisateur.PRENOM','Activite.projet_id','Utilisateur.societe_id','Activite.NUMEROGALLILIE'),'conditions'=>array($destinataire,$periode,'Facturation.VISIBLE'=>0),'order'=>array('Utilisateur.NOM'=>'asc','Utilisateur.PRENOM'=>'asc','Facturation.utilisateur_id'=>'asc'),'group'=>array('Facturation.utilisateur_id','Activite.projet_id','Activite.NOM'),'recursive'=>0));
+                return array('trop'=>$byprojetactiviteutilisateur,'result'=>$result);        
             endif;
         }
         
-        public function getEntropFirstSS2I($activitefirstweek=null){
+        public function getEntropFirstSS2I($activitefirstweek=null,$mois=null){
             $enmoins1 = array();
             $i=0;
             foreach($activitefirstweek as $firstweek):
                 $annee = date('Y');
+                $mois = $mois!= null ? $mois : $this->request->data['Rapport']['mois'];
                 $datetime1 = new DateTime(CUSDate($firstweek['Facturation']['DATE']));
-                $datetime2 = new DateTime($annee.'-'.$this->request->data['Rapport']['mois'].'-01');
+                $datetime2 = new DateTime($annee.'-'.$mois.'-01');
                 $interval = $datetime2->diff($datetime1); 
                 $entropfirst = $interval->format('%a');
                 switch ($entropfirst):
@@ -753,15 +781,17 @@ class FacturationsController extends AppController {
             return $enmoins1;
         }
         
-        public function getEntropLastSNCF($activitelastweek=null){
+        public function getEntropLastSNCF($activitelastweek=null,$du=null,$au=null){
             $enmoins2 = array();
             $i=0;            
             foreach($activitelastweek as $lastweek):
                 $annee = date('Y');
-                $dayone = new DateTime(CUSDate($this->request->data['Rapport']['DU']));
+                $du = $du!=null ? $du : $this->request->data['Rapport']['DU'];
+                $au = $au!=null ? $au : $this->request->data['Rapport']['AU'];
+                $dayone = new DateTime(CUSDate($du));
                 $lastday = $dayone->format('t');
-                $datetime1 = new DateTime(CUSDate($this->request->data['Rapport']['DU']));
-                $datetime2 = new DateTime(CUSDate($this->request->data['Rapport']['AU']));
+                $datetime1 = new DateTime(startWeek(CUSDate($au)));
+                $datetime2 = new DateTime(CUSDate($au));
                 $interval = $datetime1->diff($datetime2); 
                 $entropfirst = $interval->format('%a');
                 switch ($entropfirst):
@@ -825,13 +855,14 @@ class FacturationsController extends AppController {
             return $enmoins2;
         }       
         
-        public function getEntropFirstSNCF($activitefirstweek=null){
+        public function getEntropFirstSNCF($activitefirstweek=null,$du=null){
             $enmoins1 = array();
             $i=0;
             foreach($activitefirstweek as $firstweek):
                 $annee = date('Y');
+                $du = $du!=null ? $du : $this->request->data['Rapport']['DU'];
                 $datetime1 = new DateTime(CUSDate($firstweek['Facturation']['DATE']));
-                $datetime2 = new DateTime(CUSDate($this->request->data['Rapport']['DU']));
+                $datetime2 = new DateTime(CUSDate($du));
                 $interval = $datetime2->diff($datetime1); 
                 $entropfirst = $interval->format('%a');
                 switch ($entropfirst):
@@ -895,15 +926,16 @@ class FacturationsController extends AppController {
             return $enmoins1;
         }
         
-        public function getEntropLastSS2I($activitelastweek=null){
+        public function getEntropLastSS2I($activitelastweek=null,$mois=null){
             $enmoins2 = array();
             $i=0;            
             foreach($activitelastweek as $lastweek):
                 $annee = date('Y');
-                $dayone = new DateTime($annee.'-'.$this->request->data['Rapport']['mois'].'-01');
+                $mois = $mois!= null ? $mois : $this->request->data['Rapport']['mois'];
+                $dayone = new DateTime($annee.'-'.$mois.'-01');
                 $lastday = $dayone->format('t');
-                $datetime1 = new DateTime(CUSDate($lastweek['Facturation']['DATE']));
-                $datetime2 = new DateTime($annee.'-'.$this->request->data['Rapport']['mois'].'-'.$lastday);
+                $datetime1 = new DateTime(startWeek($annee.'-'.$mois.'-'.$lastday)); //CUSDate($lastweek['Facturation']['DATE'])
+                $datetime2 = new DateTime($annee.'-'.$mois.'-'.$lastday);
                 $interval = $datetime1->diff($datetime2); 
                 $entropfirst = $interval->format('%a');
                 switch ($entropfirst):
@@ -999,4 +1031,4 @@ class FacturationsController extends AppController {
             }    
             return $result;
         }        
-}
+}        

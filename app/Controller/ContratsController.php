@@ -1,9 +1,12 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoprojetentites');
+App::import('Controller', 'Tjmcontrats');
 /**
  * Contrats Controller
  *
  * @property Contrat $Contrat
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class ContratsController extends AppController {
         public $components = array('History','Common');
@@ -13,11 +16,32 @@ class ContratsController extends AppController {
         'conditions' => array('Contrat.id >' => 1),
         );
         
+        public function get_str_my_entite($entite=null){
+            $this->autoRender = false;
+            $list = '';
+            if ($entite!= null):
+                $obj = $this->Contrat->find('all', array('conditions' => array('Contrat.entite_id'=>$entite),'order'=>array('Contrat.id'=>'asc'),'recursive'=>-1));
+            else:
+                $obj = null;
+            endif;
+            $results = isset($obj) ? $obj : 'null';
+            if($results!='null'):            
+                foreach ($results as $result):
+                    $list .= $result['Contrat']['id'].',';
+                endforeach;
+                return substr_replace($list ,"",-1);
+            else:
+                return '';
+            endif; 
+        }
+        
         public function get_visibility(){
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoprojetentites/find_str_id_contrats/'.userAuth('id'));
+                $ObjAssoprojetentites = new AssoprojetentitesController();
+                return $ObjAssoprojetentites->find_str_id_contrats(userAuth('id'));
+//                return $this->get_str_my_entite(userAuth('entite_id'));
             endif;
         }
         
@@ -27,7 +51,7 @@ class ContratsController extends AppController {
             elseif ($visibility!=''):
                 return "Contrat.id IN (".$visibility.')';
             else:
-                return "Contrat.id < 1";
+                return 'Contrat.entite_id ='.userAuth('entite_id'); ;
             endif; 
         }
         
@@ -40,7 +64,7 @@ class ContratsController extends AppController {
                     elseif ($visibility!=''):
                         $result['condition']="Contrat.id IN (".$visibility.')';
                     else:
-                        $result['condition']="Contrat.id < 1";
+                        $result['condition']='Contrat.entite_id ='.userAuth('entite_id'); 
                     endif;   
                     $result['filter'] = "tous les contrats";
                     break;
@@ -51,7 +75,7 @@ class ContratsController extends AppController {
                     elseif ($visibility!=''):
                         $result['condition']="Contrat.id IN (".$visibility.') AND Contrat.ACTIF=1';
                     else:
-                        $result['condition']="Contrat.id < 1 AND Contrat.ACTIF=1";
+                        $result['condition']="Contrat.id < 1 AND Contrat.ACTIF=1 AND  Contrat.entite_id =".userAuth('entite_id');
                     endif;                      
                     $result['filter'] = "tous les contrats actifs";
                     break;  
@@ -61,7 +85,7 @@ class ContratsController extends AppController {
                     elseif ($visibility!=''):
                         $result['condition']="Contrat.id IN (".$visibility.') AND Contrat.ACTIF=0';
                     else:
-                        $result['condition']="Contrat.id < 1 AND Contrat.ACTIF=0";
+                        $result['condition']="Contrat.id < 1 AND Contrat.ACTIF=0 AND ".'Contrat.entite_id ='.userAuth('entite_id');
                     endif;  
                     $result['filter'] = "tous les contrats inactifs";
                     break;                     
@@ -78,12 +102,14 @@ class ContratsController extends AppController {
                 $listcontrats = $this->get_visibility();
                 $getfiltre = $this->get_contrat_filtre_filter($filtre, $listcontrats);
                 $newconditions = array($getfiltre['condition']);
-                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                
+                $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0)); 
+//                debug($this->paginate);
+//                exit();
 		$this->set('contrats', $this->paginate());
                 $this->set('fcontrat',$getfiltre['filter']);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -99,6 +125,7 @@ class ContratsController extends AppController {
                         $this->Contrat->validate = array();
                         $this->History->goBack(1);
                     else:                    
+                        $this->request->data['Contrat']['entite_id']= userAuth('entite_id');
 			$this->Contrat->create();
 			if ($this->Contrat->save($this->request->data)) {
 				$this->Session->setFlash(__('Contrat sauvegardé',true),'flash_success');
@@ -108,11 +135,12 @@ class ContratsController extends AppController {
 			}
                     endif;
 		endif;
-                $tjmcontrats = $this->requestAction('tjmcontrats/get_list');
+                $ObjTjmcontrats = new TjmcontratsController();
+                $tjmcontrats = $ObjTjmcontrats->get_list();
                 $this->set(compact('tjmcontrats'));                    
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -138,7 +166,7 @@ class ContratsController extends AppController {
                                 $contrat = $this->Contrat->read('ACTIF');   
                                 if($contrat['Contrat']['ACTIF']==false):
                                     $actif = 0;
-                                    App::import('Controller', 'Projets');
+                                    App::uses('Controller', 'Projets');
                                     $thisprojet = new ProjetsController();
                                     $thisprojet->set_actif($id, $actif);
                                 endif;                            
@@ -151,12 +179,13 @@ class ContratsController extends AppController {
 		} else {
                     $options = array('conditions' => array('Contrat.' . $this->Contrat->primaryKey => $id));
                     $this->request->data = $this->Contrat->find('first', $options);
-                    $tjmcontrats = $this->requestAction('tjmcontrats/get_list');
+                    $ObjTjmcontrats = new TjmcontratsController();
+                    $tjmcontrats = $ObjTjmcontrats->get_list();
                     $this->set(compact('tjmcontrats'));                            
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -182,7 +211,7 @@ class ContratsController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -203,7 +232,7 @@ class ContratsController extends AppController {
                 $this->set('keywords',$keywords);
                 if($keywords!= ''):
                     $arkeywords = explode(' ',trim($keywords)); 
-                    $listcontrats = $this->get_visibility();
+                    $listcontrats = ''; //$this->get_visibility();
                     $getfiltre = $this->get_contrat_filtre_filter($filtre, $listcontrats);
                     $this->set('fcontrat',$getfiltre['filter']);
                     $newconditions = array($getfiltre['condition']);
@@ -218,35 +247,35 @@ class ContratsController extends AppController {
                 endif; 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }      
         
             public function get_list(){
-            $visibility = $this->get_visibility();                
-            $conditions[]= $this->get_restriction($visibility);               
+            //$visibility = $this->get_visibility();                
+            $conditions[]= 'Contrat.entite_id ='.userAuth('entite_id'); // $this->get_restriction($visibility);               
             $list = $this->Contrat->find('list',array('fields'=>array('Contrat.id','Contrat.NOM'),'conditions'=>$conditions,'order'=>array('Contrat.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }
         
         public function get_all(){
-            $visibility = $this->get_visibility();                
-            $conditions[]= $this->get_restriction($visibility);               
+            //$visibility = $this->get_visibility();                
+            $conditions[]= 'Contrat.entite_id='.userAuth('entite_id'); //$this->get_restriction($visibility);               
             $list = $this->Contrat->find('all',array('conditions'=>$conditions,'order'=>array('Contrat.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }    
         
         public function get_list_no_absence(){
-            $visibility = $this->get_visibility();                
-            $conditions[]= $this->get_restriction($visibility); 
+            //$visibility = $this->get_visibility();                
+            $conditions[]= 'Contrat.entite_id ='.userAuth('entite_id'); // $this->get_restriction($visibility); 
             $conditions[]= 'Contrat.id > 1';
             $list = $this->Contrat->find('list',array('fields'=>array('Contrat.id','Contrat.NOM'),'conditions'=>$conditions,'order'=>array('Contrat.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }
         
         public function get_all_no_absence(){
-            $visibility = $this->get_visibility();                
-            $conditions[]= $this->get_restriction($visibility);  
+            //$visibility = $this->get_visibility();                
+            $conditions[]= 'Contrat.entite_id ='.userAuth('entite_id'); // $this->get_restriction($visibility);  
             $conditions[]= 'Contrat.id > 1';            
             $list = $this->Contrat->find('all',array('conditions'=>$conditions,'order'=>array('Contrat.NOM'=>'asc'),'recursive'=>0));
             return $list;

@@ -57,11 +57,7 @@ abstract class CacheEngine {
 			$this->_groupPrefix = str_repeat('%s_', count($this->settings['groups']));
 		}
 		if (!is_numeric($this->settings['duration'])) {
-			 /*
-             * DO_BY :: JLR le 19/06/2013 pour prendre en compte la zone horaire qui n'est pas définie.
-             */
-             if (strpos(PHP_OS, 'WIN') === false): date_default_timezone_set('Europe/Paris'); endif; //'GMT' ou 'Europe/Paris'		
-			 $this->settings['duration'] = strtotime($this->settings['duration']) - time();
+			$this->settings['duration'] = strtotime($this->settings['duration']) - time();
 		}
 		return true;
 	}

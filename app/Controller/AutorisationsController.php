@@ -1,9 +1,11 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Profils');
 /**
  * Autorisations Controller
  *
  * @property Autorisation $Autorisation
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class AutorisationsController extends AppController {
         public $components = array('History','Common'); 
@@ -50,11 +52,12 @@ class AutorisationsController extends AppController {
                 $newconditions = array($getautorisation['condition']);
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));
 		$this->set('autorisations', $this->paginate());
-                $profils = $this->requestAction('profils/get_all');
+                $ObjProfils = new ProfilsController();   
+                $profils = $ObjProfils->get_all();
                 $this->set('profils',$profils);                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -80,11 +83,12 @@ class AutorisationsController extends AppController {
                     endif;
 		endif;
                 $models = $this->get_all_tables();
-                $profil = $this->requestAction('profils/get_list');
+                $ObjProfils = new ProfilsController();   
+                $profis = $ObjProfils->get_list();
                 $this->set(compact('models','profil'));                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -117,12 +121,13 @@ class AutorisationsController extends AppController {
 			$this->request->data = $this->Autorisation->find('first', $options);
                         $this->set('autorisation', $this->Autorisation->find('first', $options));
                         $models = $this->get_all_tables();
-                        $profil = $this->requestAction('profils/get_list');
+                        $ObjProfils = new ProfilsController();   
+                        $profis = $ObjProfils->get_list();
                         $this->set(compact('models','profil'));                        
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -149,7 +154,7 @@ class AutorisationsController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -179,14 +184,15 @@ class AutorisationsController extends AppController {
                     $conditions = array($newconditions,'OR'=>$ornewconditions);
                     $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));
                     $this->set('autorisations', $this->paginate());
-                    $profils = $this->requestAction('profils/get_all');
+                    $ObjProfils = new ProfilsController();   
+                    $profils = $ObjProfils->get_all();
                     $this->set('profils',$profils);    
                 else:
                     $this->redirect(array('action'=>'index',$filtreautorisation));
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }          
 }

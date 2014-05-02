@@ -110,11 +110,17 @@
             <?php endforeach; ?>
         </tbody>        
     </table>
+ <?php 
+ $nbenv = 0; 
+ foreach($chartcumulenvresults as $chartresult):
+     $nbenv += $chartresult[0]['NB'];
+ endforeach;
+ ?>
 <br>
    <div id="charthistocontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'environnements par mois, lot, application, périmètre et état</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped sizemax" id="sorttable">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="sorttable">
         <thead>
             <tr>
                 <th>Mois</th>
@@ -144,7 +150,7 @@
 	</tr> 
         </tfoot>
     </table>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped sizemax" id="datatable" style="display:none;">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="datatable" style="display:none;">
         <thead>
             <tr>
                 <th>Mois</th>
@@ -163,14 +169,14 @@
                 <td><?php echo $result['applications']['APPLICATION']; ?></td>                
                 <td><?php echo $result['perimetres']['PERIMETRE']; ?></td>
                 <td><?php echo $result['etats']['ETAT']; ?></td>
-                <td width='40px' style='text-align: center' class='totalapp'><?php echo intval($result[0]['NB']); ?></td>
+                <td width='40px' style='text-align: center' class=''><?php echo intval($result[0]['NB']); ?></td>
             </tr>           
             <?php endforeach; ?>
         </tbody>
         <tfoot>
 	<tr>
             <td class="footer nowrap" colspan='5' style="text-align:right;">Total :</td>
-            <td class="footer nowrap" id="totalall" style="text-align:center;"></td>            
+            <td class="footer nowrap" id="" style="text-align:center;"></td>            
 	</tr> 
         </tfoot>
     </table>    
@@ -254,6 +260,10 @@ $(document).ready(function (){
                        text: 'Nombre d\'environnements'
                    }
         },
+        exporting: {
+		scale: 2,
+                filename : "Nouveaux environnements"
+	},        
         plotOptions: {
                 column: {
                     dataLabels: {
@@ -265,6 +275,14 @@ $(document).ready(function (){
         });
     var today = new Date();
     var month = (today.getMonth()+1) < 10 ? '0'+(today.getMonth()+1) : (today.getMonth()+1);
+    var nbenv = "<?php echo $nbenv; ?>";
+    <?php 
+    $categories = array();
+    foreach($lots as $key=>$vallot): 
+       $categories[] = '"Lot '.$vallot.'"';
+    endforeach; 
+    $strcat = implode(',',$categories);
+    ?>
     $('#chartcumulcontainer').highcharts({
         colors: ['#A1006B','#E05206','#CCDC00','#009AA6','#CB0044','#FFB612','#7ABB00','#00BBCE','#6E267B'], 
         credits:{
@@ -276,10 +294,13 @@ $(document).ready(function (){
         },
         title: {
             useHTML: true,
-            text: 'Nombre d\'environnements opérationnels au : '+today.getDate()+'/'+ month +'/'+today.getFullYear()
+            text: nbenv +' environnements opérationnels au : '+today.getDate()+'/'+ month +'/'+today.getFullYear()
         },
         data: {
             table: document.getElementById('datatablecumul')
+        },
+        xAxis: {
+            categories:[<?php echo $strcat; ?>],
         },
         yAxis: {
             allowDecimals: false,
@@ -287,6 +308,26 @@ $(document).ready(function (){
                        text: 'Nombre d\'environnements'
                    }
         },
+        tooltip: {
+            useHTML : true,
+            shared: true,    
+            formatter: function() {
+                console.log(this);
+                var ligne = "<br/>";
+                var total = 0;
+                for(l=0;l<this.points.length;l++){
+                    ligne += "<b style='color:"+this.points[l].series.color+";'>"+this.points[l].series.name+"</b> : "+this.points[l].y+" environnements opérationnels<br/>";
+                    total = total + this.points[l].y;
+                }
+                ligne += "<b>Total pour ce lot</b> : "+total+"  environnements opérationnels<br/>";
+                var mois = this.x ;/*Highcharts.dateFormat('%b', new Date(this.x));*/
+                return '<b>'+ mois +'</b><br/>'+ligne;
+            }
+        },          
+        exporting: {
+		scale: 2,
+                filename : "Environnements opérationnels"
+	},        
         plotOptions: {
                 column: {
                     dataLabels: {
@@ -326,7 +367,7 @@ $(document).ready(function (){
             },            
             labels: {
                 formatter: function() {
-                    $mois = ['','Janv.','Fév.','Mars','Avril','Mai','Juin','Juil.','Août','Setp.','Oct.','Nov.','Déc.'];
+                    $mois = ['','Janv.','Fév.','Mars','Avril','Mai','Juin','Juil.','Août','Sept.','Oct.','Nov.','Déc.'];
                     return $mois[this.value];
                 },
                 rotation: -45,
@@ -337,6 +378,18 @@ $(document).ready(function (){
                 }                
             },
             tickInterval: 1
+            /*type: 'datetime',   
+            dateTimeLabelFormats: { // don't display the dummy year
+                month: '%b %Y',
+                year: '%Y'   },        
+            labels: {
+                rotation: -45,
+                align: 'right',
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }                
+            },  */            
         },   
         yAxis: {
             allowDecimals: false,
@@ -344,10 +397,24 @@ $(document).ready(function (){
                        text: 'Nombre d\'environnements'
                    }
         },   
+        exporting: {
+		scale: 2,
+                filename : "Historique des demandes d'environnements"
+	},        
         tooltip: {
+            useHTML : true,
+            shared: true,    
             formatter: function() {
-                $moisentier = ['','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Setpembre','Octobre','Novembre','Décembre'];
-                return 'Nombre d\'intégration <b>' + this.y + '</b> pour le mois de <b>' + $moisentier[this.x] + '</b>, tout confondus';
+                $moisentier = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+                var ligne = "<br/>";
+                var total = 0;
+                for(l=0;l<this.points.length;l++){
+                    ligne += "<b style='color:"+this.points[l].series.color+";'>"+this.points[l].series.name+"</b> : "+this.points[l].y+" nouveaux environnements<br/>";
+                    total = total + this.points[l].y;
+                }
+                ligne += "<b>Total sur le mois</b> : "+total+" nouveaux environnements<br/>";
+                var mois = $moisentier[this.x-1];/*Highcharts.dateFormat('%b', new Date(this.x));*/
+                return '<b>'+ mois +'</b><br/>'+ligne;
             }
         },  
         plotOptions: {

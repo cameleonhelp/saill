@@ -94,7 +94,7 @@
   <?php $classExpBesoin = in_array($controller,array('expressionbesoins_index','expressionbesoins_delete','expressionbesoins_search','expressionbesoins_add','expressionbesoins_edit','expressionbesoins_export_xls')) ? $active : ''; ?> 
   <?php $classEnvironnement = in_array($active,array($classBiens,$classLogiciels,$classIntApp,$classExpBesoin,$classEnvSNCF)) ? $divactive : ''; ?>      
   <?php $classDivers = in_array($active,array($classContactUs,$classAddFavorites,$classChangelog)) ? $divactive : ''; ?> 
-  <div class="panel-group" id="menu" style="margin-bottom: 15px;padding-bottom: 10px;overflow-y: auto;">
+  <div class="panel-group" id="menu" style="margin-bottom: 30px;padding-bottom: 45px;overflow-y: auto;">
     <div class="panel panel-default">
       <div class="panel-heading panel-menu <?php echo $classGeneralites; ?>">
         <h3 class="panel-title">
@@ -147,13 +147,13 @@
             <?php if (userAuth('profil_id')!='2' && isAuthorized('parameters', 'index')) : ?> 
             <li class="divider"></li>
             <?php endif; ?>
-            <?php if (userAuth('profil_id')=='1' && isAuthorized('parameters', 'index')) : ?>
+            <?php if (userAuth('profil_id')!='2' && isAuthorized('parameters', 'index')) : ?>
             <li class="<?php echo $classParameters; ?>"><?php echo $this->Html->link('Paramètres du site',array('controller'=>'parameters','action'=>'index'),array('class'=>'showoverlay','escape' => false)); ?></li>
             <li class="divider"></li>
             <li class="<?php echo $classParametersSave; ?>"><?php echo $this->Html->link('Sauvegarder',array('controller'=>'parameters','action'=>'savebdd'),array('class'=>'showoverlay','escape' => false)); ?></li>
             <li class="<?php echo $classParametersRestore; ?>"><?php echo $this->Html->link('Restaurer',array('controller'=>'parameters','action'=>'listebackup'),array('class'=>'showoverlay','escape' => false)); ?></li>            
             <?php endif; ?>            
-            <?php if (userAuth('profil_id')=='1' && (isAuthorized('profils', 'index') || isAuthorized('assistances', 'index') || isAuthorized('autorisations', 'index'))) : ?> 
+            <?php if (userAuth('profil_id')!='2' && (isAuthorized('profils', 'index') || isAuthorized('assistances', 'index') || isAuthorized('autorisations', 'index'))) : ?> 
             <li class="divider"></li>
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('profils', 'index')) : ?>
@@ -193,7 +193,7 @@
             <li class="<?php echo $classSocietes; ?>"><?php echo $this->Html->link('Sociétés',array('controller'=>'societes','action'=>'index'),array('class'=>'showoverlay','escape' => false)); ?></li>
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('typemateriels', 'index')) : ?>
-            <li class="<?php echo $classTypeMateriels; ?>"><?php echo $this->Html->link('Types de matérel',array('controller'=>'typemateriels','action'=>'index'),array('class'=>'showoverlay','escape' => false)); ?></li>
+            <li class="<?php echo $classTypeMateriels; ?>"><?php echo $this->Html->link('Types de matériel',array('controller'=>'typemateriels','action'=>'index'),array('class'=>'showoverlay','escape' => false)); ?></li>
             <?php endif; ?>  
           </ul>
         </div>
@@ -479,7 +479,7 @@
             <ul>
                 <li class="<?php echo $classContactUs; ?>"><?php echo $this->Html->link('Nous contacter',array('controller'=>'contacts','action'=>'add'),array('class'=>'showoverlay','escape' => false)); ?></li>
                 <li class="<?php echo $classChangelog; ?>"><?php echo $this->Html->link('Changements SAILL',array('controller'=>'changelogdemandes','action'=>'add'),array('class'=>'showoverlay','escape' => false)); ?></li>
-                <li  class="margintop5 text-center text-muted text-italic text-medium">Version : <?php $version = $this->requestAction('parameters/get_version'); echo $version['Parameter']['param']; ?></li>
+                <li  class="margintop5 text-center text-muted text-italic text-medium">Version : <?php echo Configure::read('versionapp'); ?></li>
             </ul>
         </div>
       </div>

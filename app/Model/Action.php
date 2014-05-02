@@ -86,6 +86,13 @@ class Action extends AppModel {
 			'fields' => '',
 			'order' => ''
 		),
+		'Destinataire' => array(
+			'className' => 'Utilisateur',
+			'foreignKey' => 'destinataire',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),            
 		'Domaine' => array(
 			'className' => 'Domaine',
 			'foreignKey' => 'domaine_id',
@@ -214,7 +221,9 @@ class Action extends AppModel {
                     $results[$key]['Action']['DEBUT'] = $this->dateFormatAfterFind($val['Action']['DEBUT']);
                 }  
                 if (isset($val['Action']['destinataire'])) {
-                    $results[$key]['Action']['destinataire_nom'] = $this->getDestinataire($val['Action']['destinataire']);
+                    $destinataire = $this->getDestinataire($val['Action']['destinataire']);
+                    $results[$key]['Action']['destinataire_nom'] = $destinataire['Action']['NOMLONG'];
+                    $results[$key]['Action']['destinataire_mail'] = $destinataire['Action']['MAIL'];
                 }       
                 if (isset($val['Action']['activite_id'])) {
                     $results[$key]['Action']['projet_nom'] = $this->getProjet($val['Action']['activite_id']);
@@ -226,9 +235,10 @@ class Action extends AppModel {
         public function getDestinataire($id){
             $value = false;
             if ($id != 0):
-            $sql = 'SELECT CONCAT(NOM," ",PRENOM) AS NOMLONG FROM utilisateurs WHERE id="'.$id.'"';
+            $sql = 'SELECT CONCAT(NOM," ",PRENOM) AS NOMLONG, MAIL FROM utilisateurs WHERE id="'.$id.'"';
             $result = $this->query($sql);
-            $value =  $result[0][0]['NOMLONG'];
+            $value['Action']['NOMLONG'] =  $result[0][0]['NOMLONG'];
+            $value['Action']['MAIL'] =  $result[0]['utilisateurs']['MAIL'];
             endif;
             return $value;
         }

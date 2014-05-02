@@ -80,9 +80,9 @@ $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : '2'; //traité
                     else:
                         $valide = $demandeabsence['Demandeabsence']['REPONSE']=='1' ? 'green' : 'disabled';
                         $refuse = $demandeabsence['Demandeabsence']['REPONSE']=='2' ? 'red' : 'disabled';
-                        echo '<span class="glyphicons ok_2 '.$valide.' notchange"></span>';
+                        echo '<span class="glyphicons ok_2 '.$valide.' notchange cursor"></span>';
                         echo '<span class="glyphicons blank"></span>';
-                        echo '<span class="glyphicons remove_2 '.$refuse.' notchange"></span>';                                
+                        echo '<span class="glyphicons remove_2 '.$refuse.' notchange cursor"></span>';                                
                     endif;
                 endif;
             else:
@@ -93,15 +93,11 @@ $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : '2'; //traité
         <td><?php echo h($demandeabsence['Demandeabsence']['DATEREPONSE']); ?>&nbsp;</td>
         <td><?php echo h($demandeabsence['Demandeabsence']['REPONSEBY_NOM']); ?>&nbsp;</td>
         <td class="actions">
-            <?php echo '<span class="glyphicons eye_open" data-rel="popover" data-title="<h3>Détail de la demande :</h3>" data-content="<contenttitle>Motif: </contenttitle>'.$demandeabsence['Demandeabsence']['MOTIF'].'" data-trigger="click" style="cursor: pointer;"></span>'; ?>&nbsp;
-            <?php if (userAuth('profil_id')!='2' && isAuthorized('demandeabsences', 'edit')) : ?>
-            <?php //echo $this->Html->link('<span class="glyphicons pencil notchange"></span>', "#",array('escape' => false,'data-id'=>$demandeabsence['Demandeabsence']['id'])); ?>&nbsp;
-            <?php endif; ?>
+            <?php echo '<span class="glyphicons eye_open" data-rel="popover" data-title="<h3>Détail de la demande :</h3>" data-content="<contenttitle>Motif: </contenttitle>'.$demandeabsence['Demandeabsence']['MOTIF'].'" data-trigger="click" style="cursor: pointer;"></span>'; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('demandeabsences', 'delete') && $demandeabsence['Demandeabsence']['REPONSE']==NULL) : ?>
-            <?php echo $this->Html->link('<span class="glyphicons bin notchange"></span>', "#",array('escape' => false,'data-id'=>$demandeabsence['Demandeabsence']['id'])); ?>
+            <?php echo $this->Html->link('<span class="glyphicons bin notchange" data-id="'.$demandeabsence['Demandeabsence']['id'].'"></span>', "#",array('escape' => false)); ?>
             <?php echo $this->Html->link('<span class="glyphicons envelope notchange"></span>', array('action' => 'sendmailrelancedemande',$demandeabsence['Demandeabsence']['id']),array('escape' => false),'Confirmez vous l\'envois de ce mail de relance ?'); ?>
             <?php endif; ?>      
-
         </td>
 </tr>
 <?php endforeach; ?>
@@ -121,6 +117,7 @@ $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : '2'; //traité
 ?>
 </ul>
 </div>
+<?php echo $this->element('modals/adddemandeabsence'); ?>
 <script>
 $(document).ready(function () {    
     $(document).on('click','.pencil',function(e){
@@ -142,7 +139,7 @@ $(document).ready(function () {
                 $('#modaldemandeabsences').modal('show');
             },
             error :function(response,status,errorThrown) {
-                alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
             }
          });
     });     
@@ -176,7 +173,7 @@ $(document).ready(function () {
     });  
     
     $(document).on('click','.bin',function(e){
-        var id = $(this).parent('a').attr('data-id');
+        var id = $(this).attr('data-id');
         if(confirm("Voulez-vous supprimer cette demande d'absences ?")){
             $.ajax({
                 dataType: "html",

@@ -27,7 +27,7 @@
                 <?php echo $this->Form->select('outil_id',$outil,array('class'=>'form-control','empty' => 'Choisir un outil')); ?>
             <?php } ?>
         </div>
-        </div>
+    </div>
     <div class="form-group">
         <label class="col-md-2" for="UtiliseoutilListediffusionId">Liste de diffusion : </label>
         <div class="col-md-3">
@@ -38,7 +38,7 @@
                 <?php echo $this->Form->select('listediffusion_id',$listediffusion,array('class'=>'form-control','empty' => 'Choisir une liste de diffusion')); ?>
             <?php } ?>
         </div>
-        </div>
+    </div>
     <div class="form-group">
         <label class="col-md-2" for="UtiliseoutilDossierpartageId">Partage réseau : </label>
         <div class="col-md-3">
@@ -49,7 +49,7 @@
                 <?php echo $this->Form->select('dossierpartage_id',$dossierpartage,array('class'=>'form-control','empty' => 'Choisir un partage réseau')); ?>
             <?php } ?>
         </div>
-        </div>
+    </div>
     <div class="form-group">
         <label class="col-md-2 required" for="UtiliseoutilSTATUT">Etat : </label>
         <div class="col-md-3">
@@ -59,7 +59,7 @@
                 <?php echo $this->Form->select('STATUT',$etat,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>'L\'état est obligatoire','empty' => 'Choisir un état')); ?>
             <?php } ?>
         </div>
-        </div>
+    </div>
     <div style="clear:both;margin-top: 10px;">
     <div class="form-group">
       <div class="btn-block-horizontal">

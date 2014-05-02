@@ -247,7 +247,8 @@ class Activitesreelle extends AppModel {
  * @return date de d√©but de semaine au format fran√ßais
  */        
         public function debutsem($date) {
-            $d = explode('/',$date);
+            $date = is_object($date) ? $date->format("d/m/Y") : $date;
+            $d = explode('/',$date) ;
             $year = $d[2];
             $month = $d[1];
             $day = $d[0];

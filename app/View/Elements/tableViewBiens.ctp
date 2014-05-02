@@ -1,4 +1,4 @@
-	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax">
+	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax tableviewbien">
 	<thead><tr>
                         <th><?php echo 'Nom'; ?></th>
                         <th><?php echo 'Usage'; ?></th>
@@ -25,6 +25,19 @@
 <script>
 $(document).ready(function (){ 
     //tri sur le tableau 
-    $('table').tablesorter();
+    $('.tableviewbien').tablesorter({
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_saveFilters : true,
+            filter_useParsedData : true,
+            filter_startsWith : false,
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    });
 });
 </script>

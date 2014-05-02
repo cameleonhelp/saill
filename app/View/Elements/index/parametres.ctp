@@ -36,6 +36,7 @@
 <?php echo $this->Form->end(); ?>
 <div class="marginbottom15"></div>
 <?php /* Gérer contact Webmaster */ ?>
+<!--
 <?php echo $this->Form->create('Parameter',array('action'=>'saveParam','id'=>'formValidate3','class'=>'form-inline','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class="form-group" style="width:98%">
         <label class="col-md-2" for="ParameterContact">Email contact : </label>
@@ -59,6 +60,7 @@
 <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>$version['Parameter']['id'])); ?>
 <?php echo $this->Form->end(); ?>
 <div class="marginbottom15"></div>
+//-->
 <?php /* Gérer l'instance du site */ ?>
 <?php echo $this->Form->create('Parameter',array('action'=>'saveParam','id'=>'formValidate5','class'=>'form-inline','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class="form-group" style="width:98%">
@@ -73,6 +75,7 @@
 <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>$instance['Parameter']['id'])); ?>
 <?php echo $this->Form->end(); ?>
 <div class="marginbottom15"></div>
+<!--
 <?php /* Gérer le gestionnaire d'annuaire */ ?>
 <?php echo $this->Form->create('Parameter',array('action'=>'saveParam','id'=>'formValidate6','class'=>'form-inline','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class="form-group" style="width:98%">
@@ -109,6 +112,7 @@
 <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>isset($destmailenv['Parameter']['id']) ? $destmailenv['Parameter']['id'] : '')); ?>
 <?php echo $this->Form->end(); ?> 
 <div class="marginbottom15"></div>  
+//-->
 <?php /* Gérer le developpeur d'outil */ ?>
 <?php echo $this->Form->create('Parameter',array('action'=>'saveParam','id'=>'formValidate8','class'=>'form-inline','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class="form-group" style="width:98%">
@@ -120,14 +124,14 @@
     </div>
 <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>isset($developpeur['Parameter']['id']) ? $developpeur['Parameter']['id'] : '')); ?>
 <?php echo $this->Form->end(); ?> 
-<div class="marginbottom15"></div>     
+<div class="marginbottom15"></div>    
+<!--
 <div class='block-panel block-panel-50-left'>
 <?php /* Gérer la liste d'outil par défaut */ ?>
 <?php echo $this->Form->create('Parameter',array('action'=>'saveParam','id'=>'formValidate9','class'=>'form-inline','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
     <div class="form-group" style="width:98%">
         <label class="col-md-4" for="ParameterTemplateOutil">Ouverture des droits par défaut sur les outils  : </label>
         <div class="col-md-8">
-            <!-- mettre une select multiple -->
             <?php $selected = explode(',',$templateoutil['Parameter']['param']); ?>
             <?php echo $this->Form->select('param',$listoutil,array('multiple'=>'true','id'=>'ParameterTemplateOutil','class'=>"form-control multiselect size75", 'default' => $selected,'hiddenField' => false)); ?>               
             <div class="text-center margintop10"><?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?></div> 
@@ -142,7 +146,6 @@
     <div class="form-group" style="width:98%">
         <label class="col-md-4" for="ParameterTemplateGroupe">Ouverture des droits par défaut sur les groupes  : </label>
         <div class="col-md-8">
-            <!-- mettre une select multiple -->
             <?php $selected = explode(',',$templategroupe['Parameter']['param']); ?>
             <?php echo $this->Form->select('param',$listgroup,array('multiple'=>'true','id'=>'ParameterTemplateGroupe','class'=>"form-control multiselect size75", 'default' => $selected,'hiddenField' => false)); ?>                               
             <div class="text-center margintop10"><?php echo $this->Form->button('Enregistrer', array('class' => 'btn btn-sm btn-primary','type'=>'submit')); ?></div>
@@ -151,6 +154,7 @@
 <?php echo $this->Form->input('id',array('type'=>'hidden','value'=>isset($templategroupe['Parameter']['id']) ? $templategroupe['Parameter']['id'] : '')); ?>
 <?php echo $this->Form->end(); ?> 
 <div class="marginbottom15"></div>
+//-->
 </div>
 <div style="clear:both;margin-top: 10px;">
 <div class="form-group">

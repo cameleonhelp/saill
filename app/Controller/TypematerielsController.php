@@ -4,6 +4,7 @@ App::uses('AppController', 'Controller');
  * Typemateriels Controller
  *
  * @property Typemateriel $Typemateriel
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class TypematerielsController extends AppController {
         public $components = array('History','Common'); 
@@ -12,7 +13,23 @@ class TypematerielsController extends AppController {
         'limit' => 25,
         'order' => array('Typemateriel.NOM' => 'asc'),
         );
-    
+                     
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Type de matériel" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }         
+        
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_list_other'));
+            parent::beforeFilter();
+        }  
+          
         public function get_list_uc(){
             return $this->Typemateriel->find('list',array('fields'=>array('Typemateriel.id','Typemateriel.NOM'),'conditions'=>array('Typemateriel.UC'=>1),'oreder'=>array('Typemateriel.NOM'=>'asc'),'recursive'=>0));
         }
@@ -20,6 +37,16 @@ class TypematerielsController extends AppController {
         public function get_all_uc(){
             return $this->Typemateriel->find('all',array('conditions'=>array('Typemateriel.UC'=>1),'oreder'=>array('Typemateriel.NOM'=>'asc'),'recursive'=>0));
         }      
+        
+        public function get_list_other(){
+            return $this->Typemateriel->find('list',array('fields'=>array('Typemateriel.id','Typemateriel.NOM'),'conditions'=>array('Typemateriel.UC'=>0),'oreder'=>array('Typemateriel.NOM'=>'asc'),'recursive'=>0));
+        }
+        
+        public function json_list_other(){
+            $this->autoRender = false;
+            $result = $this->Typemateriel->find('list',array('fields'=>array('Typemateriel.NOM','Typemateriel.id'),'conditions'=>array('Typemateriel.UC'=>0),'oreder'=>array('Typemateriel.NOM'=>'asc'),'recursive'=>0));
+            return json_encode($result);
+        }        
         
         public function get_typemateriel_uc_filter($id){
             $result = array();
@@ -47,7 +74,7 @@ class TypematerielsController extends AppController {
  * @return void
  */
 	public function index($filtreUC = null) {
-            $this->set('title_for_layout','Types de matériel');
+            $this->set_title();
             if (isAuthorized('typemateriels', 'index')) :
                 $getUC = $this->get_typemateriel_uc_filter($filtreUC);
                 $this->set('strfilter',$getUC['filter']);
@@ -56,7 +83,7 @@ class TypematerielsController extends AppController {
 		$this->set('typemateriels', $this->paginate());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -66,7 +93,7 @@ class TypematerielsController extends AppController {
  * @return void
  */
 	public function add() {
-            $this->set('title_for_layout','Types de matériel');
+            $this->set_title();
             if (isAuthorized('typemateriels', 'add')) :
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
@@ -84,7 +111,7 @@ class TypematerielsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -96,7 +123,7 @@ class TypematerielsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','Types de matériel');
+            $this->set_title();
             if (isAuthorized('typemateriels', 'edit')) :
                 if (!$this->Typemateriel->exists($id)) {
 			throw new NotFoundException(__('Type de matériel incorrect'));
@@ -119,7 +146,7 @@ class TypematerielsController extends AppController {
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -132,7 +159,7 @@ class TypematerielsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-            $this->set('title_for_layout','Types de matériel');
+            $this->set_title();
             if (isAuthorized('typemateriels', 'delete')) :
                 $this->Typemateriel->id = $id;
 		if (!$this->Typemateriel->exists()) {
@@ -147,7 +174,7 @@ class TypematerielsController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -157,7 +184,7 @@ class TypematerielsController extends AppController {
  * @return void
  */
 	public function search($filtreUC=null,$keywords=null) {
-            $this->set('title_for_layout','Types de matériel');
+            $this->set_title();
             if (isAuthorized('typemateriels', 'index')) :
                 if(isset($this->params->data['Typemateriel']['SEARCH'])):
                     $keywords = $this->params->data['Typemateriel']['SEARCH'];
@@ -183,7 +210,7 @@ class TypematerielsController extends AppController {
                 endif;                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }            
 }

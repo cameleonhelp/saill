@@ -4,9 +4,16 @@ App::uses('AppController', 'Controller');
  * Dotations Controller
  *
  * @property Dotation $Dotation
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class DotationsController extends AppController {
         public $components = array('History','Common');
+        
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_this'));
+            parent::beforeFilter();
+        }   
+        
 /**
  * index method
  *
@@ -19,7 +26,7 @@ class DotationsController extends AppController {
 		$this->set('dotations', $liste);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -39,7 +46,7 @@ class DotationsController extends AppController {
 		$this->set('dotation', $this->Dotation->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -49,43 +56,31 @@ class DotationsController extends AppController {
  * @return void
  */
 	public function add($userid = null) {
-            if (isAuthorized('dotations', 'add') || isAuthorized('dotations', 'myprofil')) :
-                $conditions = array('Materielinformatique.ETAT ='=>'En stock');
-                if (userAuth('WIDEAREA')==0) {$restriction[]="Materielinformatique.section_id=".userAuth('section_id'); $conditions = array_merge_recursive($conditions,$restriction);}
-                $matinformatique = $this->Dotation->Materielinformatique->find('list',array('fields'=>array('id','NOM'),'conditions'=>$conditions,'order'=>array('Materielinformatique.NOM'=>'asc'),'recursive'=>-1));
-		$this->set('matinformatique', $matinformatique);
-                $matautre = $this->Dotation->Typemateriel->find('list',array('fields'=>array('id','NOM'),'conditions'=>array('Typemateriel.id >2'),'order'=>array('Typemateriel.NOM'=>"asc"),'recursive'=>-1));
-		$this->set('matautre', $matautre);                
-		if ($this->request->is('post')) :
-                    if (isset($this->params['data']['cancel'])) :
-                        $this->Dotation->validate = array();
-                        $this->History->goBack(1);
-                    else:                    
-                        $this->Dotation->utilisateur_id = $userid;
-			$this->Dotation->create();
-                        $idmat = isset($this->request->data['Dotation']['materielinformatiques_id']) ? $this->request->data['Dotation']['materielinformatiques_id'] : null;
-			if ($this->Dotation->save($this->request->data,false)) {
-                                if(isset($this->request->data['Dotation']['materielinformatiques_id']) && !empty($this->request->data['Dotation']['materielinformatiques_id'])){
-                                    $this->Dotation->Materielinformatique->id = $idmat;
-                                    $record = $this->Dotation->Materielinformatique->read();
-                                    $record['Materielinformatique']['ETAT'] = $record['Materielinformatique']['ETAT']=='En stock' ? 'En dotation' : 'En stock';
-                                    $record['Materielinformatique']['created'] = isset($record['Materielinformatique']['created']) ? $record['Materielinformatique']['created'] : date('Y-m-d');
-                                    $record['Materielinformatique']['modified'] = date('Y-m-d');                
-                                    $this->Dotation->Materielinformatique->save($record,false);
-                                }
-                                $history['Historyutilisateur']['utilisateur_id']=$userid;
-                                $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une dotation";
-                                $this->Dotation->Utilisateur->Historyutilisateur->save($history);                               
-				$this->Session->setFlash(__('Dotation sauvegardée',true),'flash_success');
-				$this->History->goBack(1);
-			} else {
-				$this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation',true),'flash_failure');
-			}
-                    endif;                        
-		endif;
+            $userid = $userid==null ? $this->request->data['Dotation']['utilisateur_id']: $userid;
+            $this->autoRender = false;
+            if (isAuthorized('dotations', 'add') || isAuthorized('dotations', 'myprofil')) :            
+                $this->Dotation->utilisateur_id = $userid;
+                $this->Dotation->create();
+                $idmat = isset($this->request->data['Dotation']['materielinformatiques_id']) ? $this->request->data['Dotation']['materielinformatiques_id'] : null;
+                if ($this->Dotation->save($this->request->data,false)) {
+                        if(isset($this->request->data['Dotation']['materielinformatiques_id']) && !empty($this->request->data['Dotation']['materielinformatiques_id'])){
+                            $this->Dotation->Materielinformatique->id = $idmat;
+                            $record = $this->Dotation->Materielinformatique->read();
+                            $record['Materielinformatique']['ETAT'] = $record['Materielinformatique']['ETAT']=='En stock' ? 'En dotation' : 'En stock';
+                            $record['Materielinformatique']['created'] = isset($record['Materielinformatique']['created']) ? $record['Materielinformatique']['created'] : date('Y-m-d');
+                            $record['Materielinformatique']['modified'] = date('Y-m-d');                
+                            $this->Dotation->Materielinformatique->save($record,false);
+                        }
+                        $history['Historyutilisateur']['utilisateur_id']=$userid;
+                        $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - ajout d'une dotation";
+                        $this->Dotation->Utilisateur->Historyutilisateur->save($history);                               
+                        $this->Session->setFlash(__('Dotation sauvegardée',true),'flash_success');
+                } else {
+                        $this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation',true),'flash_failure');
+                }
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -123,7 +118,7 @@ class DotationsController extends AppController {
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -146,13 +141,13 @@ class DotationsController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une dotation";
                         $this->Dotation->Utilisateur->Historyutilisateur->save($history);                     
 			$this->Session->setFlash(__('Dotation supprimée',true),'flash_success');
-			$this->History->goBack(1);
+			$this->History->goBack(0);
 		}
 		$this->Session->setFlash(__('Dotation <b>NON</b> supprimée',true),'flash_failure');
-		$this->History->goBack(1);
+		$this->History->goBack(0);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -179,5 +174,71 @@ class DotationsController extends AppController {
         public function get_compteur($id){
             $options =array('Dotation.utilisateur_id' => $id);
             return $this->Dotation->find('first',array('fields'=>array('count(Dotation.id) AS nbDotation'),'conditions' =>$options,'recursive'=>0));
+        }     
+        
+        public function ajaxdelete($id=null){
+            $this->autoRender = false;
+            if (isAuthorized('dotations', 'delete')) :
+		$this->Dotation->id = $id;
+		if (!$this->Dotation->exists()) {
+			return false;
+		}
+		if ($this->Dotation->delete()) :
+                    return true;
+		endif;
+            else:
+                return false;
+            endif;
+        }
+        
+        public function ajaxadd($obj){
+            $this->autoRender = false;
+            $record['Dotation']['materielinformatiques_id'] = $obj['Materielinformatique']['id'];
+            $record['Dotation']['utilisateur_id'] = $obj['Materielinformatique']['utilisateur_id'];
+            $record['Dotation']['DATERECEPTION'] = date('Y-m-d');
+            $record['Dotation']['created'] = date('Y-m-d');
+            $record['Dotation']['modified'] = date('Y-m-d');
+            $this->Dotation->create();
+            if($this->Dotation->save($record)):
+                return true;
+            else:
+                return false;
+            endif;
+        }
+        
+        public function addto(){
+            $this->autoRender = false;
+            $this->request->data['Dotation']['created'] = date('Y-m-d');
+            $this->request->data['Dotation']['modified'] = date('Y-m-d');
+            $this->Dotation->create();
+            if($this->Dotation->save($this->request->data)):
+                $this->Session->setFlash(__('Dotation sauvegardée',true),'flash_success');
+            else:
+                $this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation',true),'flash_failure');
+            endif;
+            $this->History->goback(0);
+        }
+        
+        public function editto(){
+            $this->autoRender = false;
+            $this->request->data['Dotation']['modified'] = date('Y-m-d');
+            $this->Dotation->id = $this->request->data['Dotation']['id'];
+            if($this->Dotation->save($this->request->data)):
+                $this->Session->setFlash(__('Dotation mise à jour',true),'flash_success');
+            else:
+                $this->Session->setFlash(__('Dotation incorrecte, veuillez corriger la dotation',true),'flash_failure');
+            endif;
+            $this->History->goback(0);
         }        
+        
+        public function json_get_this($id=null){
+            $this->autoRender = false;
+            $result = null;
+            if($id!=null):
+            $conditions[] = 'Dotation.id='.$id;
+            $return = $this->Dotation->find('first',array('conditions'=>$conditions,'recursive'=>-1));
+            $result = json_encode($return);
+            endif;
+            return $result;
+        }
 }

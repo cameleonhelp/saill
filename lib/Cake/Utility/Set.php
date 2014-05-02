@@ -23,6 +23,7 @@ App::uses('Hash', 'Utility');
  * Class used for manipulation of arrays.
  *
  * @package       Cake.Utility
+ * @deprecated Will be removed in 3.0. Use Hash instead.
  */
 class Set {
 
@@ -307,7 +308,7 @@ class Set {
  * @param string $path An absolute XPath 2.0 path
  * @param array $data An array of data to extract from
  * @param array $options Currently only supports 'flatten' which can be disabled for higher XPath-ness
- * @return array An array of matched items
+ * @return mixed An array of matched items or the content of a single selected item or null in any of these cases: $path or $data are null, no items found.
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/set.html#Set::extract
  */
 	public static function extract($path, $data = null, $options = array()) {
@@ -326,7 +327,7 @@ class Set {
 			return $data;
 		}
 		$contexts = $data;
-		$options = array_merge(array('flatten' => true), $options);
+		$options += array('flatten' => true);
 		if (!isset($contexts[0])) {
 			$current = current($data);
 			if ((is_array($current) && count($data) < 1) || !is_array($current) || !Set::numeric(array_keys($data))) {
@@ -532,7 +533,7 @@ class Set {
  *
  * @param array $data Array from where to extract
  * @param string|array $path As an array, or as a dot-separated string.
- * @return array|null Extracted data or null when $data or $path are empty.
+ * @return mixed An array of matched items or the content of a single selected item or null in any of these cases: $path or $data are null, no items found.
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/set.html#Set::classicExtract
  */
 	public static function classicExtract($data, $path = null) {
@@ -734,7 +735,7 @@ class Set {
  * @return integer The number of dimensions in $array
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/set.html#Set::countDim
  */
-	public static function countDim($array = null, $all = false, $count = 0) {
+	public static function countDim($array, $all = false, $count = 0) {
 		if ($all) {
 			$depth = array($count);
 			if (is_array($array) && reset($array) !== false) {
@@ -1009,7 +1010,7 @@ class Set {
  */
 	public static function apply($path, $data, $callback, $options = array()) {
 		$defaults = array('type' => 'pass');
-		$options = array_merge($defaults, $options);
+		$options += $defaults;
 		$extracted = Set::extract($path, $data);
 
 		if ($options['type'] === 'map') {

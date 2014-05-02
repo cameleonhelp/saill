@@ -1,10 +1,24 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Usages');
+App::import('Controller', 'Types');
+App::import('Controller', 'Applications');
+App::import('Controller', 'Dsitenvs');
+App::import('Controller', 'Envoutils');
+App::import('Controller', 'Historybiens');
+App::import('Controller', 'Cpuses');
+App::import('Controller', 'Lots');
+App::import('Controller', 'Chassis');
+App::import('Controller', 'Modeles');
+App::import('Controller', 'Logiciels');
+App::import('Controller', 'Assobienlogiciels');
 /**
  * Biens Controller
  *
  * @property Bien $Bien
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class BiensController extends AppController {
 
@@ -20,7 +34,8 @@ class BiensController extends AppController {
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return $ObjAssoentiteutilisateurs->json_get_my_entite(userAuth('id'));
             endif;
         }
         
@@ -36,10 +51,11 @@ class BiensController extends AppController {
         
         public function get_bien_application_filter($application){
             $result = array();
+            $ObjApplications = new ApplicationsController();	
             switch($application):
                 case null:
                 case 'tous':
-                    $listapp = $this->requestAction('applications/get_str_list');
+                    $listapp = $ObjApplications->get_str_list();
                     $result['condition']="Bien.application_id IN (".$listapp.")";
                     $result['filter'] = ', pour toutes les applications';
                     break;
@@ -171,14 +187,17 @@ class BiensController extends AppController {
                 $newconditions = array($resttriction,$getapplication['condition'],$getinstall['condition'],$getvalid['condition'],$getactif['condition'],$gettype['condition'],$getusage['condition']);
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));
                 $export = $this->get_export($newconditions);
-                $applications = $this->requestAction('applications/get_list/1');
-                $types = $this->requestAction('types/get_list/1');
-                $usages = $this->requestAction('usages/get_list/1');               
+                $ObjApplications = new ApplicationsController();
+                $ObjTypes = new TypesController();
+                $ObjUsages = new UsagesController();	
+                $applications = $ObjApplications->get_list(1);
+                $types = $ObjTypes->get_list(1);
+                $usages = $ObjUsages->get_list(1);               
                 $this->set(compact('strfilter','export','applications','types','usages'));
                 $this->set('biens', $this->paginate());    
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -188,13 +207,20 @@ class BiensController extends AppController {
  * @return void
  */
 	public function add() {            
-            if (isAuthorized('biens', 'add')) :        
+            if (isAuthorized('biens', 'add')) :   
+                $ObjApplications = new ApplicationsController();
+                $ObjModeles = new ModelesController();
+                $ObjChassis = new ChassisController();
+                $ObjTypes = new TypesController();	
+                $ObjUsages = new UsagesController();	
+                $ObjLots = new LotsController();
+                $ObjCpuses = new CpusesController();	
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Bien->validate = array();
                         $this->History->goBack(1);
                     else:
-                        $entite_id = $this->requestAction('applications/get_entite_id/'.$this->request->data['Bien']['application_id']);
+                        $entite_id = $ObjApplications->get_entite_id($this->request->data['Bien']['application_id']);
                         $this->request->data['Bien']['entite_id']=$entite_id;
 			$this->Bien->create();
 			if ($this->Bien->save($this->request->data)) {
@@ -209,18 +235,18 @@ class BiensController extends AppController {
 			}                        
                     endif;
 		endif;
-		$modeles = $this->requestAction('modeles/get_select');
-		$chassis = $this->requestAction('chassis/get_select');
-		$types = $this->requestAction('types/get_select');
-		$usages = $this->requestAction('usages/get_select');
-		$lots = $this->requestAction('lots/get_select');
-                $applications = $this->requestAction('applications/get_select');
-                $cpuses = $this->requestAction('cpuses/get_select');
+		$modeles = $ObjModeles->get_select();
+		$chassis = $ObjChassis->get_select();
+		$types = $ObjTypes->get_select();
+		$usages = $ObjUsages->get_select();
+		$lots = $ObjLots->get_select();
+                $applications = $ObjApplications->get_select();
+                $cpuses = $ObjCpuses->get_select();
                 $listbiens = array();
 		$this->set(compact('modeles', 'chassis', 'types', 'usages', 'lots','applications','cpuses','listbiens'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -244,12 +270,24 @@ class BiensController extends AppController {
 		if (!$this->Bien->exists($id)) {
 			throw new NotFoundException(__('Bien incorrect'));
 		}
+                $ObjApplications = new ApplicationsController();
+                $ObjLogiciels = new LogicielsController();
+                $ObjAssobienlogiciels = new AssobienlogicielsController();	
+                $ObjModeles = new ModelesController();	
+                $ObjChassis = new ChassisController();
+                $ObjTypes = new TypesController();	
+                $ObjUsages = new UsagesController();
+                $ObjLots = new LotsController();
+                $ObjHistorybiens = new HistorybiensController();
+                $ObjEnvoutils = new EnvoutilsController();
+                $ObjDsitenvs = new DsitenvsController();	
+                $ObjCpuses = new CpusesController();	
 		if ($this->request->is('post') || $this->request->is('put')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Bien->validate = array();
                         $this->History->goBack(1);
                     else:       
-                        $entite_id = $this->requestAction('applications/get_entite_id/'.$this->request->data['Bien']['application_id']);
+                        $entite_id = $ObjApplications->get_entite_id($this->request->data['Bien']['application_id']);
                         $this->request->data['Bien']['entite_id']=$entite_id;                        
 			if ($this->Bien->save($this->request->data)) {
 				$this->Session->setFlash(__('Bien sauvegardé',true),'flash_success');
@@ -263,29 +301,29 @@ class BiensController extends AppController {
 			}
                     endif;
 		} else {
-			$options = array('conditions' => array('Bien.' . $this->Bien->primaryKey => $id));
-			$this->request->data = $this->Bien->find('first', $options);
+                    $options = array('conditions' => array('Bien.' . $this->Bien->primaryKey => $id));
+                    $this->request->data = $this->Bien->find('first', $options);
+                    $bien =$this->request->data;
+                    $listlogiciels = $ObjLogiciels->get_select_compatible($bien['Bien']['lot_id'],$bien['Bien']['application_id']);
+                    $assobienlogiciels = $ObjAssobienlogiciels->get_outils_for_bien($id);
+                    $logiciels = $ObjAssobienlogiciels->get_list($id);
+                    $modeles = $ObjModeles->get_select();
+                    $chassis = $ObjChassis->get_select();
+                    $types = $ObjTypes->get_select();
+                    $usages = $ObjUsages->get_select();
+                    $lots = $ObjLots->get_select();
+                    $applications = $ObjApplications->get_select();
+                    $cpuses = $ObjCpuses->get_select();
+                    $histories = $ObjHistorybiens->get_list($id);
+                    $outils = $ObjEnvoutils->get_select(1);
+                    $versions=array();
+                    $all_dsitenvs = $ObjDsitenvs->get_list();
+                    
+                    $this->set(compact('modeles', 'chassis', 'types', 'usages', 'lots','applications','cpuses','histories','logiciels','listlogiciels','assobienlogiciels','outils','versions','all_dsitenvs'));                        
 		}
-                $this->Bien->id = $id;
-                $bien = $this->Bien->read();
-                $listlogiciels = $this->requestAction('logiciels/get_select_compatible/'.$bien['Bien']['lot_id'].'/'.$bien['Bien']['application_id']);
-                $assobienlogiciels = $this->requestAction('assobienlogiciels/get_outils_for_bien/'.$id);
-                $logiciels = $this->requestAction('assobienlogiciels/get_list/'.$id);
-		$modeles = $this->requestAction('modeles/get_select');
-		$chassis = $this->requestAction('chassis/get_select');
-		$types = $this->requestAction('types/get_select');
-		$usages = $this->requestAction('usages/get_select');
-		$lots = $this->requestAction('lots/get_select');
-                $applications = $this->requestAction('applications/get_select');
-                $cpuses = $this->requestAction('cpuses/get_select');
-                $histories = $this->requestAction('historybiens/get_list/'.$id);
-                $outils = $this->requestAction('envoutils/get_select/1');
-                $versions=array();
-                $all_dsitenvs = $this->requestAction('dsitenvs/get_list');
-		$this->set(compact('modeles', 'chassis', 'types', 'usages', 'lots','applications','cpuses','histories','logiciels','listlogiciels','assobienlogiciels','outils','versions','all_dsitenvs'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                   
 	}
 
@@ -347,7 +385,7 @@ class BiensController extends AppController {
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
         
@@ -486,7 +524,7 @@ class BiensController extends AppController {
                 }                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}        
         
@@ -517,7 +555,7 @@ class BiensController extends AppController {
                 }
             else:
                 $this->Session->setFlash(__('Historisation impossible le bien est incorect.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;
         }
         
@@ -549,9 +587,12 @@ class BiensController extends AppController {
                     $conditions = array($newconditions,'OR'=>$ornewconditions);
                     $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));    
                     $export = $this->get_export($conditions);
-                    $applications = $this->requestAction('applications/get_list/1');
-                    $types = $this->requestAction('types/get_list/1');
-                    $usages = $this->requestAction('usages/get_list/1');               
+                    $ObjApplications = new ApplicationsController();	
+                    $ObjTypes = new TypesController();	
+                    $ObjUsages = new UsagesController();	
+                    $applications = $ObjApplications->get_list(1);
+                    $types = $ObjTypes->get_list(1);
+                    $usages = $ObjUsages->get_list(1);               
                     $this->set(compact('strfilter','export','applications','types','usages'));
                     $this->set('biens', $this->paginate());   
                 else:
@@ -559,7 +600,7 @@ class BiensController extends AppController {
                 endif;    
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;  
         }  
         
@@ -579,6 +620,7 @@ class BiensController extends AppController {
             else :
                 $this->Session->setFlash(__('Aucune action sélectionnée',true),'flash_failure');
             endif;
+            return $this->request->data('id');
         }
         
         public function checkall(){
@@ -597,6 +639,7 @@ class BiensController extends AppController {
             else :
                 $this->Session->setFlash(__('Aucun bien sélectionné',true),'flash_failure');
             endif;
+            return $this->request->data('id');
         }
         
         public function deleteall(){
@@ -615,6 +658,7 @@ class BiensController extends AppController {
             else :
                 $this->Session->setFlash(__('Aucun bien sélectionné',true),'flash_failure');
             endif;
+            return $this->request->data('id');
         }   
         
         public function get_select_compatible($lot_id,$application_id){

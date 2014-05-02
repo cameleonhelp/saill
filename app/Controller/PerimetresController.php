@@ -1,10 +1,13 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Entites');
 /**
  * Perimetres Controller
  *
  * @property Perimetre $Perimetre
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class PerimetresController extends AppController {
 /**
@@ -15,12 +18,23 @@ class PerimetresController extends AppController {
         public $paginate = array('limit' => 25,'order'=>array('Perimetre.NOM'=>'asc'));
 	public $components = array('History','Common');
 
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Périmètres" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }              
 
         public function get_visibility(){
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return $ObjAssoentiteutilisateurs->json_get_my_entite(userAuth('id'));
             endif;
         }
         
@@ -66,7 +80,8 @@ class PerimetresController extends AppController {
                     break;
                 default:
                     $result['condition']='Perimetre.entite_id ='.$id;
-                    $nom = $this->requestAction('entites/get_entite_nom/'.$id);
+                    $ObjEntites = new EntitesController();
+                    $nom = $ObjEntites->get_entite_nom($id); 
                     $result['filter'] = 'ayant pour entité '.$nom;
             endswitch;
             return $result;
@@ -77,7 +92,7 @@ class PerimetresController extends AppController {
  * @return void
  */
 	public function index($actif=null,$entite=null) {
-            $this->set('title_for_layout','Périmètres');
+            $this->set_title();
             if (isAuthorized('perimetres', 'index')) :
                 $visibility = $this->get_visibility();                
                 $restriction= $this->get_restriction($visibility);
@@ -87,11 +102,12 @@ class PerimetresController extends AppController {
                 $newcondition = array($restriction,$getactif['condition'],$getentite['condition']);
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newcondition,'recursive'=>0));   
 		$this->set('perimetres', $this->paginate());
-                $cercles = $this->requestAction('entites/get_all');
+                $ObjEntites = new EntitesController();
+                $cercles = $ObjEntites->get_all();
                 $this->set(compact('cercles'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -101,7 +117,7 @@ class PerimetresController extends AppController {
  * @return void
  */
 	public function add() {
-            $this->set('title_for_layout','Périmètres');
+            $this->set_title();
             if (isAuthorized('perimetres', 'add')) :
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
@@ -118,11 +134,12 @@ class PerimetresController extends AppController {
 			}
                     endif;
 		endif;
-                $cercles = $this->requestAction('entites/find_list_cercle');
+                $ObjEntites = new EntitesController();
+                $cercles = $ObjEntites->find_list_cercle();
                 $this->set(compact('cercles'));                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -134,7 +151,7 @@ class PerimetresController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','Périmètres');
+            $this->set_title();
             if (isAuthorized('perimetres', 'edit')) :            
 		if (!$this->Perimetre->exists($id)) {
 			throw new NotFoundException(__('Périmètres incorrect'));
@@ -154,12 +171,13 @@ class PerimetresController extends AppController {
 		} else {
                     $options = array('conditions' => array('Perimetre.' . $this->Perimetre->primaryKey => $id));
                     $this->request->data = $this->Perimetre->find('first', $options);
-                    $cercles = $this->requestAction('entites/find_list_cercle');
+                    $ObjEntites = new EntitesController();
+                    $cercles = $ObjEntites->find_list_cercle();
                     $this->set(compact('cercles')); 
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -171,7 +189,7 @@ class PerimetresController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-            $this->set('title_for_layout','Périmètres');
+            $this->set_title();
             if (isAuthorized('perimetres', 'delete')) : 
 		$this->Perimetre->id = $id;
 		if (!$this->Perimetre->exists()) {
@@ -185,7 +203,7 @@ class PerimetresController extends AppController {
 		$this->History->notmove();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
         
@@ -204,7 +222,7 @@ class PerimetresController extends AppController {
         }
         
         public function search($actif=null,$entite=null,$keywords=null){
-            $this->set('title_for_layout','Périmètres');
+            $this->set_title();
             if (isAuthorized('perimetres', 'index')) :
                 if(isset($this->params->data['Perimetre']['SEARCH'])):
                     $keywords = $this->params->data['Perimetre']['SEARCH'];
@@ -227,15 +245,16 @@ class PerimetresController extends AppController {
                     endforeach;
                     $conditions = array($newcondition,'OR'=>$ornewconditions);
                     $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
-                    $this->set('perimetres', $this->paginate());    
-                    $cercles = $this->requestAction('entites/get_all');
+                    $this->set('perimetres', $this->paginate()); 
+                    $ObjEntites = new EntitesController();
+                    $cercles = $ObjEntites->get_all();
                     $this->set(compact('cercles'));                    
                 else:
                     $this->redirect(array('action'=>'index',$actif,$entite));
                 endif;   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;  
         }
         
@@ -251,7 +270,7 @@ class PerimetresController extends AppController {
             $visibility = $this->get_visibility();                
             $conditions[]= $this->get_restriction($visibility);               
             $conditions[] = $actif == null ? '1=1' : 'Perimetre.ACTIF='.$actif;    
-            $list = $this->Perimetre->find('all',array('fields'=>array('Perimetre.id','Perimetre.NOM'),'conditions'=>$conditions,'order'=>array('Perimetre.NOM'=>'asc'),'recursive'=>0));
+            $list = $this->Perimetre->find('all',array('fields'=>array('Perimetre.id','Perimetre.NOM'),'conditions'=>$conditions,'order'=>array('Perimetre.NOM'=>'asc'),'recursive'=>-1));
             return $list;
         }      
         

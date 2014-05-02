@@ -153,7 +153,7 @@ $get_params = http_build_query(array(
 	    height: 100%;
 	}
 	</style><![endif]-->
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<!--<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
 	<script type="text/javascript">
 	if (typeof jQuery === 'undefined')
 	{
@@ -171,13 +171,7 @@ $get_params = http_build_query(array(
 	<script type="text/javascript" src="jPlayer/jquery.jplayer.min.js"></script>
 	<script type="text/javascript" src="js/imagesloaded.pkgd.min.js"></script>
 	<script type="text/javascript" src="js/jquery.queryloader2.min.js"></script>
-	<?php
-	if($aviary_active){
-	if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) { ?>
-	    <script type="text/javascript" src="https://dme0ih8comzn4.cloudfront.net/js/feather.js"></script>
-	<?php }else{ ?>
-	    <script type="text/javascript" src="http://feather.aviary.com/js/feather.js "></script>
-	<?php }} ?>
+
 	
 	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>

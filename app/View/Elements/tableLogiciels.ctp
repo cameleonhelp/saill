@@ -1,12 +1,12 @@
-	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax">
-	<tr>
+	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax tablelogiciels">
+	<thead><tr>
             <th><?php echo 'Logiciel'; ?></th>
             <th><?php echo 'Application'; ?></th>
             <th><?php echo 'Lot'; ?></th>
             <th><?php echo 'Env. DSIT'; ?></th>
             <th><?php echo 'Installé'; ?></th>
             <th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
+            </tr></thead>
 	<?php foreach ($assobienlogiciels as $logiciel): ?>
 	<tr>
 		<td><?php echo $logiciel['Logiciel']['NOM']; ?></td>
@@ -93,6 +93,26 @@
 <?php echo $this->element('modals/envdsit'); ?>
 <script>
 $(document).ready(function () {
+   $(".tablelogiciels").tablesorter({
+        headers: {
+            4:{filter:false},
+            5:{filter:false},
+            6:{filter:false}
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_saveFilters : true,
+            filter_useParsedData : true,
+            filter_startsWith : false,
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    }); 
+
     $(document).on('click','.addenv',function(e){
         var id = $(this).attr('data-id');
         var envsid = $(this).attr('data-envid');
@@ -123,7 +143,7 @@ $(document).ready(function () {
                 });                        
             },
             error :function(response, status,errorThrown) {
-                alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
             }
         }); 
         $(this).delay(500);
@@ -149,7 +169,7 @@ $(document).ready(function () {
                 $('#editModal').modal('show');
             },
             error :function(response,status,errorThrown) {
-                alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
             }
          });
     });
@@ -174,7 +194,7 @@ $(document).ready(function () {
                 },
                 error : function(response,status,errorThrown) {
                     $('#overlay').hide();
-                    alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                    alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
                 }
             });
     });   
@@ -201,7 +221,7 @@ $(document).ready(function () {
                     });                       
                 },
                 error :function(response, status,errorThrown) {
-                    alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                    alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
                 }
              }); 
            }
@@ -230,7 +250,7 @@ $(document).ready(function () {
                     });                       
                 },
                 error :function(response, status,errorThrown) {
-                    alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                    alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
                 }
              }); 
            }

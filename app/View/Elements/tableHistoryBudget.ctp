@@ -43,6 +43,21 @@
 </table>
 <script>
 $(document).ready(function () {
+        $("table").tablesorter({
+            headers: {
+                1: {sorter:false},
+                2: {sorter:false},
+                3: {sorter:false},
+//                4: {sorter:false},
+//                5: {sorter:false},
+            },
+            widthFixed : true,
+            widgets: ["zebra"],
+            widgetOptions : {           
+                zebra : [ "normal-row", "alt-row" ]
+            }
+        });     
+    
     $(document).on('click','.savebudget',function(e){
         e.preventDefault; 
         var id = $(this).parents('tr').find('.idhistory').val();
@@ -89,7 +104,7 @@ $(document).ready(function () {
                 $('#modalnewbudget').modal('show');
             },
             error :function(response,status,errorThrown) {
-                alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
             }
          });
     });      

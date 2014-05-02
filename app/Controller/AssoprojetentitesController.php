@@ -1,10 +1,14 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Projets');
+App::import('Controller', 'Contrats');
 /**
  * Assoprojetentites Controller
  *
  * @property Assoprojetentite $Assoprojetentite
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class AssoprojetentitesController extends AppController {
 
@@ -100,7 +104,8 @@ class AssoprojetentitesController extends AppController {
         
         public function json_get_all_projets($id){
             $this->autoRender = false;
-            $entite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.$id);
+            $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+            $entite = $ObjAssoentiteutilisateurs->json_get_my_entite($id);
             if($entite != '0'):
                 $list = '';
                 $obj = $this->Assoprojetentite->find('all', array('conditions' => array('Assoprojetentite.entite_id IN ('.$entite.')'),'group'=>'Assoprojetentite.projet_id','order'=>array('Assoprojetentite.projet_id'=>"asc"),'recursive'=>0));
@@ -119,7 +124,8 @@ class AssoprojetentitesController extends AppController {
         }  
         
         public function find_str_id_contrats($utilisateur_id){
-            $entite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.$utilisateur_id);
+            $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+            $entite = $ObjAssoentiteutilisateurs->json_get_my_entite($utilisateur_id);            
             if($entite != '0'):
                 $list = '';
                 $obj = $this->Assoprojetentite->find('all', array('conditions' => array('Assoprojetentite.entite_id IN ('.$entite.')','Projet.contrat_id > 1'),'group'=>'Projet.contrat_id','order'=>array('Assoprojetentite.projet_id'=>"asc"),'recursive'=>0));
@@ -128,17 +134,21 @@ class AssoprojetentitesController extends AppController {
                     foreach ($results as $result):
                         $list .= $result['Projet']['contrat_id'].',';
                     endforeach;
-                    return strlen($list) > 1 ? substr_replace($list ,"",-1) : '0';
+                    $list = strlen($list) > 1 ? substr_replace($list ,"",-1) : '0';
                 else:
-                    return '0';
+                    $list = '0';
                 endif;    
             else:
-                return '0';
+                $list = '0';
             endif;
+            $ObjContrats = new ContratsController();
+            $list = $list.','.$ObjContrats->get_str_my_entite(userAuth('entite_id'));
+            return $list;
         }
            
         public function find_all_contrats($utilisateur_id){
-            $entite = $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.$utilisateur_id);
+            $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+            $entite = $ObjAssoentiteutilisateurs->json_get_my_entite($utilisateur_id);
             if($entite != '0'):
                 $list = '';
                 $obj = $this->Assoprojetentite->find('all', array('conditions' => array('Assoprojetentite.entite_id IN ('.$entite.')'),'group'=>'Projet.contrat_id','order'=>array('Assoprojetentite.projet_id'=>"asc"),'recursive'=>0));
@@ -169,7 +179,8 @@ class AssoprojetentitesController extends AppController {
         }          
         
         public function find_first_entite_for_contrat($contrat_id){
-            $listprojet = $this->requestAction('projets/find_str_projet_for_contrat/'.$contrat_id);
+            $ObjProjets = new ProjetsController();
+            $listprojet = $ObjProjets->find_str_projet_for_contrat($contrat_id);
             $entite = $this->Assoprojetentite->find('first',array('conditions'=>array('Assoprojetentite.projet_id IN ('.$listprojet.')'),'recursive'=>-1));
             return isset($entite['Assoprojetentite']['entite_id']) ? $entite['Assoprojetentite']['entite_id'] : null;
         }

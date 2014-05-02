@@ -101,7 +101,7 @@ $(document).ready(function(){
     $(document).on('click','.addprojet',function(){
         //getJson des projets compris dans ce centre de cout
         var cdc_id = $(this).attr('data-cdcid');
-        $('#modalprojets #cdc_id').val(cdc_id);        
+        $('#modalprojets #cdc_id').val(cdc_id); 
         $.ajax({
           dataType: "JSON",
           url: "<?php echo $this->Html->url(array('controller'=>'assocdcprojets','action'=>'json_get_info')); ?>/"+cdc_id,
@@ -115,7 +115,7 @@ $(document).ready(function(){
           },
           error : function (response){
               if(response.responseText != 'null'){
-              alert("Erreur! il se peut que votre session soit expirée\n\rOu qu'une erreur inconnue soit intervenue.\n\rActualiser la page et recommencer.");
+              alert("Erreur! Impossible de mettre à jour les informations\n\rOu qu'une erreur inconnue soit intervenue.\n\rActualiser la page et recommencer.");
               }
           }
         }); 
@@ -131,11 +131,11 @@ $(document).ready(function(){
           },
           error : function (response){
               if(response.responseText != 'null'){
-              alert("Erreur! il se peut que votre session soit expirée\n\rOu qu'une erreur inconnue soit intervenue.\n\rActualiser la page et recommencer.");
+              alert("Erreur! Impossible de mettre à jour les informations\n\rOu qu'une erreur inconnue soit intervenue.\n\rActualiser la page et recommencer.");
               }
           }
-        });          
-        $('#modalprojets').modal('show');
+        });   
+        setTimeout(function(){$('#modalprojets').modal('show');}, 1000);
     });
     
     $(document).on('keyup','#CentrecoutSEARCH',function (event){

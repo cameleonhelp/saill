@@ -1,9 +1,13 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Utilisateurs');
+App::import('Controller', 'Equipes');
 /**
  * Livrables Controller
  *
  * @property Livrable $Livrable
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class LivrablesController extends AppController {
         public $components = array('History','Common'); 
@@ -15,7 +19,8 @@ class LivrablesController extends AppController {
         if(userAuth('profil_id')==1):
             return null;
         else:
-            return $this->requestAction('assoentiteutilisateurs/json_get_all_users/'. userAuth('id'));  
+            $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+            return $ObjAssoentiteutilisateurs->json_get_all_users(userAuth('id'));  
         endif;
     }
     
@@ -99,6 +104,7 @@ class LivrablesController extends AppController {
     
     public function get_livrable_gestionnaire_filter($id,$visibility){
         $result = array();
+        $ObjEquipes = new EquipesController();
         if (areaIsVisible() || $id==userAuth('id')):
         switch ($id){
             case 'tous':   
@@ -112,7 +118,7 @@ class LivrablesController extends AppController {
                 $result['filter'] = "de tous les gestionnaires";
                 break;  
             case 'equipe':   
-                $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
+                $monequipe = $ObjEquipes->myTeam(userAuth('id')).userAuth('id');
                 $result['condition']="Livrable.utilisateur_id in (".$monequipe.")";
                 $result['filter'] = "de mon équipe";
                 break;                      
@@ -188,7 +194,7 @@ class LivrablesController extends AppController {
                 $this->get_export($newconditions);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -218,11 +224,12 @@ class LivrablesController extends AppController {
                 $etats = Configure::read('etatLivrable');
                 $listusers = $this->get_visibility();
                 $utilisateur = $this->get_list_gestionnaire($listusers);
-                $nomlong = $this->requestAction('utilisateurs/get_nomlong/'.userAuth('id'));
+                $ObjUtilisateurs = new UtilisateursController();
+                $nomlong = $ObjUtilisateurs->get_nomlong(userAuth('id'));
                 $this->set(compact('utilisateur','nomlong','etats'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -269,12 +276,13 @@ class LivrablesController extends AppController {
                         $listusers = $this->get_visibility();
                         $Suivilivrables = $this->get_all_suivi_livrable($id);
                         $utilisateur = $this->get_list_gestionnaire($listusers);
-                        $nomlong = $this->requestAction('utilisateurs/get_nomlong/'.userAuth('id'));
+                        $ObjUtilisateurs = new UtilisateursController();
+                        $nomlong = $ObjUtilisateurs->get_nomlong(userAuth('id'));
                         $this->set(compact('utilisateur','nomlong','etats','Suivilivrables'));                          
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -301,7 +309,7 @@ class LivrablesController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -344,7 +352,7 @@ class LivrablesController extends AppController {
                endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }       
         
@@ -386,7 +394,7 @@ class LivrablesController extends AppController {
 		$this->History->goFirst();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}  
         

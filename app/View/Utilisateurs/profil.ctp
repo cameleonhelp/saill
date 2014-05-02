@@ -241,6 +241,25 @@
 <div class="panel">
   <div class="panel-heading">
     <h3 class="panel-title">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse7">
+          Paramétrages
+      </a>
+  </div>    
+  <div id="collapse7" class="panel-collapse collapse">
+      <div class="panel-body">		
+          <div class="form-group">
+              <label class="col-md-2 required" for="UtilisateurNOTIFYME">Me notifier les rappels automatiques: </label>
+              <div class="col-md-10">
+                <?php echo $this->Form->input('NOTIFYME',array('class'=>'yesno')); ?>
+                &nbsp;<label for="UtilisateurNOTIFYME" class='labelAfter'></label>
+              </div>
+          </div> 
+    </div> 
+</div>
+</div>      
+<div class="panel">
+  <div class="panel-heading">
+    <h3 class="panel-title">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse5">
             Historique
             </a>

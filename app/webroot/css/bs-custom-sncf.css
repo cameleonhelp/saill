@@ -11,7 +11,6 @@ body {
   font-size: 12px;
   line-height: 18px;
   color: #747678;
-  /*padding-bottom: 15px;*/
   background-color: transparent ;/*#ffffff;*/
   overflow: no-display;  
   -ms-overflow-style: none;
@@ -20,15 +19,18 @@ body {
   min-height: 97.5%;
 }
 
+body{
+    overflow: hidden;  
+}
+
 #content{
     min-height: 95%;
     max-height: 100%;
     height: 100%;
     width:100%;
     position:absolute;
-    padding-bottom: 15px;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
 }
 
 span .clear:after{
@@ -275,24 +277,15 @@ margin-left: 0px;
 .toolbar .navbar-nav > .open > .dropdown-menu{
     top: 30px !important;
 }
+
 .fixed {
-    position: fixed;
-    left: 15px;
-    /*right: 30px; /* 15px;*/
-    top:52px; 
     z-index: 1000;
-    box-shadow: 0 6px 12px -10x #FFF, 0 6px 12px -10px rgba(0, 0, 0, 2);
-    -webkit-box-shadow: 0 6px 12px -10px #FFF, 0 6px 12px -10px rgba(0, 0, 0, 2);
+    -moz-box-shadow: 0px 6px 12px -10px #656565, 0 6px 12px -10px rgba(0, 0, 0, 2);
+    -webkit-box-shadow: 0px 6px 12px -10px #656565, 0 6px 12px -10px rgba(0, 0, 0, 2);
+    -o-box-shadow: 0px 6px 12px -10px #656565, 0 6px 12px -10px rgba(0, 0, 0, 2);
+    box-shadow: 0px 6px 12px -10px #656565, 0 6px 12px -10px rgba(0, 0, 0, 2);
 }
-.fixed-active {
-    position: fixed;
-    left: 255px;
-    right: -255px;
-    top:52px; 
-    
-    box-shadow: 0 6px 12px -10x #FFF, 0 6px 12px -10px rgba(0, 0, 0, 2);
-    -webkit-box-shadow: 0 6px 12px -10px #FFF, 0 6px 12px -10px rgba(0, 0, 0, 2);
-}
+
 .toolbar .container,
 .container{
     margin-left: -15px;
@@ -414,6 +407,9 @@ float: left !important;
 }
 .marginleft20{
     margin-left: 20px !important;
+}
+.marginleft15{
+    margin-left: 15px !important;
 }
 .marginleft10{
     margin-left: 10px !important;
@@ -2028,6 +2024,9 @@ td.actions120,th.actions120 {
     font-weight: lighter !important; 
     font-size: 12px !important;
 }
+.mce-ico{font-family:'tinymce-small',Arial}
+.mce-ico{position:relative;}
+.mce-i-insertdatetime:before{content:"\e018";}
 
 /* Custom progress bar
 ------------------------------------------------*/
@@ -2253,14 +2252,14 @@ td.actions120,th.actions120 {
 
 /* Custom popover
 ----------------------------------------*/
-.popover {
+.popover:not(.editable-popup) {
     overflow: no-content;
     width: auto !important;
     max-width: none !important;
     min-width: 350px;
 }
 
-.popover-content {
+.popover-content:not(.editable-popup) {
     max-height: 300px;
     overflow-y: auto;
 }
@@ -2448,7 +2447,7 @@ label.italic{
 /* Style pour les calendriers
 -------------------------------------------------*/
 .sur-today{
-    background-color: rgba(255,182,18,0.3) !important;
+    background-color: rgba(217,237,247,0.8) !important;
 }
 
 .indispo{
@@ -2725,7 +2724,8 @@ a.badge:hover {
     margin-top: 4px !important;
 }
 
-.dropdown-menu > li > a.subfilteractif
+.dropdown-menu > li > a.subfilteractif,
+.subfilteractif
 {
     color: #3a87ad;
     text-decoration: none;
@@ -3111,8 +3111,8 @@ height: 20px;
 }
 
 .cel-today{
-    background-color: #FFB612 !important;
-    color:#000 !important;
+    background-color: #009AA6 !important;
+    color:#fff !important;
 }
 
 .highlight{
@@ -3218,3 +3218,54 @@ dd{
 }
 
 .tablesorter thead .disabled {display: none}
+
+.dropdown-menu input {margin-top: 4px;margin-left:5px;}
+.dropdown-menu-form{min-width: 225px;}
+.dropdown-menu-form .btn{min-width: 100%;}
+.dropdown-menu form > li label {margin: 0;display: inline-block;font-weight: normal;}
+
+.tab-content {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 15px;
+}
+
+.nav-tabs {
+    margin-bottom: 0px;
+}
+
+.tabbable {
+    margin: 10px;
+    overflow: hidden;
+}
+
+.linkcolor:before {
+  color: #428bca;
+}
+
+.editable{
+    color:#747678;
+    border-bottom: dashed 1px #747678 !important;
+}
+
+.autowidth{
+    width: 500px !important;
+}
+
+.modal.fade.ui-draggable-dragging {
+    -moz-transition: none;
+    -o-transition: none;
+    -webkit-transition: none;
+    transition: none;
+    overflow-y: hidden;
+}
+
+.modal-header{
+    cursor: move;
+}
+
+.well-msg{
+    height: 500px !important;
+    overflow-y: auto;
+}

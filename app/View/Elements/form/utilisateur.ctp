@@ -246,7 +246,7 @@
         <hr/>
         <?php if(isAuthorized('dotations', 'myprofil') || isAuthorized('dotations', 'add')): ?>
         <?php $userid = $this->params->action ==  'edit' ? $this->data['Utilisateur']['id'] : userAuth('id'); ?>
-        <button type="button" class='btn btn-sm btn-default pull-right' onclick="location.href='<?php echo $this->Html->url('/dotations/add/'.$userid); ?>';">Ajouter une dotation</button><br>                   
+        <?php echo $this->Html->link('Ajouter une dotation', "#",array('class'=>'btn btn-sm btn-default pull-right adddotation','escape' => false, 'data-toggle'=>"modal",'data-userid'=>$userid, 'data-target'=>"#modaladddotation")); ?><br/>
         <?php endif; ?>                    
         <label class="sstitre">Liste des dotations</label>   
         <?php echo $this->element('tableDotation'); ?>
@@ -272,7 +272,7 @@
             <?php if(isAuthorized('affectations', 'add')): ?>
             <span  class='pull-right' style="margin-bottom:10px !important;">
             <button type="button" class='btn btn-sm btn-default' onclick="location.href='<?php echo $this->Html->url('/affectations/addIndisponibilite/'.$this->data['Utilisateur']['id']); ?>';">Ajouter indisponibilités</button>&nbsp;
-            <button type="button" class='btn btn-sm btn-default' onclick="location.href='<?php echo $this->Html->url('/affectations/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter une activité</button>    
+            <?php echo $this->Html->link('Ajouter une activité', "#",array('class'=>'btn btn-sm btn-default addaffectation','escape' => false, 'data-toggle'=>"modal",'data-userid'=>$userid, 'data-target'=>"#modaladdaffectation")); ?><br/>    
             </span><br> 
             <?php endif; ?>            
             <label class="sstitre">Liste des activités</label> 
@@ -291,15 +291,34 @@
     <div id="collapse4" class="panel-collapse collapse">
         <div class="panel-body">
             <?php if(isAuthorized('utiliseoutils', 'add')) : ?>
-            <button type="button" style="margin-bottom:10px;" class='btn btn-sm btn-default pull-right' onclick="location.href='<?php echo $this->Html->url('/utiliseoutils/add/'.$this->data['Utilisateur']['id']); ?>';">Dupliquer les ouvertures de droit</button>&nbsp;
-            <button type="button" style="margin-bottom:10px;margin-right:10px;" class='btn btn-sm btn-default pull-right' onclick="location.href='<?php echo $this->Html->url('/utiliseoutils/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter les ouvertures de droit par défaut</button>&nbsp;
-            <button type="button" style="margin-bottom:10px;margin-right:10px;" class='btn btn-sm btn-default pull-right' onclick="location.href='<?php echo $this->Html->url('/utiliseoutils/add/'.$this->data['Utilisateur']['id']); ?>';">Ajouter une ouverture de droit</button><br>                     
+            <?php echo $this->Html->link('Dupliquer à partir de ...', "#",array('class'=>'btn btn-sm btn-default pull-right duplicatefrom','escape' => false, 'data-toggle'=>"modal",'data-userid'=>$userid, 'data-target'=>"#modalduplicatefrom")); ?>
+            <button type="button" style="margin-bottom:10px;margin-right:10px;" class='btn btn-sm btn-default showoverlay pull-right' onclick="location.href='<?php echo $this->Html->url('/utiliseoutils/ajax_addtemplate/'.$this->data['Utilisateur']['id']); ?>';">Ajouter les ouvertures de droit par défaut</button>&nbsp;
+            <?php echo $this->Html->link('Ajouter une ouverture de droit', "#",array('class'=>'btn btn-sm btn-default pull-right addutiliseoutil','style'=>'margin-right:10px;','escape' => false, 'data-toggle'=>"modal",'data-userid'=>$userid, 'data-target'=>"#modaladdutiliseoutil")); ?>
             <?php endif; ?>            
-            <label class="sstitre">Liste des droits et état avancement des demandes à mettre dans un tableau</label> 
+            <label class="sstitre" style="margin-top: 10px;">Liste des droits et état avancement des demandes à mettre dans un tableau</label> 
             <?php echo $this->element('tableUtiliseOutil'); ?>
         </div>
     </div>
 </div> 
+<div class="panel">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse7">
+          Paramétrages
+      </a>
+  </div>    
+  <div id="collapse7" class="panel-collapse collapse">
+      <div class="panel-body">		
+          <div class="form-group">
+              <label class="col-md-2 required" for="UtilisateurNOTIFYME">Me notifier les rappels automatiques: </label>
+              <div class="col-md-10">
+                <?php echo $this->Form->input('NOTIFYME',array('class'=>'yesno')); ?>
+                &nbsp;<label for="UtilisateurNOTIFYME" class='labelAfter'></label>
+              </div>
+          </div> 
+    </div> 
+</div>
+</div>    
 <div class="panel">
   <div class="panel-heading">
     <h3 class="panel-title">
@@ -329,3 +348,167 @@
 <?php echo $this->Form->input('id',array('type'=>'hidden')); ?>    
 <?php echo $this->Form->end(); ?>
 </div>
+<?php echo $this->element('modals/adddotation'); ?>
+<?php echo $this->element('modals/editdotation'); ?>
+<?php echo $this->element('modals/addaffectation'); ?>
+<?php echo $this->element('modals/editaffectation'); ?>
+<?php echo $this->element('modals/duplicatefrom'); ?>
+<?php echo $this->element('modals/addutiliseoutil'); ?>
+<script>
+$(document).ready(function(){
+   //TODO au chargement des fenêtre modale il faut charger les données des selects 
+    $('#modaladddotation').on('shown.bs.modal', function (e) {
+        $('#modaladddotation #DotationTypematerielId').attr('disabled',false).find('option:not(:first)').remove();
+        $('#modaladddotation #DotationMaterielinformatiquesId').attr('disabled',false).find('option:not(:first)').remove();        
+        $.ajax({
+            type: "POST",       
+            url: "<?php echo $this->Html->url(array('controller'=>'materielinformatiques','action'=>'json_list_stock')); ?>",
+            data: {},  
+            contentType: "application/json",
+            success : function(response) {
+                var json = $.parseJSON(response);
+                console.log(json);
+                var options = $("#modaladddotation #DotationMaterielinformatiquesId");
+                $.each(json, function (index, value) {
+                    if(index != undefined) {
+                        options.append($("<option />").val(value).text(index));
+                    }
+                });                       
+            },
+            error :function(response, status,errorThrown) {
+                alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
+            }      
+        });
+        $.ajax({
+            type: "POST",       
+            url: "<?php echo $this->Html->url(array('controller'=>'typemateriels','action'=>'json_list_other')); ?>",
+            data: {},  
+            contentType: "application/json",
+            success : function(response) {
+                var json = $.parseJSON(response);
+                var options = $("#modaladddotation #DotationTypematerielId");
+                $.each(json, function (index, value) {
+                    if(index != undefined) {
+                        options.append($("<option />").val(value).text(index));
+                    }
+                });                       
+            },
+            error :function(response, status,errorThrown) {
+                alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
+            }      
+        });        
+    });   
+
+    $(document).on('click','.duplicatefrom',function(e){
+        var id = $(this).attr('data-userid');
+        $('#modalduplicatefrom #UtiliseoutilUtilisateurId').val(id);
+    });
+    
+    $(document).on('click','.addutiliseoutil',function(e){
+        var id = $(this).attr('data-userid');
+        $('#modaladdutiliseoutil #UtiliseoutilUtilisateurId').val(id);
+    });
+    
+    $('#modaladdaffectation').on('shown.bs.modal', function (e) {
+        $.ajax({
+            type: "POST",       
+            url: "<?php echo $this->Html->url(array('controller'=>'activites','action'=>'json_all_activite')); ?>",
+            data: {},  
+            contentType: "application/json",
+            success : function(response) {
+                var json = $.parseJSON(response);
+                var options = $("#modaladdaffectation #AffectationActiviteId");
+                $.each(json, function (index, value) {
+                    if(index != undefined) {
+                        options.append($("<option />").val(value).text(index));
+                    }
+                });                    
+            },
+            error :function(response, status,errorThrown) {
+                alert("Erreur! Impossible de mettre à jour les informations concernant les activités\n\rActualiser la page et recommencer.");
+            }      
+        });    
+    });
+   
+    $('#modalduplicatefrom').on('shown.bs.modal', function (e) {
+        $.ajax({
+            type: "POST",       
+            url: "<?php echo $this->Html->url(array('controller'=>'utiliseoutils','action'=>'json_all_user')); ?>",
+            data: {},  
+            contentType: "application/json",
+            success : function(response) {
+                var json = $.parseJSON(response);
+                console.log(json);
+                var options = $("#modalduplicatefrom #UtiliseoutilORIGINE");
+                $.each(json, function (index, value) {
+                    if(index != undefined) {
+                        options.append($("<option />").val(value).text(index));
+                    }
+                });                    
+            },
+            error :function(response, status,errorThrown) {
+                alert("Erreur! Impossible de mettre à jour les informations concernant les utilisateurs\n\rActualiser la page et recommencer.");
+            }      
+        });    
+    });   
+   
+    $('#modaladdutiliseoutil').on('shown.bs.modal', function (e) {
+        $.ajax({
+            type: "POST",       
+            url: "<?php echo $this->Html->url(array('controller'=>'utiliseoutils','action'=>'json_all_outils')); ?>",
+            data: {},  
+            contentType: "application/json",
+            success : function(response) {
+                var json = $.parseJSON(response);
+                var options = $("#modaladdutiliseoutil #UtiliseoutilOutilId");
+                $.each(json, function (index, value) {
+                    if(index != undefined) {
+                        options.append($("<option />").val(value).text(index));
+                    }
+                });                    
+            },
+            error :function(response, status,errorThrown) {
+                alert("Erreur! Impossible de mettre à jour les informations concernant les outils\n\rActualiser la page et recommencer.");
+            }      
+        });    
+        
+        $.ajax({
+            type: "POST",       
+            url: "<?php echo $this->Html->url(array('controller'=>'utiliseoutils','action'=>'json_all_listes')); ?>",
+            data: {},  
+            contentType: "application/json",
+            success : function(response) {
+                var json = $.parseJSON(response);
+                var options = $("#modaladdutiliseoutil #UtiliseoutilListediffusionId");
+                $.each(json, function (index, value) {
+                    if(index != undefined) {
+                        options.append($("<option />").val(value).text(index));
+                    }
+                });                    
+            },
+            error :function(response, status,errorThrown) {
+                alert("Erreur! Impossible de mettre à jour les informations concernant les listes de diffusion\n\rActualiser la page et recommencer.");
+            }      
+        }); 
+        
+        $.ajax({
+            type: "POST",       
+            url: "<?php echo $this->Html->url(array('controller'=>'utiliseoutils','action'=>'json_all_partages')); ?>",
+            data: {},  
+            contentType: "application/json",
+            success : function(response) {
+                var json = $.parseJSON(response);
+                var options = $("#modaladdutiliseoutil #UtiliseoutilDossierpartageId");
+                $.each(json, function (index, value) {
+                    if(index != undefined) {
+                        options.append($("<option />").val(value).text(index));
+                    }
+                });                    
+            },
+            error :function(response, status,errorThrown) {
+                alert("Erreur! Impossible de mettre à jour les informations concernant les partages réseaux\n\rActualiser la page et recommencer.");
+            }      
+        });         
+    });    
+});
+</script>

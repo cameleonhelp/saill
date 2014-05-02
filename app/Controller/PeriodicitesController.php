@@ -5,6 +5,7 @@ App::uses('AppController', 'Controller');
  *
  * @property Periodicite $Periodicite
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class PeriodicitesController extends AppController {
 

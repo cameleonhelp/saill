@@ -10,7 +10,14 @@
       <div class="modal-body">
         <div class="block-content">
             <!-- contenu de la fenêtre modale //-->
-       
+            <?php echo $this->Form->create('Materielinformatique',array('action'=>'assignto','id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
+            <div class="form-group">
+                <label class="col-md-3" for="MaterielinformatiqueUtilisateurId">Utilisateur : </label>
+                <div class="col-md-8">
+                        <?php echo $this->Form->input('id',array('type'=>'hidden')); ?>
+                        <?php echo $this->Form->select('utilisateur_id',$utilisateurs,array('class'=>'form-control','empty' => 'Choisir un utilisateur')); ?>
+                </div>
+            </div>
             <!-- fin du contenu de la fenêtre modale //-->
         </div>
     </div>
@@ -27,5 +34,13 @@ $(document).ready(function () {
     $(document).on('click','#closemodalassign',function(e){
         $('#modalassign').modal('hide');
     });
+    
+    $(document).on('click','.user_add',function(e){
+        var idmat = $(this).attr('data-idmat');
+        var iduser = $(this).attr('data-iduser');
+        $('#modalassign #MaterielinformatiqueId').val(idmat);
+        $('#modalassign #MaterielinformatiqueUtilisateurId option[value="'+iduser+'"]').attr('selected', 'selected');
+    });
+ 
 });
 </script>

@@ -1,4 +1,4 @@
-<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax" id="tableVersion">
+<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax tableversions" id="tableVersion">
     <thead>
     <tr>
     <th><?php echo 'Nom'; ?></th>
@@ -56,7 +56,24 @@
 
 <script>
 $(document).ready(function () {
-    $("table").tablesorter();
+   $(".tableversions").tablesorter({
+        headers: {
+            1:{filter:false},
+            2:{filter:false}
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_saveFilters : true,
+            filter_useParsedData : true,
+            filter_startsWith : false,
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    }); ;
     
     $(document).on('click','.actif',function(e){
         var id = $(this).attr('data-id');
@@ -83,7 +100,7 @@ $(document).ready(function () {
                 $('#editModal').modal('show')
             },
             error :function(response, status,errorThrown) {
-                alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
             }
          });
     });

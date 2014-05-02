@@ -5,6 +5,7 @@ App::uses('AppController', 'Controller');
  *
  * @property Envversion $Envversion
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class EnvversionsController extends AppController {
 
@@ -15,7 +16,23 @@ class EnvversionsController extends AppController {
  */
         public $paginate = array('limit' => 25,'order'=>array('Envversion.VERSION'=>'asc','Envversion.EDITION'=>'asc'));
 	public $components = array('History','Common');
-
+                
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Versions outils" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }              
+        
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_version_for','json_get_version_info'));
+            parent::beforeFilter();
+        }  
+        
 /**
  * index method
  *
@@ -163,7 +180,6 @@ class EnvversionsController extends AppController {
         }
         
 	public function ajaxadd() {
-            $this->set('title_for_layout','Envversions');
             $this->autoRender = false;
             if (isAuthorized('envversions', 'add')) :
 		if ($this->request->is('post')) :
@@ -177,12 +193,11 @@ class EnvversionsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}   
         
 	public function ajaxedit() {
-            $this->set('title_for_layout','Envversions');
             $this->autoRender = false;
             if (isAuthorized('envversions', 'edit')) : 
 		if ($this->request->is('post') || $this->request->is('put')) :
@@ -196,12 +211,11 @@ class EnvversionsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}      
         
 	public function ajaxdelete($id = null) {
-            $this->set('title_for_layout','Envversions');
             $this->autoRender = false;
             if (isAuthorized('envversions', 'delete')) : 
 		$this->Envversion->id = $id;
@@ -216,7 +230,7 @@ class EnvversionsController extends AppController {
 		$this->History->notmove();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}        
         

@@ -81,7 +81,7 @@
    <div id="charthistocontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'intégration par lot, application et environnement</div><br>
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped sizemax" id="sorttable">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="sorttable">
         <thead>
             <tr>
                 <th>Lot</th>
@@ -178,10 +178,10 @@ $(document).ready(function (){
     var title = '';
     if(env=='Tous' || env=='TOUS'){
         title = 'Nombre d\'intégration par lot et application pour';
-        title2 = 'Progression du nombre d\'intégration pour ';}
+        title2 = 'Progression du nombre d\'intégration pour la période ';}
     else{
         title = 'Nombre d\'intégration par lot et application en '+env+' pour';
-        title2 = 'Progression du nombre d\'intégration en '+env+' pour ';}
+        title2 = 'Progression du nombre d\'intégration en '+env+' pour la période ';}
 
     $('#chartcontainer').highcharts({
         colors: ['#A1006B','#E05206','#CCDC00','#009AA6','#CB0044','#FFB612','#7ABB00','#00BBCE','#6E267B'], 
@@ -202,13 +202,17 @@ $(document).ready(function (){
         yAxis: {
             allowDecimals: false,
             title: {
-                       text: 'Nombre d\'intérgation'
+                       text: 'Nombre d\'intégration'
                    }
         },
         xAxis: {
             categories: [<?php echo implode(",", $lots); ?>],
             
         },
+        exporting: {
+		scale: 2,
+                filename : "Intégrations applicatives"
+	},        
         plotOptions: {
                 column: {
                     dataLabels: {
@@ -226,19 +230,71 @@ $(document).ready(function (){
         $datas[$charthistoresult['lots']['LOT']][] = "[Date.UTC(".$time[1].",".($time[0]-1).",1),".$charthistoresult[0]['NB']."]";
     endforeach;
     ?>
-        
-    $('#charthistocontainer').highcharts({
-        colors: ['#A1006B','#E05206','#CCDC00','#009AA6','#CB0044','#FFB612','#7ABB00','#00BBCE','#6E267B'], 
+            
+    $('#charthistocontainer').highcharts('StockChart',{
         credits:{
             enabled:false
         },
+        navigator: {
+            xAxis: {
+                dateTimeLabelFormats: {
+                    day: '%b %Y',
+                    week: '%b %Y',
+                    month: '%b %Y',
+                    year: '%b %Y'
+                }
+            },
+            adaptToUpdatedData: true,
+        },     
+        scrollbar : {
+            enabled : false
+        },
+        rangeSelector:{
+            inputEnabled: $('#container').width() > 480,
+            buttonSpacing: 15, 
+            buttonTheme: { // styles for the buttons
+                fill: 'none',
+    		states: {
+                    hover: {
+                        fill: 'none',
+                        style:{
+                            fontWeight: 'bold'
+                        }
+                    },
+                    select: {
+                        fill: 'none',
+                        style: {
+                            color: '#A1006B'
+                        }
+                    }
+                }                   
+            },
+            buttons: [ {
+                type: 'all',
+                text: 'Tout'
+            },{
+                type: 'month',
+                count: 24,
+                text: '2 ans'
+            }, {
+                type: 'month',
+                count: 12,
+                text: '1 an'
+            }, {
+                type: 'month',
+                count: 6,
+                text: '6 mois'
+            }],
+            selected: 1,
+            
+        },        
         chart: {
             renderTo: 'container',
             type: 'spline'
         },
         title: {
             useHTML: true,
-            text: title2+annee
+            text: title2+<?php echo $charthistoresults[0][0]['MINANNEE']; ?>+"-"+annee
         },
         subtitle:{
                text:'(en fonction des critères sélectionnés)'
@@ -255,7 +311,7 @@ $(document).ready(function (){
                     fontSize: '13px',
                     fontFamily: 'Verdana, sans-serif'
                 }                
-            },
+            },          
         },   
         yAxis: {
             allowDecimals: false,
@@ -263,21 +319,36 @@ $(document).ready(function (){
                        text: 'Nombre d\'intégration'
                    },
              min:0
-        },   
+        },  
+        exporting: {
+		scale: 2,
+                filename : "Historique intégration applicatives"
+	},        
         tooltip: {
+            useHTML : true,
+            shared: true,    
+            xDateFormat: "mmm yyyy",
             formatter: function() {
-                $moisentier = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Setpembre','Octobre','Novembre','Décembre','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Setpembre','Octobre','Novembre','Décembre'];
-                return 'Nombre d\'intégration <b>' + this.y + ' tout confondus';
+                $moisentier = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+                var ligne = "<br/>";
+                var total = 0;
+                for(l=0;l<this.points.length;l++){
+                    ligne += "<b style='color:"+this.points[l].series.color+";'>"+this.points[l].series.name+"</b> : "+this.points[l].y+" intégrations<br/>";
+                    total = total + this.points[l].y;
+                }
+                ligne += "<b>Total sur le mois</b> : "+total+" intégrations<br/>";
+                var mois = Highcharts.dateFormat('%b %Y', new Date(this.x));
+                return '<b>'+ mois +'</b><br/>'+ligne;
             }
         },  
-        plotOptions: {
+        plotOptions: {          
                 spline: {
                     dataLabels: {
                         enabled: true,
                         color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'grey'
                     }
                 }
-            } ,        
+            } ,   
         series: [
             <?php foreach($datas as $key=>$data): ?>
                 {
@@ -285,8 +356,8 @@ $(document).ready(function (){
                 data: [<?php echo join($data, ',') ?>]
                 },
             <?php endforeach; ?>      
-        ]     
-    });        
+        ] 
+    }) ;
     <?php endif; ?>     
 });
 </script>

@@ -1,6 +1,6 @@
 <br/>
 <div class="historyUtilisateur index">
-	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax">
+	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax tablehistorique">
         <thead>
 	<tr>
 			<th width='85px'><?php echo 'Date'; ?></th>
@@ -16,4 +16,26 @@
 <?php endforeach; ?>
         </tbody>
 	</table>
-    </div>
+</div>
+<script>
+$(document).ready(function (){ 
+    //tri sur le tableau 
+    $('.tablehistorique').tablesorter({
+        headers:{
+            0:{filter:false},
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_saveFilters : true,
+            filter_useParsedData : true,
+            filter_startsWith : false,
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    });
+});
+</script>

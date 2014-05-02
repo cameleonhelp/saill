@@ -1,9 +1,11 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
 /**
  * Outils Controller
  *
  * @property Outil $Outil
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class OutilsController extends AppController {
         public $components = array('History','Common');
@@ -18,7 +20,8 @@ class OutilsController extends AppController {
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/json_get_all_users_actif_nogenerique/'.userAuth('id'));
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return $ObjAssoentiteutilisateurs->json_get_all_users_actif_nogenerique(userAuth('id'));
             endif;
         }
         
@@ -56,7 +59,7 @@ class OutilsController extends AppController {
 		$this->set('outils', $this->paginate());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -86,7 +89,7 @@ class OutilsController extends AppController {
                 $this->set('gestionnaire',$gestionnaire);                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -123,7 +126,7 @@ class OutilsController extends AppController {
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -149,7 +152,7 @@ class OutilsController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -183,13 +186,19 @@ class OutilsController extends AppController {
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }  
         
-        public function get_list_outil(){
-            $visibility = $this->get_visibility();
-            $conditions = $this->get_restriction($visibility);
+        public function get_list_outil($id = null){
+            if ($id== null):
+                $visibility = $this->get_visibility();
+                $conditions = $this->get_restriction($visibility);
+            else:
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                $visibility = $ObjAssoentiteutilisateurs->json_get_all_users_actif_nogenerique_for_entite($id);
+                $conditions = $this->get_restriction($visibility);
+            endif;
             $list = $this->Outil->find('list',array('fields'=>array('id','NOM'),'conditions'=>$conditions,'order'=>array('Outil.NOM'=>'asc'),"recursive"=>1));
             return $list;
         }

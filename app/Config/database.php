@@ -69,5 +69,5 @@ class DATABASE_CONFIG {
         'database' => 'saill',
         'prefix' => '',        
         'encoding' => 'utf8'
-    );
+    );  
 }

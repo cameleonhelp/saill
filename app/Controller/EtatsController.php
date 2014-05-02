@@ -1,10 +1,13 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Entites');
+App::import('Controller', 'Assoentiteutilisateurs');
 /**
  * Etats Controller
  *
  * @property Etat $Etat
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class EtatsController extends AppController {
 
@@ -20,7 +23,8 @@ class EtatsController extends AppController {
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return $ObjAssoentiteutilisateurs->json_get_my_entite(userAuth('id'));
             endif;
         }
         
@@ -66,7 +70,8 @@ class EtatsController extends AppController {
                     break;
                 default:
                     $result['condition']='Etat.entite_id ='.$id;
-                    $nom = $this->requestAction('entites/get_entite_nom/'.$id);
+                    $ObjEntites = new EntitesController();	
+                    $nom = $ObjEntites->get_entite_nom($id);
                     $result['filter'] = 'ayant pour entité '.$nom;
             endswitch;
             return $result;
@@ -86,11 +91,12 @@ class EtatsController extends AppController {
                 $newcondition = array($restriction,$getactif['condition'],$getentite['condition']);
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newcondition,'recursive'=>0));   
 		$this->set('etats', $this->paginate());
-                $cercles = $this->requestAction('entites/get_all');
+                $ObjEntites = new EntitesController();	
+                $cercles = $ObjEntites->get_all();
                 $this->set(compact('cercles'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -115,11 +121,12 @@ class EtatsController extends AppController {
 			}
                     endif;
 		endif;
-                $cercles = $this->requestAction('entites/find_list_cercle');
+                $ObjEntites = new EntitesController();	
+                $cercles = $ObjEntites->find_list_cercle();
                 $this->set(compact('cercles'));                 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -150,12 +157,13 @@ class EtatsController extends AppController {
 		} else {
                     $options = array('conditions' => array('Etat.' . $this->Etat->primaryKey => $id));
                     $this->request->data = $this->Etat->find('first', $options);
-                    $cercles = $this->requestAction('entites/find_list_cercle');
+                    $ObjEntites = new EntitesController();	
+                    $cercles = $ObjEntites->find_list_cercle();
                     $this->set(compact('cercles')); 
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -180,7 +188,7 @@ class EtatsController extends AppController {
 		$this->History->notmove();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
         
@@ -220,15 +228,16 @@ class EtatsController extends AppController {
                     endforeach;
                     $conditions = array($newcondition,'OR'=>$ornewconditions);
                     $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
-                    $this->set('etats', $this->paginate());    
-                    $cercles = $this->requestAction('entites/get_all');
+                    $this->set('etats', $this->paginate());    $ObjEntites = new EntitesController();	
+                    
+                    $cercles = $ObjEntites->get_all();
                     $this->set(compact('cercles'));                    
                 else:
                     $this->redirect(array('action'=>'index',$actif,$entite));
                 endif;                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;  
         }
         
@@ -244,7 +253,7 @@ class EtatsController extends AppController {
             $visibility = $this->get_visibility();                
             $conditions[]= $this->get_restriction($visibility);               
             $conditions[] = $actif == null ? '1=1' : 'Etat.ACTIF='.$actif;
-            $list = $this->Etat->find('all',array('fields'=>array('Etat.id','Etat.NOM'),'conditions'=>$conditions,'order'=>array('Etat.ORDER'=>'asc'),'recursive'=>0));
+            $list = $this->Etat->find('all',array('fields'=>array('Etat.id','Etat.NOM'),'conditions'=>$conditions,'order'=>array('Etat.ORDER'=>'asc'),'recursive'=>-1));
             return $list;
         }    
         

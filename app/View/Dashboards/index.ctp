@@ -94,14 +94,14 @@
                 <td style="text-align: right;" class="avancebudget1">
                     <?php $styleB1 = $result[0]['AVANCEMENTBUDGET']>100 ? 'progress-striped' : ''; ?>
                     <?php $styleB2 = styleBarreInd(h($result[0]['AVANCEMENTBUDGET'])); ?>
-                    <div class="progress <?php echo $styleB1; ?>"  style="margin-bottom:-10px;">
+                    <div class="progress <?php echo $styleB1; ?>"  style="margin-bottom:-6px;">
                       <div class="progress-bar progress-bar-<?php echo $styleB2; ?>  " style="width: <?php echo h($result[0]['AVANCEMENTBUDGET']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTBUDGET']); ?>%"><?php echo $result[0]['AVANCEMENTBUDGET'] > 0 ? $result[0]['AVANCEMENTBUDGET']."%" : ''; ?></div>
                     </div>
                 </td>
                 <td style="text-align: right;" class="avancecharge1">
                     <?php $styleC1 = $result[0]['AVANCEMENTCHARGE']>100 ? 'progress-striped' : ''; ?>
                     <?php $styleC2 = styleBarreInd(h($result[0]['AVANCEMENTCHARGE'])); ?>
-                    <div class="progress <?php echo $styleC1; ?>"  style="margin-bottom:-10px;">
+                    <div class="progress <?php echo $styleC1; ?>"  style="margin-bottom:-6px;">
                       <div class="progress-bar progress-bar-<?php echo $styleC2; ?>  " style="width: <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%"><?php echo $result[0]['AVANCEMENTCHARGE'] > 0 ? $result[0]['AVANCEMENTCHARGE']."%" : ''; ?></div>
                     </div>  
                 </td>
@@ -263,7 +263,7 @@
     </table>
     <br />
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Répartition charge réelle par domaine</div><br>    
-    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table1">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax tabledomaine">
         <thead>
             <tr>
             <th rowspan="2" style="vertical-align: middle;">Projet</th>
@@ -328,14 +328,14 @@
                 <td style="text-align: right;" class="avancebudgetID">
                     <?php $styleB1 = $result[0]['AVANCEMENTBUDGET']>100 ? 'progress-striped' : ''; ?>
                     <?php $styleB2 = styleBarreInd(h($result[0]['AVANCEMENTBUDGET'])); ?>
-                    <div class="progress <?php echo $styleB1; ?>"  style="margin-bottom:-10px;">
+                    <div class="progress <?php echo $styleB1; ?>"  style="margin-bottom:-6px;">
                       <div class="progress-bar progress-bar-<?php echo $styleB2; ?>  " style="width: <?php echo h($result[0]['AVANCEMENTBUDGET']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTBUDGET']); ?>%"><?php echo $result[0]['AVANCEMENTBUDGET'] > 0 ? $result[0]['AVANCEMENTBUDGET']."%" : ''; ?></div>
                     </div>                    
                 </td>
                 <td style="text-align: right;" class="avancechargeID">
                     <?php $styleC1 = $result[0]['AVANCEMENTCHARGE']>100 ? 'progress-striped' : ''; ?>
                     <?php $styleC2 = styleBarreInd(h($result[0]['AVANCEMENTCHARGE'])); ?>
-                    <div class="progress <?php echo $styleC1; ?>"  style="margin-bottom:-10px;">
+                    <div class="progress <?php echo $styleC1; ?>"  style="margin-bottom:-6px;">
                       <div class="progress-bar progress-bar-<?php echo $styleC2; ?>  " style="width: <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%;" rel="tooltip" title="Avancement à : <?php echo h($result[0]['AVANCEMENTCHARGE']); ?>%"><?php echo $result[0]['AVANCEMENTCHARGE'] > 0 ? $result[0]['AVANCEMENTCHARGE']."%" : ''; ?></div>
                     </div>  
                 </td>    
@@ -365,7 +365,39 @@
 <script>
 $(document).ready(function (){ 
    $(".table1").tablesorter();
-   
+
+   $(".tabledomaine").tablesorter({
+        headers: {
+            2:{filter:false},
+            3:{filter:false}
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_saveFilters : true,
+            filter_useParsedData : true,
+            filter_startsWith : false,
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    }).bind('filterEnd',function(e,t){
+        $("#totaldombudgetID").html(newSumOfColumns('tr:not(.filtered) > td.dombudgetID','k€'));
+        $("#totaldomchargeID").html(newSumOfColumns('tr:not(.filtered) > td.domchargeID','j'));
+        
+    });
+    
+    function newSumOfColumns(id,symbole) {
+        var tot = 0;
+        $(id).each(function() {
+          value = $(this).html()=='' ? 0: $(this).html();
+          tot += parseFloat(value);
+        });
+        return parseFloat(tot).toFixed(0)+" "+symbole;
+     };    
+    
    $(".table2").tablesorter();
     
    $(document).on('click','#DashboardSelectAllProjetId',function() {
@@ -502,10 +534,13 @@ $(document).ready(function (){
     $('#chartcontainer').highcharts({
         data: {
             table: document.getElementById('datatable')
-        },
-        colors: ['#A1006B','#E05206','#CCDC00','#009AA6','#CB0044','#FFB612','#7ABB00','#00BBCE','#6E267B'], 
+        }, 
         chart: {
-            type: 'bar'
+            type: 'bar',
+            zoomType: 'y',
+            resetZoomButton: {
+			"relativeTo": "chart"
+		},
         },
         credits:{
             enabled:false
@@ -517,14 +552,27 @@ $(document).ready(function (){
                text:'Par rapport à la charge contractuelle'
         },
         yAxis: {
+            stackLabels: {
+                enabled : true
+            },
             title: {
                 text: 'Charges'
             }
         },
+        exporting: {
+                filename : "Tableau de bord",
+	},
         tooltip: {
+            useHTML : true,
+            shared: true,
+            hideDelay: 200,
             formatter: function() {
-                return '<b>'+ this.series.name +'</b><br/>'+
-                    this.y +' jours sur '+ this.x +'<br/>Contrat: '+ this.point.stackTotal;;
+                var ligne = "<br/>";
+                for(l=0;l<this.points.length;l++){
+                    ligne += "<b style='color:"+this.points[l].series.color+";'>"+this.points[l].series.name+"</b> : "+this.points[l].y+" jours<br/>";
+                }
+                ligne += "<b>Contrat</b> : "+this.points[0].total+" jours<br/>";
+                return '<b>'+ this.points[0].point.name +'</b><br/>'+ligne;
             }
         },
         plotOptions: {

@@ -15,7 +15,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicons user size14 hard-grey "></span>&nbsp;&nbsp;<?php echo userAuth('PRENOM'); ?> <?php echo userAuth('NOM'); ?>&nbsp;&nbsp;<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                               <li><?php echo $this->Html->link('<span class="glyphicons keys margintop4 size14 notchange" ></span> Mot de passe','#',array( 'data-toggle'=>"modal",'data-target'=>"#modalpassword",'escape' => false)); ?></li>
+                               <!--<li><?php echo $this->Html->link('<span class="glyphicons keys margintop4 size14 notchange" ></span> Mot de passe','#',array( 'data-toggle'=>"modal",'data-target'=>"#modalpassword",'escape' => false)); ?></li>//-->
                                <li><?php echo $this->Html->link('<span class="glyphicons nameplate margintop4 size14 notchange" ></span> Mon profil',array('controller'=>'utilisateurs','action'=>'profil',userAuth('id')),array('escape' => false,'class'=>'showoverlay')); ?></li>
                                <li class="divider"></li>
                                <li><?php echo $this->Html->link('<span class="glyphicons log_out margintop4 size14 notchange" ></span> Se déconnecter',array('controller'=>'utilisateurs','action'=>'logout'),array('class'=>'showoverlay','escape' => false)); ?></li>

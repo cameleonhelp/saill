@@ -1,12 +1,12 @@
-<?php $this->set('title_for_layout','Calendrier des absences'); ?>
-<div class="">
-<table class="table table-bordered table-striped table-hover" id="capture">
+<div class=""  id="capture">
+<table class="table table-bordered table-striped table-hover">
         <thead>
             <?php
             $maxday = isset($this->data['Activitesreelle']['month']) ? date('t',strtotime($this->data['Activitesreelle']['month']))+1 : date('t')+1;
             $month = isset($this->data['Activitesreelle']['month']) ? date('m',strtotime($this->data['Activitesreelle']['month'])) :date('m');
             $year = isset($this->data['Activitesreelle']['month']) ? date('Y',strtotime($this->data['Activitesreelle']['month'])) : date('Y');
-            $pass = isset($this->data['Activitesreelle']['pass']) ? $this->data['Activitesreelle']['pass'] : '0';
+            $mon_cercle = userAuth('entite_id')!=null ? userAuth('entite_id') : '0';
+            $pass = isset($this->data['Activitesreelle']['pass']) ? $this->data['Activitesreelle']['pass'] : $mon_cercle;
             $strMonth = array('01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre');
             ?>
             <?php echo $this->Form->create('Activitesreelle',array('action' => 'absences','style'=>'display:none;','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
@@ -19,12 +19,12 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="dropdown-header uppercase" style="text-align:left;">Utilisateurs</li>
-                                <li style="text-align:left;"><?php echo $this->Html->link('Tous', "#",array('class'=>'showoverlay','id'=>"all")); ?></li>
-                                <li style="text-align:left;"><?php echo $this->Html->link('Mon équipe', "#",array('class'=>'showoverlay','id'=>"team")); ?></li>
+                                <li style="text-align:left;"><?php echo $this->Html->link('Tous', "#",array('class'=>'showoverlay '.subfiltre_is_actif(array($pass),array(null,0)),'id'=>"all")); ?></li>
+                                <li style="text-align:left;"><?php echo $this->Html->link('Mon équipe', "#",array('class'=>'showoverlay '.subfiltre_is_actif($pass,-1),'id'=>"team")); ?></li>
                                 <li class="divider"></li>
                                 <li class="dropdown-header uppercase" style="text-align:left;">Cercles</li>
                                 <?php foreach ($cercles as $cercle): ?>
-                                   <li style="text-align:left;"><?php echo $this->Html->link($cercle['Entite']['NOM'],'#',array('class'=>'showoverlay cercle','data-id'=>$cercle['Entite']['id'])); ?></li>
+                                   <li style="text-align:left;"><?php echo $this->Html->link($cercle['Entite']['NOM'],'#',array('class'=>'showoverlay cercle '.subfiltre_is_actif($pass,$cercle['Entite']['id']),'data-id'=>$cercle['Entite']['id'])); ?></li>
                                 <?php endforeach; ?>                                
                             </ul>
                         </div>
@@ -32,7 +32,9 @@
                             <?php echo $strMonth[$month]." ".$year; ?>
                         <?php echo $this->Form->button('<span class="glyphicons right_arrow" data-container="body" rel="tooltip" data-title="Mois suivant"></span>', array('id'=>"nextMonth",'type'=>'button','class' => 'btn btn-sm btn-default','style'=>'margin-left:75px;')); ?>
                         <?php echo $this->Form->button('<span class="glyphicons clock" data-container="body" rel="tooltip" data-title="Mois courant"></span>', array('id'=>"today",'type'=>'button','class' => 'btn  btn-sm btn-default pull-right')); ?>
-                        <?php echo $this->Form->button('<span class="glyphicons camera" data-container="body" rel="tooltip" data-title="Enregistrez au format PNG"></span>', array('id'=>"canvas",'type'=>'button','class' => 'btn  btn-sm btn-default pull-right')); ?>
+                        <?php echo $this->Form->button('<span class="glyphicons camera" data-container="body" rel="tooltip" data-title="Générer le calendrier au format PNG"></span>', array('id'=>"canvas",'type'=>'button','class' => 'btn  btn-sm btn-default pull-right')); ?>
+                        <img src="<?php echo $this->webroot; ?>img/loading-edit.gif" id="wait" style="display:none;margin-top:7px;margin-right:10px;" class="pull-right">
+                        <?php echo $this->Html->link("Télécharger l'image",'#',array('id'=>'link','style'=>'display:none;margin-top:7px;margin-right:10px;','class'=>"pull-right",'target'=>"_blank")); ?>
                     </th>
                 </tr>
             <?php $day = new DateTime(); $date = isset($this->data['Activitesreelle']['month']) ? $this->data['Activitesreelle']['month'] : $day->format('Y-m-d'); ?>
@@ -176,58 +178,32 @@
              $('#ActivitesreellePass').val(id);
              $('#ActivitesreelleAbsencesForm').submit();
          });         
-         
-        var downloadDataURI = function(options) {
-          if(!options) {
-            return;
-          }
-          $.isPlainObject(options) || (options = {data: options});
-          if(!$.browser.webkit) {
-            location.href = options.data;
-            
-          }
-          options.filename || (options.filename = "download." + options.data.split(",")[0].split(";")[0].substring(5).split("/")[1]);
-          options.url || (options.url = "http://download-data-uri.appspot.com/");
-          $('<form method="post" action="'+options.url+'" style="display:none"><input type="hidden" name="filename" value="'+options.filename+'"/><input type="hidden" name="data" value="'+options.data+'"/></form>').submit().remove();
-        }   
-        
-function downloadWithName(uri, name) {
-    var link = document.createElement("a");
-    link.download = name;
-    link.href = uri;
-    eventFire(link, "click");
-}     
-
-function eventFire(el, etype){
-    if (el.fireEvent) {
-        (el.fireEvent('on' + etype));
-    } else {
-        var evObj = document.createEvent('Events');
-        evObj.initEvent(etype, true, false);
-        el.dispatchEvent(evObj);
-    }
-}
 
          $("#canvas").on('click',function(e){
+            $("#link").hide();
+            $("#wait").show();
+            $('#content').css({"overflow" :'visible'});
             $('#capture').html2canvas({
                     onrendered: function (canvas) {
-                        var img = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-                        var titre = 'Calendrier <?php echo $month.' '.$year; ?>.png';
-                        if(!$.browser.webkit) {
-                            //sauvegarde sous firefox impossible de changer le nom du fichier
-                            Canvas2Image.saveAsPNG(canvas,false);
-                        } else {
-                            //sauvegarde sous Chrome avec nom du fichier forcé
-                            downloadWithName(img, titre);
-                        }
-                        /*    downloadDataURI({
-                              filename: titre,
-                              data: img
-                            });
-                            */
-                        //
-                    }
-                });             
+                        $('#content').css({"overflow" :'hidden'});
+                        var img = canvas.toDataURL("image/png"); //.replace("image/png", "image/octet-stream");
+                        var titre = '<?php echo userAuth('username'); ?>_calendrier_<?php echo $month.'_'.$year; ?>.png';
+                        $.post('<?php echo $this->webroot; ?>save2image.php',{image: img,title:titre},function(data){
+                            var webroot = '<?php echo $this->webroot; ?>';
+                            var newdata = webroot+data.replace('./','');
+                            $("#link").attr("href",newdata);
+                            $("#link").attr("download", titre);
+                            
+                            setTimeout(function() {
+                                $("#wait").hide();
+                                $("#link").show();
+                                $('#content').css({"overflow" :'auto'});
+                            }, 3000);
+                        });
+                    },
+                    //logging: true
+                });  
+            
          });
      });
 </script>

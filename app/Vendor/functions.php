@@ -244,13 +244,16 @@ function get_page_mod_time() {
  * @param type $day
  * @return dateTime
  */    
-    function startWeek($date) {
+    function startWeek($date,$fr=false) {
         $date = new DateTime($date);
-        $num_day = $date->format('N')-1;
-        $interval = date_interval_create_from_date_string($num_day.' days');
-        $date->format('Y-m-d');
-        $date->sub($interval);
-        return $date->format('Y-m-d');
+        $num_day = $date->format('N') == 1 ? '' : 'P'.($date->format('N')-1).'D';
+        if($num_day!=''):
+            $interval = new DateInterval($num_day);
+            $date->format('Y-m-d');
+            $date->sub($interval);
+        endif;        
+        $format = $fr ? "d/m/Y" : "Y-m-d";
+        return $date->format($format);
     }  
 
 /**
@@ -261,12 +264,13 @@ function get_page_mod_time() {
  * @param type $day
  * @return dateTime
  */    
-    function endWeek($date) {
+    function endWeek($date,$fr=false) {
         $date = new DateTime($date);
         $num_day = 7-$date->format('N');
-        $interval = date_interval_create_from_date_string($num_day.' days');
+        $interval = new DateInterval('P'.$num_day.'D');
         $date->add($interval);
-        return $date->format('Y-m-d');
+        $format = $fr ? "d/m/Y" : "Y-m-d";
+        return $date->format($format);
     }  
 
 /**
@@ -797,6 +801,19 @@ function styleBarreInd($avancement){
 	}
         return $nbopendays;
     }    
+    
+    function nbJoursOuvresWeek($date){
+	$nbopendays = 0;
+	$startweek = $date;
+        $diff = 6; ; 
+	for ($i=0; $i<=$diff;$i++){
+		$currentdate = $i > 0 ? $startweek->add(new DateInterval('P1D')) : $startweek;
+		if (isFerie($startweek)===false && ($startweek->format('N'))<6) {
+                    $nbopendays++;
+		}
+	}
+        return $nbopendays;
+    }       
 /**
  * enretard method
  * 
@@ -873,6 +890,11 @@ function styleBarreInd($avancement){
         return $moisentier[(int)$month];
     }
     
+    function strDay($day){
+        $string = array(1=>'Lundi',2=>'Mardi',3=>'Mercredi',4=>'Jeudi',5=>'Vendredi',6=>'Samedi',7=>'Dimanche');
+        return $string[(int)$day];
+    }    
+    
     function strYear($date){
         if (strpos($date, "/")!==false) $date = CUSDatetime($date);
         $date = !is_object($date) ? new DateTime($date) : $date;
@@ -881,7 +903,7 @@ function styleBarreInd($avancement){
     }    
     
     function ucfirst_utf8($stri){ 
-        if($stri{0}>="\xc3") 
+        if($stri!='' && $stri{0}>="\xc3") 
             return (($stri{1}>="\xa0")? 
             ($stri{0}.chr(ord($stri{1})-32)): 
             ($stri{0}.$stri{1})).substr($stri,2); 
@@ -926,9 +948,13 @@ function styleBarreInd($avancement){
     }
     
     function goPrev(){
-        $history = SessionComponent::read('User.history');
-        $pos = count($history)-2 < 0 ? 0 : count($history)-2; 
-        return $history[$pos];
+        $result = false;
+        if(SessionComponent::check('User.history')):
+            $history = SessionComponent::read('User.history');
+            $pos = count($history)-2 < 0 ? 0 : count($history)-2; 
+            $result = $history[$pos];
+        endif;
+        return $result;
         exit();
     }
     
@@ -1304,4 +1330,94 @@ function get_pass_check($pass){
             break;
     endswitch;
     return $value;
+}
+
+/**
+ * Méthode qui test si la première lettre est une voyelle
+ * 
+ * @param string $string
+ * @return boolean
+ */
+function isvoyelle($string){
+    $voyelles = array("a","e","i","o","u","y");
+    return in_array(substr(strtolower($string),0,1),$voyelles);
+}
+
+/**
+ * Méthode qui donne le nombre de jours ouvrés entre deux dates
+ * 
+ * @param date $datedeb
+ * @param date $datefin
+ * @return int
+ */
+function getOpenDays($datedeb,$datefin){
+    $nb_jours=0;
+    $dated=explode('-',$datedeb);
+    $datef=explode('-',$datefin);
+    $timestampcurr=mktime(0,0,0,$dated[1],$dated[2],$dated[0]);
+    $timestampf=mktime(0,0,0,$datef[1],$datef[2],$datef[0]);
+    while($timestampcurr<$timestampf){
+        if((date('w',$timestampcurr)!=0)&&(date('w',$timestampcurr)!=6) && !isFerie(date('Y-m-d',$timestampcurr))){
+          $nb_jours++;
+        }
+        $timestampcurr=mktime(0,0,0,date('m',$timestampcurr),(date('d',$timestampcurr)+1)   ,date('Y',$timestampcurr));
+    }
+    return $nb_jours;
+}
+
+/**
+ * Méthode qui renvois la date du lundi suivant
+ * 
+ * @param date $date
+ * @return date au format us
+ */
+function nextMonday($date){
+    $d = explode('-',$date);
+    return date("Y-m-d",strtotime('next Monday',  mktime('0', '0', '0', $d[1], $d[2], $d[0])));
+}
+
+/**
+ * Méthode qui retourn la date du lundi précédent
+ * 
+ * @param date $date
+ * @return date au format us
+ */
+function previousMonday($date){
+    $d = explode('-',$date);
+    return date("Y-m-d",strtotime('previous Monday',  mktime('0', '0', '0', $d[1], $d[2], $d[0])));
+}
+
+/**
+ * Méthode pour formatter le nombre de bytes en fonction de la valeur
+ * 
+ * @param int $bytes
+ * @param string $unit
+ * @param int $decimals
+ * @return string
+ */
+function byteFormat($bytes, $unit = "", $decimals = 2) {
+      $units = array('bytes' => 0, 'Ko' => 1, 'Mo' => 2, 'Go' => 3, 'To' => 4, 
+                      'Po' => 5, 'Eo' => 6, 'Zo' => 7, 'Yo' => 8);
+
+      $value = 0;
+      if ($bytes > 0) {
+              // Generate automatic prefix by bytes 
+              // If wrong prefix given
+              if (!array_key_exists($unit, $units)) {
+                      $pow = floor(log($bytes)/log(1024));
+                      $unit = array_search($pow, $units);
+              }
+
+              // Calculate byte value by prefix
+              $value = ($bytes/pow(1024,floor($units[$unit])));
+      }
+
+      // If decimals is not numeric or decimals is less than 0 
+      // then set default value
+      if (!is_numeric($decimals) || $decimals < 0) {
+              $decimals = 2;
+      }
+
+      // Format output
+      return sprintf('%.' . $decimals . 'f '.$unit, $value);
 }

@@ -154,7 +154,7 @@
 <script>
     $(document).ready(function () {  
         $(document).on('click','.eye_open',function(e){
-            $(this).parents('tr').next('.trhidden').slideToggle("slow");
+            $(this).parents('tr').next('.trhidden').toggle('slow', "easeOutBounce");
         });          
         
         $(document).on('keyup','#LivrableSEARCH',function (event){

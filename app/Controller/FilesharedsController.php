@@ -1,12 +1,13 @@
 <?php
 App::uses('AppController', 'Controller');
-App::import('Vendor', 'ical', array('file'=>'class.iCalReader.php'));
+App::uses('Vendor', 'ical', array('file'=>'class.iCalReader.php'));
+App::import('Controller', 'Activites');
+App::import('Controller', 'Activitereelles');
+
 /**
  * Description of FilesharedsController
  *
- * @author JLR
- * 
- * /!\ extension php_mysql obligatoire
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class FilesharedsController extends AppController {
     public $components = array('History','Common');
@@ -106,7 +107,8 @@ class FilesharedsController extends AppController {
                 $days = array('1'=>'LU','2'=>'MA','3'=>'ME','4'=>'JE','5'=>'VE','6'=>'SA','7'=>'DI');
                 //JLR :: on ne rajoute pas les jours fériés et les week end
                 if($date->format('N')<6 && !isFerie($date)):
-                    $activite_id =$this->requestAction('Activites/getId/'.$event['INDISPONIBILITE']);
+                    $ObjActivites = new ActivitesController();
+                    $activite_id = $ObjActivites->getId($event['INDISPONIBILITE']);
                     if(count($activite_id)>0):
                         $allindispos[] = array("id"=>CIntDate(startWeek($date->format('Y-m-d'))),"DATE"=>startWeek($date->format('Y-m-d')),"DAY"=>$days[$date->format('N')],"TYPE"=>$type,"ACTIVITE"=>$activite_id['Activite']['id'],'utilisateur_id'=>$utilisateur_id,'DUREE'=>$nb);
                     endif;
@@ -116,8 +118,9 @@ class FilesharedsController extends AppController {
         endforeach;
         // pour chaque ligne on insert en base à partir de la méthode icsImport de Activitesreelles
         aasort($allindispos, 'id');
+        $ObjActivitereelles = new ActivitereellesController();
         foreach($allindispos as $indispo):
-            $this->requestAction('Activitesreelles/icsImport/'.$indispo['utilisateur_id'].'/'.$indispo['ACTIVITE'].'/'.$indispo['DATE'].'/'.$indispo['DAY'].'/'.$indispo['TYPE'].'/'.$indispo['DUREE']);
+            $ObjActivitereelles->icsImport($indispo['utilisateur_id'],$indispo['ACTIVITE'],$indispo['DATE'],$indispo['DAY'],$indispo['TYPE'],$indispo['DUREE']);
         endforeach;
     }
 }

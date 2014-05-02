@@ -316,9 +316,11 @@ function toggleBtn(){
     $(function() { 
         $('[data-rel=popover]').popover({
             html: true,
-            placement:'auto',
-            trigger: 'click'
+            placement:'auto right',
+            trigger: 'click',
+            container: "#content"
         });
+        $("[data-rel=popover]").css({"z-index":'800'});
         $('[data-rel=popover]').unbind("click");
         $('[data-rel=popover]').bind("click", function(e) {
             e.stopPropagation();
@@ -545,6 +547,14 @@ function toggleBtn(){
     
 }(window.jQuery);
 
+function inArray(needle, haystack) {
+    var length = haystack.length;
+    for(var i = 0; i < length; i++) {
+        if(haystack[i] == needle) return true;
+    }
+    return false;
+}
+
 $(document).ready(function () {
     /*
      * pour l'affichage de la fenetre modal si navigateur = msie
@@ -565,7 +575,8 @@ $(document).ready(function () {
      /*
      * Initialisation des popover
      */
-    $("[data-rel=popover]").popover({placement:'auto',trigger:'click',html:true});        
+    $("[data-rel=popover]").popover({placement:'auto right',container:'#content',trigger:'click',html:true});   
+    $("[data-rel=popover]").css({"z-index":'800'});
     /*
      * Initialisation des bouton de scroll de la zone menu
      */
@@ -652,26 +663,56 @@ $(document).ready(function () {
     $('.dateonly').mask('99/99/9999',{placeholder:".."});
     //$('.frais').mask('9999.99',{placeholder:"0"});
     
-    var highchartsOptions = Highcharts.setOptions({
-      lang: {
-            loading: 'Chargement...',
-            months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-            weekdays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-            shortMonths: ['Jan', 'Fev', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'],
-            exportButtonTitle: "Exporter",
-            printButtonTitle: "Imprimer",
-            rangeSelectorFrom: "De",
-            rangeSelectorTo: "A",
-            rangeSelectorZoom: "Periode",
-            downloadPNG: 'Format PNG',
-            downloadJPEG: 'Fromat JPEG',
-            downloadPDF: 'Format PDF',
-            downloadSVG: 'Format SVG'
-            // resetZoom: "Reset",
-            // resetZoomTitle: "Reset,
-            // thousandsSep: ".",
-            // decimalPoint: ','
-            }
+    var highchartsOptions = Highcharts.setOptions({       
+        "colors": ['#A1006B','#E05206','#CCDC00','#009AA6','#CB0044','#FFB612','#7ABB00','#00BBCE','#6E267B'],
+        "lang": {
+            "loading": 'Chargement...',
+            "months": ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+            "weekdays": ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+            "shortMonths": ['Jan', 'Fev', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'],
+            "exportButtonTitle": "Exporter",
+            "printButtonTitle": "Imprimer",
+            "rangeSelectorFrom": "De",
+            "rangeSelectorTo": "A",
+            "rangeSelectorZoom": "Sur une période de ... ",
+            "downloadPNG": 'Image au format PNG',
+            "downloadJPEG": 'Image au fromat JPEG',
+            "downloadPDF": 'Image au format PDF',
+            "downloadSVG": 'Image au format SVG',
+            "resetZoom": "Annuler",
+            "resetZoomTitle": "Annuler",
+            "thousandsSep": " ",
+            "decimalPoint": ',',
+            "printChart": "Imprimer"
+            },
+        "exporting": {
+		"scale": 2,
+		"buttons": {
+			"contextButton": {
+				"align": "left",
+                                "menuItems" : [   
+                                  {
+                                    "text": 'Imprimer',
+                                    "onclick": function () {
+                                      this.print();
+                                    }
+                                  },                                    
+                                  {
+                                    "textKey": 'downloadPNG',
+                                    "onclick": function () {
+                                      this.exportChart();
+                                    }
+                                  }, {
+                                    "textKey": 'downloadJPEG',
+                                    "onclick": function () {
+                                      this.exportChart({
+                                        "type": 'image/jpeg'
+                                      });
+                                    }
+                                  }]
+			}    
+                    }
+	},             
       }
   );
   $.tablesorter.addParser({
@@ -685,6 +726,19 @@ $(document).ready(function () {
     },
     type: 'Numeric'
   });
+  $.tablesorter.addParser({
+    id: 'fr-datetime',
+    is: function(s) {
+        return false;
+    },
+    format: function(s) { 
+        s = s.replace(/\//g, " ");
+        s = s.replace(/\:/g, " ");
+        var date = s.split(' ');
+        return new Date(date[2],date[1],date[0],date[3],date[4],date[5]).getTime();
+    },
+    type: 'Numeric'
+  });  
   $.tablesorter.addParser({
     id: 'mois-annee',
     is: function(s) {
@@ -724,17 +778,5 @@ $(document).ready(function () {
 
   $('.table-striped tr:visible').filter(':odd').css({'background-color': '#f9f9f9'});
   $('.table-striped tr:visible').filter(':even').css({'background-color': 'white'});  
-  
 
-  
-  /*$(document).on('click','.toolbar-form input',function(e){
-      $(this).attr({style: 'width:200px !important; z-index:2000;'});
-      $(this).parents('form').attr({style: 'width:auto !important; z-index:2000;clear:both;'});
-      $(this).parents().parent('.toolbar.pull-right').attr({style:'float:left;'});
-  });
-  
-  $(document).on('focusout','.toolbar-form input',function(e){
-      $(this).attr({style: 'width:auto'});
-      $(this).parents('form').attr({style: ''});
-  });*/
 });

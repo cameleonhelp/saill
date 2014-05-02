@@ -1,6 +1,6 @@
 <br/>
-<div class="dotations index">
-	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax">
+<div class="equipe index">
+	<table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover tablemax tableequipe">
         <thead>
 	<tr>
             <th><?php echo 'Agent'; ?></th>                      
@@ -24,6 +24,24 @@
     </div>
 <script>
 $(document).ready(function(e){
+   $(".tableequipe").tablesorter({
+        headers: {
+            1:{filter:false},
+            2:{filter:false}
+        },
+        widthFixed : true,
+        widgets: ["zebra","filter"],
+        widgetOptions : {
+            filter_columnFilters : true,
+            filter_hideFilters : true,
+            filter_ignoreCase : true,
+            filter_liveSearch : true,
+            filter_saveFilters : true,
+            filter_useParsedData : true,
+            filter_startsWith : false,
+            zebra : [ "normal-row", "alt-row" ]
+        }
+    }); 
     
     $('.showpickcolor').colorpicker({format:'hex',horizontal:true,template:
             '<div class="colorpicker dropdown-menu">' +

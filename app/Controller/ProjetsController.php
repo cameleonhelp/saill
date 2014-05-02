@@ -1,9 +1,14 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller','Assoprojetentites');
+App::import('Controller','Contrats');
+App::import('Controller','Entites');
+App::import('Controller','Activites');
 /**
  * Projets Controller
  *
  * @property Projet $Projet
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class ProjetsController extends AppController {
         public $components = array('History','Common');
@@ -17,7 +22,8 @@ class ProjetsController extends AppController {
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoprojetentites/find_str_id_contrats/'.userAuth('id'));
+                $ObjAssoprojetentites = new AssoprojetentitesController();
+                return $ObjAssoprojetentites->find_str_id_contrats(userAuth('id'));
             endif;
         }
         
@@ -105,7 +111,8 @@ class ProjetsController extends AppController {
                 $getcontrat = $this->get_projet_contrat_filter($filtreContrat,$listcontrats);
                 $this->set('fcontrat',$getetat['filter']);
                 $this->set('fetat',$getcontrat['filter']); 
-                $contrats = $this->requestAction('contrats/get_all');
+                $ObjContrats = new ContratsController();
+                $contrats = $ObjContrats->get_all();
                 $this->set(compact('contrats'));
                 $newconditions = array($getetat['condition'],$getcontrat['condition']);              
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                
@@ -113,7 +120,7 @@ class ProjetsController extends AppController {
                 $this->get_export($newconditions);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -133,7 +140,8 @@ class ProjetsController extends AppController {
 			if ($this->Projet->save($this->request->data)) {
                                 $lastid = $this->Projet->getLastInsertID();
                                 $entite_id = $this->request->data['Projet']['entite_id'];
-                                $this->requestAction('assoprojetentites/silent_save/'.$entite_id."/".$lastid);
+                                $ObjAssoprojetentites = new AssoprojetentitesController();
+                                $ObjAssoprojetentites->silent_save($entite_id,$lastid);
 				$this->Session->setFlash(__('Projet sauvegardé',true),'flash_success');
 				$this->History->goBack(1);
 			} else {
@@ -142,14 +150,16 @@ class ProjetsController extends AppController {
                     endif;
 		endif;
                 $listcontrats = $this->get_visibility();
-                $contrats = $this->requestAction('contrats/get_list');
-                $cercles = $this->requestAction('entites/find_list_cercle');
+                $ObjContrats = new ContratsController();
+                $contrats = $ObjContrats->get_list();
+                $ObjEntites = new EntitesController();
+                $cercles = $ObjEntites->find_list_cercle();
                 $type = Configure::read('typeProjet');
                 $facturation = Configure::read('factureProjet');
                 $this->set(Compact('contrats','cercles','type','facturation'));                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -186,15 +196,17 @@ class ProjetsController extends AppController {
                     $options = array('conditions' => array('Projet.' . $this->Projet->primaryKey => $id),'recursive'=>0);
                     $this->request->data = $this->Projet->find('first', $options);
                     $listcontrats = $this->get_visibility();
-                    $contrats = $this->requestAction('contrats/get_list');
-                    $cercles = $this->requestAction('entites/find_list_cercle');
+                    $ObjContrats = new ContratsController();
+                    $contrats = $ObjContrats->get_list();
+                    $ObjEntites = new EntitesController();
+                    $cercles = $ObjEntites->find_list_cercle();
                     $type = Configure::read('typeProjet');
                     $facturation = Configure::read('factureProjet');
                     $this->set(Compact('contrats','cercles','type','facturation'));                        
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -221,7 +233,7 @@ class ProjetsController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -248,7 +260,8 @@ class ProjetsController extends AppController {
                     $getcontrat = $this->get_projet_contrat_filter($filtreContrat,$listcontrats);
                     $this->set('fcontrat',$getetat['filter']);
                     $this->set('fetat',$getcontrat['filter']); 
-                    $contrats = $this->requestAction('contrats/get_all');
+                    $ObjContrats = new ContratsController();
+                    $contrats = $ObjContrats->get_all();
                     $this->set(compact('contrats'));
                     $newconditions = array($getetat['condition'],$getcontrat['condition']);              
                     foreach ($arkeywords as $key=>$value):
@@ -279,7 +292,7 @@ class ProjetsController extends AppController {
                 $this->render('index');
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }      
         
@@ -327,7 +340,8 @@ class ProjetsController extends AppController {
             endif;
             foreach($projets as $projet):
                 $this->set_this_actif($projet['Projet']['id'],intval($actif));
-                $this->Projet->requestAction('activites/set_actif/'.$projet['Projet']['id'].'/'.$actif);
+                $ObjActivites = new ActivitesController();
+                $ObjActivites->set_actif($projet['Projet']['id'],$actif);
             endforeach;
         }          
         
@@ -355,7 +369,8 @@ class ProjetsController extends AppController {
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoprojetentites/json_get_all_projets/'.userAuth('id'));
+                $ObjAssoprojetentites = new AssoprojetentitesController();
+                return $ObjAssoprojetentites->json_get_all_projets(userAuth('id'));
             endif;
         }
         
@@ -371,10 +386,19 @@ class ProjetsController extends AppController {
         
         public function find_all_cercle_projet($utilisateur_id){
             $listprojets = $this->get_visibility_projet();
-            $conditions[]=$this->get_restriction_projet($listprojets);
-            $order[]=array('Projet.NOM'=>'asc');
-            $list = $this->Projet->find('all',array('order'=>$order,'conditions'=>$conditions,'recursive'=>1));
-            return $list;
+            if($listprojets == null):
+                $conditions[]=array('Projet.ACTIF'=>1);
+                $order[]=array('Projet.NOM'=>'asc');
+                $list = $this->Projet->find('all',array('order'=>$order,'conditions'=>$conditions,'recursive'=>1));
+                return $list;
+            elseif($listprojets != ''):
+                $conditions[]=$this->get_restriction_projet($listprojets);
+                $order[]=array('Projet.NOM'=>'asc');
+                $list = $this->Projet->find('all',array('order'=>$order,'conditions'=>$conditions,'recursive'=>1));
+                return $list;
+            else:
+                return array();
+            endif;
         }    
         
         public function find_list_cercle_projet($utilisateur_id){

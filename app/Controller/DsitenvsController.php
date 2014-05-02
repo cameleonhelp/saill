@@ -1,10 +1,14 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Assobienlogiciels');
+App::import('Controller', 'Applications');
 /**
  * Dsitenvs Controller
  *
  * @property Dsitenv $Dsitenv
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class DsitenvsController extends AppController {
 
@@ -20,7 +24,8 @@ class DsitenvsController extends AppController {
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return $ObjAssoentiteutilisateurs->json_get_my_entite(userAuth('id'));
             endif;
         }
         
@@ -36,16 +41,17 @@ class DsitenvsController extends AppController {
         
         public function get_envdsit_application_filter($application){
             $result = array();
+            $ObjApplications = new ApplicationsController();
             switch($application):
                 case null:
                 case 'tous':
-                    $listapp = $this->requestAction('applications/get_str_list');
+                    $listapp = $ObjApplications->get_str_list();
                     $result['condition']="Dsitenv.application_id IN (".$listapp.")";
                     $result['filter'] = 'toutes les applications';
                     break;
                 default:
                     $result['condition']="Dsitenv.application_id=".$application;
-                    $nom = $this->requestAction('applications/getname/'.$application);
+                    $nom = $ObjApplications->getname($application);
                     $result['filter'] = 'l\'application '.$nom;
                     break;
             endswitch;
@@ -69,7 +75,7 @@ class DsitenvsController extends AppController {
         }
         
         public function set_title(){
-            $this->set('title_for_layout','Environnements DSIT');
+            return $this->set('title_for_layout','Environnements DSIT');
         }
 /**
  * index method
@@ -79,19 +85,20 @@ class DsitenvsController extends AppController {
 	public function index($application=null,$actif=null) {
             $this->set_title();
             if (isAuthorized('dsitenvs', 'index')) :
+                $ObjApplications = new ApplicationsController();
                 $listentite = $this->get_visibility();
                 $restriction = $this->get_restriction($listentite);                
                 $getapplication = $this->get_envdsit_application_filter($application);
                 $getactif = $this->get_envdsit_actif_filter($actif);
                 $strfilter = $getapplication['filter'].$getactif['filter'];
                 $newconditions = array($restriction,$getapplication['condition'],$getactif['condition']);
-                $applications = $this->requestAction('applications/get_list/1');
+                $applications = $ObjApplications->get_list(1);
                 $this->set(compact('applications','strfilter'));    
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                
 		$this->set('dsitenvs', $this->paginate());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                    
 	}
 
@@ -116,7 +123,8 @@ class DsitenvsController extends AppController {
                 $options = array('conditions' => array('Dsitenv.' . $this->Dsitenv->primaryKey => $id),'recursive'=>0);
                 $dsitenv = $this->Dsitenv->find('first', $options);
                 $this->set(compact('dsitenv'));
-                $biens = $this->requestAction('assobienlogiciels/get_for_dsitenv/'.$dsitenv['Dsitenv']['id'].'/'.$dsitenv['Dsitenv']['application_id']);
+                $ObjAssobienlogiciels = new AssobienlogicielsController();
+                $biens = $ObjAssobienlogiciels->get_for_dsitenv($dsitenv['Dsitenv']['id'],$dsitenv['Dsitenv']['application_id']);
                 $this->set(compact('biens'));
             endif;
 	}
@@ -145,11 +153,12 @@ class DsitenvsController extends AppController {
                         endif;
                     }
                     $entites = $this->Dsitenv->Entite->find('list');
-                    $applications = $this->requestAction('applications/get_select');
+                    $ObjApplications = new ApplicationsController();
+                    $applications = $ObjApplications->get_select();
                     $this->set(compact('entites', 'applications'));
                 else :
                     $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                    throw new NotAuthorizedException();
+                    throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
                 endif;                
 	}
 
@@ -183,11 +192,12 @@ class DsitenvsController extends AppController {
                             $this->request->data = $this->Dsitenv->find('first', $options);
                     }
                     $entites = $this->Dsitenv->Entite->find('list');
-                    $applications = $this->requestAction('applications/get_select');
+                    $ObjApplications = new ApplicationsController();
+                    $applications = $ObjApplications->get_select();
                     $this->set(compact('entites', 'applications'));
                 else :
                     $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                    throw new NotAuthorizedException();
+                    throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
                 endif;                
 	}
 
@@ -223,7 +233,7 @@ class DsitenvsController extends AppController {
                 $this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                    
 	}
         
@@ -263,6 +273,11 @@ class DsitenvsController extends AppController {
             $list = $this->Dsitenv->find('list',array('fields'=>array('Dsitenv.id','Dsitenv.NOM'),'conditions'=>$conditions,'order'=>array('Dsitenv.NOM'=>'asc'),'recursive'=>0));
             return $list;
         }     
+                
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_select_for_application'));
+            parent::beforeFilter();
+        }  
         
         public function json_get_select_for_application($application_id){
             $this->autoRender = false;
@@ -285,6 +300,7 @@ class DsitenvsController extends AppController {
                 endif;
                 $this->set('keywords',$keywords);
                 if($keywords!= ''):
+                    $ObjApplications = new ApplicationsController();
                     $arkeywords = explode(' ',trim($keywords));                 
                     $listentite = $this->get_visibility();
                     $restriction = $this->get_restriction($listentite);                
@@ -292,7 +308,7 @@ class DsitenvsController extends AppController {
                     $getactif = $this->get_envdsit_actif_filter($actif);
                     $strfilter = $getapplication['filter'].$getactif['filter'];
                     $newconditions = array($restriction,$getapplication['condition'],$getactif['condition']);
-                    $applications = $this->requestAction('applications/get_list/1');
+                    $applications = $ObjApplications->get_list(1);
                     $this->set(compact('applications','strfilter')); 
                     foreach ($arkeywords as $key=>$value):
                         $ornewconditions[] = array('OR'=>array("Dsitenv.NOM LIKE '%".$value."%'","Application.NOM LIKE '%".$value."%'"));
@@ -305,7 +321,7 @@ class DsitenvsController extends AppController {
                 endif; 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;  
         }          
 }

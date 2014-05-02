@@ -145,6 +145,15 @@ Cache::config('default', array('engine' => 'File'));
 
 
 /**
+ * Chargement de fichiers de paramétrage supplémentaires
+ */
+
+App::import('Vendor', 'functions'); 
+App::import('Vendor', 'define'); 
+Configure::load('ldap');
+Configure::load('version');
+
+/**
  * You can attach event listeners to the request lifecyle as Dispatcher Filter . By Default CakePHP bundles two filters:
  *
  * - AssetDispatcher filter will serve your asset files (css, images, js, etc) from your themes and plugins
@@ -160,9 +169,6 @@ Cache::config('default', array('engine' => 'File'));
  *
  * ));
  */
-
-App::import('Vendor', 'functions'); 
-App::import('Vendor', 'define'); 
 
 Configure::write('Dispatcher.filters', array(
 	'AssetDispatcher',
@@ -225,7 +231,7 @@ Configure::write(
 );
 
 Configure::write(
-    'changelogEtatDemande',array('0'=>'Ouverte','1'=>'Version future','2'=>'Rejetée','3'=>'En cours','4'=>'Fermée') 
+    'changelogEtatDemande',array('0'=>'Ouverte','5'=>'Prise en compte','6'=>'Attribuée','1'=>'Version future','2'=>'Rejetée','3'=>'En cours','4'=>'Fermée') 
 );
 
 Configure::write(
@@ -233,7 +239,7 @@ Configure::write(
 );
 
 Configure::write(
-    'changelogType',array('0'=>'Demande','1'=>'Anomalie','2'=>'Evolution','3'=>'Mise à jour composant','4'=>'Modélisation') 
+    'changelogType',array('0'=>'Demande','1'=>'Anomalie','2'=>'Evolution','3'=>'Mise à jour composant','4'=>'Modélisation','5'=>"Documentation") 
 );
 
 Configure::write(
@@ -248,4 +254,10 @@ Configure::write(
     'engagementConf',array('0'=>'Non remis','1'=>'Agent','2'=>'SNCF','3'=>'Sécutité et Risques SO') 
 );
 
+//Configure::write('versionapp', '3.0.1.001');
+
+Configure::write('mailapp', 'saill.nepasrepondre@sncf.fr');
+
 Configure::write('Config.language', 'fra');
+
+Configure::write('search_tooltip',"Recherche multi-critère en séparant par un <u><b>espace</b></u> les différents mots.<br>Effacer la recherche pour revenir à l'affichage normal.");

@@ -4,9 +4,16 @@ App::uses('AppController', 'Controller');
  * Affectations Controller
  *
  * @property Affectation $Affectation
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class AffectationsController extends AppController {
-        public $components = array('History','Common');
+        public $components = array('History','Common');        
+        
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_this'));
+            parent::beforeFilter();
+        }  
+        
 /**
  * index method
  *
@@ -19,7 +26,7 @@ class AffectationsController extends AppController {
 		$this->set('affectations', $liste);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();           
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");           
             endif;                
 	}
 
@@ -39,7 +46,7 @@ class AffectationsController extends AppController {
 		$this->set('affectation', $this->Affectation->find('first', $options));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();          
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");          
             endif;                
 	}
 
@@ -72,7 +79,7 @@ class AffectationsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();         
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");         
             endif;                
 	}
 
@@ -111,7 +118,7 @@ class AffectationsController extends AppController {
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();           
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");           
             endif;                
 	}
 
@@ -134,13 +141,13 @@ class AffectationsController extends AppController {
                         $history['Historyutilisateur']['HISTORIQUE']=date('H:i:s')." - suppression d'une affectation par ".userAuth('NOMLONG');
                         $this->Affectation->Utilisateur->Historyutilisateur->save($history);                     
 			$this->Session->setFlash(__('Affectation supprimée',true),'flash_success');
-			$this->History->goBack(1);
+			$this->History->goBack(0);
 		}
 		$this->Session->setFlash(__('Affectation <b>NON</b> supprimée',true),'flash_failure');
-		$this->History->goBack(1);
+		$this->History->goBack(0);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();           
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");           
             endif;                
 	}
         
@@ -183,5 +190,41 @@ class AffectationsController extends AppController {
         public function get_compteur($id){
             $options =array('Affectation.utilisateur_id' => $id);
             return $this->Affectation->find('first',array('fields'=>array('count(Affectation.id) AS nbAffectation'),'conditions' =>$options,'recursive'=>0));
-        }             
+        }      
+        
+        public function addto(){
+            $this->autoRender = false;
+            $this->request->data['Affectation']['created'] = date('Y-m-d');
+            $this->request->data['Affectation']['modified'] = date('Y-m-d');
+            $this->Affectation->create();
+            if($this->Affectation->save($this->request->data)):
+                $this->Session->setFlash(__('Affectation sauvegardée',true),'flash_success');
+            else:
+                $this->Session->setFlash(__('Affectation incorrecte, veuillez corriger l\'affectation',true),'flash_failure');
+            endif;
+            $this->History->goback(0);
+        }
+        
+        public function editto(){
+            $this->autoRender = false;
+            $this->request->data['Affectation']['modified'] = date('Y-m-d');
+            $this->Affectation->id = $this->request->data['Affectation']['id'];
+            if($this->Affectation->save($this->request->data)):
+                $this->Session->setFlash(__('Affectation mise à jour',true),'flash_success');
+            else:
+                $this->Session->setFlash(__('Affectation incorrecte, veuillez corriger l\'affectation',true),'flash_failure');
+            endif;
+            $this->History->goback(0);
+        }        
+        
+        public function json_get_this($id=null){
+            $this->autoRender = false;
+            $result = null;
+            if($id!=null):
+            $conditions[] = 'Affectation.id='.$id;
+            $return = $this->Affectation->find('first',array('conditions'=>$conditions,'recursive'=>-1));
+            $result = json_encode($return);
+            endif;
+            return $result;
+        }        
 }

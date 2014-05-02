@@ -1,10 +1,18 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Applications');
+App::import('Controller', 'Etats');
+App::import('Controller', 'Types');
+App::import('Controller', 'Versions');
+App::import('Controller', 'Lots');
+App::import('Controller', 'Historyintegrations');
 /**
  * Intergrationapplicatives Controller
  *
  * @property Intergrationapplicative $Intergrationapplicative
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class IntergrationapplicativesController extends AppController {
 
@@ -16,11 +24,23 @@ class IntergrationapplicativesController extends AppController {
         public $paginate = array('limit' => 25,'order'=>array('Intergrationapplicative.DATEINSTALL'=>'desc'));
 	public $components = array('History','Common');
 
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Intégration applicative" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }              
+        
         public function get_visibility(){
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return $ObjAssoentiteutilisateurs->json_get_my_entite(userAuth('id'));
             endif;
         }
         
@@ -39,7 +59,8 @@ class IntergrationapplicativesController extends AppController {
             switch($aplication):
                 case null:
                 case 'tous':
-                    $listapp = $this->requestAction('applications/get_str_list');
+                    $ObjApplications = new ApplicationsController();
+                    $listapp = $ObjApplications->get_str_list();
                     $result['condition']="Intergrationapplicative.application_id IN (".$listapp.")";
                     $result['filter'] = ', pour toutes les applications';
                     break;
@@ -157,7 +178,7 @@ class IntergrationapplicativesController extends AppController {
  * @return void
  */
 	public function index($aplication=null,$installe=null,$valide=null,$actif=null,$type=null,$version = null) {
-            $this->set('title_for_layout','Intégration applicative');
+            $this->set_title();
             if (isAuthorized('intergrationapplicatives', 'index')) :
                 $listentite = $this->get_visibility();
                 $restriction = $this->get_restriction($listentite);               
@@ -172,14 +193,18 @@ class IntergrationapplicativesController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                             
 		$this->set('intergrationapplicatives', $this->paginate());
                 $this->get_export($newconditions);
-                $applications = $this->requestAction('applications/get_list/1');
-                $etats = $this->requestAction('etats/get_list/1');
-                $types = $this->requestAction('types/get_list/1');
-                $versions = $this->requestAction('versions/get_list/1');
+                $ObjApplications = new ApplicationsController();
+                $ObjEtats = new EtatsController();
+                $ObjTypes = new TypesController();
+                $ObjVersions = new VersionsController();
+                $applications = $ObjApplications->get_list(1);
+                $etats = $ObjEtats->get_list(1);
+                $types = $ObjTypes->get_list(1);
+                $versions = $ObjVersions->get_list(1);
 		$this->set(compact('strfilter','applications','etats','types','versions'));  
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -189,14 +214,15 @@ class IntergrationapplicativesController extends AppController {
  * @return void
  */
 	public function add() {
-            $this->set('title_for_layout','Intégration applicative');            
+            $this->set_title();            
              if (isAuthorized('intergrationapplicatives', 'add')) :  
-		if ($this->request->is('post')) {
+		$ObjApplications = new ApplicationsController();
+                if ($this->request->is('post')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Intergrationapplicative->validate = array();
                         $this->History->goBack(1);
-                    else:          
-                        $entite_id = $this->requestAction('applications/get_entite_id/'.$this->request->data['Bien']['application_id']);
+                    else:     
+                        $entite_id = $ObjApplications->get_entite_id($this->request->data['Intergrationapplicative']['application_id']);
                         $this->request->data['Intergrationapplicative']['entite_id']=$entite_id;
 			$this->Intergrationapplicative->create();
                         if($this->request->data['Intergrationapplicative']['DATEINSTALL'] != ''):
@@ -212,14 +238,16 @@ class IntergrationapplicativesController extends AppController {
 			}
                     endif;
 		}
-		$applications = $this->requestAction('applications/get_select');
-		$types = $this->requestAction('types/get_select');
-                $lots = $this->requestAction('lots/get_select');
+		$applications = $ObjApplications->get_select();
+                $ObjTypes = new TypesController();
+                $ObjLots = new LotsController();
+		$types = $ObjTypes->get_select();
+                $lots = $ObjLots->get_select();
 		$versions = array();
 		$this->set(compact('applications', 'types','lots', 'versions'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif; 
 	}
 
@@ -231,8 +259,9 @@ class IntergrationapplicativesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','Intégration applicative');            
-             if (isAuthorized('intergrationapplicatives', 'edit')) :             
+            $this->set_title();            
+             if (isAuthorized('intergrationapplicatives', 'edit')) : 
+                $ObjApplications = new ApplicationsController();
 		if (!$this->Intergrationapplicative->exists($id)) {
 			throw new NotFoundException(__('Intégration incorrecte'));
 		}
@@ -241,7 +270,7 @@ class IntergrationapplicativesController extends AppController {
                         $this->Intergrationapplicative->validate = array();
                         $this->History->goBack(1);
                     else:  
-                        $entite_id = $this->requestAction('applications/get_entite_id/'.$this->request->data['Bien']['application_id']);
+                        $entite_id = $ObjApplications->get_entite_id($this->request->data['Intergrationapplicative']['application_id']);
                         $this->request->data['Intergrationapplicative']['entite_id']=$entite_id;                        
                         if($this->request->data['Intergrationapplicative']['DATEINSTALL'] != ''):
                             $this->request->data['Intergrationapplicative']['INSTALL'] = 1;
@@ -259,15 +288,19 @@ class IntergrationapplicativesController extends AppController {
 			$options = array('conditions' => array('Intergrationapplicative.' . $this->Intergrationapplicative->primaryKey => $id));
 			$this->request->data = $this->Intergrationapplicative->find('first', $options);
 		}
-		$applications = $this->requestAction('applications/get_select');
-		$types = $this->requestAction('types/get_select');
-                $lots = $this->requestAction('lots/get_select');
-		$versions = $this->requestAction('versions/get_select');
-                $histories = $this->requestAction('historyintegrations/get_list/'.$id);
+		$applications = $ObjApplications->get_select();
+                $ObjTypes = new TypesController();
+                $ObjVersions = new VersionsController();
+                $ObjLots = new LotsController();
+                $ObjHistoryintegrations = new HistoryintegrationsController();
+		$types = $ObjTypes->get_select();
+                $lots = $ObjLots->get_select();
+		$versions = $ObjVersions->get_select();
+                $histories = $ObjHistoryintegrations->get_list($id);
 		$this->set(compact('applications', 'types','lots', 'versions','histories'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -279,7 +312,7 @@ class IntergrationapplicativesController extends AppController {
  * @return void
  */
 	public function delete($id = null,$loop = false) {
-            $this->set('title_for_layout','Intégration applicative');            
+            $this->set_title();            
             if (isAuthorized('intergrationapplicatives', 'delete')) : 
 		$this->Intergrationapplicative->id = $id;
 		if (!$this->Intergrationapplicative->exists()) {
@@ -325,7 +358,7 @@ class IntergrationapplicativesController extends AppController {
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
         
@@ -433,7 +466,7 @@ class IntergrationapplicativesController extends AppController {
  * @return void
  */
 	public function dupliquer($id = null) {
-            $this->set('title_for_layout','Intégration applicative');            
+            $this->set_title();            
             if (isAuthorized('intergrationapplicatives', 'duplicate')) :
 		$this->Intergrationapplicative->id = $id;
                 $record = $this->Intergrationapplicative->read();
@@ -456,7 +489,7 @@ class IntergrationapplicativesController extends AppController {
                 }                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}           
         
@@ -481,12 +514,12 @@ class IntergrationapplicativesController extends AppController {
                 }
             else:
                 $this->Session->setFlash(__('Historisation impossible l\'intégration est incorect.',true),'flash_warning'); 
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;
         }
         
         public function search($aplication=null,$installe=null,$valide=null,$actif=null,$type=null,$version = null,$keywords=null){
-            $this->set('title_for_layout','Intégration applicative');
+            $this->set_title();
             if (isAuthorized('intergrationapplicatives', 'index')) :
                 if(isset($this->params->data['Intergrationapplicative']['SEARCH'])):
                     $keywords = $this->params->data['Intergrationapplicative']['SEARCH'];
@@ -515,21 +548,26 @@ class IntergrationapplicativesController extends AppController {
                     $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0)); 
                     $this->set('intergrationapplicatives', $this->paginate());
                     $this->get_export($conditions);
-                    $applications = $this->requestAction('applications/get_list/1');
-                    $etats = $this->requestAction('etats/get_list/1');
-                    $types = $this->requestAction('types/get_list/1');
-                    $versions = $this->requestAction('versions/get_list/1');
+                    $ObjApplications = new ApplicationsController();
+                    $ObjEtats = new EtatsController();
+                    $ObjTypes = new TypesController();
+                    $ObjVersions = new VersionsController();
+                    $applications = $ObjApplications->get_list(1);
+                    $etats = $ObjEtats->get_list(1);
+                    $types = $ObjTypes->get_list(1);
+                    $versions = $ObjVersions->get_list(1);
                     $this->set(compact('strfilter','applications','etats','types','versions'));                   
                 else:
                     $this->redirect(array('action'=>'index',$aplication,$installe,$valide,$actif,$type,$version));
                 endif; 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;  
         }  
         
         public function installall($id){
+            $this->autoRender = false;
             $ids = explode('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
@@ -544,10 +582,11 @@ class IntergrationapplicativesController extends AppController {
             else :
                 $this->Session->setFlash(__('Aucune Intégration sélectionnée',true),'flash_failure');
             endif;
-            exit();            
+            return $this->request->data('all_ids');           
         }
         
         public function checkall($id){
+            $this->autoRender = false;
             $ids = explode('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
@@ -562,10 +601,11 @@ class IntergrationapplicativesController extends AppController {
             else :
                 $this->Session->setFlash(__('Aucune Intégration sélectionnée',true),'flash_failure');
             endif;
-            exit();              
+            return $this->request->data('all_ids');                     
         }
         
         public function deleteall($id){
+            $this->autoRender = false;
             $ids = explode('-', $this->request->data('all_ids'));
             if(count($ids)>0 && $ids[0]!=""):
                 foreach($ids as $id):
@@ -580,21 +620,24 @@ class IntergrationapplicativesController extends AppController {
             else :
                 $this->Session->setFlash(__('Aucune Intégration sélectionnée',true),'flash_failure');
             endif;
-            exit();             
+            return $this->request->data('all_ids');             
         }     
         
         public function rapport(){
              if (isAuthorized('intergrationapplicatives', 'rapports')) :            
-                $this->set('title_for_layout','Rapport intégration applicatives');
+                $this->set_title();
                 $mois = array('01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre');
                 $fiveyearago = date('Y')-5;
                 for($i=0;$i<6;$i++):
                     $year = $fiveyearago + $i;
                     $annee[$year]=$year;
                 endfor;
-		$applications = $this->requestAction('applications/get_select');
-		$environnements = $this->requestAction('types/get_select');
-                $lots = $this->requestAction('lots/get_select');
+                $ObjApplications = new ApplicationsController();
+                $ObjTypes = new TypesController();
+                $ObjLots = new LotsController();
+		$applications = $ObjApplications->get_select();
+		$environnements = $ObjTypes->get_select();
+                $lots = $ObjLots->get_select();
                 $this->set(compact('applications', 'mois', 'annee','lots','environnements'));
                 if ($this->request->is('post')):
                     $mois = $this->data['Intergrationapplicative']['mois'];
@@ -671,10 +714,10 @@ class IntergrationapplicativesController extends AppController {
                     endif;
                     endif;
                     $this->set('chartresults',$chartresults);   
-                    $charthistosql = "select count(intergrationapplicatives.id) as NB,lots.NOM as LOT,MONTH(DATEINSTALL) AS MOIS,CONCAT(IF(MONTH(DATEINSTALL)<10,CONCAT('0',MONTH(DATEINSTALL)),MONTH(DATEINSTALL)),'/',YEAR(DATEINSTALL)) as MOISANNEE
+                    $charthistosql = "select MIN(YEAR(DATEINSTALL)) as MINANNEE, count(intergrationapplicatives.id) as NB,lots.NOM as LOT,MONTH(DATEINSTALL) AS MOIS,CONCAT(IF(MONTH(DATEINSTALL)<10,CONCAT('0',MONTH(DATEINSTALL)),MONTH(DATEINSTALL)),'/',YEAR(DATEINSTALL)) as MOISANNEE
                             from intergrationapplicatives
                             LEFT JOIN lots on intergrationapplicatives.lot_id = lots.id
-                            WHERE YEAR(DATEINSTALL) BETWEEN ".($annee-1)." AND ".$annee." ".$selectapplications.$selectlot.$selecttype.
+                            WHERE YEAR(DATEINSTALL) < ".($annee+1)." ".$selectapplications.$selectlot.$selecttype.
                             " group by CONCAT(YEAR(DATEINSTALL),IF(MONTH(DATEINSTALL)<10,CONCAT('0',MONTH(DATEINSTALL)),MONTH(DATEINSTALL))),lot_id
                             order by CONCAT(YEAR(DATEINSTALL),IF(MONTH(DATEINSTALL)<10,CONCAT('0',MONTH(DATEINSTALL)),MONTH(DATEINSTALL))) asc,lot_id asc;";
                     $charthistoresults = $this->Intergrationapplicative->query($charthistosql);
@@ -682,7 +725,7 @@ class IntergrationapplicativesController extends AppController {
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                     
         } 
         

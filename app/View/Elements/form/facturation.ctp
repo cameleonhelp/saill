@@ -179,11 +179,11 @@
         <td><?php echo $this->Form->button('Ajouter une ligne', array('type'=>'button','class' => 'btn btn-sm btn-default','id'=>'FacturationAddRow')); ?></td>
     </tr>
 </table>
-    <?php $memo = $this->requestAction('parameters/get_memofacturation') ?>
-    <?php if($memo['Parameter']['param']!=""): ?>
+    <?php $memo = $this->requestAction('entites/get_memo/'.userAuth('entite_id')) ?>
+    <?php if($memo!=""): ?>
     <div id="container_message_erreur_total" name="container_message_erreur_total" class="bs-callout bs-callout-warning" style="display: block;">
         <ol style="display: block;">
-            <li><label for="Activitesreelle0ActiviteId" style="display: block;"><?php echo $memo['Parameter']['param']; ?></label></li>
+            <li><label for="Activitesreelle0ActiviteId" style="display: block;"><?php echo $memo; ?></label></li>
         </ol>
     </div>
     <?php endif; ?>

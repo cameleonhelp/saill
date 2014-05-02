@@ -51,6 +51,9 @@ endif;
          </li>                   
         <li class="divider-vertical-only"></li>
         <li><?php echo $this->Html->link('<span class="ico-xls"></span>', array('action' => 'export_xls'),array('escape' => false)); ?></li>               
+        <li class="divider-vertical-only"></li>
+        <li><?php echo $this->Html->link('<span class="glyphicons eye_close size14 margintop4 notactive" rel="tooltip" data-title="Ouvrir ou fermer le détail des utilisateurs de cette page"></span>', "#",array('class'=>"md btn_eye_close",'escape' => false)); ?></li>
+        <li class="divider-vertical-only"></li>          
         </ul> 
         <ul class="nav navbar-nav toolbar pull-right">
             <li class="dropdown">
@@ -100,7 +103,7 @@ endif;
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'edit')) : ?>
             <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange"></span>', array('action' => 'edit', $materielinformatique['Materielinformatique']['id']),array('escape' => false)); ?>&nbsp;
-            <?php echo $this->Html->link('<span class="glyphicons user_add notchange"></span>', "#",array('escape' => false, 'data-toggle'=>"modal", 'data-target'=>"#modalassign")); ?>&nbsp;
+            <?php echo $this->Html->link('<span class="glyphicons user_add notchange" data-idmat="'.$materielinformatique['Materielinformatique']['id'].'" data-iduser="'.trim($materielinformatique['Materielinformatique']['utilisateur_id']).'"></span>', "#",array('escape' => false, 'data-toggle'=>"modal", 'data-target'=>"#modalassign")); ?>&nbsp;
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('materielinformatiques', 'delete')) : ?>
             <?php echo $this->Form->postLink('<span class="glyphicons bin notchange"></span>', array('action' => 'delete', $materielinformatique['Materielinformatique']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce poste informatique ?')); ?>
@@ -110,7 +113,6 @@ endif;
             <?php endif; ?>                    
         </td>
 </tr>
-<?php echo $this->element('modals/assign'); ?>
 <?php $utilisateur = isset($materielinformatique['Materielinformatique']['utilisateur_NOMLONG']) ? $materielinformatique['Materielinformatique']['utilisateur_NOMLONG'] : ""; ?>
 <tr class="trhidden" style="display:none;">
     <td colspan="9" align="center">
@@ -124,6 +126,7 @@ endif;
 <?php endif; ?>
 </tbody>
 </table>
+<?php echo $this->element('modals/assign'); ?>
 </div>
 <div class="pull-left"><?php echo $this->Paginator->counter('Page {:page} sur {:pages}'); ?></div>
 <div class="pull-right "><?php echo $this->Paginator->counter('Nombre total d\'éléments : {:count}'); ?></div>    
@@ -141,7 +144,16 @@ endif;
 <script>
      $(document).ready(function () {
         $(document).on('click','.eye_open',function(e){
-            $(this).parents('tr').next('.trhidden').slideToggle("slow");
+            $(this).parents('tr').next('.trhidden').toggle('slow', "easeOutBounce");
+        });
+
+        $(document).on('click','.btn_eye_close',function(e){
+            var overlay = $('#overlay');
+            overlay.show();         
+            $('.trhidden').toggle('slow', "easeOutBounce");
+            $(this).toggleClass('filtreactif');     
+            $('.eye_close').toggleClass('margintop4');    
+            overlay.hide(); 
         });
 
         function hideoverlay(){

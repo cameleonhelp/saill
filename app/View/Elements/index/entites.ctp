@@ -47,7 +47,7 @@
     <td class="actions">
         <?php $countu = $this->requestAction('assoentiteutilisateurs/count/'.$entite['Entite']['id']); ?>
         <?php $green = $countu > 0 ? 'green btn-success' : 'btn-grey'; ?>
-        <?php echo $this->Html->link('<span class="btn btn-xs badgeaction '.$green.'"><span class="glyphicons group white notchange"></span>&nbsp;&nbsp;'.$countu.'</span>', array('action' => '#'),array('escape' => false,"data-entite"=>$entite['Entite']['id'] )); ?>
+        <?php echo $this->Html->link('<span class="btn btn-xs badgeaction '.$green.'" style="color:white !important;"><span class="glyphicons group white notchange"></span>&nbsp;&nbsp;'.$countu.'</span>', array('action' => '#'),array('escape' => false,"data-entite"=>$entite['Entite']['id'] )); ?>
         <?php $countp = $this->requestAction('assoprojetentites/count/'.$entite['Entite']['id']); ?>
         <?php $green = $countp > 0 ? 'green btn-success' : 'btn-grey' ?>
         <?php echo $this->Html->link('<span class="btn btn-xs badgeprojet '.$green.'"><span class="glyphicons share_alt white notchange"></span>&nbsp;&nbsp;'.$countp.'</span>', array('action' => '#'),array('escape' => false, "data-entite"=>$entite['Entite']['id'])); ?>

@@ -2,7 +2,7 @@
         <ul class="nav navbar-nav toolbar">
         <?php $defaultAction = $this->params->action; ?>
         <?php
-        $filtre_utilisateur = isset($this->params->pass[0]) ? $this->params->pass[0] : userAuth('id');
+        $filtre_utilisateur = isset($this->params->pass[0]) ? $this->params->pass[0] : 'tous';
         $mois = date('m');
         $filtre_mois = isset($this->params->pass[1]) ? $this->params->pass[1] : $mois;
         $filtre_visible = isset($this->params->pass[2]) ? $this->params->pass[2] : 1;
@@ -24,7 +24,7 @@
         <?php endif; ?>
          <li><?php echo $this->Html->link('A facturer', array('controller'=>'activitesreelles','action' => 'afacturer'),array('escape' => false,'class'=>'paddingtop3')); ?></li>
          <?php if (areaIsVisible()) :?>
-         <li class="dropdown <?php echo filtre_is_actif($filtre_utilisateur,  userAuth('id')); ?>">
+         <li class="dropdown <?php echo filtre_is_actif($filtre_utilisateur,  'tous'); ?>">
          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Utilisateurs <b class="caret"></b></a>
              <ul class="dropdown-menu">
              <li><?php echo $this->Html->link('Tous', array('action' => $defaultAction,'tous',$filtre_mois,$filtre_visible,$filtre_indisponible,$filtre_annee,$keyword),array('class'=>'showoverlay'.subfiltre_is_actif($filtre_utilisateur,'tous'))); ?></li>
@@ -99,6 +99,18 @@
 <div class="">
 <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" id="data">
 <thead>
+    <tr><th colspan="14">
+    <div class="text-center">
+        <?php if($filtre_mois!= 'tous'): ?>
+        <?php echo $this->Form->button('<span class="glyphicons left_arrow" data-container="body" rel="tooltip" data-title="Mois précédent"></span>', array('id'=>"previousMonth",'type'=>'button','class' => 'btn  btn-sm btn-default','style'=>'margin-right:75px;')); ?>
+        <?php endif; ?>
+        <?php echo $filtre_mois!= 'tous' ? strMonth($filtre_mois)." ".$filtre_annee : 'Tous les mois de '.$filtre_annee; ?>
+        <?php if($filtre_mois!= 'tous'): ?>
+        <?php echo $this->Form->button('<span class="glyphicons right_arrow" data-container="body" rel="tooltip" data-title="Mois suivant"></span>', array('id'=>"nextMonth",'type'=>'button','class' => 'btn btn-sm btn-default','style'=>'margin-left:75px;')); ?>
+        <?php echo $this->Form->button('<span class="glyphicons clock" data-container="body" rel="tooltip" data-title="Mois courant"></span>', array('id'=>"today",'type'=>'button','class' => 'btn  btn-sm btn-default pull-right')); ?>      
+        <?php endif; ?>
+    </div>
+    </th></tr>    
     <tr>
                 <th><?php echo 'Utilisateur'; ?></th>
                 <th><?php echo 'Date'; ?></th>
@@ -218,6 +230,37 @@
      
      $(document).ready(function () {
         $("#totalactivites").html(sumOfColumns());
+
+         $("#previousMonth").on('click', function(e){
+             e.preventDefault();
+             var overlay = $('#overlay');
+             overlay.show();               
+             var m = <?php echo $filtre_mois==1 ? 12 : $filtre_mois-1; ?>;
+             var a = <?php echo $filtre_mois==1 ? $filtre_annee-1 : $filtre_annee; ?>;
+             m = m < 10 ? "0"+m : m;
+             var url = "<?php echo $this->webroot;?><?php echo $this->params->controller;?>/<?php echo $this->params->action;?>/<?php echo $filtre_utilisateur;?>/"+m+"/<?php echo $filtre_visible;?>/<?php echo $filtre_indisponible;?>/"+a+"/<?php echo $keyword;?>";
+             location.href = url;
+         });
+         $("#nextMonth").on('click', function(e){
+             e.preventDefault();
+             var overlay = $('#overlay');
+             overlay.show();                 
+             var m = <?php echo $filtre_mois==12 ? 1 : $filtre_mois+1; ?>;
+             var a = <?php echo $filtre_mois==12 ? $filtre_annee+1 : $filtre_annee; ?>;
+             m = m < 10 ? "0"+m : m;
+             var url = "<?php echo $this->webroot;?><?php echo $this->params->controller;?>/<?php echo $this->params->action;?>/<?php echo $filtre_utilisateur;?>/"+m+"/<?php echo $filtre_visible;?>/<?php echo $filtre_indisponible;?>/"+a+"/<?php echo $keyword;?>";
+             location.href = url;
+         }); 
+         $("#today").on('click', function(e){
+             e.preventDefault();
+             var overlay = $('#overlay');
+             overlay.show();                
+             var m = <?php echo date("m"); ?>;
+             var a = <?php echo date("Y"); ?>;
+             m = m < 10 ? "0"+m : m;
+             var url = "<?php echo $this->webroot;?><?php echo $this->params->controller;?>/<?php echo $this->params->action;?>/<?php echo $filtre_utilisateur;?>/"+m+"/<?php echo $filtre_visible;?>/<?php echo $filtre_indisponible;?>/"+a+"/<?php echo $keyword;?>";
+             location.href = url;
+         }); 
 
         //setTimeout(function() {$('#ToRefresh').load('<?php echo $this->params->here; ?>');}, 60000); 
         $("[rel=tooltip]").tooltip({placement:'bottom',trigger:'hover',html:true});

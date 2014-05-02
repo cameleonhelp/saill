@@ -7,14 +7,14 @@
             <?php if (userAuth('WIDEAREA')==1): ?>
             <?php echo $this->Form->select('utilisateur_id',$utilisateur,array('class'=>'form-control','data-rule-required'=>'true','default' => userAuth('id'),'data-msg-required'=>'Le nom du gestionnaire est obligatoire','empty' => 'Choisir un gestionnaire')); ?>
             <?php else : ?>
-            <?php echo $nomlong['Utilisateur']['NOMLONG']; ?>
+            <?php echo $nomlong; ?>
             <?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>userAuth('id'))); ?>
             <?php endif; ?>            
             <?php else : ?>
             <?php if (userAuth('WIDEAREA')==1): ?>
             <?php echo $this->Form->select('utilisateur_id',$utilisateur,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>'Le nom du gestionnaire est obligatoire','empty' => 'Choisir un gestionnaire')); ?>
             <?php else : ?>
-            <?php echo $nomlong['Utilisateur']['NOMLONG']; ?>
+            <?php echo $nomlong; ?>
             <?php echo $this->Form->input('utilisateur_id',array('type'=>'hidden','value'=>userAuth('id'))); ?>
             <?php endif; ?>              
             <?php endif; ?>

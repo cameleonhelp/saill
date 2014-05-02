@@ -14,14 +14,14 @@
                     <?php if (userAuth('WIDEAREA')==1): ?>
                     <?php echo $this->Form->select('destinataire',$destinataires,array('data-rule-required'=>'true','class'=>'form-control','data-msg-required'=>"Le nom de l'utilisateur est obligatoire dans l'onglet Destinataire", 'selected' => $this->data['Action']['destinataire'],'empty' => 'Choisir un utilisateur')); ?>
                     <?php else : ?>
-                    <?php echo $nomlong['Utilisateur']['NOMLONG']; ?>
+                    <?php echo $nomlong; ?>
                     <?php echo $this->Form->input('destinataire',array('type'=>'hidden','value'=>userAuth('id'))); ?>
                     <?php endif; ?>                
                 <?php } else { ?>
                     <?php if (userAuth('WIDEAREA')==1): ?>
                     <?php echo $this->Form->select('destinataire',$destinataires,array('data-rule-required'=>'true','class'=>'form-control','default'=>  userAuth('id'),'data-msg-required'=>"Le nom de l'utilisateur est obligatoire dans l'onglet Destinataire", 'empty' => 'Choisir un utilisateur')); ?>
                     <?php else : ?>
-                    <?php echo $nomlong['Utilisateur']['NOMLONG']; ?>
+                    <?php echo $nomlong; ?>
                     <?php echo $this->Form->input('destinataire',array('type'=>'hidden','value'=>userAuth('id'))); ?>
                     <?php endif; ?>                
                 <?php } ?>
@@ -98,8 +98,8 @@
         <div class="form-group">
             <label class="col-md-4" for="ActionCONTRIBUTEURS">Contributeurs : </label>
             <div class="col-md-6">
-                    <?php $nbcontributeurs = isset($contributeurs) && count($contributeurs) > 0 ? $contributeurs[0]!='' ? count($contributeurs) : 0 : 0; ?>
-                    <?php $contributeurs_nom = isset($contributeurs) && count($contributeurs) > 0 ? $contributeurs[0]!='' ? $contributeurs_nom : 'Aucun contributeur': 'Aucun contributeur'; ?>
+                    <?php $nbcontributeurs = isset($nbcontrib) && count($nbcontrib) > 0 ? $nbcontrib : 0 ; ?>
+                    <?php $contributeurs_nom = isset($nbcontrib) && count($nbcontrib) > 0 ? $contributeurs_nom : 'Aucun contributeur'; ?>
                     <?php echo $this->Html->link('<span class="glyphicons notchange group"></span>&nbsp; <span id="NBCONTRIBUTEURS" name="NBCONTRIBUTEURS">'.$nbcontributeurs.'</span>','#',array('data-toggle'=>"modal",'id'=>'btnCONTRIBUTEURS','data-target'=>"#modaladdcontributeurs","rel"=>"tooltip","data-title"=>"$contributeurs_nom",'class'=>'btn  btn-sm btn-default','escape' => false)); ?> 
             </div>
         </div>
@@ -265,7 +265,7 @@
     <?php endif; ?>
     <!-- ajout de la liste des livrables pouvant être associés //-->
     <?php if ($this->params->action == 'edit') : ?>
-    <button type="submit" data-toggle="modal" data-target="#modaladdlivrable" class="btn btn-default btn-sm pull-right addlivrable">Ajouter un livrable</button><br>
+    <button type="button" data-toggle="modal" data-target="#modaladdlivrable" class="btn btn-default btn-sm pull-right addlivrable">Ajouter un livrable</button><br>
     <label class="sstitre">Liste des livrables associés</label>
     <?php echo $this->element('tableLivrables'); ?>
     <?php endif; ?>

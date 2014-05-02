@@ -73,6 +73,7 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicons check"></span> Actions groupées <b class="caret"></b></a>
              <ul class="dropdown-menu">
              <li><?php echo $this->Html->link('Mettre à jour l\'état', "#",array('id'=>'updatelink','class'=>'showoverlay')); ?></li>
+             <li><?php echo $this->Html->link('Supprimer', "#",array('id'=>'deletelink','class'=>'showoverlay')); ?></li>
              </ul>
         </li> 
         <?php endif; ?>
@@ -183,6 +184,23 @@
                 dataType: "html",
                 type: "POST",
                 url: "<?php echo $this->Html->url(array('controller'=>'utiliseoutils','action'=>'allupdate')); ?>/",
+                data: ({all_ids:ids})
+            }).done(function ( data ) {
+                location.reload();
+                overlay.hide();
+            });
+            $(this).parents().find(':checkbox').prop('checked', false);
+            $("#all_ids").val('');
+        });
+
+        $(document).on('click','#deletelink',function(e){
+            var ids = $("#all_ids").val();
+            var overlay = $('#overlay');
+            overlay.show(); 
+            $.ajax({
+                dataType: "html",
+                type: "POST",
+                url: "<?php echo $this->Html->url(array('controller'=>'utiliseoutils','action'=>'alldelete')); ?>/",
                 data: ({all_ids:ids})
             }).done(function ( data ) {
                 location.reload();

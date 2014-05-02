@@ -1,9 +1,11 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Entites');
 /**
  * Messages Controller
  *
  * @property Message $Message
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class MessagesController extends AppController {
         public $components = array('History','Common');
@@ -28,10 +30,11 @@ class MessagesController extends AppController {
     }
     
     public function get_cercles(){
+        $ObjEntites = new EntitesController();	
         if(userAuth('profil_id')==1):
-            return $this->requestAction('entites/find_list_all_actif_cercle');
+            return $ObjEntites->find_list_all_actif_cercle();
         else:
-            return $this->requestAction('entites/find_list_cercle');
+            return $ObjEntites->find_list_cercle();
         endif;
     }
 /**
@@ -44,11 +47,12 @@ class MessagesController extends AppController {
                 $newconditions[]= $this->get_visibilty();
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));    
 		$this->set('messages', $this->paginate());
-                $cercles = $this->requestAction('entites/get_all');
+                $ObjEntites = new EntitesController();	
+                $cercles = $ObjEntites->get_all();
                 $this->set(compact('cercles'));                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -77,7 +81,7 @@ class MessagesController extends AppController {
                 $this->set(compact('cercles'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -113,7 +117,7 @@ class MessagesController extends AppController {
                 $this->set(compact('cercles'));                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -140,7 +144,7 @@ class MessagesController extends AppController {
 		$this->History->goFirst();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -156,7 +160,7 @@ class MessagesController extends AppController {
             $newconditions= is_array($this->get_visibilty()) ? $this->get_visibilty() : array($this->get_visibilty());
             $today = date('Y-m-d');            
             $conditions = array("OR" => array('Message.DATELIMITE IS NULL','Message.DATELIMITE >=' =>'0000-00-00','Message.DATELIMITE >=' => $today));
-            $conditions = array_merge($conditions,$newconditions);
+            $conditions = array_merge($newconditions,$conditions);
             if(isset($this->params['requested'])) { //s’il s’agit de l’appel pour l’élément
                 $activeMessages = $this->Message->find('all',array('conditions' => $conditions,'order'=>array('Message.id asc'),'recursive'=>-1));
                 return $activeMessages;
@@ -168,7 +172,7 @@ class MessagesController extends AppController {
             $newconditions= is_array($this->get_visibilty()) ? $this->get_visibilty() : array($this->get_visibilty());
             $today = date('Y-m-d');            
             $conditions = array("OR" => array('Message.DATELIMITE IS NULL','Message.DATELIMITE >=' =>'0000-00-00','Message.DATELIMITE >=' => $today));
-            $conditions = array_merge($conditions,$newconditions);
+            $conditions = array_merge($newconditions,$conditions);
             $messages="";
             $activeMessages = $this->Message->find('all',array('fields'=>array('Message.LIBELLE'),'conditions' => $conditions,'order'=>array('Message.id asc'),'recursive'=>-1));
             foreach ($activeMessages as $activeMessage) {
@@ -206,7 +210,7 @@ class MessagesController extends AppController {
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }        
 }

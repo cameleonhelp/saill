@@ -1,6 +1,5 @@
 <?php
 /**
- *
  * PHP 5
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
@@ -39,10 +38,11 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->css('iosswitch');
                 echo $this->Html->css('flipcountdown');
                 echo $this->Html->css('tablesorter');
+                echo $this->Html->css('editable');
                 
                 echo $this->Html->script('jQuery/jquery');
                 echo $this->Html->script('jQuery/jquery.browser');
-                //echo $this->Html->script('jQuery/jquery-ui');
+                echo $this->Html->script('jQuery/jquery-ui');
                 echo $this->Html->script('bootstrap');              
                 echo $this->Html->script('validate/validate');  
                 echo $this->Html->script('validate/additional-methods');                  
@@ -52,11 +52,13 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->script('tinymce/tinymce');
                 echo $this->Html->script('tinymce/initTinyMCE');
                 echo $this->Html->script('datetime');
-                echo $this->Html->script('highcharts/highcharts');
+//                echo $this->Html->script('highcharts/highcharts');
+                echo $this->Html->script('highcharts/highstock');                
                 echo $this->Html->script('highcharts/highcharts-more');
                 echo $this->Html->script('highcharts/modules/exporting');   
                 echo $this->Html->script('highcharts/modules/data');
                 echo $this->Html->script('flipcountdown/flipcountdown');
+                echo $this->Html->script('editable/editable');
                 //mask sur input
                 echo $this->Html->script('maskedinput/maskedinput');
                 //pour enregistrer image
@@ -65,15 +67,14 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->script('html2canvas/canvas2image');   
                 echo $this->Html->script('base64'); 
                 //pour la timeline dans la liste des actions
-                //echo $this->Html->script('timeline_js/timeline-api');
                 echo $this->Html->script('chronoline/raphael-min');
                 echo $this->Html->script('chronoline/chronoline');
                 //pour le color picker
                 echo $this->Html->script('colorpicker/colorpicker');     
-                //echo $this->Html->script('docs'); 
                 //sort on table
                 echo $this->Html->script('tablesorter/tablesorter');
-                echo $this->Html->script('tablesorter/tablesorter.widgets');                
+                echo $this->Html->script('tablesorter/tablesorter.widgets');    
+//                echo $this->Html->script('tablesorter/widgets/widget-editable'); 
                 // compatibilité IE
                 echo $this->Html->script('respond');     
                 echo $this->Html->script('html5shiv'); 
@@ -85,6 +86,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
 		echo $this->fetch('script');
 	?>
 </head>
+<?php flush(); ?>
 <body <?php echo $this->Session->check('Auth.User') ? 'class="cbp-spmenu-push"' : ''; ?> style="overflow: hidden;">
     <?php 
     //maintenance du site
@@ -118,45 +120,48 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
             <!-- FIN DU HEADER //-->
             <!-- DEBUT DU CONTENU //-->
             <div id="content" class="row" style="margin-left: 0px;margin-right: 0px;margin-top:-17px;">
-            <div class="col-sm-12 column" style="margin-top:15px;">
+            <div class="col-sm-12 column" style="margin-top:15px;" id="subcontent">
             <div class="cursor" id="flash_message"><?php echo $this->Session->flash(); ?></div>
             <div id="container_message" name="container_message" style="cursor:pointer;" class="alert alert-danger"><ol></ol></div>
             <?php echo $this->fetch('content'); ?>
+            <?php if($this->params->action != 'login'): ?>
+            <div style="margin-bottom:100px;">&nbsp;</div>
+            <?php endif; ?>
             </div>
-            </div>
-        </div>
-        <div class="row">
-            <!-- FIN DU CONTENU //-->
-            <!-- DEBUT DU DEBUG //-->
-            <div class="col-sm-12 column" id="debug">
+            <div class="row clearfix">
+            <div class="col-sm-12 column" id="debug" style="margin-left: 0px;margin-right: 0px;">
             <?php       
             //debug($this->Session->read('User.history'));
             //debug($this->Session->read('User.goback'));
             //debug($this->request->data);
-            //echo $this->element('sql_dump');
-            //debug($etats);
+//            echo $this->element('sql_dump');
+            //debug($users);
             ?>
             </div>
-            <!-- FIN DU DEBUG //-->
+            </div>
+            </div>
         </div>
-    </div> 
+    </div>
+    <!-- FIN DU DEBUG //-->
     <?php endif; ?>
     <?php echo $this->element('modals/password'); ?>
 <script>
+   var topscroll = 15; 
+   
 $(document).on('mouseover click','.novisible',function(){
     if($(this).hasClass('active')){
-         $(this).removeClass('active');
          $('body').removeClass('cbp-spmenu-push-toright');
          $('#cbp-spmenu-s1').removeClass('cbp-spmenu-open');
-         if($('nav.toolbar').hasClass('fixed-active') && $("#content").scrollTop() >= 32){
-             $('nav.toolbar').removeClass('fixed-active').addClass('fixed');
-         }            
+         if($('nav.toolbar').css('left')!=''){
+             $('nav.toolbar').css({'left':'','right':''});
+         }   
+         $(this).removeClass('active');
      }else{
          $(this).addClass('active');  
          $('body').addClass('cbp-spmenu-push-toright');
          $('#cbp-spmenu-s1').addClass('cbp-spmenu-open');
-         if($('nav.toolbar').hasClass('fixed') && $("#content").scrollTop() >= 32){
-             $('nav.toolbar').removeClass('fixed').addClass('fixed-active');
+         if($('nav.toolbar').css('position')=='fixed'){ // && $("#content").scrollTop() > topscroll
+             $('nav.toolbar').css({'left':'255px','right':'-255px'});
          }
      }       
 });
@@ -165,33 +170,43 @@ $(document).on('mouseover click','.novisible',function(){
 </html>
 <script>   
 $(document).ready(function () {
-    $('.carousel').carousel();
-    
-    var windows_height = $(window).height();
-    var cbpmenu_height = $("#menu").height();
-    
-    
-    $("#content").scroll(function() {
-        var right = $('.index').width();
-        if(typeof right === "undefined") { right = $('.search').width();}        
-        if ( $(this).scrollTop() >= 32){
-            if($('body').hasClass('cbp-spmenu-push-toright')){
-                $('nav.toolbar').removeClass('fixed').addClass('fixed-active').css('width','auto');
-            } else {
-                $('nav.toolbar').removeClass('fixed-active').addClass('fixed').css('width',right);
-            }   
-        } else {
-             $('nav.toolbar').removeClass('fixed').removeClass('fixed-active').css('width','auto');
-        } 
+    $('.carousel').carousel(); 
 
+    $(".modal").draggable({
+      handle: ".modal-header"
+    });
+
+    $("#content").scroll(function(e) {
+        var right = $('.index').width();
+        var content = $("#subcontent").width();
+        if(typeof right === "undefined") {right = content;}
+        if ($(this).scrollTop() > topscroll && $('nav.toolbar').css('position')=="relative"){
+            if($('body').hasClass('cbp-spmenu-push-toright')){
+                if($('.novisible').hasClass('active')) {
+                    $('nav.toolbar').addClass('fixed').css({'width':content,'top':'0px','position':"fixed",'left':'','right':''}).stop().animate({'top':"52px"},200,function(){$('nav.toolbar');});
+                } else{
+                    $('nav.toolbar').addClass('fixed').css({'width':content,'top':'0px','position':"fixed",'left':'255px','right':'-255px'}).stop().animate({'top':"52px"},200,function(){$('nav.toolbar');});
+                }
+            } else {
+                $('nav.toolbar').addClass('fixed').css({'width':content,'top':'0px','position':"fixed",'left':'','right':''}).stop().animate({'top':"52px"},700,function(){$('nav.toolbar');});
+            }   
+        } 
+        if ( $(this).scrollTop() == 0){
+            $('nav.toolbar').removeClass('fixed').css({'width':content,'left':'','right':''}).stop().animate({'top':"",'position':''},10,function(){$('nav.toolbar');});
+        }
     });  
     
     $( window ).resize(function() {
         var right = $('.index').width();
-        if(typeof right === "undefined") { right = $('.search').width();} 
+        var content = $("#subcontent").width();
+        if(typeof right === "undefined") { right = content;} 
         $('nav.toolbar').css('width',right);
     });
     
+    $(document).on('click','.menu1 .accordion-inner > ul > li > a, .showoverlay:not(".disabled")',function(e){
+        var overlay = $('#overlay');
+        overlay.show();
+    });
     
         /** first element focus **/
     $("#formValidate").find("input,textarea,select").filter(":not([readonly='readonly']):not([type='file']):not('.dateall'):not('.dateyear-year'):visible:first").focus();
@@ -219,72 +234,6 @@ $(document).ready(function () {
     $(".alert").alert()
     /** Cache la zone de message d'erreur pour le formulaire **/
     $("#container_message").hide();
-    /** Tooltip **/
-    /** placement auto depuis la version 3.0.0 de bootstrap **/
-    //$("[rel=tooltip]").tooltip({placement:'auto bottom',trigger:'hover',html:true});
-    /** PopOver **/ 
-    /** placement auto depuis la version 3.0.0 de bootstrap **/
-    var isVisible = false;
-    var clickedAway = false;
-    /** permet de cacher les autres popover si on clique dans le body **/
-    if ($("[rel=popover]").length) {
-        $("[rel=popover]").popover({placement:'auto left',trigger:'manual',html:true,container:'content'});
-        $(document).on('click',"[rel=popover]",function(e){
-            e.preventDefault;
-            $(this).popover('toggle');
-            clickedAway = false
-            isVisible = true
-        });  
-    }  
-    
-    /** permet d'affciher un overlay pour éviter les doubles cliques **/
-    $(document).on('click','.menu1 .accordion-inner > ul > li > a, .showoverlay:not(".disabled")',function(e){
-        var overlay = $('#overlay');
-        overlay.show();          
-    });
-    
-    /** permet de cacher les autres popover si on clique dans le body **/
-    $(document).on('click',"html",function(e) {
-        if(isVisible & clickedAway)
-        {
-          $("[rel=popover]").popover('hide')
-          isVisible = clickedAway = false
-        }
-        else
-        {
-          clickedAway = true
-        }
-    });
-    /** DatePicker **/	        
-    $(".date").datepicker({
-        format: "dd/mm/yyyy",
-        weekStart: 1,
-        todayBtn: 'linked',
-        language: "fr",
-        autoclose: true,
-        todayHighlight: true,
-        orientation : 'auto'
-    })
-       
-    /** permet de supprimer dans les zones de date **/
-    $(".dateremove").click(function(){
-            d = new Date;
-            $(this).parent().datepicker('update', d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear());
-            $(this).parent().children("input").val('');
-            $(this).parent().data('datepicker').date = null;
-    }) 
-    
-    /** permet de mettre la date par défaut au 05/01/Y+1 dans les zones de date **/
-    $(".datedefault").click(function(){
-        d = new Date;
-        $(this).parent().children("input").val('05/01/'+(d.getFullYear()+1));
-        $(this).parent().datepicker('update', '05/01/'+(d.getFullYear()+1));
-    }) 
-    
-    /** Check all **/
-    $('.checkall').on('click',function (e) {
-         $(this).parents('.table').find(':checkbox').prop('checked', this.checked);
-    }); 
     
     /** Aide au calcul du Tarif TTC **/
     $('#calculer').on('click',function(e){

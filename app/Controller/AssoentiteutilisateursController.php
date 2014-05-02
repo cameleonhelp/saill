@@ -1,10 +1,12 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('EntitesController', 'Controller');
 /**
  * Assoentiteutilisateurs Controller
  *
  * @property Assoentiteutilisateur $Assoentiteutilisateur
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class AssoentiteutilisateursController extends AppController {
 
@@ -108,7 +110,7 @@ class AssoentiteutilisateursController extends AppController {
             $list = '';
             if(userAuth('profil_id') != 1):
                 $condition = $id == null ? array('1=1') : array('Assoentiteutilisateur.utilisateur_id' => $id);
-                $obj = $this->Assoentiteutilisateur->find('all', array('fields'=>array('Assoentiteutilisateur.entite_id'),'conditions' => $condition,'group'=>'Assoentiteutilisateur.entite_id','order'=>array('Assoentiteutilisateur.entite_id'=>"asc"),'recursive'=>0));
+                $obj = $this->Assoentiteutilisateur->find('all', array('fields'=>array('Assoentiteutilisateur.entite_id'),'conditions' => $condition,'group'=>'Assoentiteutilisateur.entite_id','order'=>array('Assoentiteutilisateur.entite_id'=>"asc"),'recursive'=>-1));
                 $results = count($obj)>0 ? $obj : 'null';
                 if($results!='null'):
                     foreach ($results as $result):
@@ -119,7 +121,8 @@ class AssoentiteutilisateursController extends AppController {
                     return '0';
                 endif;
             else:
-                $obj = $this->requestAction('entites/get_all');
+                $ObjEntites = new EntitesController();
+                $obj = $ObjEntites->get_all();
                 foreach ($obj as $result):
                     $list .= $result['Entite']['id'].',';
                 endforeach;
@@ -141,18 +144,19 @@ class AssoentiteutilisateursController extends AppController {
                 return '0';
             endif;            
         }   
+                                
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_all_users','json_get_all_users_actif_nogenerique','json_get_all_users_entite','json_get_all_users_nogenerique','json_get_my_entite','json_get_users'));
+            parent::beforeFilter();
+        }   
         
-        public function json_get_all_users($id){
+        public function json_get_all_users($id=null){
             $this->autoRender = false;
             $entite = $this->json_get_my_entite($id);   
             if($entite != '0'):
                 $list = '';
-                /*if(userAuth('profil_id')==1 || $id==1):
-                    $obj = $this->Assoentiteutilisateur->find('all', array('order'=>array('Assoentiteutilisateur.utilisateur_id'=>'asc'),'group'=>'Assoentiteutilisateur.utilisateur_id','recursive'=>0));
-                else:*/
-                    $obj = $this->Assoentiteutilisateur->find('all', array('conditions' => array('Assoentiteutilisateur.entite_id IN ('.$entite.')'),'order'=>array('Assoentiteutilisateur.utilisateur_id'=>'asc'),'group'=>'Assoentiteutilisateur.utilisateur_id','recursive'=>0));
-                //endif;
-                $results = isset($obj) ? $obj : 'null';
+                $obj = $this->Assoentiteutilisateur->find('all', array('conditions' => array('Assoentiteutilisateur.entite_id IN ('.$entite.')'),'order'=>array('Assoentiteutilisateur.utilisateur_id'=>'asc'),'group'=>'Assoentiteutilisateur.utilisateur_id','recursive'=>-1));
+                $results = count($obj)>0 ? $obj : 'null';
                 if($results!='null'):
                     foreach ($results as $result):
                         $list .= $result['Assoentiteutilisateur']['utilisateur_id'].',';
@@ -165,6 +169,20 @@ class AssoentiteutilisateursController extends AppController {
                 return '0';
             endif;             
         }    
+               
+        public function find_array_section($id){
+            $entite = $this->json_get_my_entite($id);
+            $array = array();
+            if($entite != '0'):
+                $obj = $this->Assoentiteutilisateur->find('all', array('conditions' => array('Assoentiteutilisateur.entite_id IN ('.$entite.')','Utilisateur.section_id IS NOT NULL'),'order'=>array('Utilisateur.section_id'=>'asc'),'group'=>'Utilisateur.section_id','recursive'=>0));
+                if(count($obj) > 0):
+                    foreach ($obj as $result):
+                        $array[] = $result['Utilisateur']['section_id'];
+                    endforeach;
+                endif;     
+            endif;  
+            return $array;
+        }   
         
         public function find_all_section($id){
             $entite = $this->json_get_my_entite($id);   
@@ -189,7 +207,7 @@ class AssoentiteutilisateursController extends AppController {
             $entite = $this->json_get_my_entite($id);   
             if($entite != '0'):
                 $list = '';
-                $obj = $this->Assoentiteutilisateur->find('all', array('conditions' => array('Assoentiteutilisateur.entite_id IN ('.$entite.')','Utilisateur.profil_id > 0','Utilisateur.ACTIF'=>1),'order'=>array('Assoentiteutilisateur.utilisateur_id'=>'asc'),'group'=>'Assoentiteutilisateur.utilisateur_id','recursive'=>0));
+                $obj = $this->Assoentiteutilisateur->find('all', array('conditions' => array('Assoentiteutilisateur.entite_id IN ('.$entite.')','Utilisateur.profil_id != -1','Utilisateur.ACTIF'=>1),'order'=>array('Assoentiteutilisateur.utilisateur_id'=>'asc'),'group'=>'Assoentiteutilisateur.utilisateur_id','recursive'=>0));
                 $results = isset($obj) ? $obj : 'null';
                 if($results!='null'):
                     foreach ($results as $result):
@@ -204,13 +222,27 @@ class AssoentiteutilisateursController extends AppController {
             endif;  
         }
         
+        public function json_get_all_users_actif_nogenerique_for_entite($id){
+            $list = '';
+            $obj = $this->Assoentiteutilisateur->find('all', array('conditions' => array('Assoentiteutilisateur.entite_id'=>$id,'Utilisateur.profil_id != -1','Utilisateur.ACTIF'=>1),'order'=>array('Assoentiteutilisateur.utilisateur_id'=>'asc'),'group'=>'Assoentiteutilisateur.utilisateur_id','recursive'=>0));
+            $results = isset($obj) ? $obj : 'null';
+            if($results!='null'):
+                foreach ($results as $result):
+                    $list .= $result['Assoentiteutilisateur']['utilisateur_id'].',';
+                endforeach;
+                return substr_replace($list ,"",-1);
+            else:
+                return '0';
+            endif;     
+        }
+        
         public function json_get_all_users_nogenerique($id,$section=null){
             $entite = $this->json_get_my_entite($id); 
             if($entite != '0'):
                 $list = '';
-                $condition=array('Assoentiteutilisateur.entite_id IN ('.$entite.')','Utilisateur.profil_id > 0');
-                $obj = $this->Assoentiteutilisateur->find('all', array('conditions' => $condition ,'order'=>array('Assoentiteutilisateur.utilisateur_id'=>'asc'),'group'=>'Assoentiteutilisateur.utilisateur_id','recursive'=>0));
-                $results = isset($obj) ? $obj : 'null';
+                $condition=array('Assoentiteutilisateur.entite_id IN ('.$entite.')','OR'=>array('Utilisateur.profil_id > 0','Utilisateur.profil_id'=>-2));
+                $obj = $this->Assoentiteutilisateur->find('all', array('conditions' => $condition ,'order'=>array('Assoentiteutilisateur.utilisateur_id'=>'asc'),'group'=>'Assoentiteutilisateur.utilisateur_id','recursive'=>-1));
+                $results = count($obj)>0 ? $obj : 'null';
                 if($results!='null'):              
                     foreach ($results as $result):
                         if($section != null && in_array($result['Utilisateur']['societe_id'],$section)):
@@ -228,10 +260,45 @@ class AssoentiteutilisateursController extends AppController {
             endif;  
         }   
         
+        public function json_get_all_users_and_generique($id,$section=null){
+            $entite = $this->json_get_my_entite($id); 
+            if($entite != '0'):
+                $list = '';
+                $condition=array('Assoentiteutilisateur.entite_id IN ('.$entite.')','Utilisateur.ACTIF'=>1);
+                $obj = $this->Assoentiteutilisateur->find('all', array('conditions' => $condition ,'order'=>array('Assoentiteutilisateur.utilisateur_id'=>'asc'),'group'=>'Assoentiteutilisateur.utilisateur_id','recursive'=>-1));
+                $results = count($obj)>0 ? $obj : 'null';
+                if($results!='null'):              
+                    foreach ($results as $result):
+                        if($section != null && in_array($result['Utilisateur']['societe_id'],$section)):
+                            $list .= $result['Utilisateur']['id'].',';
+                        elseif($section == null):
+                            $list .= $result['Assoentiteutilisateur']['utilisateur_id'].',';
+                        endif;
+                    endforeach;
+                    return substr_replace($list ,"",-1);
+                else:
+                    return '0';
+                endif;     
+            else:
+                return '0';
+            endif;  
+        }  
+        
         public function get_all_utilisateur_for_societe($list){
             $list = implode(',',$list); 
             $listusers = $this->json_get_all_users_nogenerique(userAuth('id'),$list); 
-            $users =  $this->Assoentiteutilisateur->Utilisateur->find('all', array('conditions' => array('Utilisateur.id IN ('.$listusers.')','Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>0));            
+            $users =  $this->Assoentiteutilisateur->Utilisateur->find('all', array('conditions' => array('Utilisateur.id IN ('.$listusers.')','Utilisateur.profil_id > 0'),'order'=>array('Utilisateur.NOMLONG'=>'asc'),'recursive'=>-1));            
             return $users;            
+        }
+        
+        public function get_list_utilisateur($userid){
+            $entite = $this->json_get_my_entite($userid);
+            $strusers = $this->json_get_all_users_entite($entite);
+            $strusers = $strusers!='' ? $strusers : '0';
+            $fields = array('Utilisateur.id','Utilisateur.NOMLONG');
+            $conditions = array('Utilisateur.id IN ('.$strusers.')');
+            $order = array('Utilisateur.NOMLONG'=>'asc');
+            $users = $this->Assoentiteutilisateur->Utilisateur->find('list',  array('fields'=>$fields,'conditions'=>$conditions,'order'=>$order,'recursive'=>0));
+            return count($users) > 0 ? $users : array();
         }
 }

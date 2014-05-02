@@ -130,15 +130,20 @@ class Materielinformatique extends AppModel {
                     $results[$key]['Materielinformatique']['modified'] = $this->dateFormatAfterFind($val['Materielinformatique']['modified']);
                 }   
                 if (isset($val['Materielinformatique']['id'])) {
-                    $results[$key]['Materielinformatique']['utilisateur_NOMLONG'] = $this->getUtilisateurFromMateriel($val['Materielinformatique']['id']);
+                    $resultat = $this->getUtilisateurFromMateriel($val['Materielinformatique']['id']);
+                    $results[$key]['Materielinformatique']['utilisateur_NOMLONG'] = $resultat['NOMLONG'];
+                    $results[$key]['Materielinformatique']['utilisateur_id'] = $resultat['id'];
                 }                   
             }
             return $results;
         } 
         
         public function getUtilisateurFromMateriel($id){
-            $sql = "SELECT CONCAT( NOM, ' ', PRENOM ) AS NOMLONG FROM utilisateurs WHERE utilisateurs.id IN (SELECT dotations.utilisateur_id FROM dotations WHERE dotations.materielinformatiques_id =".$id.")";
+            $resultat = array();
+            $sql = "SELECT utilisateurs.id,CONCAT( NOM, ' ', PRENOM ) AS NOMLONG FROM utilisateurs WHERE utilisateurs.id IN (SELECT dotations.utilisateur_id FROM dotations WHERE dotations.materielinformatiques_id =".$id.")";
             $result = $this->query($sql);
-            return !empty($result) ? $result[0][0]['NOMLONG'] : "";            
+            $resultat['id']=!empty($result) ? $result[0]['utilisateurs']['id'] : "";
+            $resultat['NOMLONG']=!empty($result) ? $result[0][0]['NOMLONG'] : "";
+            return $resultat;            
         }
 }

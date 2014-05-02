@@ -507,17 +507,21 @@ class Utilisateur extends AppModel {
                 }                 
                 if (isset($val['Utilisateur']['societe_id'])) {
                     $results[$key]['Utilisateur']['societe_NOM'] = $this->getSocieteForUser($val['Utilisateur']['societe_id']);
-                }     
-                if (isset($val['Utilisateur']['FINMISSION']) && ($val['Utilisateur']['FINMISSION']!=null || $val['Utilisateur']['FINMISSION']!= '0000-00-00') && isset($val['Utilisateur']['ACTIF'])) {
-                    if(isset($val['Utilisateur']['id']) && isset($val['Utilisateur']['FINMISSION'])):
-                        $this->autoend($val['Utilisateur']['id'],$val['Utilisateur']['FINMISSION'],$val['Utilisateur']['ACTIF']);
-                    endif;
                 } 
+                /*
+                 * TODO faire ces mise à jour par batch une fois dans la journée
+                if (isset($val['Utilisateur']['FINMISSION']) && ($val['Utilisateur']['FINMISSION']!=null || $val['Utilisateur']['FINMISSION']!= '0000-00-00') && $val['Utilisateur']['FINMISSION'] < date('d/m/Y') && isset($val['Utilisateur']['ACTIF'])) {
+                    if(isset($val['Utilisateur']['id']) && isset($val['Utilisateur']['FINMISSION'])):
+                        //$this->autoend($val['Utilisateur']['id'],$val['Utilisateur']['FINMISSION'],$val['Utilisateur']['ACTIF']);
+                    endif;
+                 } 
                 if (isset($val['Utilisateur']['ACTIF']) && ($val['Utilisateur']['ACTIF']!=null || $val['Utilisateur']['ACTIF']== 0)) {
                     if(isset($val['Utilisateur']['id']) && isset($val['Utilisateur']['FINMISSION'])):
-                        $this->purge($val['Utilisateur']['id'],$val['Utilisateur']['FINMISSION'],$val['Utilisateur']['ACTIF']);
+                        //$this->purge($val['Utilisateur']['id'],$val['Utilisateur']['FINMISSION'],$val['Utilisateur']['ACTIF']);
                     endif;
-                }                 
+                }    
+                 * 
+                 */             
             }
             return $results;
         }   

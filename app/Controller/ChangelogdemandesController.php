@@ -1,11 +1,15 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('CakeEmail', 'Network/Email');
+App::import('Controller', 'Changelogversions');
+App::import('Controller', 'Changelogreponses');
+App::import('Controller', 'Parameters');
 /**
  * Changelogdemandes Controller
  *
  * @property Changelogdemande $Changelogdemande
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class ChangelogdemandesController extends AppController {
 
@@ -17,13 +21,24 @@ class ChangelogdemandesController extends AppController {
         public $paginate = array('limit' => 25,'order'=>array('Changelogversion.VERSION'=>'asc','Changelogdemande.id'=>'desc'));
 	public $components = array('History','Common');
 
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Demandes de changement" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }             
+        
 /**
  * index method
  *
  * @return void
  */
 	public function index($changelog=null,$all=null,$criticite=null,$etat=null,$type=null,$version_id=null) {
-            $this->set('title_for_layout','Liste des changements demandés');
+            'Liste '.strtolower($this->set_title());
             switch($changelog):
                 case '1';
                     $conditions[]="Changelogdemande.OPEN=0";
@@ -37,7 +52,7 @@ class ChangelogdemandesController extends AppController {
                     break;
                 case null:
                 default:
-                    if (userAuth('profil_id')>1) :
+                    if ((int)userAuth('profil_id')!= 1) :
                         $conditions[]="Changelogdemande.utilisateur_id=".userAuth('id');
                     endif;   
                     $conditions[]= (isset($all) && $all=='1') || $all==null ? "Changelogdemande.OPEN=1" : "Changelogversion.ETAT=0";
@@ -85,13 +100,14 @@ class ChangelogdemandesController extends AppController {
 		if($changelog==1):
                     $this->paginate = array('limit'=>$this->Changelogdemande->find('count'),'conditions'=>$conditions);
                 endif;
+                $ObjChangelogversions = new ChangelogversionsController();		
                 $this->set('changelogdemandes', $this->paginate());
                 $this->set('datereelle', $this->paginate());
                 $changelogetats = Configure::read('changelogEtatDemande');  
                 $changelogtypes = Configure::read('changelogType');  
                 $changelogcriticites = Configure::read('changelogCriticite'); 
-                $versions = $this->Changelogdemande->requestAction('changelogversions/get_all_open');
-                $nextversion = $this->Changelogdemande->requestAction('changelogversions/getnextversion');
+                $versions = $ObjChangelogversions->get_all_open();
+                $nextversion = $ObjChangelogversions->getnextversion();
 		$this->set(compact('changelogetats','changelogtypes','changelogcriticites','nextversion','versions')); 
                 $export = $this->Changelogdemande->find('all',array('conditions'=>$conditions,'order'=>array('Changelogversion.VERSION'=>'asc','Changelogdemande.id'=>'desc'),'recursive'=>0));
                 $this->Session->delete('xls_export');
@@ -99,10 +115,11 @@ class ChangelogdemandesController extends AppController {
 	}
         
         public function changelog($id=null){
-            $id = $id==null ? $this->requestAction('changelogversions/get_last') : $id;
+            $ObjChangelogversions = new ChangelogversionsController();
+            $id = $id==null ? $ObjChangelogversions->get_last() : $id;
             $id = is_array($id) ? $id['Changelogversion']['id'] : $id;
             $this->index('1','0','tous','tous','tous',$id);
-            $versions = $this->requestAction('changelogversions/get_all_close');
+            $versions = $ObjChangelogversions->get_all_close();
             $this->set(compact('versions'));
         }
         
@@ -131,7 +148,7 @@ class ChangelogdemandesController extends AppController {
  * @return void
  */
 	public function add() {
-            $this->set('title_for_layout','Demande de changement dans SAILL');
+            $this->set_title().' dans SAILL';
 		if ($this->request->is('post')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Changelogdemande->validate = array();
@@ -164,7 +181,7 @@ class ChangelogdemandesController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','Mise à jour de votre demande de changement dans SAILL');
+            $this->set_title();
 		if (!$this->Changelogdemande->exists($id)) {
 			throw new NotFoundException(__('Invalid changelogdemande'));
 		}
@@ -189,7 +206,8 @@ class ChangelogdemandesController extends AppController {
 		}
 		$changelogversions = $this->Changelogdemande->Changelogversion->find('list');
 		$utilisateurs = $this->Changelogdemande->Utilisateur->find('list');
-                $changelogreponses = $this->requestAction('changelogreponses/get_all_reponses/'.$id);
+                $ObjChangelogreponses = new ChangelogreponsesController();
+                $changelogreponses = $ObjChangelogreponses->get_all_reponses($id);
 		$this->set(compact('changelogversions', 'utilisateurs','changelogreponses'));
 	}
 
@@ -226,7 +244,8 @@ class ChangelogdemandesController extends AppController {
                         if ($id==null):
                             $this->Session->setFlash(__('Modification de l\'état de la demande prise en compte',true),'flash_success');
                             $demande = $this->get_info($newid);
-                            if($etat == 4): $this->requestAction('changelogreponses/sendmail',array('pass'=>array($demande))); endif;
+                            $ObjChangelogreponses = new ChangelogreponsesController();
+                            if($etat == 4): $ObjChangelogreponses->sendmail($demande); endif;
                         else:
                             $result = true;
                         endif;
@@ -250,23 +269,24 @@ class ChangelogdemandesController extends AppController {
         }
         
         public function sendmail($obj){
-            $valideurs = $this->requestAction('parameters/get_developpeur');
+            $ObjParameters = new ParametersController();
+            $valideurs = $ObjParameters->get_developpeur();
             $to = explode(';', $valideurs['Parameter']['param']);
-            $from = userAuth('MAIL');
+            $from = Configure::read('mailapp');
             $objet = 'SAILL : Ajout de la demande de changement n°'.' [C-'.  strYear($obj['Changelogdemande']['created']).'-'.$obj['Changelogdemande']['id'].']';
             $message = "Merci de traiter la demande suivante: ".
                     '<ul>
                     <li>Demande :'.$obj['Changelogdemande']['DEMANDE'].'</li>     
                     </ul>';
-            if(count($to) > 0):
+            if(count($to) > 0 && $to[0] != ''):
                 try{
                 $email = new CakeEmail();
                 $email->config('smtp')
-                        ->emailFormat('html')
-                        ->from($from)
-                        ->to($to)
-                        ->subject($objet)
-                        ->send($message);
+                      ->emailFormat('html')
+                      ->from($from)
+                      ->to($to)
+                      ->subject($objet)
+                      ->send($message);
                 }
                 catch(Exception $e){
                     $this->Session->setFlash(__('Erreur lors de l\'envois du mail - '.translateMailException($e->getMessage()),true),'flash_warning');

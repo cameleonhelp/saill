@@ -184,7 +184,9 @@
 		<td><?php echo h($plancharge['Plancharge']['NOM']); ?>&nbsp;</td>
 		<td style='text-align:right;' class="etprow"><?php echo h($plancharge['Plancharge']['ETP']); ?>&nbsp;</td>
 		<td style='text-align:right;' class="chargerow"><?php echo h($plancharge['Plancharge']['CHARGES']); ?>&nbsp;j</td>
-		<td style='text-align:right;'><?php echo h($plancharge['Plancharge']['TJM']); ?>&nbsp;€/j</td>
+                <!--<td style='text-align:right;'><?php echo $plancharge['Plancharge']['TJM']; ?>&nbsp;€/j</td>//-->
+                <?php $urlpost = $this->Html->url(array('controller'=>'plancharges','action'=>"ajax_update")); ?>
+                <td style='text-align:right;'><?php echo $this->Html->link($plancharge['Plancharge']['TJM'],"#",array('class'=>'editable','id'=>"TJM",'data-type'=>"text",'data-pk'=>$plancharge['Plancharge']['id'],'data-title'=>"Sasir le nouveau TJM",'data-url'=>$urlpost)); ?>&nbsp;€/j</td>
 		<td style='text-align:right;'><?php echo h($plancharge['Plancharge']['VERSION']); ?>&nbsp;</td>               
 		<td style="text-align:center;" nowrap><?php $image = (isset($plancharge['Plancharge']['VISIBLE']) && $plancharge['Plancharge']['VISIBLE']==true) ? 'ok_2 notchange' : 'ok_2 disabled notchange' ; ?>
                     <a href="#" class="isvisible cursor" idplancharge="<?php echo $plancharge['Plancharge']['id']; ?>" ><span class="glyphicons <?php echo $image; ?>" rel="tooltip" data-title="Plan de charge visible ou non"></span></a></td>               
@@ -250,9 +252,12 @@
         return tot+" j";
      }     
 $(document).ready(function () {
-        $("#totaletp").html(sumOfETP());
-        $("#totalcharges").html(sumOfCharges());
+    $("#totaletp").html(sumOfETP());
+    $("#totalcharges").html(sumOfCharges());
         
+    $.fn.editable.defaults.mode = 'popup'; //popup ou inline
+    $('.editable').editable();
+    
     $(document).on('click','.isvisible',function(e){
         var id = $(this).attr('idplancharge');
         $.ajax({
@@ -297,7 +302,7 @@ $(document).ready(function () {
                 $('#newpcModal').modal('show');
             },
             error :function(response,status,errorThrown) {
-                alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
             }
          });
     });  

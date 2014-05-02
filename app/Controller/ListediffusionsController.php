@@ -1,9 +1,11 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
 /**
  * Listediffusions Controller
  *
  * @property Listediffusion $Listediffusion
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class ListediffusionsController extends AppController {
         public $components = array('History','Common');
@@ -14,11 +16,23 @@ class ListediffusionsController extends AppController {
             'Post.title' => 'asc' /*/
         );
             
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Liste de diffusion" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }              
+        
         public function get_visibility(){
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/json_get_all_users/'. userAuth('id'));  
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return $ObjAssoentiteutilisateurs->json_get_all_users(userAuth('id'));  
             endif;
         }
         
@@ -56,7 +70,7 @@ class ListediffusionsController extends AppController {
  * @return void
  */
 	public function index() {
-            $this->set('title_for_layout','Listes de diffusion');
+            $this->set_title();
             if (isAuthorized('listediffusions', 'index')) :
                 $listusers = $this->get_visibility();
                 $newcondition = $this->get_restriction($listusers);
@@ -65,7 +79,7 @@ class ListediffusionsController extends AppController {
                 $this->get_export($newcondition['condition']);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -75,7 +89,7 @@ class ListediffusionsController extends AppController {
  * @return void
  */
 	public function add() {
-            $this->set('title_for_layout','Listes de diffusion');
+            $this->set_title();
             if (isAuthorized('listediffusions', 'add')) :
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
@@ -96,7 +110,7 @@ class ListediffusionsController extends AppController {
                 $this->set('utilisateurs',$utilisateurs);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -108,7 +122,7 @@ class ListediffusionsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','Listes de diffusion');
+            $this->set_title();
             if (isAuthorized('listediffusions', 'edit')) :
                 if (!$this->Listediffusion->exists($id)) {
 			throw new NotFoundException(__('Liste de diffusion incorrecte'));
@@ -134,7 +148,7 @@ class ListediffusionsController extends AppController {
 		}            
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -147,7 +161,7 @@ class ListediffusionsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-            $this->set('title_for_layout','Listes de diffusion');
+            $this->set_title();
             if (isAuthorized('listediffusions', 'delete')) :
                 $this->Listediffusion->id = $id;
 		if (!$this->Listediffusion->exists()) {
@@ -162,7 +176,7 @@ class ListediffusionsController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -172,7 +186,7 @@ class ListediffusionsController extends AppController {
  * @return void
  */
 	public function search($keywords=null) {
-            $this->set('title_for_layout','Listes de diffusion');
+            $this->set_title();
             if (isAuthorized('listediffusions', 'index')) :               
                 if(isset($this->params->data['Assistance']['SEARCH'])):
                     $keywords = $this->params->data['Assistance']['SEARCH'];
@@ -198,7 +212,7 @@ class ListediffusionsController extends AppController {
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }  
         

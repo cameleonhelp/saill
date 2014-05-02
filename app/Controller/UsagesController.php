@@ -1,10 +1,13 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Entites');
 /**
  * Usages Controller
  *
  * @property Usage $Usage
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class UsagesController extends AppController {
 /**
@@ -19,7 +22,8 @@ class UsagesController extends AppController {
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return $ObjAssoentiteutilisateurs->json_get_my_entite(userAuth('id'));
             endif;
         }
         
@@ -65,7 +69,9 @@ class UsagesController extends AppController {
                     break;
                 default:
                     $result['condition']='Usage.entite_id ='.$id;
-                    $nom = $this->requestAction('entites/get_entite_nom/'.$id);
+                    $ObjEntites = new EntitesController();	
+                    $ObjEntites = new EntitesController();	
+                    $nom = $ObjEntites->get_entite_nom($id);
                     $result['filter'] = 'ayant pour entité '.$nom;
             endswitch;
             return $result;
@@ -85,11 +91,12 @@ class UsagesController extends AppController {
                 $newcondition = array($restriction,$getactif['condition'],$getentite['condition']);
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newcondition,'recursive'=>0));   
 		$this->set('usages', $this->paginate());
-                $cercles = $this->requestAction('entites/get_all');
+                $ObjEntites = new EntitesController();	
+                $cercles = $ObjEntites->get_all();
                 $this->set(compact('cercles'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -115,11 +122,12 @@ class UsagesController extends AppController {
 			}
                     endif;
 		endif;
-                $cercles = $this->requestAction('entites/find_list_cercle');
+                $ObjEntites = new EntitesController();	
+                $cercles = $ObjEntites->find_list_cercle();
                 $this->set(compact('cercles'));   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -150,12 +158,13 @@ class UsagesController extends AppController {
 		} else {
                     $options = array('conditions' => array('Usage.' . $this->Usage->primaryKey => $id));
                     $this->request->data = $this->Usage->find('first', $options);
-                    $cercles = $this->requestAction('entites/find_list_cercle');
+                    $ObjEntites = new EntitesController();	
+                    $cercles = $ObjEntites->find_list_cercle();
                     $this->set(compact('cercles'));                       
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -180,7 +189,7 @@ class UsagesController extends AppController {
 		$this->History->notmove();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
         
@@ -221,15 +230,16 @@ class UsagesController extends AppController {
                     endforeach;
                     $conditions = array($newcondition,'OR'=>$ornewconditions);
                     $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));                 
-                    $this->set('usages', $this->paginate());    
-                    $cercles = $this->requestAction('entites/get_all');
+                    $this->set('usages', $this->paginate()); 
+                    $ObjEntites = new EntitesController();	
+                    $cercles = $ObjEntites->get_all();
                     $this->set(compact('cercles'));                    
                 else:
                     $this->redirect(array('action'=>'index',$actif,$entite));
                 endif;                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;  
         }
         

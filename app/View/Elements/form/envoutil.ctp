@@ -123,7 +123,7 @@ $(document).ready(function () {
             },
             error :function(response, status,errorThrown) {
                 overlay.hide();
-                alert("Erreur! il se peut que votre session soit expirée\n\rActualiser la page et recommencer.");
+                alert("Erreur! Impossible de mettre à jour les informations\n\rActualiser la page et recommencer.");
             }
          });
          overlay.hide();         

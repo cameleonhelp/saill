@@ -66,11 +66,12 @@
     <tbody>
     <?php if ($this->params->action=='edit') : ?>
     <?php $i=0; $j=0;?>
-    <?php foreach($activitesreelles as $activitesreelle): ?>          
+    <?php foreach($activitesreelles as $activitesreelle): ?>           
     <tr>
         <td style="vertical-align: top !important;padding-top:5px !important;">
             <div class="col-md-12 form-horizontal">
-            <select name="data[Activitesreelle][<?php echo $i; ?>][activite_id]" class="form-control" data-rule-required="true" data-msg-required="Le nom de l'activité est obligatoire" id="Activitesreelle<?php echo $i; ?>ActiviteId"> 
+            <?php $tooltip = $this->params->action=='edit' ? " rel='tooltip' data-trigger='hover' data-placement='auto' title='".$activitesreelle['Activite']['NOM']."'" : ""; ?>
+                <select name="data[Activitesreelle][<?php echo $i; ?>][activite_id]" class="form-control" data-rule-required="true" <?php echo $tooltip; ?> data-msg-required="Le nom de l'activité est obligatoire" id="Activitesreelle<?php echo $i; ?>ActiviteId"> 
                 <option value="">Choisir une activité</option>
                 <?php foreach ($activites as $activite) : ?>
                 <?php $selected = ''; ?>
@@ -84,7 +85,7 @@
             <div class="col-md-12">
             <?php if ($this->params->action == 'edit') { ?>
                 <?php $selected = isset($activitesreelle['Activitesreelle']['domaine_id']) ? $activitesreelle['Activitesreelle']['domaine_id'] : ''; ?>
-                <?php echo $this->Form->select('Activitesreelle.'.$i.'.domaine_id',$domaines,array('class'=>'form-control','default' => $selected,'empty' => 'Choisir un domaine')); ?>
+                <?php echo $this->Form->select('Activitesreelle.'.$i.'.domaine_id',$domaines,array('class'=>'form-control','default' => $selected,'empty' => 'Choisir un domaine','rel'=>"tooltip",'data-trigger'=>"hover",'data-placement'=>"auto",'title'=>$activitesreelle['Domaine']['NOM'])); ?>
             <?php } else { ?>
                 <?php echo $this->Form->select('Activitesreelle.'.$i.'.domaine_id',$domaines,array('class'=>'form-control','empty' => 'Choisir un domaine')); ?>
             <?php } ?>  
@@ -248,7 +249,7 @@
             <div class="form-horizontal"><div class="form-inline"><?php echo $this->Form->input('Activitesreelle.¤.TOTAL',array('type'=>'hidden','class'=>'totalhidden','value'=>'0.0')); ?><?php echo $this->Form->input('Activitesreelle.¤.TotalDisabled',array('style'=>"width:45px",'class'=>'form-control text-right total','for'=>'Activitesreelle¤TOTAL','disabled'=>'disabled','value'=>"0.0")); ?><div class="nomargin nopadding pull-right"> j</div></div></td>        
         <td width='15px' style="text-align: center;">
             <div class="form-horizontal"><div class="form-inline">
-                <?php echo $this->Form->input('Activitesreelle.¤.FRAIS',array('style'=>"width:45px",'class'=>'form-control text-right frais','for'=>'Activitesreelle¤FRAIS','value'=>'0.00')); ?><div class="nomargin nopadding pull-right"> €</div></div>
+                <?php echo $this->Form->input('Activitesreelle.¤.FRAIS',array('style'=>"width:45px",'class'=>'form-control text-right frais','for'=>'Activitesreelle¤FRAIS','value'=>'0.00','type'=>'text')); ?><div class="nomargin nopadding pull-right"> €</div></div>
         </td>            
             <td style="vertical-align: top !important;padding-top:5px !important;">    
             <span class="glyphicons minus cursor" id="deleteRow"></span>
@@ -402,7 +403,7 @@ $(document).ready(function () {
                 url: "<?php echo $this->Html->url(array('controller'=>'activitesreelles','action'=>'deleteall')); ?>/",
                 data: ({all_ids:id})
             }).done(function ( data ) {
-                location.href='<?php echo goPrev(); ?>'
+                location.reload();
             });
         }
     });    

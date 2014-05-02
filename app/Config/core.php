@@ -185,7 +185,7 @@
  *
  */
         Configure::write('Session', array(
-            'defaults' => 'cake',
+            'defaults' => 'cache',
             'timeout'=>'30', //30minutes
             'autoRegenerate' => true
         ));

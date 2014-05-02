@@ -1,10 +1,25 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Applications');
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Types');
+App::import('Controller', 'Parimeters');
+App::import('Controller', 'Perimetres');
+App::import('Controller', 'Etats');
+App::import('Controller', 'Composants');
+App::import('Controller', 'Lots');
+App::import('Controller', 'Phases');
+App::import('Controller', 'Volumetries');
+App::import('Controller', 'Puissances');
+App::import('Controller', 'Architectures');
+App::import('Controller', 'Historyexpbs');
+App::import('Controller', 'Dsitenvs');
 /**
  * Expressionbesoins Controller
  *
  * @property Expressionbesoin $Expressionbesoin
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class ExpressionbesoinsController extends AppController {
 
@@ -20,7 +35,8 @@ class ExpressionbesoinsController extends AppController {
             if(userAuth('profil_id')==1):
                 return null;
             else:
-                return $this->requestAction('assoentiteutilisateurs/json_get_my_entite/'.userAuth('id'));
+                $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+                return $ObjAssoentiteutilisateurs->json_get_my_entite(userAuth('id'));
             endif;
         }
         
@@ -39,7 +55,8 @@ class ExpressionbesoinsController extends AppController {
             switch($application):
                 case null:
                 case 'tous':
-                    $listapp = $this->requestAction('applications/get_str_list');
+                    $ObjApplications = new ApplicationsController();
+                    $listapp = $ObjApplications->get_str_list();
                     $result['condition']="Expressionbesoin.application_id IN (".$listapp.")";
                     $result['filter'] = ', pour toutes les applications';
                     break;
@@ -135,14 +152,18 @@ class ExpressionbesoinsController extends AppController {
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));                
 		$this->set('expressionbesoins', $this->paginate());
                 $this->get_export($newconditions);
-                $applications = $this->requestAction('applications/get_list/1');
-                $types = $this->requestAction('types/get_list/1');
-                $perimetres = $this->requestAction('perimetres/get_list/1');
-                $etats = $this->requestAction('etats/get_list/1');
+                $ObjApplications = new ApplicationsController();
+                $ObjTypes = new TypesController();
+                $ObjPerimetres = new PerimetresController();
+                $ObjEtats = new EtatsController();
+                $applications = $ObjApplications->get_list(1);
+                $types = $ObjTypes->get_list(1);
+                $perimetres = $ObjPerimetres->get_list(1);
+                $etats = $ObjEtats->get_list(1);
 		$this->set(compact('strfilter','applications','types','perimetres','etats'));    
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}
 
@@ -173,21 +194,31 @@ class ExpressionbesoinsController extends AppController {
 			}
                     endif;
 		}
-                $applications = $this->requestAction('applications/get_select/1');
-                $types = $this->requestAction('types/get_select/1');
-                $perimetres = $this->requestAction('perimetres/get_select/1');
-                $etats = $this->requestAction('etats/get_select/1');                
-		$composants = $this->requestAction('composants/get_select/1'); 
-		$lots = $this->requestAction('lots/get_select/1'); 
-		$phases = $this->requestAction('phases/get_select/1'); 
-		$volumetries = $this->requestAction('volumetries/get_select/1'); 
-		$puissances = $this->requestAction('puissances/get_select/1'); 
-		$architectures = $this->requestAction('architectures/get_select/1'); 
+                $ObjApplications = new ApplicationsController();
+                $ObjTypes = new TypesController();
+                $ObjPerimetres = new PerimetresController();
+                $ObjEtats = new EtatsController();
+                $ObjComposants = new ComposantsController();
+                $ObjLots = new LotsController();
+                $ObjPhases = new PhasesController();	
+                $ObjVolumetries = new VolumetriesController();
+                $ObjPuissances = new PuissancesController();	
+                $ObjArchitectures = new ArchitecturesController();
+                $applications = $ObjApplications->get_select(1);
+                $types = $ObjTypes->get_select(1);
+                $perimetres = $ObjPerimetres->get_select(1);
+                $etats = $ObjEtats->get_select(1);                
+		$composants = $ObjComposants->get_select(1); 
+		$lots = $ObjLots->get_select(1); 
+		$phases = $ObjPhases->get_select(1); 
+		$volumetries = $ObjVolumetries->get_select(1); 
+		$puissances = $ObjPuissances->get_select(1); 
+		$architectures = $ObjArchitectures->get_select(1); 
                 $dsitenvs = array();
 		$this->set(compact('applications', 'composants', 'perimetres', 'lots', 'etats', 'types', 'phases', 'volumetries', 'puissances', 'architectures','dsitenvs'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
 
@@ -221,22 +252,34 @@ class ExpressionbesoinsController extends AppController {
 			$options = array('conditions' => array('Expressionbesoin.' . $this->Expressionbesoin->primaryKey => $id));
 			$this->request->data = $this->Expressionbesoin->find('first', $options);
 		}
-                $applications = $this->requestAction('applications/get_select/1');
-                $types = $this->requestAction('types/get_select/1');
-                $perimetres = $this->requestAction('perimetres/get_select/1');
-                $etats = $this->requestAction('etats/get_select/1');                
-		$composants = $this->requestAction('composants/get_select/1'); 
-		$lots = $this->requestAction('lots/get_select/1'); 
-		$phases = $this->requestAction('phases/get_select/1'); 
-		$volumetries = $this->requestAction('volumetries/get_select/1'); 
-		$puissances = $this->requestAction('puissances/get_select/1'); 
-		$architectures = $this->requestAction('architectures/get_select/1'); 
-                $histories = $this->requestAction('historyexpbs/get_list/'.$id);
-                $dsitenvs = $this->requestAction('dsitenvs/get_select_for_application/'.$this->request->data['Expressionbesoin']['application_id']);
+                $ObjApplications = new ApplicationsController();
+                $ObjTypes = new TypesController();
+                $ObjPerimetres = new PerimetresController();
+                $ObjEtats = new EtatsController();
+                $ObjComposants = new ComposantsController();
+                $ObjLots = new LotsController();
+                $ObjPhases = new PhasesController();
+                $ObjVolumetries = new VolumetriesController();
+                $ObjPuissances = new PuissancesController();	
+                $ObjArchitectures = new ArchitecturesController();
+                $ObjHistoryexpbs = new HistoryexpbsController();
+                $ObjDsitenvs = new DsitenvsController();
+                $applications = $ObjApplications->get_select(1);
+                $types = $ObjTypes->get_select(1);
+                $perimetres = $ObjPerimetres->get_select(1);
+                $etats = $ObjEtats->get_select(1);                
+		$composants = $ObjComposants->get_select(1); 
+		$lots = $ObjLots->get_select(1); 
+		$phases = $ObjPhases->get_select(1); 
+		$volumetries = $ObjVolumetries->get_select(1); 
+		$puissances = $ObjPuissances->get_select(1); 
+		$architectures = $ObjArchitectures->get_select(1);  
+                $histories = $ObjHistoryexpbs->get_list($id);
+                $dsitenvs = $ObjDsitenvs->get_select_for_application($this->request->data['Expressionbesoin']['application_id']);
 		$this->set(compact('applications', 'composants', 'perimetres', 'lots', 'etats', 'types', 'phases', 'volumetries', 'puissances', 'architectures','histories','dsitenvs'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
 
@@ -294,7 +337,7 @@ class ExpressionbesoinsController extends AppController {
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
         
@@ -327,6 +370,7 @@ class ExpressionbesoinsController extends AppController {
         } 
         
         public function deleteall($id){
+            $this->autoRender = false;
             if($this->request->data('id')!==''):
                 $ids = explode('-', $this->request->data('id'));
                 if(count($ids)>0 && $ids[0]!=""):
@@ -343,6 +387,7 @@ class ExpressionbesoinsController extends AppController {
             else :
                 $this->Session->setFlash(__('Aucune expresion de besoin sélectionnée',true),'flash_failure');
             endif;
+            return $this->request->data('id');        
         }         
         
 /**
@@ -380,16 +425,19 @@ class ExpressionbesoinsController extends AppController {
                 }               
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	} 
         
         public function rapport(){
-            $this->set('title_for_layout','Rapport environnements');
-            if (isAuthorized('expressionbesoins', 'rapports')) :               
-                $etats = $this->requestAction('etats/get_select/1');                
-		$lots = $this->requestAction('lots/get_select/1'); 
-                $perimetres = $this->requestAction('perimetres/get_select/1'); 
+            "Rapport des ".strtolower($this->set_title());
+            if (isAuthorized('expressionbesoins', 'rapports')) :  
+                $ObjPerimetres = new PerimetresController();
+                $ObjEtats = new EtatsController();
+                $ObjLots = new LotsController();
+                $etats = $ObjEtats->get_select(1);                
+		$lots = $ObjLots->get_select(1);  
+                $perimetres = $ObjPerimetres->get_select(1);  
                 $mois = array('01'=>'Janvier','02'=>'Février','03'=>'Mars','04'=>'Avril','05'=>'Mai','06'=>'Juin','07'=>'Juillet','08'=>'Août','09'=>'Septembre','10'=>'Octobre','11'=>'Novembre','12'=>'Décembre');
                 $fiveyearago = date('Y')-5;
                 for($i=0;$i<6;$i++):
@@ -499,7 +547,7 @@ class ExpressionbesoinsController extends AppController {
                 endif;                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
         }
         
@@ -531,17 +579,21 @@ class ExpressionbesoinsController extends AppController {
                     $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$conditions,'recursive'=>0));  
                     $this->set('expressionbesoins', $this->paginate());
                     $this->get_export($newconditions);
-                    $applications = $this->requestAction('applications/get_list/1');
-                    $types = $this->requestAction('types/get_list/1');
-                    $perimetres = $this->requestAction('perimetres/get_list/1');
-                    $etats = $this->requestAction('etats/get_list/1');
+                    $ObjApplications = new ApplicationsController();
+                    $ObjTypes = new TypesController();
+                    $ObjPerimetres = new PerimetresController();
+                    $ObjEtats = new EtatsController();
+                    $applications = $ObjApplications->get_list(1);
+                    $types = $ObjTypes->get_list(1);
+                    $perimetres = $ObjPerimetres->get_list(1);
+                    $etats = $ObjEtats->get_list(1);
                     $this->set(compact('strfilter','applications','types','perimetres','etats')); 
                 else:
                     $this->redirect(array('action'=>'index',$aplication,$etat,$type,$perimetre));
                 endif; 
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;  
         }  
         
@@ -575,7 +627,7 @@ class ExpressionbesoinsController extends AppController {
                 }
             else:
                 $this->Session->setFlash(__('Historisation impossible l\'expression du besoin est incorecte.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;
         }    
         
@@ -605,7 +657,8 @@ class ExpressionbesoinsController extends AppController {
         }   
         
         public function sendmailajout($expb){
-            $valideurs = $this->requestAction('parameters/get_gestionnaireenvironnement');
+            $ObjParameters = new ParametersController();
+            $valideurs = $ObjParameters->get_gestionnaireenvironnement();
             $to = explode(';', $valideurs['Parameter']['param']);
             $from = userAuth('MAIL');
             $objet = 'SAILL : Nouvelle demande d\'environnement ['.$expb['Application']['NOM'].']';

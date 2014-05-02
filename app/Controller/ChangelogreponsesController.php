@@ -1,11 +1,15 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('CakeEmail', 'Network/Email');
+App::import('Controller', 'Changelogdemandes');
+App::import('Controller', 'Changelogversions');
+App::import('Controller', 'Utilisateurs');
 /**
  * Changelogreponses Controller
  *
  * @property Changelogreponse $Changelogreponse
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class ChangelogreponsesController extends AppController {
 
@@ -17,6 +21,17 @@ class ChangelogreponsesController extends AppController {
         public $paginate = array('order'=>array('Changelogreponse.created'=>'asc'));
 	public $components = array('History','Common');
 
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Réponse à votre demande de changement" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }            
+        
 /**
  * index method
  *
@@ -26,7 +41,12 @@ class ChangelogreponsesController extends AppController {
 		$this->Changelogreponse->recursive = 0;
 		$this->set('changelogreponses', $this->paginate());
 	}
-
+        
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_info'));
+            parent::beforeFilter();
+        }  
+        
 /**
  * view method
  *
@@ -42,9 +62,10 @@ class ChangelogreponsesController extends AppController {
                     endif;
 		}                
                 //$id = demande_id
-                $this->set('title_for_layout','Liste des réponses');
+                $this-set_title('Liste des réponses');
                 $changelogreponses = $this->get_all_reponses($id);
-                $changelogdemande = $this->requestAction('changelogdemandes/get_info/'.$id);
+                $ObjChangelogdemandes = new ChangelogdemandesController();	
+                $changelogdemande = $ObjChangelogdemandes->get_info($id);
 		$this->set(compact('changelogreponses','changelogdemande'));
                 $changelogetats = Configure::read('changelogEtatDemande');  
                 $changelogtypes = Configure::read('changelogType');  
@@ -58,7 +79,9 @@ class ChangelogreponsesController extends AppController {
  * @return void
  */
 	public function add($id) {
-            $this->set('title_for_layout','Répondre à une demande');
+            $this->set_title('Répondre à une demande');
+                $ObjChangelogdemandes = new ChangelogdemandesController();
+                $ObjChangelogversions = new ChangelogversionsController();            
 		if ($this->request->is('post')) {
                     if (isset($this->params['data']['cancel'])) :
                         $this->Changelogreponse->validate = array();
@@ -89,7 +112,7 @@ class ChangelogreponsesController extends AppController {
                         if($this->request->data['Changelogreponse']['CRITICITE']!=''):
                             $this->Changelogreponse->Changelogdemande->saveField('changelogversion_id', $this->request->data['Changelogreponse']['version_id']);
                         endif;                            
-                        $demande = $this->requestAction('changelogdemandes/get_info/'.$id);
+                        $demande = $ObjChangelogdemandes->get_info($id);
                         if(in_array($this->request->data['Changelogreponse']['ETAT'],array('0','2','4'))) : $this->sendmail($demande); endif;
                         //return $this->redirect(array('controller'=>'changelogdemandes','action' => 'index',0,1));
                         $this->History->goBack(2);
@@ -99,8 +122,8 @@ class ChangelogreponsesController extends AppController {
                 $changelogtypes = Configure::read('changelogType');  
                 $changelogcriticites = Configure::read('changelogCriticite');  
 		$this->set(compact('changelogetats','changelogtypes','changelogcriticites'));                    
-		$changelogdemande = $this->requestAction('changelogdemandes/get_info/'.$id);
-                $changelogversions = $this->requestAction('changelogversions/get_select_open');
+		$changelogdemande = $ObjChangelogdemandes->get_info($id);
+                $changelogversions = $ObjChangelogversions->get_select_open();
                 $changelogreponses = $this->get_all_reponses($id);
 		$this->set(compact('changelogdemande','changelogversions','changelogreponses'));
 	}
@@ -187,14 +210,15 @@ class ChangelogreponsesController extends AppController {
         
         public function sendmail($obj){
             $reponses = '';
-            $tmpreponses = $this->requestAction('changelogreponses/get_all_reponses/'.$obj['Changelogdemande']['id']);          
+            $tmpreponses = $this->get_all_reponses($obj['Changelogdemande']['id']);          
             foreach($tmpreponses as $tmpreponse):
                 $reponses .= '<li>'.$tmpreponse['Changelogreponse']['created'].' - '.$tmpreponse['Changelogreponse']['REPONSE'].'</li>';
             endforeach;
             $changelogetats = Configure::read('changelogEtatDemande');  
-            $demandeur = $this->requestAction('utilisateurs/get_mail/'.$obj['Changelogdemande']['utilisateur_id']);           
+            $ObjUtilisateurs = new UtilisateursController();
+            $demandeur = $ObjUtilisateurs->get_mail($obj['Changelogdemande']['utilisateur_id']);           
             $to =$demandeur[0];
-            $from = userAuth('MAIL');
+            $from = Configure::read('mailapp');
             $objet = 'SAILL : Réponse à la demande de changement n°'.' [C-'.  strYear($obj['Changelogdemande']['created']).'-'.$obj['Changelogdemande']['id'].']';
             $message = "Voici la réponse à la demande : ".
                     '<ul>

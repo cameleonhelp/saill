@@ -1,17 +1,35 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('CakeEmail', 'Network/Email');
+App::uses('AssoentiteutilisateursController', 'Controller');
+App::uses('SectionsController', 'Controller');
+App::uses('ActivitesreellesController', 'Controller');
+App::uses('UtilisateursController', 'Controller');
+App::uses('FacturationsController', 'Controller');
+App::uses('SocietesController', 'Controller');
 /**
  * Rapports Controller
  *
  * @property Rapport $Rapport
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class RapportsController extends AppController {
 
     public $components = array('History','Common');
     
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Rapport" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }          
+    
     public function logistique(){
-        $this->set('title_for_layout','Etat de la logistique par sections');
+        $this->set_title('Etat de la logistique par sections');
         if (isAuthorized('actions', 'rapports')) :
             if ($this->request->is('post')):
                 $section = $this->request->data;
@@ -35,30 +53,35 @@ class RapportsController extends AppController {
                 $materiels = $this->Rapport->query($sqlMateriel);
                 $this->set('materiels',$materiels);                 
             endif;
-            $visibility = $this->requestAction('assoentiteutilisateurs/find_all_section/'.userAuth('id'));
-            $sections = $this->requestAction('sections/getList/'.$visibility);
+            $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+            $visibility = $ObjAssoentiteutilisateurs->find_all_section(userAuth('id'));
+            $ObjSections = new SectionsController();	
+            $sections = $ObjSections->get_list($visibility);
             $this->set('sections',$sections);                 
         else :
             $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-            throw new NotAuthorizedException();
+            throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
         endif;   
     }
     
     public function etatsaisie(){
-        $this->set('title_for_layout','Etat de la saisie des agents');
+        $this->set_title('Etat de la saisie des agents');
         if (isAuthorized('activitesreelles', 'rapports')) :
+            $ObjActivitereelles = new ActivitesreellesController();	
             if ($this->request->is('post')):
                 $request = $this->request->data;
-                $results = $this->requestAction('activitesreelles/getActivitesReelles/'.$request['Rapport']['mois'].'/'.$request['Rapport']['annee']);  
+                $results = $ObjActivitereelles->getActivitesReelles($request['Rapport']['mois'],$request['Rapport']['annee']);  
                 $this->set('results',$results);
-                $resultvides = $this->requestAction('activitesreelles/saisieVide/'.$request['Rapport']['mois'].'/'.$request['Rapport']['annee']);  
+                $resultvides = $ObjActivitereelles->saisieVide($request['Rapport']['mois'],$request['Rapport']['annee']);  
                 $this->set('resultvides',$resultvides);                
                 $lastMonthDay = endWeek(date('Y-m-t', mktime(0, 0, 0, $request['Rapport']['mois'], '05', $request['Rapport']['annee'])));
                 $firstMonthDay = startWeek($request['Rapport']['annee'].'-'.$request['Rapport']['mois'].'-01'); 
                 $lastday = date('Y-m-t', mktime(0, 0, 0, $request['Rapport']['mois'], '05', $request['Rapport']['annee']));
-                $firstday = date('Y-m-d', mktime(0, 0, 0, $request['Rapport']['mois'], '01', $request['Rapport']['annee']));
-                $nbmax = nbopendays($firstMonthDay,$lastMonthDay);
-                $nbdayopenforthismonth = nbopendays($firstday,$lastday);
+                $firstday = startWeek(date('Y-m-d', mktime(0, 0, 0, $request['Rapport']['mois'], '01', $request['Rapport']['annee'])));
+                $lastweek = endWeek($lastday);
+                $nbmax = date("t",mktime(0, 0, 0, $request['Rapport']['mois'], '01', $request['Rapport']['annee']));//nbopendays($firstMonthDay,$lastMonthDay);
+                $nbdayopenforthismonth = nbopendays($firstday,$lastweek);
+                $this->set(compact('firstday','lastweek'));
                 $this->set('nbmaxopen',$nbmax);
                 $this->set('nbopenday',$nbdayopenforthismonth);
             endif;
@@ -72,14 +95,15 @@ class RapportsController extends AppController {
             $this->set('annee',$annee);
         else :
             $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-            throw new NotAuthorizedException();
+            throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
         endif; 
     }
       
     public function sendmailsaisie($id){
-        $mailto = $this->Rapport->requestAction('utilisateurs/getutilisateurbyid/'.$id);
+        $ObjUtilisateurs = new UtilisateursController();
+        $mailto = $ObjUtilisateurs->getutilisateurbyid($id);
         $to=$mailto['Utilisateur']['MAIL'];
-        $from = userAuth('MAIL');
+        $from = Configure::read('mailapp');
         $objet = 'SAILL : Saisie d\'activité incomplète ou non validée.';
         $message = "Bonjour<br><br>merci de compléter ou de valider votre saisie d'activité du mois dans SAILL.";
         if($to!=''):
@@ -102,14 +126,15 @@ class RapportsController extends AppController {
     }     
     
     public function ss2i(){
-        $this->set('title_for_layout','Facturations des prestataires');
+        $this->set_title('Facturations des prestataires');
         if (isAuthorized('activitesreelles', 'rapports')) :
             if ($this->request->is('post')):
                 /** Calcul du rapport aprés submit **/
                     $societes = $this->request->data['Rapport']['societe'];
                     $start = '01/'.$this->request->data['Rapport']['mois'].'/'.$this->request->data['Rapport']['annee'];
-                    $end = @date('t',$start).'/'.$this->request->data['Rapport']['mois'].'/'.$this->request->data['Rapport']['annee'];            
-                    $rapportresult = $this->requestAction('facturations/forss2i', array('pass'=>array('societes'=>$societes,'start'=>CUSDate($start),'end'=>CUSDate($end),'indisponibilite'=>$this->request->data['Rapport']['indisponibilite'])));
+                    $end = @date('t',$start).'/'.$this->request->data['Rapport']['mois'].'/'.$this->request->data['Rapport']['annee']; 
+                    $ObjFacturations = new FacturationsController();
+                    $rapportresult = $ObjFacturations->forss2i(array('societes'=>$societes,'start'=>CUSDate($start),'end'=>CUSDate($end),'indisponibilite'=>$this->request->data['Rapport']['indisponibilite'],'mois'=>$this->request->data['Rapport']['mois']));
                     $this->set('results',$rapportresult['result']);
                     $this->set('entrops',$rapportresult['trop']);
                     $this->Session->delete('xls_export');
@@ -124,22 +149,24 @@ class RapportsController extends AppController {
                 $annee[$year]=$year;
             endfor;
             $this->set('annee',$annee);
-            $societes = $this->requestAction('societes/get_all_societe_id_name');
+            $ObjSocietes = new SocietesController();
+            $societes = $ObjSocietes->get_all_societe_id_name();
             $this->set('societes',$societes);
         else :
             $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-            throw new NotAuthorizedException();
+            throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
         endif;  
     }
     
     public function factscnf(){
-        $this->set('title_for_layout','Facturations des agents SNCF');
+        $this->set_title('Facturations des agents SNCF');
         if (isAuthorized('activitesreelles', 'rapports')) :
             if ($this->request->is('post')):
                 $societes = array('1');
                 $start = $this->request->data['Rapport']['DU'];
-                $end = $this->request->data['Rapport']['AU'];          
-                $rapportresult = $this->requestAction('facturations/forsncf', array('pass'=>array('societes'=>$societes,'start'=>CUSDate($start),'end'=>CUSDate($end),'indisponibilite'=>$this->request->data['Rapport']['indisponibilite'])));
+                $end = $this->request->data['Rapport']['AU']; 
+                $ObjFacturations = new FacturationsController();
+                $rapportresult = $ObjFacturations->forsncf(array('societes'=>$societes,'start'=>CUSDate($start),'end'=>CUSDate($end),'indisponibilite'=>$this->request->data['Rapport']['indisponibilite']));
                 $this->set('results',$rapportresult['result']);
                 $this->set('entrops',$rapportresult['trop']);
                 $this->Session->delete('xls_export');
@@ -156,7 +183,7 @@ class RapportsController extends AppController {
             $this->set('annee',$annee);            
         else :
             $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-            throw new NotAuthorizedException();
+            throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
         endif;  
     }
     

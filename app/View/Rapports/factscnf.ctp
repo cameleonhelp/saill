@@ -68,7 +68,7 @@
         <?php 
                 $nbaction = $result[0]['NB'];
                 foreach($entrops as $item):
-                    if($result['Activite']['projet_id']==$item['projet_id'] && $result['Activite']['id']==$item['activite_id'] && $result['Utilisateur']['id']==$item['utilisateur_id'] && $mois==$item['mois']):
+                    if($result['Activite']['projet_id']==$item['projet_id'] && $result['Activite']['id']==$item['activite_id'] && $result['Utilisateur']['id']==$item['utilisateur_id']):
                         $nbaction -= $item['sum'];
                         $nbaction = number_format($nbaction, 1);
                     endif;
@@ -99,8 +99,7 @@
     </tr> 
     </tfoot>    
 </table>
-<?php endif; ?>
-<?php if(isset($results) && count($results)==0) : ?>
+<?php else : ?>
 <div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
 <?php endif; ?>
 </div>

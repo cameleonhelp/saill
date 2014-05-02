@@ -1,10 +1,13 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Changelogreponses');
+App::import('Controller', 'Changelogdemandes');
 /**
  * Changelogversions Controller
  *
  * @property Changelogversion $Changelogversion
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class ChangelogversionsController extends AppController {
 
@@ -16,17 +19,33 @@ class ChangelogversionsController extends AppController {
         public $paginate = array('limit' => 25,'order'=>array('Changelogversion.VERSION'=>'desc'));
 	public $components = array('History','Common');
 
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Versions de SAILL" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }            
+        
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
-                $this->set('title_for_layout','Liste des versions de SAILL');
+                $this->set_title();
 		$this->Changelogversion->recursive = 0;
 		$this->set('changelogversions', $this->paginate());
 	}
-
+        
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_info'));
+            parent::beforeFilter();
+        }  
+        
 /**
  * view method
  *
@@ -48,7 +67,7 @@ class ChangelogversionsController extends AppController {
  * @return void
  */
 	public function add() {
-                $this->set('title_for_layout','Liste des versions de SAILL');
+                $this->set_title();
 		if ($this->request->is('post')) {                    
                     $version = $this->Changelogversion->find('all',array('conditions'=>array('Changelogversion.VERSION'=>$this->request->data['Changelogversion']['VERSION']),'recursive'=>0));
                     if(count($version)==0):
@@ -76,14 +95,14 @@ class ChangelogversionsController extends AppController {
                 $this->autoRender = false;
                 $this->Changelogversion->id = $this->request->data['Changelogversion']['id'];
 		if ($this->request->is(array('post', 'put'))) {
-			if ($this->Changelogversion->saveField('DATEPREVUE', $this->request->data['Changelogversion']['DATE'])) {
-                                $options = array('pass'=>array($this->request->data['Changelogversion']['id'],$this->request->data['Changelogversion']['DATE']));
-                                $this->Changelogversion->requestAction('changelogreponses/updateresponses/',$options);
-				$this->Session->setFlash(__('Version sauvegardée',true),'flash_success');
-			} else {
-				$this->Session->setFlash(__('Version incorrecte, veuillez corriger la version',true),'flash_failure');
-			}
-                        return $this->redirect(array('action' => 'index'));
+                    $ObjChangelogreponses = new ChangelogreponsesController();
+                    if ($this->Changelogversion->saveField('DATEPREVUE', $this->request->data['Changelogversion']['DATE'])) {
+                            $ObjChangelogreponses->updateresponses($this->request->data['Changelogversion']['id'],$this->request->data['Changelogversion']['DATE']);
+                            $this->Session->setFlash(__('Version sauvegardée',true),'flash_success');
+                    } else {
+                            $this->Session->setFlash(__('Version incorrecte, veuillez corriger la version',true),'flash_failure');
+                    }
+                    return $this->redirect(array('action' => 'index'));
 		}
 	}
 
@@ -95,7 +114,7 @@ class ChangelogversionsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-                $this->set('title_for_layout','Liste des versions de SAILL');
+                $this->set_title();
 		$this->Changelogversion->id = $id;
 		if (!$this->Changelogversion->exists()) {
 			throw new NotFoundException(__('Version de SAILL incorrecte'));
@@ -110,18 +129,19 @@ class ChangelogversionsController extends AppController {
 	}
         
         public function ajax_changeetat($id=null){
-                $this->set('title_for_layout','Liste des versions de SAILL');
+                $this->set_title();
                 $newid = $id == null ? $this->request->data('id') : $id;
                 $result = false;
                 $this->Changelogversion->id = $newid;
                 $obj = $this->Changelogversion->find('first',array('conditions'=>array('Changelogversion.id'=>$newid),'recursive'=>0));
                 $newactif = $obj['Changelogversion']['ETAT'] == 1 ? 0 : 1;
+                $ObjChangelogdemandes = new ChangelogdemandesController();
                 if ($this->Changelogversion->saveField('ETAT',$newactif)) {
                         if($newactif==1):
-                            $this->requestAction('changelogdemandes/close/'.$obj['Changelogversion']['id']);
+                            $ObjChangelogdemandes->close($obj['Changelogversion']['id']);
                             $this->Changelogversion->saveField('DATEREELLE',date('Y-m-d H:i:s'));
                         else:
-                            $this->requestAction('changelogdemandes/open/'.$obj['Changelogversion']['id']);
+                            $ObjChangelogdemandes->open($obj['Changelogversion']['id']);
                             $this->Changelogversion->saveField('DATEREELLE',null);
                         endif;
                         if ($id==null):

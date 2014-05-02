@@ -3,7 +3,7 @@
         $pass1 = isset($this->params->pass[1]) ? $this->params->pass[1] : 'tous';
         $pass2 = isset($this->params->pass[2]) ? $this->params->pass[2] : 'tous';
         $pass3 = isset($this->params->pass[3]) ? $this->params->pass[3] : 'tous'; //userAuth('id');
-        $passaction = $this->params->action;
+        $passaction = $this->params['action'] == '' ? 'index' : $this->params['action'];
         if (count($this->params->data) > 0) :
             $keyword = $this->params->data['Action']['SEARCH'];
         elseif (isset($this->params->pass[4]) && $this->params->pass[4] !=''):
@@ -14,6 +14,7 @@
             $keyword = '';
         endif;
         ?>       
+        <?php $urlpost = $this->Html->url(array('controller'=>'actions','action'=>"ajax_update")); ?>
         <nav class="navbar toolbar">
                 <ul class="nav navbar-nav toolbar">
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('actions', 'add')) : ?>
@@ -48,15 +49,21 @@
                 </li>   
                 <li class="dropdown <?php echo filtre_is_actif(isset($pass3) ? $pass3 : 'tous','tous'); ?>">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Emetteur <b class="caret"></b></a>
-                     <ul class="dropdown-menu">                         
+                     <ul class="dropdown-menu dropdown-menu-form">                         
                          <li><?php echo $this->Html->link('Tous', array('action' => $passaction,isset($pass0) ? $pass0 : 'tous',isset($pass1) ? $pass1 : 'tous',$pass2,  'tous',$keyword),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass3) ? $pass3 : 'tous','tous'))); ?></li>
                          <li><?php echo $this->Html->link('Moi', array('action' => $passaction,isset($pass0) ? $pass0 : 'tous',isset($pass1) ? $pass1 : 'tous',$pass2,  userAuth('id'),$keyword),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass3) ? $pass3 : 'tous',userAuth('id')))); ?></li>
                          <li class="divider"></li>
+                         <?php echo $this->Form->create("Action",array('url' => array('action' => $passaction,$pass0,$pass1,$pass2,$pass3))); ?>
+                         <li style="text-align:center;"><?php echo $this->Html->link("Valider", "#",array('class'=>'btn btn-sm btn-default btnfilterresponsablre showoverlay',"style"=>"margin-bottom:5px;")); ?></li>
                          <?php foreach ($responsables as $responsable): ?>
-                            <li><?php echo $this->Html->link($responsable['Utilisateur']['NOMLONG'], array('action' => $passaction,isset($pass0) ? $pass0 : 'tous',isset($pass1) ? $pass1 : 'tous',$pass2,$responsable['Utilisateur']['id'],$keyword),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass3) ? $pass3 : 'tous',$responsable['Utilisateur']['id']))); ; ?></li>
+                            <!--<li><?php echo $this->Html->link("<label  class='checkbox'><input type='checkbox'>".$responsable['Utilisateur']['NOMLONG']."</label>", array('action' => $passaction,isset($pass0) ? $pass0 : 'tous',isset($pass1) ? $pass1 : 'tous',$pass2,$responsable['Utilisateur']['id'],$keyword),array('class'=>'showoverlay'.subfiltre_is_actif(isset($pass3) ? $pass3 : 'tous',$responsable['Utilisateur']['id']))); ; ?></li>//-->
+                         <li class='liselect' data-id="<?php echo $responsable['Utilisateur']['id']; ?>"><input type="checkbox" class='selectresponsable' data-id="<?php echo $responsable['Utilisateur']['id']; ?>" id="id<?php echo $responsable['Utilisateur']['id']; ?>"/> <label for="id<?php echo $responsable['Utilisateur']['id']; ?>"><?php echo $responsable['Utilisateur']['NOMLONG']; ?></label></li>
                          <?php endforeach; ?>
+                         <input type='hidden' id='allResponsablesSelected' value="<?php echo $pass3!="tous" ? $pass3 : "" ?>">
+                         <li style="text-align:center;"><?php echo $this->Html->link("Valider", "#",array('class'=>'btn btn-sm btn-default btnfilterresponsablre showoverlay',"style"=>"margin-top:5px;")); ?></li>
+                         <?php echo $this->Form->end(); ?>
                      </ul>
-                 </li>                  
+                 </li>                      
                 <?php if (areaIsVisible()) :?>                
                 <li class="dropdown <?php echo filtre_is_actif(isset($pass2) ? $pass2 : 'tous',  'tous'); ?>">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filtre Destinataire <b class="caret"></b></a>
@@ -103,12 +110,12 @@
         </nav>
         <?php echo $this->element('modals/help',array('helpcontent' => $this->element('hlp/hlp-action'))); ?>
         <div class="panel-body panel-filter marginbottom15">
-            <strong>Filtre appliqué : </strong><em>Liste des actions avec <?php echo $fpriorite; ?>, <?php echo $fetat; ?> ayant pour émetteur  <?php echo $femetteur; ?> et pour destinataire <?php echo $fresponsable; ?></em></div>      
+            <strong>Filtre appliqué : </strong><em>Liste des actions avec <?php echo $fpriorite; ?>, <?php echo $fetat; ?> ayant <?php echo $femetteur; ?> et pour destinataire <?php echo $fresponsable; ?></em></div>      
     <div>    
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" style="width:100%;">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" style="width:100%;" id="actionslist">
         <thead>
 	<tr>
-                        <th style="min-width:80px;"><?php echo $this->Paginator->sort('id','N°'); ?></th>
+                        <th style="min-width:95px;"><?php echo $this->Paginator->sort('id','N°'); ?></th>
                         <th style="text-align:center;width:15px !important;vertical-align: middle;padding-left:5px;"><?php echo $this->Form->input('checkall',array('type'=>'checkbox','label'=>false)) ; ?>
                                 <?php echo $this->Form->input('all_ids',array('type'=>'hidden')) ; ?>
                         </th>   
@@ -139,10 +146,12 @@
                 <?php $contributeurs = isset($action['Action']['CONTRIBUTEURS']) ? $this->requestAction('utilisateurs/get_nom',array('pass'=>array($action['Action']['CONTRIBUTEURS']))) : 'Aucun contributeur'; ?>
                 <?php $contributeurs = $contributeurs != 'Aucun contributeur' ? ';'.$contributeurs : ''; ?>
                 <td><?php echo h($action['Action']['destinataire_nom'].$contributeurs); ?>&nbsp;</td>
-                <td><?php echo h($action['Action']['OBJET']); ?>
+                <!--<td data-pk="<?php echo $action['Action']['id']; ?>" data-field="OBJET" class="editable">-->
+                <td><?php echo $this->Html->link($action['Action']['OBJET'],"#",array('class'=>'editable','id'=>"OBJET",'data-inputclass'=>"autowidth",'data-type'=>"text",'data-pk'=>$action['Action']['id'],'data-title'=>"Objet de l'action",'data-url'=>$urlpost)); ?>
+                    <?php // echo h($action['Action']['OBJET']); ?>
                     <?php if($action['Action']['NEW']==1): ?>
                     <span class="pull-right"><span class="glyphicons asterisk size8 orange" rel="tooltip" data-title="Nouvelle action en date du <?php echo h($action['Action']['created']); ?>"></span></span>&nbsp;
-                    <?php endif; ?>
+                    <?php endif; ?>                    
                 </td>
                 <?php $style = styleBarre(h($action['Action']['AVANCEMENT'])); ?>
 		<td style="text-align:center;">
@@ -157,7 +166,7 @@
                     </div>
                 </td>
                 <?php $classtd = enretard($action['Action']['ECHEANCE'],$action['Action']['STATUT']) ? "class='td-error'" : ""; ?>
-		<td <?php echo $classtd; ?> style="text-align:center;"><?php echo h($action['Action']['ECHEANCE']); ?>&nbsp;</td>
+		<td <?php echo $classtd; ?> style="text-align:center;"><?php echo h($action['Action']['ECHEANCE']); ?></td>
 		<td style="text-align:center;"><?php $image = isset($action['Action']['STATUT']) ? etatAction(h($action['Action']['STATUT'])) : 'blank' ; ?>
                     <a href="#" class="changeetat cursor showoverlay" idaction="<?php echo $action['Action']['id']; ?>" ><span class="glyphicons <?php echo $image; ?> notchange" rel="tooltip" data-title="<?php echo etatTooltip(h($action['Action']['STATUT'])); ?>"></span></a></td>
 		<td style="text-align:center;"><?php $image = (isset($action['Action']['CRA']) && $action['Action']['CRA']==true) ? 'ok_2' : 'ok_2 disabled' ; ?>
@@ -243,7 +252,27 @@
         <div style="text-align:center;"><?php echo $this->Html->link('⇡ Aujourd\'hui ⇡',"",array('id'=>"to-today",'class'=>'btn btn-sm btn-default')); ?></div>        
         </div>
 <script>
-$(document).ready(function () {
+$(document).ready(function () {    
+    $.fn.editable.defaults.mode = 'inline'; //popup ou inline
+    $('.editable').editable();
+    
+//    $("#actionslist").tablesorter({
+//        widgets : ['editable'],
+//        widgetOptions: {
+//          editable_columns       : [6],       // or "0-2" (v2.14.2); point to the columns to make editable (zero-based index)
+//          editable_enterToAccept : true,          // press enter to accept content, or click outside if false
+//          editable_autoResort    : false,         // auto resort after the content has changed.
+//          editable_noEdit        : 'no-edit',     // class name of cell that is not editable
+//          editable_editComplete  : 'editComplete' // event fired after the table content has been edited
+//        }
+//        
+//    }).children('tbody').on('editComplete', 'td', function(){
+//        var id = $(this).attr('data-pk');
+//        var text = $(this).text();
+//        var field = $(this).attr('data-field');
+//        $.post('<?php // echo $urlpost; ?>',{pk:id,name:field,value:text});
+//    });
+    
     $(document).on('click','.eye_open',function(e){
         $(this).parents('tr').next('.trhidden').fadeToggle();
     });
@@ -251,11 +280,54 @@ $(document).ready(function () {
     $(document).on('click','.btn_eye_close',function(e){
         var overlay = $('#overlay');
         overlay.show();         
-        $('.trhidden').slideToggle("slow");
+        $('.trhidden').toggle('slow', "easeOutBounce");
         $(this).toggleClass('filtreactif');     
         $('.eye_close').toggleClass('margintop4');    
         overlay.hide(); 
-    });    
+    });   
+    
+    $(document).on('click','.liselect',function(e){
+        e.stopPropagation(); 
+    });
+    
+    //TODO : faire une function pour mettre en surbrillance l'id dnas le champ caché
+    $('.liselect').removeClass('subfilteractif');
+    $('.selectresponsable').prop('checked',false);
+    var ids = $("#allResponsablesSelected").val().split('-');
+    console.log(ids);
+    $('.liselect').each(
+                        function() {
+                            if (inArray($(this).attr("data-id"),ids)){
+                                $(this).addClass('subfilteractif');
+                                $(this).find('.selectresponsable').prop('checked','checked');
+                            }
+                        }); 
+    
+    $(document).on('click','.btnfilterresponsablre',function(e){ 
+        var ids = $("#allResponsablesSelected").val();
+        var overlay = $('#overlay');
+        <?php $action = $passaction == 'index' ? '/index' : $passaction; ?>
+        var url = "<?php echo $this->Html->url(array('controller'=>'actions','action'=>$passaction),true); ?><?php echo $action; ?>/<?php echo $pass0; ?>/<?php echo $pass1; ?>/<?php echo $pass2; ?>/"+ids+"/<?php echo $keyword; ?>";
+        $(this).parents('form').attr('action',url).submit();
+    });
+    
+    $(document).on('click','.selectresponsable',function(e){
+        var id = $(this).attr('data-id');
+        var allselected = $("#allResponsablesSelected").val();
+        if ($(this).is(':checked')){
+            if (allselected==""){
+                allselected = id;                    
+            }else{
+                allselected += "-"+id;
+            }
+        } else {
+            $("#allResponsablesSelected").val("");
+            tmp = allselected.replace(id+"-", "");
+            if (tmp == allselected) tmp = allselected.replace("-"+id, ""); 
+            allselected = tmp;
+        }
+        $("#allResponsablesSelected").val(allselected);
+    });
     
     $(document).on('click','.avancer',function(e){
         var id = $(this).attr('idaction');

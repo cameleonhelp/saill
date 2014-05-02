@@ -1,11 +1,15 @@
 <?php
 App::uses('AppController', 'Controller');
-App::import('Vendor', 'ical', array('file'=>'class.iCalReader.php'));
+App::uses('Vendor', 'ical', array('file'=>'class.iCalReader.php'));
 App::uses('CakeEmail', 'Network/Email');
+App::import('Controller', 'Equipes');
+App::import('Controller', 'Activitesreelles');
+App::import('Controller', 'Activites');
 /**
  * Demandeabsences Controller
  *
  * @property Demandeabsence $Demandeabsence
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class DemandeabsencesController extends AppController {
 
@@ -20,13 +24,30 @@ class DemandeabsencesController extends AppController {
         );
 
 	public $components = array('History','Common');
+                
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Demandes d'absences" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }              
+        
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_info'));
+            parent::beforeFilter();
+        }  
         
         public function get_demandeur_filter($id){
             $result = array();
+            $ObjEquipes = new EquipesController();
             switch($id):
                 case null:
                 case 'tous':
-                    $monequipe = $this->requestAction('equipes/myTeam/'.userAuth('id')).userAuth('id');
+                    $monequipe = $ObjEquipes->myTeam(userAuth('id')).userAuth('id');
                     $result['condition'] = 'Utilisateur.id IN ('.$monequipe.')';
                     $result['filter'] = ', pour toute mon équipe';
                     break;
@@ -94,7 +115,7 @@ class DemandeabsencesController extends AppController {
  * @return void
  */
 	public function index($filtreDemandeur=null,$filtreReponse=null,$filtreDate=null) {  
-            $this->set('title_for_layout','Suivi des absences');
+            $this->set_title('Suivi des absences');
             if (isAuthorized('demandeabsences', 'index')) :
                 $getdemandeur = $this->get_demandeur_filter($filtreDemandeur);
                 $getreponse = $this->get_reponse_filter($filtreReponse);
@@ -103,13 +124,14 @@ class DemandeabsencesController extends AppController {
                 $strfilter = $getdemandeur['filter'].$getreponse['filter'].$getdate['filter'];
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions));
 		$this->Demandeabsence->recursive = 0;
-		$this->set('demandeabsences', $this->paginate());   
-                $demandeurs = $this->requestAction('equipes/listMyTeam/'.userAuth('id'));
-                $utilisateurs = $this->requestAction('equipes/getMyTeam/'.userAuth('id'));
+		$this->set('demandeabsences', $this->paginate());
+                $ObjEquipes = new EquipesController();
+                $demandeurs = $ObjEquipes->listMyTeam(userAuth('id'));
+                $utilisateurs = $ObjEquipes->getMyTeam(userAuth('id'));
                 $this->set(compact('demandeurs','strfilter','utilisateurs'));  
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();                
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");                
             endif;
 	}
 
@@ -135,32 +157,53 @@ class DemandeabsencesController extends AppController {
  */
 	public function add() {
             $this->autoRender  =false;
-            if (isAuthorized('demandeabsences', 'add')) :            
+            if (isAuthorized('demandeabsences', 'add')) : 
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Demandeabsence->validate = array();
                     else:          
                         $today = new DateTime();
-                        $this->request->data['Demandeabsence']['DATEDEMANDE'] = $today->format('y-m-d H:i:s');
-                        $this->Demandeabsence->create();                        
-                        if($this->request->data['Demandeabsence']['REPEAT']==1):
-                            //TODO : dowhile si datefin <= dateau 
-                            $datefin = $this->request->data['Demandeabsence']['DATEFIN'];
-                            $datedu = $this->request->data['Demandeabsence']['DATEDU'];
-                            $dateau = $this->request->data['Demandeabsence']['DATEAU'];                        
-                            while($dateau <= $datefin):
-                                //$this->Demandeabsence->save($this->request->data);
-                                //$options = array('conditions' => array('Demandeabsence.' . $this->Demandeabsence->primaryKey => $this->Demandeabsence->getLastInsertID()));
-                                //$demandeabsence =  $this->Demandeabsence->find('first', $options); 
-                                //$this->insertConges($demandeabsence);
-                                //$this->sendmaildemandeabsences($demandeabsence);
-                                //TODO Incrémenter la date de début et date de fin de 7 jours
-                                //$datedu = +7jours;
-                                //$this->request->data['Demandeabsence']['DATEDU']=$datedu;
-                                //$dateau = +7jours;
-                                //$this->request->data['Demandeabsence']['DATEAU']=$dateau;
+                        $this->request->data['Demandeabsence']['DATEDEMANDE'] = $today->format('y-m-d H:i:s');              
+                        if($this->request->data['Demandeabsence']['REPEAT']=='1'):
+                            $datefin = CUSDate($this->request->data['Demandeabsence']['DATEFIN']);
+                            $datedu = CUSDate($this->request->data['Demandeabsence']['DATEDU']);
+                            $dateau = CUSDate($this->request->data['Demandeabsence']['DATEAU']);  
+                            $datefin = new Datetime($datefin);
+                            $datedu = new Datetime($datedu);
+                            $dateau = new Datetime($dateau);
+                            $newrecord[] = $this->request->data;
+                            $i = 1;
+                            while($datefin->diff($dateau)->format('%d')>6):
+                                $newrecord[$i]['Demandeabsence']['utilisateur_id']=$newrecord[0]['Demandeabsence']['utilisateur_id'];
+                                $datedu->add(new DateInterval('P7D'));
+                                $newrecord[$i]['Demandeabsence']['DATEDU'] = $datedu->format("d/m/Y");                            
+                                $newrecord[$i]['Demandeabsence']['DATEDUTYPE']=$newrecord[0]['Demandeabsence']['DATEDUTYPE'];
+                                $dateau->add(new DateInterval('P7D'));
+                                $newrecord[$i]['Demandeabsence']['DATEAU'] = $dateau->format("d/m/Y");                                
+                                $newrecord[$i]['Demandeabsence']['DATEAUTYPE']=$newrecord[0]['Demandeabsence']['DATEAUTYPE'];
+                                $newrecord[$i]['Demandeabsence']['REPEAT']=$newrecord[0]['Demandeabsence']['REPEAT'];
+                                $newrecord[$i]['Demandeabsence']['DATEFIN']=$newrecord[0]['Demandeabsence']['DATEFIN'];
+                                $newrecord[$i]['Demandeabsence']['MOTIF']=$newrecord[0]['Demandeabsence']['MOTIF'];
+                                $newrecord[$i]['Demandeabsence']['DATEDEMANDE']=$newrecord[0]['Demandeabsence']['DATEDEMANDE'];
+                                $i++;
                             endwhile;
+                            foreach($newrecord as $record):
+                                $this->Demandeabsence->create(); 
+                                if ($this->Demandeabsence->save($record)) :
+                                    $this->insertConges($record);
+                                    $result[] = true;
+                                else:
+                                    $result[] = false;
+                                endif;                            
+                            endforeach;
+                            if(in_array(false,$result)):
+                                $this->Session->setFlash(__('Au moins une demande d\'absences <b>N\'EST PAS</b> sauvegardée',true),'flash_failure');
+                            else:
+                                $nb = $i == 1 ? $i : $i + 1;
+                                $this->Session->setFlash(__($nb.' demandes d\'absences sauvegardées',true),'flash_success');
+                            endif;
                         else:
+                            $this->Demandeabsence->create(); 
                             if ($this->Demandeabsence->save($this->request->data)) {
                                 $options = array('conditions' => array('Demandeabsence.' . $this->Demandeabsence->primaryKey => $this->Demandeabsence->getLastInsertID()));
                                 $demandeabsence =  $this->Demandeabsence->find('first', $options);                               
@@ -176,7 +219,7 @@ class DemandeabsencesController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();           
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");           
             endif;                    
 	}
 
@@ -223,7 +266,8 @@ class DemandeabsencesController extends AppController {
             if($this->Demandeabsence->save($record)):   
                 //mise à jour des activitesreeelles avec demandeabsence_id = $id si reponse = 1 alors demandeabsence_id = null
                 if($reponse == 1):
-                    $this->requestAction('activitesreelles/setvalid/'.$id);
+                    $ObjActivitesreelles = new ActivitesreellesController();
+                    $ObjActivitesreelles->setvalid($id);
                 endif;
                 // dans le cas contraire suppression des activitésreelles
                 if($reponse == 3 || $reponse == 2):
@@ -249,12 +293,15 @@ class DemandeabsencesController extends AppController {
             $nb = 1;
             $delais = $this->delais($deb,$fin);
             $types = $this->type($tdeb,$tfin);
-            $event = array('DSTART'=>$deb->format('Y-m-d'),'INDISPONIBILITE'=>$summary,'DELAIS'=>$delais,'TYPES'=>$types);            
+            $event = array('DSTART'=>$deb->format('Y-m-d'),'INDISPONIBILITE'=>$summary,'DELAIS'=>$delais,'TYPES'=>$types);    
             for($i=0;$i<$delais;$i++):
                 $type = $i==$delais-1 ? $event['TYPES']['end'] : 1;
                 if($i==0):
                     $nb = $event['TYPES']['dureestart'];
                     $type = $event['TYPES']['start'];
+                elseif($i==$delais-1):
+                    $nb = $event['TYPES']['dureeend'];
+                    $type = $event['TYPES']['end'];  
                 else:
                     $nb = $i<$delais ? 1 : $event['TYPES']['dureeend'];
                     $type = $i<$delais ? 1 : $event['TYPES']['end'];
@@ -262,7 +309,8 @@ class DemandeabsencesController extends AppController {
                 $days = array('1'=>'LU','2'=>'MA','3'=>'ME','4'=>'JE','5'=>'VE','6'=>'SA','7'=>'DI');
                 //JLR :: on ne rajoute pas les jours fériés et les week end
                 if($deb->format('N')<6 && !isFerie($deb)):
-                    $activite_id =$this->requestAction('Activites/getId/'.$event['INDISPONIBILITE']);
+                    $ObjActivites = new ActivitesController();	
+                    $activite_id = $ObjActivites->getId($event['INDISPONIBILITE']);
                     $allindispos[] = array("id"=>CIntDate(startWeek($deb->format('Y-m-d'))),"DATE"=>startWeek($deb->format('Y-m-d')),'DELAIS'=>$delais,"DATEREEL"=>$deb->format('Y-m-d'),"DAY"=>$days[$deb->format('N')],"TYPE"=>$type,"ACTIVITE"=>$activite_id['Activite']['id'],'utilisateur_id'=>$demandeabsence['Demandeabsence']['utilisateur_id'],'DUREE'=>$nb);
                 endif;
                 $deb->add(new DateInterval('P1D'));
@@ -272,7 +320,8 @@ class DemandeabsencesController extends AppController {
             // pour chaque ligne on insert en base à partir de la méthode icsImport de Activitesreelles
             aasort($allindispos, 'id');
             foreach($allindispos as $indispo):
-                $this->requestAction('Activitesreelles/addDemandes/'.$indispo['utilisateur_id'].'/'.$indispo['ACTIVITE'].'/'.$indispo['DATE'].'/'.$indispo['DAY'].'/'.$indispo['TYPE'].'/'.$indispo['DUREE'].'/'.$id.'/'.$indispo['DATEREEL']);
+                $ObjActivitesreelles = new ActivitesreellesController();
+                $ObjActivitesreelles->addDemandes($indispo['utilisateur_id'],$indispo['ACTIVITE'],$indispo['DATE'],$indispo['DAY'],$indispo['TYPE'],$indispo['DUREE'],$id,$indispo['DATEREEL']);
             endforeach;
         }
         
@@ -296,10 +345,9 @@ class DemandeabsencesController extends AppController {
         
     public function type($tdebut,$tfin){
             $typeStart = $tdebut==8 ? 1 : 0;
-            $typeEnd = $tfin==16 ? 1 : 0;
+            $typeEnd = $tfin==16 || ($tdebut ==12  && $tfin==12)  ? 1 : 0;
             $dureestart = ($tfin-$tdebut)<8 ? 0.5 : 1;
             $dureeend = ($tfin-$tdebut)<8 ? 0.5 : 1;
-           
             return array('start'=>$typeStart,'dureestart'=>$dureestart,'end'=>$typeEnd,'dureeend'=>$dureeend);
     }  
     
@@ -313,11 +361,11 @@ class DemandeabsencesController extends AppController {
             endforeach;
             //$mailto[]=userAuth('MAIL');   plus besoin il y a la confirmation     
             $to=$mailto;
-            $from = userAuth('MAIL');
+            $from = Configure::read('mailapp');
             $objrelance = $relance ? '[RELANCE] ' : '';
             $subrelance = $relance ? '<p style="color:red">Message de relance car la demande ne semble pas être traitée</p>' : '';
             $motif = $demande['Demandeabsence']['MOTIF']!='' ? '<span style="color:blue;">'.$demande['Demandeabsence']['MOTIF'].'</span>' : 'sans motif particulier';       
-            $objet = 'SAILL : '.$objrelance.'Demande d\'absences';
+            $objet = 'SAILL : '.$objrelance.'Demande d\'absences pour '.userAuth('NOMLONG');
             $message = "Demande d'absences de la part de <b>".userAuth('NOMLONG')."</b> pour la période du ".CFRDate($demande['Demandeabsence']['DATEDU']).' à '.$heuredeb.' (inclus) jusqu\'au '.CFRDate($demande['Demandeabsence']['DATEAU']).' à '.$heurefin.' (inclus)'.
                     '<br><br>Motif : '.$motif.
                     '<br><p style="background-color:yellow;color:red;">Cette demande reste en attente de validation de votre part.'.$subrelance.'</p>';
@@ -344,7 +392,7 @@ class DemandeabsencesController extends AppController {
             $heurefin = $demande['Demandeabsence']['DATEAUTYPE']=='16' ? '17:00' : '12:00';
             $mailto[]=userAuth('MAIL');
             $to=$mailto;
-            $from = 'saill.nepasrepondre@sncf.fr';
+            $from = Configure::read('mailapp');
             $objrelance = $relance ? '[RELANCE] ' : '';
             $subrelance = $relance ? '<p style="color:red">Message de relance car la demande ne semble pas être traitée</p>' : '';
             $motif = $demande['Demandeabsence']['MOTIF']!='' ? '<span style="color:blue;">'.$demande['Demandeabsence']['MOTIF'].'</span>' : 'sans motif particulier';
@@ -389,8 +437,8 @@ class DemandeabsencesController extends AppController {
             endforeach;
             $mailto[]=$demandeur['Utilisateur']['MAIL'];
             $to=$mailto;
-            $from = userAuth('MAIL');
-            $objet = 'RE : SAILL : Demande d\'absences';
+            $from = Configure::read('mailapp');
+            $objet = 'RE : SAILL : Demande d\'absences pour '.$demandeur['Utilisateur']['NOMLONG'];
             $message = "Demande d'absences de la part de <b>".$demandeur['Utilisateur']['NOMLONG']."</b> pour la période du ".CFRDate($demande['Demandeabsence']['DATEDU']).' à '.$heuredeb.' (inclus) jusqu\'au '.CFRDate($demande['Demandeabsence']['DATEAU']).' à '.$heurefin.' (inclus)'.
                     '<br><br>Cette demande est : '.$reponse;
             if($to!='' && $etat!=3):

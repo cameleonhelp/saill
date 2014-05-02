@@ -1,9 +1,12 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
+App::import('Controller', 'Utilisateurs');
 /**
  * Sections Controller
  *
  * @property Section $Section
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class SectionsController extends AppController {
         public $components = array('History','Common'); 
@@ -25,7 +28,7 @@ class SectionsController extends AppController {
 		$this->set('sections', $this->paginate());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -50,13 +53,24 @@ class SectionsController extends AppController {
 			}
                     endif;
 		endif;
-                $responsable = $this->requestAction('utilisateurs/get_list_hierarchique');
+                $ObjUtilisateurs = new UtilisateursController();
+                $responsable = $ObjUtilisateurs->get_list_hierarchique();
                 $this->set(compact('responsable'));                
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
+        
+    public function is_in_my_entite($section){
+        if(userAuth('profil_id') != 1):
+            $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+            $listsection = $ObjAssoentiteutilisateurs->find_array_section(userAuth('id'));
+            return in_array($section,$listsection);
+        else:
+            return true;
+        endif;
+    }
 
 /**
  * edit method
@@ -85,12 +99,13 @@ class SectionsController extends AppController {
 		} else {
                     $options = array('conditions' => array('Section.' . $this->Section->primaryKey => $id),'recursive'=>0);
                     $this->request->data = $this->Section->find('first', $options);
-                    $responsable = $this->requestAction('utilisateurs/get_list_hierarchique');
+                    $ObjUtilisateurs = new UtilisateursController();
+                    $responsable = $ObjUtilisateurs->get_list_hierarchique();
                     $this->set(compact('responsable'));                        
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -117,7 +132,7 @@ class SectionsController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -150,7 +165,7 @@ class SectionsController extends AppController {
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }      
         
@@ -166,7 +181,8 @@ class SectionsController extends AppController {
             elseif ($visibility != '' && userAuth('WIDEAREA')==0):
                 $conditions[] = 'Section.id = '.userAuth('section_id');
             elseif ($visibility != '' && userAuth('WIDEAREA')!=0):
-                $sections = $this->requestAction('utilisateurs/get_str_section_utilisateurs/');
+                $ObjUtilisateurs = new UtilisateursController();
+                $sections = $ObjUtilisateurs->get_str_section_utilisateurs();
                 $conditions[] = "Section.id IN (".$sections.")";            
             else:
                 $conditions[] = 'Section.id = '.userAuth('section_id');
@@ -177,10 +193,11 @@ class SectionsController extends AppController {
         public function get_list($visibility=null) {
             if($visibility==null):
                 $conditions[] = "1=1";
-            elseif ($visibility != '' && userAuth('WIDEAREA')==0):
+            elseif ($visibility != '' && $visibility != '0' && userAuth('WIDEAREA')== 0):
                 $conditions[] = 'Section.id = '.userAuth('section_id');
-            elseif ($visibility != '' && userAuth('WIDEAREA')!=0):
-                $sections = $this->requestAction('utilisateurs/get_str_section_utilisateurs/');
+            elseif ($visibility != '' && $visibility != '0' && userAuth('WIDEAREA')!= 0):
+                $ObjUtilisateurs = new UtilisateursController();
+                $sections = $ObjUtilisateurs->get_str_section_utilisateurs();
                 $conditions[] = "Section.id IN (".$sections.")";            
             else:
                 $conditions[] = 'Section.id = '.userAuth('section_id');

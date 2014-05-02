@@ -1,10 +1,12 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Projets');
 /**
  * Centrecouts Controller
  *
  * @property Centrecout $Centrecout
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class CentrecoutsController extends AppController {
 
@@ -17,6 +19,17 @@ class CentrecoutsController extends AppController {
         public $paginate = array(
         'order' => array('Centrecout.NOM' => 'asc'),
         );
+        
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Centre de coûts" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }              
         
         public function get_visibility(){
             if(userAuth('profil_id')==1):
@@ -59,11 +72,12 @@ class CentrecoutsController extends AppController {
  * @return void
  */
 	public function index($departement=null) {
-            $this->set('title_for_layout','Centres de coûts');
+            $this->set_title();
             if (isAuthorized('centrecouts', 'index')) :   
                 $getdepartement = $this->get_centrecout_departement_filter($departement);
                 $fpriorite = $getdepartement['filter'];
-                $all_projets = $this->requestAction('projets/get_list_actif');
+                $ObjProjets = new ProjetsController();		
+                $all_projets = $ObjProjets->get_list_actif();
                 $departements = $this->find_list_nomdepartement();
                 $this->set(compact('all_projets','departements','fpriorite'));                
                 $newconditions = array($getdepartement['condition']);
@@ -71,7 +85,7 @@ class CentrecoutsController extends AppController {
                 $this->set('centrecouts', $this->paginate());
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
 
@@ -81,7 +95,7 @@ class CentrecoutsController extends AppController {
  * @return void
  */
 	public function add() {
-            $this->set('title_for_layout','Centres de coûts');
+            $this->set_title();
             if (isAuthorized('centrecouts', 'add')) :             
 		if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
@@ -99,7 +113,7 @@ class CentrecoutsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
 
@@ -111,7 +125,7 @@ class CentrecoutsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','Centres de coûts');
+            $this->set_title();
             if (isAuthorized('centrecouts', 'edit')) :             
 		if (!$this->Centrecout->exists($id)) {
 			throw new NotFoundException(__('Invalid centrecout'));
@@ -134,7 +148,7 @@ class CentrecoutsController extends AppController {
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
 
@@ -146,7 +160,7 @@ class CentrecoutsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-            $this->set('title_for_layout','Centres de coûts');
+            $this->set_title();
             if (isAuthorized('centrecouts', 'delete')) :             
 		$this->Centrecout->id = $id;
 		if (!$this->Centrecout->exists()) {
@@ -160,12 +174,12 @@ class CentrecoutsController extends AppController {
 		$this->History->goFirst();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                  
 	}
         
 	public function search($departement=null,$keywords=null) {
-            $this->set('title_for_layout','Centres de coûts');
+            $this->set_title();
             if (isAuthorized('centrecouts', 'index')) :
                 if(isset($this->params->data['Centrecout']['SEARCH'])):
                     $keywords = $this->params->data['Centrecout']['SEARCH'];
@@ -179,7 +193,8 @@ class CentrecoutsController extends AppController {
                     $arkeywords = explode(' ',trim($keywords)); 
                     $getdepartement = $this->get_centrecout_departement_filter($departement);
                     $fpriorite = $getdepartement['filter'];
-                    $all_projets = $this->requestAction('projets/get_list_actif');
+                    $ObjProjets = new ProjetsController();		
+                    $all_projets = $ObjProjets->get_list_actif();
                     $departements = $this->find_list_nomdepartement();
                     $this->set(compact('all_projets','departements','fpriorite'));                
                     $newconditions = array($getdepartement['condition']);
@@ -194,7 +209,7 @@ class CentrecoutsController extends AppController {
                 endif;   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }    
         

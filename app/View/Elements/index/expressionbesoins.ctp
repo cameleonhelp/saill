@@ -236,13 +236,13 @@ endif;
 <script>
 $(document).ready(function () {
     $(document).on('click','.eye_open',function(e){
-        $(this).parents('tr').next('.trhidden').slideToggle("slow");
+        $(this).parents('tr').next('.trhidden').toggle('slow', "easeOutBounce");
     });    
     
     $(document).on('click','.btn_eye_close',function(e){
         var overlay = $('#overlay');
         overlay.show();         
-        $('.trhidden').slideToggle("slow");
+        $('.trhidden').toggle('slow', "easeOutBounce");
         $(this).toggleClass('filtreactif');     
         $('.eye_close').toggleClass('margintop4');    
         overlay.hide(); 

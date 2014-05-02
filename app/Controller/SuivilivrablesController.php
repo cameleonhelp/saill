@@ -4,6 +4,7 @@ App::uses('AppController', 'Controller');
  * Suivilivrables Controller
  *
  * @property Suivilivrable $Suivilivrable
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class SuivilivrablesController extends AppController {
         public $components = array('History','Common');

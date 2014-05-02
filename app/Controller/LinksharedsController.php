@@ -1,9 +1,11 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Assoentiteutilisateurs');
 /**
  * Linkshareds Controller
  *
  * @property Linkshared $Linkshared
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class LinksharedsController extends AppController {
         public $components = array('History','Common'); 
@@ -14,12 +16,23 @@ class LinksharedsController extends AppController {
             'Post.title' => 'asc' /*/
         );
     
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Favoris partagés" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }          
+    
     public function get_visibility(){
         if(userAuth('profil_id')==1):
             return null;
         else:        
-            //ajout du compte admin (id=1) pour afficher les liens ajouté par l'administrateur qui sont donc commun à tous
-            return '1,'.$this->requestAction('assoentiteutilisateurs/json_get_all_users/'.userAuth('id'));
+            $ObjAssoentiteutilisateurs = new AssoentiteutilisateursController();
+            return '1,'.$ObjAssoentiteutilisateurs->json_get_all_users(userAuth('id'));
         endif;
     }
     
@@ -41,7 +54,7 @@ class LinksharedsController extends AppController {
  */
 	public function index() {
             //$this->Session->delete('history');
-            $this->set('title_for_layout','Liens partagés');
+            $this->set_title();
             $listusers = $this->get_visibility();
             $getfilter = $this->get_linkshared_filter($listusers);
             $newconditions =  array($getfilter['condition']); 
@@ -56,7 +69,7 @@ class LinksharedsController extends AppController {
  */
 	public function add() {
             if (isAuthorized('linkshareds', 'add')) :
-                $this->set('title_for_layout','Liens partagés');
+                $this->set_title();
                 if ($this->request->is('post')) :
                     if (isset($this->params['data']['cancel'])) :
                         $this->Linkshared->validate = array();
@@ -73,7 +86,7 @@ class LinksharedsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -86,7 +99,7 @@ class LinksharedsController extends AppController {
  */
 	public function edit($id = null) {
             if (isAuthorized('linkshareds', 'edit')) :
-                $this->set('title_for_layout','Liens partagés');
+                $this->set_title();
                 if (!$this->Linkshared->exists($id)) {
 			throw new NotFoundException(__('Lien partagé incorrect'));
 		}
@@ -108,7 +121,7 @@ class LinksharedsController extends AppController {
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -122,7 +135,7 @@ class LinksharedsController extends AppController {
  */
 	public function delete($id = null) {
             if (isAuthorized('linkshareds', 'delete')) :
-                $this->set('title_for_layout','Liens partagés');
+                $this->set_title();
                 $this->Linkshared->id = $id;
 		if (!$this->Linkshared->exists()) {
 			throw new NotFoundException(__('Lien partagé incorrect'));
@@ -135,7 +148,7 @@ class LinksharedsController extends AppController {
 		$this->History->goFirst();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -145,7 +158,7 @@ class LinksharedsController extends AppController {
  * @return void
  */
 	public function search($keywords=null) {
-            $this->set('title_for_layout','Liens partagés');
+            $this->set_title();
             if (isAuthorized('linkshareds', 'index')) :
                 if(isset($this->params->data['Activitesreelle']['SEARCH'])):
                     $keywords = $this->params->data['Activitesreelle']['SEARCH'];
@@ -171,7 +184,7 @@ class LinksharedsController extends AppController {
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }   
 }        

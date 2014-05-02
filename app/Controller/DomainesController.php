@@ -1,9 +1,11 @@
 <?php
 App::uses('AppController', 'Controller');
+App::import('Controller', 'Entites');
 /**
  * Domaines Controller
  *
  * @property Domaine $Domaine
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class DomainesController extends AppController {
         public $components = array('History','Common');
@@ -23,10 +25,11 @@ class DomainesController extends AppController {
         }        
         
         public function get_cercles(){
+            $ObjEntites = new EntitesController();	
             if(userAuth('profil_id')==1):
-                return $this->requestAction('entites/find_list_all_actif_cercle');
+                return $ObjEntites->find_list_all_actif_cercle();
             else:
-                return $this->requestAction('entites/find_list_cercle');
+                return $ObjEntites->find_list_cercle();
             endif;
         }        
             
@@ -41,11 +44,12 @@ class DomainesController extends AppController {
                 $newconditions[]= $this->get_visibilty();
                 $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'recursive'=>0));  
 		$this->set('domaines', $this->paginate());
-                $cercles = $this->requestAction('entites/get_all');
+                $ObjEntites = new EntitesController();	
+                $cercles = $ObjEntites->get_all();
                 $this->set(compact('cercles'));                   
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -74,7 +78,7 @@ class DomainesController extends AppController {
                 $this->set(compact('cercles'));
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -110,7 +114,7 @@ class DomainesController extends AppController {
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
 
@@ -137,7 +141,7 @@ class DomainesController extends AppController {
 		$this->History->goBack(1);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
 	}
         
@@ -170,7 +174,7 @@ class DomainesController extends AppController {
                 endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                
         }    
         

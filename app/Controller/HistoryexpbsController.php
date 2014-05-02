@@ -5,6 +5,7 @@ App::uses('AppController', 'Controller');
  *
  * @property Historyexpb $Historyexpb
  * @property PaginatorComponent $Paginator
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class HistoryexpbsController extends AppController {
 

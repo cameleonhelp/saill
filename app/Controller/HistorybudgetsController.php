@@ -4,9 +4,27 @@ App::uses('AppController', 'Controller');
  * Historybudgets Controller
  *
  * @property Historybudget $Historybudget
+ * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
  */
 class HistorybudgetsController extends AppController {
         public $components = array('History','Common');
+                        
+    /**
+     * Méthode permettant de fixer le titre de la page
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? "Budget d'une activité" : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+    }              
+        
+        public function beforeFilter() {   
+            $this->Auth->allow(array('json_get_info'));
+            parent::beforeFilter();
+        }  
+        
 /**
  * index method
  *
@@ -18,7 +36,7 @@ class HistorybudgetsController extends AppController {
 		$this->set('historybudgets', $historybudgets);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();           
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");           
             endif;  
 	}
 
@@ -29,7 +47,7 @@ class HistorybudgetsController extends AppController {
  */
 	public function add($activite_id=null) {
             $activite_id = $activite_id==null ? $this->request->data['Historybudget']['activite_id'] : $activite_id;
-            $this->set('title_for_layout','Nouveau budget');
+            $this->set_title();
             $lastcheck = $this->Historybudget->find('first',array('fields'=>array('id'),'conditions'=>array('activite_id'=>$activite_id,'ACTIF'=>1),'recursive'=>0));  
             if (isAuthorized('activites', 'add') && $activite_id!=null) :            
 		if ($this->request->is('post')) :
@@ -45,7 +63,7 @@ class HistorybudgetsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();           
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");           
             endif;                 
 	}
 
@@ -57,7 +75,7 @@ class HistorybudgetsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-            $this->set('title_for_layout','Modification du budget');
+            $this->set_title();
             $id = $id == null ? $this->request->data['Historybudget']['id'] : $id;
             if (isAuthorized('activites', 'edit') && $id!=null) :
 		if (!$this->Historybudget->exists($id)) {
@@ -86,7 +104,7 @@ class HistorybudgetsController extends AppController {
 		}
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();           
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");           
             endif; 
 	}
 
@@ -113,7 +131,7 @@ class HistorybudgetsController extends AppController {
 		$this->History->goBack(0);
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();         
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");         
             endif;                   
 	}
         
@@ -129,7 +147,7 @@ class HistorybudgetsController extends AppController {
                 exit();
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();           
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");           
             endif;             
         }
         
@@ -176,7 +194,7 @@ class HistorybudgetsController extends AppController {
 		endif;
             else :
                 $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
-                throw new NotAuthorizedException();
+                throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");
             endif;                 
 	}  
 }

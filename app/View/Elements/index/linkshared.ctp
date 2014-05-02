@@ -53,10 +53,10 @@
                 <?php if (userAuth('profil_id')!='2' && isAuthorized('linkshareds', 'view')) : ?>
                 <?php echo '<span><span rel="tooltip" data-title="Cliquez pour avoir un aperçu"><span class="glyphicons eye_open" data-rel="popover" data-title="<h3>Lien :</h3>" data-content="<contenttitle>Crée par: </contenttitle>'.h($linkshared['Utilisateur']['NOMLONG']).'<br/><contenttitle>Crée le: </contenttitle>'.h($linkshared['Linkshared']['created']).'<br/><contenttitle>Modifié le: </contenttitle>'.h($linkshared['Linkshared']['modified']).'" data-trigger="click" style="cursor: pointer;"></span></span></span>'; ?>&nbsp;
                 <?php endif; ?>
-                <?php if (userAuth('profil_id')!='2' && isAuthorized('linkshareds', 'edit') && userAuth('id')==$linkshared['Linkshared']['utilisateur_id']) : ?>
+                <?php if ((userAuth('profil_id')!='2' && isAuthorized('linkshareds', 'edit') && userAuth('id')==$linkshared['Linkshared']['utilisateur_id']) || in_array(userAuth('profil_id'),array(-2,1,17))) : ?>
                 <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange" rel="tooltip" data-title="Modification"></span>', array('action' => 'edit', $linkshared['Linkshared']['id']),array('escape' => false)); ?>&nbsp;
                 <?php endif; ?>
-                <?php if (isAuthorized('linkshareds', 'delete') && userAuth('id')==$linkshared['Linkshared']['utilisateur_id']) : ?>
+                <?php if ((isAuthorized('linkshareds', 'delete') && userAuth('id')==$linkshared['Linkshared']['utilisateur_id']) || in_array(userAuth('profil_id'),array(-2,1,17))) : ?>
                 <?php echo $this->Form->postLink('<span class="glyphicons bin notchange" rel="tooltip" data-title="Suppression"></span>', array('action' => 'delete', $linkshared['Linkshared']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer ce lien ?')); ?>
                 <?php endif; ?>
             </td>
