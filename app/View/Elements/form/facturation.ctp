@@ -119,6 +119,7 @@
         <?php $valFTGAL = $this->params->action == 'edit' ? !isset($activitesreelle['Facturation']['NUMEROFTGALILEI']) ? '' : $activitesreelle['Facturation']['NUMEROFTGALILEI']: $valFTGAL; ?>                                
         <?php echo $this->Form->input('Facturation.'.$i.'.NUMEROFTGALILEI',array('type'=>'hidden','class'=>'ftgalilei','value'=>$valFTGAL)); ?>   
         <?php if ($this->params->action == 'add') echo $this->Form->input('Facturation.'.$i.'.activitesreelle_id',array('type'=>'hidden','value'=>$activitesreelle['Activitesreelle']['id'])); ?>
+        <?php if ($this->params->action == 'edit') echo $this->Form->input('Facturation.'.$i.'.OldId',array('type'=>'hidden','value'=>$activitesreelle['Facturation']['id'])); ?> 
         </td>
     </tr>
     <?php $i++; ?>

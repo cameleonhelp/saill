@@ -1,4 +1,4 @@
-/* Column Selector/Responsive table widget (beta) for TableSorter 3/31/2014 (v2.15.12)
+/* Column Selector/Responsive table widget (beta) for TableSorter 5/22/2014 (v2.17.0)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Justin Hallett & Rob Garrison
  */
@@ -12,7 +12,7 @@ namespace = '.tscolsel',
 tsColSel = ts.columnSelector = {
 
 	queryAll   : '@media only all { [columns] { display: none; } }',
-	queryBreak : '@media screen and (min-width: [size]) { [columns] { display: table-cell; } }',
+	queryBreak : '@media all and (min-width: [size]) { [columns] { display: table-cell; } }',
 
 	init: function(table, c, wo) {
 		var $t, colSel;
@@ -46,6 +46,15 @@ tsColSel = ts.columnSelector = {
 		if (colSel.$container.length) {
 			tsColSel.updateCols(c, wo);
 		}
+
+		c.$table
+			.off('refreshColumnSelector' + namespace)
+			.on('refreshColumnSelector' + namespace, function(){
+				// make sure we're using current config settings
+				var c = this.config;
+				tsColSel.updateBreakpoints(c, c.widgetOptions);
+				tsColSel.updateCols(c, c.widgetOptions);
+			});
 
 	},
 
@@ -114,10 +123,12 @@ tsColSel = ts.columnSelector = {
 			colSel.lastIndex = -1;
 			wo.columnSelector_breakpoints.sort();
 			tsColSel.updateBreakpoints(c, wo);
-			c.$table.off('updateAll' + namespace).on('updateAll' + namespace, function(){
-				tsColSel.updateBreakpoints(c, wo);
-				tsColSel.updateCols(c, wo);
-			});
+			c.$table
+				.off('updateAll' + namespace)
+				.on('updateAll' + namespace, function(){
+					tsColSel.updateBreakpoints(c, wo);
+					tsColSel.updateCols(c, wo);
+				});
 		}
 
 		if (colSel.$container.length) {
@@ -295,7 +306,7 @@ ts.addWidget({
 	remove: function(table, c){
 		var csel = c.selector;
 		csel.$container.empty();
-		csel.$popup.empty();
+		if (csel.$popup) { csel.$popup.empty(); }
 		csel.$style.remove();
 		csel.$breakpoints.remove();
 		c.$table.off('updateAll' + namespace + ' update' + namespace);

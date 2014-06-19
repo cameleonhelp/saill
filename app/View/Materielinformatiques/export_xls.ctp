@@ -16,7 +16,7 @@
 </STYLE>
 <table>
 	<tr>
-		<td><b>Export des matériels informatiques depuis le site SAILL<b></td>
+		<td><b><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Export des matériels informatiques depuis le site SAILL"); ?><b></td>
 	</tr>
 	<tr>
 		<td><b>Date:</b></td>
@@ -32,27 +32,27 @@
 		<td></td>
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Nom</td>
-			<td class="tableTd">Type</td>
-                        <td class="tableTd">Section</td>
-                        <td class="tableTd">Assistance</td>
-                        <td class="tableTd">Etat</td>
-                        <td class="tableTd">Wifi</td>
-                        <td class="tableTd">VPN</td>
-                        <td class="tableTd">Commentaire</td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Nom"); ?></td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Type"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Section"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Assistance"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Etat"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Wifi"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "VPN"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Commentaire"); ?></td>
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
-			echo '<td class="tableTdContent">'.$row['Materielinformatique']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Typemateriel']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Section']['NOM'].'</td>';                        
-			echo '<td class="tableTdContent">'.$row['Assistance']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Materielinformatique']['ETAT'].'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['Materielinformatique']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['Typemateriel']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['Section']['NOM']).'</td>';                        
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['Assistance']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['Materielinformatique']['ETAT']).'</td>';
                         $wifi = $row['Materielinformatique']['WIFI']==1 ? 'Oui' : 'Non';
 			echo '<td class="tableTdContent">'.$wifi.'</td>';
                         $vpn = $row['Materielinformatique']['VPN']==1 ? 'Oui' : 'Non';
 			echo '<td class="tableTdContent">'.$vpn.'</td>';
-			echo '<td class="tableTdContent">'.$row['Materielinformatique']['COMMENTAIRE'].'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['Materielinformatique']['COMMENTAIRE']).'</td>';
                         echo '</tr>';
 			endforeach;
 		?>

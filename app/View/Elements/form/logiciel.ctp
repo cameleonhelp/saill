@@ -43,7 +43,8 @@
         <label class="col-md-2 required" for="LogicielTypeId">Type d'environnement : </label>
         <div class="col-md-5">
             <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->Form->select('type_id',$types,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>"Le type d'environnement est obligatoire", 'selected' => $this->data['Logiciel']['type_id'],'empty' => 'Choisir un type d\'environnement')); ?>
+                <?php $selected = isset($this->data['Logiciel']['type_id']) && $this->data['Logiciel']['type_id']!="" ? $this->data['Logiciel']['type_id'] : ''; ?>
+                <?php echo $this->Form->select('type_id',$types,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>"Le type d'environnement est obligatoire", 'selected' => $selected,'empty' => 'Choisir un type d\'environnement')); ?>
             <?php } else { ?>
                 <?php echo $this->Form->select('type_id',$types,array('class'=>'form-control','data-rule-required'=>'true','data-msg-required'=>"Le type d'environnement est obligatoire", 'empty' => 'Choisir un type d\'environnement')); ?>
             <?php } ?>        

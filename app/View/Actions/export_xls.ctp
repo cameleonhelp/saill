@@ -32,34 +32,34 @@
 		<td></td>
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Domaine</td>
-			<td class="tableTd">Emetteur</td>
-                        <td class="tableTd">Destinataire</td>
-                        <td class="tableTd">Objet</td>
-                        <td class="tableTd">Résumé</td>
-                        <td class="tableTd">Commentaire</td>
-                        <td class="tableTd">Date de début</td>
-                        <td class="tableTd">Echéance</td>
-                        <td class="tableTd">Durée</td>
-                        <td class="tableTd">Priorité</td>
-                        <td class="tableTd">Statut</td>
-                        <td class="tableTd">Avancement</td>                        
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Domaine"); ?></td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Emetteur"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Destinataire"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Objet"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Résumé"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Commentaire"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Date de début"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Echéance"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Durée"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Priorité"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Statut"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Avancement"); ?></td>                        
 
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
-			echo '<td class="tableTdContent">'.$row['Domaine']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Utilisateur']['NOMLONG'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Action']['destinataire_nom'].'</td>';                        
-			echo '<td class="tableTdContent">'.$row['Action']['OBJET'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['Action']['RESUME'].'</td>'; 
-			echo '<td class="tableTdContent">'.$row['Action']['COMMENTAIRE'].'</td>'; 
-                        echo '<td class="tableTdContent">'.$row['Action']['DEBUT'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['Action']['ECHEANCE'].'</td>';
-                        echo '<td class="tableTdContent">'.($row['Action']['DUREEPREVUE']/8).' j</td>';
-                        echo '<td class="tableTdContent">'.$row['Action']['PRIORITE'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['Action']['STATUT'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Action']['AVANCEMENT'].' %</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Domaine']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Utilisateur']['NOMLONG']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Action']['destinataire_nom']).'</td>';                        
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Action']['OBJET']).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Action']['RESUME']).'</td>'; 
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Action']['COMMENTAIRE']).'</td>'; 
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Action']['DEBUT']).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Action']['ECHEANCE']).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", ($row['Action']['DUREEPREVUE']/8)).' j</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Action']['PRIORITE']).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Action']['STATUT']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Action']['AVANCEMENT']).' %</td>';
                         echo '</tr>';
                 endforeach; ?>
 </table>

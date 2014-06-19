@@ -27,7 +27,7 @@ App::import('Vendor', 'filesfolder', array('file'=>'files_folders.class.php'));
  * Parameters Controller
  *
  * @property Parameters $Parameter
- * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
+ * @version 3.0.1.002 le 28/05/2014 par Jacques LEVAVASSEUR
  */
 class ParametersController extends AppController {
     public $components = array('History','Common');
@@ -45,51 +45,47 @@ class ParametersController extends AppController {
         return $this->set('title_for_layout',$title); //$this->fetch($title);
     }              
         
+    /**
+     * Permet de d'autoriser l'accès à des méthodes sans authentification
+     */
     public function beforeFilter() {   
         $this->Auth->allow(array('jsongetdatatabledescription','phpinfo'));
         parent::beforeFilter();
     }  
 
+    /**
+     * permet d'avoir les information du serveur et des composants
+     */
     public function phpinfo(){
         $this->autoRender = false;
         echo phpinfo();
     }
     
-/**
- * index method
- *
- * @return void
- */
+    /**
+     * liste des paramètres
+     */
     public function index() {
             $this->set_title();
             $urlMinidoc = $this->get_minidocurl();
-            $this->set('urlminidoc',$urlMinidoc);
-            $contact = $this->get_contact();
-            $this->set('contact',$contact);
-            $version = $this->get_version();
-            $this->set('version',$version);       
+            $this->set('urlminidoc',$urlMinidoc);    
             $instance = $this->get_instance();
-            $this->set('instance',$instance);  
-            $annuaire = $this->get_gestionnaireannuaire();
-            $this->set('annuaire',$annuaire);   
-            $valoutil = $this->get_valideuroutil();
-            $this->set('valoutil',$valoutil);    
-            $destmailenv = $this->get_destmailenv();
-            $this->set('destmailenv',$destmailenv); 
-            $ObjOutils = new OutilsController();
-            $listoutil = $ObjOutils->get_list_outil();
-            $this->set('listoutil',$listoutil);
-            $ObjDossierpartages = new DossierpartagesController();
-            $listgroup = $ObjDossierpartages->get_list_shared();
-            $this->set('listgroup',$listgroup);                
-            $templategroupe = $this->get_templategroupe();
-            $this->set('templategroupe',$templategroupe);  
-            $templateoutil = $this->get_templateoutil();
-            $this->set('templateoutil',$templateoutil); 
+            $this->set('instance',$instance);                
             $developpeur = $this->get_developpeur();
-            $this->set('developpeur',$developpeur);   
+            $this->set('developpeur',$developpeur);  
+    }
+    
+    /**
+     * page affichant les journaux 
+     */
+    public function logfiles(){
+        $this->set_title('Journaux du site');
+        $logs = $this->listlogs();
+        $this->set(compact('logs'));
     }
         
+    /**
+     * Sauvegarde la base de données
+     */
     public function savebdd() {
             $this->set_title('Sauvegarde du site');
             $database = $this->Parameter->getDataSource();
@@ -97,7 +93,9 @@ class ParametersController extends AppController {
             $obj = new backup_restore($database->config['host'], $database->config['database'], $database->config['login'], $database->config['password'], $path);
             $backup = $obj->backup();
             if($backup) :
-                $this->Session->setFlash(__('Base de données sauvegardée',true),'flash_success');
+                if($this->zipfile(array($backup),$backup.'.zip')):
+                    $this->Session->setFlash(__('Base de données sauvegardée',true),'flash_success');
+                endif;
                 $this->redirect(array('action' => 'listebackup'));
             else:
                 $this->Session->setFlash(__('Base de données <b>NON</b> sauvegardée',true),'flash_failure');
@@ -106,42 +104,65 @@ class ParametersController extends AppController {
             exit();
     }  
 
+    /**
+     * liste les fichiers présents dans le dossier de stockage des sauvegardes
+     */
     public function listebackup() {
         $this->set_title('Sauvegardes du site');
         $dirsqlbackup = './files/sql_backup';
         $arr_files = array();
-         foreach (new DirectoryIterator($dirsqlbackup) as $file):
+        $files = new DirectoryIterator($dirsqlbackup);
+        foreach ($files as $file):
             if(!$file->isDot() && $file->getFilename()!= 'empty' && $file->getFilename()!= '@eaDir'):
-                $arr_files[$file->getFilename()]=array("ext"=>$file->getExtension(),"name"=>$file->getFilename(),'url'=>'.'.$dirsqlbackup.'/'.$file->getFilename(),'size'=>byteFormat($file->getSize()),'time'=>date('d/m/Y H:i:s',$file->getATime()));
+                $arr_files[$file->getFilename()]=array("ext"=>pathinfo($file->getFilename(), PATHINFO_EXTENSION),"name"=>$file->getFilename(),'url'=>'.'.$dirsqlbackup.'/'.$file->getFilename(),'size'=>byteFormat($file->getSize()),'time'=>date('d/m/Y H:i:s',$file->getATime()));
             endif;
         endforeach;
-        //$files = new files_folder($this->params->base);
-        //$sqlfiles = $files->getSqlFiles();
         $this->set('files',$arr_files);
-        //$this->History->goBack(1);
     }  
 
+    /**
+     * Restaure une sauvegarde après l'avoir dézippé et supprime le fichier dézippé du serveur si nécessaire
+     * 
+     * @param string $file du fichier
+     */
     public function restorebdd($file=null) {
         $this->set_title('Restauration du site');
         $database = $this->Parameter->getDataSource();
+        $zip = true;
         $nfile = new files_folder();
-        if ($nfile->iswindows()):
-            $sqlfile = str_replace("-", "\\", $file);
-            $sqlfile = str_replace("¤", ":", $sqlfile);                
-        else:
-            $sqlfile = str_replace('-', '/', $file);                    
+        $filename = explode('-',$file);
+        $max = count($filename)-1;
+        $ext = substr($filename[$max],-3);
+        if($ext=='zip'):
+            if($zip = $this->unzipfile($filename[$max])):
+                $file = substr($file,0,-4);
+            endif;
         endif;
-        $path = WWW_ROOT.DS.'files'.DS.'sql_backup';
-        $obj = new backup_restore($database->config['host'], $database->config['database'], $database->config['login'], $database->config['password'],$path);
-        $backup = $obj->restore($sqlfile);
-        if($backup) :
-            $this->Session->setFlash(__('Base de données restaurée',true),'flash_success');
-        else:
-            $this->Session->setFlash(__('Base de données <b>NON</b> restaurée - '.$backup,true),'flash_failure');
+        if($zip):
+            if ($nfile->iswindows()):
+                $sqlfile = str_replace("-", "\\", $file);
+                $sqlfile = str_replace("¤", ":", $sqlfile);                
+            else:
+                $sqlfile = str_replace('-', '/', $file);                    
+            endif;
+            $path = WWW_ROOT.'files'.DS.'sql_backup/';
+            $obj = new backup_restore($database->config['host'], $database->config['database'], $database->config['login'], $database->config['password'],$path);
+            $backup = $obj->restore($sqlfile);
+            if($backup) :
+                $this->Session->setFlash(__('Base de données restaurée',true),'flash_success');
+                if($ext=='zip'): unlink($path.substr($filename[$max],0,-4)); endif;
+            else:
+                $this->Session->setFlash(__('Base de données <b>NON</b> restaurée - '.$backup,true),'flash_failure');
+            endif;
         endif;
         $this->History->goBack(1); 
     }          
 
+    /**
+     * Supprime une sauvegarde du serveur
+     * 
+     * @param string $file
+     */
     public function deletebackup($file=null){
         $nfile = new files_folder();
         if ($nfile->iswindows()):
@@ -160,7 +181,7 @@ class ParametersController extends AppController {
     }
 
     /**
-     * 
+     * Enregistre un parametre de façon générale
      */
     public function saveParam() {
         $id = $this->data['Parameter']['id'];
@@ -186,6 +207,9 @@ class ParametersController extends AppController {
         $this->History->goBack(1);
     }
 
+    /**
+     * Enregistre le memo sur la facturation
+     */
     public function ajaxSaveParam() {
         $id = $this->request->data('id');
         $this->Parameter->id = $id;
@@ -197,63 +221,39 @@ class ParametersController extends AppController {
         $this->History->goBack(1);
     }        
 
-    public function get_version(){
-        $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'version'),'recursive'=>-1));
-        return $version;
-    }
-
-    public function get_memofacturation(){
-        $memo = $this->Parameter->find('first',array('conditions'=>array('nom'=>'memofacturation'),'recursive'=>-1));
-        return $memo;
-    }
-
+    /**
+     * retourne l'url de Minidoc GED DSIT
+     * 
+     * @return Parameters
+     */    
     public function get_minidocurl(){
         $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'urlminidoc'),'recursive'=>-1));
         return $version;
     } 
 
-    public function get_contact(){
-        $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'contact'),'recursive'=>-1));
-        return $version;
-    }   
-
+    /**
+     * retourne l'instance du serveur (DEV,DEMO,...
+     * 
+     * @return Parameters
+     */    
     public function get_instance(){
         $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'instance'),'recursive'=>-1));
         return $version;
     }      
 
-    public function get_gestionnaireannuaire(){
-        $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'gestionnaireannuaire'),'recursive'=>-1));
-        return $version;
-    }      
-
+    /**
+     * retourne l'email du developpeur
+     * 
+     * @return Parameters
+     */
     public function get_developpeur(){
         $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'developpeur'),'recursive'=>-1));
         return $version;
     }  
 
-    public function get_gestionnaireenvironnement(){
-        $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'destmailenv'),'recursive'=>-1));
-        return $version; 
-    }
-
-    public function get_valideuroutil(){
-        $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'valideuroutil'),'recursive'=>-1));
-        return $version;
-    }      
-    public function get_destmailenv(){
-        $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'destmailenv'),'recursive'=>-1));
-        return $version;
-    }     
-    public function get_templategroupe(){
-        $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'templategroupe'),'recursive'=>-1));
-        return $version;
-    }     
-    public function get_templateoutil(){
-        $version = $this->Parameter->find('first',array('conditions'=>array('nom'=>'templateoutil'),'recursive'=>-1));
-        return $version;
-    }             
-
+    /**
+     * Permet l'importation en masse de donénes à partir de fichier CSV avec une entête
+     */
     public function importCsvData() {
         //$messages = null;       
         $this->set_title('Importation en masse de données');
@@ -302,6 +302,12 @@ class ParametersController extends AppController {
         $this->set(compact('models'));  
     }        
 
+    /**
+     * import des biens à partir de lancien fichier existant sur OSMOSE
+     * 
+     * @param string $filename
+     * @return array messages et erreurs
+     */
     public function importbiens($filename){
         $handle = fopen($filename, "r");
         $header = fgetcsv($handle);
@@ -397,6 +403,12 @@ class ParametersController extends AppController {
         return $return['errors'];
     }
 
+    /**
+     * import des logiciels à partir de l'ancien fichier existant sur OSMOSE
+     * 
+     * @param string $filename
+     * @return array messages et erreurs
+     */
     public function importlogiciels($filename){
         $handle = fopen($filename, "r");
         $header = fgetcsv($handle);
@@ -496,6 +508,12 @@ class ParametersController extends AppController {
         return $return['errors'];  
     }
 
+    /**
+     * import de l'intégration applicative à partir de l'ancien fichier existant sur OSMOSE
+     * 
+     * @param string $filename
+     * @return array de messages et d'erreurs
+     */
     public function importintergrationapplicatives($filename){
         $handle = fopen($filename, "r");
         $header = fgetcsv($handle);
@@ -575,6 +593,12 @@ class ParametersController extends AppController {
         return $return['errors'];
     }
 
+    /**
+     * Import des expression de besoin à partir de l'ancien fichier existant au niveau de OSMOSE
+     * 
+     * @param string $filename
+     * @return array de messages et d'erreurs
+     */
     public function importexpressionbesoins($filename){
         $handle = fopen($filename, "r");
         $header = fgetcsv($handle);
@@ -687,6 +711,13 @@ class ParametersController extends AppController {
         return $return['errors'];            
     }   
 
+    /**
+     * Permet l'import de fichier CSV en s'appuyant sur la ligne d'entête
+     * 
+     * @param string $filename
+     * @param string $controller
+     * @return array de messages et d'erreurs
+     */
     public function importcsv($filename,$controller){
         $handle = fopen($filename, "r");
         $header = fgetcsv($handle);
@@ -740,10 +771,21 @@ class ParametersController extends AppController {
         return $return['errors'];
     }
 
+    /**
+     * ajoute une information au journal de log
+     * 
+     * @param string $message
+     * @param string $element
+     * @param string $params
+     * @param string $key
+     */
     public function setLog($message, $element = 'default', $params = array(), $key = 'flash') {
         $this->Session->write('Log.' . $key, compact('message', 'element', 'params'));
     }
 
+    /**
+     * chargé avant de rendre la main
+     */
     public function beforeRender() {
         $key = 'flash';
         $attrs = array();
@@ -781,6 +823,12 @@ class ParametersController extends AppController {
         parent::beforeRender();
     }
 
+    /**
+     * donne la description de la table
+     * 
+     * @param string $tablename
+     * @return json
+     */
     public function jsongetdatatabledescription($tablename){
         $this->autoRender = false;
         $sql = 'DESCRIBE '.$tablename;           
@@ -788,6 +836,9 @@ class ParametersController extends AppController {
         return json_encode($table);
     }
 
+    /**
+     * fermeture du site pour maintenance
+     */
     public function openmaintenance() {
         $this->autoRender = false;
         $filename = WWW_ROOT.'maintenance.md';
@@ -796,6 +847,9 @@ class ParametersController extends AppController {
         $this->History->notmove();
     }
 
+    /**
+     * ouverture du site aprés maintenance
+     */
     public function closemaintenance() {
         $this->autoRender = false;
         $filename = WWW_ROOT.'maintenance.md';
@@ -803,6 +857,12 @@ class ParametersController extends AppController {
         $this->History->notmove();
     }   
 
+    /**
+     * retourne la liste des colonnes de la table
+     * 
+     * @param string $table
+     * @return array
+     */
     public function tableheader($table){
         $sql = 'DESCRIBE '.$table;           
         $table = $this->Bien->query($sql); 
@@ -813,5 +873,111 @@ class ParametersController extends AppController {
         endforeach;
         $result = array_slice($result,1,-2);           
         return $result;
+    }
+    
+    /**
+     * Méthode pour compresser le fichier de sauvegarde
+     * 
+     * @param array $files
+     * @param string $zip_name
+     * @return boolean
+     */
+    public function zipfile($files,$zip_name){
+        $this->autoRender = false;
+        $result = true;
+        $path = './files/sql_backup/';
+        $zip = new ZipArchive();
+        if($zip->open($path.$zip_name, ZIPARCHIVE::CREATE)!==true){
+          $this->Session->setFlash(__('Impossible de compresser les fichiers',true),'flash_failure');
+          $result = false;
+        } else {
+//            sleep(5);
+            foreach($files as $file){
+                $filename = $path.$file;
+                $zip->addFile($filename,$file);
+            }
+
+            $zip->close(); 
+//            sleep(5);
+            foreach($files as $file){
+                $filename = $path.$file;
+                unlink(realpath($filename));
+            }
+        }
+        return $result;
+    }
+    
+    /**
+     * méthode pour dézipper le fichier de sauvegarde
+     * 
+     * @param string $file
+     * @return boolean
+     */
+    public function unzipfile($file){
+        $this->autoRender = false;
+        $path = './files/sql_backup/';
+
+        $zip = new ZipArchive;
+        $res = $zip->open($path.$file);
+        if ($res === TRUE) {
+          $zip->extractTo($path);
+          $zip->close();
+          //unlink(realpath($file));
+          return true;
+        } else {
+          $this->Session->setFlash(__('Impossible d\'extraire de le fichier '.$file,true),'flash_failure');
+          return false;
+        }        
+    }
+    
+    /**
+     * liste le dossier de logs
+     * 
+     * @return array des fichiers de log
+     */
+    public function listlogs(){
+        $dir = '../tmp/logs/';
+        $arr_files = array();
+        $files = new DirectoryIterator($dir);
+        foreach ($files as $file):
+            if(!$file->isDot() && $file->getFilename()!= 'empty' && $file->getFilename()!= '@eaDir'):
+                $arr_files[$file->getFilename()]=array("ext"=>pathinfo($file->getFilename(), PATHINFO_EXTENSION),"name"=>$file->getFilename(),'url'=>$dir.'/'.$file->getFilename(),'size'=>byteFormat($file->getSize()),'time'=>date('d/m/Y H:i:s',$file->getATime()));
+            endif;
+        endforeach;
+        return $arr_files;
+    }  
+    
+    /**
+     * supprime tous les fichiers du dossier de log
+     */
+    public function cleanlogfolder(){
+        $this->autoRender = false;
+        $dir = '../tmp/logs/';
+        $arr_files = array();
+        $files = new DirectoryIterator($dir);
+        foreach ($files as $file):
+            if(!$file->isDot() && $file->getFilename()!= 'empty' && $file->getFilename()!= '@eaDir'):
+                unlink(realpath($dir.$file->getFilename()));
+            endif;
+        endforeach;  
+        $this->Session->setFlash(__('Le dossier des logs est vidé.',true),'flash_success');
+        $this->History->goBack(0);
+    }
+    
+    /**
+     * suppresion du fichier
+     * 
+     * @param type $file
+     */
+    public function delfile($file){
+        $this->autoRender = false;
+        $file = str_replace('-','/',$file);
+        if(file_exists($file)):
+            unlink(realpath($file));
+            $this->Session->setFlash(__('Fichier supprimé du serveur.',true),'flash_success');
+        else:
+            $this->Session->setFlash(__('Fichier inexistant sur le serveur.',true),'flash_failure');
+        endif;
+        $this->History->goBack(0);        
     }
 }

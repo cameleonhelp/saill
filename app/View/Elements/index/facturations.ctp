@@ -197,10 +197,11 @@
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('facturations', 'edit') && $facturation['Facturation']['VISIBLE']==0) : ?>
             <?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange" rel="tooltip" data-title="Modification de la facturation"></span>', array('action' => 'edit', $facturation['Facturation']['id'], $facturation['Facturation']['utilisateur_id']),array('escape' => false)); ?>
+            <?php endif; ?>
+            <?php echo $this->Html->link('<span class="glyphicons bin showoverlay notchange" rel="tooltip" data-title="Suppression de la facturation"></span>', array('action' => 'delete', $facturation['Facturation']['id']),array('escape' => false), __('Etes-vous certain de vouloir supprimer cette facturation ?')); ?>
             <?php if(isset($facturation['Facturation']['activitesreelle_id']) && $facturation['Facturation']['activitesreelle_id']!=''): ?>
                 <?php echo $this->Html->link('<span class="glyphicons unlock notchange" rel="tooltip" data-title="Déverouillez pour nouvelle saisie"></span>', array('controller'=>'activitesreelles','action' => 'deverouiller', $facturation['Facturation']['activitesreelle_id']),array('escape' => false)); ?>                    
-            <?php endif; ?>
-            <?php endif; ?>
+            <?php endif; ?>            
         </td>   
         </tr>
     <?php endif; ?>

@@ -1,4 +1,4 @@
-/* Pager widget (beta) for TableSorter 4/23/2014 (v2.16.0) */
+/* Pager widget (beta) for TableSorter 6/18/2014 (v2.17.2) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function($){
 "use strict";
@@ -131,7 +131,6 @@ tsp = ts.pager = {
 				filteredPages: 0,
 				currentFilters: [],
 				page: wo.pager_startPage,
-				size: wo.pager_size,
 				startRow: 0,
 				endRow: 0,
 				ajaxCounter: 0,
@@ -147,13 +146,14 @@ tsp = ts.pager = {
 			ts.log('Pager initializing');
 		}
 
+		p.size = $.data(table, 'pagerLastSize') || wo.pager_size;
 		// added in case the pager is reinitialized after being destroyed.
 		p.$container = $(s.container).addClass(wo.pager_css.container).show();
 		// goto selector
 		p.$goto = p.$container.find(s.goto);
 		// page size selector
 		p.$size = p.$container.find(s.pageSize);
-		p.totalRows = c.$tbodies.eq(0).children().length;
+		p.totalRows = c.$tbodies.eq(0).children('tr').length;
 		p.oldAjaxSuccess = p.oldAjaxSuccess || wo.pager_ajaxObject.success;
 		c.appender = tsp.appender;
 		if (ts.filter && $.inArray('filter', c.widgets) >= 0) {
@@ -246,6 +246,11 @@ tsp = ts.pager = {
 			})
 			.on('update updateRows updateAll addRows '.split(' ').join('.pager '), function(e){
 				e.stopPropagation();
+				tsp.fixHeight(table, c);
+				var $rows = c.$tbodies.eq(0).children('tr');
+				p.totalRows = $rows.length - ( c.widgetOptions.pager_countChildRows ? 0 : $rows.filter('.' + c.cssChildRow).length );
+				p.totalPages = Math.ceil( p.totalRows / p.size );
+				tsp.updatePageDisplay(table, c);
 				tsp.hideRows(table, c);
 				// make sure widgets are applied - fixes #450
 				c.$table.trigger('applyWidgets');
@@ -423,7 +428,7 @@ tsp = ts.pager = {
 				lastIndex = 0,
 				p = c.pager,
 				wo = c.widgetOptions,
-				rows = c.$tbodies.eq(0).children(),
+				rows = c.$tbodies.eq(0).children('tr'),
 				l = rows.length,
 				s = ( p.page * p.size ),
 				e =  s + p.size,
@@ -475,7 +480,7 @@ tsp = ts.pager = {
 			var i, j, t, hsh, $f, $sh, th, d, l, rr_count,
 				$t = c.$table,
 				tds = '',
-				result = wo.pager_ajaxProcessing(data, table) || [ 0, [] ],
+				result = wo.pager_ajaxProcessing(data, table, xhr) || [ 0, [] ],
 				hl = $t.find('thead th').length;
 
 			// Clean up any previous error.
@@ -486,7 +491,7 @@ tsp = ts.pager = {
 					ts.log('Ajax Error', xhr, exception);
 				}
 				ts.showError(table, exception.message + ' (' + xhr.status + ')');
-				c.$tbodies.eq(0).empty();
+				c.$tbodies.eq(0).children().detach();
 				p.totalRows = 0;
 			} else {
 				// process ajax object
@@ -508,7 +513,8 @@ tsp = ts.pager = {
 				if (d instanceof jQuery) {
 					if (wo.pager_processAjaxOnInit) {
 						// append jQuery object
-						c.$tbodies.eq(0).empty().append(d);
+						c.$tbodies.eq(0).children().detach();
+						c.$tbodies.eq(0).append(d);
 					}
 				} else if (l) {
 					// build table from array
@@ -529,7 +535,7 @@ tsp = ts.pager = {
 				// only add new header text if the length matches
 				if ( th && th.length === hl ) {
 					hsh = $t.hasClass('hasStickyHeaders');
-					$sh = hsh ? wo.$sticky.children('thead:first').children().children() : '';
+					$sh = hsh ? wo.$sticky.children('thead:first').children('tr').children() : '';
 					$f = $t.find('tfoot tr:first').children();
 					// don't change td headers (may contain pager)
 					c.$headers.filter('th').each(function(j){
@@ -565,9 +571,13 @@ tsp = ts.pager = {
 			tsp.fixHeight(table, c);
 			$t.trigger('updateCache', [function(){
 				if (p.initialized) {
-					// apply widgets after table has rendered
-					$t.trigger('applyWidgets');
-					$t.trigger('pagerChange', p);
+					// apply widgets after table has rendered & after a delay to prevent
+					// multiple applyWidget blocking code from blocking this trigger
+					setTimeout(function(){
+						$t
+							.trigger('applyWidgets')
+							.trigger('pagerChange', p);
+					}, 0);
 				}
 			}]);
 		}
@@ -592,12 +602,12 @@ tsp = ts.pager = {
 			});
 			counter = ++p.ajaxCounter;
 			wo.pager_ajaxObject.url = url; // from the ajaxUrl option and modified by customAjaxUrl
-			wo.pager_ajaxObject.success = function(data) {
+			wo.pager_ajaxObject.success = function(data, status, jqxhr) {
 				// Refuse to process old ajax commands that were overwritten by new ones - see #443
 				if (counter < p.ajaxCounter){
 					return;
 				}
-				tsp.renderAjax(data, table, c);
+				tsp.renderAjax(data, table, c, jqxhr);
 				$doc.unbind('ajaxError.pager');
 					if (typeof p.oldAjaxSuccess === 'function') {
 						p.oldAjaxSuccess(data);
@@ -677,7 +687,7 @@ tsp = ts.pager = {
 			// if filtered, start from zero
 			index = f ? 0 : s;
 			count = f ? 0 : s;
-			added = 0; 
+			added = 0;
 			while (added < e && index < rows.length) {
 				if (!f || !/filtered/.test(rows[index][0].className)){
 					count++;
@@ -853,7 +863,7 @@ tsp = ts.pager = {
 			p = c.pager;
 		if ( !p.ajax ) {
 			c.rowsCopy = rows;
-			p.totalRows = c.widgetOptions.pager_countChildRows ? c.$tbodies.eq(0).children().length : rows.length;
+			p.totalRows = c.widgetOptions.pager_countChildRows ? c.$tbodies.eq(0).children('tr').length : rows.length;
 			p.size = $.data(table, 'pagerLastSize') || p.size || wo.pager_size || 10;
 			p.totalPages = Math.ceil( p.totalRows / p.size );
 			tsp.moveToPage(table, p, true);

@@ -32,24 +32,24 @@
 		<td></td>
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Nom</td>
-			<td class="tableTd">Contrat</td>
-                        <td class="tableTd">N° GALILEI</td>
-                        <td class="tableTd">Etat</td>
-                        <td class="tableTd">Type</td>
-                        <td class="tableTd">Facturation estimée</td>
-                        <td class="tableTd">Commentaire</td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Nom"); ?></td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Contrat"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "N° GALILEI"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Etat"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Type"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Facturation estimée"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Commentaire"); ?></td>
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
-			echo '<td class="tableTdContent">'.$row['Projet']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Contrat']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Projet']['NUMEROGALLILIE'].'</td>';   
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Projet']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Contrat']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Projet']['NUMEROGALLILIE']).'</td>';   
                         $etat = $row['Projet']['ACTIF']==1 ? 'Actif' : 'Inactif';
 			echo '<td class="tableTdContent">'.$etat.'</td>';
-			echo '<td class="tableTdContent">'.$row['Projet']['TYPE'].'</td>'; 
-			echo '<td class="tableTdContent">'.$row['Projet']['FACTURATION'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Projet']['COMMENTAIRE'].'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Projet']['TYPE']).'</td>'; 
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Projet']['FACTURATION']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Projet']['COMMENTAIRE']).'</td>';
                         echo '</tr>';
 			endforeach;
 		?>

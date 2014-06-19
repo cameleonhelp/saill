@@ -555,6 +555,53 @@ function inArray(needle, haystack) {
     return false;
 }
 
+function newSumOfColumns(id,symbole) {
+    var tot = 0;
+    $(id).each(function() {
+      value = isNaN($(this).html()) || $(this).html()=='' ? 0: $(this).html();
+      tot += parseFloat(value);
+    });
+    return parseFloat(tot).toFixed(2)+" "+symbole;
+ };    
+
+function sumOfColumns(id,type) {
+    var tot = 0;
+    $(id).each(function() {
+      value = isNaN($(this).html()) || $(this).html()=='' ? 0 : $(this).html();
+      tot += parseFloat(value);
+    });
+    tot = isNaN(tot) ? 0 : tot;
+    return tot.toFixed(2)+" "+type;
+ }  
+     
+function sumOfETP() {
+    var tot = 0;
+    $(".etp").each(function() {
+      value = isNaN($(this).val()) || $(this).val()=='' || typeof $(this).val()=== "undefined" ? 0 : $(this).val();
+      if($(this).parents('tr').attr('id')!='templateRow') { tot += parseFloat(value); }
+      $('#Detailplancharge0TOTALETP').val(parseFloat(tot).toFixed(2));
+    });
+    return parseFloat(tot).toFixed(2);
+ }
+function sumOfTotal() {
+    var tot = 0;
+    $(".rowTotal").each(function() {
+      console.log($(this).val());
+      value = isNaN($(this).val()) || $(this).val()=='' || typeof $(this).val()=== "undefined" ? 0 : $(this).val();
+      if($(this).parents('tr').attr('id')!='templateRow') { tot += parseFloat(value); }
+      $('#Detailplancharge0TOTALCHARGE').val(tot);
+    });
+    return tot;
+ } 
+function sumOfCout() {
+    var tot = 0;
+    $(".rowcout").each(function() {
+      value = isNaN($(this).html()) || $(this).html()=='' || typeof $(this).html()=== "undefined" ? 0 : $(this).html();
+      if($(this).parents('tr').attr('id')!='templateRow') { tot += parseFloat(value); }
+    });
+    return parseFloat(tot).toFixed(2);
+ }   
+ 
 $(document).ready(function () {
     /*
      * pour l'affichage de la fenetre modal si navigateur = msie
@@ -576,7 +623,7 @@ $(document).ready(function () {
      * Initialisation des popover
      */
     $("[data-rel=popover]").popover({placement:'auto right',container:'#content',trigger:'click',html:true});   
-    $("[data-rel=popover]").css({"z-index":'800'});
+    $("[data-rel=popover]").css({"z-index":'800'});  
     /*
      * Initialisation des bouton de scroll de la zone menu
      */
@@ -590,6 +637,8 @@ $(document).ready(function () {
     /*
      * Initialisation des differents types de calendrier possible en fonction de la classe
      */
+
+
     $('.date').datepicker({
         format: "dd/mm/yyyy",
         weekStart: 1,
@@ -766,11 +815,11 @@ $(document).ready(function () {
   $.tablesorter.addParser({
     id: "digit",
     is: function(s) {
-     console.log("1-"+s);
+//     console.log("1-"+s);
      return false;
     },
     format: function(s) {
-     console.log("2-"+s);
+//     console.log("2-"+s);
     return $.tablesorter.formatFloat(s);
     },
     type: "Numeric"
@@ -778,5 +827,5 @@ $(document).ready(function () {
 
   $('.table-striped tr:visible').filter(':odd').css({'background-color': '#f9f9f9'});
   $('.table-striped tr:visible').filter(':even').css({'background-color': 'white'});  
-
+  
 });

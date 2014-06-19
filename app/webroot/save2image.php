@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 $uploaddir = './files/calendars';
 /**Nettoyage des fichiers de plus de 2 jours*/
 foreach (new DirectoryIterator($uploaddir) as $fileInfo) {
-    if(!$fileInfo->isDot() && time()-$fileInfo->getATime>= 2*24*60*60) {
+    if(!$fileInfo->isDot() && (time() - $fileInfo->getATime() >= 2*24*60*60)) {
         unlink($fileInfo->getPathname());
     }
 }

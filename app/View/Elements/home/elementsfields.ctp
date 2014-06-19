@@ -23,13 +23,13 @@
     $arr_files[] = array();
     foreach (new DirectoryIterator($dirall) as $file):
         if(!$file->isDot() && $file->getFilename()!= 'empty' && $file->getFilename()!= '@eaDir'):
-            $arr_files[$file->getFilename()]=array("ext"=>$file->getExtension(),"name"=>$file->getFilename(),'url'=>'.'.$dirall.'/'.$file->getFilename(),'size'=>byteFormat($file->getSize()),'time'=>date('d/m/Y H:i:s',$file->getATime()));
+            $arr_files[$file->getFilename()]=array("ext"=>pathinfo($file->getFilename(), PATHINFO_EXTENSION),"name"=>$file->getFilename(),'url'=>'.'.$dirall.'/'.$file->getFilename(),'size'=>byteFormat($file->getSize()),'time'=>date('d/m/Y H:i:s',$file->getATime()));
         endif;
     endforeach;
     if(in_array(userAuth('profil_id'),array(-2,1,3,4,5,8,12,13,14,15,17))):
     foreach (new DirectoryIterator($diradm) as $file):
         if(!$file->isDot() && $file->getFilename()!= 'empty' && $file->getFilename()!= '@eaDir'):
-            $arr_files[$file->getFilename()]=array("ext"=>$file->getExtension(),"name"=>$file->getFilename(),'url'=>'.'.$dirall.'/'.$file->getFilename(),'size'=>byteFormat($file->getSize()),'time'=>date('d/m/Y H:i:s',$file->getATime()));
+            $arr_files[$file->getFilename()]=array("ext"=>pathinfo($file->getFilename(), PATHINFO_EXTENSION),"name"=>$file->getFilename(),'url'=>'.'.$dirall.'/'.$file->getFilename(),'size'=>byteFormat($file->getSize()),'time'=>date('d/m/Y H:i:s',$file->getATime()));
         endif;
     endforeach;
     endif;

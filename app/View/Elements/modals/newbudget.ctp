@@ -42,7 +42,8 @@
                         &nbsp;<label for="HistorybudgetACTIF" class='labelAfter'></label>
                     </div>
                 </div>    
-                <?php echo $this->Form->input('activite_id',array('type'=>'hidden','value'=>$this->params->pass[0])); ?> 
+                <?php $value = isset($this->params->pass[0]) ? $this->params->pass[0] : ''; ?>
+                <?php echo $this->Form->input('activite_id',array('type'=>'hidden','value'=>$value)); ?> 
             <!-- fin du contenu de la fenêtre modale //-->
         </div>
     </div>

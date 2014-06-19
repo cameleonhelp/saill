@@ -339,49 +339,102 @@ $(document).ready(function (){
         });        
         
     <?php 
-    $data = array();
+    $datas = array();
     foreach($charthistoresults as $charthistoresult):
-        $datas[$charthistoresult['lots']['LOT']][] = "[".$charthistoresult[0]['MOIS'].",".$charthistoresult[0]['NB']."]";
+        //$datas[$charthistoresult['lots']['LOT']][] = "[".$charthistoresult[0]['MOIS'].",".$charthistoresult[0]['NB']."]";
+        $time = explode('/',$charthistoresult[0]['MOIS']);
+        $datas[$charthistoresult['lots']['LOT']][] = "[Date.UTC(".$time[1].",".($time[0]-1).",1),".$charthistoresult[0]['NB']."]";    
     endforeach;
     ?>
         
-    $('#charthistocontainer').highcharts({
-        colors: ['#A1006B','#E05206','#CCDC00','#009AA6','#CB0044','#FFB612','#7ABB00','#00BBCE','#6E267B'], 
+    $('#charthistocontainer').highcharts('StockChart',{
         credits:{
             enabled:false
+        }, 
+        navigator: {
+            //enabled: false,
+            adaptToUpdatedData: true,
+            baseSeries:<?php echo count($datas)-1; ?>
+        },         
+        scrollbar : {
+            enabled : true
         },
+        rangeSelector:{
+            inputEnabled: $('#container').width() > 480,
+            buttonSpacing: 15, 
+            buttonTheme: { // styles for the buttons
+                fill: 'none',
+                stroke: 'none',
+                width:85, 
+                style:{
+                    fontWeight: 'none'
+                },
+    		states: {
+                    hover: {
+                        fill: 'none',
+                        style: {
+                            color: '#428bca',
+                            fontWeight: 'none'
+                        }
+                    },
+                    select: {
+                        fill: 'none',
+                        style: {
+                            color: '#A1006B',
+                            fontWeight: 'none'
+                        }
+                    }
+                }                   
+            },
+            buttons: [ {
+                type: 'all',
+                text: 'Depuis le début',
+            },{
+                type: 'ytd',
+                text: 'Année en cours'
+            },{
+                type: 'month',
+                count: 24,
+                text: '2 ans'
+            }, {
+                type: 'month',
+                count: 12,
+                text: '1 an'
+            }, {
+                type: 'month',
+                count: 6,
+                text: '6 mois'
+            }],
+            selected: 1,          
+        },   
+        legend : {
+            enabled:true,
+        },
+        
         chart: {
             renderTo: 'container',
-            type: 'spline'
+            type: 'spline',
+            zoomType: 'x'
         },
         title: {
             useHTML: true,
-            text: 'Progression du nombre d\'environnements pour '+annee
+            text: 'Progression du nombre de demande d\'environnements pour une période'
         },
         subtitle:{
                text:'(en fonction des critères sélectionnés)'
         },        
         xAxis: {
-            title: {
-                text: 'Mois'
-            },            
-            labels: {
-                formatter: function() {
-                    $mois = ['','Janv.','Fév.','Mars','Avril','Mai','Juin','Juil.','Août','Sept.','Oct.','Nov.','Déc.'];
-                    return $mois[this.value];
-                },
-                rotation: -45,
-                align: 'right',
-                style: {
-                    fontSize: '13px',
-                    fontFamily: 'Verdana, sans-serif'
-                }                
-            },
-            tickInterval: 1
-            /*type: 'datetime',   
-            dateTimeLabelFormats: { // don't display the dummy year
+            type: 'datetime',   
+            dateTimeLabelFormats: { 
+                millisecond:'%e/%b/%Y',
+                second:'%e/%b/%Y',
+                minute:'%e/%b/%Y',
+                hour:'%e/%b/%Y',
+                day: '%e/%b/%Y',
+                week:'%e<br>%B<br>%Y',
                 month: '%b %Y',
-                year: '%Y'   },        
+                year: '%Y'   
+            },       
             labels: {
                 rotation: -45,
                 align: 'right',
@@ -389,7 +442,7 @@ $(document).ready(function (){
                     fontSize: '13px',
                     fontFamily: 'Verdana, sans-serif'
                 }                
-            },  */            
+            },                     
         },   
         yAxis: {
             allowDecimals: false,
@@ -404,16 +457,17 @@ $(document).ready(function (){
         tooltip: {
             useHTML : true,
             shared: true,    
+            xDateFormat: "mmm yyyy",
             formatter: function() {
                 $moisentier = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre','Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
                 var ligne = "<br/>";
                 var total = 0;
                 for(l=0;l<this.points.length;l++){
-                    ligne += "<b style='color:"+this.points[l].series.color+";'>"+this.points[l].series.name+"</b> : "+this.points[l].y+" nouveaux environnements<br/>";
+                    ligne += "<b style='color:"+this.points[l].series.color+";'>"+this.points[l].series.name+"</b> : "+this.points[l].y+" demandes<br/>";
                     total = total + this.points[l].y;
                 }
-                ligne += "<b>Total sur le mois</b> : "+total+" nouveaux environnements<br/>";
-                var mois = $moisentier[this.x-1];/*Highcharts.dateFormat('%b', new Date(this.x));*/
+                ligne += "<b>Total sur le mois</b> : "+total+" demandes<br/>";
+                var mois = Highcharts.dateFormat('%b %Y', new Date(this.x));
                 return '<b>'+ mois +'</b><br/>'+ligne;
             }
         },  
@@ -432,7 +486,7 @@ $(document).ready(function (){
                 data: [<?php echo join($data, ',') ?>]
                 },
             <?php endforeach; ?>      
-        ]     
+        ]        
     });        
     <?php endif; ?>     
 });

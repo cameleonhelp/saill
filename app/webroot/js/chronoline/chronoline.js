@@ -453,21 +453,25 @@ function Chronoline(domElement, events, options) {
             elem.attr('title', myEvent.title);
             
             if(t.tooltips){
+                //TODO [JLR] : modification pour mettre des popover avec le style de bootstrap lorsque l'on clic sur la barre
                 var description = myEvent.description;
                 var title = myEvent.title;
                 if(typeof description == "undefined" || description == ''){
                     description = title;
                     title = '';
                 }
+                var hr = "<hr style='border:4px solid #"+myEvent.color+";margin-top:-10px;margin-right:-14px;margin-left:-14px;'>";
                 var $node = jQuery(elem.node);
                 if(Raphael.type == 'SVG')
                     $node.attr('rel','popover');
                     $node.attr('data-original-title',title);
-                    $node.attr('data-content',description);
+                    $node.attr('data-content',hr+description);
                     $node.attr('data-placement','auto');
-                    $node.attr('data-trigger','manual');
+                    $node.attr('data-trigger','click');
                     $node.attr('data-html',true);
-                    $node.attr('data-container','body');                
+                    $node.attr('data-container','#chronotime');  
+//                    $node.attr('class','cursor'); 
+                //TODO [JLR] : fin modification pour mettre des popover avec le style de bootstrap lorsque l'on clic sur la barre
             }
             if(t.sections != null && t.sectionLabelsOnHover){
                 // some magic here to tie the event back to the section label element

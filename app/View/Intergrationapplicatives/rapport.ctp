@@ -178,13 +178,12 @@ $(document).ready(function (){
     var title = '';
     if(env=='Tous' || env=='TOUS'){
         title = 'Nombre d\'intégration par lot et application pour';
-        title2 = 'Progression du nombre d\'intégration pour la période ';}
+        title2 = 'Progression du nombre d\'intégration pour une période ';}
     else{
         title = 'Nombre d\'intégration par lot et application en '+env+' pour';
         title2 = 'Progression du nombre d\'intégration en '+env+' pour la période ';}
 
     $('#chartcontainer').highcharts({
-        colors: ['#A1006B','#E05206','#CCDC00','#009AA6','#CB0044','#FFB612','#7ABB00','#00BBCE','#6E267B'], 
         credits:{
             enabled:false
         },
@@ -236,42 +235,45 @@ $(document).ready(function (){
             enabled:false
         },
         navigator: {
-            xAxis: {
-                dateTimeLabelFormats: {
-                    day: '%b %Y',
-                    week: '%b %Y',
-                    month: '%b %Y',
-                    year: '%b %Y'
-                }
-            },
+            //enabled: false,
             adaptToUpdatedData: true,
         },     
         scrollbar : {
-            enabled : false
+            enabled : true
         },
         rangeSelector:{
             inputEnabled: $('#container').width() > 480,
             buttonSpacing: 15, 
             buttonTheme: { // styles for the buttons
                 fill: 'none',
+                stroke: 'none',
+                width:85, 
+                style:{
+                    fontWeight: 'none'
+                },
     		states: {
                     hover: {
                         fill: 'none',
-                        style:{
-                            fontWeight: 'bold'
+                        style: {
+                            color: '#428bca',
+                            fontWeight: 'none'
                         }
                     },
                     select: {
                         fill: 'none',
                         style: {
-                            color: '#A1006B'
+                            color: '#A1006B',
+                            fontWeight: 'none'
                         }
                     }
                 }                   
             },
             buttons: [ {
                 type: 'all',
-                text: 'Tout'
+                text: 'Depuis le début',
+            },{
+                type: 'ytd',
+                text: 'Année en cours'
             },{
                 type: 'month',
                 count: 24,
@@ -285,16 +287,18 @@ $(document).ready(function (){
                 count: 6,
                 text: '6 mois'
             }],
-            selected: 1,
-            
-        },        
+            selected: 1,         
+        },   
+        legend : {
+            enabled:true,
+        },
         chart: {
             renderTo: 'container',
-            type: 'spline'
+            type: 'spline',
         },
         title: {
             useHTML: true,
-            text: title2+<?php echo $charthistoresults[0][0]['MINANNEE']; ?>+"-"+annee
+            text: title2 //+<?php //echo $charthistoresults[0][0]['MINANNEE']; ?>+"-"+annee
         },
         subtitle:{
                text:'(en fonction des critères sélectionnés)'
@@ -302,8 +306,12 @@ $(document).ready(function (){
         xAxis: {
             type: 'datetime',   
             dateTimeLabelFormats: { // don't display the dummy year
+                hour:'%H:%M',
+                day: '%e/%b/%Y',
+                week:'%e<br>%B<br>%Y',
                 month: '%b %Y',
-                year: '%Y'   },        
+                year: '%Y'   
+            },       
             labels: {
                 rotation: -45,
                 align: 'right',
@@ -353,11 +361,16 @@ $(document).ready(function (){
             <?php foreach($datas as $key=>$data): ?>
                 {
                 name: '<?php echo $key; ?>',
-                data: [<?php echo join($data, ',') ?>]
+                data: [<?php echo join($data, ',') ?>],
                 },
             <?php endforeach; ?>      
         ] 
     }) ;
+    
+    $(document).on('click','.highcharts-button',function(e){
+        alert($(this).val());
+        $('.highcharts-title').html('alert');
+    });
     <?php endif; ?>     
 });
 </script>

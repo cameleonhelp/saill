@@ -5,7 +5,7 @@ App::uses('ActivitesController', 'Controller');
  * Achats Controller
  *
  * @property Achat $Achat
- * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
+ * @version 3.0.1.002 le 28/05/2014 par Jacques LEVAVASSEUR
  */
 class AchatsController extends AppController {
     /**

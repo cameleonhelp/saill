@@ -298,7 +298,7 @@ $(document).ready(function () {
         }).done(function(data){
             $("#AssoentiteutilisateurUtilisateursId").val(data);
             //récupération des environnements à partir du champs caché
-            var environnements = data;
+            var environnements = data.trim();
             //convertir en array
             if(environnements !='') { listuser = environnements.split(","); }
             //pour chaque éléments si data-id exist alors on ajout la classe active
@@ -351,7 +351,7 @@ $(document).ready(function () {
         }).done(function(data){
             $("#AssoprojetentiteProjetsId").val(data);
             //récupération des environnements à partir du champs caché
-            var environnements = data;
+            var environnements = data.trim();
             //convertir en array
             if(environnements !='') { listprojet = environnements.split(","); }
             //pour chaque éléments si data-id exist alors on ajout la classe active

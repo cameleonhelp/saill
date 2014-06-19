@@ -13,7 +13,7 @@ App::uses('AssoprojetentitesController', 'Controller');
  * Activitesreelles Controller
  *
  * @property Activitesreelle $Activitesreelle
- * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
+ * @version 3.0.1.002 le 28/05/2014 par Jacques LEVAVASSEUR
  */
 class ActivitesreellesController extends AppController {
     
@@ -35,6 +35,7 @@ class ActivitesreellesController extends AppController {
         $title = $title==null ? 'Feuilles de temps' : $title;
         return $this->set('title_for_layout',$title); //$this->fetch($title);
     }
+    
     /**
      * Méthode permettant ici d'autoriser une méthode pour tous les utilisateurs
      */
@@ -322,7 +323,11 @@ class ActivitesreellesController extends AppController {
             $this->get_no_limit();
             $this->paginate = array_merge_recursive($this->paginate,array('conditions'=>$newconditions,'order' => array('Utilisateur.NOM' => 'asc','Activitesreelle.DATE' => 'desc'),'recursive'=>0));                 
             $activitesreeelles = $this->Activitesreelle->find('all',$this->paginate);
-            $this->set('activitesreelles', $activitesreeelles);             
+            $this->set('activitesreelles', $activitesreeelles);  
+            if ($mois!= 'tous') :
+                $get_state = $this->etat_saisie($mois, $annee, $activitesreeelles);
+                $this->set(compact('get_state'));
+            endif;
         else :
             $this->Session->setFlash(__('Action non autorisée, veuillez contacter l\'administrateur.',true),'flash_warning');
             throw new UnauthorizedException("Vous n'êtes pas autorisé à utiliser cette fonctionnalité de l'outil");            
@@ -662,8 +667,11 @@ class ActivitesreellesController extends AppController {
                     $date = $record['Activitesreelle']['DATE'];
                     $date = new DateTime(CUSDate($date));
                     $date->add(new DateInterval('P7D')); 
-                else:
+                elseif(validateDate($dateori,"Y-m-d")):
                     $date = !is_object($dateori) ? new DateTime($dateori) : $dateori;
+                else:
+                    $this->Session->setFlash(__('Date non valide',true),'flash_failure');
+                    $this->History->goBack(1);
                 endif;
                 $record = $this->clean_holydays($date->format('d/m/Y'),$record);                  
                 if ($this->ActiviteExists($record['Activitesreelle']['utilisateur_id'], $record['Activitesreelle']['DATE'], $record['Activitesreelle']['activite_id'], $record['Activitesreelle']['domaine_id']) > 0){
@@ -959,6 +967,8 @@ class ActivitesreellesController extends AppController {
         $ObjEntites = new EntitesController();
         $cercles = $ObjEntites->find_all_cercle_not_empty(userAuth('id'));
         $this->set(compact('indisponibilites','utilisateurs','cercles'));
+        $maxday = date('t',strtotime($annee."-".$mois."-01"))+1;
+        $this->set_export_abs($mois,$annee,$maxday,$indisponibilites,$utilisateurs);
     }
 
     /**
@@ -1901,12 +1911,29 @@ class ActivitesreellesController extends AppController {
      * 
      * @param int $demande_id
      */
-    public function setvalid($demande_id){
-        $activitesreelles = $this->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.demandeabsence_id'=>$demande_id),'recursive'=>0));
-        foreach ($activitesreelles as $obj):
-            $this->Activitesreelle->id = $obj['Activitesreelle']['id'];
-            $this->Activitesreelle->saveField('demandeabsence_id', NULL);
-        endforeach;
+    public function setvalid($demande_id=null){
+        if($demande_id!= null):
+            $activitesreelles = $this->Activitesreelle->find('all',array('conditions'=>array('Activitesreelle.demandeabsence_id'=>$demande_id),'recursive'=>0));
+            foreach ($activitesreelles as $obj):
+                $this->Activitesreelle->id = $obj['Activitesreelle']['id'];
+                $this->Activitesreelle->saveField('demandeabsence_id', NULL);
+            endforeach;
+        endif;
+    }
+    
+    /**
+     * test existence d'une activité réelle dons la demande d'absence est l'argument
+     * 
+     * @param string $id
+     * @return boolean
+     */
+    public function findByDemandeabsenceId($id=null){
+        if($id!= null):
+            $obj = $this->Activitesreelle->findByDemandeabsenceId($id);
+            return count($obj) >0 ? true : false;
+        else:
+            return false;
+        endif;
     }
 
     /**
@@ -1957,4 +1984,145 @@ class ActivitesreellesController extends AppController {
         $this->Session->setFlash(__('Feuilles de temps soumises pour facturation',true),'flash_success');
         $this->History->goback(1);
     }   
+    
+    /**
+     * renvois un tableau avec la classe et le message à afficher
+     * 
+     * @param int $mois
+     * @param int $annee
+     * @param array $activitesreelles
+     * @return array
+     */
+    public function etat_saisie($mois,$annee,$activitesreelles){
+        $sum = 0;
+        $soumis = true;
+        $debut = new DateTime($annee.'-'.$mois.'-01');
+        $fin =new DateTime($annee.'-'.$mois.'-'.$debut->format('t'));
+        $nbopendays = nbopendays($debut->format('Y-m-d'), $fin->format('Y-m-d'));
+        $result = array();
+        foreach($activitesreelles as $activite):
+            $entrop = $this->getEntrop($activite,$mois,$annee);
+            $sum += ($activite["Activitesreelle"]['TOTAL']-$entrop);
+            $soumis = $soumis && $activite["Activitesreelle"]['VEROUILLE']==true ? false : $soumis;
+        endforeach;
+        if($sum == 0):
+            $result['class']="badge-important";
+            $result['msg']="Votre saisie est à faire";
+        elseif($sum < $nbopendays || $soumis == false):
+            $result['class']="badge-warning";
+            if ($sum < $nbopendays):
+                $result['msg']="Votre saisie est incomplète (".$sum."/".$nbopendays.")";
+            elseif(!$soumis):
+                $result['msg']="Votre saisie n'est pas soumise en totalité";
+            else :
+                $result['msg']="Votre saisie est incomplète (".$sum."/".$nbopendays.") ou non soumise";
+            endif;
+        elseif($sum >= $nbopendays && $soumis):
+            $result['class']="badge-success";
+            $result['msg']="Votre saisie est correcte pour ce mois"; 
+        endif;
+        return $result;
+    }
+    
+    /**
+     * permet de savoir en fonction de l'activité saisie sur une semaine se qui n'est pas sur le mois
+     * 
+     * @param type $activite
+     * @param type $mois
+     * @param type $annee
+     */
+    public function getEntrop($activite,$mois,$annee){
+        //compare le mois  par rapport au mois de l'activité si < calcul position 01 si > calcul position dernier jour
+        $first = new DateTime(CUSDate($annee.'-'.$mois.'-01'));
+        $date = new DateTime(CUSDate($activite['Activitesreelle']['DATE']));
+        $debutmois = $date->format('Ym');
+        $last = $date->add(new DateInterval('P7D'));
+        $lastmois = $last->format('Ym');
+        $ref = (int)$annee.$mois;
+        if ($debutmois < $ref):
+            $pos = $first->format('N');
+            switch($pos):
+                case 1 :
+                    $value = 0;
+                    break;
+                case 2 :
+                    $value = $activite['Activitesreelle']['LU'];
+                    break;
+                case 3 :
+                    $value = $activite['Activitesreelle']['LU']+$activite['Activitesreelle']['MA'];
+                    break;
+                case 4 :
+                    $value = $activite['Activitesreelle']['LU']+$activite['Activitesreelle']['MA']+$activite['Activitesreelle']['ME'];
+                    break;
+                case 5 :
+                    $value = $activite['Activitesreelle']['LU']+$activite['Activitesreelle']['MA']+$activite['Activitesreelle']['ME']+$activite['Activitesreelle']['JE'];
+                    break;
+                case 6 :
+                    $value = $activite['Activitesreelle']['LU']+$activite['Activitesreelle']['MA']+$activite['Activitesreelle']['ME']+$activite['Activitesreelle']['JE']+$activite['Activitesreelle']['VE'];
+                    break;     
+                case 7 :
+                    $value = $activite['Activitesreelle']['LU']+$activite['Activitesreelle']['MA']+$activite['Activitesreelle']['ME']+$activite['Activitesreelle']['JE']+$activite['Activitesreelle']['VE']+$activite['Activitesreelle']['SA'];
+                    break;                
+            endswitch;
+        elseif($lastmois > $ref):
+            $fin = new DateTime($annee.'-'.$mois.'-'.$first->format('t'));
+            $pos = $fin->format('N');
+            switch($pos):
+                case 7 :
+                    $value = 0;
+                    break;
+                case 6 :
+                    $value = $activite['Activitesreelle']['DI'];
+                    break;
+                case 5 :
+                    $value = $activite['Activitesreelle']['SA']+$activite['Activitesreelle']['DI'];
+                    break;
+                case 4 :
+                    $value = $activite['Activitesreelle']['VE']+$activite['Activitesreelle']['SA']+$activite['Activitesreelle']['DI'];
+                    break;
+                case 3 :
+                    $value = $activite['Activitesreelle']['JE']+$activite['Activitesreelle']['VE']+$activite['Activitesreelle']['SA']+$activite['Activitesreelle']['DI'];
+                    break;
+                case 2 :
+                    $value = $activite['Activitesreelle']['ME']+$activite['Activitesreelle']['JE']+$activite['Activitesreelle']['VE']+$activite['Activitesreelle']['SA']+$activite['Activitesreelle']['DI'];
+                    break;
+                case 1 :
+                    $value = $activite['Activitesreelle']['MA']+$activite['Activitesreelle']['ME']+$activite['Activitesreelle']['JE']+$activite['Activitesreelle']['VE']+$activite['Activitesreelle']['SA']+$activite['Activitesreelle']['DI'];
+                    break;                
+            endswitch;
+        else:
+            $value = 0;
+        endif;
+        return (int)$value;
+    }
+    
+    /**
+     * Export du calendrier des absences au format Excel
+     */
+    public function export_abs(){
+        $this->autoRender = false;
+        $ardate = $this->Session->read('abs_date');  
+        $utilisateurs = $this->Session->read('abs_users');
+        $indisponibilites = $this->Session->read('abs_abs');
+        $this->set(compact('indisponibilites','utilisateurs','ardate'));
+        $this->render('export_abs','export_xls');
+    }
+    
+    /**
+     * Mise en cache des information pour exporter le calendrier au format Excel
+     * 
+     * @param string $mois
+     * @param string $annee
+     * @param string $maxday
+     * @param string $indisponibilites
+     * @param string $utilisateurs
+     */
+    public function set_export_abs($mois,$annee,$maxday,$indisponibilites,$utilisateurs){
+        $this->Session->delete('abs_date');
+        $this->Session->write('abs_date',array($mois,$annee,$maxday));
+        $this->Session->delete('abs_users');
+        $this->Session->write('abs_users',$utilisateurs);
+        $this->Session->delete('abs_abs');
+        $this->Session->write('abs_abs',$indisponibilites);
+    }
 }

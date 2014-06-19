@@ -113,6 +113,38 @@
         </div>         
     </div>               
     </div>
+    <?php $hiden = $this->params->action == 'add'  ? 'style="display:none;"' : ''; ?>
+    <?php $hiden = $this->params->action == 'edit' && $this->request->data['Bien']['modele_id']==9 ? '' : 'style="display:none;"'; ?>
+    <div class="row clearfix for770" <?php echo $hiden; ?>>
+        <div class="col-md-6 column">
+            <div class="form-group">
+                <label class="col-md-4" for="BienCOEURINSTALLE">Coeur installé: </label>      
+                <div class="col-md-5">
+                    <?php echo $this->Form->input('COEURINSTALLE',array('type'=>'text','placeholder'=>'Coeur installé','class'=>'form-control')); ?>
+                </div>         
+            </div>  
+            <div class="form-group">
+                <label class="col-md-4" for="BienCOEURACTIVE">Coeur activé: </label>      
+                <div class="col-md-5">
+                    <?php echo $this->Form->input('COEURACTIVE',array('type'=>'text','placeholder'=>'Coeur activé','class'=>'form-control')); ?>
+                </div>         
+            </div>  
+        </div>
+        <div class="col-md-6 column">
+            <div class="form-group">
+                <label class="col-md-4" for="BienRAMINSTALLE">RAM installée: </label>      
+                <div class="col-md-5">
+                    <?php echo $this->Form->input('RAMINSTALLE',array('type'=>'text','placeholder'=>'Mémoire installée','class'=>'form-control')); ?>
+                </div>         
+            </div>  
+            <div class="form-group">
+                <label class="col-md-4" for="BienRAMACTIVE">RAM activée: </label>      
+                <div class="col-md-5">
+                    <?php echo $this->Form->input('RAMACTIVE',array('type'=>'text','placeholder'=>'Mémoire activée','class'=>'form-control')); ?>
+                </div>         
+            </div>  
+        </div>        
+    </div>    
     <div style="clear:both;margin-top: 10px;">
     <div class="form-group">
       <div class="btn-block-horizontal">
@@ -443,6 +475,15 @@ $(document).ready(function () {
              }); 
            }
        }
-    });       
+    }); 
+    
+    $(document).on('change','#BienModeleId',function(e){
+        var value = $("#BienModeleId option:selected").val();
+        if(value == 9){
+            $(".for770").show();
+        } else {
+            $(".for770").hide();
+        }
+    });    
 });
 </script>

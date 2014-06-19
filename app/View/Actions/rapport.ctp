@@ -63,11 +63,12 @@
 <?php $israpport = isset($rapportresults) ? count($rapportresults) : 0; ?>
 <?php $style = $israpport==0 ? 'style="display:none;"' : ''; ?>
 <div id="rapport" <?php echo $style; ?>>
-    <?php $index = count($chartresults) > 2 ? 0 : 1; ?>
+    <?php $index = isset($chartresults) && count($chartresults) > 2 ? 0 : 1; ?>
     <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc" style="vertical-align: baseline;"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn btn-sm btn-default','escape' => false)); ?></div>
 <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br>
 <br>
+<?php if(isset($detailrapportresults)): ?>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Détail des actions par mois</div><br>
     <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table1">
         <thead>
@@ -112,6 +113,8 @@
             <?php endforeach; ?>
         </tbody>
     </table>    
+    <?php endif; ?>
+    <?php if(isset($rapportresults)): ?>
     <br>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'actions par mois, par destinataire et par état</div><br>
     <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table5">
@@ -141,6 +144,7 @@
 	</tr> 
         </tfoot>
     </table>
+    <?php endif; ?>
     <?php if (isset($repartitions)): ?>
     <br />
         <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre d'actions par mois, par destinataire, par domaine et par état</div><br>

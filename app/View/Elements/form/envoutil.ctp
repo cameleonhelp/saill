@@ -12,7 +12,13 @@
             <?php echo $this->Form->input('OS',array('class'=>'yesno')); ?>
             &nbsp;<label for="EnvoutilOS" class='labelAfter'></label>
         </div>
-    </div>    
+    </div>   
+    <div class="form-group">
+        <label class="col-md-2" for="EnvoutilPVUMAX">PVU maximum : </label>
+        <div class="col-md-5">
+            <?php echo $this->Form->input('PVUMAX',array('type'=>'text','placeholder'=>'PVU maximum','class'=>'form-control')); ?>
+        </div>
+    </div>       
     <div class="form-group">
         <label class="col-md-2" for="EnvoutilEntiteId">Cercle de visibilité : </label>
         <div class="col-md-3">

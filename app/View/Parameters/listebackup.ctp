@@ -13,7 +13,7 @@
 <?php aarsort($files,'time'); ?>
 <?php foreach ($files as $file): ?>
 <tr>
-        <td style="text-align:center;"><span class="ico-file">&nbsp;</span></td>
+        <td style="text-align:center;"><span class="ico-<?php echo $file['ext']; ?>">&nbsp;</span></td>
         <td><?php echo $file['name']; ?></td>
         <td style="text-align:center;"><?php echo $file['time']; ?></td>
         <td style="text-align:right;"><?php echo $file['size']; ?></td>

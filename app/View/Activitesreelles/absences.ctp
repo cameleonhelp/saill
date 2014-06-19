@@ -32,7 +32,17 @@
                             <?php echo $strMonth[$month]." ".$year; ?>
                         <?php echo $this->Form->button('<span class="glyphicons right_arrow" data-container="body" rel="tooltip" data-title="Mois suivant"></span>', array('id'=>"nextMonth",'type'=>'button','class' => 'btn btn-sm btn-default','style'=>'margin-left:75px;')); ?>
                         <?php echo $this->Form->button('<span class="glyphicons clock" data-container="body" rel="tooltip" data-title="Mois courant"></span>', array('id'=>"today",'type'=>'button','class' => 'btn  btn-sm btn-default pull-right')); ?>
-                        <?php echo $this->Form->button('<span class="glyphicons camera" data-container="body" rel="tooltip" data-title="Générer le calendrier au format PNG"></span>', array('id'=>"canvas",'type'=>'button','class' => 'btn  btn-sm btn-default pull-right')); ?>
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+                              Export...
+                              <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li style="text-align:left;" id='canvas'><?php echo $this->Html->link('Image PNG', "#"); ?></li>
+                                <li style="text-align:left;"><?php echo $this->Html->link('Excel', array('action'=>'export_abs'),array("class"=>"")); ?></li>                               
+                            </ul>
+                        </div>
+                            <?php // echo $this->Form->button('<span class="glyphicons camera" data-container="body" rel="tooltip" data-title="Générer le calendrier au format PNG"></span>', array('id'=>"canvas",'type'=>'button','class' => 'btn  btn-sm btn-default pull-right')); ?>
                         <img src="<?php echo $this->webroot; ?>img/loading-edit.gif" id="wait" style="display:none;margin-top:7px;margin-right:10px;" class="pull-right">
                         <?php echo $this->Html->link("Télécharger l'image",'#',array('id'=>'link','style'=>'display:none;margin-top:7px;margin-right:10px;','class'=>"pull-right",'target'=>"_blank")); ?>
                     </th>

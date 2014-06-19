@@ -78,8 +78,3 @@
                    endif;
                 endforeach; ?>
 </table>
-
-<?php function convertDecimal($value){
-        return str_replace(".", ",", $value);
-       }
-?>

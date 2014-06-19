@@ -22,7 +22,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
 <head>
 	<?php echo $this->Html->charset('utf-8'); ?>
 	<title>
-		<?php echo $cakeDescription ?>:
+		<?php echo $cakeDescription ?> :
 		<?php echo $title_for_layout; ?>
 	</title>  
 	<?php
@@ -46,9 +46,10 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->script('bootstrap');              
                 echo $this->Html->script('validate/validate');  
                 echo $this->Html->script('validate/additional-methods');                  
-                echo $this->Html->script('validate/messages_fr'); 
+                echo $this->Html->script('validate/messages_fr');               
                 echo $this->Html->script('datepicker/datepicker'); 
                 echo $this->Html->script('datepicker/datepicker.fr');
+                echo $this->Html->script('editable/editable');                 
                 echo $this->Html->script('tinymce/tinymce');
                 echo $this->Html->script('tinymce/initTinyMCE');
                 echo $this->Html->script('datetime');
@@ -57,8 +58,9 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 echo $this->Html->script('highcharts/highcharts-more');
                 echo $this->Html->script('highcharts/modules/exporting');   
                 echo $this->Html->script('highcharts/modules/data');
+                echo $this->Html->script('highcharts/modules/solid-gauge');
                 echo $this->Html->script('flipcountdown/flipcountdown');
-                echo $this->Html->script('editable/editable');
+
                 //mask sur input
                 echo $this->Html->script('maskedinput/maskedinput');
                 //pour enregistrer image
@@ -74,7 +76,7 @@ $cakeDescription = __d('cake_dev', 'SAILL '); //.htmlspecialchars($version['Para
                 //sort on table
                 echo $this->Html->script('tablesorter/tablesorter');
                 echo $this->Html->script('tablesorter/tablesorter.widgets');    
-//                echo $this->Html->script('tablesorter/widgets/widget-editable'); 
+//                echo $this->Html->script('resizable-table'); 
                 // compatibilité IE
                 echo $this->Html->script('respond');     
                 echo $this->Html->script('html5shiv'); 
@@ -152,9 +154,12 @@ $(document).on('mouseover click','.novisible',function(){
     if($(this).hasClass('active')){
          $('body').removeClass('cbp-spmenu-push-toright');
          $('#cbp-spmenu-s1').removeClass('cbp-spmenu-open');
-         if($('nav.toolbar').css('left')!=''){
-             $('nav.toolbar').css({'left':'','right':''});
-         }   
+         var position = $('nav.toolbar').css('position');
+         if(position=="fixed"){
+            $('nav.toolbar').css({'left':'255px','right':'-255px'}).stop().animate({'position':'fixed','left':'15px','right':''},1,function(){$('nav.toolbar');$('navbar').css({'position':'relative'});});
+         }else{
+            $('nav.toolbar').css({'left':'255px','right':'-255px'}).stop().animate({'position':'fixed','left':'','right':''},1,function(){$('nav.toolbar');$('navbar').css({'position':'relative'});});
+         }
          $(this).removeClass('active');
      }else{
          $(this).addClass('active');  
@@ -183,16 +188,16 @@ $(document).ready(function () {
         if ($(this).scrollTop() > topscroll && $('nav.toolbar').css('position')=="relative"){
             if($('body').hasClass('cbp-spmenu-push-toright')){
                 if($('.novisible').hasClass('active')) {
-                    $('nav.toolbar').addClass('fixed').css({'width':content,'top':'0px','position':"fixed",'left':'','right':''}).stop().animate({'top':"52px"},200,function(){$('nav.toolbar');});
+                    $('nav.toolbar').addClass('fixed').css({'width':content,'top':'0px','position':"fixed",'left':'','right':''}).stop().animate({'top':"52px"},200,function(){$('nav.toolbar');$('navbar').css({'position':'relative'});});
                 } else{
-                    $('nav.toolbar').addClass('fixed').css({'width':content,'top':'0px','position':"fixed",'left':'255px','right':'-255px'}).stop().animate({'top':"52px"},200,function(){$('nav.toolbar');});
+                    $('nav.toolbar').addClass('fixed').css({'width':content,'top':'0px','position':"fixed",'left':'255px','right':'-255px'}).stop().animate({'top':"52px"},200,function(){$('nav.toolbar');$('navbar').css({'position':'relative'});});
                 }
             } else {
-                $('nav.toolbar').addClass('fixed').css({'width':content,'top':'0px','position':"fixed",'left':'','right':''}).stop().animate({'top':"52px"},700,function(){$('nav.toolbar');});
+                $('nav.toolbar').addClass('fixed').css({'width':content,'top':'0px','position':"fixed",'left':'','right':''}).stop().animate({'top':"52px"},700,function(){$('nav.toolbar');$('navbar').css({'position':'relative'});});
             }   
         } 
         if ( $(this).scrollTop() == 0){
-            $('nav.toolbar').removeClass('fixed').css({'width':content,'left':'','right':''}).stop().animate({'top':"",'position':''},10,function(){$('nav.toolbar');});
+            $('nav.toolbar').removeClass('fixed').css({'width':content,'left':'','right':'','top':'0px','position':"relative"}).stop().animate({'top':"",'position':''},10,function(){$('nav.toolbar');$('navbar').css({'position':'relative'});});
         }
     });  
     

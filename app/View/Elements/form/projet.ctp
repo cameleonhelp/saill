@@ -20,7 +20,8 @@
         <label class="col-md-2 required" for="ProjetEntiteId">Cercle de visibilité prioritaire : </label>
         <div class="col-md-3">
             <?php if ($this->params->action == 'edit') { ?>
-                <?php echo $this->Form->select('entite_id',$cercles,array('data-rule-required'=>'true','class'=>'form-control','data-msg-required'=>"Le cercle de visibilité prioritaire est obligatoire dans l'onglet idcercle",'selected' => $this->data['Projet']['entite_id'],'empty' => 'Choisir un cercle de visibilité')); ?>
+                <?php $selected = isset($this->data['Projet']['entite_id'])?$this->data['Projet']['entite_id']:''; ?>
+                <?php echo $this->Form->select('entite_id',$cercles,array('data-rule-required'=>'true','class'=>'form-control','data-msg-required'=>"Le cercle de visibilité prioritaire est obligatoire dans l'onglet idcercle",'selected' => $selected,'empty' => 'Choisir un cercle de visibilité')); ?>
             <?php } else { ?>
                 <?php $entite_id = is_null(userAuth('entite_id')) ? '' : userAuth('entite_id'); ?>
                 <?php echo $this->Form->select('entite_id',$cercles,array('data-rule-required'=>'true','class'=>'form-control','data-msg-required'=>"Le cercle de visibilité prioritaire est obligatoire dans l'onglet idcercle",'selected' => $entite_id, 'default' => $entite_id, 'empty' => 'Choisir un cercle de visibilité')); ?>

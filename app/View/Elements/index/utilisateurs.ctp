@@ -190,8 +190,8 @@
 <tr class="trhidden" style="display:none;">
    <td colspan="8" align="center">
        <table cellpadding="0" cellspacing="0" class="table table-hidden" style="margin-bottom:-3px;">
-           <tr><th>Nom Prénom</th><th>Date naissance</th><th>Email</th><th>Login</th><th>Société</th><th>Site</th><th>Assistance</th></tr>
-           <tr><td><?php echo $utilisateur['Utilisateur']['NOMLONG']; ?></td><td><?php echo $utilisateur['Utilisateur']['NAISSANCE']; ?></td><td><?php echo $mail; ?></td><td><?php echo $utilisateur['Utilisateur']['username']; ?></td><td><?php echo $utilisateur['Societe']['NOM']; ?></td><td><?php echo $utilisateur['Site']['NOM']; ?></td><td><?php echo $utilisateur['Assistance']['NOM']; ?></td></tr>
+           <tr><th>Nom Prénom</th><th>Date naissance</th><th>Email</th><th>Login</th><th>Société</th><th>Site</th><th>Assistance</th><th>Date de début</th></tr>
+           <tr><td><?php echo $utilisateur['Utilisateur']['NOMLONG']; ?></td><td><?php echo $utilisateur['Utilisateur']['NAISSANCE']; ?></td><td><?php echo $mail; ?></td><td><?php echo $utilisateur['Utilisateur']['username']; ?></td><td><?php echo $utilisateur['Societe']['NOM']; ?></td><td><?php echo $utilisateur['Site']['NOM']; ?></td><td><?php echo $utilisateur['Assistance']['NOM']; ?></td><td><?php echo $utilisateur['Utilisateur']['DATEDEBUTACTIF']; ?></td></tr>
        </table>
    </td>
 </tr>  

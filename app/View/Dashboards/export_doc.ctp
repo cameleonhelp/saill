@@ -58,7 +58,7 @@ $date->setTimezone(new DateTimeZone('Europe/Paris'));?>
                         <td class="tableTdContent" style="text-align: right;"><?php echo $row['CONTRAT']['BUDGET']; ?> k€</td>
                         <td class="tableTdContent" style="text-align: right;"><?php echo $row['CONTRAT']['CHARGE']; ?> j</td>  
                         <td class="tableTdContent" style="text-align: right;"><?php echo $row[0]['BUDGETFACTURE']; ?> k€</td>
-                        <td class="tableTdContent" style="text-align: right;"><?php echo $row['FACTURATION']['CHARGEFACTUREE']; ?> j</td> 
+                        <td class="tableTdContent" style="text-align: right;"><?php echo isset($row['FACTURATION']['CHARGEFACTUREE']) ? $row['FACTURATION']['CHARGEFACTUREE'] : ''; ?> j</td> 
                         <td class="tableTdContent" style="text-align: right;"><?php echo $row[0]['AVANCEMENTBUDGET']; ?> %</td>
                         <td class="tableTdContent" style="text-align: right;"><?php echo $row[0]['AVANCEMENTCHARGE']; ?> %</td>       
                         <td class="tableTdContent" style="text-align: right;"><?php echo $row[0]['RAF']; ?> j</td> 
@@ -105,9 +105,9 @@ $date->setTimezone(new DateTimeZone('Europe/Paris'));?>
                         <td class="tableTdContent" style="text-align: right;"><?php echo $row[0]['BUDGETPREVU']; ?> k€</td>
                         <td class="tableTdContent" style="text-align: right;"><?php echo $row['PREVISION']['CHARGEPREVUE']; ?> j</td>                
                         <td class="tableTdContent" style="text-align: right;"><?php echo $row[0]['BUDGETREEL']; ?> k€</td>
-                        <td class="tableTdContent" style="text-align: right;"><?php echo $row['CONSOMMATION']['CHARGEREELLE']; ?> j</td>   
+                        <td class="tableTdContent" style="text-align: right;"><?php echo isset($row['CONSOMMATION']['CHARGEREELLE']) ? $row['CONSOMMATION']['CHARGEREELLE'] : ''; ?> j</td>   
                         <td class="tableTdContent" style="text-align: right;"><?php echo $row[0]['BUDGETFACTURE']; ?> k€</td>
-                        <td class="tableTdContent" style="text-align: right;"><?php echo $row['FACTURATION']['CHARGEFACTUREE']; ?> j</td> 
+                        <td class="tableTdContent" style="text-align: right;"><?php echo isset($row['FACTURATION']['CHARGEFACTUREE']) ? $row['FACTURATION']['CHARGEFACTUREE'] : ''; ?> j</td> 
                         <td class="tableTdContent" style="text-align: right;"><?php echo $row[0]['AVANCEMENTBUDGET']; ?> %</td>
                         <td class="tableTdContent" style="text-align: right;"><?php echo $row[0]['AVANCEMENTCHARGE']; ?> %</td>     
                         <td class="tableTdContent" style="text-align: center;"><?php echo $row[0]['ECART']; ?> j</td>   

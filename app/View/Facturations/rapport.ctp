@@ -64,6 +64,7 @@
     <div class="pull-right"><?php echo $this->Html->link('<span class="ico-doc" style="vertical-align: baseline;"></span> Enregistrer',array('action'=>'export_doc'), array('type'=>'button','class' => 'btn btn-sm btn-default','escape' => false)); ?></div>
     <div id="chartcontainer" style="width:80%; height:500px; margin-left: 10%;"></div>
 <br><br>
+<?php if(isset($rapportresults)): ?>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jour facturés par projet</div><br>
     <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table1">
         <thead>
@@ -98,7 +99,9 @@
 	</tr> 
         </tfoot>
     </table>
+<?php endif; ?>
 <br>
+<?php if(isset($detailrapportresults)): ?>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jours facturés par projet et activité</div><br>
     <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax table2">
         <thead>
@@ -135,6 +138,7 @@
 	</tr> 
         </tfoot>        
     </table>
+<?php endif; ?>
     <?php if (isset($repartitions)): ?>
     <br />
         <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Nombre de jours facturés par utilisateur et par activité</div><br>

@@ -51,36 +51,31 @@
                         <td class="tableTd">Coeur licence</td>
                         <td class="tableTd">PVU</td>
                         <td class="tableTd">RAM</td>
-                        <td class="tableTd">Coût</td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", 'Coût'); ?></td>
                         <td class="tableTd">Usage</td>
                         <td class="tableTd">CPU</td>
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
-			echo '<td class="tableTdContent">'.$row['logiciels']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['envoutils']['logiciel'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['envversions']['VERSION'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['envversions']['EDITION'].'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['logiciels']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['envoutils']['logiciel']).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['envversions']['VERSION']).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['envversions']['EDITION']).'</td>';
                         $os = $row['envoutils']['OS']==true ? 'Oui' : 'Non';
                         echo '<td class="tableTdContent">'.$os.'</td>';
-			echo '<td class="tableTdContent">'.$row['applications']['application'].'</td>';                        
-			echo '<td class="tableTdContent">'.$row['lots']['lot'].'</td>';
-                        echo '<td class="tableTdCourrier">'.$row['biens']['bien'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['types']['type'].'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['applications']['application']).'</td>';                        
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['lots']['lot']).'</td>';
+                        echo '<td class="tableTdCourrier">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['biens']['bien']).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['types']['type']).'</td>';
                         $listenv = isset($row['assobienlogiciels']['dsitenv_nom']) ? $row['assobienlogiciels']['dsitenv_nom'] : '';
-                        echo '<td class="tableTdCourrier">'.$listenv.'</td>';
+                        echo '<td class="tableTdCourrier">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$listenv).'</td>';
                         echo '<td class="tableTdCourrier">'.convertDecimal($row['biens']['COEUR']).'</td>';
                         echo '<td class="tableTdCourrier">'.convertDecimal($row['biens']['COEURLICENCE']).'</td>';
                         echo '<td class="tableTdCourrier">'.convertDecimal($row['biens']['PVU']).'</td>';
-                        echo '<td class="tableTdCourrier">'.$row['biens']['RAM'].'</td>';
-                        echo '<td class="tableTdCourrier">'.$row['biens']['COUT'].'</td>';
-                        echo '<td class="tableTdCourrier">'.$row['usages']['usages'].'</td>';
-                        echo '<td class="tableTdCourrier">'.$row['cpuses']['cpu'].'</td>';
+                        echo '<td class="tableTdCourrier">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['biens']['RAM']).'</td>';
+                        echo '<td class="tableTdCourrier">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['biens']['COUT']).' '.iconv("UTF-8", "ISO-8859-1//TRANSLIT",'€').'</td>';
+                        echo '<td class="tableTdCourrier">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['usages']['usages']).'</td>';
+                        echo '<td class="tableTdCourrier">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['cpuses']['cpu']).'</td>';
                         echo '</tr>';
                 endforeach; ?>
 </table>
-
-<?php function convertDecimal($value){
-        return str_replace(".", ",", $value);
-       }
-?>

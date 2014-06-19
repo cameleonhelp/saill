@@ -16,7 +16,7 @@
 </STYLE>
 <table>
 	<tr>
-		<td><b>Export des facturations estimées à faire depuis le site SAILL<b></td>
+		<td><b><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Export des facturations estimées à faire depuis le site SAILL"); ?><b></td>
 	</tr>
 	<tr>
 		<td><b>Date:</b></td>
@@ -32,18 +32,17 @@
 		<td></td>
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Nom utilisateur</td>
-			<td class="tableTd">Date</td>
-                        <td class="tableTd">Activité</td>
-                        <td class="tableTd">Total</td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Nom utilisateur"); ?></td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Date"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Activité"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Total"); ?></td>
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
-			echo '<td class="tableTdContent">'.$row['Utilisateur']['NOMLONG'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Activitesreelle']['DATE'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Activitesreelle']['projet_NOM'].' - '.$row['Activite']['NOM'].'</td>';
-                        $total = str_replace('.', ',', $row['Activitesreelle']['TOTAL']);
-			echo '<td class="tableTdContent">'.$total.'</td>';                        
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Utilisateur']['NOMLONG']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Activitesreelle']['DATE']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Activitesreelle']['projet_NOM']).' - '.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Activite']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.convertDecimal($row['Activitesreelle']['TOTAL']).'</td>';                        
                         echo '</tr>';
 			endforeach;
 		?>

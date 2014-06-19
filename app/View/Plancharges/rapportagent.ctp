@@ -29,6 +29,7 @@
 </div>
 <?php $israpport = isset($rapportresults) ? count($rapportresults) : 0; ?>
 <?php $style = $israpport==0 ? 'style="display:none;"' : ''; ?>
+<?php if(isset($rapportresults)): ?>
 <div id="rapport" <?php echo $style; ?>>
     <div style="font-family:'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helvetica, sans-serif;font-size:16px;color:#274b6d;fill:#274b6d;text-align: center;" text-anchor="middle" class="highcharts-title" zIndex="4">Répartition du plan de charge pour un agent</div><br>
     <table cellpadding="0" cellspacing="0" class="table table-bordered tablemax">
@@ -67,6 +68,7 @@
         </tfoot>
     </table>
     <?php echo $this->Html->link('Envoyer par mail à l\'agent',array('controller'=>'plancharges','action'=>'sendmail'),array('type'=>'button','class' => 'btn btn-sm btn-default pull-right')); ?>
+<?php endif; ?>
 </div>
 <?php if(isset($rapportresults) && $israpport==0) : ?>
 <div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>

@@ -36,17 +36,18 @@ $this->set('title_for_layout','Accueil');
                         Vous trouverez ci-dessous des fichiers qui sont à votre disposition ci-dessous pour vous aider dans votre activité ou des informations à connaître.<br/>
                         <br/>
                         Nous espérons que ce site vous facilitera votre restitution d'activité et un meilleur partage de l'information.
+                        <!--<div class="filigrane"><p>SAILL</p></div>-->
                     </div>                
                 </div>
                 <?php 
                 if (isset($activeMessages)):
                     foreach ($activeMessages as $activeMessage) { ?>
                         <div class="item">
-                            <div class="well well-small top-header-orange well-msg"><?php echo $activeMessage['Message']['LIBELLE']; ?></div>
+                           <div class="well well-small top-header-orange well-msg"><?php echo $activeMessage['Message']['LIBELLE']; ?><!-- <div class="filigrane"><p>SAILL</p></div>--></div>
                         </div>                           
                 <?php    }
                 endif;
-                ?>        
+                ?>  
             </div>
         </div>
     </div>
@@ -74,10 +75,14 @@ $this->set('title_for_layout','Accueil');
 </div>
 <script>
 $(document).ready(function () {
-    /*
-    var defaultpswd = "<?php echo md5('SAILL'); ?>";
-    var userpswd = "<?php echo userAuth('password'); ?>";
-    if(defaultpswd === userpswd){$('#modalpassword').modal('show');}
-    */
+    $('#carousel-message').carousel({
+        interval: 3000
+      })
+    $('#carousel-stat').carousel({
+        interval: 4500
+      })
+    $('#carousel-composant').carousel({
+        interval: 5500
+      })      
 });
 </script>  

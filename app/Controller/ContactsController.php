@@ -1,9 +1,9 @@
 <?php
 App::uses('CakeEmail', 'Network/Email');
-App::import('Controller', 'Entites');
+App::uses('EntitesController', 'Controller');
 /**
  * Description of ContactsController
- * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
+ * @version 3.0.1.002 le 28/05/2014 par Jacques LEVAVASSEUR
  */
 class ContactsController extends AppController {
     public $components = array('History','Common');
@@ -19,11 +19,19 @@ class ContactsController extends AppController {
         return $this->set('title_for_layout',$title); //$this->fetch($title);
     }      
     
-/**
- * add method
- *
- * @return void
- */
+    /**
+     * Méthode permettant ici d'autoriser une méthode pour tous les utilisateurs
+     */
+    public function beforeFilter() {   
+        $this->Auth->allow(array('add'));
+        parent::beforeFilter();
+    }   
+    
+    /**
+     * envois d'un mail au contact désigné dans le centre de visibilité
+     *
+     * @return void
+     */
     public function add() {
         $this->set_title();
         if ($this->request->is('post')) {

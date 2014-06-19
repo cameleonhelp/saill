@@ -1,17 +1,23 @@
 <?php
 App::uses('AppController', 'Controller');
-App::uses('Vendor', 'ical', array('file'=>'class.iCalReader.php'));
-App::import('Controller', 'Activites');
-App::import('Controller', 'Activitereelles');
+App::import('Vendor', 'ICal', array('file'=>'class.iCalReader.php'));
+App::uses('ActivitesController', 'Controller');
+App::uses('ActivitesreellesController', 'Controller');
 
 /**
  * Description of FilesharedsController
  *
- * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
+ * @version 3.0.1.002 le 28/05/2014 par Jacques LEVAVASSEUR
  */
 class FilesharedsController extends AppController {
+    /**
+     * variables globales utilisées au niveau du controller
+     */
     public $components = array('History','Common');
     
+    /**
+     * upload d'un fichier
+     */
     public function shared(){
         $file = isset($this->data['Fileshared']['file']['name']) ? $this->data['Fileshared']['file']['name'] : '';
         $file_type = strrchr($file,'.');
@@ -30,9 +36,13 @@ class FilesharedsController extends AppController {
         $this->redirect(array('controller'=>'pages','action'=>'home'));
     }
     
+    /**
+     * suppression du fichier
+     * 
+     * @param string $name
+     */
     public function deletefile($name=null){
         if($name!=null):
-            //$name = str_replace('+', '/', $name);
             $name = str_replace('..','.',$name);
             $name = explode('+',$name);
             $path =  '';
@@ -56,6 +66,11 @@ class FilesharedsController extends AppController {
         $this->redirect(array('controller'=>'pages','action'=>'home'));        
     }
     
+    /**
+     * suppression du fichier ics pour ne pas garder de trace et surcharger le serveur
+     * 
+     * @param string $name
+     */
     public function deleteicsfile($name=null){
         if($name!=null):
             $fileurl = realpath($name);           
@@ -65,6 +80,9 @@ class FilesharedsController extends AppController {
         endif;      
     }
     
+    /**
+     * parse le fichier ICS pour mettre les indisponibilités en feuille de temps
+     */
     public function parseICS(){
         $file = isset($this->data['Fileshared']['file']['name']) ? $this->data['Fileshared']['file']['name'] : '';
         $file_type = strrchr($file,'.');
@@ -87,8 +105,14 @@ class FilesharedsController extends AppController {
         $this->redirect(array('controller'=>'activitesreelles','action'=>'index','tous',userAuth('id'),date('m')));        
     }
     
+    /**
+     * insertion en base des indisponibilités trouvées dans le fichier ICS
+     * 
+     * @param string $file
+     * @param int $utilisateur_id
+     */
     public function inserticstodb($file=null,$utilisateur_id){
-        $ical = new ical($file);
+        $ical = new ICal($file);
         $events = $ical->events($file);
         //pour chaque evenement on recupére la date de départ, le type d'indisponibilité, le nombre de jours et en cas de congé si matin(0) ou aprés midi(1)
         foreach($events as $event):
@@ -118,11 +142,12 @@ class FilesharedsController extends AppController {
         endforeach;
         // pour chaque ligne on insert en base à partir de la méthode icsImport de Activitesreelles
         aasort($allindispos, 'id');
-        $ObjActivitereelles = new ActivitereellesController();
+        $ObjActivitereelles = new ActivitesreellesController();
         foreach($allindispos as $indispo):
             $ObjActivitereelles->icsImport($indispo['utilisateur_id'],$indispo['ACTIVITE'],$indispo['DATE'],$indispo['DAY'],$indispo['TYPE'],$indispo['DUREE']);
         endforeach;
     }
+    
 }
 
 ?>

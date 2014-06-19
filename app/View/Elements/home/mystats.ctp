@@ -64,6 +64,7 @@
                           <?php foreach ($listelivrables as $livrable) :  ?>
                           <?php $class = CUSDate($livrable['Livrable']['ECHEANCE']) < date('Y-m-d') ? 'tolate' : ''; ?>
                           <?php $chronos = CUSDate($livrable['Livrable']['ECHEANCE']) < date('Y-m-d') ? 'En retard' : ''; ?>
+                          <?php $warning_sign = '<span class="glyphicons warning_sign red"></span>'; ?>
                               <li class="list-group-item"><div><span class="bold size14 <?php echo $class; ?>"><?php echo $livrable['Livrable']['ECHEANCE']; ?>&nbsp;<span class='text-exposant'><?php echo $chronos != '' ? "[".$chronos."] ".$warning_sign : ''; ?></span></span></div><span class="objet"><?php echo $livrable['Livrable']['NOM']; ?></span>
                                   <span class="pull-right"><?php echo $this->Html->link('<span class="glyphicons pencil showoverlay notchange" rel="tooltip" data-title="Modification"></span>', array('controller'=>'livrables','action' => 'edit', $livrable['Livrable']['id']),array('escape' => false,'class'=>'showoverlay')); ?></span>
                               </li>

@@ -16,7 +16,7 @@
 </STYLE>
 <table>
 	<tr>
-		<td colspan="17"><b>Export du plan de charges <?php echo $rows[0]['Plancharge']['NOM']; ?> depuis le site SAILL<b></td>
+		<td colspan="17"><b>Export du plan de charges <?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT",$rows[0]['Plancharge']['NOM']); ?> depuis le site SAILL<b></td>
 	</tr>
 	<tr>
 		<td><b>Date:</b></td>
@@ -32,43 +32,43 @@
 		<td></td>
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Utilisateur</td>
-                        <td class="tableTd">Domaines</td>
-			<td class="tableTd">Activité</td>
-                        <td class="tableTd">Etp</td>
-                        <td class="tableTd">Jan.</td>
-                        <td class="tableTd">Fév.</td>
-                        <td class="tableTd">Mars</td>
-                        <td class="tableTd">Avril</td>
-                        <td class="tableTd">Mai</td>
-                        <td class="tableTd">Juin</td>
-                        <td class="tableTd">Juil.</td>
-                        <td class="tableTd">Aout</td>
-                        <td class="tableTd">Sept</td>
-                        <td class="tableTd">Oct.</td>
-                        <td class="tableTd">Nov.</td>
-                        <td class="tableTd">Déc</td>
-                        <td class="tableTd">Total</td>                      
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Utilisateur"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Domaines"); ?></td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Activité"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Etp"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Jan."); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Fév."); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Mars"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Avril"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Mai"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Juin"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Juil."); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Août"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Sept"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Oct."); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Nov."); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Déc"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Total"); ?></td>                      
 		</tr>	
                 <?php $i=6; ?>
 		<?php foreach($rows as $row):
 			echo '<tr>';
-			echo '<td class="tableTdContent">'.$row['Utilisateur']['NOMLONG'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Domaine']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Activite']['NOM'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['Detailplancharge']['ETP'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Detailplancharge']['JANVIER'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Detailplancharge']['FEVRIER'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Detailplancharge']['MARS'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Detailplancharge']['AVRIL'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Detailplancharge']['MAI'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Detailplancharge']['JUIN'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Detailplancharge']['JUILLET'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Detailplancharge']['AOUT'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Detailplancharge']['SEPTEMBRE'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Detailplancharge']['OCTOBRE'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Detailplancharge']['NOVEMBRE'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Detailplancharge']['DECEMBRE'].'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Utilisateur']['NOMLONG']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Domaine']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Activite']['NOM']).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Detailplancharge']['ETP']).'</td>';
+			echo '<td class="tableTdContent">'.convertDecimal($row['Detailplancharge']['JANVIER']).'</td>';
+			echo '<td class="tableTdContent">'.convertDecimal($row['Detailplancharge']['FEVRIER']).'</td>';
+			echo '<td class="tableTdContent">'.convertDecimal($row['Detailplancharge']['MARS']).'</td>';
+			echo '<td class="tableTdContent">'.convertDecimal($row['Detailplancharge']['AVRIL']).'</td>';
+			echo '<td class="tableTdContent">'.convertDecimal($row['Detailplancharge']['MAI']).'</td>';
+			echo '<td class="tableTdContent">'.convertDecimal($row['Detailplancharge']['JUIN']).'</td>';
+			echo '<td class="tableTdContent">'.convertDecimal($row['Detailplancharge']['JUILLET']).'</td>';
+			echo '<td class="tableTdContent">'.convertDecimal($row['Detailplancharge']['AOUT']).'</td>';
+			echo '<td class="tableTdContent">'.convertDecimal($row['Detailplancharge']['SEPTEMBRE']).'</td>';
+			echo '<td class="tableTdContent">'.convertDecimal($row['Detailplancharge']['OCTOBRE']).'</td>';
+			echo '<td class="tableTdContent">'.convertDecimal($row['Detailplancharge']['NOVEMBRE']).'</td>';
+			echo '<td class="tableTdContent">'.convertDecimal($row['Detailplancharge']['DECEMBRE']).'</td>';
 			echo '<td class="tableTdContent">=SOMME(E'.$i.':P'.$i.')</td>';                      
 			echo '</tr>';
                         $i++;

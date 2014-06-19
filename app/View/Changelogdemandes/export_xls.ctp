@@ -16,7 +16,7 @@
 </STYLE>
 <table>
 	<tr>
-		<td><b>Export des changements SAILL prévus<b></td>
+		<td><b><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Export des changements SAILL prévus"); ?><b></td>
 	</tr>
 	<tr>
 		<td><b>Date:</b></td>
@@ -32,23 +32,23 @@
 		<td></td>
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Identifiant</td>
-			<td class="tableTd">Version</td>
-                        <td class="tableTd">Prévue le</td>
-                        <td class="tableTd">Criticité</td>
-                        <td class="tableTd">Etat</td>
-                        <td class="tableTd">Type de demande</td>
-                        <td class="tableTd">Changement demandé</td>                   
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Identifiant"); ?></td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Version"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Prévue le"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Criticité"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Etat"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Type de demande"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Changement demandé"); ?></td>                   
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
 			echo '<td class="tableTdContent">'."C-".strYear($row['Changelogdemande']['created'])."-".$row['Changelogdemande']['id'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Changelogversion']['VERSION'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Changelogdemande']['DATEPREVUE'].'</td>';                        
-			echo '<td class="tableTdContent">'.$changelogcriticites[$row['Changelogdemande']['CRITICITE']].'</td>';
-                        echo '<td class="tableTdContent">'.$changelogetats[$row['Changelogdemande']['ETAT']].'</td>'; 
-			echo '<td class="tableTdContent">'.$changelogtypes[$row['Changelogdemande']['TYPE']].'</td>'; 
-                        echo '<td class="tableTdContent">'.$row['Changelogdemande']['DEMANDE'].'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Changelogversion']['VERSION']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Changelogdemande']['DATEPREVUE']).'</td>';                        
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $changelogcriticites[$row['Changelogdemande']['CRITICITE']]).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $changelogetats[$row['Changelogdemande']['ETAT']]).'</td>'; 
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $changelogtypes[$row['Changelogdemande']['TYPE']]).'</td>'; 
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Changelogdemande']['DEMANDE']).'</td>';
                         echo '</tr>';
                 endforeach; ?>
 </table>

@@ -30,7 +30,7 @@
             <label class="col-md-4 required" for="RapportIndisponibilite">Indisponibilité : </label>
             <div class="col-md-4">
                     <?php $checked = isset($this->data['Rapport']['indisponibilite']) ? $this->data['Rapport']['indisponibilite'] : 'checked'; ?>
-                    <?php echo $this->Form->input('indisponibilite',array('type'=>'checkbox','class'=>'yesno','value'=>1,'checked'=>$checked)); ?>&nbsp;<label class="labelAfter" for="RapportIndisponibilite"></label>         
+                    <?php echo $this->Form->input('indisponibilite',array('type'=>'checkbox','class'=>'yesno','checked'=>$checked)); ?>&nbsp;<label class="labelAfter" for="RapportIndisponibilite"></label>         
             </div>            
         </div>        
     </div>
@@ -99,7 +99,7 @@
     </tr> 
     </tfoot>    
 </table>
-<?php else : ?>
+<?php elseif (isset($results) && count($results)==0)  : ?>
 <div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
 <?php endif; ?>
 </div>
@@ -125,25 +125,8 @@ $(document).ready(function (){
         $("#total").html(newSumOfColumns('tr:not(.filtered) > td.nb','j'));
         $("#totalfrais").html(newSumOfColumns('tr:not(.filtered) > td.frais','€'));
     });
-            
-    function newSumOfColumns(id,symbole) {
-        var tot = 0;
-        $(id).each(function() {
-          value = $(this).html()=='' ? 0: $(this).html();
-          tot += parseFloat(value);
-        });
-        return parseFloat(tot).toFixed(2)+" "+symbole;
-     };    
-    function sumOfColumns(id,type) {
-        var tot = 0;
-        $("."+id).each(function() {
-          tot += parseFloat($(this).html());
-        });
-        tot = isNaN(tot) ? 0 : tot;
-        return tot.toFixed(2)+" "+type;
-     }   
     
-    $("#total").html(sumOfColumns('nb','j'));
-    $("#totalfrais").html(sumOfColumns('frais','€'));
+    $("#total").html(sumOfColumns('.nb','j'));
+    $("#totalfrais").html(sumOfColumns('.frais','€'));
 });
 </script>

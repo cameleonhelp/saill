@@ -1,13 +1,13 @@
 <?php
 App::uses('AppController', 'Controller');
-App::import('Controller', 'Assoprojetentites');
-App::import('Controller', 'Projets');
-App::import('Controller', 'Plancharges');
+App::uses('AssoprojetentitesController', 'Controller');
+App::uses('ProjetsController', 'Controller');
+App::uses('PlanchargesController', 'Controller');
 /**
  * Dashboards Controller
  *
  * @property Dashboard $Dashboard
- * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
+ * @version 3.0.1.002 le 28/05/2014 par Jacques LEVAVASSEUR
  */
 class DashboardsController extends AppController {
     public $components = array('History','Common');    
@@ -23,6 +23,11 @@ class DashboardsController extends AppController {
         return $this->set('title_for_layout',$title); //$this->fetch($title);
     }      
     
+    /**
+     * tableau de bord pour les indicateurs
+     * 
+     * @throws UnauthorizedException
+     */
     public function index() {
             $this->set_title();
             if (isAuthorized('facturations', 'rapports') || isAuthorized('activitesreelles', 'rapports') || isAuthorized('plancharges', 'rapports')) :
@@ -159,16 +164,19 @@ class DashboardsController extends AppController {
             endif;                     
     }
     
-	function export_doc() {
-            if($this->Session->check('rapportresults')):
-                $data = $this->Session->read('rapportresults');
-                $this->set('rowsrapport',$data);              
-		$this->render('export_doc','export_doc');
-            else:
-                $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport',true),'flash_failure');             
-                $this->redirect(array('action'=>'rapport'));
-            endif;
-        }        
+    /**
+     * exportation au format Word
+     */
+    function export_doc() {
+        if($this->Session->check('rapportresults')):
+            $data = $this->Session->read('rapportresults');
+            $this->set('rowsrapport',$data);              
+            $this->render('export_doc','export_doc');
+        else:
+            $this->Session->setFlash(__('Rapport impossible à éditer veuillez renouveler le calcul du rapport',true),'flash_failure');             
+            $this->redirect(array('action'=>'rapport'));
+        endif;
+    }        
 }
 
 ?>

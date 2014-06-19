@@ -1797,6 +1797,10 @@ color: #3E3D40;
     background-image: url("../img/file.png");
     background-position: 0 0;    
 }
+.ico-sql{
+    background-image: url("../img/file.png");
+    background-position: 0 0;    
+}
 .ico-ics{
     background-image: url("../img/ics.png");
     background-position: 0 0;    
@@ -1819,6 +1823,10 @@ color: #3E3D40;
 }
 .ico-pdf{
     background-image: url("../img/pdf.png");
+    background-position: 0 0;     
+}
+.ico-zip{
+    background-image: url("../img/zip.png");
     background-position: 0 0;     
 }
 
@@ -2263,7 +2271,7 @@ td.actions120,th.actions120 {
     max-height: 300px;
     overflow-y: auto;
 }
-[data-rel=popover]:not(.free):not(span .clear){
+[data-rel=popover]:not(.free):not(span .clear):not(.editable-popup){
     margin-top:0px;
     cursor: pointer;
     padding: 11px 15px;
@@ -2454,7 +2462,15 @@ label.italic{
     background-color: #AEA79F !important;
 }
 .tmpindispo{
-    background-color: #F2BFE3 !important;
+/*    background-image:url('../img/abs_striped.png');
+    background-repeat:repeat;*/
+    background: repeating-linear-gradient(
+      45deg,
+      #FFFFFF,
+      #FFFFFF 2px,
+      #CCCCCD 2px,
+      #CCCCCD 4px
+    );
 }
 .week {
     background-color: #CB0044 !important;
@@ -3124,7 +3140,7 @@ height: 20px;
 dd{
     margin-left:20px;
     list-style-type: square;
-     display: list-item; 
+    display: list-item; 
 }
 
 .vertical-text{
@@ -3228,16 +3244,29 @@ dd{
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
-    padding: 15px;
+    border-top: 0px solid #fff !important;
+    padding: 10px;
+    margin-top:0px !important;
 }
 
 .nav-tabs {
-    margin-bottom: 0px;
+    margin-bottom: -1px;
 }
 
 .tabbable {
-    margin: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     overflow: hidden;
+}
+
+.nav-tabs > li.active > a, 
+.nav-tabs > li.active > a:hover, 
+.nav-tabs > li.active > a:focus{
+    border-bottom: 2px solid transparent !important;
+}
+
+.nav-tabs > li > a > span{
+    margin-top:-5px !important;
 }
 
 .linkcolor:before {
@@ -3268,4 +3297,23 @@ dd{
 .well-msg{
     height: 500px !important;
     overflow-y: auto;
+}
+
+.filigrane{
+  color: #fff;
+  text-shadow: 0 -2px 3px #777; /* horizontal-offset vertical-offset 'blur' colour */
+  -moz-text-shadow: 0 -2px 3px #777;
+  -webkit-text-shadow: 0 -2px 3px #777;
+  font-size: 150pt !important;
+/*  -webkit-transform: rotate(-35deg);
+  -moz-transform: rotate(-35deg);*/
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  z-index: 0;
+  left:25%;
+  top:50%;
+  opacity:0.1;
+  filter : alpha(opacity=10);
 }

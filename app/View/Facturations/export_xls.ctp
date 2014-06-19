@@ -16,7 +16,7 @@
 </STYLE>
 <table>
 	<tr>
-		<td><b>Export des facturations estimées depuis le site SAILL<b></td>
+		<td><b><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Export des facturations estimées depuis le site SAILL"); ?><b></td>
 	</tr>
 	<tr>
 		<td><b>Date:</b></td>
@@ -32,22 +32,21 @@
 		<td></td>
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Nom utilisateur</td>
-			<td class="tableTd">Date</td>
-                        <td class="tableTd">Réf. GALILEI</td>
-                        <td class="tableTd">Version</td>
-                        <td class="tableTd">Activité</td>
-                        <td class="tableTd">Total</td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Nom utilisateur"); ?></td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Date"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Réf. GALILEI"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Version"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Activité"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Total"); ?></td>
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
-			echo '<td class="tableTdContent">'.$row['Utilisateur']['NOMLONG'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Facturation']['DATE'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Facturation']['NUMEROFTGALILEI'].'</td>';                        
-			echo '<td class="tableTdContent">'.$row['Facturation']['VERSION'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Facturation']['projet_NOM'].' - '.$row['Activite']['NOM'].'</td>';
-                        $total = str_replace('.', ',', $row['Facturation']['TOTAL']);
-			echo '<td class="tableTdContent">'.$total.'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Utilisateur']['NOMLONG']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Facturation']['DATE']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Facturation']['NUMEROFTGALILEI']).'</td>';                        
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Facturation']['VERSION']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Facturation']['projet_NOM']).' - '.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Activite']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.  convertDecimal( $row['Facturation']['TOTAL']).'</td>';
                         echo '</tr>';
 			endforeach;
 		?>

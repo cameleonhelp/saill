@@ -42,15 +42,17 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Ajout d'une version pour le lot <?php echo $this->data['Lot']['NOM']; ?></h4>
+        <?php $lot_nom = isset($this->data['Lot']['NOM']) ? $this->data['Lot']['NOM'] : '<inconnu>'; ?>
+        <h4 class="modal-title">Ajout d'une version pour le lot <?php echo $lot_nom; ?></h4>
       </div>
       <?php echo $this->Form->create('Version',array('controller'=>'versions','action'=>'ajaxadd','id'=>'formValidate','class'=>'form-horizontal','inputDefaults' => array('error'=>false,'label'=>false,'div' => false))); ?>
       <div class="modal-body">
-        <?php  echo $this->Form->input('lot_id',array('type'=>'hidden','value'=>$this->data['Lot']['id'])); ?>
+        <?php $lot_id = isset($this->data['Lot']['id']) ? $this->data['Lot']['id'] : ''; ?>
+        <?php  echo $this->Form->input('lot_id',array('type'=>'hidden','value'=>$lot_id)); ?>
         <div class="form-group">
               <label class="col-md-4" for="VersionNOM">Nom : </label>
               <div class="col-md-7">
-                  <?php echo $this->Form->input('NOM',array('class'=>'form-control','type'=>'text','placeholder'=>'Numéro de version du lot '.$this->data['Lot']['NOM'])); ?>                     
+                  <?php echo $this->Form->input('NOM',array('class'=>'form-control','type'=>'text','placeholder'=>'Numéro de version du lot '.$lot_nom)); ?>                     
               </div>
         </div>            
       </div>
@@ -74,7 +76,7 @@ $(document).ready(function () {
         overlay.show();         
         $.ajax({
             type: "POST",       
-            url: "<?php echo $this->Html->url(array('controller'=>'versions','action'=>'json_get_version_for')); ?>/<?php echo $this->data['Lot']['id']; ?>/"+actif,
+            url: "<?php echo $this->Html->url(array('controller'=>'versions','action'=>'json_get_version_for')); ?>/<?php echo $lot_id; ?>/"+actif,
             data: {},  
             contentType: "application/json",
             success : function(response) {

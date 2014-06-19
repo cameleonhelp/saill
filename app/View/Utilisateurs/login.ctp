@@ -3,8 +3,8 @@
         <div class="col-md-6 column">
             <div class="bs-callout bs-callout-warning marginleft15">
             <h4><small>Information sur la connexion à SAILL</small></h4>
-            La connexion à SAILL se fait dorénavant avec votre <b style="color:red;">compte de session Windows (LDAP)</b>.<br>
-            Seul les personnes avec un compte SAILL peuvent se connecter. Si votre compte n'est pas référencé dans SAILL, vous devez en faire la demande auprès d'un administrateur.
+            <b style="color:red;">La connexion à SAILL se fait avec votre compte LDAP</b>.<br>
+            <i>Seul les personnes avec un compte référencé dans SAILL peuvent se connecter.<br>Si votre compte n'est pas référencé dans SAILL, vous devez en faire la demande auprès d'un administrateur.</i>
             </div>              
         </div>
         <div class="col-md-6 column">

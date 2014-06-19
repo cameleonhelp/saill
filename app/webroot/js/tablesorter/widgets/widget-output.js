@@ -1,4 +1,4 @@
-/* Output widget (beta) for TableSorter 4/14/2014 (v2.16.0)
+/* Output widget (beta) for TableSorter 5/22/2014 (v2.17.0)
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * Modified from:
  * HTML Table to CSV: http://www.kunalbabre.com/projects/table2CSV.php (License unknown?)
@@ -42,8 +42,8 @@ output = ts.output = {
 		var $this, row, col, rowlen, collen, txt,
 			wo = c.widgetOptions,
 			tmpRow = [],
+			dupe = wo.output_duplicateSpans,
 			addSpanIndex = isHeader && isJSON && wo.output_headerRows && $.isFunction(wo.output_callbackJSON),
-			rowIndex = 0,
 			cellIndex = 0;
 		$rows.each(function(rowIndex) {
 			if (!tmpRow[rowIndex]) { tmpRow[rowIndex] = []; }
@@ -56,7 +56,7 @@ output = ts.output = {
 					txt = output.formatData( wo, $this.attr(wo.output_dataAttrib) || $this.html(), isHeader );
 					for (row = 1; row <= rowlen; row++) {
 						if (!tmpRow[rowIndex + row]) { tmpRow[rowIndex + row] = []; }
-						tmpRow[rowIndex + row][cellIndex] = txt;
+						tmpRow[rowIndex + row][cellIndex] = isHeader ? txt : dupe ? txt : '';
 					}
 				}
 				// process colspans
@@ -70,11 +70,11 @@ output = ts.output = {
 							for (row = 0; row < rowlen; row++) {
 								if (!tmpRow[rowIndex + row]) { tmpRow[rowIndex + row] = []; }
 								tmpRow[rowIndex + row][cellIndex + col] = addSpanIndex ?
-									wo.output_callbackJSON($this, txt, cellIndex + col) || txt + '(' + (cellIndex + col) + ')' : txt;
+									wo.output_callbackJSON($this, txt, cellIndex + col) || txt + '(' + (cellIndex + col) + ')' : isHeader ? txt : dupe ? txt : '';
 							}
 						} else {
 							tmpRow[rowIndex][cellIndex + col] = addSpanIndex ?
-								wo.output_callbackJSON($this, txt, cellIndex + col) || txt + '(' + (cellIndex + col) + ')' : txt;
+								wo.output_callbackJSON($this, txt, cellIndex + col) || txt + '(' + (cellIndex + col) + ')' : isHeader ? txt : dupe ? txt : '';
 						}
 					}
 				}
@@ -82,7 +82,7 @@ output = ts.output = {
 				// don't include hidden columns
 				if ( $this.css('display') !== 'none' ) {
 					// skip column if already defined
-					while (tmpRow[rowIndex][cellIndex]) { cellIndex++; }
+					while (typeof tmpRow[rowIndex][cellIndex] !== 'undefined') { cellIndex++; }
 					tmpRow[rowIndex][cellIndex] = tmpRow[rowIndex][cellIndex] ||
 						output.formatData( wo, $this.attr(wo.output_dataAttrib) || $this.html(), isHeader );
 					cellIndex++;
@@ -90,6 +90,16 @@ output = ts.output = {
 			});
 		});
 		return tmpRow;
+	},
+
+	ignoreColumns : function(wo, data) {
+		// ignore columns -> remove data from built array (because we've already processed any rowspan/colspan)
+		$.each( data, function(indx, val){
+			data[indx] = $.grep(val, function(v, cellIndx){
+				return $.inArray(cellIndx, wo.output_ignoreColumns) < 0;
+			});
+		});
+		return data;
 	},
 
 	process : function(c, wo) {
@@ -118,23 +128,30 @@ output = ts.output = {
 		csvData = output.processRow(c, $rows);
 		len = headers.length;
 
+		if (wo.output_ignoreColumns.length) {
+			headers = output.ignoreColumns(wo, headers);
+			csvData = output.ignoreColumns(wo, csvData);
+		}
+
 		if (outputJSON) {
 			tmpData = [];
 			$.each( csvData, function(indx, val){
 				// multiple header rows & output_headerRows = true, pick the last row...
 				tmpData.push( output.row2Hash( headers[ (len > 1 && wo.output_headerRows) ? indx % len : len - 1], val ) );
 			});
+
 			// requires JSON stringify; if it doesn't exist, the output will show [object Object],... in the output window
 			mydata = hasStringify ? JSON.stringify(tmpData) : tmpData;
 		} else {
 			tmpData = output.row2CSV(wo, wo.output_headerRows ? headers : [ headers[ (len > 1 && wo.output_headerRows) ? indx % len : len - 1] ], outputArray)
 				.concat( output.row2CSV(wo, csvData, outputArray) );
+
 			// stringify the array; if stringify doesn't exist the array will be flattened
 			mydata = outputArray && hasStringify ? JSON.stringify(tmpData) : tmpData.join('\n');
 		}
 
 		// callback; if true returned, continue processing
-		if (!wo.output_callback(mydata)) { return; }
+		if ($.isFunction(wo.output_callback) && !wo.output_callback(c, mydata)) { return; }
 
 		if ( /p/.test( (wo.output_delivery || '').toLowerCase() ) ) {
 			output.popup(mydata, wo.output_popupStyle, outputJSON || outputArray);
@@ -206,7 +223,7 @@ output = ts.output = {
 	// modified from https://github.com/PixelsCommander/Download-File-JS
 	download : function (wo, data){
 		var e, link,
-			processedData = 'data:text/csv;charset=utf8,' + encodeURIComponent(data);
+			processedData = wo.output_encoding + encodeURIComponent(data);
 
 		// iOS devices do not support downloading. We have to inform user about this.
 		if (/(iP)/g.test(navigator.userAgent)) {
@@ -242,23 +259,30 @@ output = ts.output = {
 ts.addWidget({
 	id: "output",
 	options: {
-		output_separator    : ',',         // set to "json", "array" or any separator
-		output_dataAttrib   : 'data-name', // header attrib containing modified header name
-		output_headerRows   : false,       // if true, include multiple header rows (JSON only)
-		output_delivery     : 'popup',     // popup, download
-		output_saveRows     : 'filtered',  // all, visible or filtered
-		output_replaceQuote : '\u201c;',   // left double quote
-		output_includeHTML  : false,
-		output_trimSpaces   : true,
-		output_wrapQuotes   : false,
-		output_popupStyle   : 'width=500,height=300',
-		output_saveFileName : 'mytable.csv',
+		output_separator     : ',',         // set to "json", "array" or any separator
+		output_ignoreColumns : [],          // columns to ignore [0, 1,... ] (zero-based index)
+		output_dataAttrib    : 'data-name', // header attrib containing modified header name
+		output_headerRows    : false,       // if true, include multiple header rows (JSON only)
+		output_delivery      : 'popup',     // popup, download
+		output_saveRows      : 'filtered',  // all, visible or filtered
+		output_duplicateSpans: true,        // duplicate output data in tbody colspan/rowspan
+		output_replaceQuote  : '\u201c;',   // left double quote
+		output_includeHTML   : false,
+		output_trimSpaces    : true,
+		output_wrapQuotes    : false,
+		output_popupStyle    : 'width=500,height=300',
+		output_saveFileName  : 'mytable.csv',
 		// callback executed when processing completes
 		// return true to continue download/output
 		// return false to stop delivery & do something else with the data
-		output_callback     : function(data){ return true; },
+		output_callback      : function(config, data){ return true; },
 		// JSON callback executed when a colspan is encountered in the header
-		output_callbackJSON : function($cell, txt, cellIndex) { return txt + '(' + (cellIndex + col) + ')'; }
+		output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + (cellIndex) + ')'; },
+		// output data type (with BOM or Windows-1252 is needed for excel)
+		// NO BOM   : 'data:text/csv;charset=utf8,'
+		// With BOM : 'data:text/csv;charset=utf8,%EF%BB%BF'
+		// WIN 1252 : 'data:text/csv;charset=windows-1252'
+		output_encoding      : 'data:text/csv;charset=utf8,'
 	},
 	init: function(table, thisWidget, c) {
 		output.init(c);

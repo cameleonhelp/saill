@@ -45,6 +45,7 @@
             </tr>
         </thead>
         <tbody>
+            <?php if(isset($rapportresults)): ?>
             <?php foreach($rapportresults as $result): ?>
             <tr>
                 <td><?php echo $result['Plancharge']['ANNEE']; ?></td>
@@ -53,6 +54,7 @@
                 <td style="text-align:center" class="nbcharge1"><?php echo $result[0]['TOTAL']; ?></td> 
             </tr>           
             <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
         <tfoot>
 	<tr>
@@ -75,6 +77,7 @@
             </tr>
         </thead>
         <tbody>
+            <?php if(isset($detailrapportresults)): ?>
             <?php foreach($detailrapportresults as $result): ?>
             <tr>
                 <td><?php echo $result['Plancharge']['ANNEE']; ?></td>
@@ -84,6 +87,7 @@
                 <td style="text-align:center" class="nbcharge"><?php echo $result[0]['TOTAL']; ?></td> 
             </tr>           
             <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
         <tfoot>
 	<tr>

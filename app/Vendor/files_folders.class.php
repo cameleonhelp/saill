@@ -2,11 +2,6 @@
 App::uses('Folder', 'Utility');
 App::uses('File', 'Utility');
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of files
  *
@@ -36,6 +31,11 @@ class files_folder {
     
     var $urlbase = '';
     
+    /**
+     * Méthode qui attribut les droits complets sur les différents dossiers
+     * 
+     * @param string $base
+     */
     public function __construct($base=null) {
         $this->diradmin = new Folder($this->dir.$this->admin_dir,true,0777);
         $this->diraall = new Folder($this->dir.$this->all_dir,true,0777);
@@ -44,26 +44,54 @@ class files_folder {
         $this->urlbase = $base;
     }
     
+    /**
+     * Méthode qui liste tous les fichiers pour les administrateurs
+     * 
+     * @return array
+     */
     public function getAdmFiles(){
         $files = $this->diradmin->findRecursive('.*\.*');
         return $this->arrayfiles($files,$this->admin_dir);
     }
     
+    /**
+     * Méthode qui liste tous les fichiers pour tous les acteurs
+     * 
+     * @return array
+     */
     public function getAllFiles(){
         $files = $this->dirall->find('.*\.*');
         return $this->arrayfiles($files,$this->all_dir);
     }
     
+    /**
+     * Méthode qui liste tous les fichier ics du dossier
+     * 
+     * @return array
+     */
     public function getIcsFiles(){
         $files = $this->dirics->find('.*\.ics');
         return $this->arrayfiles($files,$this->ics_files_dir);
     }
     
+    /**
+     * Méthode qui retourne un tableau des fichier sql ou zip du dossier
+     * 
+     * @return array
+     */
     public function getSqlFiles(){
-        $files = $this->dirsql->findRecursive('.*\.sql',true);
+        $filessql = $this->dirsql->findRecursive('.*\.sql',true);
+        $filezip = $this->dirsql->findRecursive('.*\.zip',true); 
+        $files = array_merge($filessql,$filezip);
         return $this->arrayfiles($files,$this->sql_backup_dir);
     }    
     
+    /**
+     * Méthode pour supprimer physiquement un fichier
+     * 
+     * @param string $file
+     * @return boolean
+     */
     public function deletefile($file){
         $filetodelete = new File($file);
         if ($filetodelete->delete()):
@@ -73,11 +101,24 @@ class files_folder {
         endif;
     }
     
+    /**
+     * Méthode qui test l'existance d'un fichier
+     * 
+     * @param string $path
+     * @return type
+     */
     public function isfileexist($path){
         $file = new File($path);
         return $file->exists();
     }
     
+    /**
+     * Méthode pour lister les fichiers d'un array et retourner un tableau avec des informations particulières sur les fichiers
+     * 
+     * @param array $files
+     * @param string $absolutepath
+     * @return array
+     */
     public function arrayfiles($files,$absolutepath){
         foreach ($files as $file):
             $thisfile = new File($file);
@@ -88,12 +129,23 @@ class files_folder {
         return $this->data;
     }
     
+    /**
+     * Méthode qui test si l'OS du serveur Web est sous Windows
+     * 
+     * @return boolean
+     */
     public function iswindows(){
         $folder = new Folder();
         $path = APP;
         return $folder->isWindowsPath($path);
     }
     
+    /**
+     * Méthode qui remanote les permissions du fichier
+     * 
+     * @param string $file
+     * @return array
+     */
     public function getdroits($file){
         $nfile = new File($file);
         return $nfile->perms();

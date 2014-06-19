@@ -250,6 +250,9 @@
 <thead>
 <tr><th colspan="14">
 <div class="text-center">
+    <?php if($this->params->action != 'afacturer' && $pass2!='tous'): ?>
+    <div class="badge <?php echo $get_state['class']; ?> pull-left" style="margin-top:4px;"><?php echo $get_state['msg']; ?></div>
+    <?php endif; ?>
     <?php if($pass2!= 'tous'): ?>
     <?php echo $this->Form->button('<span class="glyphicons left_arrow" data-container="body" rel="tooltip" data-title="Mois précédent"></span>', array('id'=>"previousMonth",'type'=>'button','class' => 'btn  btn-sm btn-default','style'=>'margin-right:75px;')); ?>
     <?php endif; ?>
@@ -366,7 +369,7 @@
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'duplicate')) : ?>
             <?php //TODO : mettre l'appel à une modale //array('action' => 'autoduplicate', $activitesreelle['Activitesreelle']['id'])?>
-            <?php echo $this->Html->link('<span class="glyphicons retweet notchange" rel="tooltip" data-title="Duplication"></span>', "#",array('escape' => false,'data-activitesreelleid'=>$activitesreelle['Activitesreelle']['id'],'data-toggle'=>"modal",'data-target'=>"#modalduplicate")); ?>                    
+            <?php echo $this->Html->link('<span class="glyphicons retweet notchange" rel="tooltip" data-title="Duplication"></span>', "#",array('escape' => false,'data-activitesreelleid'=>$activitesreelle['Activitesreelle']['id'],'data-date'=> CUSDate($activitesreelle['Activitesreelle']['DATE']),'data-toggle'=>"modal",'data-target'=>"#modalduplicate",'id'=>'duplicatelnk')); ?>                    
             <?php endif; ?>
         <?php else : ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('activitesreelles', 'edit')) : ?>
@@ -667,6 +670,17 @@
         $(document).on('keyup','#FacturationSEARCH',function (event){
             var url = "<?php echo $this->webroot;?>facturations/search/<?php echo $pass0;?>/<?php echo $pass1;?>/<?php echo $pass2;?>/<?php echo $pass3;?>/<?php echo $pass4;?>/";
             $(this).parents('form').attr('action',url+$(this).val());
+        });  
+        
+        $(document).on('click','#duplicatelnk',function(e){
+            var days = 7;
+            var date = new Date($(this).attr('data-date'));
+            var res = date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            date = new Date(res);
+            var day = date.getDate() < 10 ? "0"+date.getDate() : date.getDate();
+            var month = (date.getMonth()+1) <10 ? "0"+(date.getMonth()+1) : (date.getMonth()+1);
+            var cfrdate = day +'/'+ month +'/'+date.getFullYear();
+            $('#modalduplicate #ActivitesreelleDATE').val(cfrdate);
         });        
     });
 </script>

@@ -16,7 +16,7 @@
 </STYLE>
 <table>
 	<tr>
-		<td><b>Export des livrables depuis le site SAILL<b></td>
+		<td><b><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Export des livrables depuis le site SAILL"); ?><b></td>
 	</tr>
 	<tr>
 		<td><b>Date:</b></td>
@@ -32,25 +32,25 @@
 		<td></td>
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Nom</td>
-			<td class="tableTd">Gestionnaire</td>
-                        <td class="tableTd">Réf. MINIDOC</td>
-                        <td class="tableTd">Echéance</td>
-                        <td class="tableTd">Livraison prévue</td>
-                        <td class="tableTd">Validation prévue</td>
-                        <td class="tableTd">Etat</td>
-                        <td class="tableTd">Commentaire</td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Nom"); ?></td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Gestionnaire"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Réf. MINIDOC"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Echéance"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Livraison prévue"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Validation prévue"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Etat"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Commentaire"); ?></td>
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
-			echo '<td class="tableTdContent">'.$row['Livrable']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Utilisateur']['NOMLONG'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Livrable']['REFERENCE'].'</td>';                        
-			echo '<td class="tableTdContent">'.$row['Livrable']['ECHEANCE'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Livrable']['DATELIVRAISON'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Livrable']['DATEVALIDATION'].'</td>'; 
-			echo '<td class="tableTdContent">'.$row['Livrable']['ETAT'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Livrable']['COMMENTAIRE'].'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Livrable']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Utilisateur']['NOMLONG']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Livrable']['REFERENCE']).'</td>';                        
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Livrable']['ECHEANCE']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Livrable']['DATELIVRAISON']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Livrable']['DATEVALIDATION']).'</td>'; 
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Livrable']['ETAT']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Livrable']['COMMENTAIRE']).'</td>';
                         echo '</tr>';
 			endforeach;
 		?>

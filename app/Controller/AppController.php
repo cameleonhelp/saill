@@ -3,7 +3,7 @@ App::uses('Controller', 'Controller');
 App::uses('HistoryComponent', 'Component');
 App::uses('ConnectionManager', 'Model');
 /**
- * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
+ * @version 3.0.1.002 le 28/05/2014 par Jacques LEVAVASSEUR
  */
 class AppController extends Controller {
 
@@ -71,4 +71,16 @@ class AppController extends Controller {
         $autorisation = $this->Autorisations->find('first',array('conditions'=>array('Autorisation.profil_id'=>$profil,'Autorisation.MODEL'=>$model),'fields'=>array('Autorisation.'.$action)));
         $this->set('autorisation',$autorisation);
     }  
+    
+    /**
+     * Méthode permettant de fixer le titre de la page ou de lui donner le nom du controller en guise de titre
+     * 
+     * @param string $title
+     * @return string
+     */
+    public function set_title($title = null){
+        $title = $title==null ? $this->params['controller'] : $title;
+        return $this->set('title_for_layout',$title); //$this->fetch($title);
+        parent::set_title();
+    }
 }

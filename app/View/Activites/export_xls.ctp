@@ -32,28 +32,28 @@
 		<td></td>
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Projet</td>
-			<td class="tableTd">Activité</td>
-                        <td class="tableTd">N° GALILEI</td>
-                        <td class="tableTd">Début</td>
-                        <td class="tableTd">Fin</td>
-                        <td class="tableTd">Etat</td>
-                        <td class="tableTd">Budget initial</td>
-                        <td class="tableTd">Budget revu</td>                        
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Projet"); ?></td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Activité"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "N° GALILEI"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Début"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Fin"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Etat"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Budget initial"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Budget revu"); ?></td>                        
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
-			echo '<td class="tableTdContent">'.$row['Projet']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Activite']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Activite']['NUMEROGALLILIE'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Activite']['DATEDEBUT'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Activite']['DATEFIN'].'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Projet']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Activite']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Activite']['NUMEROGALLILIE']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Activite']['DATEDEBUT']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Activite']['DATEFIN']).'</td>';
                         $etat = $row['Activite']['ACTIVE']==1 ? 'Active' : "Inactive";
-			echo '<td class="tableTdContent">'.$etat.'</td>'; 
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $etat).'</td>'; 
                         $budget = isset($row['Activite']['BUDJETRA']) ? $row['Activite']['BUDJETRA'] : '0';
-                        echo '<td class="tableTdContent">'.$budget.' k€</td>';
+                        echo '<td class="tableTdContent">'.  convertDecimal($budget).iconv("UTF-8", "ISO-8859-1//TRANSLIT", ' k€').'</td>';
                         $revu = isset($row['Activite']['BUDGETREVU']) ? $row['Activite']['BUDGETREVU'] : '0';
-                        echo '<td class="tableTdContent">'.$revu.' k€</td>';                      
+                        echo '<td class="tableTdContent">'.convertDecimal($revu).iconv("UTF-8", "ISO-8859-1//TRANSLIT", ' k€').'</td>';                      
 			echo '</tr>';
                 endforeach; ?>
 </table>

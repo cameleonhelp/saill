@@ -11,10 +11,13 @@ App::uses('SocietesController', 'Controller');
  * Rapports Controller
  *
  * @property Rapport $Rapport
- * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
+ * @version 3.0.1.002 le 28/05/2014 par Jacques LEVAVASSEUR
  */
 class RapportsController extends AppController {
 
+    /**
+     * variables gloables utilisées au niveau du controller
+     */
     public $components = array('History','Common');
     
     /**
@@ -28,6 +31,11 @@ class RapportsController extends AppController {
         return $this->set('title_for_layout',$title); //$this->fetch($title);
     }          
     
+    /**
+     * rapport sur la logistique
+     * 
+     * @throws UnauthorizedException
+     */
     public function logistique(){
         $this->set_title('Etat de la logistique par sections');
         if (isAuthorized('actions', 'rapports')) :
@@ -64,6 +72,11 @@ class RapportsController extends AppController {
         endif;   
     }
     
+    /**
+     * rapport sur l'état de la saisie
+     * 
+     * @throws UnauthorizedException
+     */
     public function etatsaisie(){
         $this->set_title('Etat de la saisie des agents');
         if (isAuthorized('activitesreelles', 'rapports')) :
@@ -99,6 +112,11 @@ class RapportsController extends AppController {
         endif; 
     }
       
+    /**
+     * envois un email en cas de saisie incomplète
+     * 
+     * @param string $id
+     */
     public function sendmailsaisie($id){
         $ObjUtilisateurs = new UtilisateursController();
         $mailto = $ObjUtilisateurs->getutilisateurbyid($id);
@@ -125,6 +143,11 @@ class RapportsController extends AppController {
         $this->History->goBack(1);
     }     
     
+    /**
+     * rapport sur la facturation pour les SS2I
+     * 
+     * @throws UnauthorizedException
+     */
     public function ss2i(){
         $this->set_title('Facturations des prestataires');
         if (isAuthorized('activitesreelles', 'rapports')) :
@@ -158,6 +181,11 @@ class RapportsController extends AppController {
         endif;  
     }
     
+    /**
+     * rapport sur la facturation des agents SNCF
+     * 
+     * @throws UnauthorizedException
+     */
     public function factscnf(){
         $this->set_title('Facturations des agents SNCF');
         if (isAuthorized('activitesreelles', 'rapports')) :
@@ -187,13 +215,18 @@ class RapportsController extends AppController {
         endif;  
     }
     
+    /**
+     * export Excel de la facturation des agents SNCF
+     */
     public function xls_sncf(){
-            $data = $this->Session->read('xls_export');
-            //$this->Session->delete('xls_export');                
+            $data = $this->Session->read('xls_export');               
             $this->set('rows',$data);
             $this->render('export_sncf','export_xls');
     }
     
+    /**
+     * export Excel de la facturation des SS2I
+     */
     public function xls_ss2i(){
             $data = $this->Session->read('xls_export');
             //$this->Session->delete('xls_export');                

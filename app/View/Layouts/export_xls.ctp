@@ -1,3 +1,8 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<?php //echo $this->Html->charset('utf-8'); ?>
+</head>
+<body>
 <?php
 date_default_timezone_set("Europe/Paris");
 $key = new DateTime();
@@ -5,9 +10,11 @@ $key = new DateTime();
 header ("Last-Modified: " . gmdate("D,d M YH:i:s") . " Europe/Paris");
 //header ("Cache-Control: no-cache, must-revalidate, post-check=0, pre-check=0");
 header ("Pragma: no-cache");
-header ("Content-type: application/vnd.ms-excel; charset=utf-8");
+header ("Content-type: application/vnd.ms-excel; charset=UTF-8");
 header ("Content-Disposition: attachment; filename=\"".$this->params['controller'].'_'.$key->format("Y_m_d_H_i_s").".xls" );
 header ("Content-Description: Generated Report" );
-echo "\xEF\xBB\xBF"; // UTF-8 BOM
+//echo "\xEF\xBB\xBF"; // UTF-8 BOM
 ?>
 <?php echo $content_for_layout ?> 
+</body>
+</html>

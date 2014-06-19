@@ -6,7 +6,7 @@
 $config = array('version');
 
 Configure::write(
-    'versionapp','3.0.1.001'
+    'versionapp','3.0.1.002'
 );
 
 ?>

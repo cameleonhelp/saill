@@ -32,19 +32,19 @@
 		<td></td>
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Activité</td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", 'Activité'); ?></td>
 			<td class="tableTd">Achats</td>
-                        <td class="tableTd">Date d'achat</td>
+                        <td class="tableTd"><?php echoiconv("UTF-8", "ISO-8859-1//TRANSLIT", "Date d'achat"); ?></td>
                         <td class="tableTd">Montant en euros</td>
                         <td class="tableTd">Commentaire</td>
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
-			echo '<td class="tableTdContent">'.$row['Activite']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Achat']['LIBELLEACHAT'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['Achat']['DATE'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['Achat']['MONTANT'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['Achat']['DESCRIPTION'].'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['Activite']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['Achat']['LIBELLEACHAT']).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['Achat']['DATE']).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['Achat']['MONTANT']).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT",$row['Achat']['DESCRIPTION']).'</td>';
 			echo '</tr>';
 			endforeach;
 		?>

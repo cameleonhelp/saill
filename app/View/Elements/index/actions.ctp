@@ -112,7 +112,7 @@
         <div class="panel-body panel-filter marginbottom15">
             <strong>Filtre appliqué : </strong><em>Liste des actions avec <?php echo $fpriorite; ?>, <?php echo $fetat; ?> ayant <?php echo $femetteur; ?> et pour destinataire <?php echo $fresponsable; ?></em></div>      
     <div>    
-    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover" style="width:100%;" id="actionslist">
+    <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover resizable" style="width:100%;" id="actionslist">
         <thead>
 	<tr>
                         <th style="min-width:95px;"><?php echo $this->Paginator->sort('id','N°'); ?></th>
@@ -137,9 +137,10 @@
         <?php if (isset($actions)): ?>
 	<?php foreach ($actions as $action): ?>
 	<tr>
-                <td style="white-space:nowrap !important;"><?php echo 'A-'.strYear($action['Action']['created']).'-'.$action['Action']['id']; ?></td>
+                <td style="white-space:nowrap !important;"><?php echo $actid='A-'.strYear($action['Action']['created']).'-'.$action['Action']['id']; ?></td>
                 <td style="text-align:center;"><?php echo $this->Form->input('id',array('type'=>'checkbox','label'=>false,'class'=>'idselect nopadding','value'=>$action['Action']['id'])) ; ?></td>  
                 <?php $tooltip = $action['Action']['NIVEAU'] != null ? 'Risque identifié de niveau '.$action['Action']['NIVEAU'].' / 5' : 'Aucun risque identifié' ; ?>
+                <?php $tooltip .= "<br/>".$action['Action']['COMMENTRISK'] ; ?>
                 <td style="background-color:<?php echo colorNiveauRisque($action['Action']['NIVEAU']) ?>"><span class="cursor" style="display:block;" rel='tooltip' data-title="<?php echo $tooltip; ?>">&nbsp;</span></td>
                 <td><?php echo h($action['Domaine']['NOM']); ?>&nbsp;</td>
 		<td><?php echo h($action['Utilisateur']['NOM']." ".$action['Utilisateur']['PRENOM']); ?>&nbsp;</td>
@@ -147,7 +148,7 @@
                 <?php $contributeurs = $contributeurs != 'Aucun contributeur' ? ';'.$contributeurs : ''; ?>
                 <td><?php echo h($action['Action']['destinataire_nom'].$contributeurs); ?>&nbsp;</td>
                 <!--<td data-pk="<?php echo $action['Action']['id']; ?>" data-field="OBJET" class="editable">-->
-                <td><?php echo $this->Html->link($action['Action']['OBJET'],"#",array('class'=>'editable','id'=>"OBJET",'data-inputclass'=>"autowidth",'data-type'=>"text",'data-pk'=>$action['Action']['id'],'data-title'=>"Objet de l'action",'data-url'=>$urlpost)); ?>
+                <td><?php echo $this->Html->link($action['Action']['OBJET'],"#",array('class'=>'editable actobjet','id'=>"OBJET",'data-inputclass'=>"autowidth",'data-type'=>"text",'data-pk'=>$action['Action']['id'],'data-title'=>"Objet de l'action ".$actid,'data-url'=>$urlpost)); ?>
                     <?php // echo h($action['Action']['OBJET']); ?>
                     <?php if($action['Action']['NEW']==1): ?>
                     <span class="pull-right"><span class="glyphicons asterisk size8 orange" rel="tooltip" data-title="Nouvelle action en date du <?php echo h($action['Action']['created']); ?>"></span></span>&nbsp;
@@ -166,7 +167,9 @@
                     </div>
                 </td>
                 <?php $classtd = enretard($action['Action']['ECHEANCE'],$action['Action']['STATUT']) ? "class='td-error'" : ""; ?>
-		<td <?php echo $classtd; ?> style="text-align:center;"><?php echo h($action['Action']['ECHEANCE']); ?></td>
+		<td <?php echo $classtd; ?> style="text-align:center;">
+                    <?php echo $this->Html->link($action['Action']['ECHEANCE'],"#",array('class'=>'editable actecheance','id'=>"ECHEANCE",'data-type'=>"date",'data-pk'=>$action['Action']['id'],'data-title'=>"Echéance de l'action ".$actid,'data-url'=>$urlpost)); ?>
+                    <?php // echo h($action['Action']['ECHEANCE']); ?></td>
 		<td style="text-align:center;"><?php $image = isset($action['Action']['STATUT']) ? etatAction(h($action['Action']['STATUT'])) : 'blank' ; ?>
                     <a href="#" class="changeetat cursor showoverlay" idaction="<?php echo $action['Action']['id']; ?>" ><span class="glyphicons <?php echo $image; ?> notchange" rel="tooltip" data-title="<?php echo etatTooltip(h($action['Action']['STATUT'])); ?>"></span></a></td>
 		<td style="text-align:center;"><?php $image = (isset($action['Action']['CRA']) && $action['Action']['CRA']==true) ? 'ok_2' : 'ok_2 disabled' ; ?>
@@ -199,7 +202,10 @@
             <td colspan="15" align="center">
                 <table cellpadding="0" cellspacing="0" class="table table-hidden" style="margin-bottom:-3px;">
                     <tr><th>Date de début</th><th>Commentaire</th><th>Bilan/Résultat</th><th>Modifié le</th></tr>
-                    <tr><td><?php echo h($action['Action']['DEBUT']); ?>&nbsp;</td><td><?php echo $action['Action']['COMMENTAIRE']; ?></td><td><?php echo $action['Action']['BILAN']; ?></td><td><?php echo $action['Action']['modified']; ?></td></tr>
+                    <tr><td><?php echo h($action['Action']['DEBUT']); ?>&nbsp;</td>
+                        <td><?php //echo $this->Html->link($action['Action']['COMMENTAIRE'],"#",array('class'=>'editable actcommentaire','id'=>"COMMENTAIRE",'data-type'=>"textarea",'data-pk'=>$action['Action']['id'],'data-title'=>"Commentaire de l'action ".$actid,'data-url'=>$urlpost)); ?>
+                            <?php echo $action['Action']['COMMENTAIRE']; ?></td>
+                        <td><?php echo $action['Action']['BILAN']; ?></td><td><?php echo $action['Action']['modified']; ?></td></tr>
                 </table>
             </td>
         </tr>  
@@ -239,7 +245,7 @@
                     endforeach;
                     $start = $event['start'];
                     $end = $event['end'];
-                    echo "{dates: [new Date(".$start."),new Date(".$end.")], descr:'test', title:\"".h($event['title'])."\", description:\"".$event['description']."\",attrs: {fill: '".$color."',stroke: '".$color."'}},";
+                    echo "{dates: [new Date(".$start."),new Date(".$end.")], descr:'test', title:\"".h($event['title'])."\", description:\"".$event['description']."\",attrs: {fill: '".$color."',stroke: '".$color."'},color:\"".substr($color,1)."\"},";
                 endforeach;
             ?>
             ];
@@ -253,25 +259,74 @@
         </div>
 <script>
 $(document).ready(function () {    
-    $.fn.editable.defaults.mode = 'inline'; //popup ou inline
-    $('.editable').editable();
+    $.fn.editable.defaults.mode = 'popup'; //popup ou inline
+    $.fn.datepicker.dates['fr'] = {
+        days: ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"],
+        daysShort: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
+        daysMin: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa", "Di"],
+        months: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+        monthsShort: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"],
+        today: "Aujourd'hui",
+        clear: "Supprimer"
+    };    
     
-//    $("#actionslist").tablesorter({
-//        widgets : ['editable'],
-//        widgetOptions: {
-//          editable_columns       : [6],       // or "0-2" (v2.14.2); point to the columns to make editable (zero-based index)
-//          editable_enterToAccept : true,          // press enter to accept content, or click outside if false
-//          editable_autoResort    : false,         // auto resort after the content has changed.
-//          editable_noEdit        : 'no-edit',     // class name of cell that is not editable
-//          editable_editComplete  : 'editComplete' // event fired after the table content has been edited
-//        }
-//        
-//    }).children('tbody').on('editComplete', 'td', function(){
-//        var id = $(this).attr('data-pk');
-//        var text = $(this).text();
-//        var field = $(this).attr('data-field');
-//        $.post('<?php // echo $urlpost; ?>',{pk:id,name:field,value:text});
-//    });
+    var now = new Date();
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+    var date = <?php echo isset($action['Action']['ECHEANCE']) ? $action['Action']['ECHEANCE'] : date('d/m/Y'); ?> ;
+
+    $('.actobjet').editable();
+    $('.actcommentaire').editable({
+        mode: 'inline' //'inline'
+    });
+    $('.actecheance').editable({
+        format: 'yyyy-mm-dd',    
+        viewformat: 'dd/mm/yyyy',    
+        datepicker: {
+            date: date,
+            weekStart: 1,
+            todayBtn:'linked',
+            
+        },  
+        placement: 'left',
+        container:'body',
+        title: 'Choisir une échéance',
+        clear:false,
+        //emptytext:'Aucune date renseignée',
+        mode: 'popup' //'inline'
+    });
+    
+    $("[rel=popover]").popover({placement:'auto',container:'#chronotime',trigger:'click',html:true});  
+    
+    var popoverOpened = null;
+    $(function() { 
+        $('[rel=popover]').popover({
+            html: true,
+            placement:'auto',
+            trigger: 'click',
+            container: "#chronotime"
+        });
+        $('[rel=popover]').unbind("click");
+        $('[rel=popover]').bind("click", function(e) {
+            e.stopPropagation();
+            if($(this).equals(popoverOpened)) return;
+            if(popoverOpened !== null) {
+                popoverOpened.popover("hide");            
+            }
+            $(this).popover('show');
+            popoverOpened = $(this);
+            e.preventDefault();
+        });
+
+        $(document).click(function(e) {
+            if(popoverOpened !== null) {
+                popoverOpened.popover("hide");   
+                popoverOpened = null;
+            }        
+        });
+    });    
+
+
     
     $(document).on('click','.eye_open',function(e){
         $(this).parents('tr').next('.trhidden').fadeToggle();
@@ -294,7 +349,7 @@ $(document).ready(function () {
     $('.liselect').removeClass('subfilteractif');
     $('.selectresponsable').prop('checked',false);
     var ids = $("#allResponsablesSelected").val().split('-');
-    console.log(ids);
+//    console.log(ids);
     $('.liselect').each(
                         function() {
                             if (inArray($(this).attr("data-id"),ids)){

@@ -17,8 +17,8 @@
                         <div class="input-group">
                         <?php $today = new dateTime(); $today->add(new DateInterval('P7D'));?>
                         <?php echo $this->Form->input('DATE',array('type'=>'text','class'=>"form-control dateall",'placeholder'=>'ex.: '.$today->format('d/m/Y'),'required'=>'false','error' => array('attributes' => array('wrap' => 'span', 'style' => 'display:none;')))); ?>
-                        <span class="input-group-addon addon-middle date-addon-clean btn-addon" data-target="#ActivitesreellesDATE"><span class="glyphicons circle_remove grey"></span></span>
-                        <span class="input-group-addon date-addon-calendar btn-addon" data-target="#ActivitesreellesDATE"><span class="glyphicons calendar"></span></span>
+                        <span class="input-group-addon addon-middle date-addon-clean btn-addon" data-target="#modalduplicate #ActivitesreelleDATE"><span class="glyphicons circle_remove grey"></span></span>
+                        <span class="input-group-addon date-addon-calendar btn-addon" data-target="#modalduplicate #ActivitesreelleDATE"><span class="glyphicons calendar"></span></span>
                         </div>                
                     </div>
                 </div> 
@@ -33,8 +33,7 @@
 </div><!-- /.modal -->
 <!--modal hebdomadaire//--> 
 <script>
-$(document).ready(function () {
-  
+$(document).ready(function () {  
     $(document).on('click','#closemodalduplicate',function(e){
         $('#modalduplicate').modal('toggle');
     }); 
@@ -47,9 +46,17 @@ $(document).ready(function () {
     $(document).on('click','#savemodalduplicate',function(e){
         var idar =  $('#modalduplicate #ActivitesreelleId').val();
         var d =  $('#modalduplicate #ActivitesreelleDATE').val().split('/');
-        var date = d[2]+"-"+d[1]+"-"+d[0];
-        var url = $('#formValidate_date').attr('action')+'/'+idar+'/'+date;
-        $('#formValidate_date').attr('action',url).submit();
+        if(typeof d[2] !== 'undefined' && typeof d[1] !== 'undefined' && typeof d[0] !== 'undefined'){
+            var date = d[2]+"-"+d[1]+"-"+d[0];
+            var url = $('#formValidate_date').attr('action')+'/'+idar+'/'+date;
+            $('#formValidate_date').attr('action',url).submit();
+        }
+        else
+        {
+            $('#modalduplicate').modal('toggle');
+            alert("La date choisie n\'est pas valide");
+            location.reload();
+        }
     });   
 });
 </script>          

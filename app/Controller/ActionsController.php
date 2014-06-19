@@ -15,7 +15,7 @@ App::uses('ActivitesController', 'Controller');
  * Actions Controller
  *
  * @property Action $Action
- * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
+ * @version 3.0.1.002 le 28/05/2014 par Jacques LEVAVASSEUR
  */
 class ActionsController extends AppController {
 
@@ -850,7 +850,7 @@ class ActionsController extends AppController {
     }
 
     public function deleteHistory($history){
-        $this->Action->Historyaction->delete($history['Historyaction']['id']);             
+        if(isset($history['Historyaction']['id'])) : $this->Action->Historyaction->delete($history['Historyaction']['id']); endif;          
     }
 
     /**
@@ -860,17 +860,19 @@ class ActionsController extends AppController {
      */
     public function saveHistory($id){
         $thisAction = $this->Action->find('first',array('conditions'=>array('Action.id'=>$id)));
-        $history['Historyaction']['action_id']=$thisAction['Action']['id'];
-        $history['Historyaction']['AVANCEMENT']=$thisAction['Action']['AVANCEMENT'];
-        $history['Historyaction']['DEBUT']=$thisAction['Action']['DEBUT'];
-        $history['Historyaction']['ECHEANCE']=$thisAction['Action']['ECHEANCE'];
-        $history['Historyaction']['CHARGEPREVUE']=$thisAction['Action']['DUREEPREVUE'];
-        $history['Historyaction']['PRIORITE']=$thisAction['Action']['PRIORITE'];
-        $history['Historyaction']['STATUT']=$thisAction['Action']['STATUT'];
-        $history['Historyaction']['NIVEAU']=$thisAction['Action']['NIVEAU'];
-        $history['Historyaction']['COMMENTAIRE']='Le '.date('d/m/Y').' par '.userAuth('NOMLONG').'<br>'.$thisAction['Action']['COMMENTAIRE'];
-        $this->Action->Historyaction->create();
-        $this->Action->Historyaction->save($history);            
+        if(isset($thisAction['Action']['id'])):
+            $history['Historyaction']['action_id']=$thisAction['Action']['id'];
+            $history['Historyaction']['AVANCEMENT']=$thisAction['Action']['AVANCEMENT'];
+            $history['Historyaction']['DEBUT']=$thisAction['Action']['DEBUT'];
+            $history['Historyaction']['ECHEANCE']=$thisAction['Action']['ECHEANCE'];
+            $history['Historyaction']['CHARGEPREVUE']=$thisAction['Action']['DUREEPREVUE'];
+            $history['Historyaction']['PRIORITE']=$thisAction['Action']['PRIORITE'];
+            $history['Historyaction']['STATUT']=$thisAction['Action']['STATUT'];
+            $history['Historyaction']['NIVEAU']=$thisAction['Action']['NIVEAU'];
+            $history['Historyaction']['COMMENTAIRE']='Le '.date('d/m/Y').' par '.userAuth('NOMLONG').'<br>'.$thisAction['Action']['COMMENTAIRE'];
+            $this->Action->Historyaction->create();
+            $this->Action->Historyaction->save($history); 
+        endif;
     }
 
     /**
@@ -1156,8 +1158,10 @@ class ActionsController extends AppController {
         $duree = $this->request->data('duree');
         $this->Action->id = $id;
         $history = $this->getLastHistory($id);
-        if ($duree > $history['Historyaction']['CHARGEPREVUE']):
-            $this->deleteHistory($history);
+        if(isset($history['Historyaction']['CHARGEPREVUE'])):
+            if ($duree > $history['Historyaction']['CHARGEPREVUE']):
+                $this->deleteHistory($history);
+            endif;
         endif;
         $this->saveHistory($id); 
         $this->Action->saveField('DUREEPREVUE',$duree);
@@ -1255,10 +1259,11 @@ class ActionsController extends AppController {
     public function sendmailactiondelete($action){
         $valideurs = $this->Action->Utilisateur->find('first',array('conditions'=>array('Utilisateur.id'=>$action['Action']['destinataire'])));
         $mailto = array();
+        $ObjUtilisateurs = new UtilisateursController(); 
+        $contributeurs = $ObjUtilisateurs->get_nom($action['Action']['CONTRIBUTEURS']);;
         $mailto[]=$valideurs['Utilisateur']['MAIL'];
         $to=$mailto;
-        $from = Configure::read('mailapp');
-        $ObjUtilisateurs = new UtilisateursController();            
+        $from = Configure::read('mailapp');            
         $cc= $ObjUtilisateurs->get_mail($action['Action']['CONTRIBUTEURS']);
         $cc = $cc != '' ? $cc : array();            
         $objet = 'SAILL : Action n°'.' [A-'.  strYear($action['Action']['created']).'-'.$action['Action']['id'].'] supprimée';

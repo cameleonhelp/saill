@@ -18,6 +18,7 @@ class HistoryComponent extends Component {
     var $data = array(); 
     var $started = false; 
     var $controller = true; 
+    
     /**
      * actions qui ne sont pas prises en compte pour l'ajout
      * Ajouter toutes les méthode dont on fait $this->History->goBack()
@@ -30,17 +31,20 @@ class HistoryComponent extends Component {
         'json_list_all','json_list_other','json_get_this','json_get_all_users','json_get_my_entite','json_get_all_users_entite',
         'json_get_all_projets_entite','json_get_projets','json_get_users','save','ajax_save_password','json_get_assoid','json_get_info',
         'delete','erase','json_get_select_for_application','json_get_select_compatible','ajaxdelete','ajaxadd','openmaintenance',
-        'files/source','closemaintenance','ajax_update_cpu','ajax_install','pinghost','budgetisactif',
+        'files/source','closemaintenance','ajax_update','ajax_update_cpu','ajax_install','pinghost','budgetisactif',
         'ajaxedit','ajax_actif','json_get_logiciel_info','json_get_version_info','json_get_version_for',
         'notifier','addnewpc','sendmailgestannuaire','newactivite','dupliquer','export_doc','export_xls','incra','parseICS',
         'progressduree','progressavancement','prolonger','progressstatut','progressstate','autoduplicate','errorfacturation',
-        'setmenuvisible','deverouiller','soumettre','deleteall','autoprogressState','addIndisponibilite');
+        'setmenuvisible','deverouiller','soumettre','deleteall','autoprogressState','addIndisponibilite',
+        'zipfile','unzipfile','colorpicker','cleanlogfolder','delfile');
 
     /**
      * action initialisant l'historique
      * @var type 
      */
-    var $initpage = array('index','changelog','display','last7days','risques','home','profil', 'rapport','absences','login','afacturer','listebackup');
+    var $initpage = array('index','changelog',
+        'display','last7days','risques','home','profil', 
+        'rapport','absences','login','afacturer','listebackup');
 
     function initialize(Controller $controller){
     }
@@ -50,10 +54,10 @@ class HistoryComponent extends Component {
      */
     function beforeRender(Controller $controller){
         $this->cleanhistory();
-        //debug($this->show());   
+//        debug($this->show());   
         //debug($this->goback);
         //debug($this->lastURL());
-        //debug($this->controller->params['action']);
+//        debug($this->controller->params['action']);
     }
     
     function shutdown(Controller $controller){ 
@@ -105,8 +109,6 @@ class HistoryComponent extends Component {
      * @param type $step
      */
     public function goBack($step = 0) {  
-        //$this->urlexists($step+1); 
-        //$this->params['form']['cancel']=null;
         $this->cleanhistory(); 
         $max = count($this->data) - 1;
         if ($max <= 0):
@@ -146,7 +148,6 @@ class HistoryComponent extends Component {
     public function notmove(){
         SessionComponent::write('User.goback', '');
         $this->cleanhistory();
-        //$this->_deleteUrl($this->lastIndex()); 
         $this->controller->redirect($this->lastURL());
         exit();         
     }
@@ -272,7 +273,6 @@ class HistoryComponent extends Component {
         SessionComponent::delete('User.history'); 
         SessionComponent::write('User.history', $newhistory); 
         $this->data = $newhistory;
-        /**/
     }
 } 
 ?>

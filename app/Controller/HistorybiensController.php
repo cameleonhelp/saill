@@ -4,8 +4,7 @@ App::uses('AppController', 'Controller');
  * Historybiens Controller
  *
  * @property Historybien $Historybien
- * @property PaginatorComponent $Paginator
- * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
+ * @version 3.0.1.002 le 28/05/2014 par Jacques LEVAVASSEUR
  */
 class HistorybiensController extends AppController {
 
@@ -14,7 +13,7 @@ class HistorybiensController extends AppController {
  *
  * @var array
  */
-        public $paginate = array('order'=>array('Historybien.created'=>'desc'));
+//        public $paginate = array('order'=>array('Historybien.created'=>'desc'));
 	public $components = array('History','Common');
 
 /**
@@ -22,10 +21,10 @@ class HistorybiensController extends AppController {
  *
  * @return void
  */
-	public function index() {
-		$this->Historybien->recursive = 0;
-		$this->set('historybiens', $this->Paginator->paginate());
-	}
+//	public function index() {
+//		$this->Historybien->recursive = 0;
+//		$this->set('historybiens', $this->Paginator->paginate());
+//	}
 
 /**
  * view method
@@ -34,32 +33,32 @@ class HistorybiensController extends AppController {
  * @param string $id
  * @return void
  */
-	public function view($id = null) {
-		if (!$this->Historybien->exists($id)) {
-			throw new NotFoundException(__('Invalid historybien'));
-		}
-		$options = array('conditions' => array('Historybien.' . $this->Historybien->primaryKey => $id));
-		$this->set('historybien', $this->Historybien->find('first', $options));
-	}
+//	public function view($id = null) {
+//		if (!$this->Historybien->exists($id)) {
+//			throw new NotFoundException(__('Invalid historybien'));
+//		}
+//		$options = array('conditions' => array('Historybien.' . $this->Historybien->primaryKey => $id));
+//		$this->set('historybien', $this->Historybien->find('first', $options));
+//	}
 
 /**
  * add method
  *
  * @return void
  */
-	public function add() {
-		if ($this->request->is('post')) {
-			$this->Historybien->create();
-			if ($this->Historybien->save($this->request->data)) {
-				$this->Session->setFlash(__('The historybien has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The historybien could not be saved. Please, try again.'));
-			}
-		}
-		$biens = $this->Historybien->Bien->find('list');
-		$this->set(compact('biens'));
-	}
+//	public function add() {
+//		if ($this->request->is('post')) {
+//			$this->Historybien->create();
+//			if ($this->Historybien->save($this->request->data)) {
+//				$this->Session->setFlash(__('The historybien has been saved.'));
+//				return $this->redirect(array('action' => 'index'));
+//			} else {
+//				$this->Session->setFlash(__('The historybien could not be saved. Please, try again.'));
+//			}
+//		}
+//		$biens = $this->Historybien->Bien->find('list');
+//		$this->set(compact('biens'));
+//	}
 
 /**
  * edit method
@@ -68,24 +67,24 @@ class HistorybiensController extends AppController {
  * @param string $id
  * @return void
  */
-	public function edit($id = null) {
-		if (!$this->Historybien->exists($id)) {
-			throw new NotFoundException(__('Invalid historybien'));
-		}
-		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Historybien->save($this->request->data)) {
-				$this->Session->setFlash(__('The historybien has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The historybien could not be saved. Please, try again.'));
-			}
-		} else {
-			$options = array('conditions' => array('Historybien.' . $this->Historybien->primaryKey => $id));
-			$this->request->data = $this->Historybien->find('first', $options);
-		}
-		$biens = $this->Historybien->Bien->find('list');
-		$this->set(compact('biens'));
-	}
+//	public function edit($id = null) {
+//		if (!$this->Historybien->exists($id)) {
+//			throw new NotFoundException(__('Invalid historybien'));
+//		}
+//		if ($this->request->is('post') || $this->request->is('put')) {
+//			if ($this->Historybien->save($this->request->data)) {
+//				$this->Session->setFlash(__('The historybien has been saved.'));
+//				return $this->redirect(array('action' => 'index'));
+//			} else {
+//				$this->Session->setFlash(__('The historybien could not be saved. Please, try again.'));
+//			}
+//		} else {
+//			$options = array('conditions' => array('Historybien.' . $this->Historybien->primaryKey => $id));
+//			$this->request->data = $this->Historybien->find('first', $options);
+//		}
+//		$biens = $this->Historybien->Bien->find('list');
+//		$this->set(compact('biens'));
+//	}
 
 /**
  * delete method
@@ -94,22 +93,28 @@ class HistorybiensController extends AppController {
  * @param string $id
  * @return void
  */
-	public function delete($id = null) {
-		$this->Historybien->id = $id;
-		if (!$this->Historybien->exists()) {
-			throw new NotFoundException(__('Invalid historybien'));
-		}
-		$this->request->onlyAllow('post', 'delete');
-		if ($this->Historybien->delete()) {
-			$this->Session->setFlash(__('The historybien has been deleted.'));
-		} else {
-			$this->Session->setFlash(__('The historybien could not be deleted. Please, try again.'));
-		}
-		return $this->redirect(array('action' => 'index'));
-	}
+//	public function delete($id = null) {
+//		$this->Historybien->id = $id;
+//		if (!$this->Historybien->exists()) {
+//			throw new NotFoundException(__('Invalid historybien'));
+//		}
+//		$this->request->onlyAllow('post', 'delete');
+//		if ($this->Historybien->delete()) {
+//			$this->Session->setFlash(__('The historybien has been deleted.'));
+//		} else {
+//			$this->Session->setFlash(__('The historybien could not be deleted. Please, try again.'));
+//		}
+//		return $this->redirect(array('action' => 'index'));
+//	}
         
-        public function get_list($id){
-            $list = $this->Historybien->find('all',array('conditions'=>array('Historybien.biens_id'=>$id),'order'=>array('Historybien.created'=>'desc'),'recursive'=>0));
-            return $list;
-        }    
+    /**
+     * renvois la liste de l'historique pour un bien
+     * 
+     * @param string $id
+     * @return array
+     */
+    public function get_list($id){
+        $list = $this->Historybien->find('all',array('conditions'=>array('Historybien.biens_id'=>$id),'order'=>array('Historybien.created'=>'desc'),'recursive'=>0));
+        return $list;
+    }    
 }        

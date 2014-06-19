@@ -84,7 +84,7 @@
                     <option value="">Choisir une activité</option>
                     <?php foreach ($activites as $activite) : ?>
                     <?php $selected = ''; ?>
-                    <?php if ($this->params->action == 'edit') $selected = $activite['Activite']['id']==$activitesreelle['Activitesreelle']['activite_id'] ? 'selected="selected"' :''; ?>
+                    <?php if ($this->params->action == 'edit') $selected = isset($activitesreelle['Activitesreelle']['activite_id']) && $activite['Activite']['id']==$activitesreelle['Activitesreelle']['activite_id'] ? 'selected="selected"' :''; ?>
                         <option value="<?php echo $activite['Activite']['id']; ?>" <?php echo $selected; ?>><?php echo $activite['Projet']['NOM']; ?> - <?php echo $activite['Activite']['NOM']; ?></option>
                     <?php endforeach; ?>
                 </select>                        
@@ -142,29 +142,7 @@
 </div>
 </div>    
 <script>
-    function sumOfETP() {
-        var tot = 0;
-        $(".etp").each(function() {
-          if($(this).parents('tr').attr('id')!='templateRow') tot += parseFloat($(this).val());
-          $('#Detailplancharge0TOTALETP').val(parseFloat(tot).toFixed(2));
-        });
-        return parseFloat(tot).toFixed(2);
-     }
-    function sumOfTotal() {
-        var tot = 0;
-        $(".rowTotal").each(function() {
-          if($(this).parents('tr').attr('id')!='templateRow') tot += parseFloat($(this).val());
-          $('#Detailplancharge0TOTALCHARGE').val(tot);
-        });
-        return tot;
-     } 
-    function sumOfCout() {
-        var tot = 0;
-        $(".rowcout").each(function() {
-          if($(this).parents('tr').attr('id')!='templateRow' && $(this).html()!='') tot += parseFloat($(this).html());
-        });
-        return parseFloat(tot).toFixed(2);
-     }         
+     
 $(document).ready(function () {
         $("#totaletps").html(sumOfETP());
         $("#totalrows").html(sumOfTotal());
@@ -177,6 +155,8 @@ $(document).ready(function () {
         } else {
             index = $(this).parents('tr').attr('rowindex');
         }
+        value = isNaN($(this).val()) || $(this).val()=='' || typeof $(this).val()=== "undefined" ? 0 : $(this).val();
+        $(this).val(value);
         var id = 'Detailplancharge'+index; 
         $('#'+id+'TOTAL').val(parseFloat($('#'+id+'JANVIER').val())+parseFloat($('#'+id+'FEVRIER').val())+parseFloat($('#'+id+'MARS').val())+parseFloat($('#'+id+'AVRIL').val())+parseFloat($('#'+id+'MAI').val())+parseFloat($('#'+id+'JUIN').val()));
         $('#'+id+'TOTAL').val(parseFloat($('#'+id+'TOTAL').val())+parseFloat($('#'+id+'JUILLET').val())+parseFloat($('#'+id+'AOUT').val())+parseFloat($('#'+id+'SEPTEMBRE').val())+parseFloat($('#'+id+'OCTOBRE').val())+parseFloat($('#'+id+'NOVEMBRE').val())+parseFloat($('#'+id+'DECEMBRE').val()));

@@ -63,7 +63,7 @@
         <?php 
                 $nbaction = $result[0]['NB'];
                 foreach($entrops as $item):
-                    if($result['Activite']['projet_id']==$item['projet_id'] && $result['Activite']['id']==$item['activite_id'] && $result['Utilisateur']['id']==$item['utilisateur_id'] && $mois==$item['mois']):
+                    if($result['Activite']['projet_id']==$item['projet_id'] && $result['Activite']['id']==$item['activite_id'] && $result['Utilisateur']['id']==$item['utilisateur_id']):
                         $nbaction -= $item['sum'];
                         $nbaction = number_format($nbaction, 1);
                     endif;
@@ -90,15 +90,17 @@
     <tr>
         <td colspan="5" class="footer" style="text-align:right;">Total :</td>
         <td class="footer" id="total" style="text-align:center;" nowrap></td>
-        <td class="footer" id="totalfrais" style="text-align:center;"></td>
+        <td class="footer" id="totalfrais" style="text-align:center;" nowrap></td>
         <td class="footer" colspan="4" style="text-align:left;">&nbsp;</td>
     </tr> 
     </tfoot>    
 </table>
-<?php else : ?>
+<?php elseif (isset($results) && count($results)==0) : ?>
 <div class="bs-callout bs-callout-warning"><b>Aucun résultat pour ce rapport, modifier les paramètres de recherche ...</b></div>
 <?php endif; ?>
 </div>
+<?php //debug($entrops); ?>
+<?php //debug($results); ?>
 <script>
 $(document).ready(function (){ 
    $("table").tablesorter({
@@ -121,26 +123,8 @@ $(document).ready(function (){
         $("#total").html(newSumOfColumns('tr:not(.filtered) > td.nb','j'));
         $("#totalfrais").html(newSumOfColumns('tr:not(.filtered) > td.frais','€'));
     });
-            
-    function newSumOfColumns(id,symbole) {
-        var tot = 0;
-        $(id).each(function() {
-          value = $(this).html()=='' ? 0: $(this).html();
-          tot += parseFloat(value);
-        });
-        return parseFloat(tot).toFixed(2)+" "+symbole;
-     };    
     
-    function sumOfColumns(id,type) {
-        var tot = 0;
-        $("."+id).each(function() {
-          tot += parseFloat($(this).html());
-        });
-        tot = isNaN(tot) ? 0 : tot;
-        return tot.toFixed(2)+" "+type;
-     }   
-    
-    $("#total").html(sumOfColumns('nb','j'));
-    $("#totalfrais").html(sumOfColumns('frais','€'));
+    $("#total").html(sumOfColumns('.nb','j'));
+    $("#totalfrais").html(sumOfColumns('.frais','€'));
 });
 </script>

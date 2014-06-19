@@ -32,33 +32,33 @@
 		<td></td>
 	</tr>
 		<tr id="titles">
-			<td class="tableTd">Nom</td>
-			<td class="tableTd">Société</td>
-                        <td class="tableTd">Section</td>
-                        <td class="tableTd">Site</td>
-                        <td class="tableTd">Identifiant</td>
-                        <td class="tableTd">Assistance</td>
-                        <td class="tableTd">Email</td>
-                        <td class="tableTd">Téléphone</td>
-                        <td class="tableTd">Fin de mission</td>   
-                        <td class="tableTd">Eng. de confidentialité</td>  
-                        <td class="tableTd">Date remise eng. conf.</td>  
-                        <td class="tableTd">Commentaire</td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Nom"); ?></td>
+			<td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Société"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Section"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Site"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Identifiant"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Assistance"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Email"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Téléphone"); ?></td>
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Fin de mission"); ?></td>   
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Eng. de confidentialité"); ?></td>  
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Date remise eng. conf."); ?></td>  
+                        <td class="tableTd"><?php echo iconv("UTF-8", "ISO-8859-1//TRANSLIT", "Commentaire"); ?></td>
 		</tr>		
 		<?php foreach($rows as $row):
 			echo '<tr>';
-			echo '<td class="tableTdContent">'.$row['Utilisateur']['NOMLONG'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Societe']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Section']['NOM'].'</td>';                        
-			echo '<td class="tableTdContent">'.$row['Site']['NOM'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Utilisateur']['username'].'</td>'; 
-                        echo '<td class="tableTdContent">'.$row['Assistance']['NOM'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['Utilisateur']['MAIL'].'</td>';
-                        echo '<td class="tableTdContent">'.$row['Utilisateur']['TELEPHONE'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Utilisateur']['FINMISSION'].'</td>';
-                        echo '<td class="tableTdContent">'.tooltipconf($row['Utilisateur']['ENGCONF']).'</td>';
-			echo '<td class="tableTdContent">'.$row['Utilisateur']['DATEENGCONF'].'</td>';
-			echo '<td class="tableTdContent">'.$row['Utilisateur']['COMMENTAIRE'].'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Utilisateur']['NOMLONG']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Societe']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Section']['NOM']).'</td>';                        
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Site']['NOM']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Utilisateur']['username']).'</td>'; 
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Assistance']['NOM']).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Utilisateur']['MAIL']).'</td>';
+                        echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Utilisateur']['TELEPHONE']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Utilisateur']['FINMISSION']).'</td>';
+                        echo '<td class="tableTdContent">'.tooltipconf(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Utilisateur']['ENGCONF'])).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Utilisateur']['DATEENGCONF']).'</td>';
+			echo '<td class="tableTdContent">'.iconv("UTF-8", "ISO-8859-1//TRANSLIT", $row['Utilisateur']['COMMENTAIRE']).'</td>';
                         echo '</tr>';
                 endforeach; ?>
 </table>

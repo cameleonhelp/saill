@@ -1,12 +1,12 @@
 <?php
 App::uses('AppController', 'Controller');
-App::import('Controller', 'Assoprojetentites');
-App::import('Controller', 'Projets');
+App::uses('AssoprojetentitesController', 'Controller');
+App::uses('ProjetsController', 'Controller');
 /**
  * Activites Controller
  *
  * @property Activite $Activite
- * @version 3.0.1.001 le 25/04/2014 par Jacques LEVAVASSEUR
+ * @version 3.0.1.002 le 28/05/2014 par Jacques LEVAVASSEUR
  */
 class ActivitesController extends AppController {
         public $components = array('History','Common');
@@ -497,5 +497,44 @@ class ActivitesController extends AppController {
         else:
             return '0';
         endif;           
-    }        
+    }  
+    
+    /**
+     * création forcé de l'activité lors de l'import si elle n'existe pas
+     * 
+     * @return int
+     */
+    public function import_add_forced(){
+        $obj_id = $this->exist($nom,$ref);
+        if($obj_id != false):
+            $tmp = array();
+            $objProjet = new ProjetsController();
+            $tmp['Activite']['projet_id']= $objProjet->idgetbynom(); //récupéré à partir de l'import
+            $tmp['Activite']['NOM']=''; //récupéré à partir de l'import
+            $tmp['Activite']['ACTIVE']=1;
+            $tmp['Activite']['DELETABLE'] = 1;
+            $tmp['Activite']['NUMEROGALLILIE']=''; //récupéré à partir de l'import
+            $tmp['Activite']['created']=date('Y-m-d');
+            $tmp['Activite']['modified']=date('Y-m-d');
+            $this->Activite->create();
+            $this->Activite->save($tmp);
+            return $this->Activite->getLastInsertID();
+        else:
+            return $obj_id;
+        endif;
+    }
+    
+    /**
+     * recherche une activité par son nom et son numéro Galilei
+     * 
+     * @param string $nom
+     * @param string $ref
+     * @return int ou false
+     */
+    public function exist($nom,$ref){
+        $conditions = array('Activite.NOM'=>$nom,'Activite.NUMEROGALLILIE'=>$ref);
+        $obj = $this->Activite->find('first',array('conditions'=>$conditions));
+        $exist = count($obj) > 0 ? $obj['Activite']['id'] : false;
+        return $exist;
+    }    
 }

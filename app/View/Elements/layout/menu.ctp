@@ -22,6 +22,7 @@
   <?php $classListeDiffusions = in_array($controller,array('listediffusions_index','listediffusions_add','listediffusions_edit','listediffusions_delete','listediffusions_search')) ? $active : ''; ?>               
   <?php $classProfils = in_array($controller,array('profils_index','profils_add','profils_edit','profils_delete','profils_search')) ? $active : ''; ?>  
   <?php $classParameters = in_array($controller,array('parameters_index','parameters_importcsvdata')) ? $active : ''; ?>    
+  <?php $classLog = in_array($controller,array('parameters_logfiles')) ? $active : ''; ?>    
   <?php $classParametersSave = in_array($controller,array('parameters_savebdd')) ? $active : ''; ?>    
   <?php $classParametersRestore = in_array($controller,array('parameters_restorebdd','parameters_listebackup')) ? $active : ''; ?>    
   <?php $classAutorisations = in_array($controller,array('autorisations_index','autorisations_add','autorisations_edit','autorisations_delete','autorisations_search')) ? $active : ''; ?>                
@@ -50,7 +51,7 @@
   <?php $classEnvOutils = in_array($controller,array('envoutils_index','envoutils_add','envoutils_edit','envoutils_delete','envoutils_search')) ? $active : ''; ?>
   <?php $classEnvVersions = in_array($controller,array('envversions_index','envversions_add','envversions_edit','envversions_delete','envversions_search')) ? $active : ''; ?>
   <?php $classEntites = in_array($controller,array('entites_index','entites_add','entites_edit','entites_delete','entites_search')) ? $active : ''; ?>
-  <?php $classAdministration = in_array($active,array($classParametersRestore,$classEntites,$classParametersSave,$classParameters,$classSections,$classSocietes,$classSites,$classDossierPartages,$classAutorisations,$classDomaines,$classOutils,$classAssistances,$classProfils,$classListeDiffusions,$classTypeMateriels,$classMessages)) ? $divactive : ''; ?>               
+  <?php $classAdministration = in_array($active,array($classLog,$classParametersRestore,$classEntites,$classParametersSave,$classParameters,$classSections,$classSocietes,$classSites,$classDossierPartages,$classAutorisations,$classDomaines,$classOutils,$classAssistances,$classProfils,$classListeDiffusions,$classTypeMateriels,$classMessages)) ? $divactive : ''; ?>               
   <?php $classAdminEnv = in_array($active,array($classEnvVersions,$classEnvOutils,$classVolumetries,$classVersions,$classUsages,$classTypes,$classPuissances,$classPhases,$classPerimetres,$classEtats,$classNFS,$classMWS,$classModeles,$classLots,$classLocalites,$classCoutsuos,$classCpus,$classComposants,$classChassis,$classArchitectures,$classApplications)) ? $divactive : ''; ?>              
   <?php $classContrats = in_array($controller,array('contrats_index','contrats_add','contrats_edit','contrats_delete','contrats_search')) ? $active : ''; ?> 
   <?php $classProjets = in_array($controller,array('projets_index','projets_add','projets_edit','projets_delete','projets_search')) ? $active : ''; ?> 
@@ -84,7 +85,8 @@
   <?php $classCRAPlancharges = in_array($controller,array('plancharges_rapport','plancharges_export_doc')) ? $active : ''; ?>  
   <?php $classCRAPlanchargesAgents = in_array($controller,array('plancharges_rapportagent')) ? $active : ''; ?> 
   <?php $classCRADashboard = in_array($controller,array('dashboards_index','dashboards_export_doc')) ? $active : ''; ?> 
-  <?php $classRapports = in_array($active,array($classCRAExpBesoin,$classCRAIntApp,$classFACTSNCF,$classCRAPlanchargesAgents,$classCRAActions,$classCRAActionsProjet,$classCRARisques,$classCRAActivites,$classCRASaisie,$classCRASS2I,$classCRAFacturations,$classCRAPlancharges,$classCRADashboard,$classCRAActions7,$classCRALogistique)) ? $divactive : ''; ?> 
+  <?php $classCRAbien = in_array($controller,array('biens_rapport')) ? $active : ''; ?>   
+  <?php $classRapports = in_array($active,array($classCRAExpBesoin,$classCRAbien,$classCRAIntApp,$classFACTSNCF,$classCRAPlanchargesAgents,$classCRAActions,$classCRAActionsProjet,$classCRARisques,$classCRAActivites,$classCRASaisie,$classCRASS2I,$classCRAFacturations,$classCRAPlancharges,$classCRADashboard,$classCRAActions7,$classCRALogistique)) ? $divactive : ''; ?> 
   <?php $classContactUs = in_array($controller,array('contacts_add')) ? $active : ''; ?>  
   <?php $classChangelog = in_array($controller,array('changelogdemandes_add','changelogdemandes_changelog','changelogdemandes_listetodo','changelogreponses_add','changelogreponses_view','changelogdemandes_edit','changelogdemandes_index','changelogversions_index')) ? $active : ''; ?> 
   <?php $classAddFavorites = 'notactive'; ?>  
@@ -149,6 +151,7 @@
             <?php endif; ?>
             <?php if (userAuth('profil_id')!='2' && isAuthorized('parameters', 'index')) : ?>
             <li class="<?php echo $classParameters; ?>"><?php echo $this->Html->link('Paramètres du site',array('controller'=>'parameters','action'=>'index'),array('class'=>'showoverlay','escape' => false)); ?></li>
+            <li class="<?php echo $classLog; ?>"><?php echo $this->Html->link('Journaux',array('controller'=>'parameters','action'=>'logfiles'),array('class'=>'showoverlay','escape' => false)); ?></li>
             <li class="divider"></li>
             <li class="<?php echo $classParametersSave; ?>"><?php echo $this->Html->link('Sauvegarder',array('controller'=>'parameters','action'=>'savebdd'),array('class'=>'showoverlay','escape' => false)); ?></li>
             <li class="<?php echo $classParametersRestore; ?>"><?php echo $this->Html->link('Restaurer',array('controller'=>'parameters','action'=>'listebackup'),array('class'=>'showoverlay','escape' => false)); ?></li>            
@@ -459,6 +462,7 @@
             <li class="divider"></li>
             <li class="<?php echo $classCRAIntApp; ?>"><?php echo $this->Html->link('Intégration App.',array('controller'=>'intergrationapplicatives','action'=>'rapport'),array('class'=>'showoverlay','escape' => false)); ?></li>            
             <li class="<?php echo $classCRAExpBesoin; ?>"><?php echo $this->Html->link('Environnements',array('controller'=>'expressionbesoins','action'=>'rapport'),array('class'=>'showoverlay','escape' => false)); ?></li>                        
+            <li class="<?php echo $classCRAbien; ?>"><?php echo $this->Html->link('Px70 et PVU',array('controller'=>'biens','action'=>'rapport'),array('class'=>'showoverlay','escape' => false)); ?></li>                        
             <?php endif; ?>  
           </ul>
         </div>
